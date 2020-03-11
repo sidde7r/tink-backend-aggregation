@@ -39,6 +39,8 @@ public class UserEntity {
     private String initials;
     private boolean newUser;
     private boolean isBrandActiveAgentUpdated;
+    private SecurityOutputEntity securityOutput;
+    private String authenticationType;
 
     public FetchIdentityDataResponse toTinkIdentity() {
         return new FetchIdentityDataResponse(
@@ -48,5 +50,17 @@ public class UserEntity {
                         .addSurnameElement(lastName)
                         .setDateOfBirth(null)
                         .build());
+    }
+
+    public String getSignatureType() {
+        return signatureType;
+    }
+
+    public String getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public SecurityOutputEntity getSecurityOutput() {
+        return securityOutput;
     }
 }

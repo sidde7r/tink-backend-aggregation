@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
@@ -22,10 +22,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.SabadellAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.SabadellTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.session.SabadellSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -34,24 +33,23 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SabadellAgent extends NextGenerationAgent
+public class SabadellAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                ProgressiveAuthAgent {
     private final SabadellApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SabadellAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    public SabadellAgent(final AgentComponentProvider componentProvider) {
+        super(componentProvider);
         this.apiClient = new SabadellApiClient(client);
 
         this.investmentRefreshController =
@@ -70,12 +68,6 @@ public class SabadellAgent extends NextGenerationAgent
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                new SabadellAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
@@ -162,5 +154,11 @@ public class SabadellAgent extends NextGenerationAgent
                 .orElseThrow(IllegalStateException::new)
                 .getUser()
                 .toTinkIdentity();
+    }
+
+    @Override
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        return new SabadellAuthenticator(
+                apiClient, sessionStorage, persistentStorage, supplementalInformationFormer);
     }
 }

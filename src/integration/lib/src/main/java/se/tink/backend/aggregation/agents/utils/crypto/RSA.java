@@ -56,6 +56,11 @@ public class RSA {
             byte[] modulusBytes, byte[] exponentBytes) {
         BigInteger modulus = new BigInteger(modulusBytes);
         BigInteger publicExponent = new BigInteger(exponentBytes);
+        return getPublicKeyFromModulusAndExponent(modulus, publicExponent);
+    }
+
+    public static RSAPublicKey getPublicKeyFromModulusAndExponent(
+            BigInteger modulus, BigInteger publicExponent) {
         RSAPublicKeySpec keySpec = new RSAPublicKeySpec(modulus, publicExponent);
 
         return getRsaPublicKey(keySpec);

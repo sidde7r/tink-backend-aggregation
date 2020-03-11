@@ -73,7 +73,18 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "supplementalFields": [
+                {
+                    "description": "Requested coordinate",
+                    "helpText": "Insert the coordinate number requested in the SMS (1 to 80).",
+                    "name": "otpinput",
+                    "numeric": true,
+                    "pattern": "^([1-9]|[1-7][0-9]|80)$",
+                    "patternError": "Incorrect coordinate. It should be between 1 and 80.",
+                    "sensitive": false
+                }
+            ]
         },
         {
             "accessType": "OTHER",

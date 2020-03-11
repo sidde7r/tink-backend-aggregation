@@ -30,13 +30,10 @@ public final class SabadellConstants {
         }
     }
 
-    public static final class Authentication {
-        public static final String PUBLIC_KEY_B64 =
-                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4Ug848S9Hf0wg4YUbr"
-                        + "KKTP2m54k2yB9Nh7PhQKmdNfel9LkRea4hFis3Kdzv0KW/ZeUNA5KKj5hZO3HG7ZIz5Ee8OG8j7965MsuLkU1IPl0k+egF5U"
-                        + "LjcVz8OU5sZMtihUhcPf3eZEUql4I+lJ/8b9dTzjb0EjRofnjOYunLyMX72Puvdh8PqDmWk6Lh+co9y414WC/crwa9vZOxWx"
-                        + "3lG28UeEwRCkSxnwqs/EkQi8cTymohQ9xJAXO8jonNNoTecEUA7ZnRNGqAat7Knsn+TLV2+pEPRfpEassZkVVpSGZ+JchrRL"
-                        + "br2kR1wyJybVgg12VJmhE0yvy5McZEzm3T8wIDAQAB";
+    public static final class Crypto {
+        public static final String RSA_MODULUS =
+                "28439240429073869445176380997167701932818260635090736843326083260339271383738240021817050501243881798752377083361384445136453394471735368886785360561395796482581081992434698373359558811210803240458598980299934401302052633969945864284110040125828803754404066691079159847934026963609689073268489019046367863391712572974308649795456260959837968975851737667663005999948625162689067074686007634339965952434532527609515110241345900755381476784270241391403204227136740459788389176362521875065537019413375905738398712759387266095327923797289746384844448015151948419393684484454600328858276863140057401141966479509689750901747";
+        public static final long RSA_EXPONENT = 65537;
     }
 
     public static class UrlParams {
@@ -76,7 +73,7 @@ public final class SabadellConstants {
 
     public static final class InitiateSessionRequest {
         public static final String DEVICE_INFO =
-                "es-ES GEO() IOS 10.2 iPhone8,1 NATIVE_APP 18.3.0 STANDARD";
+                "en-US GEO() IOS 13.3.1 iPhone9,3 NATIVE_APP 20.1.0 STANDARD";
         public static final String LAST_REQUEST_DATE = "";
         public static final String BRAND = "SAB";
         public static final String GEO_LOCATION_DATA = "";
@@ -90,6 +87,16 @@ public final class SabadellConstants {
         public static final String TRUSTEER = "";
         public static final String USERNAME_BS_KEY = "userName";
         public static final String PASSWORD_BS_KEY = "password";
+        public static final String ARXAN_BS_KEY = "arxan";
+        public static final String ARXAN_DATA =
+                "{csid} DebuggerOK RootKO SwizzlingOK VerifyCertificatesOK | ";
+        public static final String FLOATING_KEYBOARD_KEY_PREFIX = "@0#";
+        public static final String FLOATING_KEYBOARD_ENABLED = "N";
+    }
+
+    public static final class Authentication {
+        public static final String TYPE_SCA = "indSca";
+        public static final String SIGNATURE_TYPE_TPC = "tpc";
     }
 
     public static final class FetcherRequest {
@@ -160,6 +167,7 @@ public final class SabadellConstants {
     }
 
     public static final class Storage {
+        public static final String CSID_KEY = "csid";
         public static final String SESSION_KEY = "sabadell-session-data";
     }
 
