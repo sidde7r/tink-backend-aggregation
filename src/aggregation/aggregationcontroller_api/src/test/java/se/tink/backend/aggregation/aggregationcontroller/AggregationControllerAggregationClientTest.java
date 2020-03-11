@@ -106,7 +106,7 @@ public final class AggregationControllerAggregationClientTest
 
         AggregationControllerAggregationClient client =
                 Guice.createInjector(new TestModule())
-                        .getInstance(AggregationControllerAggregationClient.class);
+                        .getInstance(AggregationControllerAggregationClientImpl.class);
 
         HostConfiguration hostConfiguration = new HostConfiguration();
         hostConfiguration.setHost("http://localhost:" + getPort());

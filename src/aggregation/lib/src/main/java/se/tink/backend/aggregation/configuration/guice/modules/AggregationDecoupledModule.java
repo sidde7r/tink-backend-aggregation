@@ -16,6 +16,7 @@ import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClientStub;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.api.MonitoringService;
@@ -60,6 +61,8 @@ import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
+import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryStub;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
@@ -187,13 +190,15 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(PrometheusConfiguration.class).toInstance(configuration.getPrometheus());
 
         // AggregationModule
-        bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
+        bind(AggregationControllerAggregationClient.class)
+                .to(AggregationControllerAggregationClientStub.class);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
                 .in(Scopes.SINGLETON);
         bind(ClientConfig.class).toInstance(new DefaultApacheHttpClient4Config());
-
+        bind(InterProcessSemaphoreMutexFactory.class)
+                .to(InterProcessSemaphoreMutexFactoryStub.class);
         bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
 
         bind(CryptoConfigurationsRepository.class)

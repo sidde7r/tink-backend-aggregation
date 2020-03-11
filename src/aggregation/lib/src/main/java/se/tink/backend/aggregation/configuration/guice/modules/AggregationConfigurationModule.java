@@ -21,6 +21,8 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementali
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.TinkHttpClientProviderFactory;
+import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
+import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.metrics.prometheus.PrometheusConfiguration;
@@ -77,6 +79,8 @@ public class AggregationConfigurationModule extends AbstractModule {
                         configuration
                                 .getAgentsServiceConfiguration()
                                 .getTppSecretsServiceConfiguration());
+        bind(InterProcessSemaphoreMutexFactory.class)
+                .to(InterProcessSemaphoreMutexFactoryImpl.class);
         bind(ProviderConfigurationServiceConfiguration.class)
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
 
