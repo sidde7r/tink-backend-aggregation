@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authen
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.creditcard.rpc.FetchCreditCardResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.einvoice.rpc.FetchEinvoiceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.einvoice.rpc.FetchEinvoiceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementResponse;
@@ -169,6 +171,18 @@ public class LansforsakringarApiClient {
         return getBaseRequest(Urls.FETCH_PAYMENT_ACCOUNTS)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(FetchPaymentAccountResponse.class);
+    }
+
+    public FetchEinvoiceResponse fetchEinvoices() {
+        return getBaseRequest(Urls.FETCH_EINVOICES)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(
+                        FetchEinvoiceRequest.of(
+                                Fetcher.CUSTOMER_PROFILE_TYPE,
+                                Fetcher.EINVOICE_UNAPPROVED_STATUS,
+                                sessionStorage.get(StorageKeys.SSN)),
+                        MediaType.APPLICATION_JSON_TYPE)
+                .post(FetchEinvoiceResponse.class);
     }
 
     private RequestBuilder getBaseRequest(URL url) {

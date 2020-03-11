@@ -777,6 +777,28 @@ public class LansforsakringarEntitiesDeserializationTest {
                     + "\t\"bindingPeriodInfoModel\": null\n"
                     + "}";
 
+    private final String INVOICE_REQUEST =
+            "{\n"
+                    + "\t\"responseControl\": {\n"
+                    + "\t\t\"profile\": {\n"
+                    + "\t\t\t\"profileType\": \"CUSTOMER\",\n"
+                    + "\t\t\t\"customerId\": \"198311236452\"\n"
+                    + "\t\t},\n"
+                    + "\t\t\"filter\": {\n"
+                    + "\t\t\t\"includes\": [{\n"
+                    + "\t\t\t\t\"invoiceType\": \"DEBIT\",\n"
+                    + "\t\t\t\t\"eInvoiceStatuses\": [\"NEW\"],\n"
+                    + "\t\t\t\t\"paymentType\": \"MANUAL_EINVOICE\"\n"
+                    + "\t\t\t}]\n"
+                    + "\t\t},\n"
+                    + "\t\t\"pager\": {\n"
+                    + "\t\t\t\"startIndex\": 0,\n"
+                    + "\t\t\t\"size\": 20\n"
+                    + "\t\t}\n"
+                    + "\t},\n"
+                    + "\t\"customerId\": \"198311236452\"\n"
+                    + "}";
+
     @Test
     public void testTransactionParsing() {
         FetchTransactionResponse ftr =
@@ -853,4 +875,5 @@ public class LansforsakringarEntitiesDeserializationTest {
         Assert.assertTrue(la.getDetails().hasCoApplicant());
         Assert.assertEquals(la.getExactBalance().getExactValue(), BigDecimal.valueOf(-250000.0));
     }
+
 }

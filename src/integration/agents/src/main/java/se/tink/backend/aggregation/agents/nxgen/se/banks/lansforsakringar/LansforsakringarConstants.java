@@ -36,6 +36,7 @@ public class LansforsakringarConstants {
                 new URL(BASE + ApiService.PAYMENT_ACCOUNTS);
         public static final URL FETCH_TRANSFER_SOURCE_ACCOUNTS =
                 new URL(BASE + ApiService.TRANSFER_SOURCE_ACCOUNTS);
+        public static final URL FETCH_EINVOICES = new URL(BASE + ApiService.EINVOICES);
     }
 
     public static class ApiService {
@@ -58,6 +59,7 @@ public class LansforsakringarConstants {
         public static final String PAYMENT_ACCOUNTS = "appoutlet/payment/paymentaccount";
         public static final String TRANSFER_SOURCE_ACCOUNTS =
                 "appoutlet/account/transferrable/2.0?direction=from";
+        public static final String EINVOICES = "es/payment/geteinvoices/1.0";
     }
 
     public static class StorageKeys {
@@ -96,6 +98,7 @@ public class LansforsakringarConstants {
         public static final String BOOKED_TRANSACTION_STATUS = "BOOKED";
         public static final String PENDING_TRANSACTION_STATUS = "PENDING";
         public static final String PENSION_ACCOUNT_TYPE = "PENSION";
+        public static final String EINVOICE_UNAPPROVED_STATUS = "NEW";
     }
 
     public enum UserMessage implements LocalizableEnum {
