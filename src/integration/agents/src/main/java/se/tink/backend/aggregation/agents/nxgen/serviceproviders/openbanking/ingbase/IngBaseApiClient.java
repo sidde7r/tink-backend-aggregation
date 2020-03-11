@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase;
 
 import com.google.gson.Gson;
-import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -83,16 +82,11 @@ public class IngBaseApiClient {
         this.configuration = configuration;
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
-        try {
-            this.certificateSerial =
-                    IngBaseUtils.getCertificateSerial(configuration.getClientCertificate());
-        } catch (CertificateException e) {
-            throw new IllegalStateException("Could not get certificate serial", e);
-        }
+        this.certificateSerial =
+                IngBaseUtils.getCertificateSerial(configuration.getClientCertificate());
     }
 
     public FetchAccountsResponse fetchAccounts() {
-
         return buildRequestWithSignature(
                         Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
