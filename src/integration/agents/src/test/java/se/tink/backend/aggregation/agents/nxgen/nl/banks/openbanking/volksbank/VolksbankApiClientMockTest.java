@@ -57,7 +57,7 @@ public final class VolksbankApiClientMockTest {
         TinkHttpClient tinkHttpClient = createWiremockHttpClient();
 
         VolksbankUrlFactory urlFactory =
-                new VolksbankUrlFactory("https://localhost:8888", "snsbank", false);
+                new VolksbankUrlFactory("https://localhost:8888", "snsbank");
 
         VolksbankApiClient apiClient = new VolksbankApiClient(tinkHttpClient, urlFactory);
 

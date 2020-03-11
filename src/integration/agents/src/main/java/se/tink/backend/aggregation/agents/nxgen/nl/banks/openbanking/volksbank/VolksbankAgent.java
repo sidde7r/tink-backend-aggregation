@@ -54,13 +54,9 @@ public class VolksbankAgent
 
         final String[] payload = request.getProvider().getPayload().split(" ");
 
-        final String clientName = payload[0];
         final String bankPath = payload[1];
 
-        final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
-
-        final VolksbankUrlFactory urlFactory =
-                new VolksbankUrlFactory(Urls.HOST, bankPath, isSandbox);
+        final VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, bankPath);
 
         final VolksbankConfiguration volksbankConfiguration =
                 getAgentConfigurationController()
@@ -72,8 +68,7 @@ public class VolksbankAgent
         final String clientId = volksbankConfiguration.getClientId();
 
         final ConsentFetcher consentFetcher =
-                new ConsentFetcher(
-                        volksbankApiClient, persistentStorage, isSandbox, redirectUrl, clientId);
+                new ConsentFetcher(volksbankApiClient, persistentStorage, redirectUrl, clientId);
 
         final EidasProxyConfiguration eidasProxyConfiguration =
                 agentsServiceConfiguration.getEidasProxy();
