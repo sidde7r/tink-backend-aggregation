@@ -16,14 +16,14 @@ public class SEBDateUtil {
     private static final CountryDateHelper dateHelper =
             new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
 
-    public static String nextPossibleTransferDate(Date now, boolean withinSEB) {
-        Preconditions.checkNotNull(now);
+    public static String nextPossibleTransferDate(Date date, boolean withinSEB) {
+        Preconditions.checkNotNull(date);
 
         Date nextPossibleDate;
         if (withinSEB) {
-            nextPossibleDate = now;
+            nextPossibleDate = date;
         } else {
-            nextPossibleDate = nextPossibleExternalDate(now);
+            nextPossibleDate = nextPossibleExternalDate(date);
         }
 
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(nextPossibleDate);

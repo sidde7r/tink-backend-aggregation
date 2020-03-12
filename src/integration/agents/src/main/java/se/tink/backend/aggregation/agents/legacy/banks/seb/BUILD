@@ -4,6 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/account:enums",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:service",
