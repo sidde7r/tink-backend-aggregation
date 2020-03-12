@@ -323,7 +323,7 @@ java_library(
     name = "com_googlecode_gettext_commons_gettext_commons",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_googlecode_gettext_commons_gettext_commons//jar",
+        "@aggregation//:com_googlecode_gettext_commons_gettext_commons",
     ],
 )
 
