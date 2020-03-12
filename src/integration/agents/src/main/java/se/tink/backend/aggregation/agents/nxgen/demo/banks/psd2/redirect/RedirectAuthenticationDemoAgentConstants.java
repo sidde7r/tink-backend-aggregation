@@ -16,7 +16,7 @@ public class RedirectAuthenticationDemoAgentConstants {
             "uk-test-open-banking-redirect-cancelled";
 
     public static final String DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE_REGEX =
-            ".*-credentialExpireInTenMinutes";
+            ".*-configurable-session-expiry";
 
     public static final TransferExecutionException FAILED_CASE_EXCEPTION =
             TransferExecutionException.builder(SignableOperationStatuses.FAILED)
