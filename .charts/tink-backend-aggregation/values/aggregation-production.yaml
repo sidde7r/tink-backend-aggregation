@@ -427,7 +427,7 @@ clients:
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
   enabled: true
-  enabledRetryPolicy: true
+  enabledRetryPolicy: false
 
 debugLogFrequencyPercent: 100
 
