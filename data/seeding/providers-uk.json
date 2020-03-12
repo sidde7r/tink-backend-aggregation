@@ -793,7 +793,7 @@
             "financialInstitutionName": "Demo Open Banking Redirect",
             "groupDisplayName": "Demo providers",
             "multiFactor": true,
-            "name": "uk-test-open-banking-redirect-credentialExpireInTenMinutes",
+            "name": "all-test-open-banking-redirect-credentialExpireInTenMinutes",
             "passwordHelpText": "To connect your bank, you need to identify yourself using a third party app.",
             "popular": false,
             "status": "ENABLED",
