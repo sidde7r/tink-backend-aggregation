@@ -32,7 +32,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("se", "sbab-bankid")
-                .addCredentialField(Field.Key.USERNAME, "ssn")
+                .addCredentialField(Field.Key.USERNAME, "199003191443")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
