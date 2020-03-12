@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator;
 
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE_REGEX;
 
 import com.google.common.base.Strings;
 import java.util.Base64;
@@ -52,7 +52,7 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
             throw BankServiceError.CONSENT_REVOKED.exception("No code present.");
         }
         long accessExpiresInSeconds = THIRTY_DAYS_IN_SECONDS;
-        if (providerName.equals(DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE)) {
+        if (providerName.matches(DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE_REGEX)) {
             accessExpiresInSeconds = TEN_MINUTES_IN_SECONDS;
         }
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE_REGEX;
 
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
@@ -78,7 +78,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
         final OAuth2AuthenticationController controller;
 
-        if (provider.equals(DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE)) {
+        if (provider.matches(DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE_REGEX)) {
             controller =
                     new OAuth2AuthenticationController(
                             persistentStorage,
