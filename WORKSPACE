@@ -1734,7 +1734,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_contribs_jersey_apache_client4",
+    name = "com_sun_jersey_contribs_jersey_apache_client4",  # Do not use, but do not remove
     artifact = "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
     sha1 = "9dbac6cb2e05715b5b55f92187e7dc52f8c718e1",
 )
@@ -2591,6 +2591,7 @@ maven_install(
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
         "com.netflix.governator:governator:1.17.2",
+        "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
         "com.sun.jersey:jersey-client:1.18.1",
         "com.sun.jersey:jersey-core:1.18.1",
         "commons-codec:commons-codec:1.10",
