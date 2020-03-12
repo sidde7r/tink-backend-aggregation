@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.bankid;
 import com.google.common.base.Strings;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
@@ -41,8 +42,13 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
 
     @Override
     public BankIdStatus collect(String reference) {
+        int total_attempt = 3;
+        if (credentials.getProviderName().equals("se-test-bankid-qr-successful")) {
+            total_attempt = 30;
+        }
+
         BankIdStatus status;
-        if (attempt > 3) {
+        if (attempt > total_attempt) {
             status = BankIdStatus.DONE;
         } else if (successfulAuthentication) {
             status = BankIdStatus.WAITING;
@@ -56,6 +62,24 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
 
     @Override
     public Optional<String> getAutostartToken() {
+        if (credentials.getProviderName().equals("se-test-bankid-qr-successful")) {
+            int leftLimit = 48; // numeral '0'
+            int rightLimit = 101; // letter 'e'
+            int targetStringLength = 32;
+            Random random = new Random();
+            // Autostart token example: 8dce0218-9cc2-0263-3904-aec17576ec3a
+            String generatedString =
+                    random.ints(leftLimit, rightLimit + 1)
+                            .filter(i -> (i <= 57 || i >= 97))
+                            .limit(targetStringLength)
+                            .collect(
+                                    StringBuilder::new,
+                                    StringBuilder::appendCodePoint,
+                                    StringBuilder::append)
+                            .toString()
+                            .replaceAll("(.{8})(.{4})(.{4})(.{4})", "$1-$2-$3-$4-");
+            return Optional.ofNullable(generatedString);
+        }
         return Optional.empty();
     }
 
