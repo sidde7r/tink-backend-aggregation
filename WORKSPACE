@@ -1058,7 +1058,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_googlecode_gettext_commons_gettext_commons",
+    name = "com_googlecode_gettext_commons_gettext_commons",  # Do not use, but do not remove
     artifact = "com.googlecode.gettext-commons:gettext-commons:0.9.8",
     sha1 = "20e498b37fcced2f3fa273df2fae169e6b4e8061",
 )
@@ -2586,6 +2586,7 @@ maven_install(
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
         "com.google.instrumentation:instrumentation-api:0.4.3",
+        "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
