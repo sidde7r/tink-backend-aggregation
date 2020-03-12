@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,44 +19,46 @@ public class AccountEntity implements GeneralAccountEntity {
 
     private static final AggregationLogger log = new AggregationLogger(AccountEntity.class);
 
-    @JsonProperty("formattedSaldo")
-    private String formattedBalance;
+    @JsonProperty("produktnamn")
+    private String productName;
 
-    @JsonProperty("kontonamn")
-    private String name;
+    @JsonProperty("produkttyp")
+    private String productType;
+
+    @JsonProperty("kundvaltNamn")
+    private String accountaName;
 
     @JsonProperty("kontonummer")
     private String accountNumber;
 
-    @JsonProperty("kontostatus")
-    private String status;
-
     @JsonProperty("saldo")
     private String balance;
 
-    @JsonProperty("pagaendeUppdrag")
-    private int numberOfPendingJobs;
+    @JsonProperty("disponibeltBelopp")
+    private String availableBalance;
 
-    @JsonProperty("maxNoOfAccounts")
-    private boolean maxNumberOfAccounts;
-
-    @JsonProperty("ejGenomfordaUppdrag")
-    private int numberOfUnfinishedJobs;
-
-    public String getFormattedBalance() {
-        return formattedBalance;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setFormattedBalance(String formattedBalance) {
-        this.formattedBalance = formattedBalance;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public String getName() {
-        return name;
+    public String getProductType() {
+        return productType;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+
+    public String getAccountaName() {
+        return accountaName;
+    }
+
+    public void setAccountaName(String accountaName) {
+        this.accountaName = accountaName;
     }
 
     public String getAccountNumber() {
@@ -66,14 +69,6 @@ public class AccountEntity implements GeneralAccountEntity {
         this.accountNumber = accountNumber;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getBalance() {
         return balance;
     }
@@ -82,47 +77,35 @@ public class AccountEntity implements GeneralAccountEntity {
         this.balance = balance;
     }
 
-    public int getNumberOfPendingJobs() {
-        return numberOfPendingJobs;
+    public String getAvailableBalance() {
+        return availableBalance;
     }
 
-    public void setNumberOfPendingJobs(int numberOfPendingJobs) {
-        this.numberOfPendingJobs = numberOfPendingJobs;
-    }
-
-    public boolean isMaxNumberOfAccounts() {
-        return maxNumberOfAccounts;
-    }
-
-    public void setMaxNumberOfAccounts(boolean maxNumberOfAccounts) {
-        this.maxNumberOfAccounts = maxNumberOfAccounts;
-    }
-
-    public int getNumberOfUnfinishedJobs() {
-        return numberOfUnfinishedJobs;
-    }
-
-    public void setNumberOfUnfinishedJobs(int numberOfUnfinishedJobs) {
-        this.numberOfUnfinishedJobs = numberOfUnfinishedJobs;
+    public void setAvailableBalance(String availableBalance) {
+        this.availableBalance = availableBalance;
     }
 
     public Optional<Account> toTinkAccount() {
+
         Account account = new Account();
         account.setType(AccountTypes.SAVINGS);
         account.putFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
-        account.setAccountNumber(getAccountNumber());
-        account.setBankId(getAccountNumber());
+        account.setAccountNumber(accountNumber);
+        account.setBankId(accountNumber);
+        account.setBalance(Double.parseDouble(balance));
+        account.setExactBalance(ExactCurrencyAmount.of(availableBalance, "SEK"));
+        account.setName(accountaName);
         account.putIdentifier(new SwedishIdentifier(accountNumber));
 
-        if (!Strings.isNullOrEmpty(getBalance()) && !getBalance().trim().isEmpty()) {
-            String cleanBalance = getBalance().replaceAll("[^\\d.,]", "");
+        if (!Strings.isNullOrEmpty(balance) && !balance.trim().isEmpty()) {
+            String cleanBalance = balance.replaceAll("[^\\d.,]", "");
             account.setBalance(StringUtils.parseAmount(cleanBalance));
         } else {
             log.error("An account cannot have a null balance");
             return Optional.empty();
         }
 
-        String name = !Strings.isNullOrEmpty(getName()) ? getName() : getAccountNumber();
+        String name = !Strings.isNullOrEmpty(accountaName) ? accountaName : accountNumber;
         account.setName(name == null ? "" : name.replace("\n", "").replace("\r", ""));
 
         return Optional.of(account);
@@ -130,7 +113,7 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        return new SwedishIdentifier(getAccountNumber());
+        return new SwedishIdentifier(accountNumber);
     }
 
     @Override
@@ -143,6 +126,6 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @Override
     public String generalGetName() {
-        return getName();
+        return accountaName;
     }
 }
