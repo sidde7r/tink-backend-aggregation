@@ -825,7 +825,7 @@ java_library(
         "@xerces_xercesImpl//jar",
     ],
     runtime_deps = [
-        "@xml_apis_xml_apis//jar",
+        "@aggregation//:xml_apis_xml_apis",
     ],
 )
 
@@ -845,6 +845,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_w3c_css_sac",
+        "@aggregation//:xml_apis_xml_apis",
         "@commons_io_commons_io//jar",
         "@net_sourceforge_htmlunit_htmlunit//jar",
         "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
@@ -854,7 +855,6 @@ java_library(
         "@xalan_serializer//jar",
         "@xalan_xalan//jar",
         "@xerces_xercesImpl//jar",
-        "@xml_apis_xml_apis//jar",
     ],
 )
 
@@ -1181,6 +1181,7 @@ java_library(
     exports = [
         "@aggregation//:commons_collections_commons_collections",
         "@aggregation//:org_slf4j_slf4j_api",
+        "@aggregation//:xml_apis_xml_apis",
         "@antlr_antlr//jar",
         "@dom4j_dom4j//jar",
         "@javax_transaction_jta//jar",
@@ -1188,7 +1189,6 @@ java_library(
         "@org_hibernate_hibernate_commons_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
         "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
-        "@xml_apis_xml_apis//jar",
     ],
 )
 

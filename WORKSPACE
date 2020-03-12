@@ -1130,7 +1130,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "xml_apis_xml_apis",
+    name = "xml_apis_xml_apis",  # Do not use, but do not remove
     artifact = "xml-apis:xml-apis:1.4.01",
     sha1 = "3789d9fada2d3d458c4ba2de349d48780f381ee3",
 )
