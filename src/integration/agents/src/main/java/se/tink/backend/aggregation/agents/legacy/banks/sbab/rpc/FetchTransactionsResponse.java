@@ -6,19 +6,19 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class FetchTransactionsResponse {
 
-    private List<Transaction> transactions = Lists.newArrayList();
+    private List<Transaction> completedTransactions = Lists.newArrayList();
     private List<Transaction> upcomingTransactions = Lists.newArrayList();
     private boolean hasMoreResults;
     private String token;
     private String strutsTokenName;
     private String postUrl;
 
-    public List<Transaction> getTransactions() {
-        return transactions;
+    public List<Transaction> getCompletedTransactions() {
+        return completedTransactions;
     }
 
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
+    public void setCompletedTransactions(List<Transaction> completedTransactions) {
+        this.completedTransactions = completedTransactions;
     }
 
     public boolean hasMoreResults() {

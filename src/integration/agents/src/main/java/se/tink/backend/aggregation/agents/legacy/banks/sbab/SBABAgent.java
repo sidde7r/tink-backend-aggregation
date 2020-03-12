@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -40,8 +42,9 @@ import se.tink.backend.aggregation.agents.banks.sbab.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.SavedRecipientEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedTransferException;
 import se.tink.backend.aggregation.agents.banks.sbab.executor.SBABTransferExecutor;
-import se.tink.backend.aggregation.agents.banks.sbab.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitBankIdResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -84,7 +87,7 @@ public class SBABAgent extends AbstractAgent
     private final SBABTransferExecutor transferExecutor;
 
     // cache
-    private List<AccountEntity> accountEntities = null;
+    private AccountsResponse accountsResponse = null;
 
     public SBABAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -164,14 +167,14 @@ public class SBABAgent extends AbstractAgent
         }
     }
 
-    private List<AccountEntity> getAccounts() {
-        if (accountEntities != null) {
-            return accountEntities;
+    private AccountsResponse getAccounts() {
+        if (accountsResponse != null) {
+            return accountsResponse;
         }
 
         try {
-            accountEntities = userDataClient.getAccounts();
-            return accountEntities;
+            accountsResponse = userDataClient.getAccounts();
+            return accountsResponse;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -243,47 +246,33 @@ public class SBABAgent extends AbstractAgent
     private List<Transaction> fetchTransactions(Account account) throws Exception {
         List<Transaction> transactions = Lists.newArrayList();
         String accountNumber = account.getAccountNumber();
-        FetchTransactionsResponse response =
-                userDataClient.initiateTransactionSearch(accountNumber);
+        TransactionsResponse upcomingTransactions =
+                userDataClient.fetchUpcomingTransactions(accountNumber);
 
-        transactions.addAll(response.getUpcomingTransactions());
+        TransactionsResponse completedTransaction =
+                userDataClient.fetchCompletedTransactions(accountNumber);
 
-        // The initial page contains transactions. If we're already content here, we return.
-        if (isContentWithRefresh(account, response.getTransactions())
-                || response.getTransactions().isEmpty()) {
-            transactions.addAll(response.getTransactions());
-            return transactions;
-        }
-
-        // Fetch executed transactions until we are content with the refresh.
-        boolean hasMoreResults = true;
-        int pageNumber = 0;
-
-        while (!isContentWithRefresh(account, transactions) && hasMoreResults) {
-            response = userDataClient.fetchTransactions(accountNumber, pageNumber, response);
-            transactions.addAll(response.getTransactions());
-
-            hasMoreResults = response.hasMoreResults();
-            pageNumber++;
-        }
-
-        return transactions;
+        return Stream.concat(
+                        upcomingTransactions.stream()
+                                .map(transactionEntity -> transactionEntity.toTinkTransaction(true))
+                                .filter(Optional::isPresent)
+                                .map(Optional::get),
+                        completedTransaction.stream()
+                                .map(
+                                        transactionEntity ->
+                                                transactionEntity.toTinkTransaction(false))
+                                .filter(Optional::isPresent)
+                                .map(Optional::get))
+                .collect(Collectors.toList());
     }
 
-    private List<Account> toTinkAccounts(List<AccountEntity> sbabAccounts) {
-        List<Account> accounts = Lists.newArrayList();
+    private List<Account> toTinkAccounts(List<AccountEntity> accounts) {
 
-        for (AccountEntity accountEntity : sbabAccounts) {
-            Optional<Account> account = accountEntity.toTinkAccount();
-
-            if (account.isPresent()) {
-                accounts.add(account.get());
-            } else {
-                log.error("Could not convert account entity to Tink account");
-            }
-        }
-
-        return accounts;
+        return accounts.stream()
+                .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override

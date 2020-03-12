@@ -35,7 +35,7 @@ public class AccountEntityTest {
     public void entityWithNewLineInName_ConvertsToTinkAccountWithoutNewLine() {
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setBalance("10 000,00 kr");
-        accountEntity.setName("This is a name with a new line\n");
+        accountEntity.setAccountaName("This is a name with a new line\n");
         Optional<Account> tinkAccount = accountEntity.toTinkAccount();
 
         Assert.assertEquals("This is a name with a new line", tinkAccount.get().getName());
@@ -56,7 +56,7 @@ public class AccountEntityTest {
     public void entityWithWindowsNewLineInName_ConvertsToTinkAccountWithoutNewLine() {
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setBalance("10 000,00 kr");
-        accountEntity.setName("This is a name with a Windows new line\r\n");
+        accountEntity.setAccountaName("This is a name with a Windows new line\r\n");
         Optional<Account> tinkAccount = accountEntity.toTinkAccount();
 
         Assert.assertEquals("This is a name with a Windows new line", tinkAccount.get().getName());

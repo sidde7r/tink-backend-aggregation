@@ -5,99 +5,73 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import java.util.Optional;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
 
     private static final AggregationLogger log = new AggregationLogger(TransactionEntity.class);
 
-    @JsonProperty("Belopp")
+    @JsonProperty("transferId")
+    private String id;
+
+    private String accountNumberFrom;
+    private String accountNumberTo;
     private String amount;
+    private String transactionDate;
+    private String transferType;
 
-    @JsonProperty("Datum")
-    private String date;
+    @JsonProperty("narrativeFrom")
+    private String descriptionFrom;
 
-    @JsonProperty("Beskrivning")
-    private String note;
+    @JsonProperty("narrativeTo")
+    private String descriptionTo;
 
-    @JsonProperty("Typ")
-    private String type;
-
-    @JsonProperty("Mottagare")
-    private String destinationAccountNumber;
-
-    @JsonProperty("Meddelande")
-    private String destinationMessage;
-
-    public String getAmount() {
-        return amount;
-    }
+    private String transferStatus;
+    private String fromAccountName;
 
     public void setAmount(String amount) {
         this.amount = amount;
     }
 
-    public String getDate() {
-        return date;
+    public void setTransactionDate(String transactionDate) {
+        this.transactionDate = transactionDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDescriptionFrom(String descriptionFrom) {
+        this.descriptionFrom = descriptionFrom;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note.trim();
-    }
-
-    public String getDestinationAccountNumber() {
-        return destinationAccountNumber;
-    }
-
-    public void setDestinationAccountNumber(String destinationAccountNumber) {
-        this.destinationAccountNumber = destinationAccountNumber;
-    }
-
-    public String getDestinationMessage() {
-        return destinationMessage;
-    }
-
-    public void setDestinationMessage(String destinationMessage) {
-        this.destinationMessage = destinationMessage;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Optional<Transaction> toTinkTransaction() {
+    public Optional<Transaction> toTinkTransaction(boolean isUpcoming) {
         try {
             Transaction transaction = new Transaction();
 
-            transaction.setDescription(getNote() != null ? getNote().trim() : "");
+            transaction.setId(id);
 
-            if (!Strings.isNullOrEmpty(getDate()) && !getDate().trim().isEmpty()) {
-                transaction.setDate(DateUtils.parseDate(getDate()));
+            transaction.setDescription(
+                    Stream.of(descriptionFrom, descriptionTo)
+                            .filter(java.util.Objects::nonNull)
+                            .findFirst()
+                            .orElse("N/A"));
+
+            if (!Strings.isNullOrEmpty(transactionDate) && !transactionDate.trim().isEmpty()) {
+                transaction.setDate(DateUtils.parseDate(transactionDate));
             } else {
                 log.error("A transaction cannot have a null date");
                 return Optional.empty();
             }
 
-            if (!Strings.isNullOrEmpty(getAmount()) && !getAmount().trim().isEmpty()) {
-                String cleanAmount = getAmount().replaceAll("[^\\d.,-]", "");
-                double amount = StringUtils.parseAmount(cleanAmount);
+            if (!Strings.isNullOrEmpty(amount) && !amount.trim().isEmpty()) {
+                String cleanAmount = amount.replaceAll("[^\\d.,-]", "");
+                double amount = Double.valueOf(cleanAmount);
                 transaction.setAmount(amount);
 
                 if (Objects.equal(amount, 0)) {
-                    log.warn("Transaction amount (" + getAmount() + ") was parsed to 0.");
+                    log.warn("Transaction amount (" + amount + ") was parsed to 0.");
                 }
             } else {
                 log.error("A transaction cannot have a null amount");
@@ -105,6 +79,8 @@ public class TransactionEntity {
             }
 
             transaction.setType(getTinkTransactionType());
+
+            transaction.setUpcoming(isUpcoming);
 
             return Optional.of(transaction);
 
@@ -115,16 +91,16 @@ public class TransactionEntity {
     }
 
     private TransactionTypes getTinkTransactionType() {
-        if (type == null) {
+        if (transferType == null) {
             return TransactionTypes.DEFAULT;
         }
 
-        switch (type.toLowerCase()) {
-            case "överföring":
+        switch (transferType.toLowerCase()) {
+            case "sbabgiro":
+            case "deposit":
                 return TransactionTypes.TRANSFER;
-            case "uttag":
-            case "insättning":
-                return TransactionTypes.DEFAULT;
+            case "withdrawal":
+                return TransactionTypes.WITHDRAWAL;
             default:
                 return TransactionTypes.DEFAULT;
         }

@@ -9,51 +9,51 @@ public class TransactionEntityTest {
     @Test
     public void testAmountIsCorrectWhenRightCurrencyOrNoCurrency() {
         TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setDate("2016-01-01");
+        transactionEntity.setTransactionDate("2016-01-01");
 
         // Allow both kr and sek (and ignore case).
         transactionEntity.setAmount("150,00 kr");
-        Assert.assertEquals(transactionEntity.toTinkTransaction().get().getAmount(), 150, 0);
+        Assert.assertEquals(transactionEntity.toTinkTransaction(false).get().getAmount(), 150, 0);
         transactionEntity.setAmount("100,00 sek");
-        Assert.assertEquals(transactionEntity.toTinkTransaction().get().getAmount(), 100, 0);
+        Assert.assertEquals(transactionEntity.toTinkTransaction(false).get().getAmount(), 100, 0);
         transactionEntity.setAmount("50,00 Sek");
-        Assert.assertEquals(transactionEntity.toTinkTransaction().get().getAmount(), 50, 0);
+        Assert.assertEquals(transactionEntity.toTinkTransaction(false).get().getAmount(), 50, 0);
         transactionEntity.setAmount("20,00kr");
-        Assert.assertEquals(transactionEntity.toTinkTransaction().get().getAmount(), 20, 0);
+        Assert.assertEquals(transactionEntity.toTinkTransaction(false).get().getAmount(), 20, 0);
         transactionEntity.setAmount("30,00");
-        Assert.assertEquals(transactionEntity.toTinkTransaction().get().getAmount(), 30, 0);
+        Assert.assertEquals(transactionEntity.toTinkTransaction(false).get().getAmount(), 30, 0);
     }
 
     @Test
     public void testNegativeAmounts() {
         TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setDate("2016-01-01");
+        transactionEntity.setTransactionDate("2016-01-01");
 
         transactionEntity.setAmount("-150,00");
-        Assert.assertEquals(transactionEntity.toTinkTransaction().get().getAmount(), -150, 0);
+        Assert.assertEquals(transactionEntity.toTinkTransaction(false).get().getAmount(), -150, 0);
 
         transactionEntity.setAmount("-150");
-        Assert.assertEquals(transactionEntity.toTinkTransaction().get().getAmount(), -150, 0);
+        Assert.assertEquals(transactionEntity.toTinkTransaction(false).get().getAmount(), -150, 0);
 
         transactionEntity.setAmount("-1,00");
-        Assert.assertEquals(transactionEntity.toTinkTransaction().get().getAmount(), -1, 0);
+        Assert.assertEquals(transactionEntity.toTinkTransaction(false).get().getAmount(), -1, 0);
     }
 
     @Test
     public void nullOrEmptyAmountIsNotOkay() {
         TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setDate("2016-01-01");
+        transactionEntity.setTransactionDate("2016-01-01");
 
-        Assert.assertFalse(transactionEntity.toTinkTransaction().isPresent());
+        Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
 
         transactionEntity.setAmount("");
-        Assert.assertFalse(transactionEntity.toTinkTransaction().isPresent());
+        Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
 
         transactionEntity.setAmount(" ");
-        Assert.assertFalse(transactionEntity.toTinkTransaction().isPresent());
+        Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
 
         transactionEntity.setAmount("       ");
-        Assert.assertFalse(transactionEntity.toTinkTransaction().isPresent());
+        Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
     }
 
     @Test
@@ -61,31 +61,31 @@ public class TransactionEntityTest {
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setAmount("150,00 kr");
 
-        Assert.assertFalse(transactionEntity.toTinkTransaction().isPresent());
+        Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
 
-        transactionEntity.setDate("");
-        Assert.assertFalse(transactionEntity.toTinkTransaction().isPresent());
+        transactionEntity.setTransactionDate("");
+        Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
 
-        transactionEntity.setDate(" ");
-        Assert.assertFalse(transactionEntity.toTinkTransaction().isPresent());
+        transactionEntity.setTransactionDate(" ");
+        Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
 
-        transactionEntity.setDate("       ");
-        Assert.assertFalse(transactionEntity.toTinkTransaction().isPresent());
+        transactionEntity.setTransactionDate("       ");
+        Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
     }
 
     @Test
     public void nullOrEmptyDescriptionIsOkay() {
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setAmount("150,00 kr");
-        transactionEntity.setDate("2016-01-01");
+        transactionEntity.setTransactionDate("2016-01-01");
 
-        Assert.assertTrue(transactionEntity.toTinkTransaction().isPresent());
+        Assert.assertTrue(transactionEntity.toTinkTransaction(false).isPresent());
 
-        transactionEntity.setNote("");
-        Assert.assertTrue(transactionEntity.toTinkTransaction().isPresent());
+        transactionEntity.setDescriptionFrom("");
+        Assert.assertTrue(transactionEntity.toTinkTransaction(false).isPresent());
 
-        transactionEntity.setNote(" ");
-        Assert.assertTrue(transactionEntity.toTinkTransaction().isPresent());
+        transactionEntity.setDescriptionFrom(" ");
+        Assert.assertTrue(transactionEntity.toTinkTransaction(false).isPresent());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class TransactionEntityTest {
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setAmount("150,00 kr");
 
-        transactionEntity.setDate("This is not a date");
-        Assert.assertFalse(transactionEntity.toTinkTransaction().isPresent());
+        transactionEntity.setTransactionDate("This is not a date");
+        Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
     }
 }
