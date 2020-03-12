@@ -822,7 +822,7 @@ java_library(
     name = "xerces_xercesImpl",
     visibility = ["//visibility:public"],
     exports = [
-        "@xerces_xercesImpl//jar",
+        "@aggregation//:xerces_xercesImpl",
     ],
     runtime_deps = [
         "@aggregation//:xml_apis_xml_apis",
@@ -845,6 +845,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_w3c_css_sac",
+        "@aggregation//:xerces_xercesImpl",
         "@aggregation//:xml_apis_xml_apis",
         "@commons_io_commons_io//jar",
         "@net_sourceforge_htmlunit_htmlunit//jar",
@@ -854,7 +855,6 @@ java_library(
         "@org_eclipse_jetty_jetty_websocket//jar",
         "@xalan_serializer//jar",
         "@xalan_xalan//jar",
-        "@xerces_xercesImpl//jar",
     ],
 )
 
