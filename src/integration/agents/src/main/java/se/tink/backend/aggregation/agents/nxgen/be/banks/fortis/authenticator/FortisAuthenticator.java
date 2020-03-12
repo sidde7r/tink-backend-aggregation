@@ -136,7 +136,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                 throw LoginError.PASSWORD_CHANGED.exception();
             }
             if (responseBody.contains(FortisConstants.ErrorCode.MAXIMUM_NUMBER_OF_TRIES)) {
-                throw AuthorizationError.REACH_MAXIMUM_TRIES.exception();
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             }
             if (responseBody.contains(FortisConstants.ErrorCode.INVALID_SIGNATURE_KO)) {
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
@@ -415,7 +415,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             UserInfoResponse userInfoResponse;
             try {
                 sendChallenges(authResponse);
-            } catch (LoginException l) {
+            } catch (LoginException | AuthorizationException l) {
                 clearAuthenticationData();
                 throw SessionError.SESSION_EXPIRED.exception();
             }
