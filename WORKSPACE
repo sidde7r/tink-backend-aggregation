@@ -1794,7 +1794,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_lambdaworks_scrypt",
+    name = "com_lambdaworks_scrypt",  # Do not use, but do not remove
     artifact = "com.lambdaworks:scrypt:1.3.2",
     sha1 = "b144d80b2b915a900730dd156ae749a88c0e2555",
 )
@@ -2586,6 +2586,7 @@ maven_install(
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
         "com.google.instrumentation:instrumentation-api:0.4.3",
+        "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
         "com.netflix.governator:governator:1.17.2",
