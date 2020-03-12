@@ -20,4 +20,12 @@ public class RefreshTokenBaseRequest {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
     }
+
+    public RefreshTokenBaseRequest(
+            final String grantType, final String token, final String clientId) {
+        this.grantType = grantType;
+        this.token = token;
+        this.clientId = clientId;
+        this.clientSecret = null;
+    }
 }

@@ -1,19 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
-import se.tink.backend.aggregation.annotations.SensitiveSecret;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 @JsonObject
 public class KbcConfiguration implements BerlinGroupConfiguration {
 
-    @JsonProperty @Secret private String psuIpAddress;
-    @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret private String clientId;
-    @JsonProperty @SensitiveSecret private String clientSecret;
     @JsonProperty @AgentConfigParam private String redirectUrl;
 
     @Override
@@ -23,7 +21,7 @@ public class KbcConfiguration implements BerlinGroupConfiguration {
 
     @Override
     public String getClientSecret() {
-        return clientSecret;
+        throw new NotImplementedException("clientSecret not used anymore");
     }
 
     @Override
@@ -33,11 +31,11 @@ public class KbcConfiguration implements BerlinGroupConfiguration {
 
     @Override
     public String getBaseUrl() {
-        return baseUrl;
+        return KbcConstants.Urls.BASE_URL;
     }
 
     @Override
     public String getPsuIpAddress() {
-        return psuIpAddress;
+        return "0.0.0.0";
     }
 }
