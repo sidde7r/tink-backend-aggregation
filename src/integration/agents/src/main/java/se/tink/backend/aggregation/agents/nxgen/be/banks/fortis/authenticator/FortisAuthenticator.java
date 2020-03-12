@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
@@ -415,6 +416,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             try {
                 sendChallenges(authResponse);
             } catch (LoginException l) {
+                clearAuthenticationData();
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             userInfoResponse = apiClient.getUserInfo();
@@ -426,6 +428,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             LOGGER.warnExtraLong(
                     String.format("authenticate, no user data found: %s", ""),
                     FortisConstants.LoggingTag.NO_USER_DATA_FOUND);
+            clearAuthenticationData();
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
@@ -444,5 +447,17 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             cardString.setCharAt(index, 'X');
         }
         return String.valueOf(cardString);
+    }
+
+    private void clearAuthenticationData() {
+        ImmutableList<String> valuesToClean =
+                ImmutableList.of(
+                        FortisConstants.Storage.ACCOUNT_PRODUCT_ID,
+                        FortisConstants.Storage.SMID,
+                        FortisConstants.Storage.AGREEMENT_ID,
+                        FortisConstants.Storage.PASSWORD,
+                        FortisConstants.Storage.DEVICE_FINGERPRINT,
+                        FortisConstants.Storage.MUID);
+        valuesToClean.forEach(v -> persistentStorage.remove(v));
     }
 }
