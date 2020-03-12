@@ -1649,8 +1649,8 @@ maven_jar(
 
 maven_jar(
     name = "xerces_xercesImpl",
-    artifact = "xerces:xercesImpl:2.10.0",
-    sha1 = "9161654d2afe7f9063455f02ccca8e4ec2787222",
+    artifact = "xerces:xercesImpl:2.11.0",
+    sha1 = "9bb329db1cfc4e22462c9d6b43a8432f5850e92c",
 )
 
 maven_jar(
