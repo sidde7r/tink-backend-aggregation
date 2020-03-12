@@ -41,6 +41,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
+    private final UkOpenBankingAisConfig aisConfig;
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
@@ -49,7 +50,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             ProviderConfiguration providerConfiguration,
             URL wellKnownURL,
             RandomValueGenerator randomValueGenerator,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            UkOpenBankingAisConfig aisConfig) {
         super(
                 httpClient,
                 signer,
@@ -59,6 +61,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 randomValueGenerator);
         this.persistentStorage = persistentStorage;
         this.randomValueGenerator = randomValueGenerator;
+        this.aisConfig = aisConfig;
     }
 
     public <T> T createPaymentIntentId(
@@ -83,8 +86,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .post(responseType);
     }
 
-    private <T extends AccountPermissionResponse> T createAccountIntentId(
-            UkOpenBankingAisConfig aisConfig, Class<T> responseType) {
+    private <T extends AccountPermissionResponse> T createAccountIntentId(Class<T> responseType) {
         // Account Permissions are added to persistentStorage
         List<String> accountPermissions = new ArrayList<>(ACCOUNT_PERMISSIONS);
         if (Objects.nonNull(aisConfig.getAdditionalPermissions())) {
@@ -100,17 +102,15 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .post(responseType);
     }
 
-    public <T> T fetchAccounts(UkOpenBankingAisConfig aisConfig, Class<T> responseType) {
+    public <T> T fetchAccounts(Class<T> responseType) {
         return createAisRequest(aisConfig.getBulkAccountRequestURL()).get(responseType);
     }
 
-    public <T> T fetchAccountBalance(
-            UkOpenBankingAisConfig aisConfig, String accountId, Class<T> responseType) {
+    public <T> T fetchAccountBalance(String accountId, Class<T> responseType) {
         return createAisRequest(aisConfig.getAccountBalanceRequestURL(accountId)).get(responseType);
     }
 
-    public <T> T fetchAccountTransactions(
-            UkOpenBankingAisConfig aisConfig, String paginationKey, Class<T> responseType) {
+    public <T> T fetchAccountTransactions(String paginationKey, Class<T> responseType) {
 
         // Check if the key provided is a complete url or if it should be appended on the apiBase
         URL url = new URL(paginationKey);
@@ -119,8 +119,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         return createAisRequest(url).get(responseType);
     }
 
-    public <T> T fetchUpcomingTransactions(
-            UkOpenBankingAisConfig aisConfig, String accountId, Class<T> responseType) {
+    public <T> T fetchUpcomingTransactions(String accountId, Class<T> responseType) {
         try {
 
             return createAisRequest(aisConfig.getUpcomingTransactionRequestURL(accountId))
@@ -148,9 +147,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .addFilter(getAisAuthFilter());
     }
 
-    public String fetchIntentIdString(UkOpenBankingAisConfig aisConfig) {
+    public String fetchIntentIdString() {
         return aisConfig.getIntentId(
-                this.createAccountIntentId(aisConfig, aisConfig.getIntentIdResponseType()));
+                this.createAccountIntentId(aisConfig.getIntentIdResponseType()));
     }
 
     // General Payments Interface

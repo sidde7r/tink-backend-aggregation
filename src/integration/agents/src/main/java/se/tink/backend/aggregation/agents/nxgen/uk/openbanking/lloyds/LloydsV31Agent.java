@@ -47,7 +47,7 @@ public class LloydsV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        LloydsAuthenticator authenticator = new LloydsAuthenticator(apiClient, aisConfig);
+        LloydsAuthenticator authenticator = new LloydsAuthenticator(apiClient);
         return createOpenIdFlowWithAuthenticator(authenticator, aisConfig.getAppToAppURL());
     }
 

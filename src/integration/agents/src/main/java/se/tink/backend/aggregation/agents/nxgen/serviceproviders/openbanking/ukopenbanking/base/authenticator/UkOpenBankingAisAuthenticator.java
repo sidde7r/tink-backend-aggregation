@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.jwt.AuthorizeRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
@@ -13,19 +12,16 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
 
     private final UkOpenBankingApiClient apiClient;
     private final ProviderConfiguration providerConfiguration;
-    private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
 
-    public UkOpenBankingAisAuthenticator(
-            UkOpenBankingApiClient apiClient, UkOpenBankingAisConfig ukOpenBankingAisConfig) {
+    public UkOpenBankingAisAuthenticator(UkOpenBankingApiClient apiClient) {
         this.apiClient = apiClient;
-        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.providerConfiguration = apiClient.getProviderConfiguration();
     }
 
     @Override
     public URL decorateAuthorizeUrl(
             URL authorizeUrl, String state, String nonce, String callbackUri) {
-        String intentId = apiClient.fetchIntentIdString(ukOpenBankingAisConfig);
+        String intentId = apiClient.fetchIntentIdString();
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 

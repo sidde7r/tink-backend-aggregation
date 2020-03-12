@@ -52,7 +52,7 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BarclaysAuthenticator authenticator = new BarclaysAuthenticator(apiClient, aisConfig);
+        BarclaysAuthenticator authenticator = new BarclaysAuthenticator(apiClient);
         return createOpenIdFlowWithAuthenticator(authenticator, null);
     }
 

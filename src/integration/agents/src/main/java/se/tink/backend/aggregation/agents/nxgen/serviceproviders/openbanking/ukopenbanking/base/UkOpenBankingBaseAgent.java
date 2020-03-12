@@ -147,15 +147,15 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 providerConfiguration,
                 wellKnownURL,
                 randomValueGenerator,
-                persistentStorage);
+                persistentStorage,
+                agentConfig);
     }
 
     @Override
     protected abstract Authenticator constructAuthenticator();
 
     protected Authenticator constructAuthenticator(UkOpenBankingAisConfig aisConfig) {
-        UkOpenBankingAisAuthenticator authenticator =
-                new UkOpenBankingAisAuthenticator(apiClient, aisConfig);
+        UkOpenBankingAisAuthenticator authenticator = new UkOpenBankingAisAuthenticator(apiClient);
         return createOpenIdFlowWithAuthenticator(authenticator, aisConfig.getAppToAppURL());
     }
 
