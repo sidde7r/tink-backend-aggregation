@@ -3,27 +3,76 @@
 # Explicitly not setting `-e` here to be able to contain errors from bazel-wrapper.
 set -x
 
-# Start aggregation service in the background
-bazel run --workspace_status_command $(pwd)/stamp.sh --disk_cache=/cache/v4-disk --repository_cache=/cache/v4-repo --deleted_packages=deb,docker --curses=yes --color=yes -- //src/aggregation/service:bin_decoupled &
+# Port exposed by application under test
+PORT=9095
 
-bazel_pid=$!
+# Port exposed by application under test
+CONTAINER_UNDER_TEST_NAME="appundertest"
+
+teardown() {
+    # Find a way to do this that doesn't couple this script with the name of the container
+    appundertest_container_id="$(docker ps | grep $CONTAINER_UNDER_TEST_NAME | awk -F' ' '{print $1}')"
+
+    # Tear down container under test
+    docker stop "$appundertest_container_id"
+}
+
+# Building tests early so the test code can be built in parallel with the tested code
+./bazel-wrapper build \
+    --workspace_status_command $(pwd)/stamp.sh \
+    --disk_cache=/cache/v4-disk \
+    --repository_cache=/cache/v4-repo \
+    --deleted_packages=deb,docker \
+    --curses=yes \
+    --color=yes \
+    --test_output=streamed \
+    --curses=no \
+    -- \
+    //src/aggregation/service/src/test/java/se/tink/backend/aggregation/service
+
+build_outcome="$?"
+
+if [ "$build_outcome" != 0 ]; then
+    teardown
+    exit 1
+fi
+
+echo "System tests starting..."
+
+echo "Waiting for app under test to become healthy..."
 
 exit_code=1
 
 while [ "$exit_code" != 0 ]; do
     # Ping continuously until service responds
-    response="$(curl --silent localhost:9095/aggregation/ping)"
+    response="$(curl --silent $CONTAINER_UNDER_TEST_NAME:$PORT/aggregation/ping)"
     exit_code="$?"
     sleep 1
 done
 
-# Stop aggregation service
-kill $bazel_pid
+echo "App under test is now healthy. Testing..."
 
-# Don't proceed execution until aggregation process has stopped
-wait
+./bazel-wrapper test \
+    --workspace_status_command $(pwd)/stamp.sh \
+    --disk_cache=/cache/v4-disk \
+    --repository_cache=/cache/v4-repo \
+    --deleted_packages=deb,docker \
+    --curses=yes \
+    --color=yes \
+    --test_output=streamed \
+    --curses=no \
+    -- \
+    //src/aggregation/service/src/test/java/se/tink/backend/aggregation/service
 
-# Assert /ping responded with "pong"
-if [ "$response" != "pong" ]; then
+test_outcome="$?"
+
+echo "Testing finished. Stopping app under test..."
+
+if [ "$test_outcome" != 0 ]; then
+    teardown
     exit 1
 fi
+
+teardown
+
+echo "System tests finished."
