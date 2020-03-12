@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.BaseSignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.TransferAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -31,7 +32,7 @@ public class TransferSignRequest implements BaseSignRequest {
             AmountableDestination destination,
             TransferMessageFormatter.Messages messages) {
         TransferSignRequest request = new TransferSignRequest();
-        request.transferDate = getCurrentDateAsString();
+        request.transferDate = getDueDate(transfer);
         request.amount = toAmount(transfer);
         request.message = messages.getDestinationMessage();
         request.annotation = messages.getSourceMessage();
@@ -57,12 +58,21 @@ public class TransferSignRequest implements BaseSignRequest {
         boolean isKnownDestination();
     }
 
+    private static String getDueDate(Transfer transfer) {
+        final Date dueDate;
+        if (Objects.isNull(transfer.getDueDate())) {
+            dueDate = new Date();
+        } else {
+            dueDate = transfer.getDueDate();
+        }
+        return formatDueDate(dueDate);
+    }
+
     /**
      * This method returns the current date in correct time zone, as a string formatted as
      * yyyy-MM-dd
      */
-    public static String getCurrentDateAsString() {
-        Date date = new Date();
+    private static String formatDueDate(Date date) {
         LocalDateTime localDate = date.toInstant().atZone(ZoneId.of("CET")).toLocalDateTime();
         return localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
