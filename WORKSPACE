@@ -1131,8 +1131,8 @@ maven_jar(
 
 maven_jar(
     name = "xml_apis_xml_apis",
-    artifact = "xml-apis:xml-apis:1.0.b2",
-    sha1 = "3136ca936f64c9d68529f048c2618bd356bf85c9",
+    artifact = "xml-apis:xml-apis:1.4.01",
+    sha1 = "3789d9fada2d3d458c4ba2de349d48780f381ee3",
 )
 
 maven_jar(
