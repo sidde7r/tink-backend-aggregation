@@ -24,7 +24,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class SkandiaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final SkandiaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -35,7 +34,6 @@ public final class SkandiaAgent extends NextGenerationAgent
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         apiClient = new SkandiaApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
@@ -44,9 +42,7 @@ public final class SkandiaAgent extends NextGenerationAgent
     }
 
     protected SkandiaConfiguration getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        SkandiaConstants.INTEGRATION_NAME, clientName, SkandiaConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(SkandiaConfiguration.class);
     }
 
     @Override
