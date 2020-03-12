@@ -40,7 +40,7 @@ java_library(
     name = "ch_qos_logback_contrib_logback_json_classic",
     visibility = ["//visibility:public"],
     exports = [
-        "@ch_qos_logback_contrib_logback_json_classic//jar",
+        "@aggregation//:ch_qos_logback_contrib_logback_json_classic",
     ],
     runtime_deps = [
         "@aggregation//:ch_qos_logback_contrib_logback_jackson",
