@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.rpc.FetchCardAccountsTransactions;
+import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -136,5 +137,16 @@ public class SebCorporateApiClient extends SebBaseApiClient {
 
         return buildCardTransactionsFetch(url, fromDate, toDate)
                 .get(FetchCardAccountsTransactions.class);
+    }
+
+    @Override
+    protected RequestBuilder createRequestInSession(URL url) {
+        return createRequest(url)
+                .header(SebCommonConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(
+                        SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
+                        SebCommonConstants.getPsuIpAddress())
+                .header(HeaderKeys.PSU_CORPORATE_ID, credentials.getField("CORPORATE_ID"))
+                .addBearerToken(getTokenFromStorage());
     }
 }
