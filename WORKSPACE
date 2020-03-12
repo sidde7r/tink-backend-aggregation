@@ -2617,6 +2617,7 @@ maven_install(
         "org.slf4j:slf4j-api:1.7.22",
         "org.w3c.css:sac:1.3",
         "org.yaml:snakeyaml:1.23",
+        "xerces:xercesImpl:2.11.0",
         "xml-apis:xml-apis:1.4.01",
     ],
     excluded_artifacts = [
