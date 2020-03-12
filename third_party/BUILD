@@ -331,7 +331,7 @@ java_library(
     name = "com_lambdaworks_scrypt",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_lambdaworks_scrypt//jar",
+        "@aggregation//:com_lambdaworks_scrypt",
     ],
 )
 
