@@ -103,9 +103,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         try {
             TransactionKeyPaginatorResponse<String> response =
                     transactionConverter.toPaginatorResponse(
-                            apiClient.fetchAccountTransactions(
-                                    ukOpenBankingAisConfig, key, responseType),
-                            account);
+                            apiClient.fetchAccountTransactions(key, responseType), account);
             setFetchingTransactionsUntil(account.getApiIdentifier());
             return response;
         } catch (HttpResponseException e) {
@@ -143,9 +141,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
                                                 .minusDays(DEFAULT_MAX_ALLOWED_DAYS));
                 TransactionKeyPaginatorResponse<String> response =
                         transactionConverter.toPaginatorResponse(
-                                apiClient.fetchAccountTransactions(
-                                        ukOpenBankingAisConfig, key, responseType),
-                                account);
+                                apiClient.fetchAccountTransactions(key, responseType), account);
                 setFetchingTransactionsUntil(account.getApiIdentifier());
                 return response;
             }

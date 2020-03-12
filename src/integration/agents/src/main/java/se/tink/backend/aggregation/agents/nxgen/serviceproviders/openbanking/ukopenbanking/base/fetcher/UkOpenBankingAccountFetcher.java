@@ -83,8 +83,7 @@ public class UkOpenBankingAccountFetcher<
     @Override
     public List<AccountType> fetchAccounts() {
 
-        AccountResponseType accounts =
-                apiClient.fetchAccounts(ukOpenBankingAisConfig, accountEntityType);
+        AccountResponseType accounts = apiClient.fetchAccounts(accountEntityType);
 
         URL identityDataEndpointURL = ukOpenBankingAisConfig.getIdentityDataURL();
 
@@ -106,7 +105,6 @@ public class UkOpenBankingAccountFetcher<
                                         accountConverter.toTinkAccount(
                                                 accounts,
                                                 apiClient.fetchAccountBalance(
-                                                        ukOpenBankingAisConfig,
                                                         account.getBankIdentifier(),
                                                         balanceEntityType),
                                                 partyName))
