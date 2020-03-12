@@ -16,6 +16,6 @@ public class IngRetryFilter extends AbstractRandomRetryFilter {
 
     @Override
     protected boolean shouldRetry(HttpResponse response) {
-        return ErrorMessages.ERROR_CODES.equals(response.getStatus());
+        return ErrorMessages.ERROR_CODES.contains(response.getStatus());
     }
 }
