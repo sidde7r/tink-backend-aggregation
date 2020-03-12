@@ -2630,6 +2630,36 @@ load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")
 
 aggregation_pin()
 
+SPRING_FRAMEWORK_VERSION = "5.1.5.RELEASE"
+
+SPRING_BOOT_VERSION = "2.1.3.RELEASE"
+
+maven_install(
+    name = "system_tests",
+    artifacts = [
+        "org.springframework.boot:spring-boot-test:%s" % SPRING_BOOT_VERSION,
+        "org.springframework:spring-aop:%s" % SPRING_FRAMEWORK_VERSION,
+        "org.springframework:spring-beans:%s" % SPRING_FRAMEWORK_VERSION,
+        "org.springframework:spring-context:%s" % SPRING_FRAMEWORK_VERSION,
+        "org.springframework:spring-expression:%s" % SPRING_FRAMEWORK_VERSION,
+        "org.springframework:spring-test:%s" % SPRING_FRAMEWORK_VERSION,
+        "org.springframework:spring-web:%s" % SPRING_FRAMEWORK_VERSION,
+        "org.springframework:spring-webmvc:%s" % SPRING_FRAMEWORK_VERSION,
+        "org.testcontainers:testcontainers:1.12.5",
+        "org.hamcrest:hamcrest-core:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party/system_tests:system_tests_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+
+load("@system_tests//:defs.bzl", system_tests_pin = "pinned_maven_install")
+
+system_tests_pin()
+
 # Use via //third_party/jetty_server9
 maven_install(
     name = "jetty_server9",
