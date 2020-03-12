@@ -1,0 +1,32 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "sbab",
+    srcs = glob(["**/*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//data:cryptography_test",
+        "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/sbab",
+        "//src/integration/amount",
+        "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/lib",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/models",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "//src/libraries/account_identifier",
+        "//src/libraries/account_identifier:account_identifier_test",
+        "//src/libraries/date",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_jsoup_jsoup",
+    ],
+)
