@@ -1698,7 +1698,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_codec_http",
+    name = "io_netty_netty_codec_http",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec-http:4.1.38.Final",
     sha1 = "4d55b3cdb74cd140d262de96987ebd369125a64c",
 )
