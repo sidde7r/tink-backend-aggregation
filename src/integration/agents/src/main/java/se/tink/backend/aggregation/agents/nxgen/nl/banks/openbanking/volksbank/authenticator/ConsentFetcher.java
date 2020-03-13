@@ -35,11 +35,11 @@ public final class ConsentFetcher {
 
         if (persistentStorage.containsKey(Storage.CONSENT)) {
             consentId = persistentStorage.get(Storage.CONSENT);
+            isConsentValid(consentId);
         } else {
             final ConsentResponse consent = client.consentRequest(redirectUrl, clientId);
             consentId = consent.getConsentId();
         }
-        isConsentValid(consentId);
         persistentStorage.put(Storage.CONSENT, consentId);
 
         return consentId;
