@@ -2600,6 +2600,7 @@ maven_install(
         "commons-logging:commons-logging:1.2",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:4.1.38.Final",
+        "io.netty:netty-codec-socks:4.1.38.Final",
         "io.netty:netty-codec:4.1.38.Final",
         "io.netty:netty-common:4.1.38.Final",
         "io.netty:netty-resolver:4.1.38.Final",
