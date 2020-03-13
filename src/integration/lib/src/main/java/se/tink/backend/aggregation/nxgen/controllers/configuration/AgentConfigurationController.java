@@ -193,6 +193,12 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         }
 
         final String REDIRECT_URL_KEY = "redirectUrl";
+
+        // To debug ing-ob issue, check if we get the redirectUrl
+        if ("farnham-staging".equals(clusterId)) {
+            log.info("RedirectUrl received is" + redirectUrl);
+        }
+
         if (Strings.isNullOrEmpty(redirectUrl)) {
             // No redirectUrl provided in the CredentialsRequest, pick the first one from
             // the registered list.
