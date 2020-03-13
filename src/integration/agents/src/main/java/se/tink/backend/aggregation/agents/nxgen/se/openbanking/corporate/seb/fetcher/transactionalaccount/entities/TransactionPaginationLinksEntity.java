@@ -10,7 +10,7 @@ public class TransactionPaginationLinksEntity {
     public LinksDetailsEntity next;
 
     public boolean hasMore() {
-        return next != null && next.href != null && !Strings.isNullOrEmpty(next.href);
+        return next != null && !Strings.isNullOrEmpty(next.href);
     }
 
     public String getNext() {

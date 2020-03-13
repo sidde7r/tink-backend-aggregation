@@ -48,8 +48,7 @@ public class BookedEntity {
             TransactionDetailsEntity detailsEntity =
                     apiClient.fetchTransactionDetails(links.getTransactions().getHref());
             return detailsEntity.getCardAcceptorId();
-        } else {
-            return descriptiveText;
         }
+        return descriptiveText;
     }
 }
