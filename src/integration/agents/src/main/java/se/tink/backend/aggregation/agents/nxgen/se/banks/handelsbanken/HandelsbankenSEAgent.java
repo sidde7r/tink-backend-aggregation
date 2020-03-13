@@ -52,6 +52,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
@@ -96,6 +97,7 @@ public class HandelsbankenSEAgent
     @Override
     protected HandelsbankenSEApiClient constructApiClient(
             HandelsbankenSEConfiguration handelsbankenConfiguration) {
+        client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenSEContentTypeFilter());
         client.addFilter(new HandelsbankenSEBankSideErrorFilter());
         return new HandelsbankenSEApiClient(client, handelsbankenConfiguration);
