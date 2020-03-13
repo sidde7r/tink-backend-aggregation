@@ -57,6 +57,44 @@
                 "sha256": "0f3fa923d5b084b28e6b0e40fc5e4441be188b9606d689efa8b6ee3236cfd15a"
             },
             {
+                "coord": "ch.qos.logback.contrib:logback-json-classic:0.1.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/ch/qos/logback/contrib/logback-json-classic/0.1.5/logback-json-classic-0.1.5.jar",
+                "directDependencies": [
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "ch.qos.logback.contrib:logback-json-core:0.1.5"
+                ],
+                "dependencies": [
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "ch.qos.logback.contrib:logback-json-core:0.1.5"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/ch/qos/logback/contrib/logback-json-classic/0.1.5/logback-json-classic-0.1.5.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/ch/qos/logback/contrib/logback-json-classic/0.1.5/logback-json-classic-0.1.5.jar"
+                ],
+                "sha256": "257194ac9c57f65e72e7b18e60d7b78d3ea1bc85e734332a4a8bbb46a5af305a"
+            },
+            {
+                "coord": "ch.qos.logback.contrib:logback-json-classic:jar:sources:0.1.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/ch/qos/logback/contrib/logback-json-classic/0.1.5/logback-json-classic-0.1.5-sources.jar",
+                "directDependencies": [
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11",
+                    "ch.qos.logback.contrib:logback-json-core:jar:sources:0.1.5"
+                ],
+                "dependencies": [
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "ch.qos.logback.contrib:logback-json-core:jar:sources:0.1.5"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/ch/qos/logback/contrib/logback-json-classic/0.1.5/logback-json-classic-0.1.5-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/ch/qos/logback/contrib/logback-json-classic/0.1.5/logback-json-classic-0.1.5-sources.jar"
+                ],
+                "sha256": "401696da09afae42f45344b018be7da3d686177cc060899798b10cb08366be8d"
+            },
+            {
                 "coord": "ch.qos.logback.contrib:logback-json-core:0.1.5",
                 "file": "v1/https/repo.maven.apache.org/maven2/ch/qos/logback/contrib/logback-json-core/0.1.5/logback-json-core-0.1.5.jar",
                 "directDependencies": [
@@ -1089,6 +1127,50 @@
                 "sha256": "2cd9022a77151d0b574887635cdfcdf3b78155b602abc89d7f8e62aba55cfb4f"
             },
             {
+                "coord": "com.googlecode.gettext-commons:gettext-commons:0.9.8",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/googlecode/gettext-commons/gettext-commons/0.9.8/gettext-commons-0.9.8.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/googlecode/gettext-commons/gettext-commons/0.9.8/gettext-commons-0.9.8.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/googlecode/gettext-commons/gettext-commons/0.9.8/gettext-commons-0.9.8.jar"
+                ],
+                "sha256": "e99db87257317dd14767661fb0d55d05c63b777c5f89243dc4fa04736cc48ef0"
+            },
+            {
+                "coord": "com.googlecode.gettext-commons:gettext-commons:jar:sources:0.9.8",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/googlecode/gettext-commons/gettext-commons/0.9.8/gettext-commons-0.9.8-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/googlecode/gettext-commons/gettext-commons/0.9.8/gettext-commons-0.9.8-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/googlecode/gettext-commons/gettext-commons/0.9.8/gettext-commons-0.9.8-sources.jar"
+                ],
+                "sha256": "e6314bc9cf86d5e84d1e35d3d36caec53bfdc5a08c01d059b6516f1c20e6456e"
+            },
+            {
+                "coord": "com.lambdaworks:scrypt:1.3.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/lambdaworks/scrypt/1.3.2/scrypt-1.3.2.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/lambdaworks/scrypt/1.3.2/scrypt-1.3.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/lambdaworks/scrypt/1.3.2/scrypt-1.3.2.jar"
+                ],
+                "sha256": "56c73991d535bce0521c8e5ba4204a21cdccf38081f17f19781f83165829b3ac"
+            },
+            {
+                "coord": "com.lambdaworks:scrypt:jar:sources:1.3.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/lambdaworks/scrypt/1.3.2/scrypt-1.3.2-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/lambdaworks/scrypt/1.3.2/scrypt-1.3.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/lambdaworks/scrypt/1.3.2/scrypt-1.3.2-sources.jar"
+                ],
+                "sha256": "c7f43998d858b7d5a51acd9464846168c58db3f3e0604b94cbe1360db77bcfb7"
+            },
+            {
                 "coord": "com.netflix.governator:governator-api:1.17.2",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/netflix/governator/governator-api/1.17.2/governator-api-1.17.2.jar",
                 "directDependencies": [
@@ -1251,6 +1333,48 @@
                     "https://repo.maven.apache.org/maven2/com/netflix/governator/governator/1.17.2/governator-1.17.2-sources.jar"
                 ],
                 "sha256": "9fd88c6d8283eca292a25b51d4087604aa17d77dc2ab3064cae3b5bab60b4e55"
+            },
+            {
+                "coord": "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1.jar",
+                "directDependencies": [
+                    "com.sun.jersey:jersey-client:1.18.1",
+                    "org.apache.httpcomponents:httpclient:4.3.4"
+                ],
+                "dependencies": [
+                    "commons-logging:commons-logging:1.2",
+                    "com.sun.jersey:jersey-core:1.18.1",
+                    "org.apache.httpcomponents:httpclient:4.3.4",
+                    "org.apache.httpcomponents:httpcore:4.3.2",
+                    "commons-codec:commons-codec:1.10",
+                    "com.sun.jersey:jersey-client:1.18.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1.jar"
+                ],
+                "sha256": "284aecde8999121c4f829474b57a05061b1e4ace7a0092df5848dadadad0461f"
+            },
+            {
+                "coord": "com.sun.jersey.contribs:jersey-apache-client4:jar:sources:1.18.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1-sources.jar",
+                "directDependencies": [
+                    "com.sun.jersey:jersey-client:jar:sources:1.18.1",
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4"
+                ],
+                "dependencies": [
+                    "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                    "commons-codec:commons-codec:jar:sources:1.10",
+                    "commons-logging:commons-logging:jar:sources:1.2",
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                    "com.sun.jersey:jersey-core:jar:sources:1.18.1",
+                    "com.sun.jersey:jersey-client:jar:sources:1.18.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1-sources.jar"
+                ],
+                "sha256": "3e25de82e552b16b437d2edeb92da719fd261e8f705b66bc89b065bbf6c48677"
             },
             {
                 "coord": "com.sun.jersey:jersey-client:1.18.1",
@@ -1857,9 +1981,61 @@
                     "https://repo.maven.apache.org/maven2/org/yaml/snakeyaml/1.23/snakeyaml-1.23-sources.jar"
                 ],
                 "sha256": "ec649cde6353321553eebc3ccf7c473663113d17d724df94541de88e06101d53"
+            },
+            {
+                "coord": "xerces:xercesImpl:2.11.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar",
+                "directDependencies": [
+                    "xml-apis:xml-apis:1.4.01"
+                ],
+                "dependencies": [
+                    "xml-apis:xml-apis:1.4.01"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar"
+                ],
+                "sha256": "175bbbd9def7a22a30e05f9c8db629c88fa5bdfc57d5658791901b54222abe1c"
+            },
+            {
+                "coord": "xerces:xercesImpl:jar:sources:2.11.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0-sources.jar",
+                "directDependencies": [
+                    "xml-apis:xml-apis:jar:sources:1.4.01"
+                ],
+                "dependencies": [
+                    "xml-apis:xml-apis:jar:sources:1.4.01"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0-sources.jar"
+                ],
+                "sha256": "8c5c7844749c0cfd6735ffd43630025b1c1ac93da2ac30632e7df2530b1f8f11"
+            },
+            {
+                "coord": "xml-apis:xml-apis:1.4.01",
+                "file": "v1/https/repo.maven.apache.org/maven2/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar"
+                ],
+                "sha256": "a840968176645684bb01aed376e067ab39614885f9eee44abe35a5f20ebe7fad"
+            },
+            {
+                "coord": "xml-apis:xml-apis:jar:sources:1.4.01",
+                "file": "v1/https/repo.maven.apache.org/maven2/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01-sources.jar"
+                ],
+                "sha256": "5db8b94589e334283e01075458cfae920995e37ab997cb3b475fd0667b3158b2"
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1490694253
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 988531004
     }
 }

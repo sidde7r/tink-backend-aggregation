@@ -598,7 +598,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "ch_qos_logback_contrib_logback_json_classic",
+    name = "ch_qos_logback_contrib_logback_json_classic",  # Do not use, but do not remove
     artifact = "ch.qos.logback.contrib:logback-json-classic:jar:0.1.5",
     sha1 = "f7fd4e747a9b0c50fc4f71b0055d5bea64dc05c3",
 )
@@ -1058,7 +1058,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_googlecode_gettext_commons_gettext_commons",
+    name = "com_googlecode_gettext_commons_gettext_commons",  # Do not use, but do not remove
     artifact = "com.googlecode.gettext-commons:gettext-commons:0.9.8",
     sha1 = "20e498b37fcced2f3fa273df2fae169e6b4e8061",
 )
@@ -1130,9 +1130,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "xml_apis_xml_apis",
-    artifact = "xml-apis:xml-apis:1.0.b2",
-    sha1 = "3136ca936f64c9d68529f048c2618bd356bf85c9",
+    name = "xml_apis_xml_apis",  # Do not use, but do not remove
+    artifact = "xml-apis:xml-apis:1.4.01",
+    sha1 = "3789d9fada2d3d458c4ba2de349d48780f381ee3",
 )
 
 maven_jar(
@@ -1648,9 +1648,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "xerces_xercesImpl",
-    artifact = "xerces:xercesImpl:2.10.0",
-    sha1 = "9161654d2afe7f9063455f02ccca8e4ec2787222",
+    name = "xerces_xercesImpl",  # Do not use, but do not remove
+    artifact = "xerces:xercesImpl:2.11.0",
+    sha1 = "9bb329db1cfc4e22462c9d6b43a8432f5850e92c",
 )
 
 maven_jar(
@@ -1734,7 +1734,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_contribs_jersey_apache_client4",
+    name = "com_sun_jersey_contribs_jersey_apache_client4",  # Do not use, but do not remove
     artifact = "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
     sha1 = "9dbac6cb2e05715b5b55f92187e7dc52f8c718e1",
 )
@@ -1794,7 +1794,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_lambdaworks_scrypt",
+    name = "com_lambdaworks_scrypt",  # Do not use, but do not remove
     artifact = "com.lambdaworks:scrypt:1.3.2",
     sha1 = "b144d80b2b915a900730dd156ae749a88c0e2555",
 )
@@ -2559,6 +2559,7 @@ maven_install(
     artifacts = [
         "aopalliance:aopalliance:1.0",
         "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
+        "ch.qos.logback.contrib:logback-json-classic:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
         "ch.qos.logback:logback-classic:1.1.11",
         "ch.qos.logback:logback-core:1.1.11",
@@ -2586,9 +2587,12 @@ maven_install(
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
         "com.google.instrumentation:instrumentation-api:0.4.3",
+        "com.googlecode.gettext-commons:gettext-commons:0.9.8",
+        "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
         "com.netflix.governator:governator:1.17.2",
+        "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
         "com.sun.jersey:jersey-client:1.18.1",
         "com.sun.jersey:jersey-core:1.18.1",
         "commons-codec:commons-codec:1.10",
@@ -2613,6 +2617,8 @@ maven_install(
         "org.slf4j:slf4j-api:1.7.22",
         "org.w3c.css:sac:1.3",
         "org.yaml:snakeyaml:1.23",
+        "xerces:xercesImpl:2.11.0",
+        "xml-apis:xml-apis:1.4.01",
     ],
     excluded_artifacts = [
         # Keep this list empty please
@@ -2736,8 +2742,10 @@ maven_install(
     name = "selenium",
     artifacts = [
         "com.codeborne:phantomjsdriver:1.4.4",
+        "com.google.code.findbugs:jsr305:3.0.0",
+        "com.google.guava:guava:23.1-jre",
         "commons-io:commons-io:2.5",
-        "org.seleniumhq.selenium:selenium-support:3.8.1",
+        "net.bytebuddy:byte-buddy:1.10.1",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-api:3.8.1",
         "org.seleniumhq.selenium:selenium-chrome-driver:3.8.1",
@@ -2747,9 +2755,8 @@ maven_install(
         "org.seleniumhq.selenium:selenium-iphone-driver:2.39.0",
         "org.seleniumhq.selenium:selenium-java:3.8.1",
         "org.seleniumhq.selenium:selenium-remote-driver:3.8.1",
-        "com.google.guava:guava:23.1-jre",
         "org.seleniumhq.selenium:selenium-safari-driver:3.8.1",
-        "net.bytebuddy:byte-buddy:1.10.1",
+        "org.seleniumhq.selenium:selenium-support:3.8.1",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:selenium_install.json",

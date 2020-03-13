@@ -40,7 +40,7 @@ java_library(
     name = "ch_qos_logback_contrib_logback_json_classic",
     visibility = ["//visibility:public"],
     exports = [
-        "@ch_qos_logback_contrib_logback_json_classic//jar",
+        "@aggregation//:ch_qos_logback_contrib_logback_json_classic",
     ],
     runtime_deps = [
         "@aggregation//:ch_qos_logback_contrib_logback_jackson",
@@ -323,7 +323,7 @@ java_library(
     name = "com_googlecode_gettext_commons_gettext_commons",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_googlecode_gettext_commons_gettext_commons//jar",
+        "@aggregation//:com_googlecode_gettext_commons_gettext_commons",
     ],
 )
 
@@ -331,7 +331,7 @@ java_library(
     name = "com_lambdaworks_scrypt",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_lambdaworks_scrypt//jar",
+        "@aggregation//:com_lambdaworks_scrypt",
     ],
 )
 
@@ -339,7 +339,7 @@ java_library(
     name = "com_sun_jersey_contribs_jersey_apache_client4",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_sun_jersey_contribs_jersey_apache_client4//jar",
+        "@aggregation//:com_sun_jersey_contribs_jersey_apache_client4",
     ],
     runtime_deps = [
         "@aggregation//:com_sun_jersey_jersey_client",
@@ -439,13 +439,13 @@ java_library(
         "@io_dropwizard_dropwizard_client//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_sun_jersey_contribs_jersey_apache_client4",
         "@aggregation//:com_sun_jersey_jersey_client",
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_httpclient//jar",
-        "@com_sun_jersey_contribs_jersey_apache_client4//jar",
         "@io_dropwizard_dropwizard_core//jar",
     ],
 )
@@ -822,10 +822,10 @@ java_library(
     name = "xerces_xercesImpl",
     visibility = ["//visibility:public"],
     exports = [
-        "@xerces_xercesImpl//jar",
+        "@aggregation//:xerces_xercesImpl",
     ],
     runtime_deps = [
-        "@xml_apis_xml_apis//jar",
+        "@aggregation//:xml_apis_xml_apis",
     ],
 )
 
@@ -845,6 +845,8 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_w3c_css_sac",
+        "@aggregation//:xerces_xercesImpl",
+        "@aggregation//:xml_apis_xml_apis",
         "@commons_io_commons_io//jar",
         "@net_sourceforge_htmlunit_htmlunit//jar",
         "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
@@ -853,8 +855,6 @@ java_library(
         "@org_eclipse_jetty_jetty_websocket//jar",
         "@xalan_serializer//jar",
         "@xalan_xalan//jar",
-        "@xerces_xercesImpl//jar",
-        "@xml_apis_xml_apis//jar",
     ],
 )
 
@@ -1181,6 +1181,7 @@ java_library(
     exports = [
         "@aggregation//:commons_collections_commons_collections",
         "@aggregation//:org_slf4j_slf4j_api",
+        "@aggregation//:xml_apis_xml_apis",
         "@antlr_antlr//jar",
         "@dom4j_dom4j//jar",
         "@javax_transaction_jta//jar",
@@ -1188,7 +1189,6 @@ java_library(
         "@org_hibernate_hibernate_commons_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
         "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
-        "@xml_apis_xml_apis//jar",
     ],
 )
 
