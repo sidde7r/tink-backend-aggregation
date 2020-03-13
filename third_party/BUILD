@@ -709,10 +709,10 @@ java_library(
         "@aggregation//:io_netty_netty_codec_socks",
         "@aggregation//:io_netty_netty_common",
         "@aggregation//:io_netty_netty_handler",
+        "@aggregation//:io_netty_netty_handler_proxy",
         "@aggregation//:io_netty_netty_resolver",
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
-        "@io_netty_netty_handler_proxy//jar",
         "@io_netty_netty_tcnative_boringssl_static//jar",
     ],
 )
@@ -1507,6 +1507,7 @@ java_library(
         "@aggregation//:io_netty_netty_codec_socks",
         "@aggregation//:io_netty_netty_common",
         "@aggregation//:io_netty_netty_handler",
+        "@aggregation//:io_netty_netty_handler_proxy",
         "@aggregation//:io_netty_netty_resolver",
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
@@ -1522,7 +1523,6 @@ java_library(
         "@io_grpc_grpc_protobuf_nano//jar",
         "@io_grpc_grpc_stub//jar",
         "@io_grpc_grpc_testing//jar",
-        "@io_netty_netty_handler_proxy//jar",
         "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
     ],
@@ -1630,8 +1630,8 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:io_netty_netty_codec_http2",
+        "@aggregation//:io_netty_netty_handler_proxy",
         "@io_grpc_grpc_core//jar",
-        "@io_netty_netty_handler_proxy//jar",
     ],
 )
 
