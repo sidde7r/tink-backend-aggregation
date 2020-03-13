@@ -2599,6 +2599,7 @@ maven_install(
         "commons-collections:commons-collections:3.2.2",
         "commons-logging:commons-logging:1.2",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
+        "io.netty:netty-buffer:4.1.38.Final",
         "io.netty:netty-common:4.1.38.Final",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
