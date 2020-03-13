@@ -1472,7 +1472,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_transport",
+    name = "io_netty_netty_transport",  # Do not use, but do not remove
     artifact = "io.netty:netty-transport:4.1.38.Final",
     sha1 = "cd8b612d5daa42d1be3bb3203e4857597d5db79b",
 )
