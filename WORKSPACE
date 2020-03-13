@@ -1188,7 +1188,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_handler",
+    name = "io_netty_netty_handler",  # Do not use, but do not remove
     artifact = "io.netty:netty-handler:4.1.38.Final",
     sha1 = "ebf1f2bd0dad5e16aa1fc48d32e5dbe507b38d53",
 )
