@@ -2011,7 +2011,7 @@
             "financialInstitutionId": "edcfe750f47948bf8334287c5054b88e",
             "financialInstitutionName": "ICA Banken",
             "multiFactor": false,
-            "name": "se-icabanken-oauth2",
+            "name": "se-icabanken-ob",
             "passwordHelpText": "In order to use this bank, please provide your social security number.",
             "payload": "tink",
             "popular": true,
