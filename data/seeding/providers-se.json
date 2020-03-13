@@ -1999,7 +1999,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.se.openbanking.icabanken.IcaBankenAgent",
-            "credentialsType": "THIRD_PARTY_APP",
+            "credentialsType": "MOBILE_BANKID",
             "displayName": "ICA Banken",
             "fields": [
                 {
@@ -2010,6 +2010,7 @@
             ],
             "financialInstitutionId": "edcfe750f47948bf8334287c5054b88e",
             "financialInstitutionName": "ICA Banken",
+            "groupDisplayName": "ICAbanken",
             "multiFactor": false,
             "name": "se-icabanken-ob",
             "passwordHelpText": "In order to use this bank, please provide your social security number.",
