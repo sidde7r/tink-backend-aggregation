@@ -3518,6 +3518,8 @@
         },
         {
             "accessType": "OPEN_BANKING",
+            "backgroundRefreshEnabled": true,
+            "backgroundRefreshMaxFrequency": 4,
             "className": "nxgen.se.openbanking.entercard.coop.CoopMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -3549,12 +3551,12 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "CREDIT_CARD",
-            "backgroundRefreshMaxFrequency": 4,
-            "backgroundRefreshEnabled": true
+            "type": "CREDIT_CARD"
         },
         {
             "accessType": "OPEN_BANKING",
+            "backgroundRefreshEnabled": true,
+            "backgroundRefreshMaxFrequency": 4,
             "className": "nxgen.se.openbanking.entercard.moregolf.MoreGolfMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -3586,12 +3588,12 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "CREDIT_CARD",
-            "backgroundRefreshMaxFrequency": 4,
-            "backgroundRefreshEnabled": true
+            "type": "CREDIT_CARD"
         },
         {
             "accessType": "OPEN_BANKING",
+            "backgroundRefreshEnabled": true,
+            "backgroundRefreshMaxFrequency": 4,
             "className": "nxgen.se.openbanking.entercard.remember.RememberMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -3623,9 +3625,7 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "CREDIT_CARD",
-            "backgroundRefreshMaxFrequency": 4,
-            "backgroundRefreshEnabled": true
+            "type": "CREDIT_CARD"
         }
     ]
 }
