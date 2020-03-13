@@ -2604,6 +2604,7 @@ maven_install(
         "io.netty:netty-codec-socks:4.1.38.Final",
         "io.netty:netty-codec:4.1.38.Final",
         "io.netty:netty-common:4.1.38.Final",
+        "io.netty:netty-resolver-dns:4.1.38.Final",
         "io.netty:netty-resolver:4.1.38.Final",
         "io.netty:netty-transport:4.1.38.Final",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
