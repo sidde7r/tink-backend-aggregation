@@ -678,8 +678,8 @@ java_library(
     exports = [
         "@aggregation//:io_netty_netty_buffer",
         "@aggregation//:io_netty_netty_common",
+        "@aggregation//:io_netty_netty_resolver",
         "@io_netty_netty_codec//jar",
-        "@io_netty_netty_resolver//jar",
         "@io_netty_netty_transport//jar",
     ],
 )
@@ -690,9 +690,9 @@ java_library(
     exports = [
         "@aggregation//:io_netty_netty_buffer",
         "@aggregation//:io_netty_netty_common",
+        "@aggregation//:io_netty_netty_resolver",
         "@io_netty_netty_codec//jar",
         "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_resolver//jar",
         "@io_netty_netty_transport//jar",
     ],
 )
@@ -703,6 +703,7 @@ java_library(
     exports = [
         "@aggregation//:io_netty_netty_buffer",
         "@aggregation//:io_netty_netty_common",
+        "@aggregation//:io_netty_netty_resolver",
         "@io_netty_netty_codec//jar",
         "@io_netty_netty_codec_dns//jar",
         "@io_netty_netty_codec_http//jar",
@@ -710,7 +711,6 @@ java_library(
         "@io_netty_netty_codec_socks//jar",
         "@io_netty_netty_handler//jar",
         "@io_netty_netty_handler_proxy//jar",
-        "@io_netty_netty_resolver//jar",
         "@io_netty_netty_resolver_dns//jar",
         "@io_netty_netty_tcnative_boringssl_static//jar",
         "@io_netty_netty_transport//jar",
@@ -1501,6 +1501,7 @@ java_library(
         "@aggregation//:io_grpc_grpc_context",
         "@aggregation//:io_netty_netty_buffer",
         "@aggregation//:io_netty_netty_common",
+        "@aggregation//:io_netty_netty_resolver",
         "@com_google_api_grpc_proto_google_common_protos//jar",
         "@com_google_protobuf_protobuf_java//jar",
         "@com_google_protobuf_protobuf_java_util//jar",
@@ -1520,7 +1521,6 @@ java_library(
         "@io_netty_netty_codec_socks//jar",
         "@io_netty_netty_handler//jar",
         "@io_netty_netty_handler_proxy//jar",
-        "@io_netty_netty_resolver//jar",
         "@io_netty_netty_resolver_dns//jar",
         "@io_netty_netty_transport//jar",
         "@io_opencensus_opencensus_api//jar",
@@ -1745,7 +1745,7 @@ java_library(
     name = "io_netty_netty_resolver",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_resolver//jar",
+        "@aggregation//:io_netty_netty_resolver",
     ],
     runtime_deps = [
         "@aggregation//:io_netty_netty_common",
