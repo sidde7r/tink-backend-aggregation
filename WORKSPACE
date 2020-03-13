@@ -2601,6 +2601,7 @@ maven_install(
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:4.1.38.Final",
         "io.netty:netty-common:4.1.38.Final",
+        "io.netty:netty-resolver:4.1.38.Final",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
