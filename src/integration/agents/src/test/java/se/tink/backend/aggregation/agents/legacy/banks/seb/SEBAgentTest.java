@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.seb;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.AgentTestContext;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -18,6 +20,8 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SEBAgentTest extends AbstractAgentTest<SEBApiAgent> {
 
+    private final ArgumentManager<UsernameArgumentEnum> manager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
     private Credentials credentials;
 
     public SEBAgentTest() {
@@ -26,6 +30,11 @@ public class SEBAgentTest extends AbstractAgentTest<SEBApiAgent> {
         credentials = createCredentials("ssn", null, CredentialsTypes.MOBILE_BANKID);
 
         testContext = new AgentTestContext(credentials);
+    }
+
+    @Before
+    public void setup() {
+        manager.before();
     }
 
     @AfterClass
