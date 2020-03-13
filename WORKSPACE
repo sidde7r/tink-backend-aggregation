@@ -2601,6 +2601,7 @@ maven_install(
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:4.1.38.Final",
         "io.netty:netty-codec-dns:4.1.38.Final",
+        "io.netty:netty-codec-http:4.1.38.Final",
         "io.netty:netty-codec-socks:4.1.38.Final",
         "io.netty:netty-codec:4.1.38.Final",
         "io.netty:netty-common:4.1.38.Final",
