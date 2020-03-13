@@ -2742,6 +2742,7 @@ maven_install(
     name = "selenium",
     artifacts = [
         "com.codeborne:phantomjsdriver:1.4.4",
+        "com.google.code.findbugs:jsr305:3.0.0",
         "com.google.guava:guava:23.1-jre",
         "commons-io:commons-io:2.5",
         "net.bytebuddy:byte-buddy:1.10.1",
