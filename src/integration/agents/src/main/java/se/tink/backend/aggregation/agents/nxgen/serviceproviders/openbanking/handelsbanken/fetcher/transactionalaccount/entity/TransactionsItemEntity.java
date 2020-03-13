@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.time.DateTimeException;
 import java.util.Date;
 import java.util.Optional;
+import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
@@ -94,7 +95,10 @@ public class TransactionsItemEntity {
 
     private Optional<Date> getDateFromTransactionDate() {
         try {
-            return Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(transactionDate));
+            if (!Strings.isNullOrEmpty(transactionDate)) {
+                return Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(transactionDate));
+            }
+            return Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(valueDate));
         } catch (ParseException e) {
             return Optional.empty();
         }
