@@ -169,6 +169,8 @@ public class HandelsbankenSEConstants {
 
     public static final class Loans {
 
+        public static final String BOUNDED = "bundet";
+        public static final Integer BOUNDED_PERIOD = null;
         public static final String FLOATING = "rörligt";
         public static final int FLOATING_REEVALUATION_PERIOD = 3; // In months
         public static final Pattern PERIOD_PATTERN =
