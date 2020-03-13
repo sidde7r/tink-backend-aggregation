@@ -404,7 +404,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_resolver_dns",
+    name = "io_netty_netty_resolver_dns",  # Do not use, but do not remove
     artifact = "io.netty:netty-resolver-dns:4.1.38.Final",
     sha1 = "a628b322a1a7fadc427edc15eb3c141d50706437",
 )
