@@ -6,7 +6,6 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/base",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/v31",
         "//src/integration/amount",
-        "//src/integration/credentials:service",
         "//src/integration/lib",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
