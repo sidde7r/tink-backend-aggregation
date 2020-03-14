@@ -162,7 +162,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "499bc63e420a0d00dec9db4dfdeee63ae412dbb7",
+    commit = "299604dd9341f62898be2e1f843bed134271c865",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1582675200 +0000",
 )
@@ -315,8 +315,8 @@ maven_jar(
 
 maven_jar(
     name = "com_google_errorprone_error_prone_annotations",  # Do not use, but do not remove
-    artifact = "com.google.errorprone:error_prone_annotations:2.0.18",
-    sha1 = "5f65affce1684999e2f4024983835efc3504012e",
+    artifact = "com.google.errorprone:error_prone_annotations:2.1.3",
+    sha1 = "39b109f2cd352b2d71b52a3b5a1a9850e1dc304b",
 )
 
 ## Maven jar imports
@@ -382,9 +382,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_annotation_javax_annotation_api",
-    artifact = "javax.annotation:javax.annotation-api:1.2",
-    sha1 = "479c1e06db31c432330183f5cae684163f186146",
+    name = "javax_annotation_javax_annotation_api",  # Do not use, but do not remove
+    artifact = "javax.annotation:javax.annotation-api:1.3.2",
+    sha1 = "934c04d3cfef185a8008e7bf34331b79730a9d43",
 )
 
 maven_jar(
@@ -1459,8 +1459,8 @@ maven_jar(
 
 maven_jar(
     name = "com_google_code_findbugs_jsr305",  # Do not use, but do not remove
-    artifact = "com.google.code.findbugs:jsr305:3.0.0",
-    sha1 = "5871fb60dc68d67da54a663c3fd636a10a532948",
+    artifact = "com.google.code.findbugs:jsr305:3.0.2",
+    sha1 = "25ea2e8b0c338a877313bd4672d3fe056ea78f0d",
 )
 
 maven_jar(
@@ -1759,8 +1759,8 @@ maven_jar(
 
 maven_jar(
     name = "com_google_guava_guava",  # Do not use, but do not remove
-    artifact = "com.google.guava:guava:23.1-jre",
-    sha1 = "23ed5a005f9289062224ddbe0d398e732c5efc36",
+    artifact = "com.google.guava:guava:25.1-jre",
+    sha1 = "6c57e4b22b44e89e548b5c9f70f0c45fe10fb0b4",
 )
 
 maven_jar(
@@ -2581,13 +2581,14 @@ maven_install(
         "com.fasterxml:classmate:1.0.0",
         "com.github.rholder:guava-retrying:2.0.0",
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
-        "com.google.code.findbugs:jsr305:3.0.0",
+        "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.code.gson:gson:2.8.2",
-        "com.google.guava:guava:23.1-jre",
-        "com.google.inject.extensions:guice-assistedinject:4.1.0",
-        "com.google.inject.extensions:guice-grapher:4.1.0",
-        "com.google.inject.extensions:guice-multibindings:4.1.0",
-        "com.google.inject:guice:4.1.0",
+        "com.google.errorprone:error_prone_annotations:2.1.3",
+        "com.google.guava:guava:25.1-jre",
+        "com.google.inject.extensions:guice-assistedinject:4.2.2",
+        "com.google.inject.extensions:guice-grapher:4.2.2",
+        "com.google.inject.extensions:guice-multibindings:4.2.2",
+        "com.google.inject:guice:4.2.2",
         "com.google.instrumentation:instrumentation-api:0.4.3",
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.lambdaworks:scrypt:1.3.2",
@@ -2765,8 +2766,9 @@ maven_install(
     name = "selenium",
     artifacts = [
         "com.codeborne:phantomjsdriver:1.4.4",
-        "com.google.code.findbugs:jsr305:3.0.0",
-        "com.google.guava:guava:23.1-jre",
+        "com.google.code.findbugs:jsr305:3.0.2",
+        "com.google.errorprone:error_prone_annotations:2.1.3",
+        "com.google.guava:guava:25.1-jre",
         "commons-io:commons-io:2.5",
         "net.bytebuddy:byte-buddy:1.10.1",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
