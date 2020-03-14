@@ -945,9 +945,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@jline_jline//jar",
-        "@log4j_log4j//jar",
         "@org_apache_zookeeper_zookeeper//jar",
     ],
 )
@@ -961,9 +961,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@jline_jline//jar",
-        "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_zookeeper_zookeeper//jar",
     ],
@@ -978,9 +978,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@jline_jline//jar",
-        "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_zookeeper_zookeeper//jar",
@@ -996,9 +996,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@jline_jline//jar",
-        "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_curator_curator_recipes//jar",
@@ -1695,9 +1695,9 @@ java_library(
     runtime_deps = [
         "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:io_netty_netty_dev_tools",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_oracle_substratevm_svm//jar",
-        "@log4j_log4j//jar",
         "@org_apache_logging_log4j_log4j_api//jar",
         "@org_apache_logging_log4j_log4j_core//jar",
         "@org_mockito_mockito_core//jar",

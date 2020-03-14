@@ -628,7 +628,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "log4j_log4j",
+    name = "log4j_log4j",  # Do not use, but do not remove
     artifact = "log4j:log4j:1.2.14",
     sha1 = "03b254c872b95141751f414e353a25c2ac261b51",
 )
