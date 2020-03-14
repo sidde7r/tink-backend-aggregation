@@ -21,7 +21,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
-        "//src/integration/signableoperation:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
