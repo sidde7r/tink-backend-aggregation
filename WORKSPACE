@@ -1136,7 +1136,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "asm_asm",
+    name = "asm_asm",  # Do not use, but do not remove
     artifact = "asm:asm:3.1",
     sha1 = "c157def142714c544bdea2e6144645702adf7097",
 )

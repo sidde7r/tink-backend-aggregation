@@ -4,7 +4,7 @@ java_library(
     name = "asm_asm",
     visibility = ["//visibility:public"],
     exports = [
-        "@asm_asm//jar",
+        "@aggregation//:asm_asm",
     ],
 )
 
@@ -172,6 +172,7 @@ java_library(
         "@com_github_tomakehurst_wiremock//jar",
     ],
     runtime_deps = [
+        "@aggregation//:asm_asm",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
@@ -186,7 +187,6 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@asm_asm//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
         "@com_jayway_jsonpath_json_path//jar",
         "@javax_servlet_javax_servlet_api//jar",
@@ -1196,8 +1196,8 @@ java_library(
     name = "org_hibernate_hibernate_entitymanager",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:asm_asm",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@asm_asm//jar",
         "@cglib_cglib//jar",
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
