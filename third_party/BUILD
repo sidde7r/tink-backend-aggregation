@@ -1115,8 +1115,8 @@ java_library(
     name = "org_bouncycastle_bcpkix_jdk15on",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
     ],
 )
 
@@ -1440,13 +1440,13 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
         "@com_google_crypto_tink//jar",
         "@junit_junit//jar",
         "@net_jadler_jadler_all//jar",
         "@net_minidev_json_smart//jar",
         "@org_bitbucket_b_c_jose4j//jar",
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
     ],
 )
 
@@ -1561,8 +1561,8 @@ java_library(
     name = "bouncycastle",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
     ],
 )
 
@@ -1715,7 +1715,7 @@ java_library(
         "@aggregation//:io_netty_netty_codec",
         "@aggregation//:io_netty_netty_tcnative_boringssl_static",
         "@aggregation//:io_netty_netty_transport",
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@org_mockito_mockito_core//jar",
     ],
 )

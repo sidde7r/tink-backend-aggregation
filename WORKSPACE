@@ -702,7 +702,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_bouncycastle_bcpkix_jdk15on",
+    name = "org_bouncycastle_bcpkix_jdk15on",  # Do not use, but do not remove
     artifact = "org.bouncycastle:bcpkix-jdk15on:1.59",
     sha1 = "9cef0aab8a4bb849a8476c058ce3ff302aba3fff",
 )
