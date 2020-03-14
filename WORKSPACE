@@ -2627,6 +2627,7 @@ maven_install(
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
+        "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
