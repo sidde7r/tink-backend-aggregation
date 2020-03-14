@@ -1078,12 +1078,12 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:org_apache_commons_commons_lang3",
+        "@aggregation//:org_apache_mahout_commons_commons_cli",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_thoughtworks_xstream_xstream//jar",
         "@org_apache_commons_commons_math3//jar",
         "@org_apache_lucene_lucene_analyzers_common//jar",
         "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_mahout_commons_commons_cli//jar",
         "@org_apache_mahout_mahout_core//jar",
         "@org_apache_mahout_mahout_math//jar",
         "@org_codehaus_jackson_jackson_core_asl//jar",

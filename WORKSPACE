@@ -786,7 +786,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_mahout_commons_commons_cli",
+    name = "org_apache_mahout_commons_commons_cli",  # Do not use, but do not remove
     artifact = "org.apache.mahout.commons:commons-cli:2.0-mahout",
     sha1 = "f1df8dc67ae086159ac66bd92c0bb54254776a93",
 )
