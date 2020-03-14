@@ -1694,9 +1694,9 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:commons_logging_commons_logging",
+        "@aggregation//:io_netty_netty_dev_tools",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_oracle_substratevm_svm//jar",
-        "@io_netty_netty_dev_tools//jar",
         "@log4j_log4j//jar",
         "@org_apache_logging_log4j_log4j_api//jar",
         "@org_apache_logging_log4j_log4j_core//jar",
