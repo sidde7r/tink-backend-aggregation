@@ -1094,7 +1094,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_io_commons_io",
+    name = "commons_io_commons_io",  # Do not use, but do not remove
     artifact = "commons-io:commons-io:2.5",
     sha1 = "2852e6e05fbb95076fc091f6d1780f1f8fe35e0f",
 )

@@ -408,7 +408,7 @@ java_library(
     name = "commons_io_commons_io",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_io_commons_io//jar",
+        "@aggregation//:commons_io_commons_io",
     ],
 )
 
@@ -836,6 +836,7 @@ java_library(
     exports = [
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:commons_collections_commons_collections",
+        "@aggregation//:commons_io_commons_io",
         "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:net_sourceforge_cssparser_cssparser",
         "@aggregation//:org_apache_commons_commons_lang3",
@@ -847,7 +848,6 @@ java_library(
         "@aggregation//:org_w3c_css_sac",
         "@aggregation//:xerces_xercesImpl",
         "@aggregation//:xml_apis_xml_apis",
-        "@commons_io_commons_io//jar",
         "@net_sourceforge_htmlunit_htmlunit//jar",
         "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
         "@net_sourceforge_nekohtml_nekohtml//jar",
@@ -1800,9 +1800,9 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:commons_io_commons_io",
         "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
-        "@commons_io_commons_io//jar",
         "@io_perfmark_perfmark_api//jar",
         "@lombok//:org_projectlombok_lombok",
         "@standalone_agent_deps//:ch_qos_logback_logback_classic",
