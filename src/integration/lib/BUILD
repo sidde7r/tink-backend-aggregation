@@ -18,6 +18,7 @@ java_library(
         "//tools:libkbc_wbaes_mac",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = ["//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/scaffold"],
     deps = [
         "annotations",
         "//src/integration/account:enums",
@@ -71,7 +72,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/serializecontainer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/truststrategy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/scaffold",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/integration/payment:enums",
