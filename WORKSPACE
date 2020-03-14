@@ -1598,7 +1598,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_bouncycastle_bcprov_jdk15on",
+    name = "org_bouncycastle_bcprov_jdk15on",  # Do not use, but do not remove
     artifact = "org.bouncycastle:bcprov-jdk15on:1.59",
     sha1 = "2507204241ab450456bdb8e8c0a8f986e418bd99",
 )
