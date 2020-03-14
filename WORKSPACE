@@ -2610,6 +2610,7 @@ maven_install(
         "io.netty:netty-handler:4.1.38.Final",
         "io.netty:netty-resolver-dns:4.1.38.Final",
         "io.netty:netty-resolver:4.1.38.Final",
+        "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
         "io.netty:netty-transport:4.1.38.Final",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
