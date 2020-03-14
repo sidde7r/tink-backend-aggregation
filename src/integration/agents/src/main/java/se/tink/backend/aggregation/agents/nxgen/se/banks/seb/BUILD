@@ -20,7 +20,6 @@ java_library(
         "//src/integration/signableoperation:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/i18n",
-        "//src/libraries/serialization",
         "//src/libraries/social_security_number",
         "//src/libraries/strings",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
