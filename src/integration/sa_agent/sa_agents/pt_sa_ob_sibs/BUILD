@@ -15,7 +15,6 @@ java_binary(
     deps = [
         "//src/integration/sa_agent/sa_agent_framework:sa-agent-framework",
         "//src/integration/sa_agent/sa_common:sa-common",
-        "//src/integration/sa_agent/sa_grpc_api:java_grpc",
         "//src/integration/sa_agent/sa_grpc_api:java_proto",
         "//src/integration/sa_agent/sa_grpc_api:sa-agent-grpc-api-proto",
         "//third_party:standalone_agent_libs",
@@ -34,7 +33,6 @@ junit_test(
         ":standalone-agent-ob-sibs-bin",
         "//src/integration/sa_agent/sa_agent_framework:sa-agent-framework",
         "//src/integration/sa_agent/sa_common:sa-common",
-        "//src/integration/sa_agent/sa_grpc_api:java_grpc",
         "//src/integration/sa_agent/sa_grpc_api:java_proto",
         "//src/integration/sa_agent/sa_grpc_api:sa-agent-grpc-api-proto",
         "//third_party:standalone_agent_test_libs",
