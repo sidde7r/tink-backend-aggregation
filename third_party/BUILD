@@ -712,8 +712,8 @@ java_library(
         "@aggregation//:io_netty_netty_handler_proxy",
         "@aggregation//:io_netty_netty_resolver",
         "@aggregation//:io_netty_netty_resolver_dns",
+        "@aggregation//:io_netty_netty_tcnative_boringssl_static",
         "@aggregation//:io_netty_netty_transport",
-        "@io_netty_netty_tcnative_boringssl_static//jar",
     ],
 )
 
@@ -1532,7 +1532,7 @@ java_library(
     name = "netty-runtime",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_tcnative_boringssl_static//jar",
+        "@aggregation//:io_netty_netty_tcnative_boringssl_static",
     ],
 )
 
@@ -1713,8 +1713,8 @@ java_library(
     runtime_deps = [
         "@aggregation//:io_netty_netty_buffer",
         "@aggregation//:io_netty_netty_codec",
+        "@aggregation//:io_netty_netty_tcnative_boringssl_static",
         "@aggregation//:io_netty_netty_transport",
-        "@io_netty_netty_tcnative_boringssl_static//jar",
         "@org_bouncycastle_bcpkix_jdk15on//jar",
         "@org_mockito_mockito_core//jar",
     ],
@@ -1724,7 +1724,7 @@ java_library(
     name = "io_netty_netty_tcnative_boringssl_static",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_tcnative_boringssl_static//jar",
+        "@aggregation//:io_netty_netty_tcnative_boringssl_static",
     ],
 )
 

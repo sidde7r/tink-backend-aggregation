@@ -1618,7 +1618,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_tcnative_boringssl_static",
+    name = "io_netty_netty_tcnative_boringssl_static",  # Do not use, but do not remove
     artifact = "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
     sha1 = "185980556f9f083b5339825f19c9641c6c879417",
 )
