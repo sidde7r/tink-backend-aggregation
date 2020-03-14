@@ -2617,6 +2617,7 @@ maven_install(
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
+        "log4j:log4j:1.2.14",
         "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-collections4:4.0",
         "org.apache.commons:commons-lang3:3.4",
