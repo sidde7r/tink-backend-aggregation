@@ -2606,6 +2606,7 @@ maven_install(
         "io.netty:netty-codec-socks:4.1.38.Final",
         "io.netty:netty-codec:4.1.38.Final",
         "io.netty:netty-common:4.1.38.Final",
+        "io.netty:netty-dev-tools:4.1.38.Final",
         "io.netty:netty-handler-proxy:4.1.38.Final",
         "io.netty:netty-handler:4.1.38.Final",
         "io.netty:netty-resolver-dns:4.1.38.Final",
