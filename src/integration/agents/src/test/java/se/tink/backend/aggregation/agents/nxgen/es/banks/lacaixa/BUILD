@@ -48,13 +48,12 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
     ],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
         "//src/integration/api",
-        "//src/integration/credentials:service",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock",
