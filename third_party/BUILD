@@ -1439,7 +1439,7 @@ java_library(
         "@com_nimbusds_nimbus_jose_jwt//jar",
     ],
     runtime_deps = [
-        "@com_github_stephenc_jcip_annotations//jar",
+        "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
         "@com_google_crypto_tink//jar",
         "@junit_junit//jar",
         "@net_jadler_jadler_all//jar",

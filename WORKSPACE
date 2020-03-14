@@ -2446,7 +2446,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_github_stephenc_jcip_annotations",
+    name = "com_github_stephenc_jcip_annotations",  # Do not use, but do not remove
     artifact = "com.github.stephenc.jcip:jcip-annotations:1.0-1",
     sha1 = "ef31541dd28ae2cefdd17c7ebf352d93e9058c63",
 )
