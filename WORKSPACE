@@ -2016,7 +2016,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_bytebuddy_byte_buddy_agent",
+    name = "net_bytebuddy_byte_buddy_agent",  # Do not use, but do not remove
     artifact = "net.bytebuddy:byte-buddy-agent:1.10.1",
     sha1 = "9b7d95d699d08e92eb51a29b4949ae975325b40b",
 )

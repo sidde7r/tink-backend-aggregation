@@ -1736,7 +1736,7 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:net_bytebuddy_byte_buddy",
-        "@net_bytebuddy_byte_buddy_agent//jar",
+        "@aggregation//:net_bytebuddy_byte_buddy_agent",
         "@org_objenesis_objenesis//jar",
     ],
 )
