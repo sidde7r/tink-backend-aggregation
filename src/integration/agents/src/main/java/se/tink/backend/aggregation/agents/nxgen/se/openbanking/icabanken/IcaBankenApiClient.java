@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executo
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -39,6 +40,13 @@ public final class IcaBankenApiClient {
     public IcaBankenApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+    }
+
+    public void setConfiguration(
+            IcaBankenConfiguration icaBankenConfiguration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
+        this.configuration = icaBankenConfiguration;
+        client.setEidasProxy(eidasProxyConfiguration);
     }
 
     public IcaBankenConfiguration getConfiguration() {
@@ -91,10 +99,6 @@ public final class IcaBankenApiClient {
                         HeaderValues.BEARER + sessionStorage.get(StorageKeys.TOKEN))
                 .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
                 .get(FetchTransactionsResponse.class);
-    }
-
-    public void setConfiguration(IcaBankenConfiguration icaBankenConfiguration) {
-        this.configuration = icaBankenConfiguration;
     }
 
     public GetPaymentResponse createPayment(
