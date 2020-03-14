@@ -797,7 +797,7 @@ java_library(
     name = "net_bytebuddy_byte_buddy",
     visibility = ["//visibility:public"],
     exports = [
-        "@net_bytebuddy_byte_buddy//jar",
+        "@aggregation//:net_bytebuddy_byte_buddy",
     ],
 )
 
@@ -1735,7 +1735,7 @@ java_library(
         "@org_mockito_mockito_core//jar",
     ],
     runtime_deps = [
-        "@net_bytebuddy_byte_buddy//jar",
+        "@aggregation//:net_bytebuddy_byte_buddy",
         "@net_bytebuddy_byte_buddy_agent//jar",
         "@org_objenesis_objenesis//jar",
     ],
