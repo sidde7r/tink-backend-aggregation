@@ -17,7 +17,7 @@ public class SystemTest {
     @Test
     public void testPing() {
         // given
-        String url = String.format("http://%s:%s/aggregation/ping", HOST, PORT);
+        String url = String.format("http://%s:%d/aggregation/ping", HOST, PORT);
         TestRestTemplate testRestTemplate = new TestRestTemplate();
         String response = testRestTemplate.getForObject(url, String.class);
 
