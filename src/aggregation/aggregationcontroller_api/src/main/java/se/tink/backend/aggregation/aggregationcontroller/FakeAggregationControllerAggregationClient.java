@@ -20,13 +20,13 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersR
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
-public class AggregationControllerAggregationClientStub
+public class FakeAggregationControllerAggregationClient
         implements AggregationControllerAggregationClient {
 
     private final ClientConfig config;
 
     @Inject
-    private AggregationControllerAggregationClientStub(ClientConfig custom) {
+    private FakeAggregationControllerAggregationClient(ClientConfig custom) {
         this.config = custom;
     }
 

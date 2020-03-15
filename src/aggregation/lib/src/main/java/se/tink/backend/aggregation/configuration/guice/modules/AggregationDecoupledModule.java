@@ -16,7 +16,7 @@ import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
-import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClientStub;
+import se.tink.backend.aggregation.aggregationcontroller.FakeAggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.api.MonitoringService;
@@ -191,7 +191,7 @@ public class AggregationDecoupledModule extends AbstractModule {
 
         // AggregationModule
         bind(AggregationControllerAggregationClient.class)
-                .to(AggregationControllerAggregationClientStub.class);
+                .to(FakeAggregationControllerAggregationClient.class);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
