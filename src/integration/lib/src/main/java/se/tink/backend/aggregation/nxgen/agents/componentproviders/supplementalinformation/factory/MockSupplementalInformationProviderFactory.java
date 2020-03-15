@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.MockSupplementalInformationProvider;
@@ -11,7 +13,9 @@ public final class MockSupplementalInformationProviderFactory
 
     private final Map<String, String> mockCallbackData;
 
-    public MockSupplementalInformationProviderFactory(final Map<String, String> mockCallbackData) {
+    @Inject
+    public MockSupplementalInformationProviderFactory(
+            @Named("mockCallbackData") final Map<String, String> mockCallbackData) {
         this.mockCallbackData = mockCallbackData;
     }
 

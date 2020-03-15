@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
@@ -10,7 +12,9 @@ public final class WireMockTinkHttpClientProviderFactory implements TinkHttpClie
 
     private final String wireMockServerHost;
 
-    public WireMockTinkHttpClientProviderFactory(String wireMockServerHost) {
+    @Inject
+    public WireMockTinkHttpClientProviderFactory(
+            @Named("wireMockServerHost") String wireMockServerHost) {
         this.wireMockServerHost = wireMockServerHost;
     }
 
