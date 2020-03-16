@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 
 // Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
 public class NemIdIFrameController {
-
     // NemId Javascript Client Integration for mobile:
     // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Integration%20-%20Mobile.pdf
 
@@ -103,6 +102,7 @@ public class NemIdIFrameController {
             String b64Html = Base64.getEncoder().encodeToString(html.getBytes());
 
             if (isNemIdInitialized(driver, b64Html)) {
+                driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
                 return true;
             }
         }
@@ -116,28 +116,20 @@ public class NemIdIFrameController {
 
         sleeper.sleepFor(5_000);
 
-        try {
-            return webdriverHelper
-                    .waitForElement(driver, IFRAME)
-                    .map(
-                            element -> {
-                                driver.switchTo().frame(element);
-
-                                driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-                                return webdriverHelper
-                                        .waitForElement(driver, USERNAME_INPUT)
-                                        .isPresent();
-                            })
-                    .orElse(false);
-        } finally {
-            driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        }
+        return webdriverHelper
+                .waitForElement(driver, IFRAME)
+                .map(
+                        element -> {
+                            driver.switchTo().frame(element);
+                            return webdriverHelper
+                                    .waitForElement(driver, USERNAME_INPUT)
+                                    .isPresent();
+                        })
+                .orElse(false);
     }
 
     private void validateCredentials(WebDriver driver) throws LoginException {
         boolean isValid = false;
-        // don't wait for rendering if element is misisng
-        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 
         for (int i = 0; i < 20; i++) {
             checkForErrorMessage(driver);
@@ -147,9 +139,6 @@ public class NemIdIFrameController {
             }
             sleeper.sleepFor(1_000);
         }
-
-        // set back wait for rendering elements
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
         if (!isValid) {
             throw new IllegalStateException("Can't validate NemId credentials.");
