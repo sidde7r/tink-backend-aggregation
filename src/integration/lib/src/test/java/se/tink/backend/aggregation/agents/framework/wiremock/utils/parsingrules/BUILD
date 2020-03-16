@@ -10,6 +10,5 @@ java_library(
     ],
     deps = [
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/parsingoperations",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/predicates",
     ],
 )
