@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.OAuth;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.QueryValues;
@@ -40,6 +43,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
+
+    private static final Logger logger = LoggerFactory.getLogger(KbcApiClient.class);
 
     private final Credentials credentials;
     private final PersistentStorage persistentStorage;
@@ -152,14 +157,15 @@ public final class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
     @Override
     public String getConsentId() {
+        final String iban = credentials.getField(KbcConstants.CredentialKeys.IBAN);
+        logger.info(iban);
+
+        final List<String> ibanList = Collections.singletonList(iban);
+
         final AccessEntity accessEntity =
                 new AccessEntity.Builder()
-                        .withBalances(
-                                Arrays.asList(
-                                        credentials.getField(KbcConstants.CredentialKeys.IBAN)))
-                        .withTransactions(
-                                Arrays.asList(
-                                        credentials.getField(KbcConstants.CredentialKeys.IBAN)))
+                        .withBalances(ibanList)
+                        .withTransactions(ibanList)
                         .build();
 
         final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
