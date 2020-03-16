@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.CreditorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.DebtorAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.RemittanceInformationStructuredEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -15,6 +16,7 @@ public class CreatePaymentRequest {
     private String debtorAccountMessage;
     private String creditorAccountMessage;
     private String remittanceInformationUnstructured;
+    private RemittanceInformationStructuredEntity remittanceInformationStructured;
     private String creditorName;
     private String requestedExecutionDate;
 
@@ -67,19 +69,8 @@ public class CreatePaymentRequest {
             return this;
         }
 
-        public Builder withDebtorrAccountMessage(String debtorAccountMessage) {
-            this.debtorAccountMessage = debtorAccountMessage;
-            return this;
-        }
-
         public Builder withExecutionDate(String executionDate) {
             this.requestedExecutionDate = executionDate;
-            return this;
-        }
-
-        public Builder withRemittanceInformationUnstructured(
-                String remittanceInformationUnstructured) {
-            this.remittanceInformationUnstructured = remittanceInformationUnstructured;
             return this;
         }
 
@@ -91,5 +82,14 @@ public class CreatePaymentRequest {
         public CreatePaymentRequest build() {
             return new CreatePaymentRequest(this);
         }
+    }
+
+    public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
+        this.remittanceInformationUnstructured = remittanceInformationUnstructured;
+    }
+
+    public void setRemittanceInformationStructured(
+            RemittanceInformationStructuredEntity remittanceInformationStructured) {
+        this.remittanceInformationStructured = remittanceInformationStructured;
     }
 }

@@ -17,7 +17,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 public class CreditorAccountEntity {
     public static Map<PaymentProduct, Function<String, CreditorAccountEntity>>
             paymentProductsMapper = new HashMap<>();
-    public static Map<PaymentProduct, Creditor> toTinkCreditorMapper = new HashMap<>();
 
     static {
         paymentProductsMapper.put(

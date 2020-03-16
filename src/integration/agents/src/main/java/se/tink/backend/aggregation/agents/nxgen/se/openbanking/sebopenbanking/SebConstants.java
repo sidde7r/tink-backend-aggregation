@@ -40,6 +40,8 @@ public abstract class SebConstants {
                 "The payment product could not be determined";
         public static final String CROSS_BORDER_PAYMENT_NOT_SUPPORTED =
                 "Cross border payment is still not supported";
+        public static final String PAYMENT_REF_TOO_LONG =
+                "Supplied payment reference is too long, max is %s characters.";
     }
 
     public static class IdTags {
@@ -49,13 +51,15 @@ public abstract class SebConstants {
 
     public static class FormValues {
         public static final String MOBILT_BANK_ID = "mobiltbankid";
-        public static final String CREDITORS_MESSAGE = "Creditor's message";
-        public static final String DEBTORS_MESSAGE = "Debtor's messages";
         public static final String DATE_FORMAT = "yyyy-MM-dd";
     }
 
     public static class Storage {
         public static final String CREDIT_CARD_TRANSACTION_RESPONSE =
                 "creditCardTransactionResponse";
+    }
+
+    public static class PaymentValue {
+        public static final int MAX_DEST_MSG_LEN = 100;
     }
 }
