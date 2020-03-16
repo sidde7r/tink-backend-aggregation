@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -44,8 +44,9 @@ public class TransactionDtoTest {
                 mapper.readValue(transactionTestString, TransactionDto.class);
         Transaction tinkTransaction = transactionDto.toTinkTransaction();
 
-        assertEquals(tinkTransaction.getAmount().getValue(), new Double(-100.50d));
-        assertEquals(tinkTransaction.getDescription(), "FIRSTNAME LASTNAME");
-        assertEquals(tinkTransaction.getRawDetails(), "{\"details\":[\"Credit transfer\"]}");
+        assertThat(tinkTransaction.getExactAmount().getDoubleValue()).isEqualTo(-100.50d);
+        assertThat(tinkTransaction.getDescription()).isEqualTo("FIRSTNAME LASTNAME");
+        assertThat(tinkTransaction.getRawDetails())
+                .isEqualTo("{\"details\":[\"Credit transfer\"]}");
     }
 }

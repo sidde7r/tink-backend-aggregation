@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
@@ -79,8 +81,8 @@ public class OtmlResponseConverterTest {
         Assert.assertEquals(3, transactions.size());
 
         Transaction transaction = transactions.iterator().next();
-        Assert.assertEquals("PORTO", transaction.getDescription());
-        Assert.assertEquals(Double.valueOf(-0.68), transaction.getAmount().getValue());
+        assertThat("PORTO").isEqualTo(transaction.getDescription());
+        assertThat(transaction.getExactAmount().getDoubleValue()).isEqualTo(-0.68);
     }
 
     @Test

@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.entities;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.math.BigDecimal;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 public class TransactionEntityTest {
@@ -43,9 +44,10 @@ public class TransactionEntityTest {
 
         Transaction transaction = transactionEntity.toTinkTransaction();
 
-        assertEquals(transaction.getAmount(), Amount.inNOK(-30.0));
-        assertEquals("SPOTIFY ADDRESS CITY", transaction.getDescription());
-        assertEquals(
-                DateUtils.flattenTime(DateUtils.parseDate("2018-01-26")), transaction.getDate());
+        assertThat(transaction.getExactAmount())
+                .isEqualTo(new ExactCurrencyAmount(new BigDecimal(-30.0), "NOK"));
+        assertThat("SPOTIFY ADDRESS CITY").isEqualTo(transaction.getDescription());
+        assertThat(DateUtils.flattenTime(DateUtils.parseDate("2018-01-26")))
+                .isEqualTo(transaction.getDate());
     }
 }

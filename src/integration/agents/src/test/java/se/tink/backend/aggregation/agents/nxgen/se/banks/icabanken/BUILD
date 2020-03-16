@@ -20,7 +20,7 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@org_assertj_assertj_core//jar",
     ],
 )

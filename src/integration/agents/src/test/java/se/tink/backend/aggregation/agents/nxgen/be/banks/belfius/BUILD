@@ -30,9 +30,9 @@ junit_test(
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
-        "@org_assertj_assertj_core//jar",
     ],
 )
