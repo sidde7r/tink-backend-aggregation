@@ -79,6 +79,7 @@ import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -526,14 +527,15 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands =
                 createTransferBaseCommands(
                         clientInfo, request, context, operationName, controllerWrapper);
-        commands.addAll(
-                createRefreshAccountsCommands(
-                        request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
-        commands.add(new SelectAccountsToAggregateCommand(context, request));
-        commands.addAll(
-                createOrderedRefreshableItemsCommands(
-                        request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
-
+        if (!request.getUser().getFlags().contains(FeatureFlags.ANONYMOUS)) {
+            commands.addAll(
+                    createRefreshAccountsCommands(
+                            request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+            commands.add(new SelectAccountsToAggregateCommand(context, request));
+            commands.addAll(
+                    createOrderedRefreshableItemsCommands(
+                            request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+        }
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationName, request, commands, context);
     }
