@@ -15,7 +15,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NemIdAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
 
-    private static final String NEMID_PASSWORD_FIELD_NAME = "nemid-password";
+    public static final String NEMID_PASSWORD_FIELD_NAME = "nemid-password";
 
     private final NemIdIFrameController iFrameController;
     private final NemIdAuthenticatorV2 authenticator;
