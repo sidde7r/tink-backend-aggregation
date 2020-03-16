@@ -25,6 +25,28 @@
                 "sha256": "e6ef91d439ada9045f419c77543ebe0416c3cdfc5b063448343417a3e4a72123"
             },
             {
+                "coord": "asm:asm:3.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/asm/asm/3.1/asm-3.1.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/asm/asm/3.1/asm-3.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/asm/asm/3.1/asm-3.1.jar"
+                ],
+                "sha256": "333ff5369043975b7e031b8b27206937441854738e038c1f47f98d072a20437a"
+            },
+            {
+                "coord": "asm:asm:jar:sources:3.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/asm/asm/3.1/asm-3.1-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/asm/asm/3.1/asm-3.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/asm/asm/3.1/asm-3.1-sources.jar"
+                ],
+                "sha256": "7192812253956896289973f2a8ae53813af5611ddcb8beca7f9fa5b88a79b003"
+            },
+            {
                 "coord": "ch.qos.logback.contrib:logback-jackson:0.1.5",
                 "file": "v1/https/repo.maven.apache.org/maven2/ch/qos/logback/contrib/logback-jackson/0.1.5/logback-jackson-0.1.5.jar",
                 "directDependencies": [
@@ -765,6 +787,28 @@
                 "sha256": "3e1e871288340a2cf5af6b8caf747cce17fc496451968e665d66d71a5da987a9"
             },
             {
+                "coord": "com.github.stephenc.jcip:jcip-annotations:1.0-1",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.jar"
+                ],
+                "sha256": "4fccff8382aafc589962c4edb262f6aa595e34f1e11e61057d1c6a96e8fc7323"
+            },
+            {
+                "coord": "com.github.stephenc.jcip:jcip-annotations:jar:sources:1.0-1",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1-sources.jar"
+                ],
+                "sha256": "d60bb3bf4e03a5e405f9b16f4c2625de86089d6ce4f999bcc2548dcac090ae19"
+            },
+            {
                 "coord": "com.google.code.findbugs:jsr305:3.0.0",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0.jar",
                 "directDependencies": [],
@@ -1473,6 +1517,28 @@
                 "sha256": "a5b5ee16a02edadf7fe637f250217c19878bc6134f15eb55635c48996f6fed1d"
             },
             {
+                "coord": "commons-io:commons-io:2.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/commons-io/commons-io/2.5/commons-io-2.5.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/commons-io/commons-io/2.5/commons-io-2.5.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/commons-io/commons-io/2.5/commons-io-2.5.jar"
+                ],
+                "sha256": "a10418348d234968600ccb1d988efcbbd08716e1d96936ccc1880e7d22513474"
+            },
+            {
+                "coord": "commons-io:commons-io:jar:sources:2.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/commons-io/commons-io/2.5/commons-io-2.5-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/commons-io/commons-io/2.5/commons-io-2.5-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/commons-io/commons-io/2.5/commons-io-2.5-sources.jar"
+                ],
+                "sha256": "3b69b518d9a844732e35509b79e499fca63a960ee4301b1c96dc32e87f3f60a1"
+            },
+            {
                 "coord": "commons-logging:commons-logging:1.2",
                 "file": "v1/https/repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar",
                 "directDependencies": [],
@@ -1515,6 +1581,546 @@
                     "https://repo.maven.apache.org/maven2/io/grpc/grpc-context/1.23.0/grpc-context-1.23.0-sources.jar"
                 ],
                 "sha256": "2fcfb20019d99269762d1690122e9548fb044e36daba4fe39a6d383b9c73c2e0"
+            },
+            {
+                "coord": "io.netty:netty-buffer:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-buffer/4.1.38.Final/netty-buffer-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-buffer/4.1.38.Final/netty-buffer-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-buffer/4.1.38.Final/netty-buffer-4.1.38.Final.jar"
+                ],
+                "sha256": "a3dcb49108f83b195e66cdad70b2d4a127c17f1be7f5b228a88ce18908c30b3e"
+            },
+            {
+                "coord": "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-buffer/4.1.38.Final/netty-buffer-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-common:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-common:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-buffer/4.1.38.Final/netty-buffer-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-buffer/4.1.38.Final/netty-buffer-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "2341b7c20d2ca2c6bbb2ff8c4615c90213bf1633cc90f82bf883a6b73a8a2daa"
+            },
+            {
+                "coord": "io.netty:netty-codec-dns:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec-dns/4.1.38.Final/netty-codec-dns-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.38.Final",
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec-dns/4.1.38.Final/netty-codec-dns-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec-dns/4.1.38.Final/netty-codec-dns-4.1.38.Final.jar"
+                ],
+                "sha256": "80294b24483ecdba2fd4f30cdc64bb708b74a65e978b35966efeea4f7ae25cc5"
+            },
+            {
+                "coord": "io.netty:netty-codec-dns:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec-dns/4.1.38.Final/netty-codec-dns-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec-dns/4.1.38.Final/netty-codec-dns-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec-dns/4.1.38.Final/netty-codec-dns-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "09514c733acc9624e920521bd63a952ba3efc814a54f631f14adc5f78899693e"
+            },
+            {
+                "coord": "io.netty:netty-codec-http2:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec-http2/4.1.38.Final/netty-codec-http2-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-codec-http:4.1.38.Final",
+                    "io.netty:netty-handler:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.38.Final",
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-codec-http:4.1.38.Final",
+                    "io.netty:netty-handler:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec-http2/4.1.38.Final/netty-codec-http2-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec-http2/4.1.38.Final/netty-codec-http2-4.1.38.Final.jar"
+                ],
+                "sha256": "7e2d792407d2da34d3338a3e8f8ed421570fdbf845941b8ee0aa952fe0e07026"
+            },
+            {
+                "coord": "io.netty:netty-codec-http2:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec-http2/4.1.38.Final/netty-codec-http2-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec-http:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-handler:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec-http:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-handler:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec-http2/4.1.38.Final/netty-codec-http2-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec-http2/4.1.38.Final/netty-codec-http2-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "2a443edfe0bc147637260b4a4724e95d62348f83a82b1384f497ef766eb6472c"
+            },
+            {
+                "coord": "io.netty:netty-codec-http:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec-http/4.1.38.Final/netty-codec-http-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-handler:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.38.Final",
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-handler:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec-http/4.1.38.Final/netty-codec-http-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec-http/4.1.38.Final/netty-codec-http-4.1.38.Final.jar"
+                ],
+                "sha256": "b35c4ac78ed3aaefeb782965ce9f22901e5302bf5e75b75fbed79434ce007e8c"
+            },
+            {
+                "coord": "io.netty:netty-codec-http:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec-http/4.1.38.Final/netty-codec-http-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-handler:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-handler:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec-http/4.1.38.Final/netty-codec-http-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec-http/4.1.38.Final/netty-codec-http-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "687a9f5cfb7c15ddf50fc9cb14df1ceb86dc7dacefc7a67d5c3ed810535f2a83"
+            },
+            {
+                "coord": "io.netty:netty-codec-socks:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec-socks/4.1.38.Final/netty-codec-socks-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.38.Final",
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec-socks/4.1.38.Final/netty-codec-socks-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec-socks/4.1.38.Final/netty-codec-socks-4.1.38.Final.jar"
+                ],
+                "sha256": "16d932d76d06992923ce640609d297fe35d9f7b219ea5f0514a4259f1f1f2146"
+            },
+            {
+                "coord": "io.netty:netty-codec-socks:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec-socks/4.1.38.Final/netty-codec-socks-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec-socks/4.1.38.Final/netty-codec-socks-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec-socks/4.1.38.Final/netty-codec-socks-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "bba3ff3979e15bd505dfc3f18d2f082d96e7fd789b817cca25c11b0020441837"
+            },
+            {
+                "coord": "io.netty:netty-codec:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec/4.1.38.Final/netty-codec-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final",
+                    "io.netty:netty-resolver:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec/4.1.38.Final/netty-codec-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec/4.1.38.Final/netty-codec-4.1.38.Final.jar"
+                ],
+                "sha256": "8a4cb96e2131eeb8a824014f0ee338b11c6041405446acf73181199ed05744ac"
+            },
+            {
+                "coord": "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-codec/4.1.38.Final/netty-codec-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-codec/4.1.38.Final/netty-codec-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-codec/4.1.38.Final/netty-codec-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "246a4f72bd36b121224604fc90b5c1254e1f8dff7412efd3934baced321997ab"
+            },
+            {
+                "coord": "io.netty:netty-common:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-common/4.1.38.Final/netty-common-4.1.38.Final.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-common/4.1.38.Final/netty-common-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-common/4.1.38.Final/netty-common-4.1.38.Final.jar"
+                ],
+                "sha256": "710df7c27fe5ba4b15689ae10668cd10ab3b618a1291f3a47b2cc292a0fa67da"
+            },
+            {
+                "coord": "io.netty:netty-common:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-common/4.1.38.Final/netty-common-4.1.38.Final-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-common/4.1.38.Final/netty-common-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-common/4.1.38.Final/netty-common-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "cc727d580ae793df2f40493cb1bd0ace9bb212c093d4da7c13944cde8f6e1584"
+            },
+            {
+                "coord": "io.netty:netty-dev-tools:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-dev-tools/4.1.38.Final/netty-dev-tools-4.1.38.Final.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-dev-tools/4.1.38.Final/netty-dev-tools-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-dev-tools/4.1.38.Final/netty-dev-tools-4.1.38.Final.jar"
+                ],
+                "sha256": "89bfcf8d6e5255d019be72d16d801b3c05a7c95694a1697c7ff3a66d8b91e864"
+            },
+            {
+                "coord": "io.netty:netty-dev-tools:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-dev-tools/4.1.38.Final/netty-dev-tools-4.1.38.Final-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-dev-tools/4.1.38.Final/netty-dev-tools-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-dev-tools/4.1.38.Final/netty-dev-tools-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "bd6ccebbc7bfd3815a2c66fd0b5a30eb4ea2d818225051d029556e6235280224"
+            },
+            {
+                "coord": "io.netty:netty-handler-proxy:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-handler-proxy/4.1.38.Final/netty-handler-proxy-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-codec-http:4.1.38.Final",
+                    "io.netty:netty-codec-socks:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.38.Final",
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-codec-http:4.1.38.Final",
+                    "io.netty:netty-handler:4.1.38.Final",
+                    "io.netty:netty-codec-socks:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-handler-proxy/4.1.38.Final/netty-handler-proxy-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-handler-proxy/4.1.38.Final/netty-handler-proxy-4.1.38.Final.jar"
+                ],
+                "sha256": "9dab309a0422dd9858f431d503b58b854b37d2545c50ad7b4771f34d2288e5c0"
+            },
+            {
+                "coord": "io.netty:netty-handler-proxy:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-handler-proxy/4.1.38.Final/netty-handler-proxy-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec-socks:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec-http:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec-socks:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec-http:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-handler:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-handler-proxy/4.1.38.Final/netty-handler-proxy-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-handler-proxy/4.1.38.Final/netty-handler-proxy-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "84171c08be47fbc0dbfcf83887b83a329a8fbb1b85d030f37c87a68e8053cbe6"
+            },
+            {
+                "coord": "io.netty:netty-handler:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-handler/4.1.38.Final/netty-handler-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.38.Final",
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-handler/4.1.38.Final/netty-handler-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-handler/4.1.38.Final/netty-handler-4.1.38.Final.jar"
+                ],
+                "sha256": "b49b57dbdc88a2c77e3ea9b9d00d3136f28771e059b74a7be7458d7a86bfccd1"
+            },
+            {
+                "coord": "io.netty:netty-handler:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-handler/4.1.38.Final/netty-handler-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-handler/4.1.38.Final/netty-handler-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-handler/4.1.38.Final/netty-handler-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "0f71ffa1a7eb30fd8e24773804cae950297f27e3047da45d8ffe1c0c8154c984"
+            },
+            {
+                "coord": "io.netty:netty-resolver-dns:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-resolver-dns/4.1.38.Final/netty-resolver-dns-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-resolver:4.1.38.Final",
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-codec-dns:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-resolver:4.1.38.Final",
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-codec:4.1.38.Final",
+                    "io.netty:netty-transport:4.1.38.Final",
+                    "io.netty:netty-codec-dns:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-resolver-dns/4.1.38.Final/netty-resolver-dns-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-resolver-dns/4.1.38.Final/netty-resolver-dns-4.1.38.Final.jar"
+                ],
+                "sha256": "15ccc3054e8470b30c552070764d4c3adc2968158b47d94743ad4578f6fc824f"
+            },
+            {
+                "coord": "io.netty:netty-resolver-dns:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-resolver-dns/4.1.38.Final/netty-resolver-dns-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec-dns:jar:sources:4.1.38.Final",
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-codec-dns:jar:sources:4.1.38.Final",
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-resolver-dns/4.1.38.Final/netty-resolver-dns-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-resolver-dns/4.1.38.Final/netty-resolver-dns-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "80869cdf23f56b0a9ae623ae240d836610700bb45ce46b063b53f7601c6981fa"
+            },
+            {
+                "coord": "io.netty:netty-resolver:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-resolver/4.1.38.Final/netty-resolver-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-common:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-resolver/4.1.38.Final/netty-resolver-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-resolver/4.1.38.Final/netty-resolver-4.1.38.Final.jar"
+                ],
+                "sha256": "3692c12a0035e566d5cd1dc1529d4f61725304c5e88817ae78b5c2f7f6d86cad"
+            },
+            {
+                "coord": "io.netty:netty-resolver:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-resolver/4.1.38.Final/netty-resolver-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-common:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-common:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-resolver/4.1.38.Final/netty-resolver-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-resolver/4.1.38.Final/netty-resolver-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "7fd6afb9f1a07edfe45648fa6f8e511c3a88eb9dbe56e443c7c6afcbed8abfcd"
+            },
+            {
+                "coord": "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-tcnative-boringssl-static/2.0.25.Final/netty-tcnative-boringssl-static-2.0.25.Final.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-tcnative-boringssl-static/2.0.25.Final/netty-tcnative-boringssl-static-2.0.25.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-tcnative-boringssl-static/2.0.25.Final/netty-tcnative-boringssl-static-2.0.25.Final.jar"
+                ],
+                "sha256": "96d9c14ab4c47cbad7fec9bdb083917db971d3754d6c7fa89f958bc719e230ed"
+            },
+            {
+                "coord": "io.netty:netty-tcnative-boringssl-static:jar:sources:2.0.25.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-tcnative-boringssl-static/2.0.25.Final/netty-tcnative-boringssl-static-2.0.25.Final-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-tcnative-boringssl-static/2.0.25.Final/netty-tcnative-boringssl-static-2.0.25.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-tcnative-boringssl-static/2.0.25.Final/netty-tcnative-boringssl-static-2.0.25.Final-sources.jar"
+                ],
+                "sha256": "dc44ab2ce5726ff14bedd4a12d16fd0eb1db45b04692d37af9ab0a3a3c295ce8"
+            },
+            {
+                "coord": "io.netty:netty-transport:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-transport/4.1.38.Final/netty-transport-4.1.38.Final.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final",
+                    "io.netty:netty-resolver:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-buffer:4.1.38.Final",
+                    "io.netty:netty-common:4.1.38.Final",
+                    "io.netty:netty-resolver:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-transport/4.1.38.Final/netty-transport-4.1.38.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-transport/4.1.38.Final/netty-transport-4.1.38.Final.jar"
+                ],
+                "sha256": "5f826976585a49aae9b495290125a60a59dc6887fbe4c70da3182a83fb8bfa88"
+            },
+            {
+                "coord": "io.netty:netty-transport:jar:sources:4.1.38.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/netty/netty-transport/4.1.38.Final/netty-transport-4.1.38.Final-sources.jar",
+                "directDependencies": [
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final",
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final"
+                ],
+                "dependencies": [
+                    "io.netty:netty-resolver:jar:sources:4.1.38.Final",
+                    "io.netty:netty-buffer:jar:sources:4.1.38.Final",
+                    "io.netty:netty-common:jar:sources:4.1.38.Final"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/netty/netty-transport/4.1.38.Final/netty-transport-4.1.38.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/netty/netty-transport/4.1.38.Final/netty-transport-4.1.38.Final-sources.jar"
+                ],
+                "sha256": "28940a77f0a32f3406fa61916703920b30dc0d3bf68a2a337afc8e525333da9c"
             },
             {
                 "coord": "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
@@ -1611,6 +2217,72 @@
                     "https://repo.maven.apache.org/maven2/joda-time/joda-time/2.9.9/joda-time-2.9.9-sources.jar"
                 ],
                 "sha256": "facba3aeb0c0d842d545bf7e732ea19869e2b18916adaa4eeda395c946c22991"
+            },
+            {
+                "coord": "log4j:log4j:1.2.14",
+                "file": "v1/https/repo.maven.apache.org/maven2/log4j/log4j/1.2.14/log4j-1.2.14.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/log4j/log4j/1.2.14/log4j-1.2.14.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/log4j/log4j/1.2.14/log4j-1.2.14.jar"
+                ],
+                "sha256": "e3bff9ab64a09b1ac2800f3b5fb1e3d99728064acb6dd3924938507638a404fb"
+            },
+            {
+                "coord": "log4j:log4j:jar:sources:1.2.14",
+                "file": "v1/https/repo.maven.apache.org/maven2/log4j/log4j/1.2.14/log4j-1.2.14-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/log4j/log4j/1.2.14/log4j-1.2.14-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/log4j/log4j/1.2.14/log4j-1.2.14-sources.jar"
+                ],
+                "sha256": "8c5db849ba289617ff63789e836c7afe9d10b96a8b932051dbec27cfb63ba9ed"
+            },
+            {
+                "coord": "net.bytebuddy:byte-buddy-agent:1.10.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy-agent/1.10.1/byte-buddy-agent-1.10.1.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy-agent/1.10.1/byte-buddy-agent-1.10.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy-agent/1.10.1/byte-buddy-agent-1.10.1.jar"
+                ],
+                "sha256": "7c403588401e6992958280358ab90679a82734bfd84c1947b8d6b12bca756037"
+            },
+            {
+                "coord": "net.bytebuddy:byte-buddy-agent:jar:sources:1.10.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy-agent/1.10.1/byte-buddy-agent-1.10.1-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy-agent/1.10.1/byte-buddy-agent-1.10.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy-agent/1.10.1/byte-buddy-agent-1.10.1-sources.jar"
+                ],
+                "sha256": "db10b11abad396e77ab864edbc906acc53c67117277d4b8f2e8ea149cc1c6c3b"
+            },
+            {
+                "coord": "net.bytebuddy:byte-buddy:1.10.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy/1.10.1/byte-buddy-1.10.1.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy/1.10.1/byte-buddy-1.10.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy/1.10.1/byte-buddy-1.10.1.jar"
+                ],
+                "sha256": "6583a29cb641eaef9fb617ca5d03df84664ace40efaee3c980526d8d38ad860f"
+            },
+            {
+                "coord": "net.bytebuddy:byte-buddy:jar:sources:1.10.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy/1.10.1/byte-buddy-1.10.1-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy/1.10.1/byte-buddy-1.10.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy/1.10.1/byte-buddy-1.10.1-sources.jar"
+                ],
+                "sha256": "76bec2cf4a6fa5ccb55dbc37726462a68304e70ef48205f407d65888825a4a66"
             },
             {
                 "coord": "net.sourceforge.cssparser:cssparser:0.9.16",
@@ -1745,6 +2417,69 @@
                     "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2-sources.jar"
                 ],
                 "sha256": "947b7078b3ff3dfa21d9fc2a3e451feacd30fa6f5df8e699c508b24845886c5b"
+            },
+            {
+                "coord": "org.apache.mahout.commons:commons-cli:2.0-mahout",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/mahout/commons/commons-cli/2.0-mahout/commons-cli-2.0-mahout.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/mahout/commons/commons-cli/2.0-mahout/commons-cli-2.0-mahout.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/mahout/commons/commons-cli/2.0-mahout/commons-cli-2.0-mahout.jar"
+                ],
+                "sha256": "0dbc0532a36415455b6e867f402ed2673ff9c229a292507d5a4d1e4921290367"
+            },
+            {
+                "coord": "org.bouncycastle:bcpkix-jdk15on:1.59",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.59/bcpkix-jdk15on-1.59.jar",
+                "directDependencies": [
+                    "org.bouncycastle:bcprov-jdk15on:jar:1.59"
+                ],
+                "dependencies": [
+                    "org.bouncycastle:bcprov-jdk15on:jar:1.59"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.59/bcpkix-jdk15on-1.59.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.59/bcpkix-jdk15on-1.59.jar"
+                ],
+                "sha256": "601d85cfbcef76a1cb77cbf755a6234a4ba1d4c02a98d9a81028d471f388694f"
+            },
+            {
+                "coord": "org.bouncycastle:bcpkix-jdk15on:jar:sources:1.59",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.59/bcpkix-jdk15on-1.59-sources.jar",
+                "directDependencies": [
+                    "org.bouncycastle:bcprov-jdk15on:jar:sources:1.59"
+                ],
+                "dependencies": [
+                    "org.bouncycastle:bcprov-jdk15on:jar:sources:1.59"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.59/bcpkix-jdk15on-1.59-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.59/bcpkix-jdk15on-1.59-sources.jar"
+                ],
+                "sha256": "e93f0a769845bbd063ba6037f2cc8bd790066f98e5defe234c287eba16bd6c61"
+            },
+            {
+                "coord": "org.bouncycastle:bcprov-jdk15on:1.59",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/bouncycastle/bcprov-jdk15on/1.59/bcprov-jdk15on-1.59.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/bouncycastle/bcprov-jdk15on/1.59/bcprov-jdk15on-1.59.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/bouncycastle/bcprov-jdk15on/1.59/bcprov-jdk15on-1.59.jar"
+                ],
+                "sha256": "1c31e44e331d25e46d293b3e8ee2d07028a67db011e74cb2443285aed1d59c85"
+            },
+            {
+                "coord": "org.bouncycastle:bcprov-jdk15on:jar:sources:1.59",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/bouncycastle/bcprov-jdk15on/1.59/bcprov-jdk15on-1.59-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/bouncycastle/bcprov-jdk15on/1.59/bcprov-jdk15on-1.59-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/bouncycastle/bcprov-jdk15on/1.59/bcprov-jdk15on-1.59-sources.jar"
+                ],
+                "sha256": "1f5c5264bf39fdc96608acbc3cc35647b806125595c3ce6ec22c4acf13e099a4"
             },
             {
                 "coord": "org.codehaus.mojo:animal-sniffer-annotations:1.14",
@@ -2033,9 +2768,15 @@
                     "https://repo.maven.apache.org/maven2/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01-sources.jar"
                 ],
                 "sha256": "5db8b94589e334283e01075458cfae920995e37ab997cb3b475fd0667b3158b2"
+            },
+            {
+                "coord": "org.apache.mahout.commons:commons-cli:jar:sources:2.0-mahout",
+                "file": null,
+                "directDependencies": [],
+                "dependencies": []
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 988531004
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -46308714
     }
 }

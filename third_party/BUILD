@@ -4,7 +4,7 @@ java_library(
     name = "asm_asm",
     visibility = ["//visibility:public"],
     exports = [
-        "@asm_asm//jar",
+        "@aggregation//:asm_asm",
     ],
 )
 
@@ -172,6 +172,7 @@ java_library(
         "@com_github_tomakehurst_wiremock//jar",
     ],
     runtime_deps = [
+        "@aggregation//:asm_asm",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
@@ -186,7 +187,6 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@asm_asm//jar",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
         "@com_jayway_jsonpath_json_path//jar",
         "@javax_servlet_javax_servlet_api//jar",
@@ -408,7 +408,7 @@ java_library(
     name = "commons_io_commons_io",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_io_commons_io//jar",
+        "@aggregation//:commons_io_commons_io",
     ],
 )
 
@@ -676,11 +676,11 @@ java_library(
     name = "io_netty_netty_codec",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_resolver//jar",
-        "@io_netty_netty_transport//jar",
+        "@aggregation//:io_netty_netty_buffer",
+        "@aggregation//:io_netty_netty_codec",
+        "@aggregation//:io_netty_netty_common",
+        "@aggregation//:io_netty_netty_resolver",
+        "@aggregation//:io_netty_netty_transport",
     ],
 )
 
@@ -688,12 +688,12 @@ java_library(
     name = "io_netty_netty_codec_http",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_resolver//jar",
-        "@io_netty_netty_transport//jar",
+        "@aggregation//:io_netty_netty_buffer",
+        "@aggregation//:io_netty_netty_codec",
+        "@aggregation//:io_netty_netty_codec_http",
+        "@aggregation//:io_netty_netty_common",
+        "@aggregation//:io_netty_netty_resolver",
+        "@aggregation//:io_netty_netty_transport",
     ],
 )
 
@@ -701,19 +701,19 @@ java_library(
     name = "io_netty_netty_all",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_codec_dns//jar",
-        "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_codec_http2//jar",
-        "@io_netty_netty_codec_socks//jar",
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_handler//jar",
-        "@io_netty_netty_handler_proxy//jar",
-        "@io_netty_netty_resolver//jar",
-        "@io_netty_netty_resolver_dns//jar",
-        "@io_netty_netty_tcnative_boringssl_static//jar",
-        "@io_netty_netty_transport//jar",
+        "@aggregation//:io_netty_netty_buffer",
+        "@aggregation//:io_netty_netty_codec",
+        "@aggregation//:io_netty_netty_codec_dns",
+        "@aggregation//:io_netty_netty_codec_http",
+        "@aggregation//:io_netty_netty_codec_http2",
+        "@aggregation//:io_netty_netty_codec_socks",
+        "@aggregation//:io_netty_netty_common",
+        "@aggregation//:io_netty_netty_handler",
+        "@aggregation//:io_netty_netty_handler_proxy",
+        "@aggregation//:io_netty_netty_resolver",
+        "@aggregation//:io_netty_netty_resolver_dns",
+        "@aggregation//:io_netty_netty_tcnative_boringssl_static",
+        "@aggregation//:io_netty_netty_transport",
     ],
 )
 
@@ -797,7 +797,7 @@ java_library(
     name = "net_bytebuddy_byte_buddy",
     visibility = ["//visibility:public"],
     exports = [
-        "@net_bytebuddy_byte_buddy//jar",
+        "@aggregation//:net_bytebuddy_byte_buddy",
     ],
 )
 
@@ -836,6 +836,7 @@ java_library(
     exports = [
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:commons_collections_commons_collections",
+        "@aggregation//:commons_io_commons_io",
         "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:net_sourceforge_cssparser_cssparser",
         "@aggregation//:org_apache_commons_commons_lang3",
@@ -847,7 +848,6 @@ java_library(
         "@aggregation//:org_w3c_css_sac",
         "@aggregation//:xerces_xercesImpl",
         "@aggregation//:xml_apis_xml_apis",
-        "@commons_io_commons_io//jar",
         "@net_sourceforge_htmlunit_htmlunit//jar",
         "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
         "@net_sourceforge_nekohtml_nekohtml//jar",
@@ -945,9 +945,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@jline_jline//jar",
-        "@log4j_log4j//jar",
         "@org_apache_zookeeper_zookeeper//jar",
     ],
 )
@@ -961,9 +961,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@jline_jline//jar",
-        "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_zookeeper_zookeeper//jar",
     ],
@@ -978,9 +978,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@jline_jline//jar",
-        "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_zookeeper_zookeeper//jar",
@@ -996,9 +996,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@jline_jline//jar",
-        "@log4j_log4j//jar",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_curator_curator_recipes//jar",
@@ -1078,12 +1078,12 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:org_apache_commons_commons_lang3",
+        "@aggregation//:org_apache_mahout_commons_commons_cli",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_thoughtworks_xstream_xstream//jar",
         "@org_apache_commons_commons_math3//jar",
         "@org_apache_lucene_lucene_analyzers_common//jar",
         "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_mahout_commons_commons_cli//jar",
         "@org_apache_mahout_mahout_core//jar",
         "@org_apache_mahout_mahout_math//jar",
         "@org_codehaus_jackson_jackson_core_asl//jar",
@@ -1115,8 +1115,8 @@ java_library(
     name = "org_bouncycastle_bcpkix_jdk15on",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
-        "@org_bouncycastle_bcprov_jdk15on//jar",
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
+        "@aggregation//:org_bouncycastle_bcprov_jdk15on",
     ],
 )
 
@@ -1124,7 +1124,7 @@ java_library(
     name = "org_bouncycastle_bcprov_jdk15on",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_bouncycastle_bcprov_jdk15on//jar",
+        "@aggregation//:org_bouncycastle_bcprov_jdk15on",
     ],
 )
 
@@ -1196,8 +1196,8 @@ java_library(
     name = "org_hibernate_hibernate_entitymanager",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:asm_asm",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@asm_asm//jar",
         "@cglib_cglib//jar",
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
@@ -1439,14 +1439,14 @@ java_library(
         "@com_nimbusds_nimbus_jose_jwt//jar",
     ],
     runtime_deps = [
-        "@com_github_stephenc_jcip_annotations//jar",
+        "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
+        "@aggregation//:org_bouncycastle_bcprov_jdk15on",
         "@com_google_crypto_tink//jar",
         "@junit_junit//jar",
         "@net_jadler_jadler_all//jar",
         "@net_minidev_json_smart//jar",
         "@org_bitbucket_b_c_jose4j//jar",
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
-        "@org_bouncycastle_bcprov_jdk15on//jar",
     ],
 )
 
@@ -1499,6 +1499,18 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_google_instrumentation_instrumentation_api",
         "@aggregation//:io_grpc_grpc_context",
+        "@aggregation//:io_netty_netty_buffer",
+        "@aggregation//:io_netty_netty_codec",
+        "@aggregation//:io_netty_netty_codec_dns",
+        "@aggregation//:io_netty_netty_codec_http",
+        "@aggregation//:io_netty_netty_codec_http2",
+        "@aggregation//:io_netty_netty_codec_socks",
+        "@aggregation//:io_netty_netty_common",
+        "@aggregation//:io_netty_netty_handler",
+        "@aggregation//:io_netty_netty_handler_proxy",
+        "@aggregation//:io_netty_netty_resolver",
+        "@aggregation//:io_netty_netty_resolver_dns",
+        "@aggregation//:io_netty_netty_transport",
         "@com_google_api_grpc_proto_google_common_protos//jar",
         "@com_google_protobuf_protobuf_java//jar",
         "@com_google_protobuf_protobuf_java_util//jar",
@@ -1511,18 +1523,6 @@ java_library(
         "@io_grpc_grpc_protobuf_nano//jar",
         "@io_grpc_grpc_stub//jar",
         "@io_grpc_grpc_testing//jar",
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_codec_dns//jar",
-        "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_codec_http2//jar",
-        "@io_netty_netty_codec_socks//jar",
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_handler//jar",
-        "@io_netty_netty_handler_proxy//jar",
-        "@io_netty_netty_resolver//jar",
-        "@io_netty_netty_resolver_dns//jar",
-        "@io_netty_netty_transport//jar",
         "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
     ],
@@ -1532,7 +1532,7 @@ java_library(
     name = "netty-runtime",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_tcnative_boringssl_static//jar",
+        "@aggregation//:io_netty_netty_tcnative_boringssl_static",
     ],
 )
 
@@ -1561,8 +1561,8 @@ java_library(
     name = "bouncycastle",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
-        "@org_bouncycastle_bcprov_jdk15on//jar",
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
+        "@aggregation//:org_bouncycastle_bcprov_jdk15on",
     ],
 )
 
@@ -1629,9 +1629,9 @@ java_library(
         "@io_grpc_grpc_netty//jar",
     ],
     runtime_deps = [
+        "@aggregation//:io_netty_netty_codec_http2",
+        "@aggregation//:io_netty_netty_handler_proxy",
         "@io_grpc_grpc_core//jar",
-        "@io_netty_netty_codec_http2//jar",
-        "@io_netty_netty_handler_proxy//jar",
     ],
 )
 
@@ -1671,17 +1671,17 @@ java_library(
     name = "io_netty_netty_codec_http2",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_codec_http2//jar",
+        "@aggregation//:io_netty_netty_codec_http2",
     ],
     runtime_deps = [
         "@aggregation//:com_google_code_gson_gson",
+        "@aggregation//:io_netty_netty_buffer",
+        "@aggregation//:io_netty_netty_codec",
+        "@aggregation//:io_netty_netty_codec_http",
+        "@aggregation//:io_netty_netty_common",
+        "@aggregation//:io_netty_netty_handler",
+        "@aggregation//:io_netty_netty_transport",
         "@com_jcract_jzlib//jar",
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_handler//jar",
-        "@io_netty_netty_transport//jar",
         "@org_mockito_mockito_core//jar",
     ],
 )
@@ -1690,14 +1690,14 @@ java_library(
     name = "io_netty_netty_common",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_common//jar",
+        "@aggregation//:io_netty_netty_common",
     ],
     runtime_deps = [
         "@aggregation//:commons_logging_commons_logging",
+        "@aggregation//:io_netty_netty_dev_tools",
+        "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_oracle_substratevm_svm//jar",
-        "@io_netty_netty_dev_tools//jar",
-        "@log4j_log4j//jar",
         "@org_apache_logging_log4j_log4j_api//jar",
         "@org_apache_logging_log4j_log4j_core//jar",
         "@org_mockito_mockito_core//jar",
@@ -1708,14 +1708,14 @@ java_library(
     name = "io_netty_netty_handler",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_handler//jar",
+        "@aggregation//:io_netty_netty_handler",
     ],
     runtime_deps = [
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_tcnative_boringssl_static//jar",
-        "@io_netty_netty_transport//jar",
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
+        "@aggregation//:io_netty_netty_buffer",
+        "@aggregation//:io_netty_netty_codec",
+        "@aggregation//:io_netty_netty_tcnative_boringssl_static",
+        "@aggregation//:io_netty_netty_transport",
+        "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@org_mockito_mockito_core//jar",
     ],
 )
@@ -1724,7 +1724,7 @@ java_library(
     name = "io_netty_netty_tcnative_boringssl_static",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_tcnative_boringssl_static//jar",
+        "@aggregation//:io_netty_netty_tcnative_boringssl_static",
     ],
 )
 
@@ -1735,8 +1735,8 @@ java_library(
         "@org_mockito_mockito_core//jar",
     ],
     runtime_deps = [
-        "@net_bytebuddy_byte_buddy//jar",
-        "@net_bytebuddy_byte_buddy_agent//jar",
+        "@aggregation//:net_bytebuddy_byte_buddy",
+        "@aggregation//:net_bytebuddy_byte_buddy_agent",
         "@org_objenesis_objenesis//jar",
     ],
 )
@@ -1745,10 +1745,10 @@ java_library(
     name = "io_netty_netty_resolver",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_resolver//jar",
+        "@aggregation//:io_netty_netty_resolver",
     ],
     runtime_deps = [
-        "@io_netty_netty_common//jar",
+        "@aggregation//:io_netty_netty_common",
         "@org_mockito_mockito_core//jar",
     ],
 )
@@ -1800,9 +1800,9 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:commons_io_commons_io",
         "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
-        "@commons_io_commons_io//jar",
         "@io_perfmark_perfmark_api//jar",
         "@lombok//:org_projectlombok_lombok",
         "@standalone_agent_deps//:ch_qos_logback_logback_classic",

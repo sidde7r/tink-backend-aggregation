@@ -396,7 +396,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_resolver",
+    name = "io_netty_netty_resolver",  # Do not use, but do not remove
     artifact = "io.netty:netty-resolver:4.1.38.Final",
     sha1 = "b00be4aa309e9b56e498191aa8c73e4f393759ed",
 )
@@ -404,7 +404,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_resolver_dns",
+    name = "io_netty_netty_resolver_dns",  # Do not use, but do not remove
     artifact = "io.netty:netty-resolver-dns:4.1.38.Final",
     sha1 = "a628b322a1a7fadc427edc15eb3c141d50706437",
 )
@@ -412,7 +412,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_codec_dns",
+    name = "io_netty_netty_codec_dns",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec-dns:4.1.38.Final",
     sha1 = "cfc06c8566e4bf060a0360e28865e70e37d150e8",
 )
@@ -628,7 +628,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "log4j_log4j",
+    name = "log4j_log4j",  # Do not use, but do not remove
     artifact = "log4j:log4j:1.2.14",
     sha1 = "03b254c872b95141751f414e353a25c2ac261b51",
 )
@@ -690,7 +690,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_codec",
+    name = "io_netty_netty_codec",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec:4.1.38.Final",
     sha1 = "ccfbdfc727cbf702350572a0b12fe92185ebf162",
 )
@@ -702,7 +702,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_bouncycastle_bcpkix_jdk15on",
+    name = "org_bouncycastle_bcpkix_jdk15on",  # Do not use, but do not remove
     artifact = "org.bouncycastle:bcpkix-jdk15on:1.59",
     sha1 = "9cef0aab8a4bb849a8476c058ce3ff302aba3fff",
 )
@@ -786,7 +786,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_mahout_commons_commons_cli",
+    name = "org_apache_mahout_commons_commons_cli",  # Do not use, but do not remove
     artifact = "org.apache.mahout.commons:commons-cli:2.0-mahout",
     sha1 = "f1df8dc67ae086159ac66bd92c0bb54254776a93",
 )
@@ -806,7 +806,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_handler_proxy",
+    name = "io_netty_netty_handler_proxy",  # Do not use, but do not remove
     artifact = "io.netty:netty-handler-proxy:4.1.38.Final",
     sha1 = "dbb09abb0c9c494cb651234eed428189eb730872",
 )
@@ -1094,7 +1094,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_io_commons_io",
+    name = "commons_io_commons_io",  # Do not use, but do not remove
     artifact = "commons-io:commons-io:2.5",
     sha1 = "2852e6e05fbb95076fc091f6d1780f1f8fe35e0f",
 )
@@ -1136,7 +1136,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "asm_asm",
+    name = "asm_asm",  # Do not use, but do not remove
     artifact = "asm:asm:3.1",
     sha1 = "c157def142714c544bdea2e6144645702adf7097",
 )
@@ -1162,7 +1162,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_common",
+    name = "io_netty_netty_common",  # Do not use, but do not remove
     artifact = "io.netty:netty-common:4.1.38.Final",
     sha1 = "6f8aae763f743d91fb1ba1e9011dae0ef4f6ff34",
 )
@@ -1188,7 +1188,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_handler",
+    name = "io_netty_netty_handler",  # Do not use, but do not remove
     artifact = "io.netty:netty-handler:4.1.38.Final",
     sha1 = "ebf1f2bd0dad5e16aa1fc48d32e5dbe507b38d53",
 )
@@ -1316,7 +1316,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_codec_socks",
+    name = "io_netty_netty_codec_socks",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec-socks:4.1.38.Final",
     sha1 = "9a6b2c27383061ac9b6de10e6f0f81a7283216f5",
 )
@@ -1324,7 +1324,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_buffer",
+    name = "io_netty_netty_buffer",  # Do not use, but do not remove
     artifact = "io.netty:netty-buffer:4.1.38.Final",
     sha1 = "d16cf15d29c409987cecde77407fbb6f1e16d262",
 )
@@ -1410,7 +1410,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_codec_http2",
+    name = "io_netty_netty_codec_http2",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec-http2:4.1.38.Final",
     sha1 = "0dc353dd011c512d5e631a4bee517b17ed3155c1",
 )
@@ -1472,7 +1472,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_transport",
+    name = "io_netty_netty_transport",  # Do not use, but do not remove
     artifact = "io.netty:netty-transport:4.1.38.Final",
     sha1 = "cd8b612d5daa42d1be3bb3203e4857597d5db79b",
 )
@@ -1598,7 +1598,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_bouncycastle_bcprov_jdk15on",
+    name = "org_bouncycastle_bcprov_jdk15on",  # Do not use, but do not remove
     artifact = "org.bouncycastle:bcprov-jdk15on:1.59",
     sha1 = "2507204241ab450456bdb8e8c0a8f986e418bd99",
 )
@@ -1618,7 +1618,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_tcnative_boringssl_static",
+    name = "io_netty_netty_tcnative_boringssl_static",  # Do not use, but do not remove
     artifact = "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
     sha1 = "185980556f9f083b5339825f19c9641c6c879417",
 )
@@ -1698,7 +1698,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_codec_http",
+    name = "io_netty_netty_codec_http",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec-http:4.1.38.Final",
     sha1 = "4d55b3cdb74cd140d262de96987ebd369125a64c",
 )
@@ -2010,13 +2010,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_bytebuddy_byte_buddy",
+    name = "net_bytebuddy_byte_buddy",  # Do not use, but do not remove
     artifact = "net.bytebuddy:byte-buddy:1.10.1",
     sha1 = "11fe565e2b8b857c9dcee66e4170b97abb92530b",
 )
 
 maven_jar(
-    name = "net_bytebuddy_byte_buddy_agent",
+    name = "net_bytebuddy_byte_buddy_agent",  # Do not use, but do not remove
     artifact = "net.bytebuddy:byte-buddy-agent:1.10.1",
     sha1 = "9b7d95d699d08e92eb51a29b4949ae975325b40b",
 )
@@ -2325,7 +2325,7 @@ maven_jar(
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
 maven_jar(
-    name = "io_netty_netty_dev_tools",
+    name = "io_netty_netty_dev_tools",  # Do not use, but do not remove
     artifact = "io.netty:netty-dev-tools:4.1.38.Final",
     sha1 = "1208cf0fb96a4faa8030c735af3410cfd04012f9",
 )
@@ -2446,7 +2446,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_github_stephenc_jcip_annotations",
+    name = "com_github_stephenc_jcip_annotations",  # Do not use, but do not remove
     artifact = "com.github.stephenc.jcip:jcip-annotations:1.0-1",
     sha1 = "ef31541dd28ae2cefdd17c7ebf352d93e9058c63",
 )
@@ -2558,6 +2558,7 @@ maven_install(
     name = "aggregation",
     artifacts = [
         "aopalliance:aopalliance:1.0",
+        "asm:asm:3.1",
         "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-classic:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
@@ -2579,6 +2580,7 @@ maven_install(
         "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
         "com.github.rholder:guava-retrying:2.0.0",
+        "com.github.stephenc.jcip:jcip-annotations:1.0-1",
         "com.google.code.findbugs:jsr305:3.0.0",
         "com.google.code.gson:gson:2.8.2",
         "com.google.guava:guava:23.1-jre",
@@ -2597,17 +2599,38 @@ maven_install(
         "com.sun.jersey:jersey-core:1.18.1",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
+        "commons-io:commons-io:2.5",
         "commons-logging:commons-logging:1.2",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
+        "io.netty:netty-buffer:4.1.38.Final",
+        "io.netty:netty-codec-dns:4.1.38.Final",
+        "io.netty:netty-codec-http2:4.1.38.Final",
+        "io.netty:netty-codec-http:4.1.38.Final",
+        "io.netty:netty-codec-socks:4.1.38.Final",
+        "io.netty:netty-codec:4.1.38.Final",
+        "io.netty:netty-common:4.1.38.Final",
+        "io.netty:netty-dev-tools:4.1.38.Final",
+        "io.netty:netty-handler-proxy:4.1.38.Final",
+        "io.netty:netty-handler:4.1.38.Final",
+        "io.netty:netty-resolver-dns:4.1.38.Final",
+        "io.netty:netty-resolver:4.1.38.Final",
+        "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
+        "io.netty:netty-transport:4.1.38.Final",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
+        "log4j:log4j:1.2.14",
+        "net.bytebuddy:byte-buddy-agent:1.10.1",
+        "net.bytebuddy:byte-buddy:1.10.1",
         "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-collections4:4.0",
         "org.apache.commons:commons-lang3:3.4",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
+        "org.apache.mahout.commons:commons-cli:2.0-mahout",
+        "org.bouncycastle:bcpkix-jdk15on:1.59",
+        "org.bouncycastle:bcprov-jdk15on:1.59",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
