@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-public final class OpenbankApiClient {
+public class OpenbankApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
 

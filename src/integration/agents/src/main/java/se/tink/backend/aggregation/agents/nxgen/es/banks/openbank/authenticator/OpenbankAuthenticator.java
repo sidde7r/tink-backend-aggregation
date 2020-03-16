@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.Openban
 
 import com.google.common.base.Strings;
 import io.vavr.control.Try;
+import java.util.Locale;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -50,7 +51,7 @@ public class OpenbankAuthenticator implements Authenticator, AuthenticationContr
 
         final LoginRequest request =
                 new LoginRequest.Builder()
-                        .withUsername(username)
+                        .withUsername(username.toUpperCase(Locale.forLanguageTag("es")))
                         .withUsernameType(usernameType)
                         .withPassword(password)
                         .withForce(1)
@@ -77,7 +78,7 @@ public class OpenbankAuthenticator implements Authenticator, AuthenticationContr
                         Case(
                                 $(HAS_INVALID_LOGIN_USERNAME_TYPE),
                                 LoginError.INCORRECT_CREDENTIALS.exception(
-                                        LocalizableKey.of("Invalid username type"), hre)));
+                                        new LocalizableKey("Invalid username type"), hre)));
     }
 
     private void putAuthTokenInSessionStorage(LoginResponse loginResponse) {
