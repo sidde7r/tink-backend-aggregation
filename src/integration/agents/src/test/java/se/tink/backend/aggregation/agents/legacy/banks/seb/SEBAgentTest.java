@@ -45,6 +45,7 @@ public class SEBAgentTest extends AbstractAgentTest<SEBApiAgent> {
     @Test
     public void refresh() throws Exception {
         new AgentIntegrationTest.Builder("se", "seb-bankid")
+                .addCredentialField(Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
@@ -60,7 +61,7 @@ public class SEBAgentTest extends AbstractAgentTest<SEBApiAgent> {
         transfer.setDestination(new SwedishIdentifier("destination"));
 
         new AgentIntegrationTest.Builder("se", "seb-bankid")
-                .addCredentialField(Field.Key.USERNAME, "ssn")
+                .addCredentialField(Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .build()
