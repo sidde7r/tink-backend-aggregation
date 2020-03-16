@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
+import com.google.inject.Inject;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -29,6 +30,7 @@ public class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
 
+    @Inject
     public NordeaDkAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         this.nordeaClient = constructNordeaClient();
