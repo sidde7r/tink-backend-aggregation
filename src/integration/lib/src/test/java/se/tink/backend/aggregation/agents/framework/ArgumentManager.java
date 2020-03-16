@@ -90,7 +90,7 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum> & Arg
         }
     }
 
-    public enum CorporateIdArgumentEnum implements ArgumentManagerEnum {
+    public enum BusinessIdArgumentEnum implements ArgumentManagerEnum {
         CPI;
 
         @Override
