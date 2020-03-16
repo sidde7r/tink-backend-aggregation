@@ -42,13 +42,8 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
 
     @Override
     public BankIdStatus collect(String reference) {
-        int total_attempt = 3;
-        if (credentials.getProviderName().equals("se-test-bankid-qr-successful")) {
-            total_attempt = 30;
-        }
-
         BankIdStatus status;
-        if (attempt > total_attempt) {
+        if (attempt > 3) {
             status = BankIdStatus.DONE;
         } else if (successfulAuthentication) {
             status = BankIdStatus.WAITING;
