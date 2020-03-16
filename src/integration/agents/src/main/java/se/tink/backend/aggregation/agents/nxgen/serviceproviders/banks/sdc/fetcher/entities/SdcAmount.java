@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
+@JsonObject
 public class SdcAmount {
     private long value;
     private int scale;
@@ -13,6 +15,7 @@ public class SdcAmount {
     private String localizedValueWithCurrencyAtEnd;
     private String roundedAmountWithIsoCurrency;
     private String roundedAmountWithCurrencySymbol;
+    private String localizedValueWithoutCurrency;
 
     public long getValue() {
         return value;
@@ -28,6 +31,10 @@ public class SdcAmount {
 
     public String getLocalizedValueWithCurrency() {
         return localizedValueWithCurrency;
+    }
+
+    public String getLocalizedValueWithoutCurrency() {
+        return localizedValueWithoutCurrency;
     }
 
     public String getCurrency() {
