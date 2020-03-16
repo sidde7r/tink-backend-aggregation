@@ -32,6 +32,10 @@ public class SignableOperation {
     private UUID userId;
     private UUID credentialsId;
     private String signableObject;
+    // This is an optional field to set a more fine-grained status when our external status are too
+    // coarse. Internal use-only!
+    // Do not expect this field to be always non-null. It is agent developers responsibility to
+    // decide if internalStatus is helpful
     private String internalStatus;
 
     public SignableOperation() {}
