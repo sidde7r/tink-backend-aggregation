@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -13,12 +12,6 @@ import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
-
-    private UkOpenBankingV31Constants() {
-        throw new AssertionError();
-    }
-
-    public static final int HEX_SIZE = 8;
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
@@ -37,21 +30,6 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                             .put("UK.OBIE.PAN", AccountIdentifier.Type.PAYMENT_CARD_NUMBER)
                             .put("UK.OBIE.SortCodeAccountNumber", AccountIdentifier.Type.SORT_CODE)
                             .put("UK.OBIE.IBAN", AccountIdentifier.Type.IBAN)
-                            .build();
-
-    public static final GenericTypeMapper<ExternalAccountIdentification4Code, String>
-            ACCOUNT_IDENTIFIER_TYPE_MAPPER =
-                    GenericTypeMapper.<ExternalAccountIdentification4Code, String>genericBuilder()
-                            .put(
-                                    ExternalAccountIdentification4Code.BBAN,
-                                    "UK.OBIE.BBAN",
-                                    "DK.DanskeBank.AccountNumber")
-                            .put(ExternalAccountIdentification4Code.IBAN, "UK.OBIE.IBAN")
-                            .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
-                            .put(
-                                    ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
-                                    "UK.OBIE.SortCodeAccountNumber")
-                            .put(ExternalAccountIdentification4Code.PAN, "UK.OBIE.PAN", "PAN")
                             .build();
 
     private static final TypeMapper<PaymentStatus> paymentStatusMapper =
@@ -99,8 +77,6 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
 
     public static final class ApiServices extends UkOpenBankingConstants.ApiServices {
         public static final String CONSENT_REQUEST = "/account-access-consents";
-        public static final String AISP_PREFIX = "/aisp";
-        public static final String PISP_PREFIX = "/pisp";
     }
 
     public static class Links {

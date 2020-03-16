@@ -16,13 +16,6 @@ public abstract class UkOpenBankingConstants {
         public static final String X_JWS_SIGNATURE = "x-jws-signature";
     }
 
-    public static class AgentConfigurations {
-        public static final String WELL_KNOWN_URL = "wellKnownUrl";
-        public static final String AIS_BASE_URL = "aisBaseUel";
-        public static final String PIS_BASE_URL = "pisBaseUrl";
-        public static final String ACCOUNT_HOLDER_ENDPOINT = "accountHolderEndpoint";
-    }
-
     public static class PartyEndpoints {
         public static final String IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES =
                 "/accounts/%s/parties";

@@ -44,8 +44,6 @@ public class TransactionEntity {
 
     private ProprietaryBankTransactionCodeEntity proprietaryBankTransactionCode;
 
-    private BalanceEntity balance;
-
     /*
     TODO: Most banks supply AddressLine as string but Barclays is putting it as String
     array and this needs to be fixed at Barclays end. Until then we are ignoring this property as
