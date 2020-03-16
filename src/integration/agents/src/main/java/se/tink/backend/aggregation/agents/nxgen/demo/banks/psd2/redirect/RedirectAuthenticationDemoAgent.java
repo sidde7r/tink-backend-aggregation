@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE_REGEX;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX;
 
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
@@ -74,11 +74,11 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, provider);
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, credentials);
 
         final OAuth2AuthenticationController controller;
 
-        if (provider.matches(DEMO_PROVIDER_TEN_MINUTE_EXPIRE_CASE_REGEX)) {
+        if (provider.matches(DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX)) {
             controller =
                     new OAuth2AuthenticationController(
                             persistentStorage,
@@ -86,8 +86,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                             redirectOAuth2Authenticator,
                             credentials,
                             strongAuthenticationState,
-                            10,
-                            ChronoUnit.MINUTES);
+                            Integer.parseInt(credentials.getField("sessionExpiryTime")),
+                            ChronoUnit.SECONDS);
         } else {
             controller =
                     new OAuth2AuthenticationController(
@@ -126,7 +126,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, provider);
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, credentials);
 
         OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
@@ -156,7 +156,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, provider);
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, credentials);
 
         OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
