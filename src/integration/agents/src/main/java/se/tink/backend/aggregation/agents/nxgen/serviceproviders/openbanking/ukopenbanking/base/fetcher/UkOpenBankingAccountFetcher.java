@@ -34,33 +34,6 @@ public class UkOpenBankingAccountFetcher<
             accountConverter;
     private final IdentityDataFetcher identityDataFetcher;
 
-    /**
-     * @param apiClient Ukob api client
-     * @param accountsResponseType Class type of the account response entity
-     * @param balancesResponseType Class type of the account balance response entity
-     * @param accountConverter A method taking the AccountEntity and AccountBalanceEntity and
-     *     converting it to a Tink account. See: {@link
-     *     se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.AccountConverter#toTinkAccount(Object,
-     *     Object, String)}
-     */
-    public UkOpenBankingAccountFetcher(
-            UkOpenBankingAisConfig ukOpenBankingAisConfig,
-            UkOpenBankingApiClient apiClient,
-            Class<AccountResponseType> accountsResponseType,
-            Class<BalanceResponseType> balancesResponseType,
-            AccountConverter<AccountResponseType, BalanceResponseType, AccountType>
-                    accountConverter) {
-
-        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
-        this.apiClient = apiClient;
-
-        this.accountEntityType = accountsResponseType;
-        this.balanceEntityType = balancesResponseType;
-
-        this.accountConverter = accountConverter;
-        this.identityDataFetcher = new IdentityDataFetcher(apiClient);
-    }
-
     public UkOpenBankingAccountFetcher(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             UkOpenBankingApiClient apiClient,
