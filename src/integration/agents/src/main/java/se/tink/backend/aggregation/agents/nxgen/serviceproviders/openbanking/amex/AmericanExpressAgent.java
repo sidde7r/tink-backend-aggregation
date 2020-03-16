@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
 import java.time.Clock;
 import lombok.Getter;
 import org.assertj.core.util.VisibleForTesting;
@@ -45,6 +46,7 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
 
     @VisibleForTesting @Getter private final HmacMultiTokenStorage hmacMultiTokenStorage;
 
+    @Inject
     public AmericanExpressAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
