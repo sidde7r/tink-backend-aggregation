@@ -90,7 +90,8 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             String smid,
             String agreementId,
             String deviceFingerprint)
-            throws SupplementalInfoException, LoginException, AuthorizationException {
+            throws SupplementalInfoException, LoginException, AuthorizationException,
+                    SessionException {
         GenerateChallangeRequest challangeRequest =
                 new GenerateChallangeRequest(apiClient.getDistributorId(), authenticationProcessID);
         String challenge = apiClient.fetchChallenges(challangeRequest);
@@ -116,11 +117,11 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                         .withMeanId(FortisConstants.Values.UCR)
                         .build();
 
-        sendChallenges(authResponse);
+        sendChallenges(authResponse, false);
     }
 
-    private void sendChallenges(AuthResponse response)
-            throws LoginException, AuthorizationException {
+    private void sendChallenges(AuthResponse response, boolean inAutoAuthenticationFlow)
+            throws LoginException, AuthorizationException, SessionException {
         HttpResponse httpResponse;
         try {
             httpResponse = apiClient.authenticationRequest(response.getUrlEncodedFormat());
@@ -139,7 +140,11 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             }
             if (responseBody.contains(FortisConstants.ErrorCode.INVALID_SIGNATURE_KO)) {
-                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+                if (inAutoAuthenticationFlow) {
+                    throw SessionError.SESSION_EXPIRED.exception();
+                } else {
+                    throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+                }
             } else {
                 throw new IllegalStateException(String.format("Unknown error: %s", responseBody));
             }
@@ -414,7 +419,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
 
             UserInfoResponse userInfoResponse;
             try {
-                sendChallenges(authResponse);
+                sendChallenges(authResponse, true);
             } catch (LoginException | AuthorizationException l) {
                 clearAuthenticationData();
                 throw SessionError.SESSION_EXPIRED.exception();
