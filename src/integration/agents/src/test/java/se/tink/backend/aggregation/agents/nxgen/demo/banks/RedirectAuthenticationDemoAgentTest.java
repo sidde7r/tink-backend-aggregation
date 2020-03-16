@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -22,6 +23,8 @@ public class RedirectAuthenticationDemoAgentTest {
             "IT52X0300203280728575573739"; // from ais flow, checking account
     private final String DESTINATION_ACCOUNT =
             "IT53X0300203280882749129712"; // from ais flow, savings account
+
+    private static final String EXPIRED_TIME_IN_SECOND = "60";
 
     @Test
     public void testTransfer() throws Exception {
@@ -52,6 +55,21 @@ public class RedirectAuthenticationDemoAgentTest {
                 .setAppId("dummy")
                 .build()
                 .testBankTransferUK(transfer, false);
+    }
+
+    @Test
+    public void testAISSE() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder(
+                                "se", "se-test-open-banking-redirect-configurable-session-expiry")
+                        .addCredentialField(Field.Key.SESSION_EXPIRY_TIME, EXPIRED_TIME_IN_SECOND)
+                        .expectLoggedIn(false)
+                        .setFinancialInstitutionId("dummy")
+                        .setAppId("dummy")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true);
+
+        builder.build().testRefresh();
     }
 
     @Test

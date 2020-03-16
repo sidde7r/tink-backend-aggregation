@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -86,7 +87,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                             redirectOAuth2Authenticator,
                             credentials,
                             strongAuthenticationState,
-                            Integer.parseInt(credentials.getField("sessionExpiryTime")),
+                            Integer.parseInt(credentials.getField(Field.Key.SESSION_EXPIRY_TIME)),
                             ChronoUnit.SECONDS);
         } else {
             controller =
