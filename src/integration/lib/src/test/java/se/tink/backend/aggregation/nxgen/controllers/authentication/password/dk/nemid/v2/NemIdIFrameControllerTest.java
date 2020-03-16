@@ -147,7 +147,6 @@ public class NemIdIFrameControllerTest {
         // verify response
         inOrder.verify(webdriverHelper).waitForElement(driver, ERROR_MESSAGE);
         inOrder.verify(webdriverHelper).waitForElement(driver, OTP_ICON);
-//        inOrder.verify(driver.manage().timeouts()).implicitlyWait(30, TimeUnit.SECONDS);
 
         // credentials ok, forward request to nemid app
         inOrder.verify(webdriverHelper).clickButton(driver, NEMID_APP_BUTTON);
