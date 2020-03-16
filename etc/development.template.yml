@@ -1344,10 +1344,10 @@ agentsServiceConfiguration:
         redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
     volvofinans:
       tink:
-        baseUrl: https://api.sandbox.volvofinans.se
         clientId: F71sVTDkeSnYwoKuiNARTGRGItJ42XhB
         clientSecret: X0JsLD5hXlvPuX9l
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        certificateId: Tink
     widiba:
       tink:
         clientId: ''
