@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -9,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusTest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusTransaction;
@@ -59,12 +59,12 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
 
-        assertTrue(accounts.get(0).getBalance().getValue() == 0);
-        assertTrue(accounts.get(1).getBalance().getValue() == 847.24);
-        assertTrue(accounts.get(2).getBalance().getValue() == 0);
-        assertTrue(accounts.get(3).getBalance().getValue() == 0.01);
-        assertTrue(accounts.get(4).getBalance().getValue() == 0);
-        assertTrue(accounts.get(5).getBalance().getValue() == 38374.26);
+        assertThat(accounts.get(0).getExactBalance().getDoubleValue()).isEqualTo(0);
+        assertThat(accounts.get(1).getExactBalance().getDoubleValue()).isEqualTo(847.24);
+        assertThat(accounts.get(2).getExactBalance().getDoubleValue()).isEqualTo(0);
+        assertThat(accounts.get(3).getExactBalance().getDoubleValue()).isEqualTo(0.01);
+        assertThat(accounts.get(4).getExactBalance().getDoubleValue()).isEqualTo(0);
+        assertThat(accounts.get(5).getExactBalance().getDoubleValue()).isEqualTo(38374.26);
     }
 
     @Test
@@ -80,8 +80,8 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
 
-        Assert.assertEquals(12, accounts.get(0).getBalance().getValue(), 0.1);
-        Assert.assertEquals(42, accounts.get(1).getBalance().getValue(), 0.1);
+        assertThat(accounts.get(0).getExactBalance().getDoubleValue()).isEqualTo(12);
+        assertThat(accounts.get(1).getExactBalance().getDoubleValue()).isEqualTo(42);
     }
 
     @Test

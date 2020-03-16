@@ -60,7 +60,7 @@ public class UpdateController {
             log.info(
                     String.format(
                             "Found incompatible Account currencies (expected: %s, but was: %s)",
-                            currency, account.getBalance().getCurrency()));
+                            currency, account.getExactAvailableBalance().getCurrencyCode()));
             return null;
         }
 

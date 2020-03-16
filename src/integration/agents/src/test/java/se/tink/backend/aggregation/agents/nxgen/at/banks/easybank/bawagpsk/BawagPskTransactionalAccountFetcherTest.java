@@ -152,7 +152,7 @@ public final class BawagPskTransactionalAccountFetcherTest {
 
         // Balance
         Assert.assertThat(
-                accounts.stream().map(Account::getBalance).collect(Collectors.toSet()),
+                accounts.stream().map(Account::getExactBalance).collect(Collectors.toSet()),
                 hasItems(
                         new Amount(
                                 "EUR",
