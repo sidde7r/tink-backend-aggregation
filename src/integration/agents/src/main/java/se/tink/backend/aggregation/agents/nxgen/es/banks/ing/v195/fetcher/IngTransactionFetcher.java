@@ -58,7 +58,9 @@ public class IngTransactionFetcher implements TransactionMonthPaginator {
     private static Transaction toTinkTransaction(Account account, Element element) {
         Transaction.Builder builder = new Transaction.Builder();
 
-        builder.setAmount(new Amount(account.getBalance().getCurrency(), element.getAmount()))
+        builder.setAmount(
+                        new Amount(
+                                account.getExactBalance().getCurrencyCode(), element.getAmount()))
                 .setDate(LocalDate.parse(element.getEffectiveDate(), IngUtils.DATE_FORMATTER))
                 .setDescription(element.getDescription())
                 .setPending(false);

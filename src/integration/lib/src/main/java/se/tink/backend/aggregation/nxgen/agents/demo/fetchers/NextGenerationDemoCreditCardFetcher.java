@@ -55,7 +55,7 @@ public class NextGenerationDemoCreditCardFetcher
         return purchaseHistoryGenerator.generateTransactions(
                 getRefreshStartDate(account.getAccountNumber()),
                 DateUtils.getToday(),
-                account.getBalance().getCurrency());
+                account.getExactBalance().getCurrencyCode());
     }
 
     private Date getRefreshStartDate(String accountId) {

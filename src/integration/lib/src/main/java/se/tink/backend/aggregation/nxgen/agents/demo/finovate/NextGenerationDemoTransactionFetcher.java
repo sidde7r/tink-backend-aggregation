@@ -65,7 +65,7 @@ public class NextGenerationDemoTransactionFetcher
             return purchaseHistoryGenerator.generateTransactions(
                     getRefreshStartDate(account.getAccountNumber()),
                     DateUtils.getToday(),
-                    account.getBalance().getCurrency());
+                    account.getExactBalance().getCurrencyCode());
         }
 
         if (account.getType() == AccountTypes.SAVINGS) {

@@ -1,10 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.entities;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.math.BigDecimal;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.MortgageEntity;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class MortgageEntityTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -56,6 +60,8 @@ public class MortgageEntityTest {
                 MAPPER.readValue(mortgageEntityString, MortgageEntity.class);
 
         LoanAccount loanAccount = mortgageEntity.toTinkLoan();
-        System.out.println(loanAccount.getBalance());
+
+        assertThat(new ExactCurrencyAmount(new BigDecimal(-1000000.00), "SEK"))
+                .isEqualTo(loanAccount.getExactBalance());
     }
 }
