@@ -127,7 +127,7 @@ public class WebdriverHelperTest {
 
         // then
         inOrder.verify(driver).findElements(BY_ID);
-        inOrder.verify(sleeper).sleepFor(5_000);
+        inOrder.verify(sleeper).sleepFor(500);
         inOrder.verify(driver).findElements(BY_ID);
     }
 
