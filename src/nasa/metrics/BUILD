@@ -6,12 +6,10 @@ java_library(
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_inject_guice",
         "//third_party:io_prometheus_simpleclient_servlet",
+        "//third_party:java_spark",
         "//third_party:org_eclipse_jetty_orbit_javax_servlet",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:prometheus",
         "@aggregation//:com_google_guava_guava",
-        "@org_eclipse_jetty_jetty_server_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_servlet_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_util_spark_dep//jar",
     ],
 )

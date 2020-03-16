@@ -14,9 +14,9 @@ java_library(
         "//src/integration/models",
         "//src/libraries/account_identifier",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
+        "//third_party:org_apache_commons_commons_collections4",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
-        "@org_apache_commons_commons_collections4//jar",
     ],
 )
