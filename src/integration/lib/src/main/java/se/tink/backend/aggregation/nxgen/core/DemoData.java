@@ -55,7 +55,7 @@ public class DemoData {
 
         for (Transaction t : lastTransactions) {
             // Add some dummy randomization
-            double prevAmount = t.getAmount().getValue();
+            double prevAmount = t.getExactAmount().getDoubleValue();
             double randAmount = Math.round(prevAmount * Math.random());
 
             Transaction updatedTransaction =

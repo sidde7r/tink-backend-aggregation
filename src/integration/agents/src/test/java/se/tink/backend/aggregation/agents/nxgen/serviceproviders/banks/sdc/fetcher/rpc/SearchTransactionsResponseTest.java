@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import org.junit.Test;
@@ -20,12 +19,11 @@ public class SearchTransactionsResponseTest {
         SdcSeTransactionParser transactionParser = new SdcSeTransactionParser();
         Collection<Transaction> transactions = response.getTinkTransactions(transactionParser);
 
-        assertNotNull(transactions);
-        assertTrue(transactions.size() > 0);
+        assertThat(transactions).isNotEmpty();
         for (Transaction transaction : transactions) {
-            assertNotNull(transaction.getDescription());
-            assertNotNull(transaction.getDate());
-            assertTrue(transaction.getAmount().getValue() != 0);
+            assertThat(transaction.getDescription()).isNotNull();
+            assertThat(transaction.getDate()).isNotNull();
+            assertThat(transaction.getExactAmount().getDoubleValue()).isNotEqualTo(0);
         }
     }
 
@@ -45,15 +43,14 @@ public class SearchTransactionsResponseTest {
         Collection<CreditCardTransaction> transactions =
                 response.getTinkCreditCardTransactions(creditCardAccount, transactionParser);
 
-        assertNotNull(transactions);
-        assertTrue(transactions.size() > 0);
-        assertEquals(1, transactions.stream().filter(Transaction::isPending).count());
-        assertEquals(6, transactions.stream().filter(t -> !t.isPending()).count());
+        assertThat(transactions).isNotEmpty();
+        assertThat(transactions.stream().filter(Transaction::isPending).count()).isEqualTo(1);
+        assertThat(transactions.stream().filter(t -> !t.isPending()).count()).isEqualTo(6);
         for (CreditCardTransaction transaction : transactions) {
-            assertNotNull(transaction.getDescription());
-            assertNotNull(transaction.getDate());
-            assertTrue(transaction.getCreditAccount().isPresent());
-            assertTrue(transaction.getAmount().getValue() != 0);
+            assertThat(transaction.getDescription()).isNotNull();
+            assertThat(transaction.getDate()).isNotNull();
+            assertThat(transaction.getCreditAccount().isPresent()).isTrue();
+            assertThat(transaction.getExactAmount().getDoubleValue()).isNotEqualTo(0);
         }
     }
 
@@ -65,13 +62,12 @@ public class SearchTransactionsResponseTest {
         SdcSeTransactionParser transactionParser = new SdcSeTransactionParser();
         Collection<Transaction> transactions = response.getTinkTransactions(transactionParser);
 
-        assertNotNull(transactions);
-        assertTrue(transactions.size() > 0);
+        assertThat(transactions).isNotEmpty();
         assertEquals(1, transactions.stream().filter(Transaction::isPending).count());
         for (Transaction transaction : transactions) {
-            assertNotNull(transaction.getDescription());
-            assertNotNull(transaction.getDate());
-            assertTrue(transaction.getAmount().getValue() != 0);
+            assertThat(transaction.getDescription()).isNotNull();
+            assertThat(transaction.getDate()).isNotNull();
+            assertThat(transaction.getExactAmount().getDoubleValue()).isNotEqualTo(0);
         }
     }
 
@@ -82,7 +78,6 @@ public class SearchTransactionsResponseTest {
         SdcSeTransactionParser transactionParser = new SdcSeTransactionParser();
         Collection<Transaction> transactions = response.getTinkTransactions(transactionParser);
 
-        assertNotNull(transactions);
-        assertTrue(transactions.size() == 0);
+        assertThat(transactions).isNotEmpty();
     }
 }

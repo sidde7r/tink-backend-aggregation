@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.creditcard.rpc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.List;
@@ -15,32 +13,32 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditCardTransactionsResponseTest {
     @Test
-    public void testPagination() throws Exception {
+    public void testPagination() {
         CreditCardTransactionsResponse response =
                 SerializationUtils.deserializeFromString(
                         TEST_DATA_PAGINATION, CreditCardTransactionsResponse.class);
-        assertTrue(response.hasMoreTransactions());
-        assertTrue(100 == response.getNextStartOffset());
+        assertThat(response.hasMoreTransactions()).isTrue();
+        assertThat(response.getNextStartOffset()).isEqualTo(100);
     }
 
     @Test
-    public void testParseActualResponse() throws Exception {
+    public void testParseActualResponse() {
         CreditCardTransactionsResponse response =
                 SerializationUtils.deserializeFromString(
                         TEST_DATA_PARSE, CreditCardTransactionsResponse.class);
 
-        assertFalse(response.hasMoreTransactions());
-        assertTrue(50 == response.getNextStartOffset());
+        assertThat(response.hasMoreTransactions()).isTrue();
+        assertThat(response.getNextStartOffset()).isEqualTo(50);
         List<CreditCardTransaction> transactions = response.getTinkTransactions();
         assertEquals(11, response.getTinkTransactions().size());
         transactions.stream()
                 .forEach(
                         tx -> {
-                            assertEquals(TransactionTypes.CREDIT_CARD, tx.getType());
-                            assertEquals("NOK", tx.getAmount().getCurrency());
-                            assertTrue(0 != tx.getAmount().getValue());
-                            assertNotNull(tx.getDate());
-                            assertNotNull(tx.getDescription());
+                            assertThat(TransactionTypes.CREDIT_CARD).isEqualTo(tx.getType());
+                            assertThat(tx.getExactAmount().getCurrencyCode()).isEqualTo("NOK");
+                            assertThat(tx.getExactAmount().getDoubleValue()).isNotEqualTo(0);
+                            assertThat(tx.getDate()).isNotNull();
+                            assertThat(tx.getDescription()).isNotNull();
                         });
         Calendar cExpect = Calendar.getInstance();
         cExpect.set(Calendar.YEAR, 2018);
@@ -50,9 +48,9 @@ public class CreditCardTransactionsResponseTest {
         Calendar cActual = Calendar.getInstance();
         cActual.setTime(transactions.get(0).getDate());
 
-        assertEquals(cExpect.get(Calendar.YEAR), cActual.get(Calendar.YEAR));
-        assertEquals(cExpect.get(Calendar.MONTH), cActual.get(Calendar.MONTH));
-        assertEquals(cExpect.get(Calendar.DATE), cActual.get(Calendar.DATE));
+        assertThat(cExpect.get(Calendar.YEAR)).isEqualTo(cActual.get(Calendar.YEAR));
+        assertThat(cExpect.get(Calendar.MONTH)).isEqualTo(cActual.get(Calendar.MONTH));
+        assertThat(cExpect.get(Calendar.DATE)).isEqualTo(cActual.get(Calendar.DATE));
     }
 
     private static final String TEST_DATA_PAGINATION =
