@@ -137,16 +137,17 @@ public class NemIdIFrameControllerTest {
         inOrder.verify(driver.switchTo()).frame(iframeMock);
         inOrder.verify(webdriverHelper).waitForElement(driver, USERNAME_INPUT);
 
+        inOrder.verify(driver.manage().timeouts()).implicitlyWait(0, TimeUnit.SECONDS);
+
         // fulfill nemid form and submit
         inOrder.verify(webdriverHelper).setValueToElement(driver, USERNAME, USERNAME_INPUT);
         inOrder.verify(webdriverHelper).setValueToElement(driver, PASSWORD, PASSWORD_INPUT);
         inOrder.verify(webdriverHelper).clickButton(driver, SUBMIT_BUTTON);
 
         // verify response
-        inOrder.verify(driver.manage().timeouts()).implicitlyWait(0, TimeUnit.SECONDS);
         inOrder.verify(webdriverHelper).waitForElement(driver, ERROR_MESSAGE);
         inOrder.verify(webdriverHelper).waitForElement(driver, OTP_ICON);
-        inOrder.verify(driver.manage().timeouts()).implicitlyWait(30, TimeUnit.SECONDS);
+//        inOrder.verify(driver.manage().timeouts()).implicitlyWait(30, TimeUnit.SECONDS);
 
         // credentials ok, forward request to nemid app
         inOrder.verify(webdriverHelper).clickButton(driver, NEMID_APP_BUTTON);
