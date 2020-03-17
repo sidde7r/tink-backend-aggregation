@@ -281,7 +281,8 @@ public class Field {
         ACCESS_PIN_CONFIRMATION("confirmaccesspininput"),
         EMAIL("email"),
         IBAN("iban"),
-        BANKID_PASSWORD("bankid-password");
+        BANKID_PASSWORD("bankid-password"),
+        SESSION_EXPIRY_TIME("sessionExpiryTime");
 
         private final String fieldKey;
 

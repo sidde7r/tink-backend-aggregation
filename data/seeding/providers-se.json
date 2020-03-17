@@ -2807,6 +2807,35 @@
             "type": "TEST"
         },
         {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayDescription": "Redirect",
+            "displayName": "Demo Open Banking Redirect (successful - configurable session expiry)",
+            "fields": [
+                {
+                    "description": "Session expiration time (seconds)",
+                    "name": "sessionExpiryTime",
+                    "immutable": true,
+                    "minLength": 1,
+                    "maxLength": 7,
+                    "numeric": true,
+                    "pattern": "\\b([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-8][0-9]{4}|9[0-8][0-9]{3}|99[0-8][0-9]{2}|999[0-8][0-9]|9999[0-9]|[1-8][0-9]{5}|9[0-8][0-9]{4}|99[0-8][0-9]{3}|999[0-8][0-9]{2}|9999[0-8][0-9]|99999[0-9]|[1-6][0-9]{6}|7[0-6][0-9]{5}|77[0-6][0-9]{4}|777[0-5][0-9]{3}|7776000)\\b",
+                    "patternError": "Please enter session expiration time in seconds. It should be between 0 and 7776000"
+                }
+            ],
+            "financialInstitutionId": "dummyId",
+            "financialInstituteName": "Demo Open Banking Redirect - configurable session expiry",
+            "groupDisplayName": "Demo providers",
+            "multiFactor": true,
+            "name": "se-test-open-banking-redirect-configurable-session-expiry",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using a third party app.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
             "accessType": "OTHER",
             "credentialsType": "PASSWORD",
             "displayName": "TEST_PARTNER Abstract",

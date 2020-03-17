@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.
 import com.google.common.base.Strings;
 import java.util.Base64;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -54,7 +55,8 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
         }
         long accessExpiresInSeconds = THIRTY_DAYS_IN_SECONDS;
         if (providerName.matches(DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX)) {
-            accessExpiresInSeconds = Integer.parseInt(credentials.getField("sessionExpiryTime"));
+            accessExpiresInSeconds =
+                    Integer.parseInt(credentials.getField(Field.Key.SESSION_EXPIRY_TIME));
         }
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
         String refreshToken = BASE64_ENCODER.encodeToString("fakeRefreshToken".getBytes());
