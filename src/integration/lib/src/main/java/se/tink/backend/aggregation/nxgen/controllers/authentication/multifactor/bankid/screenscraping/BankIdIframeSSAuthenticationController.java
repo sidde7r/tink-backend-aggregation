@@ -64,34 +64,12 @@ public class BankIdIframeSSAuthenticationController {
     }
 
     private void submitUsername(WebDriver driver, String username) {
-        WebElement userInput = webDriverHelper.getElement(driver, USERNAME_INPUT_XPATH);
-        sendValueToInputAndSubmit(userInput, username);
-    }
-
-    private void getLoadedBankIdIframe(WebDriver driver) {
-        getBankIdLoginIframe(driver);
-        checkIfLoadedIfNotRefresh(driver);
-    }
-
-    private boolean checkIfLoadedIfNotRefresh(WebDriver driver) {
-        for (int i = 0; i < 10; i++) {
-            if (isErrorWhenBankIdLoaded(driver)) {
-                getBankIdLoginIframe(driver);
-                webDriverHelper.sleep(WAIT_RENDER_MILLIS * i);
-            } else {
-                return true;
-            }
+        try{
+            WebElement userInput = webDriverHelper.getElement(driver, USERNAME_INPUT_XPATH);
+            sendValueToInputAndSubmit(userInput, username);
+        } catch (HtmlElementNotFoundException ex){
+            throw new ScreenScrapingException("Bank Id template not loaded");
         }
-        throw new ScreenScrapingException("Bank Id template not loaded");
-    }
-
-    private void getBankIdLoginIframe(WebDriver driver) {
-        driver.get(loginBaseUrl);
-        webDriverHelper.switchToIframe(driver);
-    }
-
-    private boolean isErrorWhenBankIdLoaded(WebDriver driver) {
-        return driver.findElements(USERNAME_INPUT_XPATH).isEmpty();
     }
 
     private WebElement waitForUserInteraction(WebDriver driver) throws LoginException {
