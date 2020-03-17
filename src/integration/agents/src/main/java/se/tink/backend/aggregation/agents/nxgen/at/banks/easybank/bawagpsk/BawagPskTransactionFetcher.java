@@ -64,7 +64,7 @@ public final class BawagPskTransactionFetcher<AcccountT extends Account>
         // Get transactions, filter zero amounts since they are not shown in the app
         final Collection<? extends Transaction> transactions =
                 response.getTransactions().stream()
-                        .filter(transaction -> !transaction.getAmount().isZero())
+                        .filter(transaction -> transaction.getExactAmount().getDoubleValue() != 0)
                         .collect(Collectors.toSet());
 
         return PaginatorResponseImpl.create(transactions);
