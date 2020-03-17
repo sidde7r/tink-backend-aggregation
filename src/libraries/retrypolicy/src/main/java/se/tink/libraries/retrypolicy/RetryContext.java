@@ -2,7 +2,7 @@ package se.tink.libraries.retrypolicy;
 
 class RetryContext {
     private int attempt;
-    private Throwable t;
+    private Throwable throwable;
 
     RetryContext() {}
 
@@ -11,11 +11,11 @@ class RetryContext {
     }
 
     Throwable getLastThrowable() {
-        return t;
+        return throwable;
     }
 
     void setNewThrowable(final Throwable t) {
-        this.t = t;
+        this.throwable = t;
         attempt++;
     }
 }
