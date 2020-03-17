@@ -255,8 +255,9 @@ public abstract class Account {
                 Optional.ofNullable(this.exactAvailableCredit)
                         .map(ExactCurrencyAmount::getDoubleValue)
                         .orElse(0.0));
-        account.setExactAvailableCredit(
-                Optional.ofNullable(this.exactAvailableCredit).orElse(null));
+        account.setExactAvailableCredit(this.exactAvailableCredit);
+        account.setAvailableBalance(this.exactAvailableBalance);
+        account.setCreditLimit(this.exactCreditLimit);
 
         return account;
     }

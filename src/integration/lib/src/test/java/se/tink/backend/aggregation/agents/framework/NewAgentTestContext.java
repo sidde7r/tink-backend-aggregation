@@ -24,6 +24,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
@@ -502,6 +503,23 @@ public final class NewAgentTestContext extends AgentContext {
         row.put("number", account.getAccountNumber());
         row.put("name", account.getName());
         row.put("balance", String.valueOf(account.getBalance()));
+        if (account.getType() == AccountTypes.CREDIT_CARD) {
+            row.put("availableCredit", String.valueOf(account.getAvailableCredit()));
+        } else if (account.getType() == AccountTypes.CHECKING
+                || account.getType() == AccountTypes.SAVINGS) {
+            row.put(
+                    "availableBalance",
+                    String.valueOf(
+                            Optional.ofNullable(account.getAvailableBalance())
+                                    .map(a -> a.getExactValue())
+                                    .orElse(null)));
+            row.put(
+                    "creditLimit",
+                    String.valueOf(
+                            Optional.ofNullable(account.getCreditLimit())
+                                    .map(a -> a.getExactValue())
+                                    .orElse(null)));
+        }
         CliPrintUtils.printTable(0, "account", Lists.newArrayList(row));
 
         printAccountIdentifiers(account);

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.libraries.account.rpc.Account;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateAccountRequest {
@@ -11,6 +12,8 @@ public class UpdateAccountRequest {
     private String user;
     private String credentialsId;
     private int credentialsDataVersion;
+    private ExactCurrencyAmount availableBalance;
+    private ExactCurrencyAmount creditLimit;
 
     public String getCredentialsId() {
         return credentialsId;
@@ -53,5 +56,21 @@ public class UpdateAccountRequest {
 
     public void setCredentialsDataVersion(int credentialsDataVersion) {
         this.credentialsDataVersion = credentialsDataVersion;
+    }
+
+    public ExactCurrencyAmount getAvailableBalance() {
+        return availableBalance;
+    }
+
+    public void setAvailableBalance(ExactCurrencyAmount availableBalance) {
+        this.availableBalance = availableBalance;
+    }
+
+    public ExactCurrencyAmount getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(ExactCurrencyAmount creditLimit) {
+        this.creditLimit = creditLimit;
     }
 }

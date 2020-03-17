@@ -18,6 +18,7 @@ java_library(
     deps = [
         ":enums",
         "//src/integration/account/src/main/java/se/tink/libraries/account/iface",
+        "//src/integration/amount",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
