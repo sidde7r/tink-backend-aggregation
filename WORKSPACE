@@ -2667,6 +2667,12 @@ SPRING_BOOT_VERSION = "2.1.3.RELEASE"
 maven_install(
     name = "system_tests",
     artifacts = [
+        "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+        "com.google.guava:guava:23.1-jre",
+        "commons-io:commons-io:2.5",
+        "org.apache.httpcomponents:httpclient:4.5.10",
+        "org.hamcrest:hamcrest-core:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
         "org.springframework.boot:spring-boot-test:%s" % SPRING_BOOT_VERSION,
         "org.springframework:spring-aop:%s" % SPRING_FRAMEWORK_VERSION,
         "org.springframework:spring-beans:%s" % SPRING_FRAMEWORK_VERSION,
@@ -2676,8 +2682,6 @@ maven_install(
         "org.springframework:spring-web:%s" % SPRING_FRAMEWORK_VERSION,
         "org.springframework:spring-webmvc:%s" % SPRING_FRAMEWORK_VERSION,
         "org.testcontainers:testcontainers:1.12.5",
-        "org.hamcrest:hamcrest-core:1.3",
-        "org.hamcrest:hamcrest-library:1.3",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party/system_tests:system_tests_install.json",
