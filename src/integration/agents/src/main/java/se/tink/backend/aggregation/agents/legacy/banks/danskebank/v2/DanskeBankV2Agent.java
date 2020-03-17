@@ -495,7 +495,7 @@ public class DanskeBankV2Agent extends AbstractAgent
                         ? dateHelper.getCalendar(transfer.getDueDate())
                         : dateHelper.getCalendar();
         if (!Objects.equals(bankId, DanskeUtils.getBankId(ClearingNumber.Bank.DANSKE_BANK))) {
-            Calendar tomorrow = Calendar.getInstance();
+            Calendar tomorrow = dateHelper.getCalendar();
             tomorrow.add(Calendar.DATE, 1);
             if (!tomorrow.after(transferDate)) {
                 transferDate.add(Calendar.DAY_OF_YEAR, 1);
