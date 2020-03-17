@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.agents;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants;
 
 public class KbcAgentTest {
 
