@@ -16,5 +16,5 @@ LOGFILE="/cache/aggregation_decoupled.log"
     --test_output=streamed \
     --curses=no \
     -- \
-    //src/aggregation/service:bin_decoupled \
+    //src/aggregation/service:run_aggregation_decoupled_and_external_deps \
     &> "$LOGFILE"

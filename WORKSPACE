@@ -83,11 +83,11 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "513c12397db1bc9aa46dd62f02dd94b49a9b5d17444d49b5a04c5a89f3053c1c",
     urls = [
-        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/rules_go/releases/download/v0.19.5/rules_go-v0.19.5.tar.gz",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.19.5/rules_go-v0.19.5.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.22.1/rules_go-v0.22.1.tar.gz",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.22.1/rules_go-v0.22.1.tar.gz",
     ],
+    sha256 = "e6a6c016b0663e06fa5fccf1cd8152eab8aa8180c583ec20c872f4f9953a7ac5",
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
@@ -2682,6 +2682,8 @@ maven_install(
         "org.springframework:spring-web:%s" % SPRING_FRAMEWORK_VERSION,
         "org.springframework:spring-webmvc:%s" % SPRING_FRAMEWORK_VERSION,
         "org.testcontainers:testcontainers:1.12.5",
+        "org.hamcrest:hamcrest-core:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party/system_tests:system_tests_install.json",
@@ -2835,3 +2837,14 @@ maven_install(
 load("@com_github_javafaker_javafaker//:defs.bzl", com_github_javafaker_javafaker_pin = "pinned_maven_install")
 
 com_github_javafaker_javafaker_pin()
+
+git_repository(
+    name = "com_github_atlassian_bazel_tools",
+    commit = "72f7db723e7723842042922344dd690c359a87a5",
+    remote = "https://github.com/atlassian/bazel-tools.git",
+    shallow_since = "1490898663 +0200",
+)
+
+load("@com_github_atlassian_bazel_tools//multirun:deps.bzl", "multirun_dependencies")
+
+multirun_dependencies()
