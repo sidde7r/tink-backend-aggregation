@@ -4,6 +4,8 @@ import java.util.Optional;
 
 public class AuthenticationStepResponse {
 
+    private static final AuthenticationStepResponse EMPTY = new AuthenticationStepResponse();
+
     private SupplementInformationRequester supplementInformationRequester;
     private String nextStepId;
     private boolean authenticationFinished;
@@ -37,7 +39,7 @@ public class AuthenticationStepResponse {
     }
 
     public static AuthenticationStepResponse executeNextStep() {
-        return new AuthenticationStepResponse();
+        return EMPTY;
     }
 
     public Optional<SupplementInformationRequester> getSupplementInformationRequester() {
