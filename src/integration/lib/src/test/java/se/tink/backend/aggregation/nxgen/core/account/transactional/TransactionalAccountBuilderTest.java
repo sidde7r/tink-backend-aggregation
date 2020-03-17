@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -264,34 +264,34 @@ public class TransactionalAccountBuilderTest {
 
         Optional<SomeBoxing> storage = account.getFromTemporaryStorage("box", SomeBoxing.class);
 
-        assertEquals(AccountTypes.SAVINGS, account.getType());
-        assertEquals("321573128", account.getIdModule().getUniqueId());
-        assertEquals("B-321-573-128", account.getAccountNumber());
+        assertThat(account.getType()).isEqualTo(AccountTypes.SAVINGS);
+        assertThat(account.getIdModule().getUniqueId()).isEqualTo("321573128");
+        assertThat(account.getAccountNumber()).isEqualTo("B-321-573-128");
 
-        assertEquals(
-                "iban://DE75512108001245126199;sepa-eur://DE75512108001245126199",
-                account.getIdModule().getIdentifiers().stream()
-                        .map(AccountIdentifier::toString)
-                        .sorted()
-                        .collect(Collectors.joining(";")));
-        assertEquals("Meine Pezparinger", account.getIdModule().getAccountName());
-        assertEquals("UltraSavings ZeroFX", account.getIdModule().getProductName());
+        assertThat(
+                        account.getIdModule().getIdentifiers().stream()
+                                .map(AccountIdentifier::toString)
+                                .sorted()
+                                .collect(Collectors.joining(";")))
+                .isEqualTo("iban://DE75512108001245126199;sepa-eur://DE75512108001245126199");
+        assertThat(account.getIdModule().getAccountName()).isEqualTo("Meine Pezparinger");
+        assertThat(account.getIdModule().getProductName()).isEqualTo("UltraSavings ZeroFX");
 
-        assertEquals(579.3, account.getBalance().getValue(), 0);
-        assertEquals("EUR", account.getBalance().getCurrency());
-        assertNotNull(account.getAvailableCredit());
-        assertEquals(420.7, account.getAvailableCredit().getValue(), 0);
-        assertNotNull(account.getExactAvailableBalance());
-        assertEquals(529.3, account.getExactAvailableBalance().getDoubleValue(), 0);
-        assertEquals("EUR", account.getExactAvailableBalance().getCurrencyCode());
-        assertNotNull(account.getExactCreditLimit());
-        assertEquals(1000.0, account.getExactCreditLimit().getDoubleValue(), 0);
-        assertEquals("EUR", account.getExactCreditLimit().getCurrencyCode());
+        assertThat(account.getExactBalance().getDoubleValue()).isEqualTo(579.3);
+        assertThat(account.getExactBalance().getCurrencyCode()).isEqualTo("EUR");
+        assertThat(account.getExactAvailableCredit()).isNotNull();
+        assertThat(account.getExactAvailableCredit().getDoubleValue()).isEqualTo(420.7);
+        assertThat(account.getExactAvailableBalance()).isNotNull();
+        assertThat(account.getExactAvailableBalance().getDoubleValue()).isEqualTo(529.3);
+        assertThat(account.getExactAvailableBalance().getCurrencyCode()).isEqualTo("EUR");
+        assertThat(account.getExactCreditLimit()).isNotNull();
+        assertThat(account.getExactCreditLimit().getDoubleValue()).isEqualTo(1000.0);
+        assertThat(account.getExactCreditLimit().getCurrencyCode()).isEqualTo("EUR");
 
-        assertTrue(storage.isPresent());
-        assertEquals("TestString", storage.get().x);
-        assertEquals(15, storage.get().y);
-        assertEquals("Jürgen Flughaubtkopf", account.getHolderName().toString());
-        assertEquals("2a3ffe-38320c", account.getApiIdentifier());
+        assertThat(storage.isPresent()).isTrue();
+        assertThat(storage.get().x).isEqualTo("TestString");
+        assertThat(storage.get().y).isEqualTo(15);
+        assertThat(account.getHolderName().toString()).isEqualTo("Jürgen Flughaubtkopf");
+        assertThat(account.getApiIdentifier()).isEqualTo("2a3ffe-38320c");
     }
 }
