@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator;
 
+import org.openqa.selenium.WebDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field.Key;
@@ -12,12 +13,19 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.BankIdIframeSSAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants;
+import se.tink.libraries.selenium.WebDriverHelper;
 
 public class SdcNoBankIdIFrameSSAuthenticator implements AutoAuthenticator, TypedAuthenticator {
     private final BankIdIframeSSAuthenticationController controller;
+    private final WebDriver driver;
+    private final String baseUrl;
 
-    public SdcNoBankIdIFrameSSAuthenticator(BankIdIframeSSAuthenticationController controller) {
-        this.controller = controller;
+    public SdcNoBankIdIFrameSSAuthenticator(String baseUrl) {
+        WebDriverHelper webDriverHelper = new WebDriverHelper();
+        this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
+        this.baseUrl = baseUrl;
+        this.controller = new BankIdIframeSSAuthenticationController(webDriverHelper, driver);
     }
 
     @Override
@@ -27,7 +35,11 @@ public class SdcNoBankIdIFrameSSAuthenticator implements AutoAuthenticator, Type
         String username = credentials.getField(Key.USERNAME);
         String password = credentials.getField(Key.PASSWORD);
 
+        driver.get(baseUrl);
+
         controller.doLogin(username, password);
+
+        driver.close();
     }
 
     @Override

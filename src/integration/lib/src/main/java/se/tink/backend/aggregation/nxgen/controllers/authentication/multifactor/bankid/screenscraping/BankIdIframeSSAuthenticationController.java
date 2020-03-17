@@ -8,11 +8,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.libraries.selenium.WebDriverHelper;
+import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
 public class BankIdIframeSSAuthenticationController {
     private WebDriverHelper webDriverHelper;
-    private String loginBaseUrl;
     private WebDriver driver;
 
     private static final By FORM_XPATH = By.xpath("//form");
@@ -27,14 +27,13 @@ public class BankIdIframeSSAuthenticationController {
     private static final int WAIT_RENDER_MILLIS = 1000;
 
     public BankIdIframeSSAuthenticationController(
-            String loginBaseUrl, WebDriverHelper webDriverHelper) {
+            WebDriverHelper webDriverHelper, WebDriver driver) {
         this.webDriverHelper = webDriverHelper;
-        this.loginBaseUrl = loginBaseUrl;
-        this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
+        this.driver = driver;
     }
 
     public void doLogin(String username, String password) throws AuthenticationException {
-        getLoadedBankIdIframe(driver);
+        webDriverHelper.switchToIframe(driver);
 
         submitUsername(driver, username);
 
@@ -43,8 +42,6 @@ public class BankIdIframeSSAuthenticationController {
         chooseBankIdMobil(driver);
 
         waitForUserInteractionAndSendBankIdPassword(driver, password);
-
-        driver.close();
     }
 
     private void waitForUserInteractionAndSendBankIdPassword(WebDriver driver, String password)
@@ -67,34 +64,12 @@ public class BankIdIframeSSAuthenticationController {
     }
 
     private void submitUsername(WebDriver driver, String username) {
-        WebElement userInput = webDriverHelper.getElement(driver, USERNAME_INPUT_XPATH);
-        sendValueToInputAndSubmit(userInput, username);
-    }
-
-    private void getLoadedBankIdIframe(WebDriver driver) {
-        getBankIdLoginIframe(driver);
-        checkIfLoadedIfNotRefresh(driver);
-    }
-
-    private boolean checkIfLoadedIfNotRefresh(WebDriver driver) {
-        for (int i = 0; i < 10; i++) {
-            if (isErrorWhenBankIdLoaded(driver)) {
-                getBankIdLoginIframe(driver);
-                webDriverHelper.sleep(WAIT_RENDER_MILLIS * i);
-            } else {
-                return true;
-            }
+        try {
+            WebElement userInput = webDriverHelper.getElement(driver, USERNAME_INPUT_XPATH);
+            sendValueToInputAndSubmit(userInput, username);
+        } catch (HtmlElementNotFoundException ex) {
+            throw new ScreenScrapingException("Bank Id template not loaded");
         }
-        throw new ScreenScrapingException("Bank Id template not loaded");
-    }
-
-    private void getBankIdLoginIframe(WebDriver driver) {
-        driver.get(loginBaseUrl);
-        webDriverHelper.switchToIframe(driver);
-    }
-
-    private boolean isErrorWhenBankIdLoaded(WebDriver driver) {
-        return driver.findElements(USERNAME_INPUT_XPATH).isEmpty();
     }
 
     private WebElement waitForUserInteraction(WebDriver driver) throws LoginException {

@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
-import java.util.Collections;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +16,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.libraries.selenium.WebDriverHelper;
+import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
 public class BankIdIframeSSAuthenticationControllerTest {
@@ -53,10 +51,8 @@ public class BankIdIframeSSAuthenticationControllerTest {
         driver = mock(PhantomJSDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
 
-        given(webDriverHelper.constructPhantomJsWebDriver(anyString())).willReturn(driver);
-
         inOrder = Mockito.inOrder(driver, webDriverHelper);
-        controller = new BankIdIframeSSAuthenticationController(LOGIN_INPUT, webDriverHelper);
+        controller = new BankIdIframeSSAuthenticationController(webDriverHelper, driver);
         initializeWebElements();
     }
 
@@ -79,7 +75,6 @@ public class BankIdIframeSSAuthenticationControllerTest {
 
         // password input
         passwordInputMock = mock(WebElement.class);
-        // given(passwordInputMock.isEnabled()).willReturn(true);
         given(webDriverHelper.checkIfElementEnabledIfNotWait(passwordInputMock)).willReturn(true);
         given(driver.findElements(PASSWORD_INPUT_XPATH))
                 .willReturn(Arrays.asList(passwordInputMock));
@@ -115,15 +110,15 @@ public class BankIdIframeSSAuthenticationControllerTest {
     }
 
     @Test
-    public void doLoginShouldRefresh11TimesAndThrowExceptionWhenBankIdTemplateNotLoaded() {
+    public void doLoginShouldThrowExceptionWhenBankIdTemplateNotLoaded() {
         // given
-        given(driver.findElements(USERNAME_INPUT_XPATH)).willReturn(Collections.EMPTY_LIST);
+        given(webDriverHelper.getElement(driver, USERNAME_INPUT_XPATH))
+                .willThrow(new HtmlElementNotFoundException("Element not found"));
         // when
         Throwable throwable =
                 Assertions.catchThrowable(
                         () -> controller.doLogin("USERNAME-EXAMPLE", "PASSWORD-EXAMPLE"));
         // then
-        verify(webDriverHelper, Mockito.times(11)).switchToIframe(driver);
         assertThat(throwable)
                 .isInstanceOf(ScreenScrapingException.class)
                 .hasMessage("Bank Id template not loaded");

@@ -11,9 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.BankIdIframeSSAuthenticationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.selenium.WebDriverHelper;
 
 /*
  * Configure market specific client, this is NO
@@ -35,9 +33,7 @@ public class SdcNoAgent extends SdcAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BankIdIframeSSAuthenticationController controller =
-                new BankIdIframeSSAuthenticationController(getLoginUrl(), new WebDriverHelper());
-        return new SdcNoBankIdIFrameSSAuthenticator(controller);
+        return new SdcNoBankIdIFrameSSAuthenticator(getLoginUrl());
     }
 
     @Override
