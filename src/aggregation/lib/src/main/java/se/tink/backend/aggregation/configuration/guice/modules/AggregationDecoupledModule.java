@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
@@ -32,14 +33,14 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.MockSupplementalInformationProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.TinkHttpClientProviderFactory;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.WireMockTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.FakeCreditSafeService;
 import se.tink.backend.aggregation.resources.FakeProviderConfigurationService;
@@ -169,13 +170,19 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AggregationServiceConfiguration.class).toInstance(configuration);
         bind(AgentsServiceConfiguration.class)
                 .toInstance(configuration.getAgentsServiceConfiguration());
-        bind(TinkHttpClientProviderFactory.class).to(NextGenTinkHttpClientProviderFactory.class);
+        bind(String.class)
+                .annotatedWith(Names.named("wireMockServerHost"))
+                .toInstance("localhost:10000");
+        bind(TinkHttpClientProviderFactory.class).to(WireMockTinkHttpClientProviderFactory.class);
+        bind(new TypeLiteral<Map<String, String>>() {})
+                .annotatedWith(Names.named("mockCallbackData"))
+                .toInstance(Collections.emptyMap());
         bind(SupplementalInformationProviderFactory.class)
-                .to(SupplementalInformationProviderFactoryImpl.class);
+                .to(MockSupplementalInformationProviderFactory.class);
         bind(AgentContextProviderFactory.class).to(AgentContextProviderFactoryImpl.class);
-        bind(RandomValueGenerator.class).to(RandomValueGeneratorImpl.class);
-        bind(LocalDateTimeSource.class).to(ActualLocalDateTimeSource.class);
         bind(GeneratedValueProvider.class).to(GeneratedValueProviderImpl.class);
+        bind(LocalDateTimeSource.class).to(ConstantLocalDateTimeSource.class);
+        bind(RandomValueGenerator.class).to(MockRandomValueGenerator.class);
         bind(TppSecretsServiceConfiguration.class)
                 .toInstance(
                         configuration
