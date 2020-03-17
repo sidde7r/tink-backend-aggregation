@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.entity;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Accounts.ACCOUNT_TYPE_MAPPER;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -113,28 +111,24 @@ public class MainAndCoAccountsEntity implements GeneralAccountEntity {
     public Optional<TransactionalAccount> toTinkAccount() {
 
         // TODO: check flags (add PSD2 if applicable
-        Optional<TransactionalAccount> transactionalAccount =
-                TransactionalAccount.nxBuilder()
-                        .withTypeAndFlagsFrom(Accounts.ACCOUNT_TYPE_MAPPER, type)
-                        .withBalance(
-                                BalanceModule.of(
-                                        ExactCurrencyAmount.of(balance, Accounts.CURRENCY)))
-                        .withId(
-                                IdModule.builder()
-                                        .withUniqueIdentifier(accountNumber)
-                                        .withAccountNumber(accountNumber)
-                                        .withAccountName(accountName)
-                                        .addIdentifier(new SwedishIdentifier(accountNumber))
-                                        .build())
-                        .setApiIdentifier(accountNumber)
-                        .build();
-        return transactionalAccount;
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(Accounts.ACCOUNT_TYPE_MAPPER, type)
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(balance, Accounts.CURRENCY)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountNumber)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(accountName)
+                                .addIdentifier(new SwedishIdentifier(accountNumber))
+                                .build())
+                .setApiIdentifier(accountNumber)
+                .build();
     }
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
-        return ACCOUNT_TYPE_MAPPER.isOf(type, AccountTypes.CHECKING)
-                || ACCOUNT_TYPE_MAPPER.isOf(type, AccountTypes.SAVINGS);
+        return Accounts.ACCOUNT_TYPE_MAPPER.isOf(type, AccountTypes.CHECKING)
+                || Accounts.ACCOUNT_TYPE_MAPPER.isOf(type, AccountTypes.SAVINGS);
     }
 
     @JsonIgnore

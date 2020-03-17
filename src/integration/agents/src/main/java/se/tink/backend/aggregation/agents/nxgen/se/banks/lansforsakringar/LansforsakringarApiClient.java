@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar;
 
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.StorageKeys;
@@ -10,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authen
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdLoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.executor.rpc.DirectTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.creditcard.rpc.FetchCreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.einvoice.rpc.FetchEinvoiceRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.einvoice.rpc.FetchEinvoiceResponse;
@@ -70,16 +70,14 @@ public class LansforsakringarApiClient {
                 .post(BankIdLoginResponse.class);
     }
 
-    public void keepAlive() throws SessionException {}
-
     public FetchAccountsResponse fetchAccounts() {
-        return getBaseRequest(Urls.FETCH_TRANSACTIONS)
+        return getBaseRequest(Urls.FETCH_ACCOUNTS)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(FetchAccountsResponse.class);
     }
 
     public FetchTransactionResponse fetchBookedTransactions(String accountNumber, int page) {
-        return getBaseRequest(Urls.FETCH_TRANSACTIONs)
+        return getBaseRequest(Urls.FETCH_TRANSACTIONS)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(
                         FetchTransactionRequest.of(
@@ -155,7 +153,7 @@ public class LansforsakringarApiClient {
                 .get(FetchSavedPaymentRecipientsResponse.class);
     }
 
-    public FetchTransferrableResponse fetchTransferDestinationAccounts() {
+    public FetchTransferrableResponse fetchSavedTransferDestinationAccounts() {
         return getBaseRequest(Urls.FETCH_TRANSFER_SAVED_RECEPIENTS)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(FetchTransferrableResponse.class);
@@ -163,6 +161,12 @@ public class LansforsakringarApiClient {
 
     public FetchTransferrableResponse fetchTransferSourceAccounts() {
         return getBaseRequest(Urls.FETCH_TRANSFER_SOURCE_ACCOUNTS)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchTransferrableResponse.class);
+    }
+
+    public FetchTransferrableResponse fetchTransferDestinationAccounts() {
+        return getBaseRequest(Urls.FETCH_TRANSFER_DESTINATION_ACCOUNTS)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(FetchTransferrableResponse.class);
     }
@@ -183,6 +187,20 @@ public class LansforsakringarApiClient {
                                 sessionStorage.get(StorageKeys.SSN)),
                         MediaType.APPLICATION_JSON_TYPE)
                 .post(FetchEinvoiceResponse.class);
+    }
+
+    // TODO: consider accepting html response in case request fails but response status is 200
+    public void executeValidateTransfer(DirectTransferRequest request) {
+        getBaseRequest(Urls.EXECUTE_DIRECT_TRANSFER_VALIDATE)
+                .body(request, MediaType.APPLICATION_JSON_TYPE)
+                .post();
+    }
+
+    // TODO: consider accepting html response in case request fails but response status is 200
+    public void executeDirectTransfer(DirectTransferRequest request) {
+        getBaseRequest(Urls.EXECUTE_DIRECT_TRANSFER)
+                .body(request, MediaType.APPLICATION_JSON_TYPE)
+                .post();
     }
 
     private RequestBuilder getBaseRequest(URL url) {

@@ -4,18 +4,21 @@ import com.google.api.client.util.Lists;
 import java.util.Collection;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.entities.EngagementsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class InvestmentFetcher implements AccountFetcher<InvestmentAccount> {
+public class LansforsakringarInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
     private final LansforsakringarApiClient apiClient;
-    private final AggregationLogger log = new AggregationLogger(InvestmentFetcher.class);
+    private final AggregationLogger log =
+            new AggregationLogger(LansforsakringarInvestmentFetcher.class);
 
-    public InvestmentFetcher(LansforsakringarApiClient apiClient) {
+    public LansforsakringarInvestmentFetcher(LansforsakringarApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -34,14 +37,12 @@ public class InvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
         // Log new entities
         FetchPensionResponse pensionResponse = apiClient.fetchPension();
-        if (!pensionResponse.getIpsPensionsResponseModel().isEmpty()) {
-            log.info("\nNew unknown entity found for IPS pension");
-        }
-        if (!pensionResponse.getLivPensionsResponseModel().isPrivatPensionsEmpty()) {
-            log.info("\nNew unknown entity found for privat pension");
-        }
-        if (!pensionResponse.getLivPensionsResponseModel().isCapitalInsurancesEmpty()) {
-            log.info("\nNew unknown entity found for capital insurance pension");
+        if (!pensionResponse.getIpsPensionsResponseModel().isEmpty()
+                || !pensionResponse.getLivPensionsResponseModel().isPrivatPensionsEmpty()
+                || !pensionResponse.getLivPensionsResponseModel().isCapitalInsurancesEmpty()) {
+            log.infoExtraLong(
+                    SerializationUtils.serializeToString(pensionResponse),
+                    LogTags.UNKNOWN_PENSION_TYPE);
         }
 
         return investmentAccounts;

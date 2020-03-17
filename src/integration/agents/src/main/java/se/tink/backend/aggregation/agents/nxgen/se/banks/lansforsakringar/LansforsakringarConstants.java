@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar;
 
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
@@ -14,10 +15,10 @@ public class LansforsakringarConstants {
     public static class Urls {
         public static final String BASE = "https://mobil.lansforsakringar.se/";
 
-        public static final URL FETCH_TRANSACTIONS = new URL(BASE + ApiService.FETCH_ACCOUNTS);
+        public static final URL FETCH_ACCOUNTS = new URL(BASE + ApiService.FETCH_ACCOUNTS);
         public static final URL INIT_BANKID = new URL(BASE + ApiService.INIT_BANKID);
         public static final URL LOGIN_BANKID = new URL(BASE + ApiService.LOGIN_BANKID);
-        public static final URL FETCH_TRANSACTIONs = new URL(BASE + ApiService.FETCH_TRANSACTIONS);
+        public static final URL FETCH_TRANSACTIONS = new URL(BASE + ApiService.FETCH_TRANSACTIONS);
         public static final URL FETCH_UPCOMING = new URL(BASE + ApiService.FETCH_UPCOMING);
         public static final URL FETCH_CARDS = new URL(BASE + ApiService.FETCH_CARDS);
         public static final URL FETCH_PENSION_WITH_LIFE_INSURANCE =
@@ -36,7 +37,25 @@ public class LansforsakringarConstants {
                 new URL(BASE + ApiService.PAYMENT_ACCOUNTS);
         public static final URL FETCH_TRANSFER_SOURCE_ACCOUNTS =
                 new URL(BASE + ApiService.TRANSFER_SOURCE_ACCOUNTS);
+        public static final URL FETCH_TRANSFER_DESTINATION_ACCOUNTS =
+                new URL(BASE + ApiService.TRANSFER_DESTINATION_ACCOUNTS);
         public static final URL FETCH_EINVOICES = new URL(BASE + ApiService.EINVOICES);
+        public static final URL EXECUTE_DIRECT_TRANSFER_VALIDATE =
+                new URL(BASE + ApiService.DIRECT_TRANSFER_VALIDATE);
+        public static final URL EXECUTE_DIRECT_TRANSFER =
+                new URL(BASE + ApiService.DIRECT_TRANSFER);
+        public static final URL EXECUTE_EXTERNAL_TRANSFER_CREATE_BANKID_REFERENCE =
+                new URL(BASE + ApiService.EXTERNAL_TRANSFER_CREATE_BANKID_REFERENCE);
+        public static final URL EXECUTE_EXTERNAL_TRANSFER_BANKID_SIGN_VERIFICATION =
+                new URL(BASE + ApiService.EXTERNAL_TRANSFER_BANKID_SIGN_VERIFICATION);
+        public static final URL EXECUTE_PAYMENT_ADD_INVOICE =
+                new URL(BASE + ApiService.PAYMENT_ADD_INVOICE);
+        public static final URL EXECUTE_PAYMENT_AND_TRANSFER_VALIDATE =
+                new URL(BASE + ApiService.PAYMENT_AND_TRANSFER_VALIDATE);
+        public static final URL EXECUTE_PAYMENT_AND_TRANSFER_CREATE_BANKID_REFERENCE =
+                new URL(BASE + ApiService.PAYMENT_AND_TRANSFER_CREATE_BANKID_REFERENCE);
+        public static final URL EXECUTE_PAYMENT_AND_TRANSFER_BANKID_SIGN_VERIFICATION =
+                new URL(BASE + ApiService.PAYMENT_AND_TRANSFER_BANKID_SIGN_VERIFICATION);
     }
 
     public static class ApiService {
@@ -59,7 +78,23 @@ public class LansforsakringarConstants {
         public static final String PAYMENT_ACCOUNTS = "appoutlet/payment/paymentaccount";
         public static final String TRANSFER_SOURCE_ACCOUNTS =
                 "appoutlet/account/transferrable/2.0?direction=from";
+        public static final String TRANSFER_DESTINATION_ACCOUNTS =
+                "appoutlet/account/transferrable/3.0?direction=to";
         public static final String EINVOICES = "es/payment/geteinvoices/1.0";
+        public static final String DIRECT_TRANSFER_VALIDATE =
+                "appoutlet/directtransfer/validate/2.0";
+        public static final String DIRECT_TRANSFER = "appoutlet/directtransfer/2.0";
+        public static final String EXTERNAL_TRANSFER_CREATE_BANKID_REFERENCE =
+                "appoutlet/directtransfer/createbankidreference/2.0";
+        public static final String EXTERNAL_TRANSFER_BANKID_SIGN_VERIFICATION =
+                "appoutlet/directtransfer/bankid/2.0";
+        public static final String PAYMENT_ADD_INVOICE = "appoutlet/payment/einvoice/addeinvoices";
+        public static final String PAYMENT_AND_TRANSFER_VALIDATE =
+                "appoutlet/unsigned/paymentsandtransfers/validate/2.0";
+        public static final String PAYMENT_AND_TRANSFER_CREATE_BANKID_REFERENCE =
+                "appoutlet/unsigned/paymentsandtransfers/bankid/createreference/2.0";
+        public static final String PAYMENT_AND_TRANSFER_BANKID_SIGN_VERIFICATION =
+                "appoutlet/unsigned/paymentsandtransfers/bankid/send/2.0";
     }
 
     public static class StorageKeys {
@@ -92,13 +127,20 @@ public class LansforsakringarConstants {
         public static final Pattern PATTERN_PG_RECIPIENT = Pattern.compile("^\\d{1,7}-\\d");
     }
 
-    public static final class Fetcher {
+    public static class Fetcher {
         public static final int START_PAGE = 0;
         public static final String CUSTOMER_PROFILE_TYPE = "CUSTOMER";
         public static final String BOOKED_TRANSACTION_STATUS = "BOOKED";
         public static final String PENDING_TRANSACTION_STATUS = "PENDING";
         public static final String PENSION_ACCOUNT_TYPE = "PENSION";
         public static final String EINVOICE_UNAPPROVED_STATUS = "NEW";
+    }
+
+    public static class LogTags {
+        public static final LogTag CREDIT_CARD = LogTag.from("lansforsakringar_credit_card");
+        public static final LogTag UNKNOWN_LOAN_TYPE = LogTag.from("lansforsakringar_unknown_loan");
+        public static final LogTag UNKNOWN_PENSION_TYPE =
+                LogTag.from("lansforkaringar_unknown_pension");
     }
 
     public enum UserMessage implements LocalizableEnum {

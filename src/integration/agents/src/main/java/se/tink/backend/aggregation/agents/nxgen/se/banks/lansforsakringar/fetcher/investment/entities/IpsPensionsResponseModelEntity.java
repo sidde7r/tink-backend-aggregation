@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

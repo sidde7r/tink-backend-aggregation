@@ -11,31 +11,29 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class TransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
+public class LansforsakringarTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount> {
 
     private final LansforsakringarApiClient apiClient;
 
-    public TransactionalAccountFetcher(LansforsakringarApiClient apiClient) {
+    public LansforsakringarTransactionalAccountFetcher(LansforsakringarApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     public Collection<TransactionalAccount> fetchAccounts() {
         final FetchAccountsResponse accountsResponse = apiClient.fetchAccounts();
-        final List<MainAndCoAccountsEntity> mainAndCoAccounts =
-                accountsResponse.getMainAndCoAccounts();
-
         if (accountsResponse == null) {
             return Collections.emptyList();
         }
 
-        Collection<TransactionalAccount> transAccounts =
-                mainAndCoAccounts.stream()
-                        .filter(MainAndCoAccountsEntity::isTransactionalAccount)
-                        .map(MainAndCoAccountsEntity::toTinkAccount)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .collect(Collectors.toList());
+        final List<MainAndCoAccountsEntity> mainAndCoAccounts =
+                accountsResponse.getMainAndCoAccounts();
 
-        return transAccounts;
+        return mainAndCoAccounts.stream()
+                .filter(MainAndCoAccountsEntity::isTransactionalAccount)
+                .map(MainAndCoAccountsEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 }

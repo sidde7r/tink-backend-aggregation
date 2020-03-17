@@ -15,6 +15,7 @@ public class TransferAccountsEntity implements GeneralAccountEntity {
     private String bankName;
     private String type;
     private boolean savedRecipient;
+    // `accountInfoText` is null - cannot define it!
 
     public String getAccountNumber() {
         return accountNumber;

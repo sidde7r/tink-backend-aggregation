@@ -15,7 +15,6 @@ public class FetchCreditCardResponse {
         if (cards == null) {
             return "";
         }
-        // We're only interested in non-debit cards
         return cards.stream()
                 .filter(CardsEntity::isNotDebit)
                 .map(CardsEntity::toString)

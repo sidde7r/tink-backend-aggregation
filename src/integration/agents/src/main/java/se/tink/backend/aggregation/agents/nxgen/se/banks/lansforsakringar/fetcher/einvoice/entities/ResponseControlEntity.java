@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.einvoice.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Arrays;
+import java.util.Collections;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -21,8 +21,8 @@ public class ResponseControlEntity {
             String profileType, String customerId, String eInvoiceStatus) {
         ProfileEntity profileEntity = new ProfileEntity(profileType, customerId);
         IncludesEntity includesEntity =
-                new IncludesEntity(null, Arrays.asList(eInvoiceStatus), null);
-        FilterEntity filterEntity = new FilterEntity(Arrays.asList(includesEntity));
+                new IncludesEntity(null, Collections.singletonList(eInvoiceStatus), null);
+        FilterEntity filterEntity = new FilterEntity(Collections.singletonList(includesEntity));
         PagerEntity pagerEntity = new PagerEntity(0, 20);
         return new ResponseControlEntity(profileEntity, filterEntity, pagerEntity);
     }

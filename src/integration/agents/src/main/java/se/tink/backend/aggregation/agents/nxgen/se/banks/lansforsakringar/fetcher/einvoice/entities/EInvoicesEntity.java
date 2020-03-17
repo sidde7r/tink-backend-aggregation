@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetch
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.api.client.util.Preconditions;
+import com.google.common.base.Strings;
 import java.util.Date;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;

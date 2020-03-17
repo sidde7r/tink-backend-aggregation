@@ -20,8 +20,6 @@ public class LansforsakringarAgentTest {
         }
     }
 
-    // The bank credentials are added to the run configuration.
-    // This removes the risk of accidentally committing sensitive information.u
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
     @AfterClass
@@ -42,11 +40,7 @@ public class LansforsakringarAgentTest {
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .expectLoggedIn(false)
-                // Can be anything for now but has to match prod value for real testing
-                .setFinancialInstitutionId("lansforshakringar")
-                // Device pinning (we already have saved credentials
                 .loadCredentialsBefore(false)
-                // Save to either db in prod or local storage for testing
                 .saveCredentialsAfter(false)
                 .build()
                 .testRefresh();

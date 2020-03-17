@@ -11,11 +11,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
-public class LoanFetcher implements AccountFetcher<LoanAccount> {
+public class LansforsakringarLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private final LansforsakringarApiClient apiClient;
 
-    public LoanFetcher(LansforsakringarApiClient apiClient) {
+    public LansforsakringarLoanFetcher(LansforsakringarApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -30,7 +30,7 @@ public class LoanFetcher implements AccountFetcher<LoanAccount> {
 
         return fetchLoanOverviewResponse.getLoans().stream()
                 .map(LoansEntity::getLoanNumber)
-                .map(loanNumber -> apiClient.fetchLoanDetails(loanNumber))
+                .map(apiClient::fetchLoanDetails)
                 .map(FetchLoanDetailsResponse::toTinkLoanAccount)
                 .collect(Collectors.toList());
     }

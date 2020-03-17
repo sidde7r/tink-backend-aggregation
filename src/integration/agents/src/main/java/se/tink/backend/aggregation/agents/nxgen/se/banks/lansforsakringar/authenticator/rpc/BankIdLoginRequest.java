@@ -12,7 +12,7 @@ public class BankIdLoginRequest {
     private BankIdLoginRequest(String ssn, String ref, boolean acceptTerms) {
         this.ssn = ssn;
         this.reference = ref;
-        this.acceptingUserTerms = Boolean.valueOf(acceptTerms);
+        this.acceptingUserTerms = acceptTerms;
     }
 
     @JsonIgnore

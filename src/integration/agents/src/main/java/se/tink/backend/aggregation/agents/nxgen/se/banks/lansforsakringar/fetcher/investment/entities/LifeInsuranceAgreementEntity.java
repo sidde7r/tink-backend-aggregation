@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Accounts;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -99,14 +100,17 @@ public class LifeInsuranceAgreementEntity {
     @JsonIgnore
     public InvestmentAccount toTinkInvestmentAccount() {
         return InvestmentAccount.builder(agreementNumber.trim())
-                .setPortfolios(
-                        lifeInsurances.stream()
-                                .map(LifeInsurancesEntity::toTinkPortfolio)
-                                .collect(Collectors.toList()))
+                .setPortfolios(getPortfolios())
                 .setName(product.getName())
                 .setAccountNumber(agreementNumber)
                 .setExactBalance(
                         ExactCurrencyAmount.of(agreementInvestmentValue, Accounts.CURRENCY))
                 .build();
+    }
+
+    private List<Portfolio> getPortfolios() {
+        return lifeInsurances.stream()
+                .map(LifeInsurancesEntity::toTinkPortfolio)
+                .collect(Collectors.toList());
     }
 }

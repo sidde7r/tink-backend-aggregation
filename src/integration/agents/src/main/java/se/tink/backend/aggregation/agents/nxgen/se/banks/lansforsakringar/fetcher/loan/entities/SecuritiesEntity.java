@@ -9,6 +9,6 @@ public class SecuritiesEntity {
 
     @Override
     public String toString() {
-        return "Security: " + securityText + ", Type: " + securityType;
+        return String.format("Security: %s, Type: %s", securityText, securityType);
     }
 }

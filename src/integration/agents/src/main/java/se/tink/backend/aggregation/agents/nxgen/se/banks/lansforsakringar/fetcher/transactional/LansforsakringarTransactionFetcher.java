@@ -5,11 +5,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class TransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
+public class LansforsakringarTransactionFetcher
+        implements TransactionPagePaginator<TransactionalAccount> {
 
     private final LansforsakringarApiClient apiClient;
 
-    public TransactionFetcher(LansforsakringarApiClient apiClient) {
+    public LansforsakringarTransactionFetcher(LansforsakringarApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

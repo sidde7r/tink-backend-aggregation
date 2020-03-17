@@ -15,7 +15,7 @@ public class ResponseEntity {
         return numberOfEInvoices;
     }
 
-    public List<EInvoicesEntity> geteInvoices() {
+    public List<EInvoicesEntity> getEInvoices() {
         return Optional.ofNullable(eInvoices).orElse(Lists.newArrayList());
     }
 

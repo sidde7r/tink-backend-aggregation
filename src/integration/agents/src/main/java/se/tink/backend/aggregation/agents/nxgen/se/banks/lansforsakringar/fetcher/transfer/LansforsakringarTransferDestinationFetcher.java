@@ -9,17 +9,16 @@ import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarApiClient;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 
-public class TransferDestinationFetcher
-        implements se.tink.backend.aggregation.nxgen.controllers.refresh.transfer
-                .TransferDestinationFetcher {
+public class LansforsakringarTransferDestinationFetcher implements TransferDestinationFetcher {
 
     private final LansforsakringarApiClient apiClient;
 
-    public TransferDestinationFetcher(LansforsakringarApiClient apiClient) {
+    public LansforsakringarTransferDestinationFetcher(LansforsakringarApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -37,7 +36,7 @@ public class TransferDestinationFetcher
             return new TransferDestinationPatternBuilder()
                     .setSourceAccounts(apiClient.fetchTransferSourceAccounts().getAccounts())
                     .setDestinationAccounts(
-                            apiClient.fetchTransferDestinationAccounts().getAccounts())
+                            apiClient.fetchSavedTransferDestinationAccounts().getAccounts())
                     .setTinkAccounts(accounts)
                     .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
                     .build();

@@ -41,7 +41,6 @@ public class LansforsakringarBankIdAuthenticator implements BankIdAuthenticator<
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
             }
-            /** Todo handle cancel bankId response */
             throw BankIdError.UNKNOWN.exception();
         }
     }

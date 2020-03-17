@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.api.client.util.Lists;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.assertj.core.util.Strings;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Accounts;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.entities.BorrowersEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.entities.SecuritiesEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
@@ -58,17 +60,15 @@ public class FetchLoanDetailsResponse {
     }
 
     private LoanModule getLoanModule() {
-        LoanModule loanModule =
-                LoanModule.builder()
-                        .withType(getLoanType())
-                        .withBalance(ExactCurrencyAmount.of(getDebt(), Accounts.CURRENCY))
-                        .withInterestRate(getCurrentInterestrate())
-                        .setLoanNumber(loanNumber)
-                        .setApplicants(getApplicants())
-                        .setCoApplicant(hasCoapplicant())
-                        .setSecurity(getSecurities())
-                        .build();
-        return loanModule;
+        return LoanModule.builder()
+                .withType(getLoanType())
+                .withBalance(ExactCurrencyAmount.of(getDebt(), Accounts.CURRENCY))
+                .withInterestRate(getCurrentInterestrate())
+                .setLoanNumber(loanNumber)
+                .setApplicants(getApplicants())
+                .setCoApplicant(hasCoapplicant())
+                .setSecurity(getSecurities())
+                .build();
     }
 
     private String getSecurities() {
@@ -82,7 +82,7 @@ public class FetchLoanDetailsResponse {
 
     private boolean hasCoapplicant() {
         if (borrowers != null) {
-            return borrowers.size() > 1 ? true : false;
+            return borrowers.size() > 1;
         }
         return false;
     }
@@ -103,7 +103,8 @@ public class FetchLoanDetailsResponse {
         } else if (loanName.toLowerCase().contains("bolån")) {
             return Type.MORTGAGE;
         } else {
-            log.info("Unknown loan type found");
+            log.infoExtraLong(
+                    SerializationUtils.serializeToString(this), LogTags.UNKNOWN_LOAN_TYPE);
             return Type.OTHER;
         }
     }
