@@ -47,7 +47,7 @@ public final class IngBaseAuthenticator implements OAuth2Authenticator {
             client.setTokenToSession(token);
             return token;
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
                 ErrorResponse error = e.getResponse().getBody(ErrorResponse.class);
                 if (error.isInvalidGrant()) {
                     log.warn("Invalid refresh token.");
