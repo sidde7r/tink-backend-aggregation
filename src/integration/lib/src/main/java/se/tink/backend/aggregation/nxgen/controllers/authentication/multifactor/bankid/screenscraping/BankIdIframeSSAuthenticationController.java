@@ -64,10 +64,10 @@ public class BankIdIframeSSAuthenticationController {
     }
 
     private void submitUsername(WebDriver driver, String username) {
-        try{
+        try {
             WebElement userInput = webDriverHelper.getElement(driver, USERNAME_INPUT_XPATH);
             sendValueToInputAndSubmit(userInput, username);
-        } catch (HtmlElementNotFoundException ex){
+        } catch (HtmlElementNotFoundException ex) {
             throw new ScreenScrapingException("Bank Id template not loaded");
         }
     }

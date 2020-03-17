@@ -112,7 +112,8 @@ public class BankIdIframeSSAuthenticationControllerTest {
     @Test
     public void doLoginShouldThrowExceptionWhenBankIdTemplateNotLoaded() {
         // given
-        given(webDriverHelper.getElement(driver,USERNAME_INPUT_XPATH)).willThrow(new HtmlElementNotFoundException("Element not found"));
+        given(webDriverHelper.getElement(driver, USERNAME_INPUT_XPATH))
+                .willThrow(new HtmlElementNotFoundException("Element not found"));
         // when
         Throwable throwable =
                 Assertions.catchThrowable(
