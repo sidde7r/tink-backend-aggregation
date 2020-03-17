@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.authe
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.configuration.VolvoFinansConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -43,8 +44,11 @@ public final class VolvoFinansApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(VolvoFinansConfiguration configuration) {
+    protected void setConfiguration(
+            VolvoFinansConfiguration configuration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
+        this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
     public URL getAuthorizeUrl(String state) {
