@@ -2942,9 +2942,10 @@
         },
         {
             "accessType": "OPEN_BANKING",
+            "authenticationFlow": "REDIRECT",
             "className": "nxgen.se.openbanking.volvofinans.VolvoFinansAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "VolvoFinans (Sandbox)",
+            "credentialsType": "MOBILE_BANKID",
+            "displayName": "VolvoFinans",
             "fields": [],
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
