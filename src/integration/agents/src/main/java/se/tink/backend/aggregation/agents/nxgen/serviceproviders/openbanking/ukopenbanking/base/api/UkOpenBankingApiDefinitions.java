@@ -140,7 +140,8 @@ public class UkOpenBankingApiDefinitions {
                                 .put(
                                         ExternalAccountIdentification4Code.BBAN,
                                         "UK.OBIE.BBAN",
-                                        "DK.DanskeBank.AccountNumber")
+                                        "DK.DanskeBank.AccountNumber",
+                                        "UK.NWB.CurrencyAccount")
                                 .put(ExternalAccountIdentification4Code.IBAN, "UK.OBIE.IBAN")
                                 .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
                                 .put(
