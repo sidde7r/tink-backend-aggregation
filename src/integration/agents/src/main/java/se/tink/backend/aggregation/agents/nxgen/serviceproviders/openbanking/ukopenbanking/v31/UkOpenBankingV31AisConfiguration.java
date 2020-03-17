@@ -9,17 +9,24 @@ import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.authenticator.rpc.AccountPermissionResponseV31;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@Getter
 public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig {
-    protected final URL apiBaseURL;
+    private final URL apiBaseURL;
     private final URL wellKnownURL;
-    private final URL identityDataURL;
     private final URL appToAppURL;
+    private final URL identityDataURL;
+    private final boolean partyEndpointEnabled;
+    private final boolean accountPartyEndpointEnabled;
+    private final boolean accountPartiesEndpointEnabled;
+
     private final List<String> additionalPermissions;
     private IdentityDataEntity identityData;
     private String holderName;
@@ -29,43 +36,23 @@ public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig 
             URL wellKnownURL,
             URL identityDataURL,
             URL appToAppURL,
+            boolean partyEndpointEnabled,
+            boolean accountPartyEndpointEnabled,
+            boolean accountPartiesEndpointEnabled,
             List<String> additionalPermissions) {
         this.apiBaseURL = apiBaseURL;
         this.wellKnownURL = wellKnownURL;
         this.identityDataURL = identityDataURL;
         this.appToAppURL = appToAppURL;
+        this.partyEndpointEnabled = partyEndpointEnabled;
+        this.accountPartyEndpointEnabled = accountPartyEndpointEnabled;
+        this.accountPartiesEndpointEnabled = accountPartiesEndpointEnabled;
         this.additionalPermissions = additionalPermissions;
-    }
-
-    public URL getWellKnownURL() {
-        return wellKnownURL;
-    }
-
-    public URL getIdentityDataURL() {
-        return identityDataURL;
-    }
-
-    public URL getAppToAppURL() {
-        return appToAppURL;
-    }
-
-    public List<String> getAdditionalPermissions() {
-        return additionalPermissions;
-    }
-
-    @Override
-    public IdentityDataEntity getIdentityData() {
-        return identityData;
     }
 
     @Override
     public void setIdentityData(IdentityDataEntity identityData) {
         this.identityData = identityData;
-    }
-
-    @Override
-    public String getHolderName() {
-        return holderName;
     }
 
     @Override
@@ -110,17 +97,17 @@ public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig 
         return String.format(ACCOUNT_TRANSACTIONS_REQUEST, accountId);
     }
 
-    public URL getApiBaseURL() {
-        return apiBaseURL;
-    }
-
+    // TODO replace with lombok builder
     public static final class Builder {
 
-        protected URL apiBaseURL;
-        protected URL wellKnownURL;
-        protected URL identityDataURL;
-        protected URL appToAppURL;
-        protected List<String> additionalPermissions;
+        private URL apiBaseURL;
+        private URL wellKnownURL;
+        private URL identityDataURL;
+        private URL appToAppURL;
+        private List<String> additionalPermissions;
+        private boolean partyEndpointEnabled;
+        private boolean accountPartyEndpointEnabled;
+        private boolean accountPartiesEndpointEnabled;
 
         public Builder() {}
 
@@ -140,6 +127,17 @@ public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig 
 
         public Builder withIdentityDataURL(final String identityDataURL) {
             this.identityDataURL = new URL(identityDataURL);
+            // TODO replace this builder method with URL with 3 seperate boolean methods to enable
+            // each endpoints
+            if (identityDataURL.equals(PartyEndpoints.IDENTITY_DATA_ENDPOINT_PARTY)) {
+                partyEndpointEnabled = true;
+            } else if (identityDataURL.equals(
+                    PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY)) {
+                accountPartyEndpointEnabled = true;
+            } else if (identityDataURL.equals(
+                    PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES)) {
+                accountPartiesEndpointEnabled = true;
+            }
             return this;
         }
 
@@ -167,7 +165,14 @@ public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig 
         public UkOpenBankingV31AisConfiguration build() {
             Preconditions.checkNotNull(apiBaseURL);
             return new UkOpenBankingV31AisConfiguration(
-                    apiBaseURL, wellKnownURL, identityDataURL, appToAppURL, additionalPermissions);
+                    apiBaseURL,
+                    wellKnownURL,
+                    identityDataURL,
+                    appToAppURL,
+                    partyEndpointEnabled,
+                    accountPartyEndpointEnabled,
+                    accountPartiesEndpointEnabled,
+                    additionalPermissions);
         }
     }
 }
