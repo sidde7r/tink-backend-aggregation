@@ -1,6 +1,12 @@
 package se.tink.backend.aggregation.agents.banks.danskebank;
 
+import static java.time.temporal.TemporalAdjusters.next;
+
 import com.google.common.collect.ImmutableList;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import org.junit.Test;
@@ -25,6 +31,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
     private List<String> featureFlags;
     private static final String SENSITIVE_PAYLOAD_SECURITY_KEY = "securityKey";
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     protected List<String> constructFeatureFlags() {
@@ -124,6 +131,24 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         Transfer transfer =
                 create1SEKTestTransfer(
                         TestAccount.DANSKEBANK_FH, TestAccount.DANSKEBANK_ANOTHER_FH);
+        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
+    }
+
+    @Test
+    public void testTransferBankId_futureDate() throws Exception {
+        Transfer transfer =
+                create1SEKTestTransfer(
+                        TestAccount.DANSKEBANK_FH, TestAccount.DANSKEBANK_ANOTHER_FH);
+        transfer.setDueDate(getNextFriday());
+        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
+    }
+
+    @Test
+    public void testTransferBankId_today() throws Exception {
+        Transfer transfer =
+                create1SEKTestTransfer(
+                        TestAccount.DANSKEBANK_FH, TestAccount.DANSKEBANK_ANOTHER_FH);
+        transfer.setDueDate(new Date());
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
@@ -250,6 +275,34 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
             }
         }
 
+        @Test
+        public void testTransferExternal_today() throws Throwable {
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
+                            .withAmountInSEK(1.0)
+                            .withDestinationMessage("tink test")
+                            .withDueDate(new Date())
+                            .build();
+
+            testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
+        }
+
+        @Test
+        public void testTransferExternal_futureDate() throws Throwable {
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
+                            .withAmountInSEK(1.0)
+                            .withDestinationMessage("tink test")
+                            .withDueDate(getNextFriday())
+                            .build();
+
+            testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
+        }
+
         @Override
         protected Provider constructProvider() {
             Provider p = new Provider();
@@ -268,7 +321,6 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         transfer.setDestination(new SwedishIdentifier(destinationAccount));
         transfer.setDestinationMessage("Tink Test");
         transfer.setSourceMessage("Tink Test");
-
         return transfer;
     }
 
@@ -278,5 +330,10 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         p.setPayload("SE");
         p.setCurrency("SEK");
         return p;
+    }
+
+    public static Date getNextFriday() {
+        final LocalDate nextFriday = LocalDate.now().with(next(DayOfWeek.FRIDAY));
+        return Date.from(nextFriday.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }
