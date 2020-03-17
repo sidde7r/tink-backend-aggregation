@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -48,11 +47,7 @@ public final class IngBaseAuthenticator implements OAuth2Authenticator {
             return token;
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-                ErrorResponse error = e.getResponse().getBody(ErrorResponse.class);
-                if (error.isInvalidGrant()) {
-                    log.warn("Invalid refresh token.");
-                    throw SessionError.SESSION_EXPIRED.exception();
-                }
+                throw SessionError.SESSION_EXPIRED.exception();
             }
             throw e;
         }
