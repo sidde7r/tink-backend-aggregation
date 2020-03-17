@@ -44,41 +44,39 @@ public class NordeaPartnerApiClient {
         this.jweHelper = jweHelper;
     }
 
-    private URL endpointUrl(String endpoint) {
-        return configuration.getBaseUrl().concat(endpoint);
-    }
-
     public AccountListResponse fetchAccounts() {
-        RequestBuilder request =
-                client.request(
-                                endpointUrl(EndPoints.ACCOUNTS)
-                                        .parameter(
-                                                PathParamsKeys.PARTNER_ID,
-                                                configuration.getPartnerId()))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE);
-
-        return requestRefreshableGet(request, AccountListResponse.class);
+        return requestRefreshableGet(request(EndPoints.ACCOUNTS), AccountListResponse.class);
     }
 
     public AccountTransactionsResponse fetchAccountTransaction(String accountId, String key) {
-        RequestBuilder request =
-                client.request(
-                                endpointUrl(EndPoints.ACCOUNT_TRANSACTIONS)
-                                        .parameter(
-                                                PathParamsKeys.PARTNER_ID,
-                                                configuration.getPartnerId())
-                                        .parameter(PathParamsKeys.ACCOUNT_ID, accountId))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
-                        .queryParam(QueryParamsKeys.CONTINUATION_KEY, key);
+        return requestRefreshableGet(
+                request(EndPoints.ACCOUNT_TRANSACTIONS, PathParamsKeys.ACCOUNT_ID, accountId)
+                        .queryParam(QueryParamsKeys.CONTINUATION_KEY, key),
+                AccountTransactionsResponse.class);
+    }
 
-        return requestRefreshableGet(request, AccountTransactionsResponse.class);
+    private RequestBuilder request(String endpoint) {
+        return request(endpoint, null, null);
+    }
+
+    private RequestBuilder request(String endpoint, String pathParamKey, String pathParamValue) {
+        URL url =
+                configuration
+                        .getBaseUrl()
+                        .concat(endpoint)
+                        .parameter(PathParamsKeys.PARTNER_ID, configuration.getPartnerId());
+        if (pathParamKey != null && pathParamValue != null) {
+            url = url.parameter(pathParamKey, pathParamValue);
+        }
+        return client.request(url);
     }
 
     private <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
         try {
-            return request.addBearerToken(getAccessToken()).get(responseType);
+            return request.addBearerToken(getAccessToken())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                    .get(responseType);
 
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
