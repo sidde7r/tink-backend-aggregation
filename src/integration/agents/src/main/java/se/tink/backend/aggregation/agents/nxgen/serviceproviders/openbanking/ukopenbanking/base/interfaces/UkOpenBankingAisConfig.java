@@ -27,6 +27,12 @@ public interface UkOpenBankingAisConfig {
 
     URL getIdentityDataURL();
 
+    boolean isPartyEndpointEnabled();
+
+    boolean isAccountPartiesEndpointEnabled();
+
+    boolean isAccountPartyEndpointEnabled();
+
     URL getAppToAppURL();
 
     List<String> getAdditionalPermissions();

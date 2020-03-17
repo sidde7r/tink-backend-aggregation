@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @Getter
-public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig {
+public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     private final URL apiBaseURL;
     private final URL wellKnownURL;
     private final URL appToAppURL;
@@ -31,7 +31,7 @@ public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig 
     private IdentityDataEntity identityData;
     private String holderName;
 
-    private UkOpenBankingV31AisConfiguration(
+    private UKOpenBankingAis(
             URL apiBaseURL,
             URL wellKnownURL,
             URL identityDataURL,
@@ -162,9 +162,9 @@ public class UkOpenBankingV31AisConfiguration implements UkOpenBankingAisConfig 
             return this;
         }
 
-        public UkOpenBankingV31AisConfiguration build() {
+        public UKOpenBankingAis build() {
             Preconditions.checkNotNull(apiBaseURL);
-            return new UkOpenBankingV31AisConfiguration(
+            return new UKOpenBankingAis(
                     apiBaseURL,
                     wellKnownURL,
                     identityDataURL,

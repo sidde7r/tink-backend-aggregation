@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
@@ -33,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.EidasJwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -65,7 +65,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
     private final UkOpenBankingAisConfig agentConfig;
-    private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
+    private AccountFetcher<TransactionalAccount> transactionalAccountFetcher;
 
     private final RandomValueGenerator randomValueGenerator;
 
@@ -257,8 +257,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 
-    private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount>
-            getTransactionalAccountFetcher() {
+    private AccountFetcher<TransactionalAccount> getTransactionalAccountFetcher() {
         if (Objects.nonNull(transactionalAccountFetcher)) {
             return transactionalAccountFetcher;
         }

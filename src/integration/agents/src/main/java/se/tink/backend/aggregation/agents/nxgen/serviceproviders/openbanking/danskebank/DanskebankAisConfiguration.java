@@ -47,6 +47,21 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
         return identityDataURL;
     }
 
+    @Override
+    public boolean isPartyEndpointEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountPartiesEndpointEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountPartyEndpointEnabled() {
+        return false;
+    }
+
     public URL getAppToAppURL() {
         return appToAppURL;
     }
