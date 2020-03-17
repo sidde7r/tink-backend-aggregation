@@ -8,11 +8,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.libraries.selenium.WebDriverHelper;
+import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
 import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
 public class BankIdIframeSSAuthenticationController {
     private WebDriverHelper webDriverHelper;
-    private String loginBaseUrl;
     private WebDriver driver;
 
     private static final By FORM_XPATH = By.xpath("//form");
@@ -27,14 +27,13 @@ public class BankIdIframeSSAuthenticationController {
     private static final int WAIT_RENDER_MILLIS = 1000;
 
     public BankIdIframeSSAuthenticationController(
-            String loginBaseUrl, WebDriverHelper webDriverHelper) {
+            WebDriverHelper webDriverHelper, WebDriver driver) {
         this.webDriverHelper = webDriverHelper;
-        this.loginBaseUrl = loginBaseUrl;
-        this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
+        this.driver = driver;
     }
 
     public void doLogin(String username, String password) throws AuthenticationException {
-        getLoadedBankIdIframe(driver);
+        webDriverHelper.switchToIframe(driver);
 
         submitUsername(driver, username);
 
@@ -43,8 +42,6 @@ public class BankIdIframeSSAuthenticationController {
         chooseBankIdMobil(driver);
 
         waitForUserInteractionAndSendBankIdPassword(driver, password);
-
-        driver.close();
     }
 
     private void waitForUserInteractionAndSendBankIdPassword(WebDriver driver, String password)
