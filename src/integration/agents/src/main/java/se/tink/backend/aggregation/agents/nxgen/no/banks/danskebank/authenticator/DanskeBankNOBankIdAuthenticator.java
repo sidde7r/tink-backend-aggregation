@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.danskebank.authenticat
 
 import com.google.common.base.Strings;
 import java.util.Base64;
-import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
@@ -10,7 +9,6 @@ import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -38,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.BankIdIframeSSAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -342,34 +341,6 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
         }
     }
 
-    private void setUserName(WebDriver driver, String username) {
-        // The <input> for userName has a randomized `id`. Therefore we search for an input with
-        // maxlength 11.
-        webDriverHelper.setInputValue(driver, By.xpath("//form//input[@maxlength='11']"), username);
-    }
-
-    private boolean submitForm(WebDriver driver) {
-        return webDriverHelper.submitForm(driver, By.xpath("//form"));
-    }
-
-    private Optional<WebElement> waitForBankIdPasswordInputElement(WebDriver driver) {
-        // Wait for the user to sign the BankId authentication.
-        for (int i = 0; i < 90; i++) {
-            log.debug("[{}] Waiting for bankId sign.", i);
-            webDriverHelper.sleep(2000);
-            webDriverHelper.switchToIframe(driver);
-
-            List<WebElement> elements =
-                    driver.findElements(By.xpath("//form//input[@type='password'][@maxlength]"));
-            if (elements.isEmpty()) {
-                continue;
-            }
-            return Optional.ofNullable(elements.get(0));
-        }
-
-        return Optional.empty();
-    }
-
     private Optional<String> waitForLogonPackage(WebDriver driver) {
         // Look for the logonPackage in the main dom.
         // `logonPackage` is assigned in the dom by the JavaScript snippet we constructed.
@@ -399,47 +370,9 @@ public class DanskeBankNOBankIdAuthenticator implements TypedAuthenticator, Auto
                     DanskeBankJavascriptStringFormatter.createNOBankIdJavascript(dynamicJs);
             js.executeScript(formattedJs);
 
-            // NoBankId runs inside an iframe (there's only one).
-            webDriverHelper.switchToIframe(driver);
-            // Page load (`loading BankId...`)
-
-            setUserName(driver, username);
-            if (!submitForm(driver)) {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
-            }
-
-            // Must reference the iframe every page reload.
-            webDriverHelper.switchToIframe(driver);
-
-            WebElement passwordInputElement =
-                    webDriverHelper
-                            .waitForElement(driver, By.xpath("//form//input[@type='password']"))
-                            .orElseThrow(LoginError.NOT_SUPPORTED::exception);
-            if (passwordInputElement.isEnabled()) {
-                // The element should be disabled for Mobile BankId.
-                throw LoginError.NOT_SUPPORTED.exception();
-            }
-
-            // Submit the form to continue with Mobile BankId.
-            if (!submitForm(driver)) {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
-            }
-
-            // The user will now sign the Mobile BankId authentication.
-            // Wait for that to happen by searching for the BankId password input element.
-            WebElement bankIdPasswordInputElement =
-                    waitForBankIdPasswordInputElement(driver)
-                            .orElseThrow(LoginError.CREDENTIALS_VERIFICATION_ERROR::exception);
-
-            // Once the user has signed the authentication, the page will reload and contain a form
-            // asking for the BankId password.
-            webDriverHelper.sendInputValue(bankIdPasswordInputElement, bankIdPassword);
-
-            // Submit the form to finalize the auth.
-            if (!submitForm(driver)) {
-                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
-            }
-
+            BankIdIframeSSAuthenticationController bankIdIframeSSAuthenticationController =
+                    new BankIdIframeSSAuthenticationController(webDriverHelper, driver);
+            bankIdIframeSSAuthenticationController.doLogin(username, bankIdPassword);
             // Page reload (destroy the iframe).
             // Read the `logonPackage` string which is used as `stepUpToken`.
             return waitForLogonPackage(driver)
