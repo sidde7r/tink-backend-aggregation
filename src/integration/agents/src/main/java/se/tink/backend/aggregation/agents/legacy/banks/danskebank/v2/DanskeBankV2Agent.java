@@ -485,13 +485,21 @@ public class DanskeBankV2Agent extends AbstractAgent
         String bankId = DanskeUtils.getBankId(transfer.getDestination());
 
         // TODO: Adapt this to multiple markets.
+
         CountryDateHelper dateHelper =
                 new CountryDateHelper(
                         DanskebankV2Constants.Date.DEFAULT_LOCALE,
                         TimeZone.getTimeZone(DanskebankV2Constants.Date.DEFAULT_ZONE_ID));
-        Calendar transferDate = dateHelper.getCalendar();
+        Calendar transferDate =
+                transfer.getDueDate() != null
+                        ? dateHelper.getCalendar(transfer.getDueDate())
+                        : dateHelper.getCalendar();
         if (!Objects.equals(bankId, DanskeUtils.getBankId(ClearingNumber.Bank.DANSKE_BANK))) {
-            transferDate.add(Calendar.DAY_OF_YEAR, 1);
+            Calendar tomorrow = dateHelper.getCalendar();
+            tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+            if (!tomorrow.after(transferDate)) {
+                transferDate = tomorrow;
+            }
             transferDate = dateHelper.getCurrentOrNextBusinessDay(transferDate);
         }
 
