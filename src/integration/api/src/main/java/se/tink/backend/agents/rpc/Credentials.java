@@ -459,6 +459,11 @@ public class Credentials implements Cloneable {
     /** Check if this credential is a demo credential */
     @JsonIgnore
     public boolean isDemoCredentials() {
+
+        if (fieldsSerialized == null) {
+            return false;
+        }
+
         for (DemoCredentials demoCredentials : DemoCredentials.values()) {
             final String demoUsername = demoCredentials.getUsername();
             if (fieldsSerialized.contains(demoUsername)) {
