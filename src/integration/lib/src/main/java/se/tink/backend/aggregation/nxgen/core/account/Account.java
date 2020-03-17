@@ -186,18 +186,6 @@ public abstract class Account {
         return idModule;
     }
 
-    @Deprecated
-    public Amount getAccountBalance() {
-        return new Amount(this.exactBalance.getCurrencyCode(), this.exactBalance.getDoubleValue());
-    }
-
-    @Deprecated
-    public Amount getAvailableCredit() {
-        return new Amount(
-                this.getExactAvailableCredit().getCurrencyCode(),
-                this.getExactAvailableCredit().getDoubleValue());
-    }
-
     public ExactCurrencyAmount getExactAvailableCredit() {
         return exactAvailableCredit;
     }

@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account.creditcard;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -97,28 +95,28 @@ public class CreditCardAccountTest {
 
         Optional<SomeBoxing> storage = account.getFromTemporaryStorage("box", SomeBoxing.class);
 
-        assertEquals(AccountTypes.CREDIT_CARD, account.getType());
-        assertEquals("4532101207732467", account.getIdModule().getUniqueId());
-        assertEquals("4532 - 1012 0773 2467", account.getAccountNumber());
+        assertThat(account.getType()).isEqualTo(AccountTypes.CREDIT_CARD);
+        assertThat(account.getIdModule().getUniqueId()).isEqualTo("4532101207732467");
+        assertThat(account.getAccountNumber()).isEqualTo("4532 - 1012 0773 2467");
 
-        assertEquals(
-                "payment-card-number://4532101207732467",
-                account.getIdModule().getIdentifiers().stream()
-                        .map(AccountIdentifier::toString)
-                        .sorted()
-                        .collect(Collectors.joining(";")));
-        assertEquals("Kalle Anka-Kortet", account.getIdModule().getAccountName());
-        assertEquals("Kalle Anka-Kortet", account.getIdModule().getProductName());
+        assertThat(
+                        account.getIdModule().getIdentifiers().stream()
+                                .map(AccountIdentifier::toString)
+                                .sorted()
+                                .collect(Collectors.joining(";")))
+                .isEqualTo("payment-card-number://4532101207732467");
+        assertThat(account.getIdModule().getAccountName()).isEqualTo("Kalle Anka-Kortet");
+        assertThat(account.getIdModule().getProductName()).isEqualTo("Kalle Anka-Kortet");
 
-        assertEquals(579.3, account.getBalance().getValue(), 0);
-        assertEquals("EUR", account.getBalance().getCurrency());
-        assertNotNull(account.getAvailableCredit());
-        assertEquals(420.7, account.getAvailableCredit().getValue(), 0);
+        assertThat(account.getExactBalance().getDoubleValue()).isEqualTo(579.3);
+        assertThat(account.getExactBalance().getCurrencyCode()).isEqualTo("EUR");
+        assertThat(account.getExactAvailableCredit()).isNotNull();
+        assertThat(account.getExactAvailableCredit().getDoubleValue()).isEqualTo(420.7);
 
-        assertTrue(storage.isPresent());
-        assertEquals("TestString", storage.get().x);
-        assertEquals(15, storage.get().y);
-        assertEquals("Jürgen Flughaubtkopf", account.getHolderName().toString());
-        assertEquals("2a3ffe-38320c", account.getApiIdentifier());
+        assertThat(storage.isPresent()).isTrue();
+        assertThat(storage.get().x).isEqualTo("TestString");
+        assertThat(storage.get().y).isEqualTo(15);
+        assertThat(account.getHolderName().toString()).isEqualTo("Jürgen Flughaubtkopf");
+        assertThat(account.getApiIdentifier()).isEqualTo("2a3ffe-38320c");
     }
 }
