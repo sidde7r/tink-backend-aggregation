@@ -10,14 +10,14 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
-import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 
-public final class AmexV62UkMockServerAgentTest extends AgentIntegrationMockServerTest {
+public final class AmexV62UkMockServerAgentTest {
 
     private final String USERNAME = "testUser";
     private final String PASSWORD = "testPassword";
@@ -26,7 +26,8 @@ public final class AmexV62UkMockServerAgentTest extends AgentIntegrationMockServ
     public void testRefresh() throws Exception {
 
         // Given
-        prepareMockServer(
+        WireMockTestServer server = new WireMockTestServer();
+        server.prepareMockServer(
                 new AapFileParser(
                         new ResourceFileReader()
                                 .read(
@@ -89,7 +90,7 @@ public final class AmexV62UkMockServerAgentTest extends AgentIntegrationMockServ
                 Arrays.asList(transaction1, transaction2, transaction3, transaction4);
 
         final WireMockConfiguration configuration =
-                new WireMockConfiguration("localhost:" + getWireMockPort());
+                new WireMockConfiguration("localhost:" + server.getHttpsPort());
 
         // When
         NewAgentTestContext context =
