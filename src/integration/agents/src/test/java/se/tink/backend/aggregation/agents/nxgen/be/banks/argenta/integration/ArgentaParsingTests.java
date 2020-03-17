@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transac
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class ArgentaParsingTests {
 
@@ -43,21 +47,20 @@ public class ArgentaParsingTests {
         ArgentaTransactionResponse argentaTransactionResponse =
                 objectMapper.readValue(
                         ArgentaTestData.TRANSACTIONS, ArgentaTransactionResponse.class);
-        Assert.assertEquals(1, argentaTransactionResponse.getPage());
-        Assert.assertEquals(2, argentaTransactionResponse.getNextPage());
-        Assert.assertEquals(27, argentaTransactionResponse.getTransactions().size());
+        assertThat(argentaTransactionResponse.getPage()).isEqualTo(1);
+        assertThat(argentaTransactionResponse.getNextPage()).isEqualTo(2);
+        assertThat(argentaTransactionResponse.getTransactions().size()).isEqualTo(27);
 
         Transaction argentaTransaction =
                 argentaTransactionResponse.getTransactions().get(0).toTinkTransaction();
-        Assert.assertEquals("Amount", Amount.inEUR(-150), argentaTransaction.getAmount());
-        Assert.assertEquals(
-                "Description",
-                "Uw overschrijving Olivier Appel Zakgeld",
-                argentaTransaction.getDescription());
-        Assert.assertEquals("External id", "B7H30BI1K00A000U", argentaTransaction.getExternalId());
-        String pattern = "yyyyMMdd";
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        Assert.assertEquals("Date", "20170930", format.format(argentaTransaction.getDate()));
+        assertThat(argentaTransaction.getExactAmount())
+                .isEqualTo(ExactCurrencyAmount.of(new BigDecimal(-150), "EUR"));
+        assertThat(argentaTransaction.getDescription())
+                .isEqualTo("Uw overschrijving Olivier Appel Zakgeld");
+        assertThat(argentaTransaction.getExternalId()).isEqualTo("B7H30BI1K00A000U");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        assertThat(format.format(argentaTransaction.getDate())).isEqualTo("20170930");
     }
 
     @Test
@@ -70,15 +73,14 @@ public class ArgentaParsingTests {
 
         Transaction argentaTransaction =
                 argentaTransactionResponse.getTransactions().get(4).toTinkTransaction();
-        Assert.assertEquals("Amount", Amount.inEUR(-15), argentaTransaction.getAmount());
-        Assert.assertEquals(
-                "Description",
-                "Uw overschrijving Olivier Appel",
-                argentaTransaction.getDescription());
-        Assert.assertEquals("External id", "B7H30BI3K00A000T", argentaTransaction.getExternalId());
-        String pattern = "yyyyMMdd";
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        Assert.assertEquals("Date", "20170929", format.format(argentaTransaction.getDate()));
+        assertThat(argentaTransaction.getExactAmount())
+                .isEqualTo(new ExactCurrencyAmount(new BigDecimal(-15), "EUR"));
+        assertThat(argentaTransaction.getDescription())
+                .isEqualTo("Uw overschrijving Olivier Appel");
+        assertThat(argentaTransaction.getExternalId()).isEqualTo("B7H30BI3K00A000T");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        assertThat(format.format(argentaTransaction.getDate())).isEqualTo("20170929");
     }
 
     @Test

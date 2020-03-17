@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher;
 
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class TransactionMatcher extends TypeSafeMatcher<Transaction> {
     private static final SimpleDateFormat TRANSACTION_DATE_FORMATTER =
@@ -24,7 +26,13 @@ public class TransactionMatcher extends TypeSafeMatcher<Transaction> {
     @Override
     protected boolean matchesSafely(Transaction transaction) {
         return Strings.nullToEmpty(transaction.getDescription()).equals(description)
-                && transaction.getAmount().equals(Amount.inEUR(amountInEur))
+                && transaction
+                        .getExactAmount()
+                        .equals(
+                                new ExactCurrencyAmount(
+                                        new BigDecimal(amountInEur)
+                                                .setScale(3, RoundingMode.HALF_DOWN),
+                                        "EUR"))
                 && TRANSACTION_DATE_FORMATTER.format(transaction.getDate()).equals(dateString);
     }
 
@@ -35,8 +43,8 @@ public class TransactionMatcher extends TypeSafeMatcher<Transaction> {
                         "was (%s, '%s', %g %s)",
                         TRANSACTION_DATE_FORMATTER.format(item.getDate()),
                         item.getDescription(),
-                        item.getAmount().getValue(),
-                        item.getAmount().getCurrency()));
+                        item.getExactAmount().getDoubleValue(),
+                        item.getExactAmount().getCurrencyCode()));
     }
 
     @Override

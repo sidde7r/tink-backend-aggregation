@@ -33,7 +33,7 @@ public class AsLhvTransactionFetcher {
 
         final Collection<? extends Transaction> transactions =
                 response.getTransactions(sessionStorage).stream()
-                        .filter(transaction -> !transaction.getAmount().isZero())
+                        .filter(transaction -> transaction.getExactAmount().getDoubleValue() != 0)
                         .collect(Collectors.toSet());
         return PaginatorResponseImpl.create(transactions);
     }

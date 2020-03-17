@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Assert;
@@ -35,10 +37,10 @@ public class TransactionDescriptionParserTest {
                 mapper.readValue(transactionString, BelfiusTransaction.class);
         Transaction transaction = belfiusTransaction.toTinkTransaction();
 
-        Assert.assertEquals("MERCHANT NAME", transaction.getDescription());
-        Assert.assertEquals(new Double(-10), transaction.getAmount().getValue());
-        Assert.assertEquals(
-                "{\"recipientAccount\":[\"MERCHANT NAME\"],\"details\":[\"TEXT TEXT TEXT TEXT 123456789 TEXT TEXT   \\nTEXT TEXT: MORE TEXT    \\ntext text 1234567 03/14 TEXT:\\n1234567890                        \\nREF. : 123456789 VAL. 12-34                       \\n\"]}",
-                transaction.getRawDetails());
+        assertThat(transaction.getDescription()).isEqualTo("MERCHANT NAME");
+        assertThat(transaction.getExactAmount().getDoubleValue()).isEqualTo(-10);
+        assertThat(transaction.getRawDetails())
+                .isEqualTo(
+                        "{\"recipientAccount\":[\"MERCHANT NAME\"],\"details\":[\"TEXT TEXT TEXT TEXT 123456789 TEXT TEXT   \\nTEXT TEXT: MORE TEXT    \\ntext text 1234567 03/14 TEXT:\\n1234567890                        \\nREF. : 123456789 VAL. 12-34                       \\n\"]}");
     }
 }

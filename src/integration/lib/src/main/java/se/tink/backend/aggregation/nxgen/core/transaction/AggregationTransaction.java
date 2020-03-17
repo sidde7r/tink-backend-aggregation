@@ -61,11 +61,6 @@ public abstract class AggregationTransaction {
         this.payload = payload;
     }
 
-    @Deprecated
-    public Amount getAmount() {
-        return new Amount(amount.getCurrencyCode(), amount.getDoubleValue());
-    }
-
     public ExactCurrencyAmount getExactAmount() {
         return amount;
     }
