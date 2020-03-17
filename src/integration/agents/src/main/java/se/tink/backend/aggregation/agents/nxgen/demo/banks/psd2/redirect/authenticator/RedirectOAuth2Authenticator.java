@@ -1,15 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator;
 
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_CANCEL_CASE;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_FAILURE_CASE;
 
 import com.google.common.base.Strings;
 import java.util.Base64;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -47,12 +51,18 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+    public OAuth2Token exchangeAuthorizationCode(String code)
+            throws BankServiceException, ThirdPartyAppException {
         if (!CODE.equals(code)) {
             // Ensure the code we got back from the fake-bank is the one
             // we sent.
             throw BankServiceError.CONSENT_REVOKED.exception("No code present.");
         }
+        if (providerName.equals(UK_DEMO_PROVIDER_CANCEL_CASE)
+                || providerName.equals(UK_DEMO_PROVIDER_FAILURE_CASE)) {
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+        }
+
         long accessExpiresInSeconds = THIRTY_DAYS_IN_SECONDS;
         if (providerName.matches(DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX)) {
             accessExpiresInSeconds =
