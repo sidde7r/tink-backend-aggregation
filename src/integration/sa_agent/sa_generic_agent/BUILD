@@ -18,15 +18,14 @@ java_library(
         "//src/integration/sa_agent/sa_grpc_api:sa-agent-grpc-api-proto",
         "//src/libraries/account_identifier",
         "//third_party:com_github_rholder_guava_retrying",
+        "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_slf4j_slf4j_api",
         "//third_party/sa_agent:grpc_client_libs",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
-        "@com_github_rholder_guava_retrying//jar",
         "@com_google_googleapis//google/type:date_proto",
         "@com_google_googleapis//google/type:type_java_proto",
         "@io_grpc_grpc_java//api",
-        "@org_apache_commons_commons_lang3//jar",
-        "@org_slf4j_slf4j_api//jar",
     ],
 )
 
@@ -54,8 +53,8 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/sa_agent/sa_grpc_api:java_grpc",
+        "//third_party:junit_junit",
+        "//third_party:org_slf4j_slf4j_api",
         "//third_party/sa_agent:grpc_client_libs",
-        "@junit_junit//jar",
-        "@org_slf4j_slf4j_api//jar",
     ],
 )

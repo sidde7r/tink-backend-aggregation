@@ -111,6 +111,7 @@ java_library(
         "//third_party:com_google_inject_extensions_guice_multibindings",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
+        "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_codec_commons_codec",
         "//third_party:commons_httpclient_commons_httpclient",
@@ -127,6 +128,7 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
+        "//third_party:org_iban4j_iban4j",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_modelmapper_modelmapper",
         "//third_party:org_slf4j_slf4j_api",
@@ -139,8 +141,6 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_reactivex_rxjava3_rxjava",
         "@aggregation//:joda_time_joda_time",
-        "@com_sun_jersey_jersey_client//jar",
-        "@org_iban4j_iban4j//jar",
     ],
 )
 

@@ -43,6 +43,7 @@ java_library(
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_sun_jersey_jersey_core",
@@ -56,6 +57,5 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
     ],
 )
