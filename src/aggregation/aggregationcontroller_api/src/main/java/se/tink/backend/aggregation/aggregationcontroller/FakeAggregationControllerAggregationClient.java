@@ -1,8 +1,23 @@
 package se.tink.backend.aggregation.aggregationcontroller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.config.ClientConfig;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
@@ -23,7 +38,12 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class FakeAggregationControllerAggregationClient
         implements AggregationControllerAggregationClient {
 
+    private static final String AGGREGATION_CONTROLLER_NAME = "localhost";
+    private static final int AGGREGATION_CONTROLLER_PORT = 8080;
+
     private final ClientConfig config;
+    private static final Logger log =
+            LoggerFactory.getLogger(FakeAggregationControllerAggregationClient.class);
 
     @Inject
     private FakeAggregationControllerAggregationClient(ClientConfig custom) {
@@ -83,9 +103,54 @@ public class FakeAggregationControllerAggregationClient
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    private void callFakeAggregationController(String caller, Object data) {
+        try {
+            URL serverAddress =
+                    new URL(
+                            String.format(
+                                    "http://%s:%d/data",
+                                    AGGREGATION_CONTROLLER_NAME, AGGREGATION_CONTROLLER_PORT));
+            HttpURLConnection connection = (HttpURLConnection) serverAddress.openConnection();
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestMethod("POST");
+
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer =
+                    new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+
+            Map<String, Object> requestBody = new HashMap<>();
+            String serializedRequestBody = new ObjectMapper().writeValueAsString(data);
+            requestBody.put(caller, serializedRequestBody);
+
+            writer.write(new ObjectMapper().writeValueAsString(requestBody));
+            writer.flush();
+            writer.close();
+            os.close();
+            connection.connect();
+
+            int status =
+                    connection.getResponseCode(); // this cannot be invoked before data stream is
+            // ready when performing HTTP POST
+            if (status != 200) {
+                throw new RuntimeException(
+                        "Invalid HTTP response status "
+                                + "code "
+                                + status
+                                + " from web service server.");
+            }
+        } catch (MalformedURLException | ProtocolException | JsonProcessingException e) {
+            throw new IllegalStateException("Could not connect to Fake Aggregation Controller", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not connect to Fake Aggregation Controller", e);
+        }
+    }
+
     @Override
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
+        callFakeAggregationController("updateCredentials", request);
         return null;
     }
 
@@ -110,6 +175,8 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response updateCredentialSensitive(
             HostConfiguration hostConfiguration, Credentials credentials, String sensitiveData) {
+        callFakeAggregationController("updateCredentialSensitive", credentials);
+        callFakeAggregationController("updateCredentialSensitiveString", sensitiveData);
         return null;
     }
 
