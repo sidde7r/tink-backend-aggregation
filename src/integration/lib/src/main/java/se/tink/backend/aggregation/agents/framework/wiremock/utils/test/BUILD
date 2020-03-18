@@ -6,12 +6,12 @@ junit_test(
         ["*.java"],
     ),
     data = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/test/resources",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
     ],
     deps = [
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
-        "//third_party:org_apache_httpcomponents_httpcore",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
     ],
 )

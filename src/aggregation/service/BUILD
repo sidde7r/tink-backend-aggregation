@@ -163,7 +163,7 @@ command(
 multirun(
     name = "run_aggregation_decoupled_and_external_deps",
     commands = [
-        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service:wiremock",
+        "//src/aggregation/fakebank/src/main/java/se/tink/backend/fakebank",
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/aggregationcontroller:fake_aggregationcontroller_bin",
         ":run_aggregation_decoupled",
     ],

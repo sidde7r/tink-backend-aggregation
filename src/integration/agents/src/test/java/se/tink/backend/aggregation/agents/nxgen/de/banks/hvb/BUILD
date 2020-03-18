@@ -14,8 +14,8 @@ junit_test(
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/hvb",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
         "//src/integration/transfer:mocks",
         "//third_party:pl_pragmatists_junitparams",
     ],

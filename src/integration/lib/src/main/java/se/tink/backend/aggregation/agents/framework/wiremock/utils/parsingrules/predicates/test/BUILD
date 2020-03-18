@@ -11,6 +11,6 @@ junit_test(
     runtime_deps = [
     ],
     deps = [
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/predicates",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/predicates",
     ],
 )

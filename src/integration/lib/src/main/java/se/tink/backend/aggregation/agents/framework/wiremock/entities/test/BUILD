@@ -11,6 +11,7 @@ junit_test(
     runtime_deps = [
     ],
     deps = [
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/parsingoperations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
+        "//third_party:org_apache_httpcomponents_httpcore",
     ],
 )

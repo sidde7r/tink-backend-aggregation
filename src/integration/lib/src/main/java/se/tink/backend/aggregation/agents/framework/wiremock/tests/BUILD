@@ -7,7 +7,7 @@ junit_test(
     ]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_hamcrest_hamcrest_library",

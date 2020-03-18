@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.service;
+package se.tink.backend.fakebank;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,13 +6,13 @@ import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 
-public class BlackboxWireMockServer {
+public class FakeBankServer {
 
-    private static final Logger log = LoggerFactory.getLogger(BlackboxWireMockServer.class);
+    private static final Logger log = LoggerFactory.getLogger(FakeBankServer.class);
     private WireMockTestServer server;
 
     public static void main(String[] args) {
-        new BlackboxWireMockServer().run();
+        new FakeBankServer().run();
     }
 
     public void run() {
@@ -23,7 +23,7 @@ public class BlackboxWireMockServer {
                 new AapFileParser(
                         new ResourceFileReader()
                                 .read(
-                                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/resources/amex.aap")));
+                                        "src/aggregation/fakebank/src/main/java/se/tink/backend/fakebank/resources/amex.aap")));
 
         log.info("WireMock server is started");
     }

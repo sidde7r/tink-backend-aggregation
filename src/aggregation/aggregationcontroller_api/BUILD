@@ -42,9 +42,9 @@ junit_test(
     deps = [
         ":aggregationcontroller_api",
         "//src/integration/credentials:rpc",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
         "//src/integration/models",
         "//src/libraries/http_client",
         "//src/libraries/jersey_utils",
