@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.filter.NordeaServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.session.NordeaPartnerSessionHandler;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -50,8 +51,6 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
 
-        configureHttpClient(agentsServiceConfiguration);
-
         NordeaPartnerConfiguration nordeaConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfigurationFromK8s(
@@ -62,12 +61,24 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                 new NordeaPartnerKeystore(nordeaConfiguration, context.getClusterId());
         jweHelper = new NordeaPartnerJweHelper(keystore, nordeaConfiguration);
 
+        configureHttpClient(agentsServiceConfiguration);
         apiClient.setConfiguration(nordeaConfiguration);
         apiClient.setJweHelper(jweHelper);
     }
 
+    @Override
+    protected EidasIdentity getEidasIdentity() {
+        if (context.isTestContext()) {
+            return new EidasIdentity(
+                    "oxford-staging", "5f98e87106384b2981c0354a33b51590", NordeaPartnerAgent.class);
+        }
+        return super.getEidasIdentity();
+    }
+
     private void configureHttpClient(AgentsServiceConfiguration configuration) {
-        client.setEidasProxy(configuration.getEidasProxy());
+        if (context.isTestContext()) {
+            client.setEidasProxy(configuration.getEidasProxy());
+        }
         client.addFilter(new BankServiceInternalErrorFilter());
         client.addFilter(
                 new TimeoutRetryFilter(
