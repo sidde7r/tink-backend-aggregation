@@ -27,7 +27,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class BnpParibasFortisAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final BnpParibasFortisApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -35,20 +34,13 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BnpParibasFortisApiClient(client, sessionStorage);
-        clientName = request.getProvider().getPayload();
-
+        apiClient = new BnpParibasFortisApiClient(client, sessionStorage, getClientConfiguration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        apiClient.setConfiguration(getClientConfiguration());
     }
 
     private BnpParibasFortisConfiguration getClientConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        BnpParibasFortisConstants.INTEGRATION_NAME,
-                        clientName,
-                        BnpParibasFortisConfiguration.class);
+                .getAgentConfiguration(BnpParibasFortisConfiguration.class);
     }
 
     @Override
