@@ -158,10 +158,9 @@ public class AutoAuthenticationControllerTest {
     }
 
     /** Automatic authentication */
-    @Test
-    public void
-            ensureExceptionIsThrownAndCredentialsTypeIsReset_whenAutoAuthenticationFails_andRequestIsAutomatic()
-                    throws AuthenticationException, AuthorizationException {
+    @Test(expected = SessionException.class)
+    public void ensureExceptionIsThrown_whenAutoAuthenticationFails()
+            throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.REFRESH_INFORMATION);
         credentials.setType(CredentialsTypes.PASSWORD);
         Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
@@ -171,53 +170,8 @@ public class AutoAuthenticationControllerTest {
 
         Mockito.when(request.isManual()).thenReturn(false);
 
-        try {
-            autoAuthenticationController.authenticate(credentials);
-            Assert.fail("Expected SessionException to be thrown");
-        } catch (SessionException e) {
-            Assert.assertEquals(multiFactorAuthenticator.getType(), credentials.getType());
-
-            InOrder order = Mockito.inOrder(autoAuthenticator, systemUpdater, credentials);
-            order.verify(autoAuthenticator).autoAuthenticate();
-            order.verify(credentials).setType(multiFactorAuthenticator.getType());
-            order.verify(systemUpdater)
-                    .updateCredentialsExcludingSensitiveInformation(credentials, false);
-        }
-    }
-
-    @Test
-    public void
-            ensureExceptionIsThrownAndCredentialsTypeIsReset_whenAutomaticAndManualAuthenticationFails()
-                    throws AuthenticationException, AuthorizationException {
-        prepareCredentialsRequest(CredentialsRequestType.REFRESH_INFORMATION);
-        credentials.setType(CredentialsTypes.PASSWORD);
-        Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
-        Mockito.doThrow(SessionError.SESSION_EXPIRED.exception())
-                .when(autoAuthenticator)
-                .autoAuthenticate();
-        Mockito.when(request.isManual()).thenReturn(true);
-        Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception())
-                .when(multiFactorAuthenticator)
-                .authenticate(credentials);
-
-        try {
-            autoAuthenticationController.authenticate(credentials);
-            Assert.fail("Expected LoginException to be thrown");
-        } catch (LoginException e) {
-            Assert.assertEquals(multiFactorAuthenticator.getType(), credentials.getType());
-
-            InOrder order =
-                    Mockito.inOrder(
-                            autoAuthenticator,
-                            multiFactorAuthenticator,
-                            systemUpdater,
-                            credentials);
-            order.verify(autoAuthenticator).autoAuthenticate();
-            order.verify(multiFactorAuthenticator).authenticate(credentials);
-            order.verify(credentials).setType(multiFactorAuthenticator.getType());
-            order.verify(systemUpdater)
-                    .updateCredentialsExcludingSensitiveInformation(credentials, false);
-        }
+        autoAuthenticationController.authenticate(credentials);
+        Assert.fail("Expected SessionException to be thrown");
     }
 
     /** Helper methods */
