@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 import org.junit.Before;
@@ -25,18 +24,17 @@ public class FilterAccountsResponseTest {
     @Test
     public void getTinkAccounts() throws Exception {
         FilterAccountsResponse response = FilterAccountsResponseTestData.getTestData();
-        assertTrue(response.size() == 2);
+        assertThat(response).hasSize(2);
 
         Collection<TransactionalAccount> accounts = response.getTinkAccounts(agentConfiguration);
 
-        assertNotNull(accounts);
-        assertTrue(accounts.size() == 1);
+        assertThat(accounts).isNotNull();
+        assertThat(accounts).hasSize(1);
         for (TransactionalAccount account : accounts) {
-            assertNotNull(account.getName());
-            assertNotNull(account.getApiIdentifier());
-            assertNotNull(account.getAccountNumber());
-            assertTrue(account.getBalance().getValue() != 0);
-            System.out.println("Account: " + account.toString() + ", TYPE: " + account.getType());
+            assertThat(account.getName()).isNotNull();
+            assertThat(account.getApiIdentifier()).isNotNull();
+            assertThat(account.getAccountNumber()).isNotNull();
+            assertThat(account.getExactBalance().getDoubleValue()).isNotEqualTo(0);
         }
     }
 }

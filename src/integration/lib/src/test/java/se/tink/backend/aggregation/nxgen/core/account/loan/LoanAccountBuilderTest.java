@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.loan;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -174,29 +174,29 @@ public class LoanAccountBuilderTest {
 
         Optional<SomeBoxing> storage = account.getFromTemporaryStorage("box", SomeBoxing.class);
 
-        assertEquals(AccountTypes.LOAN, account.getType());
-        assertEquals("321573128", account.getIdModule().getUniqueId());
-        assertEquals("B-321-573-128", account.getAccountNumber());
+        assertThat(account.getType()).isEqualTo(AccountTypes.LOAN);
+        assertThat(account.getIdModule().getUniqueId()).isEqualTo("321573128");
+        assertThat(account.getAccountNumber()).isEqualTo("B-321-573-128");
 
-        assertEquals(
-                "iban://DE75512108001245126199;sepa-eur://DE75512108001245126199",
-                account.getIdModule().getIdentifiers().stream()
-                        .map(AccountIdentifier::toString)
-                        .sorted()
-                        .collect(Collectors.joining(";")));
-        assertEquals("Meine Pezparinger", account.getIdModule().getAccountName());
-        assertEquals("UltraSavings ZeroFX", account.getIdModule().getProductName());
+        assertThat(
+                        account.getIdModule().getIdentifiers().stream()
+                                .map(AccountIdentifier::toString)
+                                .sorted()
+                                .collect(Collectors.joining(";")))
+                .isEqualTo("iban://DE75512108001245126199;sepa-eur://DE75512108001245126199");
+        assertThat(account.getIdModule().getAccountName()).isEqualTo("Meine Pezparinger");
+        assertThat(account.getIdModule().getProductName()).isEqualTo("UltraSavings ZeroFX");
 
-        assertEquals(2_565_389.43, account.getBalance().getValue(), 0);
-        assertEquals("SEK", account.getBalance().getCurrency());
-        assertNull(account.getExactAvailableCredit());
-        assertEquals(0.00155, account.getInterestRate(), 0);
-        assertEquals(Integer.valueOf(12), account.getDetails().getNumMonthsBound());
+        assertThat(account.getExactBalance().getDoubleValue()).isEqualTo(2_565_389.43);
+        assertThat(account.getExactBalance().getCurrencyCode()).isEqualTo("SEK");
+        assertThat(account.getExactAvailableCredit()).isNull();
+        assertThat(account.getInterestRate()).isEqualTo(0.00155);
+        assertThat(account.getDetails().getNumMonthsBound()).isEqualTo(12);
 
-        assertTrue(storage.isPresent());
-        assertEquals("TestString", storage.get().x);
-        assertEquals(15, storage.get().y);
-        assertEquals("Jürgen Flughaubtkopf", account.getHolderName().toString());
-        assertEquals("2a3ffe-38320c", account.getApiIdentifier());
+        assertThat(storage.isPresent()).isTrue();
+        assertThat(storage.get().x).isEqualTo("TestString");
+        assertThat(storage.get().y).isEqualTo(15);
+        assertThat(account.getHolderName().toString()).isEqualTo("Jürgen Flughaubtkopf");
+        assertThat(account.getApiIdentifier()).isEqualTo("2a3ffe-38320c");
     }
 }

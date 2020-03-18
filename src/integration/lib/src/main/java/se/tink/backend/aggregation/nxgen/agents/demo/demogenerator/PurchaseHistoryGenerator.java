@@ -107,8 +107,10 @@ public class PurchaseHistoryGenerator {
                                         Transaction.builder()
                                                 .setAmount(
                                                         new Amount(
-                                                                account.getBalance().getCurrency(),
-                                                                account.getBalance().getValue()
+                                                                account.getExactBalance()
+                                                                        .getCurrencyCode(),
+                                                                account.getExactBalance()
+                                                                                .getDoubleValue()
                                                                         / 36))
                                                 .setPending(false)
                                                 .setDescription("monthly savings")

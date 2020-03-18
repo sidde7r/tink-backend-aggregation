@@ -56,7 +56,7 @@ public class UpdateController {
             Account account, AccountFeatures accountFeatures) {
 
         if (!FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(user.getFlags())
-                && !currency.equalsIgnoreCase(account.getBalance().getCurrency())) {
+                && !currency.equalsIgnoreCase(account.getExactBalance().getCurrencyCode())) {
             log.info(
                     String.format(
                             "Found incompatible Account currencies (expected: %s, but was: %s)",

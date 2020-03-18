@@ -114,7 +114,7 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
     }
 
     private void validateAmountCoveredByBalance(TransactionalAccount sourceAccount, Amount amount) {
-        if (sourceAccount.getBalance().isLessThan(amount.doubleValue())) {
+        if (sourceAccount.getExactBalance().getDoubleValue() < amount.doubleValue()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage(
                             catalog.getString(

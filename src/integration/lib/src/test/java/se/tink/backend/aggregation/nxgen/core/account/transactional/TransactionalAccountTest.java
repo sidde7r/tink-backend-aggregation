@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class TransactionalAccountTest {
 
@@ -30,10 +32,10 @@ public class TransactionalAccountTest {
                 TransactionalAccount.builder(AccountTypes.CHECKING, ACCOUNT_NUMBER)
                         .setHolderName(new HolderName("name"))
                         .setAccountNumber(ACCOUNT_NUMBER)
-                        .setBalance(Amount.inSEK(12d));
-        transactionalBuilder.setBalance(Amount.inDKK(20d));
+                        .setExactBalance(ExactCurrencyAmount.of(12d, "DKK"));
+        transactionalBuilder.setExactBalance(ExactCurrencyAmount.of(20d, "DKK"));
         TransactionalAccount transactionalAccount = transactionalBuilder.build();
-        assertEquals(Amount.inDKK(20d), transactionalAccount.getBalance());
+        assertThat(transactionalAccount.getExactBalance().getDoubleValue()).isEqualTo(20);
     }
 
     @Test
@@ -42,10 +44,11 @@ public class TransactionalAccountTest {
                 TransactionalAccount.builder(AccountTypes.OTHER, ACCOUNT_NUMBER)
                         .setHolderName(new HolderName("name"))
                         .setAccountNumber(ACCOUNT_NUMBER)
-                        .setBalance(Amount.inDKK(12d));
+                        .setExactBalance(ExactCurrencyAmount.of(12d, "DKK"));
         TransactionalAccount transactionalAccount = transactionalBuilder.build();
-        assertEquals(Amount.inDKK(12d), transactionalAccount.getBalance());
-        assertEquals(AccountTypes.OTHER, transactionalAccount.getType());
+        assertThat(transactionalAccount.getExactBalance())
+                .isEqualTo(ExactCurrencyAmount.of(12d, "DKK"));
+        assertThat(transactionalAccount.getType()).isEqualTo(AccountTypes.OTHER);
     }
 
     @Test
@@ -55,10 +58,10 @@ public class TransactionalAccountTest {
                         // setting additional data before general one
                         .setInterestRate(1d)
                         .setAccountNumber(ACCOUNT_NUMBER)
-                        .setBalance(Amount.inEUR(1d))
+                        .setExactBalance(ExactCurrencyAmount.of(1d, "DKK"))
                         // setting additional data after general one
                         .setInterestRate(2d)
                         .build();
-        assertEquals(Double.valueOf(2d), savingsAccount.getInterestRate());
+        assertThat(savingsAccount.getInterestRate()).isEqualTo(2d);
     }
 }

@@ -62,12 +62,6 @@ public class LoanAccount extends Account {
         return AccountTypes.LOAN;
     }
 
-    @Deprecated
-    @Override
-    public Amount getBalance() {
-        return Amount.createFromAmount(super.getBalance()).orElseThrow(NullPointerException::new);
-    }
-
     @Override
     public ExactCurrencyAmount getExactBalance() {
         return Optional.ofNullable(super.getExactBalance()).orElseThrow(NullPointerException::new);
