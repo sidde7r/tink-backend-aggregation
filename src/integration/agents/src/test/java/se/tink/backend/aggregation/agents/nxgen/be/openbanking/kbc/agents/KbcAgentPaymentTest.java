@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.agents;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

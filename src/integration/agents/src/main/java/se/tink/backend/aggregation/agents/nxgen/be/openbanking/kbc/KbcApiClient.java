@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +46,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
+    private static final Pattern IBAN_PATTERN = Pattern.compile("BE[0-9]{14}");
     private static final Logger logger = LoggerFactory.getLogger(KbcApiClient.class);
 
     private final Credentials credentials;
@@ -158,7 +161,9 @@ public final class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
     @Override
     public String getConsentId() {
         final String iban = credentials.getField(KbcConstants.CredentialKeys.IBAN);
-        logger.info(iban);
+        logger.info(String.format("iban: %s", iban));
+
+        validateIban(iban);
 
         final List<String> ibanList = Collections.singletonList(iban);
 
@@ -218,5 +223,11 @@ public final class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
     private OAuth2Token tokenFromClientId() {
         return OAuth2Token.create(OAuth.BEARER, getConfiguration().getClientId(), null, 864000);
+    }
+
+    private static void validateIban(String iban) {
+        if (Objects.isNull(iban) || !IBAN_PATTERN.matcher(iban).matches()) {
+            throw new IllegalArgumentException("Iban has incorrect format.");
+        }
     }
 }
