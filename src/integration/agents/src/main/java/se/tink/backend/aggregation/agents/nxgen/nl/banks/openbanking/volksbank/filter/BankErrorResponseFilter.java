@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.filter;
 
 import java.util.List;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ErrorResponse;
@@ -32,6 +33,8 @@ public class BankErrorResponseFilter extends Filter {
                                 .get()
                                 .getText();
                 throw BankServiceError.BANK_SIDE_FAILURE.exception(message);
+            } else if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
             throw e;
         }
