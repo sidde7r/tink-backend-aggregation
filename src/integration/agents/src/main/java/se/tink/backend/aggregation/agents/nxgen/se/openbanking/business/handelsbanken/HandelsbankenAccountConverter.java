@@ -23,12 +23,6 @@ public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountCo
                             "shb-anställds konto",
                             "Affärskonto")
                     .put(TransactionalAccountType.CHECKING, "euro privat")
-                    // Not transactional accounts
-                    .ignoreKeys(
-                            // Credit card
-                            "allkortskonto",
-                            // Business account
-                            "valutakonto utan ränta")
                     .build();
 
     @Override
