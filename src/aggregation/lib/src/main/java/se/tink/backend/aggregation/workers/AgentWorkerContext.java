@@ -319,9 +319,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 accountFeaturesToCache = pair.second;
             }
         }
-
         allAvailableAccountsByUniqueId.put(
                 account.getBankId(), new Pair<>(account, accountFeaturesToCache));
+        log.info(
+                "Cache account. Is available balance null: "
+                        + (account.getAvailableBalance() == null));
+        log.info("Cache account. Is credit limit null: " + (account.getCreditLimit() == null));
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {
@@ -364,6 +367,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
         updateAccountRequest.setAvailableBalance(account.getAvailableBalance());
         updateAccountRequest.setCreditLimit(account.getCreditLimit());
+
+        log.info(
+                "Set available balance. Is value null: " + (account.getAvailableBalance() == null));
+        log.info("Set credit limit. Is value null: " + (account.getCreditLimit() == null));
 
         Account updatedAccount;
         try {
