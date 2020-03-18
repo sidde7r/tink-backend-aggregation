@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.nxgen.core.account;
 import java.util.List;
 import org.mockito.Mockito;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
 
 public class TestAccountBuilder<T extends Account> {
 
@@ -25,11 +24,6 @@ public class TestAccountBuilder<T extends Account> {
 
     public TestAccountBuilder setAccountNumber(String accountNumber) {
         Mockito.when(account.getAccountNumber()).thenReturn(accountNumber);
-        return this;
-    }
-
-    public TestAccountBuilder setBalance(Amount balance) {
-        Mockito.when(account.getBalance()).thenReturn(balance);
         return this;
     }
 

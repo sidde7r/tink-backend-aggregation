@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities;
 
-import static org.hamcrest.core.IsCollectionContaining.hasItems;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -145,15 +144,15 @@ public class HandelsbankenSEAccountTest {
     }
 
     private void assertTinkAccountIsValid() {
-        assertEquals(new Double(20.20), tinkAccount.getBalance().getValue());
-        assertEquals("1234-123 456 78", tinkAccount.getAccountNumber());
+        assertThat(tinkAccount.getExactBalance().getDoubleValue()).isEqualTo(20.20);
+        assertThat(tinkAccount.getAccountNumber()).isEqualTo("1234-123 456 78");
         // TODO: getAccountType() returns OTHER for the above test data
         // assertEquals(AccountTypes.CHECKING, tinkAccount.getType());
         assertThat(
-                tinkAccount.getIdentifiers().stream()
-                        .map(AccountIdentifier::getType)
-                        .collect(Collectors.toList()),
-                hasItems(AccountIdentifier.Type.SE, AccountIdentifier.Type.SE_SHB_INTERNAL));
+                        tinkAccount.getIdentifiers().stream()
+                                .map(AccountIdentifier::getType)
+                                .collect(Collectors.toList()))
+                .contains(AccountIdentifier.Type.SE, AccountIdentifier.Type.SE_SHB_INTERNAL);
     }
 
     private static final String ACCOUNT_DATA =

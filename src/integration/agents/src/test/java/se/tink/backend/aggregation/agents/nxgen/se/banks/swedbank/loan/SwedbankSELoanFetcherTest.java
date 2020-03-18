@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.argThat;
 
 import java.util.ArrayList;
@@ -64,15 +62,13 @@ public class SwedbankSELoanFetcherTest {
                         .filter(l -> LoanDetails.Type.MEMBERSHIP.equals(l.getDetails().getType()))
                         .collect(Collectors.toList());
 
-        assertEquals(1, membershipLoans.size());
+        assertThat(membershipLoans).hasSize(1);
         LoanAccount membershipLoan = membershipLoans.get(0);
 
-        assertEquals(Double.valueOf(-88888.0d), membershipLoan.getBalance().getValue());
-        assertEquals("SEK", membershipLoan.getBalance().getCurrency());
-
-        assertEquals("111 111 111-1", membershipLoan.getAccountNumber());
-
-        assertEquals(2, membershipLoan.getDetails().getApplicants().size());
+        assertThat(membershipLoan.getExactBalance().getDoubleValue()).isEqualTo(-88888.0d);
+        assertThat(membershipLoan.getExactBalance().getCurrencyCode()).isEqualTo("SEK");
+        assertThat(membershipLoan.getAccountNumber()).isEqualTo("111 111 111-1");
+        assertThat(membershipLoan.getDetails().getApplicants()).hasSize(2);
     }
 
     @Test
@@ -108,20 +104,18 @@ public class SwedbankSELoanFetcherTest {
                         .filter(l -> LoanDetails.Type.MORTGAGE.equals(l.getDetails().getType()))
                         .collect(Collectors.toList());
 
-        assertEquals(5, mortageList.size());
+        assertThat(mortageList).hasSize(5);
         LoanAccount mortgage =
                 mortageList.stream()
                         .filter(l -> !l.getDetails().getApplicants().isEmpty())
                         .findFirst()
                         .get();
 
-        assertEquals(Double.valueOf(-333000.0d), mortgage.getBalance().getValue());
-        assertEquals("SEK", mortgage.getBalance().getCurrency());
-
-        assertEquals("555 555 555-2", mortgage.getAccountNumber());
-        assertTrue(mortgage.getDetails().getSecurity().contains("QUITE"));
-
-        assertEquals(1, mortgage.getDetails().getApplicants().size());
-        assertFalse(mortgage.getDetails().hasCoApplicant());
+        assertThat(mortgage.getExactBalance().getDoubleValue()).isEqualTo(-333000.0d);
+        assertThat(mortgage.getExactBalance().getCurrencyCode()).isEqualTo("SEK");
+        assertThat(mortgage.getAccountNumber()).isEqualTo("555 555 555-2");
+        assertThat(mortgage.getDetails().getSecurity().contains("QUITE")).isTrue();
+        assertThat(mortgage.getDetails().getApplicants()).hasSize(1);
+        assertThat(mortgage.getDetails().hasCoApplicant()).isFalse();
     }
 }
