@@ -119,6 +119,11 @@ public final class SbabConstants {
                 "Supplied date is not valid, ensure it's not set to a non business day and try again.";
     }
 
+    public static class HttpClient {
+        public static final int MAX_RETRIES = 5;
+        public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+    }
+
     public static class PaymentValue {
         // From SBAB documentation
         public static final Pattern ALLOWED_CHARS_PATTERN =

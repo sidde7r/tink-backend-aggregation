@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.HttpClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.TransactionFetching;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.pay
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fliter.SbabBadGatewayFilter;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fliter.SbabRetryFilter;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -29,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -54,6 +57,13 @@ public final class SbabAgent extends NextGenerationAgent
         apiClient.setConfiguration(sbabConfiguration);
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+        configureHttpClient(this.client);
+    }
+
+    private void configureHttpClient(TinkHttpClient client) {
+
+        client.addFilter(
+                new SbabRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
         this.client.addFilter(new BankServiceInternalErrorFilter());
         this.client.addFilter(new SbabBadGatewayFilter());
     }
