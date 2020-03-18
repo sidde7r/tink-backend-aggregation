@@ -25,7 +25,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -89,11 +88,15 @@ public class QsealcSignerHttpClientTest {
         QsealcSignerHttpClient httpClient = QsealcSignerHttpClient.create(configuration);
         HttpPost post = new HttpPost("http://127.0.0.1:11111/test/");
         CloseableHttpResponse response = httpClient.execute(post);
-        Assert.assertEquals(200, response.getStatusLine().getStatusCode());
+        int httpStatusCode = response.getStatusLine().getStatusCode();
+        response.close();
+        Assert.assertEquals(200, httpStatusCode);
 
         HttpPost postHttps = new HttpPost("https://127.0.0.1:12345/test/");
-        HttpResponse responseHttps = httpClient.execute(postHttps);
-        Assert.assertEquals(200, responseHttps.getStatusLine().getStatusCode());
+        CloseableHttpResponse responseHttps = httpClient.execute(postHttps);
+        int httpsStatusCode = responseHttps.getStatusLine().getStatusCode();
+        responseHttps.close();
+        Assert.assertEquals(200, httpsStatusCode);
 
         QsealcSigner signer =
                 QsealcSigner.build(

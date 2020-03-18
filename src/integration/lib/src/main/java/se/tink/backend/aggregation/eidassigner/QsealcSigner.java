@@ -107,7 +107,10 @@ public class QsealcSigner {
                 }
 
                 byte[] responseBytes = EntityUtils.toByteArray(response.getEntity());
-                if (response.getStatusLine().getStatusCode() != 200) {
+                final int statusCode = response.getStatusLine().getStatusCode();
+                response.close();
+
+                if (statusCode != 200) {
                     throw new QsealcSignerException(
                             "Unexpected status code "
                                     + response.getStatusLine()

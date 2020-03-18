@@ -148,10 +148,12 @@ public class QsealcSignerHttpClient {
         return qsealcSignerHttpClient;
     }
 
+    /**
+     * Note: Remember to call close() on the returned CloseableHttpResponse after you are done with
+     * it.
+     */
     public CloseableHttpResponse execute(HttpPost post) throws IOException {
-        try (CloseableHttpResponse response = httpClient.execute(post)) {
-            return response;
-        }
+        return httpClient.execute(post);
     }
 
     private static class IdleConnectionMonitorThread extends Thread {
