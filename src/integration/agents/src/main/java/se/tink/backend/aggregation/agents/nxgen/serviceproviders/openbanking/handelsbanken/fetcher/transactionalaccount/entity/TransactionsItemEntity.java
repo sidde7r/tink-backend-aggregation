@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.DateTimeException;
@@ -94,7 +95,10 @@ public class TransactionsItemEntity {
 
     private Optional<Date> getDateFromTransactionDate() {
         try {
-            return Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(transactionDate));
+            if (!Strings.isNullOrEmpty(transactionDate)) {
+                return Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(transactionDate));
+            }
+            return Optional.of(ThreadSafeDateFormat.FORMATTER_DAILY.parse(valueDate));
         } catch (ParseException e) {
             return Optional.empty();
         }

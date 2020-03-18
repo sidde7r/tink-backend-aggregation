@@ -66,6 +66,7 @@ public final class HandelsbankenBaseConstants {
         public static final String COUNTRY = "country";
         public static final String CONSENT_ID = "consentId";
         public static final String BEARER = "Bearer ";
+        public static final String PSU_CORPORATE_ID = "PSU-CORPORATE-ID";
     }
 
     public static class BodyKeys {
