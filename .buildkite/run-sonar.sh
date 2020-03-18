@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euxo pipefail
+set -euo pipefail
 
 export SONAR_SCANNER_VERSION=4.2.0.1873
 export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
@@ -30,7 +30,9 @@ export SONAR_SCANNER_OPTS="-server"
 if [ "$BUILDKITE_PULL_REQUEST" != "false" ]; then
   sonar-scanner \
     -Dsonar.pullrequest.key="$BUILDKITE_PULL_REQUEST" \
-    -Dsonar.pullrequest.branch="$BUILDKITE_BRANCH"
+    -Dsonar.pullrequest.branch="$BUILDKITE_BRANCH" \
+    -Dsonar.login="$SONAR_TOKEN"
 else
-  sonar-scanner
+  sonar-scanner \
+    -Dsonar.login="$SONAR_TOKEN"
 fi
