@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.pa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.NordeaPartnerJweHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.configuration.NordeaPartnerConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.rpc.CardListResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.creditcard.rpc.CardTransactionListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.transactional.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -108,5 +109,14 @@ public class NordeaPartnerApiClient {
 
     public CardListResponse fetchCreditCards() {
         return requestRefreshableGet(request(EndPoints.CARDS), CardListResponse.class);
+    }
+
+    public CardTransactionListResponse fetchCreditCardTransactions(
+            String cardId, int page, int pageSize) {
+        return requestRefreshableGet(
+                request(EndPoints.CARD_TRANSACTIONS, PathParamsKeys.CARD_ID, cardId)
+                        .queryParam(QueryParamsKeys.PAGE, Integer.toString(page))
+                        .queryParam(QueryParamsKeys.PAGE_SIZE, Integer.toString(pageSize)),
+                CardTransactionListResponse.class);
     }
 }

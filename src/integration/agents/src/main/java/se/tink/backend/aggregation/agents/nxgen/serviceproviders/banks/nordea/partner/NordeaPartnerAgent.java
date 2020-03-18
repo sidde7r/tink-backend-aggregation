@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.time.ZoneId;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -25,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
@@ -48,6 +51,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         apiClient = new NordeaPartnerApiClient(client, sessionStorage, credentials);
+        client.registerJacksonModule(new JavaTimeModule());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
 
@@ -154,11 +158,17 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
         return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
+    protected abstract ZoneId getPaginatorZoneId();
+
     private CreditCardRefreshController constructCreditCardRefreshController() {
+        final NordeaPartnerCreditCardAccountFetcher fetcher =
+                new NordeaPartnerCreditCardAccountFetcher(apiClient);
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
-                new NordeaPartnerCreditCardAccountFetcher(apiClient),
-                null);
+                fetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(fetcher, 1)));
     }
 }
