@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis;
 
-import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.QueryKeys;
@@ -35,17 +33,12 @@ public final class BnpParibasFortisApiClient {
     private final SessionStorage sessionStorage;
     private BnpParibasFortisConfiguration configuration;
 
-    public BnpParibasFortisApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public BnpParibasFortisApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            BnpParibasFortisConfiguration configuration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-    }
-
-    public BnpParibasFortisConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    public void setConfiguration(BnpParibasFortisConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -56,8 +49,8 @@ public final class BnpParibasFortisApiClient {
     }
 
     private RequestBuilder createAuthenticatedRequest(String url) {
-        final String openbankStetVersion = getConfiguration().getOpenbankStetVersion();
-        final String organizationId = getConfiguration().getOrganisationId();
+        final String openbankStetVersion = configuration.getOpenbankStetVersion();
+        final String organizationId = configuration.getOrganisationId();
 
         return createRequest(url)
                 .addBearerToken(getTokenFromSession())
@@ -75,10 +68,10 @@ public final class BnpParibasFortisApiClient {
     }
 
     public URL getAuthorizeUrl(String state) {
-        final String clientId = getConfiguration().getClientId();
+        final String clientId = configuration.getClientId();
 
-        final String redirectUri = getConfiguration().getRedirectUrl();
-        final String authBaseUrl = getConfiguration().getAuthBaseUrl();
+        final String redirectUri = configuration.getRedirectUrl();
+        final String authBaseUrl = configuration.getAuthBaseUrl();
         final String oauthUrl = authBaseUrl + Urls.OAUTH;
 
         return createRequest(oauthUrl)
@@ -91,13 +84,13 @@ public final class BnpParibasFortisApiClient {
     }
 
     public OAuth2Token getToken(String code) {
-        final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
-        final String openbankStetVersion = getConfiguration().getOpenbankStetVersion();
-        final String organizationId = getConfiguration().getOrganisationId();
+        final String clientId = configuration.getClientId();
+        final String clientSecret = configuration.getClientSecret();
+        final String openbankStetVersion = configuration.getOpenbankStetVersion();
+        final String organizationId = configuration.getOrganisationId();
 
-        final String redirectUri = getConfiguration().getRedirectUrl();
-        final String authBaseUrl = getConfiguration().getAuthBaseUrl();
+        final String redirectUri = configuration.getRedirectUrl();
+        final String authBaseUrl = configuration.getAuthBaseUrl();
         final String tokenUrl = authBaseUrl + Urls.TOKEN;
 
         final TokenResponse response =
@@ -125,13 +118,13 @@ public final class BnpParibasFortisApiClient {
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
-        final String openbankStetVersion = getConfiguration().getOpenbankStetVersion();
-        final String organizationId = getConfiguration().getOrganisationId();
+        final String clientId = configuration.getClientId();
+        final String clientSecret = configuration.getClientSecret();
+        final String openbankStetVersion = configuration.getOpenbankStetVersion();
+        final String organizationId = configuration.getOrganisationId();
 
-        final String redirectUri = getConfiguration().getRedirectUrl();
-        final String authBaseUrl = getConfiguration().getAuthBaseUrl();
+        final String redirectUri = configuration.getRedirectUrl();
+        final String authBaseUrl = configuration.getAuthBaseUrl();
         final String tokenUrl = authBaseUrl + Urls.TOKEN;
 
         final TokenResponse response =
@@ -159,21 +152,21 @@ public final class BnpParibasFortisApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        final String baseUrl = getConfiguration().getApiBaseUrl();
+        final String baseUrl = configuration.getApiBaseUrl();
         final String accountsUrl = baseUrl + Urls.ACCOUNTS;
 
         return createAuthenticatedRequest(accountsUrl).get(GetAccountsResponse.class);
     }
 
     public GetBalancesResponse getBalanceForAccount(Account account) {
-        final String baseUrl = getConfiguration().getApiBaseUrl();
+        final String baseUrl = configuration.getApiBaseUrl();
         final String balancesUrl = baseUrl + account.getLinks().getBalances().getHref();
 
         return createAuthenticatedRequest(balancesUrl).get(GetBalancesResponse.class);
     }
 
     public GetTransactionsResponse getTransactionsForAccount(TransactionalAccount account) {
-        final String baseUrl = getConfiguration().getApiBaseUrl();
+        final String baseUrl = configuration.getApiBaseUrl();
         final String transactionsUrl =
                 account.getFromTemporaryStorage(StorageKeys.ACCOUNT_LINKS, Links.class)
                         .map(links -> baseUrl + links.getTransactions().getHref())
@@ -183,14 +176,13 @@ public final class BnpParibasFortisApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest paymentRequest) {
-        return createAuthenticatedRequest(getConfiguration().getApiBaseUrl() + Urls.PAYMENTS)
+        return createAuthenticatedRequest(configuration.getApiBaseUrl() + Urls.PAYMENTS)
                 .post(CreatePaymentResponse.class, paymentRequest);
     }
 
     public GetPaymentResponse getPayment(String paymentId) {
         return createAuthenticatedRequest(
-                        String.format(
-                                getConfiguration().getApiBaseUrl() + Urls.GET_PAYMENT, paymentId))
+                        String.format(configuration.getApiBaseUrl() + Urls.GET_PAYMENT, paymentId))
                 .get(GetPaymentResponse.class);
     }
 }
