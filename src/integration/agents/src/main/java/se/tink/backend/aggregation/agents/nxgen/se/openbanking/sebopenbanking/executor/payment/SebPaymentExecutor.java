@@ -1,22 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment;
 
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.PaymentValue;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.CreditorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.DebtorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.PaymentProduct;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities.RemittanceInformationStructuredEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.PaymentSigningRequest;
@@ -51,7 +57,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         final Payment payment = paymentRequest.getPayment();
         final PaymentType type = getPaymentType(payment);
 
@@ -65,18 +71,29 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .get(PaymentProduct.fromString(paymentProduct))
                         .apply(payment.getCreditor().getAccountNumber());
         final AmountEntity amountEntity = AmountEntity.of(paymentRequest);
-        final CreatePaymentRequest createPaymentRequest =
+
+        CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
                         .withTemplateId(paymentProduct)
                         .withCreditorAccount(creditorAccountEntity)
-                        .withCreditorAccountMessage(FormValues.CREDITORS_MESSAGE)
                         .withDebtorAccount(debtorAccountEntity)
-                        .withDebtorrAccountMessage(FormValues.DEBTORS_MESSAGE)
-                        .withExecutionDate(getCurrentDate())
+                        .withExecutionDate(
+                                getExecutionDateOrCurrentDate(payment.getExecutionDate()))
                         .withAmount(amountEntity)
-                        .withRemittanceInformationUnstructured(payment.getReference().getValue())
+                        .withCreditorAccountMessage(
+                                paymentRequest.getPayment().getReference().getValue())
                         .withCreditorName(payment.getCreditor().getName())
                         .build();
+
+        if (shouldAddRemittanceInformationStructured(paymentProduct)) {
+            RemittanceInformationStructuredEntity remittanceInformation =
+                    new RemittanceInformationStructuredEntity()
+                            .createOCRRemittanceInformation(payment.getReference().getValue());
+            createPaymentRequest.setRemittanceInformationStructured(remittanceInformation);
+        } else {
+            createPaymentRequest.setRemittanceInformationUnstructured(
+                    getRemittanceInformationUnStructured(payment.getReference().getValue()));
+        }
 
         CreatePaymentResponse createPaymentResponse =
                 apiClient.createPaymentInitiation(createPaymentRequest, paymentProduct);
@@ -227,8 +244,36 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         }
     }
 
-    private String getCurrentDate() {
-        return LocalDate.now().format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT));
+    private String getExecutionDateOrCurrentDate(LocalDate executionDate) {
+        return executionDate == null
+                ? LocalDate.now().format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT))
+                : executionDate.toString();
+    }
+
+    private boolean shouldAddRemittanceInformationStructured(String paymentProduct) {
+        if (StringUtils.containsAny(
+                paymentProduct,
+                PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_BNAKGIROS.getValue(),
+                PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_PLUSGIROS.getValue())) {
+            return true;
+        }
+        return false;
+    }
+
+    private String getRemittanceInformationUnStructured(String message) throws PaymentException {
+        if (Strings.isNullOrEmpty(message)) {
+            return message;
+        }
+
+        if (message.length() > PaymentValue.MAX_DEST_MSG_LEN) {
+            throw new ReferenceValidationException(
+                    String.format(
+                            ErrorMessages.PAYMENT_REF_TOO_LONG, PaymentValue.MAX_DEST_MSG_LEN),
+                    "",
+                    new IllegalArgumentException());
+        }
+
+        return message;
     }
 
     private PaymentProduct getDomesticPaymentProduct(Type creditorAccountType) {

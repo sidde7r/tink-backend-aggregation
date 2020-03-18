@@ -1,86 +1,129 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.BankGiroIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Payment.Builder;
 import se.tink.libraries.payment.rpc.Reference;
 
 // DISCLAIMER! Actual money being transferred, run under own responsability
 public class SebAgentPaymentTest {
 
-    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+    private final ArgumentManager<SsnArgumentEnum> ssnManager =
+            new ArgumentManager<>(SsnArgumentEnum.values());
+    private final ArgumentManager<SebAgentPaymentTest.Arg> creditorDebtorManager =
+            new ArgumentManager<>(SebAgentPaymentTest.Arg.values());
 
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
-        manager.before();
+        ssnManager.before();
+        creditorDebtorManager.before();
+
         builder =
                 new AgentIntegrationTest.Builder("se", "se-seb-ob")
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("seb")
+                        .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(true)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
     }
 
     @Test
-    public void testPayments() throws Exception {
-        builder.build().testGenericPayment(createListMockedDomesticPayment(1));
+    public void testRealDomesticPayment() throws Exception {
+        builder.build().testGenericPayment(createRealDomesticPayment());
     }
 
-    private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
-        List<Payment> listOfMockedPayments = new ArrayList<>();
+    @Test
+    public void testRealBgPayment() throws Exception {
+        builder.build().testGenericPayment(createRealBgPayment());
+    }
 
-        for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(manager.get(Arg.CREDITOR_ACCOUNT)).when(creditor).getAccountNumber();
-            doReturn("Cedric Verbeken").when(creditor).getName();
+    private List<Payment> createRealDomesticPayment() {
+        AccountIdentifier creditorAccountIdentifier =
+                new IbanIdentifier(
+                        creditorDebtorManager.get(SebAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Shankey Jain");
 
-            Reference reference = mock(Reference.class);
-            doReturn("Message").when(reference).getValue();
+        AccountIdentifier debtorAccountIdentifier =
+                new IbanIdentifier(
+                        creditorDebtorManager.get(SebAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+        Debtor debtor = new Debtor(debtorAccountIdentifier);
 
-            Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(manager.get(Arg.DEBTOR_ACCOUNT)).when(debtor).getAccountNumber();
+        Reference reference = new Reference("Message", "ToSomeone");
 
-            Amount amount = Amount.inSEK(10);
-            LocalDate executionDate = LocalDate.now();
-            String currency = "SEK";
+        Amount amount = Amount.inSEK(1);
+        LocalDate executionDate = LocalDate.now();
+        String currency = "SEK";
 
-            listOfMockedPayments.add(
-                    new Payment.Builder()
-                            .withCreditor(creditor)
-                            .withDebtor(debtor)
-                            .withAmount(amount)
-                            .withExecutionDate(executionDate)
-                            .withReference(reference)
-                            .withCurrency(currency)
-                            .build());
-        }
+        return Collections.singletonList(
+                new Builder()
+                        .withCreditor(creditor)
+                        .withDebtor(debtor)
+                        .withAmount(amount)
+                        .withExecutionDate(executionDate)
+                        .withCurrency(currency)
+                        .withReference(reference)
+                        .build());
+    }
 
-        return listOfMockedPayments;
+    private List<Payment> createRealBgPayment() {
+        AccountIdentifier creditorAccountIdentifier =
+                new BankGiroIdentifier(
+                        creditorDebtorManager.get(SebAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Shankey Jain");
+
+        AccountIdentifier debtorAccountIdentifier =
+                new IbanIdentifier(
+                        creditorDebtorManager.get(SebAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+        Debtor debtor = new Debtor(debtorAccountIdentifier);
+
+        Reference reference = new Reference("OCR", "50000038393");
+
+        Amount amount = Amount.inSEK(1);
+        LocalDate executionDate = LocalDate.now().plusDays(1);
+        String currency = "SEK";
+
+        return Collections.singletonList(
+                new Builder()
+                        .withCreditor(creditor)
+                        .withDebtor(debtor)
+                        .withAmount(amount)
+                        .withExecutionDate(executionDate)
+                        .withCurrency(currency)
+                        .withReference(reference)
+                        .build());
     }
 
     private enum Arg implements ArgumentManagerEnum {
-        DEBTOR_ACCOUNT,
-        CREDITOR_ACCOUNT;
+        DEBTOR_ACCOUNT, // Domestic Swedish account number
+        CREDITOR_ACCOUNT; // Domestic Swedish account number
 
         @Override
         public boolean isOptional() {
             return false;
         }
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }
