@@ -6,6 +6,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/password",
         "//src/integration/api",
         "//src/integration/credentials:service",
+        "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//third_party:com_sun_jersey_jersey_core",
