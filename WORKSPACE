@@ -83,11 +83,11 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "io_bazel_rules_go",
+    sha256 = "e6a6c016b0663e06fa5fccf1cd8152eab8aa8180c583ec20c872f4f9953a7ac5",
     urls = [
         "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.22.1/rules_go-v0.22.1.tar.gz",
         "https://github.com/bazelbuild/rules_go/releases/download/v0.22.1/rules_go-v0.22.1.tar.gz",
     ],
-    sha256 = "e6a6c016b0663e06fa5fccf1cd8152eab8aa8180c583ec20c872f4f9953a7ac5",
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
@@ -2695,6 +2695,29 @@ maven_install(
 load("@system_tests//:defs.bzl", system_tests_pin = "pinned_maven_install")
 
 system_tests_pin()
+
+maven_install(
+    name = "fakebank_server",
+    artifacts = [
+        "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+        "com.fasterxml.jackson.core:jackson-core:2.9.9",
+        "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+        "com.google.guava:guava:23.1-jre",
+        "commons-io:commons-io:2.5",
+        "org.apache.httpcomponents:httpclient:4.5.10",
+        "org.hamcrest:hamcrest-core:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party/fakebank_server:fakebank_server_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+
+load("@fakebank_server//:defs.bzl", fakebank_server_pin = "pinned_maven_install")
+
+fakebank_server_pin()
 
 # Use via //third_party/jetty_server9
 maven_install(
