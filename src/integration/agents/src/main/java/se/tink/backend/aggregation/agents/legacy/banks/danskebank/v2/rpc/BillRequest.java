@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.DanskebankV2Constants;
@@ -81,12 +82,13 @@ public class BillRequest {
     }
 
     public void setDate(Date date) {
-        if (date == null) {
-            CountryDateHelper dateHelper =
-                    new CountryDateHelper(
-                            DanskebankV2Constants.Date.DEFAULT_LOCALE,
-                            TimeZone.getTimeZone(DanskebankV2Constants.Date.DEFAULT_ZONE_ID));
-
+        CountryDateHelper dateHelper =
+                new CountryDateHelper(
+                        DanskebankV2Constants.Date.DEFAULT_LOCALE,
+                        TimeZone.getTimeZone(DanskebankV2Constants.Date.DEFAULT_ZONE_ID));
+        Calendar tomorrow = dateHelper.getCalendar();
+        tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+        if (date == null || dateHelper.getCalendar(date).before(tomorrow)) {
             this.date =
                     "\\/Date("
                             + dateHelper.getNextBusinessDay().getTime() / 1000 * 1000

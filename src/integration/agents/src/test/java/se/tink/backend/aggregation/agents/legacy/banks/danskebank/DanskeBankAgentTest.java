@@ -99,6 +99,47 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
     }
 
     @Test
+    public void testPaymentBGBankId_noDueDate() throws Exception {
+        Transfer t = new Transfer();
+        t.setAmount(Amount.inSEK(20.2424));
+        t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
+        t.setDestination(new BankGiroIdentifier("7308596"));
+        t.setDestinationMessage("37578936060100475");
+        t.setSourceMessage("AmEx test1");
+        t.setType(TransferType.PAYMENT);
+
+        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
+    }
+
+    @Test
+    public void testPaymentBGBankId_dueDate_today() throws Exception {
+        Transfer t = new Transfer();
+        t.setAmount(Amount.inSEK(20.2424));
+        t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
+        t.setDestination(new BankGiroIdentifier("7308596"));
+        t.setDestinationMessage("37578936060100475");
+        t.setSourceMessage("AmEx test1");
+        t.setType(TransferType.PAYMENT);
+        t.setDueDate(new Date());
+
+        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
+    }
+
+    @Test
+    public void testPaymentBGBankId_dueDate_futureDate() throws Exception {
+        Transfer t = new Transfer();
+        t.setAmount(Amount.inSEK(20.2424));
+        t.setSource(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
+        t.setDestination(new BankGiroIdentifier("7308596"));
+        t.setDestinationMessage("37578936060100475");
+        t.setSourceMessage("AmEx test1");
+        t.setType(TransferType.PAYMENT);
+        t.setDueDate(getNextFriday());
+
+        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
+    }
+
+    @Test
     public void testPaymentBGBankId() throws Exception {
         Transfer t = new Transfer();
         t.setAmount(Amount.inSEK(20.2424));
@@ -140,6 +181,15 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
                 create1SEKTestTransfer(
                         TestAccount.DANSKEBANK_FH, TestAccount.DANSKEBANK_ANOTHER_FH);
         transfer.setDueDate(getNextFriday());
+        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
+    }
+
+    @Test
+    public void testTransferBankId_nextNonBusinessDay() throws Exception {
+        Transfer transfer =
+                create1SEKTestTransfer(
+                        TestAccount.DANSKEBANK_FH, TestAccount.DANSKEBANK_ANOTHER_FH);
+        transfer.setDueDate(getNextNonBusinessDay());
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
@@ -335,5 +385,10 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
     public static Date getNextFriday() {
         final LocalDate nextFriday = LocalDate.now().with(next(DayOfWeek.FRIDAY));
         return Date.from(nextFriday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static Date getNextNonBusinessDay() {
+        final LocalDate nextSaturday = LocalDate.now().with(next(DayOfWeek.SATURDAY));
+        return Date.from(nextSaturday.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }
