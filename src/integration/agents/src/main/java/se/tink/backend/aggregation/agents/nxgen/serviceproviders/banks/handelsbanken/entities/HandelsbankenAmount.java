@@ -8,6 +8,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.DoubleDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class HandelsbankenAmount {
@@ -63,5 +64,14 @@ public class HandelsbankenAmount {
         }
 
         return new Amount(currency, amount);
+    }
+
+    @JsonIgnore
+    public ExactCurrencyAmount toExactCurrencyAmount() {
+        if (Objects.isNull(amount)) {
+            return ExactCurrencyAmount.of(amountFormatted, currency);
+        }
+
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }

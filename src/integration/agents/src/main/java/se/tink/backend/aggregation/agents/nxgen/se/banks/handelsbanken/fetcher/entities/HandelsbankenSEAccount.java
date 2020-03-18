@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
@@ -54,7 +54,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER, accountTypeName)
-                .withBalance(BalanceModule.of(findBalanceAmount().asAmount()))
+                .withBalance(BalanceModule.of(findBalanceAmount().toExactCurrencyAmount()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(number)
@@ -83,12 +83,12 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
 
         return Optional.of(
                 CreditCardAccount.builder(number)
-                        .setAvailableCredit(getAvailableCredit(cardInvoiceInfo))
+                        .setExactAvailableCredit(getAvailableCredit(cardInvoiceInfo))
                         .setHolderName(new HolderName(holderName))
-                        .setBalance(
-                                new Amount(
-                                        balance.getCurrency(),
-                                        calculateBalance(transactionsResponse)))
+                        .setExactBalance(
+                                ExactCurrencyAmount.of(
+                                        calculateBalance(transactionsResponse),
+                                        balance.getCurrency()))
                         .setBankIdentifier(number)
                         .setAccountNumber(accountNumber)
                         .setName(name)
@@ -102,19 +102,19 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
      * available credit. Doesn't seem likely that they are ever null, but you never know with
      * Handelsbanken, so defaulting to credit limit (which is what we used before).
      */
-    private Amount getAvailableCredit(CardInvoiceInfo cardInvoiceInfo) {
+    private ExactCurrencyAmount getAvailableCredit(CardInvoiceInfo cardInvoiceInfo) {
         if (cardInvoiceInfo.getSpendable() != null) {
-            return cardInvoiceInfo.getSpendable().asAmount();
+            return cardInvoiceInfo.getSpendable().toExactCurrencyAmount();
         }
 
         if (amountAvailable != null) {
-            return amountAvailable.asAmount();
+            return amountAvailable.toExactCurrencyAmount();
         }
 
         LOG.warn(
                 "No spendable or amountAvailable value found for Handelsbanken credit card: {}",
                 name);
-        return cardInvoiceInfo.getCredit().asAmount();
+        return cardInvoiceInfo.getCredit().toExactCurrencyAmount();
     }
 
     private String getAccountNumber(TransactionsSEResponse transactionsResponse) {

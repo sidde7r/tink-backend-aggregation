@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject
@@ -34,7 +34,7 @@ public class HandelsbankenSETransaction extends BaseResponse {
         }
 
         return Transaction.builder()
-                .setAmount(Amount.inSEK(amount.asDouble()))
+                .setAmount(amount.toExactCurrencyAmount())
                 .setDate(dueDate)
                 .setDescription(description)
                 .setPending(pending)
@@ -51,14 +51,14 @@ public class HandelsbankenSETransaction extends BaseResponse {
     }
 
     @JsonIgnore
-    public Amount positiveAmount() {
+    public ExactCurrencyAmount positiveAmount() {
         if (amount == null) {
             return null;
         }
-        Amount positiveAmount = Amount.inSEK(amount.asDouble());
+        ExactCurrencyAmount positiveAmount = amount.toExactCurrencyAmount();
 
-        if (!positiveAmount.isPositive()) {
-            return positiveAmount.negate();
+        if (positiveAmount.getDoubleValue() < 0) {
+            positiveAmount = positiveAmount.negate();
         }
 
         return positiveAmount;
