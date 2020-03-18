@@ -51,7 +51,7 @@ public class HandelsbankenFILoan {
             loanAmount.setAmount(-loanAmount.asDouble());
         }
 
-        return LoanAccount.builder(loanNumber, loanAmount.asAmount())
+        return LoanAccount.builder(loanNumber, loanAmount.toExactCurrencyAmount())
                 .setAccountNumber(loanNumber)
                 .setName(loanName)
                 .setInterestRate(getInterest())

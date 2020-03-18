@@ -33,9 +33,9 @@ public class CreditCardSETransactionsResponse
         if (cardInvoiceInfo.hasCreditLimitLargerThanZero() && cardInvoiceInfo.hasSpendable()) {
             return cardInvoiceInfo
                     .getSpendable()
-                    .asAmount()
-                    .subtract(cardInvoiceInfo.getCredit().asAmount())
-                    .doubleValue();
+                    .toExactCurrencyAmount()
+                    .subtract(cardInvoiceInfo.getCredit().toExactCurrencyAmount())
+                    .getDoubleValue();
         }
 
         // Return fallback amount if it contains any value, otherwise default to 0

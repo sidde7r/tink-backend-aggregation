@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEUpcomingTransactionFetcher
@@ -28,7 +28,8 @@ public class HandelsbankenSEUpcomingTransactionFetcher
 
     private final HandelsbankenSEApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
-    private Map<String, List<Amount>> todaysTransactionAmountsByAccount = new HashMap<>();
+    private Map<String, List<ExactCurrencyAmount>> todaysTransactionAmountsByAccount =
+            new HashMap<>();
 
     public HandelsbankenSEUpcomingTransactionFetcher(
             HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
@@ -83,18 +84,18 @@ public class HandelsbankenSEUpcomingTransactionFetcher
     private boolean filterUpcomingPresentAsTransaction(
             TransactionalAccount account, PendingTransaction upcomingTransaction) {
 
-        List<Amount> todaysAmounts = fetchTodaysTransactionAmounts(account);
+        List<ExactCurrencyAmount> todaysAmounts = fetchTodaysTransactionAmounts(account);
         return todaysAmounts.stream()
                 .noneMatch(amount -> Objects.equal(amount, upcomingTransaction.getTinkAmount()));
     }
 
-    private List<Amount> fetchTodaysTransactionAmounts(TransactionalAccount account) {
+    private List<ExactCurrencyAmount> fetchTodaysTransactionAmounts(TransactionalAccount account) {
 
         if (todaysTransactionAmountsByAccount.containsKey(account.getAccountNumber())) {
             return todaysTransactionAmountsByAccount.get(account.getAccountNumber());
         }
 
-        List<Amount> amounts =
+        List<ExactCurrencyAmount> amounts =
                 findAccount(account)
                         .map(client::transactions)
                         .map(TransactionsSEResponse::getTodaysTransactions)

@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class HandelsbankenFICreditCardTransaction {
@@ -23,7 +22,7 @@ public class HandelsbankenFICreditCardTransaction {
 
     public CreditCardTransaction toTinkTransaction(CreditCardAccount account) {
         return CreditCardTransaction.builder()
-                .setAmount(Amount.inEUR(amount.asDouble()).negate())
+                .setAmount(amount.toExactCurrencyAmount().negate())
                 .setDate(date)
                 .setCreditAccount(account)
                 .setDescription(description)

@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class PendingTransaction extends BaseResponse {
@@ -47,11 +48,11 @@ public class PendingTransaction extends BaseResponse {
     }
 
     @JsonIgnore
-    public Amount getTinkAmount() {
+    public ExactCurrencyAmount getTinkAmount() {
         if (amount == null) {
             return null;
         }
 
-        return amount.asAmount();
+        return amount.toExactCurrencyAmount();
     }
 }

@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CustodyAccount extends BaseResponse {
     private static final AggregationLogger log = new AggregationLogger(CustodyAccount.class);
@@ -80,9 +80,9 @@ public class CustodyAccount extends BaseResponse {
     }
 
     @JsonIgnore
-    public Amount getTinkAmount() {
+    public ExactCurrencyAmount getTinkAmount() {
         return Optional.ofNullable(marketValue)
-                .map(HandelsbankenAmount::asAmount)
-                .orElse(Amount.inSEK(0.0));
+                .map(HandelsbankenAmount::toExactCurrencyAmount)
+                .orElse(ExactCurrencyAmount.of(0.0, "SEK"));
     }
 }

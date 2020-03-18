@@ -82,7 +82,7 @@ public class FundHoldingsUser {
     }
 
     private String getCurrency(CustodyAccount custodyAccount) {
-        return Optional.ofNullable(custodyAccount.getTinkAmount().getCurrency()).orElse("");
+        return Optional.ofNullable(custodyAccount.getTinkAmount().getCurrencyCode()).orElse("");
     }
 
     private PortfolioModule toPortfolioModule(CustodyAccount custodyAccount) {
