@@ -121,18 +121,6 @@ steps:
       queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
-  - name: ':docker: tink-backend-notifying-aggregation-service-asserter'
-    branches: 'staging'
-    command: .buildkite/build-and-push-docker.sh //src/nasa/service:docker_push
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v3.0.3:
-        run: "app"
-        config: "docker/docker-compose.bazel.yml"
-    agents:
-      queue: default
-    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
-
   - wait
 
   - name: ':pipeline: Generate trigger steps'
