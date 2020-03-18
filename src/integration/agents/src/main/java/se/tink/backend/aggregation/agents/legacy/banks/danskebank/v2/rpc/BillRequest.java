@@ -86,15 +86,21 @@ public class BillRequest {
                 new CountryDateHelper(
                         DanskebankV2Constants.Date.DEFAULT_LOCALE,
                         TimeZone.getTimeZone(DanskebankV2Constants.Date.DEFAULT_ZONE_ID));
-        Calendar tomorrow = dateHelper.getCalendar();
-        tomorrow.add(Calendar.DAY_OF_YEAR, 1);
-        if (date == null || dateHelper.getCalendar(date).before(tomorrow)) {
+        Calendar nextBusinessDay = dateHelper.getCalendar(dateHelper.getNextBusinessDay());
+        if (date == null || dateHelper.getCalendar(date).before(nextBusinessDay)) {
+            this.date =
+                    "\\/Date(" + nextBusinessDay.getTime().getTime() / 1000 * 1000 + "+0200)\\/";
+        } else {
             this.date =
                     "\\/Date("
-                            + dateHelper.getNextBusinessDay().getTime() / 1000 * 1000
+                            + dateHelper
+                                            .getCurrentOrNextBusinessDay(
+                                                    dateHelper.getCalendar(date))
+                                            .getTime()
+                                            .getTime()
+                                    / 1000
+                                    * 1000
                             + "+0200)\\/";
-        } else {
-            this.date = "\\/Date(" + date.getTime() / 1000 * 1000 + "+0200)\\/";
         }
     }
 
