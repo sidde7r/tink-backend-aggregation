@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -15,14 +15,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountsOverviewResponse;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AvanzaInvestmentFetcherTest {
-    private static String ACCOUNT_ID = "13371337";
-    private static String AUTH_SESSION_ID = "4AEF3BB1-09B5-4FA8-BF8D-555363CB3C4E";
-    private static String AUTH_SESSION_SECURITY_KEY = "318DB1E6-4477-4C27-8914-4501B724E956";
-    final String TEST_DATA_PATH = "data/test/agents/avanza";
+    private static final String ACCOUNT_ID = "13371337";
+    private static final String AUTH_SESSION_ID = "4AEF3BB1-09B5-4FA8-BF8D-555363CB3C4E";
+    private static final String AUTH_SESSION_SECURITY_KEY = "318DB1E6-4477-4C27-8914-4501B724E956";
+    private static final String TEST_DATA_PATH = "data/test/agents/avanza";
 
     private <T> T loadTestResponse(String path, Class<T> cls) {
         return SerializationUtils.deserializeFromString(
@@ -51,11 +50,11 @@ public class AvanzaInvestmentFetcherTest {
                 new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage);
         InvestmentAccount account = fetcher.fetchAccounts().iterator().next();
 
-        assertEquals(Amount.inSEK(449894.55), account.getBalance());
+        assertThat(account.getExactBalance()).isEqualTo(449894.55);
 
-        assertEquals(1, account.getSystemPortfolios().size());
+        assertThat(account.getSystemPortfolios()).hasSize(1);
         Portfolio portfolio = account.getSystemPortfolios().iterator().next();
-        assertEquals(new Double(3719.61), portfolio.getCashValue());
-        assertEquals(new Double(446175.0), portfolio.getTotalValue());
+        assertThat(portfolio.getCashValue()).isEqualTo(3719.61);
+        assertThat(portfolio.getTotalValue()).isEqualTo(446175.0);
     }
 }

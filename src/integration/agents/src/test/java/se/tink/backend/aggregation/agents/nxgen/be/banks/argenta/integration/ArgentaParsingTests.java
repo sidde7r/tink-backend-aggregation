@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaTransactionResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class ArgentaParsingTests {
@@ -25,20 +25,20 @@ public class ArgentaParsingTests {
         ObjectMapper objectMapper = new ObjectMapper();
         ArgentaAccountResponse argentaAccountResponse =
                 objectMapper.readValue(ArgentaTestData.ACCOUNTS, ArgentaAccountResponse.class);
-        Assert.assertEquals(1, argentaAccountResponse.getPage());
-        Assert.assertEquals(0, argentaAccountResponse.getNextPage());
-        Assert.assertEquals(3, argentaAccountResponse.getAccounts().size());
+        assertThat(argentaAccountResponse.getPage()).isEqualTo(1);
+        assertThat(argentaAccountResponse.getNextPage()).isEqualTo(0);
+        assertThat(argentaAccountResponse.getAccounts()).hasSize(3);
 
         TransactionalAccount checkingAccount =
                 argentaAccountResponse.getAccounts().get(0).toTransactionalAccount().get();
-        Assert.assertEquals("Balance", Amount.inEUR(1891.98), checkingAccount.getBalance());
-        Assert.assertEquals("BE78973136067186", checkingAccount.getAccountNumber());
-        Assert.assertEquals("1#01", checkingAccount.getApiIdentifier());
-        Assert.assertEquals(AccountTypes.CHECKING, checkingAccount.getType());
+        assertThat(checkingAccount.getExactBalance()).isEqualTo(1891.98);
+        assertThat(checkingAccount.getAccountNumber()).isEqualTo("BE78973136067186");
+        assertThat(checkingAccount.getApiIdentifier()).isEqualTo("1#01");
+        assertThat(checkingAccount.getType()).isEqualTo(AccountTypes.CHECKING);
 
         TransactionalAccount savingsAccount =
                 argentaAccountResponse.getAccounts().get(2).toTransactionalAccount().get();
-        Assert.assertEquals(AccountTypes.SAVINGS, savingsAccount.getType());
+        assertThat(savingsAccount.getType()).isEqualTo(AccountTypes.SAVINGS);
     }
 
     @Test
@@ -88,9 +88,9 @@ public class ArgentaParsingTests {
         ObjectMapper objectMapper = new ObjectMapper();
         ArgentaErrorResponse argentaErrorResponse =
                 objectMapper.readValue(ArgentaTestData.ERROR, ArgentaErrorResponse.class);
-        Assert.assertEquals("error.request.invalid", argentaErrorResponse.getCode());
-        Assert.assertEquals(1, argentaErrorResponse.getFieldErrors().size());
-        Assert.assertEquals(
+        assertEquals("error.request.invalid", argentaErrorResponse.getCode());
+        assertEquals(1, argentaErrorResponse.getFieldErrors().size());
+        assertEquals(
                 ArgentaTestData.CARD_NUMBER_REQUIRED,
                 argentaErrorResponse.getFieldErrors().get(0).getMessage());
     }
@@ -101,8 +101,7 @@ public class ArgentaParsingTests {
         ArgentaErrorResponse argentaErrorResponse =
                 objectMapper.readValue(
                         ArgentaTestData.AUTHENTICATION_ERROR, ArgentaErrorResponse.class);
-        Assert.assertEquals(
-                ArgentaConstants.ErrorResponse.ERROR_CODE_SBP, argentaErrorResponse.getCode());
+        assertEquals(ArgentaConstants.ErrorResponse.ERROR_CODE_SBP, argentaErrorResponse.getCode());
     }
 
     @Test
@@ -111,7 +110,7 @@ public class ArgentaParsingTests {
         ArgentaErrorResponse argentaErrorResponse =
                 objectMapper.readValue(
                         ArgentaTestData.TOO_MANY_DEVICE_ERROR, ArgentaErrorResponse.class);
-        Assert.assertTrue(
+        assertTrue(
                 ArgentaConstants.ErrorResponse.ERROR_CODE_SBP,
                 argentaErrorResponse.getMessage().contains("maximumaantal actieve registraties"));
     }

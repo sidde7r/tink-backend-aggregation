@@ -171,13 +171,6 @@ public abstract class Account {
         return this.accountNumber;
     }
 
-    @Deprecated
-    public Amount getBalance() {
-        return Optional.ofNullable(exactBalance)
-                .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()))
-                .orElse(null);
-    }
-
     public ExactCurrencyAmount getExactBalance() {
         return exactBalance;
     }

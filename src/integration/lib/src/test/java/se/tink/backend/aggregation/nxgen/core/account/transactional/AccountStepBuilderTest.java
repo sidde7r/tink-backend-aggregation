@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.Collections;
-import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.CheckingBuildStep;
@@ -10,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.Savi
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 public final class AccountStepBuilderTest {
@@ -17,6 +20,7 @@ public final class AccountStepBuilderTest {
     private static final String VALID_UNIQUE_ID = "MyUniqueId";
     private static final String VALID_ACCOUNT_NUMBER = "MyAccountNumber";
     private final Amount VALID_AMOUNT = Amount.inSEK(10);
+    private final ExactCurrencyAmount VALID_EXACT_AMOUNT = ExactCurrencyAmount.of(10d, "SEK");
     private final AccountIdentifier VALID_IBAN_IDENTIFIER =
             AccountIdentifier.create(AccountIdentifier.Type.IBAN, "SE1004976016582303953969");
     private final AccountIdentifier VALID_TINK_IDENTIFIER =
@@ -54,11 +58,10 @@ public final class AccountStepBuilderTest {
 
         CheckingAccount account = getRequiredCheckingBuilder().build();
 
-        Assert.assertEquals(account.hashCode(), VALID_UNIQUE_ID.hashCode());
-        Assert.assertEquals(account.getAccountNumber(), VALID_ACCOUNT_NUMBER);
-        Assert.assertEquals(account.getBalance(), VALID_AMOUNT);
-        Assert.assertEquals(
-                account.getIdentifiers(), Collections.singletonList(VALID_IBAN_IDENTIFIER));
+        assertEquals(account.hashCode(), VALID_UNIQUE_ID.hashCode());
+        assertEquals(account.getAccountNumber(), VALID_ACCOUNT_NUMBER);
+        assertEquals(account.getExactBalance(), VALID_EXACT_AMOUNT);
+        assertEquals(account.getIdentifiers(), Collections.singletonList(VALID_IBAN_IDENTIFIER));
     }
 
     @Test
@@ -66,11 +69,10 @@ public final class AccountStepBuilderTest {
 
         SavingsAccount account = getRequiredSavingsBuilder().build();
 
-        Assert.assertEquals(account.hashCode(), VALID_UNIQUE_ID.hashCode());
-        Assert.assertEquals(account.getAccountNumber(), VALID_ACCOUNT_NUMBER);
-        Assert.assertEquals(account.getBalance(), VALID_AMOUNT);
-        Assert.assertEquals(
-                account.getIdentifiers(), Collections.singletonList(VALID_IBAN_IDENTIFIER));
+        assertEquals(account.hashCode(), VALID_UNIQUE_ID.hashCode());
+        assertEquals(account.getAccountNumber(), VALID_ACCOUNT_NUMBER);
+        assertEquals(account.getExactBalance(), VALID_EXACT_AMOUNT);
+        assertEquals(account.getIdentifiers(), Collections.singletonList(VALID_IBAN_IDENTIFIER));
     }
 
     @Test
@@ -82,10 +84,10 @@ public final class AccountStepBuilderTest {
                         .addHolderName(VALID_HOLDER_NAME)
                         .build();
 
-        Assert.assertEquals(account.getName(), VALID_ALIAS);
-        Assert.assertEquals(account.getApiIdentifier(), VALID_API_IDENTIFIER);
-        Assert.assertEquals(account.getProductName(), VALID_PRODUCT_NAME);
-        Assert.assertEquals(account.getHolderName().toString(), VALID_HOLDER_NAME);
+        assertEquals(account.getName(), VALID_ALIAS);
+        assertEquals(account.getApiIdentifier(), VALID_API_IDENTIFIER);
+        assertEquals(account.getProductName(), VALID_PRODUCT_NAME);
+        assertEquals(account.getHolderName().toString(), VALID_HOLDER_NAME);
     }
 
     @Test
@@ -98,11 +100,11 @@ public final class AccountStepBuilderTest {
                         .setInterestRate(VALID_INTEREST_RATE)
                         .build();
 
-        Assert.assertEquals(account.getName(), VALID_ALIAS);
-        Assert.assertEquals(account.getApiIdentifier(), VALID_API_IDENTIFIER);
-        Assert.assertEquals(account.getProductName(), VALID_PRODUCT_NAME);
-        Assert.assertEquals(account.getHolderName().toString(), VALID_HOLDER_NAME);
-        Assert.assertEquals(account.getInterestRate(), VALID_INTEREST_RATE, 0.0);
+        assertEquals(account.getName(), VALID_ALIAS);
+        assertEquals(account.getApiIdentifier(), VALID_API_IDENTIFIER);
+        assertEquals(account.getProductName(), VALID_PRODUCT_NAME);
+        assertEquals(account.getHolderName().toString(), VALID_HOLDER_NAME);
+        assertEquals(account.getInterestRate(), VALID_INTEREST_RATE, 0.0);
     }
 
     @Test
@@ -119,8 +121,8 @@ public final class AccountStepBuilderTest {
                         .putInTemporaryStorage(KEY_2, VALUE_2)
                         .build();
 
-        Assert.assertEquals(account.getFromTemporaryStorage(KEY_1), VALUE_1);
-        Assert.assertEquals(account.getFromTemporaryStorage(KEY_2), VALUE_2);
+        assertEquals(account.getFromTemporaryStorage(KEY_1), VALUE_1);
+        assertEquals(account.getFromTemporaryStorage(KEY_2), VALUE_2);
     }
 
     @Test
@@ -131,7 +133,7 @@ public final class AccountStepBuilderTest {
                         .addAccountFlags(AccountFlag.BUSINESS, AccountFlag.MANDATE)
                         .build();
 
-        Assert.assertTrue(
+        assertTrue(
                 account.getAccountFlags()
                         .containsAll(Arrays.asList(AccountFlag.BUSINESS, AccountFlag.MANDATE)));
     }
@@ -149,8 +151,7 @@ public final class AccountStepBuilderTest {
                         .addAccountIdentifier(VALID_IBAN_IDENTIFIER)
                         .build();
 
-        Assert.assertEquals(
-                account.hashCode(), StringUtils.removeNonAlphaNumeric(formattedId).hashCode());
+        assertEquals(account.hashCode(), StringUtils.removeNonAlphaNumeric(formattedId).hashCode());
     }
 
     @Test
@@ -164,7 +165,7 @@ public final class AccountStepBuilderTest {
                         .setAlias(null)
                         .addAccountIdentifier(VALID_TINK_IDENTIFIER)
                         .build();
-        Assert.assertEquals(VALID_ACCOUNT_NUMBER, account.getName());
+        assertEquals(VALID_ACCOUNT_NUMBER, account.getName());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -219,7 +220,7 @@ public final class AccountStepBuilderTest {
                         .addAccountIdentifier(VALID_TINK_IDENTIFIER)
                         .build();
 
-        Assert.assertTrue(
+        assertTrue(
                 account.getIdentifiers()
                         .containsAll(Arrays.asList(VALID_IBAN_IDENTIFIER, VALID_TINK_IDENTIFIER)));
     }
