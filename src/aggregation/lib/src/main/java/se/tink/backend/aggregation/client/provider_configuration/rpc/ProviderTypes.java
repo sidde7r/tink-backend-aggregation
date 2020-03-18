@@ -6,5 +6,6 @@ public enum ProviderTypes {
     BROKER,
     OTHER,
     TEST,
-    FRAUD
+    FRAUD,
+    BUSINESS_BANK
 }
