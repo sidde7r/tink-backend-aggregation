@@ -3,7 +3,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 java_library(
     name = "amount",
     srcs = glob(["src/main/**/*.java"]),
-    visibility = ["//src/integration:__subpackages__"],
+    visibility = [
+        "//src/aggregation/aggregationcontroller_api:__subpackages__",
+        "//src/integration:__subpackages__",
+    ],
     deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",

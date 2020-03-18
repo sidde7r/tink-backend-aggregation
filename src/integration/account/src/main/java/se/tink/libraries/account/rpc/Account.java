@@ -22,6 +22,7 @@ import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
 import se.tink.libraries.account.iface.Identifiable;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.TransferDestination;
@@ -59,6 +60,8 @@ public class Account implements Identifiable, Cloneable {
     private String flags;
     private AccountExclusion accountExclusion;
     private String financialInstitutionId;
+    private ExactCurrencyAmount availableBalance;
+    private ExactCurrencyAmount creditLimit;
 
     @Override
     public Account clone() throws CloneNotSupportedException {
@@ -439,5 +442,21 @@ public class Account implements Identifiable, Cloneable {
 
     public void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
+    }
+
+    public ExactCurrencyAmount getAvailableBalance() {
+        return availableBalance;
+    }
+
+    public void setAvailableBalance(ExactCurrencyAmount availableBalance) {
+        this.availableBalance = availableBalance;
+    }
+
+    public ExactCurrencyAmount getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(ExactCurrencyAmount creditLimit) {
+        this.creditLimit = creditLimit;
     }
 }

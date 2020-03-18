@@ -362,6 +362,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setAccountFeatures(accountFeatures);
         updateAccountRequest.setCredentialsId(request.getCredentials().getId());
         updateAccountRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
+        updateAccountRequest.setAvailableBalance(account.getAvailableBalance());
+        updateAccountRequest.setCreditLimit(account.getCreditLimit());
 
         Account updatedAccount;
         try {
@@ -409,6 +411,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setAccountFeatures(accountFeatures);
         updateAccountRequest.setCredentialsId(request.getCredentials().getId());
         updateAccountRequest.setCredentialsDataVersion(request.getCredentials().getDataVersion());
+        updateAccountRequest.setAvailableBalance(account.getAvailableBalance());
+        updateAccountRequest.setCreditLimit(account.getCreditLimit());
 
         Account updatedAccount;
         try {

@@ -9,6 +9,7 @@ java_library(
     ],
     deps = [
         "//src/integration/account:rpc",
+        "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:rpc",
         "//src/integration/enums",

@@ -27,9 +27,13 @@ public class AccountDeserializer extends JsonDeserializer<List<Account>> {
         for (JsonNode rawNode : rawList) {
             JsonNode exactBalance = rawNode.get("exactBalance");
             JsonNode exactAvailableCredit = rawNode.get("exactAvailableCredit");
+            JsonNode availableBalance = rawNode.get("availableBalance");
+            JsonNode creditLimit = rawNode.get("creditLimit");
             ObjectNode objectNode = (ObjectNode) rawNode;
             objectNode.remove("exactBalance");
             objectNode.remove("exactAvailableCredit");
+            objectNode.remove("availableBalance");
+            objectNode.remove("creditLimit");
             Account account = new ObjectMapper().readValue(objectNode.toString(), Account.class);
             if (exactBalance != null) {
                 account.setExactBalance(
@@ -42,6 +46,18 @@ public class AccountDeserializer extends JsonDeserializer<List<Account>> {
                         ExactCurrencyAmount.of(
                                 exactAvailableCredit.get("exactValue").asText(),
                                 exactAvailableCredit.get("currencyCode").asText()));
+            }
+            if (availableBalance != null) {
+                account.setAvailableBalance(
+                        ExactCurrencyAmount.of(
+                                availableBalance.get("exactValue").asText(),
+                                availableBalance.get("currencyCode").asText()));
+            }
+            if (creditLimit != null) {
+                account.setCreditLimit(
+                        ExactCurrencyAmount.of(
+                                creditLimit.get("exactValue").asText(),
+                                creditLimit.get("currencyCode").asText()));
             }
             entities.add(account);
         }

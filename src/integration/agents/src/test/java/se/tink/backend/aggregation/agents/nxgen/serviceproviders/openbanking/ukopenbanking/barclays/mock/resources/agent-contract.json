@@ -10,6 +10,13 @@
         "doubleValue": 30.0,
         "unscaledValue": 3000
       },
+      "availableBalance": {
+        "currencyCode": "GBP",
+        "exactValue": 30.0,
+        "scale": 2,
+        "doubleValue": 30.0,
+        "unscaledValue": 3000
+      },
       "currencyCode": "GBP",
       "bankId": "00000000000000",
       "name": "00000000000000",

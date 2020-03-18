@@ -50,6 +50,8 @@ public class Account implements Cloneable {
     private Double balance;
     private ExactCurrencyAmount exactBalance;
     private String currencyCode;
+    private ExactCurrencyAmount availableBalance;
+    private ExactCurrencyAmount creditLimit;
     private String bankId;
     private Date certainDate;
     private String credentialsId;
@@ -558,6 +560,8 @@ public class Account implements Cloneable {
                 && Objects.equals(first.exactAvailableCredit, second.exactAvailableCredit)
                 && Objects.equals(first.exactBalance, second.exactBalance)
                 && Objects.equals(first.currencyCode, second.currencyCode)
+                && Objects.equals(first.creditLimit, second.creditLimit)
+                && Objects.equals(first.availableBalance, second.availableBalance)
                 && Objects.equals(first.bankId, second.bankId)
                 && Objects.equals(first.certainDate, second.certainDate)
                 && Objects.equals(first.credentialsId, second.credentialsId)
@@ -591,5 +595,21 @@ public class Account implements Cloneable {
 
     public void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
+    }
+
+    public ExactCurrencyAmount getAvailableBalance() {
+        return availableBalance;
+    }
+
+    public void setAvailableBalance(ExactCurrencyAmount availableBalance) {
+        this.availableBalance = availableBalance;
+    }
+
+    public ExactCurrencyAmount getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(ExactCurrencyAmount creditLimit) {
+        this.creditLimit = creditLimit;
     }
 }
