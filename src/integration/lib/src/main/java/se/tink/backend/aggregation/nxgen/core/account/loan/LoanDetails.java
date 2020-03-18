@@ -253,14 +253,6 @@ public class LoanDetails {
         }
 
         @Deprecated
-        public Amount getAmortized() {
-            return Optional.ofNullable(amortized)
-                    .filter(a -> Objects.nonNull(a.getExactValue()))
-                    .map(a -> new Amount(a.getCurrencyCode(), a.getDoubleValue()))
-                    .orElse(null);
-        }
-
-        @Deprecated
         public Builder setAmortized(Amount amortized) {
             this.amortized =
                     ExactCurrencyAmount.of(amortized.toBigDecimal(), amortized.getCurrency());

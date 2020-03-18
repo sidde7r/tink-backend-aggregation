@@ -1,17 +1,16 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import org.junit.Test;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-@SuppressWarnings("ConstantConditions")
 public class BalanceModuleTest {
+
     @Test
     public void of_exactBalance() {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of(BigDecimal.valueOf(257.90), "SEK");
@@ -29,13 +28,13 @@ public class BalanceModuleTest {
         BalanceModule balance = BalanceModule.of(amount);
 
         // Test successful build
-        assertEquals(257.90, balance.getBalance().doubleValue(), 0);
-        assertFalse(balance.getAvailableCredit().isPresent());
-        assertFalse(balance.getInterestRate().isPresent());
+        assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(257.90);
+        assertThat(balance.getAvailableCredit().isPresent()).isFalse();
+        assertThat(balance.getInterestRate().isPresent()).isFalse();
 
         // Ensure immutability
         amount.setValue(100);
-        assertEquals(257.90, balance.getBalance().doubleValue(), 0);
+        assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(257.90);
     }
 
     @Test(expected = NullPointerException.class)
@@ -81,15 +80,15 @@ public class BalanceModuleTest {
         bal.add(Amount.inDKK(20));
         credit.setCurrency("USD");
 
-        assertTrue(balance.getInterestRate().isPresent());
-        assertTrue(balance.getAvailableCredit().isPresent());
-        assertEquals(25_506.32, balance.getBalance().getValue(), 0);
-        assertEquals(9473.27, balance.getAvailableCredit().get().getValue(), 0);
-        assertEquals("DKK", balance.getBalance().getCurrency());
-        assertEquals("DKK", balance.getAvailableCredit().get().getCurrency());
-        assertEquals(0.0265, balance.getInterestRate().get(), 0);
-        assertNull(balance.getExactCreditLimit());
-        assertNull(balance.getExactAvailableBalance());
+        assertThat(balance.getInterestRate().isPresent()).isTrue();
+        assertThat(balance.getAvailableCredit().isPresent()).isTrue();
+        assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(25_506.32);
+        assertThat(balance.getAvailableCredit().get().getValue()).isEqualTo(9473.27);
+        assertThat(balance.getExactBalance().getCurrencyCode()).isEqualTo("DKK");
+        assertThat(balance.getAvailableCredit().get().getCurrency()).isEqualTo("DKK");
+        assertThat(balance.getInterestRate().get()).isEqualTo(0.0265);
+        assertThat(balance.getExactCreditLimit()).isNull();
+        assertThat(balance.getExactAvailableBalance()).isNull();
     }
 
     @Test
@@ -108,16 +107,16 @@ public class BalanceModuleTest {
                         .setInterestRate(0.0265)
                         .build();
 
-        assertTrue(balance.getInterestRate().isPresent());
-        assertTrue(balance.getAvailableCredit().isPresent());
-        assertEquals(25506.32, balance.getBalance().getValue(), 0);
-        assertEquals(9473.27, balance.getAvailableCredit().get().getValue(), 0);
-        assertEquals("DKK", balance.getBalance().getCurrency());
-        assertEquals("DKK", balance.getAvailableCredit().get().getCurrency());
-        assertEquals(0.0265, balance.getInterestRate().get(), 0);
-        assertEquals(25_006.32, balance.getExactAvailableBalance().getDoubleValue(), 0);
-        assertEquals("DKK", balance.getExactAvailableBalance().getCurrencyCode());
-        assertEquals(10_000d, balance.getExactCreditLimit().getDoubleValue(), 0);
-        assertEquals("DKK", balance.getExactCreditLimit().getCurrencyCode());
+        assertThat(balance.getInterestRate().isPresent()).isTrue();
+        assertThat(balance.getAvailableCredit().isPresent()).isTrue();
+        assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(25506.32);
+        assertThat(balance.getAvailableCredit().get().getValue()).isEqualTo(9473.27);
+        assertThat(balance.getExactBalance().getCurrencyCode()).isEqualTo("DKK");
+        assertThat(balance.getAvailableCredit().get().getCurrency()).isEqualTo("DKK");
+        assertThat(balance.getInterestRate().get()).isEqualTo(0.0265);
+        assertThat(balance.getExactAvailableBalance().getDoubleValue()).isEqualTo(25_006.32);
+        assertThat(balance.getExactAvailableBalance().getCurrencyCode()).isEqualTo("DKK");
+        assertThat(balance.getExactCreditLimit().getDoubleValue()).isEqualTo(10_000d);
+        assertThat(balance.getExactCreditLimit().getCurrencyCode()).isEqualTo("DKK");
     }
 }

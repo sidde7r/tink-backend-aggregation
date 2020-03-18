@@ -335,11 +335,6 @@ public abstract class Account {
                     ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency());
         }
 
-        protected final void applyBalance(@Nonnull ExactCurrencyAmount balance) {
-            Preconditions.checkNotNull(balance, "Balance must not be null.");
-            this.exactBalance = balance;
-        }
-
         protected final void applyAlias(String alias) {
             this.alias = alias;
         }
