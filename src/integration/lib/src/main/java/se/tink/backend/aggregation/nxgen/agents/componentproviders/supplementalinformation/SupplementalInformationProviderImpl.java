@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
@@ -12,6 +13,7 @@ public final class SupplementalInformationProviderImpl implements SupplementalIn
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SupplementalInformationController supplementalInformationController;
 
+    @Inject
     public SupplementalInformationProviderImpl(
             final SupplementalRequester supplementalRequester,
             final CredentialsRequest credentialsRequest) {

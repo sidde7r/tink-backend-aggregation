@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.CompositeAgentContext;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -14,6 +15,7 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
 
     private final TinkHttpClient tinkHttpClient;
 
+    @Inject
     public WireMockTinkHttpClientProvider(
             final CredentialsRequest credentialsRequest,
             final CompositeAgentContext context,
