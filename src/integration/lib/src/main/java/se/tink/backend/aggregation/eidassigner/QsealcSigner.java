@@ -7,6 +7,7 @@ import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
@@ -110,7 +111,7 @@ public class QsealcSigner {
                 final int statusCode = response.getStatusLine().getStatusCode();
                 response.close();
 
-                if (statusCode != 200) {
+                if (statusCode != HttpStatus.SC_OK) {
                     throw new QsealcSignerException(
                             "Unexpected status code "
                                     + response.getStatusLine()
