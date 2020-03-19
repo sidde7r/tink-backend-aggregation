@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
@@ -22,29 +24,34 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.CreditCardFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.PartyFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.TransactionalAccountFixtures;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 
-public class TransactionalAccountV31FetcherTest {
+public class AccountV31FetcherTest {
 
-    private TransactionalAccountV31Fetcher accountFetcher;
-    private TransactionalAccountMapper accountMapper;
+    private AccountV31Fetcher accountFetcher;
+    private AccountMapper accountMapper;
     private PartyDataV31Fetcher partyDataV31Fetcher;
     private UkOpenBankingApiClient apiClient;
 
     @Before
     public void setUp() {
-        accountMapper = mock(TransactionalAccountMapper.class);
+        accountMapper = mock(AccountMapper.class);
+        when(accountMapper.map(any(), anyCollection(), anyCollection()))
+                .thenReturn(Optional.of(mock(Account.class)));
+        when(accountMapper.supportsAccountType(any())).thenReturn(true);
+
         partyDataV31Fetcher = mock(PartyDataV31Fetcher.class);
         apiClient = mock(UkOpenBankingApiClient.class);
 
         accountFetcher =
-                new TransactionalAccountV31Fetcher(apiClient, accountMapper, partyDataV31Fetcher);
+                new AccountV31Fetcher(
+                        apiClient, partyDataV31Fetcher, new AccountTypeMapper(), accountMapper);
     }
 
     @Test
-    public void onlyCheckingAndSavingAccountsAreFetched() {
+    public void returnOnlyAccountsSupportedByMapper() {
         // when
         when(apiClient.fetchV31Accounts())
                 .thenReturn(
@@ -53,13 +60,19 @@ public class TransactionalAccountV31FetcherTest {
                                 TransactionalAccountFixtures.currentAccount(),
                                 CreditCardFixtures.creditCardAccount()));
 
-        when(accountMapper.map(any(), any(), anyCollection(), anyCollection()))
-                .thenReturn(Optional.of(mock(TransactionalAccount.class)));
-
-        Collection<TransactionalAccount> result = accountFetcher.fetchAccounts();
+        when(accountMapper.supportsAccountType(AccountTypes.SAVINGS)).thenReturn(true);
+        when(accountMapper.supportsAccountType(AccountTypes.CHECKING)).thenReturn(false);
+        when(accountMapper.supportsAccountType(AccountTypes.CREDIT_CARD)).thenReturn(true);
+        Collection<Account> result = accountFetcher.fetchAccounts();
 
         // then
-        verify(accountMapper, times(2)).map(any(), any(), anyCollection(), anyCollection());
+        verify(accountMapper, times(1))
+                .map(
+                        eq(TransactionalAccountFixtures.savingsAccount()),
+                        anyCollection(),
+                        anyCollection());
+        verify(accountMapper, times(1))
+                .map(eq(CreditCardFixtures.creditCardAccount()), anyCollection(), anyCollection());
         assertThat(result).hasSize(2);
     }
 
@@ -79,7 +92,6 @@ public class TransactionalAccountV31FetcherTest {
 
         accountFetcher.fetchAccounts();
         // then
-        verify(accountMapper)
-                .map(account, TransactionalAccountType.SAVINGS, ImmutableList.of(balance), parties);
+        verify(accountMapper).map(account, ImmutableList.of(balance), parties);
     }
 }

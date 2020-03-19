@@ -3,15 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 @RequiredArgsConstructor
-public class TransactionalAccountV31Fetcher implements AccountFetcher<TransactionalAccount> {
+public class CreditCardAccountV31Fetcher implements AccountFetcher<CreditCardAccount> {
 
-    private final AccountV31Fetcher<TransactionalAccount> accountV31Fetcher;
+    private final AccountV31Fetcher<CreditCardAccount> accountV31Fetcher;
 
     @Override
-    public Collection<TransactionalAccount> fetchAccounts() {
+    public Collection<CreditCardAccount> fetchAccounts() {
         return accountV31Fetcher.fetchAccounts();
     }
 }

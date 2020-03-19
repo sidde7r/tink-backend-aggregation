@@ -5,13 +5,16 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.google.common.collect.Collections2;
 import io.vavr.collection.Stream;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
@@ -21,14 +24,19 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 @RequiredArgsConstructor
-public class TransactionalAccountMapper {
+public class TransactionalAccountMapper implements AccountMapper<TransactionalAccount> {
 
     private final TransactionalAccountBalanceMapper balanceMapper;
     private final IdentifierMapper identifierMapper;
 
+    @Override
+    public boolean supportsAccountType(AccountTypes type) {
+        return AccountTypes.CHECKING.equals(type) || AccountTypes.SAVINGS.equals(type);
+    }
+
+    @Override
     public Optional<TransactionalAccount> map(
             AccountEntity account,
-            TransactionalAccountType accountType,
             Collection<AccountBalanceEntity> balances,
             Collection<IdentityDataV31Entity> parties) {
 
@@ -42,7 +50,7 @@ public class TransactionalAccountMapper {
 
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
-                        .withType(accountType)
+                        .withType(mapType(account))
                         .withInferredAccountFlags()
                         .withBalance(buildBalanceModule(balances))
                         .withId(
@@ -91,7 +99,18 @@ public class TransactionalAccountMapper {
         return Stream.ofAll(parties)
                 .map(IdentityDataV31Entity::getName)
                 .append(primaryIdentifier.getOwnerName())
+                .filter(Objects::nonNull)
                 .distinct()
                 .toJavaList();
+    }
+
+    private TransactionalAccountType mapType(AccountEntity account) {
+        if ("CurrentAccount".equals(account.getRawAccountSubType())) {
+            return TransactionalAccountType.CHECKING;
+        } else if ("Savings".equals(account.getRawAccountSubType())) {
+            return TransactionalAccountType.SAVINGS;
+        }
+        throw new IllegalStateException(
+                "Cannot map to transactional account. Wrong account type passed to the mapper");
     }
 }

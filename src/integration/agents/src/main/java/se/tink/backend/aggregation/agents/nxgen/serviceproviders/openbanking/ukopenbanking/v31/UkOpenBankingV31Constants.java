@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -12,16 +11,6 @@ import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "CurrentAccount")
-                    .put(AccountTypes.CREDIT_CARD, "CreditCard")
-                    .put(AccountTypes.SAVINGS, "Savings")
-                    .put(AccountTypes.LOAN, "Loan")
-                    .put(AccountTypes.MORTGAGE, "Mortgage")
-                    .ignoreKeys("ChargeCard", "EMoney", "PrePaidCard")
-                    .build();
 
     public static final GenericTypeMapper<String, AccountIdentifier.Type>
             PAYMENT_SCHEME_TYPE_MAPPER =

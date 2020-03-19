@@ -49,7 +49,7 @@ public class DanskebankAisConfiguration implements UkOpenBankingAisConfig {
 
     @Override
     public boolean isPartyEndpointEnabled() {
-        return false;
+        return true;
     }
 
     @Override
