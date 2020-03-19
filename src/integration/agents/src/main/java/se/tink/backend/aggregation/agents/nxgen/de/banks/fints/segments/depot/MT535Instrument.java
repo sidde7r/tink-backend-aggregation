@@ -90,20 +90,21 @@ public class MT535Instrument {
     private static List<String> collapseMultilinse(String str) {
         List<String> clauses = new ArrayList<>();
         String preLine = "";
-        Scanner mt535Scanner = new Scanner(str);
-        while (mt535Scanner.hasNextLine()) {
-            String line = mt535Scanner.nextLine();
-            if (line.startsWith(":")) {
-                if (preLine != "") {
-                    clauses.add(preLine);
-                } else if (line.startsWith(MT535_FIN_SEGMENT_END)) {
-                    // last line
-                    clauses.add(preLine);
-                    clauses.add(line);
+        try (Scanner mt535Scanner = new Scanner(str)) {
+            while (mt535Scanner.hasNextLine()) {
+                String line = mt535Scanner.nextLine();
+                if (line.startsWith(":")) {
+                    if (preLine != "") {
+                        clauses.add(preLine);
+                    } else if (line.startsWith(MT535_FIN_SEGMENT_END)) {
+                        // last line
+                        clauses.add(preLine);
+                        clauses.add(line);
+                    }
+                    preLine = line;
+                } else {
+                    preLine += String.format("|%s", line);
                 }
-                preLine = line;
-            } else {
-                preLine += String.format("|%s", line);
             }
         }
         return clauses;

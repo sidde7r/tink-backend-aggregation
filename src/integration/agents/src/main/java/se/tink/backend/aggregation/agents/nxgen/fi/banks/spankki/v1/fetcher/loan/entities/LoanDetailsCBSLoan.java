@@ -87,10 +87,11 @@ public class LoanDetailsCBSLoan {
             return 0;
         }
 
-        Scanner scanner = new Scanner(interestBinding);
-        scanner.useDelimiter(SpankkiConstants.Loan.INTEREST_BINDING_TEXT);
-        if (scanner.hasNextInt()) {
-            return scanner.nextInt();
+        try (Scanner scanner = new Scanner(interestBinding)) {
+            scanner.useDelimiter(SpankkiConstants.Loan.INTEREST_BINDING_TEXT);
+            if (scanner.hasNextInt()) {
+                return scanner.nextInt();
+            }
         }
 
         return 0;

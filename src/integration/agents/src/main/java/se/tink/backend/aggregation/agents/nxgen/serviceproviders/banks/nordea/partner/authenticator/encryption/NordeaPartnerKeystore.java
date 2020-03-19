@@ -46,8 +46,7 @@ public class NordeaPartnerKeystore {
     }
 
     private KeyStore loadKeyStore(String keyStorePath, String password) {
-        try {
-            FileInputStream is = new FileInputStream(keyStorePath);
+        try (FileInputStream is = new FileInputStream(keyStorePath)) {
             KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
             ks.load(is, password.toCharArray());
             return ks;
