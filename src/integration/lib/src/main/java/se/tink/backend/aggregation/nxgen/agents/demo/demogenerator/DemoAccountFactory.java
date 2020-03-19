@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -28,8 +26,6 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 
 public class DemoAccountFactory {
-    private static final Logger log = LoggerFactory.getLogger(DemoAccountFactory.class);
-
     public static Collection<TransactionalAccount> fetchTransactionalAccounts(
             String currency,
             Catalog catalog,
@@ -39,18 +35,6 @@ public class DemoAccountFactory {
 
         if (Objects.nonNull(transactionAccountDefinition)) {
             for (DemoTransactionAccount transactionAccount : transactionAccountDefinition) {
-                log.info(
-                        "Demo account available balance: "
-                                + transactionAccount
-                                        .getAvailableBalance()
-                                        .map(String::valueOf)
-                                        .orElse(null));
-                log.info(
-                        "Demo account credit limit: "
-                                + transactionAccount
-                                        .getCreditLimit()
-                                        .map(String::valueOf)
-                                        .orElse(null));
                 accounts.add(
                         TransactionalAccount.nxBuilder()
                                 .withType(TransactionalAccountType.CHECKING)
