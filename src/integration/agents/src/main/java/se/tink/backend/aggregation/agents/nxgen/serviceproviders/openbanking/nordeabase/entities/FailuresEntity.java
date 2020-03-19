@@ -30,7 +30,6 @@ public class FailuresEntity {
                                     "error.apikey.missing",
                                     "error.token",
                                     "error.token.invalid",
-                                    "error.token.expired",
                                     "error.token.expired")
                             .put(
                                     (description, cause) ->

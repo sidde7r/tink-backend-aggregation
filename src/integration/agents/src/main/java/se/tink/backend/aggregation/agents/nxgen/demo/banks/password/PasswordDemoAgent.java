@@ -220,10 +220,23 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent
         return new DemoIdentityData() {
             @Override
             public List<NameElement> getNameElements() {
-                return new ArrayList<>(
-                        Arrays.asList(
-                                new NameElement(NameElement.Type.FIRST_NAME, "Jane"),
-                                new NameElement(NameElement.Type.SURNAME, "Doe")));
+                switch (username) {
+                    case "tink2":
+                        return new ArrayList<>(
+                                Arrays.asList(
+                                        new NameElement(NameElement.Type.FIRST_NAME, "John"),
+                                        new NameElement(NameElement.Type.SURNAME, "Doe")));
+                    case "tink3":
+                        return new ArrayList<>(
+                                Arrays.asList(
+                                        new NameElement(NameElement.Type.FIRST_NAME, "Mary"),
+                                        new NameElement(NameElement.Type.SURNAME, "Sue")));
+                    default:
+                        return new ArrayList<>(
+                                Arrays.asList(
+                                        new NameElement(NameElement.Type.FIRST_NAME, "Jane"),
+                                        new NameElement(NameElement.Type.SURNAME, "Doe")));
+                }
             }
 
             @Override

@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.embedded;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.NameElement;
 
 public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent {
     private static final int DAYS_UNTIL_SESSION_SHOULD_EXPIRE = 90;
@@ -99,6 +103,32 @@ public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoIdentityData getIdentityDataResponse() {
-        return null;
+        return new DemoIdentityData() {
+            @Override
+            public List<NameElement> getNameElements() {
+                switch (username) {
+                    case "tink2":
+                        return new ArrayList<>(
+                                Arrays.asList(
+                                        new NameElement(NameElement.Type.FIRST_NAME, "John"),
+                                        new NameElement(NameElement.Type.SURNAME, "Doe")));
+                    case "tink3":
+                        return new ArrayList<>(
+                                Arrays.asList(
+                                        new NameElement(NameElement.Type.FIRST_NAME, "Mary"),
+                                        new NameElement(NameElement.Type.SURNAME, "Sue")));
+                    default:
+                        return new ArrayList<>(
+                                Arrays.asList(
+                                        new NameElement(NameElement.Type.FIRST_NAME, "Jane"),
+                                        new NameElement(NameElement.Type.SURNAME, "Doe")));
+                }
+            }
+
+            @Override
+            public LocalDate getDateOfBirth() {
+                return LocalDate.of(1970, 1, 1);
+            }
+        };
     }
 }
