@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.eidassigner;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.io.Files;
 import java.io.ByteArrayInputStream;
@@ -25,6 +27,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -90,13 +93,13 @@ public class QsealcSignerHttpClientTest {
         CloseableHttpResponse response = httpClient.execute(post);
         int httpStatusCode = response.getStatusLine().getStatusCode();
         response.close();
-        Assert.assertEquals(200, httpStatusCode);
+        assertThat(httpStatusCode).isEqualTo(HttpStatus.SC_OK);
 
         HttpPost postHttps = new HttpPost("https://127.0.0.1:12345/test/");
         CloseableHttpResponse responseHttps = httpClient.execute(postHttps);
         int httpsStatusCode = responseHttps.getStatusLine().getStatusCode();
         responseHttps.close();
-        Assert.assertEquals(200, httpsStatusCode);
+        assertThat(httpsStatusCode).isEqualTo(HttpStatus.SC_OK);
 
         QsealcSigner signer =
                 QsealcSigner.build(

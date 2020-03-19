@@ -16,6 +16,7 @@ junit_test(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
