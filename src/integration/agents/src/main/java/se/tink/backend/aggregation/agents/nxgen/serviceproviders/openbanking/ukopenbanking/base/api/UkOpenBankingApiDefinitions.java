@@ -131,7 +131,8 @@ public class UkOpenBankingApiDefinitions {
         IBAN,
         PAYM,
         SORT_CODE_ACCOUNT_NUMBER,
-        PAN;
+        PAN,
+        SAVINGS_ROLL_NUMBER;
 
         private static final GenericTypeMapper<ExternalAccountIdentification4Code, String>
                 ACCOUNT_IDENTIFIER_TYPE_MAPPER =
@@ -148,6 +149,9 @@ public class UkOpenBankingApiDefinitions {
                                         ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
                                         "UK.OBIE.SortCodeAccountNumber")
                                 .put(ExternalAccountIdentification4Code.PAN, "UK.OBIE.PAN", "PAN")
+                                .put(
+                                        ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER,
+                                        "UK.Santander.SavingsRollNumber")
                                 .build();
 
         @JsonCreator

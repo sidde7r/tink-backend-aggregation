@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.BBAN;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.IBAN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER;
 
 import com.google.common.collect.ImmutableList;
@@ -22,7 +23,7 @@ public class IdentifierMapper {
 
     private static final List<ExternalAccountIdentification4Code>
             ALLOWED_TRANSACTIONAL_ACCOUNT_IDENTIFIERS =
-                    ImmutableList.of(SORT_CODE_ACCOUNT_NUMBER, IBAN, BBAN);
+                    ImmutableList.of(SORT_CODE_ACCOUNT_NUMBER, IBAN, BBAN, SAVINGS_ROLL_NUMBER);
 
     private static final GenericTypeMapper<Type, ExternalAccountIdentification4Code> typeMapper =
             GenericTypeMapper.<Type, ExternalAccountIdentification4Code>genericBuilder()
@@ -30,7 +31,10 @@ public class IdentifierMapper {
                             Type.SORT_CODE,
                             ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER)
                     .put(Type.IBAN, ExternalAccountIdentification4Code.IBAN)
-                    .put(Type.BBAN, ExternalAccountIdentification4Code.BBAN)
+                    .put(
+                            Type.BBAN,
+                            ExternalAccountIdentification4Code.BBAN,
+                            ExternalAccountIdentification4Code.SAVINGS_ROLL_NUMBER)
                     .put(Type.PAYMENT_CARD_NUMBER, ExternalAccountIdentification4Code.PAN)
                     .build();
 
