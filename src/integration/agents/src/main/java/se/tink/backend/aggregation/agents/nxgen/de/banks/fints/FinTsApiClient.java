@@ -246,7 +246,7 @@ public class FinTsApiClient {
 
     private int getAccountType(String accountType, String productName) {
         if (!Strings.isNullOrEmpty(accountType)) {
-            return Integer.valueOf(accountType);
+            return Integer.parseInt(accountType);
         }
 
         return sepaAccountGuesser.guessSepaAccountType(productName);
@@ -557,12 +557,13 @@ public class FinTsApiClient {
     }
 
     private List<MT940Statement> parseMt940Transactions(String mt940) {
-        Scanner mt940Scanner = new Scanner(mt940);
         List<MT940Statement> transactions = new ArrayList<>();
-        while (mt940Scanner.hasNextLine()) {
-            String nextLine = mt940Scanner.nextLine();
-            while (nextLine.startsWith(FinTsConstants.SegData.MT940_TURNOVER_FIELD)) {
-                nextLine = this.process_61_86elements(nextLine, mt940Scanner, transactions);
+        try (Scanner mt940Scanner = new Scanner(mt940)) {
+            while (mt940Scanner.hasNextLine()) {
+                String nextLine = mt940Scanner.nextLine();
+                while (nextLine.startsWith(FinTsConstants.SegData.MT940_TURNOVER_FIELD)) {
+                    nextLine = this.process_61_86elements(nextLine, mt940Scanner, transactions);
+                }
             }
         }
         return transactions;
