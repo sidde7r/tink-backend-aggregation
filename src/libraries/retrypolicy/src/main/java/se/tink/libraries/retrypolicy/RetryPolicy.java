@@ -12,7 +12,7 @@ public class RetryPolicy {
 
     private final Set<Class> retryables;
 
-    RetryPolicy(final int maxAttempts, final Class... t) {
+    public RetryPolicy(final int maxAttempts, final Class... t) {
         this.maxAttempts = maxAttempts;
         this.retryables = Collections.unmodifiableSet(Arrays.stream(t).collect(Collectors.toSet()));
     }
@@ -22,7 +22,7 @@ public class RetryPolicy {
         return (t == null || isOneOfRetryables(t)) && context.getAttempt() < this.maxAttempts;
     }
 
-    public boolean isOneOfRetryables(Throwable t) {
+    private boolean isOneOfRetryables(Throwable t) {
         Set<Class> throwableSuperclasses = getThrowableSuperclasses(t);
         throwableSuperclasses.retainAll(retryables);
         return !throwableSuperclasses.isEmpty();

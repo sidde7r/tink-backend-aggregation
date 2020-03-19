@@ -44,7 +44,7 @@ public class WebdriverHelperTest {
         // given
 
         // when
-        WebDriver result = helper.constructWebDriver(1_000);
+        WebDriver result = helper.constructWebDriver(5_000);
 
         // then
         assertThat(result).isInstanceOf(PhantomJSDriver.class);
@@ -127,7 +127,7 @@ public class WebdriverHelperTest {
 
         // then
         inOrder.verify(driver).findElements(BY_ID);
-        inOrder.verify(sleeper).sleepFor(500);
+        inOrder.verify(sleeper).sleepFor(5_000);
         inOrder.verify(driver).findElements(BY_ID);
     }
 

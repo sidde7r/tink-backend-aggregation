@@ -13,26 +13,28 @@ import org.junit.Test;
 public class RetryExecutorTest {
 
     private static final int MAX_ATTEMPTS = 3;
-    private RetryPolicy retryPolicy;
 
     private RetryExecutor retryExecutor;
 
     @Before
     public void setUp() {
-        retryPolicy = new RetryPolicy(MAX_ATTEMPTS, IllegalStateException.class);
-        retryExecutor = new RetryExecutor(retryPolicy);
+        RetryPolicy retryPolicy = new RetryPolicy(MAX_ATTEMPTS, IllegalStateException.class);
+        retryExecutor = new RetryExecutor();
+        retryExecutor.setRetryPolicy(retryPolicy);
     }
 
     @Test
-    public void executeCallbackShouldEndSuccessfully() throws Throwable {
+    public void executeCallbackShouldEndSuccessfully() {
         // given
         String expectedResponse = "sample expected response";
         // and
-        RetryCallback retryCallback = mock(RetryCallback.class);
+        @SuppressWarnings("unchecked")
+        RetryCallback<String, RuntimeException> retryCallback =
+                (RetryCallback<String, RuntimeException>) mock(RetryCallback.class);
         given(retryCallback.retry()).willReturn(expectedResponse);
 
         // when
-        String result = (String) retryExecutor.execute(retryCallback);
+        String result = retryExecutor.execute(retryCallback);
 
         // then
         assertThat(result).isEqualTo(expectedResponse);
@@ -40,19 +42,20 @@ public class RetryExecutorTest {
     }
 
     @Test
-    public void executeCallbackShouldEndSuccessfullyIfCallbackFailsLessThanMaxAttemptsInPolicy()
-            throws Throwable {
+    public void executeCallbackShouldEndSuccessfullyIfCallbackFailsLessThanMaxAttemptsInPolicy() {
         // given
         String expectedResponse = "sample expected response";
         // and
-        RetryCallback retryCallback = mock(RetryCallback.class);
+        @SuppressWarnings("unchecked")
+        RetryCallback<String, RuntimeException> retryCallback =
+                (RetryCallback<String, RuntimeException>) mock(RetryCallback.class);
         given(retryCallback.retry())
                 .willThrow(IllegalStateException.class)
                 .willThrow(IllegalStateException.class)
                 .willReturn(expectedResponse);
 
         // when
-        String result = (String) retryExecutor.execute(retryCallback);
+        String result = retryExecutor.execute(retryCallback);
 
         // then
         assertThat(result).isEqualTo(expectedResponse);
@@ -60,9 +63,11 @@ public class RetryExecutorTest {
     }
 
     @Test
-    public void executeCallbackShouldFailWhenCallbackExceedsNumberOfMaxAttempts() throws Throwable {
+    public void executeCallbackShouldFailWhenCallbackExceedsNumberOfMaxAttempts() {
         // given
-        RetryCallback retryCallback = mock(RetryCallback.class);
+        @SuppressWarnings("unchecked")
+        RetryCallback<String, RuntimeException> retryCallback =
+                (RetryCallback<String, RuntimeException>) mock(RetryCallback.class);
         given(retryCallback.retry())
                 .willThrow(IllegalStateException.class)
                 .willThrow(IllegalStateException.class)
@@ -77,10 +82,11 @@ public class RetryExecutorTest {
     }
 
     @Test
-    public void executeCallbackShouldFailImmediatelyWhenCallbackThrowsNotRetryableException()
-            throws Throwable {
+    public void executeCallbackShouldFailImmediatelyWhenCallbackThrowsNotRetryableException() {
         // given
-        RetryCallback retryCallback = mock(RetryCallback.class);
+        @SuppressWarnings("unchecked")
+        RetryCallback<String, RuntimeException> retryCallback =
+                (RetryCallback<String, RuntimeException>) mock(RetryCallback.class);
         given(retryCallback.retry()).willThrow(IllegalArgumentException.class);
 
         // when

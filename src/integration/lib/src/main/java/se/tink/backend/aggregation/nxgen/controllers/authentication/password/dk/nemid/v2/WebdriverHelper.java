@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 public class WebdriverHelper {
 
-    private static final long WAIT_FOR_RENDER_MILLIS = 500;
+    private static final long WAIT_FOR_RENDER_MILLIS = 5_000;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebdriverHelper.class);
 
