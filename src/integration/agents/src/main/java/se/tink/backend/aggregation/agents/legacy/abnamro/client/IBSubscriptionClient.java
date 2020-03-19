@@ -8,7 +8,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,7 +29,8 @@ import se.tink.backend.aggregation.agents.abnamro.client.rpc.PfmContractResponse
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.SubscriptionAccountsRequest;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.SubscriptionAccountsResponse;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.SubscriptionResponse;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroInternetBankingConfiguration;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -322,7 +322,7 @@ public class IBSubscriptionClient extends IBClient {
     }
 
     public List<PfmContractEntity> getContracts(String bcNumber)
-            throws SubscriptionException, SessionException {
+            throws SubscriptionException, LoginException {
         Preconditions.checkArgument(
                 !Strings.isNullOrEmpty(bcNumber), "BcNumber must not be null or empty");
 
@@ -331,11 +331,7 @@ public class IBSubscriptionClient extends IBClient {
         ClientResponse response = new IBClientRequestBuilder(url).build().get(ClientResponse.class);
 
         if (response.getStatus() == 403) {
-
-            // TODO Temporary log to investigate the bcNumber that fails to fetch account.
-            log.info("bcNumber: {}", bcNumber);
-
-            return Collections.emptyList();
+            throw LoginError.INVALIDATED_CREDENTIALS.exception();
         }
 
         validateContentType(response, MediaType.APPLICATION_JSON_TYPE);
