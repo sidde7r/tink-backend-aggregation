@@ -300,10 +300,10 @@ agentsServiceConfiguration:
       tink:
         apiBaseUrl: https://sandbox.api.bnpparibasfortis.com
         authBaseUrl: https://sandbox.auth.bnpparibasfortis.com
-        clientId: ce8d0df7-bee6-40d7-8d8c-d55fe1f24e6b
-        clientSecret: 9ed360328e07b88884f9cb3b8101a5cf4fce83aaf33c206976aa219b0ae1c36fff2381a4d0589957ae2ecb2415c0e703
+        clientId: bdea6b61-cd25-44d8-962b-8b3608ff220b
+        clientSecret: c07b6e41fa1f778cb5354f831db9ac072e66cf6a603b5475c5b8bbc738527d1a70053e62b5660aebf6ffd986c54589cb
         openbankStetVersion: 1.4.0.47.develop
-        organisationId: 26766eb3-f144-4c92-89a2-3d9ec6c4f72d
+        organisationId: 34ecb03c-8abd-47da-bbfd-3c52bc8f7e14
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     boursorama:
       tink:
