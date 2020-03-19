@@ -67,9 +67,9 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
         final DebtorAccountEntity debtorAccountEntity = DebtorAccountEntity.of(paymentRequest);
         final CreditorAccountEntity creditorAccountEntity =
-                CreditorAccountEntity.paymentProductsMapper
-                        .get(PaymentProduct.fromString(paymentProduct))
-                        .apply(payment.getCreditor().getAccountNumber());
+                CreditorAccountEntity.create(
+                        payment.getCreditor().getAccountNumber(), paymentProduct);
+
         final AmountEntity amountEntity = AmountEntity.of(paymentRequest);
 
         CreatePaymentRequest createPaymentRequest =
