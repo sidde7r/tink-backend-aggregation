@@ -5,11 +5,11 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -66,7 +66,7 @@ public class AutoAuthenticationController
             } else {
                 Preconditions.checkState(
                         !Objects.equals(request.getType(), CredentialsRequestType.CREATE));
-                auto(credentials);
+                autoAuthenticator.autoAuthenticate();
             }
         } finally {
             systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
@@ -91,7 +91,8 @@ public class AutoAuthenticationController
                                         && !Objects.equals(
                                                 request.getType(),
                                                 CredentialsRequestType.TRANSFER)))
-                || credentials.forceManualAuthentication();
+                || credentials.forceManualAuthentication()
+                || CredentialsStatus.CREATED.equals(credentials.getStatus());
     }
 
     @Override
@@ -118,26 +119,5 @@ public class AutoAuthenticationController
 
         manualAuthenticator.authenticate(credentials);
         credentials.setType(CredentialsTypes.PASSWORD);
-    }
-
-    private void auto(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
-        try {
-            autoAuthenticator.autoAuthenticate();
-        } catch (SessionException autoException) {
-            if (!request.isManual()) {
-                credentials.setType(manualAuthenticator.getType());
-
-                throw autoException;
-            }
-
-            try {
-                manual(credentials);
-            } catch (AuthenticationException | AuthorizationException manualException) {
-                credentials.setType(manualAuthenticator.getType());
-
-                throw manualException;
-            }
-        }
     }
 }
