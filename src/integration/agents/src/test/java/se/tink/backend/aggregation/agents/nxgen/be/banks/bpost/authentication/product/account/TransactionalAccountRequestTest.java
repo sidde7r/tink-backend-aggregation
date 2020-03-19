@@ -10,8 +10,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity.BPostBankAuthContext;
-import se.tink.backend.aggregation.agents.wiremock.WireMockIntegrationTest;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.wiremock.WireMockIntegrationTest;
 
 public class TransactionalAccountRequestTest extends WireMockIntegrationTest {
 
