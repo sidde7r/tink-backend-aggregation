@@ -17,7 +17,6 @@ export PATH=$SONAR_SCANNER_HOME/bin:$PATH
 export SONAR_SCANNER_OPTS="-server"
 
 ./bazel-wrapper build \
-    --build_manual_tests \
     --workspace_status_command $(pwd)/stamp.sh \
     --disk_cache=/cache/v4-disk \
     --repository_cache=/cache/v4-repo \
@@ -25,7 +24,7 @@ export SONAR_SCANNER_OPTS="-server"
     --curses=yes \
     --color=yes \
     -- \
-    //src/integration/agents/...
+    //src/...
 
 if [ "$BUILDKITE_PULL_REQUEST" != "false" ]; then
   sonar-scanner \
