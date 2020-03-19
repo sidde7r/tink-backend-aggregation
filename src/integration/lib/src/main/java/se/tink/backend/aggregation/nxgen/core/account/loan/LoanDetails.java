@@ -59,13 +59,6 @@ public class LoanDetails {
         return new Builder(type);
     }
 
-    @Deprecated
-    public Amount getAmortized() {
-        return Optional.ofNullable(amortized)
-                .map(a -> new Amount(a.getCurrencyCode(), a.getDoubleValue()))
-                .orElse(null);
-    }
-
     public ExactCurrencyAmount getExactAmortized() {
         return amortized;
     }
@@ -269,14 +262,6 @@ public class LoanDetails {
         }
 
         @Deprecated
-        public Amount getMonthlyAmortization() {
-            return Optional.ofNullable(monthlyAmortization)
-                    .filter(m -> Objects.nonNull(m.getExactValue()))
-                    .map(m -> new Amount(m.getCurrencyCode(), m.getDoubleValue()))
-                    .orElse(null);
-        }
-
-        @Deprecated
         public Builder setMonthlyAmortization(Amount monthlyAmortization) {
             this.monthlyAmortization =
                     ExactCurrencyAmount.of(
@@ -291,14 +276,6 @@ public class LoanDetails {
 
         public ExactCurrencyAmount getExactMonthlyAmortization() {
             return monthlyAmortization;
-        }
-
-        @Deprecated
-        public Amount getInitialBalance() {
-            return Optional.ofNullable(initialBalance)
-                    .filter(i -> Objects.nonNull(i.getExactValue()))
-                    .map(i -> new Amount(i.getCurrencyCode(), i.getDoubleValue()))
-                    .orElse(null);
         }
 
         @Deprecated

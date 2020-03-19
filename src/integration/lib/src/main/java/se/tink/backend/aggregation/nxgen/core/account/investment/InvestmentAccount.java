@@ -105,21 +105,6 @@ public class InvestmentAccount extends Account {
             return cashBalance;
         }
 
-        @Override
-        @Deprecated
-        public Amount getBalance() {
-            if (cashBalance != null) {
-                BigDecimal retVal = cashBalance.getExactValue();
-                for (Portfolio portfolio : portfolios) {
-                    retVal = retVal.add(BigDecimal.valueOf(portfolio.getTotalValue()));
-                }
-                return new Amount(cashBalance.getCurrencyCode(), retVal.doubleValue());
-            } else {
-                ExactCurrencyAmount exactBalance = super.getExactBalance();
-                return new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue());
-            }
-        }
-
         /** @deprecated Use {@link #setCashBalance(Amount)} instead */
         @Override
         @Deprecated
