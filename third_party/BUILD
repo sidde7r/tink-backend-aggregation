@@ -1049,15 +1049,6 @@ java_library(
 
 java_library(
     # TODO: check is this used?
-    name = "org_apache_lucene_lucene_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-    ],
-)
-
-java_library(
-    # TODO: check is this used?
     name = "org_apache_mahout_mahout_core",
     visibility = ["//visibility:public"],
     exports = [
