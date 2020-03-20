@@ -390,11 +390,6 @@ public abstract class Account {
             return apiIdentifier;
         }
 
-        @Deprecated
-        Amount getBalance() {
-            return new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue());
-        }
-
         ExactCurrencyAmount getExactBalance() {
             return exactBalance;
         }
@@ -469,13 +464,6 @@ public abstract class Account {
         public T setAccountNumber(String accountNumber) {
             thisObj.accountNumber = accountNumber;
             return self();
-        }
-
-        @Deprecated
-        public Amount getBalance() {
-            return Optional.ofNullable(thisObj.exactBalance)
-                    .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()))
-                    .orElseThrow(NullPointerException::new);
         }
 
         @Deprecated

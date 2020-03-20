@@ -70,10 +70,6 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
         return buildStep();
     }
 
-    String getBankIdentifier() {
-        return temporaryStorage.get(Account.BANK_IDENTIFIER_KEY);
-    }
-
     IdModule getIdModule() {
         return idModule;
     }

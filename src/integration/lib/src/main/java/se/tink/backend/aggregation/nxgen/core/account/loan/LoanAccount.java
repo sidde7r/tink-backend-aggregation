@@ -114,14 +114,6 @@ public class LoanAccount extends Account {
             return this;
         }
 
-        @Deprecated
-        @Override
-        public Amount getBalance() {
-            return new Amount(
-                    super.getExactBalance().getCurrencyCode(),
-                    ensureNegativeSign(super.getExactBalance()).getDoubleValue());
-        }
-
         @Override
         public ExactCurrencyAmount getExactBalance() {
             return ensureNegativeSign(super.getExactBalance());
