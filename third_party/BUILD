@@ -838,27 +838,6 @@ java_library(
 )
 
 java_library(
-    # TODO: check is this used?
-    name = "oauth_signpost_signpost_commonshttp4",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:org_apache_httpcomponents_httpclient",
-        "@aggregation//:org_apache_httpcomponents_httpcore",
-        "@oauth_signpost_signpost_commonshttp4//jar",
-        "@oauth_signpost_signpost_core//jar",
-    ],
-)
-
-java_library(
-    name = "oauth_signpost_signpost_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:commons_codec_commons_codec",
-        "@oauth_signpost_signpost_core//jar",
-    ],
-)
-
-java_library(
     name = "org_apache_commons_commons_csv",
     visibility = ["//visibility:public"],
     exports = [
