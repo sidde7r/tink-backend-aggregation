@@ -3,24 +3,26 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountBalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountIdentifierEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountIdentifierEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.CreditCardFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.IdentifierFixtures;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.PartyFixtures;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
@@ -64,12 +66,15 @@ public class CreditCardAccountMapperTest {
         ExactCurrencyAmount expectedAvailableCredit = ExactCurrencyAmount.of(123.123d, "EUR");
         when(balanceMapper.getAvailableCredit(balances)).thenReturn(expectedAvailableCredit);
 
-        CreditCardAccount mappingResult =
-                mapper.map(CreditCardFixtures.creditCardAccount(), balances, anyString());
+        Optional<CreditCardAccount> mappingResult =
+                mapper.map(
+                        CreditCardFixtures.creditCardAccount(), balances, Collections.emptyList());
 
         // then
-        assertThat(mappingResult.getExactBalance()).isEqualByComparingTo(expectedAccountBalance);
-        assertThat(mappingResult.getExactAvailableCredit()).isEqualTo(expectedAvailableCredit);
+        assertThat(mappingResult.get().getExactBalance())
+                .isEqualByComparingTo(expectedAccountBalance);
+        assertThat(mappingResult.get().getExactAvailableCredit())
+                .isEqualTo(expectedAvailableCredit);
     }
 
     @Test
@@ -82,9 +87,10 @@ public class CreditCardAccountMapperTest {
 
         CreditCardAccount mappingResult =
                 mapper.map(
-                        CreditCardFixtures.creditCardAccount(),
-                        mock(Collection.class),
-                        "somePartyName");
+                                CreditCardFixtures.creditCardAccount(),
+                                Collections.emptyList(),
+                                Collections.emptyList())
+                        .get();
 
         // then
         assertThat(mappingResult.getIdentifiers())
@@ -107,29 +113,32 @@ public class CreditCardAccountMapperTest {
                 .thenReturn(expectedIdentifier);
         CreditCardAccount mappingResult =
                 mapper.map(
-                        CreditCardFixtures.creditCardAccount(),
-                        mock(Collection.class),
-                        "somePartyName");
+                                CreditCardFixtures.creditCardAccount(),
+                                Collections.emptyList(),
+                                Collections.emptyList())
+                        .get();
 
         assertThat(mappingResult.getHolderName().toString())
                 .isEqualTo(expectedIdentifier.getOwnerName());
     }
 
     @Test
-    public void shouldUsePartyNameAsHolderName_whenOwnerNameIsNotPresentInIdentifier() {
+    public void holderName_shouldBeOneOfPartyOrFromIdentifierOwnerName() {
         // given
         AccountEntity creditCardAccount = CreditCardFixtures.creditCardAccount();
-
-        AccountIdentifierEntity identifierWithoutOwnerName = IdentifierFixtures.panIdentifier();
-        identifierWithoutOwnerName.setOwnerName(null);
+        AccountIdentifierEntity primaryId = IdentifierFixtures.panIdentifier();
+        List<IdentityDataV31Entity> parties = PartyFixtures.parties();
 
         // when
-        when(identifierMapper.getCreditCardIdentifier(anyCollection()))
-                .thenReturn(identifierWithoutOwnerName);
-        creditCardAccount.setIdentifiers(Collections.singletonList(identifierWithoutOwnerName));
+        when(identifierMapper.getCreditCardIdentifier(anyCollection())).thenReturn(primaryId);
         CreditCardAccount mappingResult =
-                mapper.map(creditCardAccount, ImmutableList.of(), "somePartyName");
+                mapper.map(creditCardAccount, Collections.emptyList(), parties).get();
 
-        assertThat(mappingResult.getHolderName().toString()).isEqualTo("somePartyName");
+        // then
+        List<String> allPossibleHolders =
+                parties.stream().map(IdentityDataV31Entity::getName).collect(Collectors.toList());
+        allPossibleHolders.add(primaryId.getOwnerName());
+
+        assertThat(mappingResult.getHolderName().toString()).isIn(allPossibleHolders);
     }
 }

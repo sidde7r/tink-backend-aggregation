@@ -1,11 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
@@ -127,7 +124,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             401 is to cover Danske as they send 401 instead of 403.
              */
             if (e.getResponse().getStatus() == 401 || e.getResponse().getStatus() == 403) {
-                logger.debug(
+                logger.error(
                         "Trying to fetch transactions again for last 89 days. Got 401 in previous request",
                         e);
 
@@ -167,27 +164,15 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
     }
 
     private Optional<OffsetDateTime> fetchedTransactionsUntil(String accountId) {
-        final String dateString = persistentStorage.get(FETCHED_TRANSACTIONS_UNTIL + accountId);
-        if (Objects.isNull(dateString)) {
-            return Optional.empty();
-        }
-        try {
-            return Optional.of(
-                    OffsetDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        } catch (DateTimeParseException e) {
-            /*
-            This implies the format saved in persistent storage is ISO_LOCAL_DATE_TIME so this
-            needs to be converted to ISO_OFFSET_DATE_TIME.
-             */
-            LocalDateTime timeInStorage =
-                    LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            return Optional.of(OffsetDateTime.of(timeInStorage, ZoneOffset.UTC));
-        }
+        String dateString = persistentStorage.get(FETCHED_TRANSACTIONS_UNTIL + accountId);
+        return Optional.ofNullable(dateString)
+                .map(s -> OffsetDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 
     private OffsetDateTime getLastTransactionsFetchedDate(String accountId) {
         final Optional<OffsetDateTime> lastTransactionsFetchedDate =
                 fetchedTransactionsUntil(accountId);
+
         final OffsetDateTime defaultRefreshDate =
                 localDateTimeSource
                         .now()

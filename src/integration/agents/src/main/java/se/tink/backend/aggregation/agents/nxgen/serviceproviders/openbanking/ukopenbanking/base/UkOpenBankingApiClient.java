@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticatorConstants.ACCOUNT_PERMISSIONS;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints.IDENTITY_DATA_ENDPOINT_PARTY;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.MONZO_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TINK_UKOPENBANKING_ORGID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.UKOB_TAN;
@@ -10,14 +13,23 @@ import com.google.common.collect.ImmutableMap;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.AccountBalanceV31Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.AccountsV31Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.PartiesV31Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.PartyV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.HttpHeaders;
@@ -104,6 +116,38 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public <T> T fetchAccounts(Class<T> responseType) {
         return createAisRequest(aisConfig.getBulkAccountRequestURL()).get(responseType);
+    }
+
+    public List<AccountEntity> fetchV31Accounts() {
+        return fetchAccounts(AccountsV31Response.class).getData().orElse(Collections.emptyList());
+    }
+
+    public List<AccountBalanceEntity> fetchV31AccountBalances(String accountId) {
+        return createAisRequest(aisConfig.getAccountBalanceRequestURL(accountId))
+                .get(AccountBalanceV31Response.class)
+                .getData()
+                .orElse(Collections.emptyList());
+    }
+
+    public Optional<IdentityDataV31Entity> fetchV31Party() {
+        return createAisRequest(aisConfig.getApiBaseURL().concat(IDENTITY_DATA_ENDPOINT_PARTY))
+                .get(PartyV31Response.class)
+                .getData();
+    }
+
+    public Optional<IdentityDataV31Entity> fetchV31Party(String accountId) {
+        String path = String.format(IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY, accountId);
+        return createAisRequest(aisConfig.getApiBaseURL().concat(path))
+                .get(PartyV31Response.class)
+                .getData();
+    }
+
+    public List<IdentityDataV31Entity> fetchV31Parties(String accountId) {
+        String path = String.format(IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES, accountId);
+        return createAisRequest(aisConfig.getApiBaseURL().concat(path))
+                .get(PartiesV31Response.class)
+                .getData()
+                .orElse(Collections.emptyList());
     }
 
     public <T> T fetchAccountBalance(String accountId, Class<T> responseType) {

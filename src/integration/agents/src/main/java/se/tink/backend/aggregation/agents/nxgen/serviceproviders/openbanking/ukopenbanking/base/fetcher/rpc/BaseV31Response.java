@@ -1,32 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BaseResponse<T> {
+@JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
+public class BaseV31Response<T> {
 
     private T data;
 
-    @JsonProperty("Links")
     private Map<String, String> links;
 
-    @JsonProperty("Meta")
     private Map<String, String> meta;
 
-    protected T getData() {
-        return data;
+    public Optional<T> getData() {
+        return Optional.ofNullable(data);
     }
 
     @JsonProperty("Data")
-    private void setData(Map.Entry<String, T> dataWrapper) {
-        data = dataWrapper.getValue();
-    }
-
-    protected boolean hasLink(String linkId) {
-        return links.containsKey(linkId);
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+    private void setData(Map<String, T> dataWrapper) {
+        data = dataWrapper.entrySet().stream().findAny().map(Map.Entry::getValue).orElse(null);
     }
 
     protected String getLink(String linkId) {
@@ -35,6 +34,6 @@ public class BaseResponse<T> {
     }
 
     protected Optional<String> searchLink(String linkId) {
-        return Optional.ofNullable(links.get(linkId));
+        return Optional.ofNullable(links).map(links -> links.get(linkId));
     }
 }
