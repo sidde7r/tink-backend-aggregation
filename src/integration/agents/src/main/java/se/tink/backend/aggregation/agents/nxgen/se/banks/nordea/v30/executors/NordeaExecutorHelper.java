@@ -123,6 +123,14 @@ public class NordeaExecutorHelper {
                 .findFirst();
     }
 
+    /** Minimum valid amount is 1 SEK */
+    protected void validateMinimumTransferAmount(Transfer transfer) {
+        if (transfer.getAmount().getValue() < 1) {
+            throw transferCancelledWithMessage(
+                    TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT);
+        }
+    }
+
     /**
      * Method added to handle faulty Swedbank accounts, but will also handle other cases where we
      * can't properly parse the account identifier. Used when verifying transfer's destination

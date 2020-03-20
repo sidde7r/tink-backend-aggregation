@@ -73,6 +73,9 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                         new StringNormalizerSwedish(
                                 NordeaSEConstants.Transfer.WHITE_LISTED_CHARACTERS));
 
+        // minimum valid amount is 1 SEK
+        executorHelper.validateMinimumTransferAmount(transfer);
+
         // find source account
         final AccountEntity sourceAccount =
                 executorHelper.validateSourceAccount(transfer, accountResponse, false);

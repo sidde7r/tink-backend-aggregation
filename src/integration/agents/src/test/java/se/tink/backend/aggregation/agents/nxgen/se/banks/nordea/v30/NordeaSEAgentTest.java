@@ -3,8 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 import java.util.Calendar;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
@@ -62,6 +65,8 @@ public class NordeaSEAgentTest {
         ArgumentManager.afterClass();
     }
 
+    @Rule public ExpectedException exception = ExpectedException.none();
+
     @Test
     public void testRefresh() throws Exception {
         builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
@@ -90,6 +95,27 @@ public class NordeaSEAgentTest {
     }
 
     @Test
+    public void testTransferWithAmountLessThan1SEK() throws Exception {
+        exception.expect(TransferExecutionException.class);
+        exception.expectMessage(
+                TransferExecutionException.EndUserMessage.INVALID_MINIMUM_AMOUNT.getKey().get());
+        Transfer transfer = new Transfer();
+        transfer.setSource(AccountIdentifier.create(Type.SE, manager.get(Arg.FROMACCOUNT)));
+        transfer.setDestination(
+                AccountIdentifier.create(AccountIdentifier.Type.SE, manager.get(Arg.TOACCOUNT)));
+        transfer.setAmount(Amount.inSEK(0.99d));
+        transfer.setType(TransferType.BANK_TRANSFER);
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, 1);
+        transfer.setDueDate(c.getTime());
+        transfer.setDestinationMessage("Test msg");
+
+        builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .build()
+                .testBankTransfer(transfer);
+    }
+
+    @Test
     public void testTransferToNordeaSSN() throws Exception {
         Transfer transfer = new Transfer();
         transfer.setSource(AccountIdentifier.create(Type.SE, manager.get(Arg.FROMACCOUNT)));
@@ -100,7 +126,7 @@ public class NordeaSEAgentTest {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
         transfer.setDueDate(c.getTime());
-        transfer.setDestinationMessage("Test dest msg");
+        transfer.setDestinationMessage("Test msg"); // minimum length is 12
 
         builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                 .build()
