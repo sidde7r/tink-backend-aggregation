@@ -2539,6 +2539,7 @@ maven_install(
     artifacts = [
         "aopalliance:aopalliance:1.0",
         "asm:asm:3.1",
+        "c3p0:c3p0:0.9.1.1",
         "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-classic:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
