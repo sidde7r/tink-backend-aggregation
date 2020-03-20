@@ -81,7 +81,6 @@ steps:
     timeout_in_minutes: 10
     agents:
       queue: default
-    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - wait
 
