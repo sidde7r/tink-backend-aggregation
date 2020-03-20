@@ -3,6 +3,9 @@
 # Explicitly not setting `-e` here to be able to contain errors from bazel-wrapper.
 set -x
 
+# Shared volume
+LOGFILE="/cache/aggregation_decoupled.log"
+
 ./bazel-wrapper run \
     --workspace_status_command $(pwd)/stamp.sh \
     --disk_cache=/cache/v4-disk \
@@ -13,4 +16,5 @@ set -x
     --test_output=streamed \
     --curses=no \
     -- \
-    //src/aggregation/service:bin_decoupled
+    //src/aggregation/service:bin_decoupled \
+    &> "$LOGFILE"

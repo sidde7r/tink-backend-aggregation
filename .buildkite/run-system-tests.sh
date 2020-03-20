@@ -15,6 +15,12 @@ teardown() {
 
     # Tear down container under test
     docker stop "$appundertest_container_id"
+
+    .buildkite/upload-test-files.sh
+
+    # Upload aggregation service logs
+    LOGFILE="/cache/aggregation_decoupled.log"
+    buildkite-agent artifact upload "$LOGFILE"
 }
 
 # Building tests early so the test code can be built in parallel with the tested code
@@ -44,6 +50,14 @@ echo "Waiting for app under test to become healthy..."
 exit_code=1
 
 while [ "$exit_code" != 0 ]; do
+
+    if [ "$exit_code" == 6 ]; then
+        # Couldn't resolve host -> container stopped because service failed to start
+        echo "Aggregation service seemed to have crashed upon boot."
+        teardown
+        exit 1
+    fi
+
     # Ping continuously until service responds
     response="$(curl --silent $CONTAINER_UNDER_TEST_NAME:$PORT/aggregation/ping)"
     exit_code="$?"
