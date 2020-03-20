@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -41,9 +40,9 @@ public class AmountEntity {
         this.coin = coin;
     }
 
-    public Amount toTinkAmount() {
-        return new Amount(
-                coin.getShortName(), BigDecimal.valueOf(unscaledValue, scale).doubleValue());
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(
+                BigDecimal.valueOf(unscaledValue, scale), coin.getShortName());
     }
 
     @JsonProperty("numeroDecimalesImporte")

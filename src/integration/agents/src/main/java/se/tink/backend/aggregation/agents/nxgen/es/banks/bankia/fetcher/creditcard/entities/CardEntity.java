@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardEntity {
@@ -30,15 +30,15 @@ public class CardEntity {
         String cardAlias = contract.getAlias();
 
         return CreditCardAccount.builderFromFullNumber(cardNumber, cardAlias)
-                .setBalance(getBalance())
-                .setAvailableCredit(availableBalance.toTinkAmount())
+                .setExactBalance(getBalance())
+                .setExactAvailableCredit(availableBalance.toTinkAmount())
                 .setBankIdentifier(cardNumber)
                 .build();
     }
 
     @JsonIgnore
-    private Amount getBalance() {
-        if (creditLimit.toTinkAmount().isPositive()) {
+    private ExactCurrencyAmount getBalance() {
+        if (creditLimit.toTinkAmount().getDoubleValue() > 0) {
             return availableBalance.toTinkAmount().subtract(creditLimit.toTinkAmount());
         }
         return availableBalance.toTinkAmount();

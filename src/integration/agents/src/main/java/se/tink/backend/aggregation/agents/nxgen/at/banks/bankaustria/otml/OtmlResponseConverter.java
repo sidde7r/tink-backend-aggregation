@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class OtmlResponseConverter {
     private static final Logger LOGGER = LoggerFactory.getLogger(OtmlResponseConverter.class);
@@ -191,7 +192,7 @@ public class OtmlResponseConverter {
                 getValue(getNode(balanceNode, BankAustriaConstants.XPathExpression.XPATH_CURRENCY));
         String balanceValue =
                 getValue(getNode(balanceNode, BankAustriaConstants.XPathExpression.XPATH_VALUE));
-        Amount amount = new Amount(balanceCurrency, Double.valueOf(balanceValue));
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of(balanceValue, balanceCurrency);
         String iban =
                 getNodeValueFromDocument(
                         document, BankAustriaConstants.XPathExpression.XPATH_ACCOUNT_IBAN);
@@ -207,7 +208,7 @@ public class OtmlResponseConverter {
                 filledAccount =
                         CheckingAccount.builder(iban)
                                 .setHolderName(holderName)
-                                .setBalance(amount)
+                                .setExactBalance(amount)
                                 .setBankIdentifier(account.getApiIdentifier())
                                 .setAccountNumber(iban)
                                 .setName(account.getName())
@@ -215,9 +216,10 @@ public class OtmlResponseConverter {
                 break;
             case SAVINGS:
                 filledAccount =
-                        SavingsAccount.builder(iban, amount)
+                        SavingsAccount.builder(iban)
                                 .setAccountNumber(iban)
                                 .setHolderName(holderName)
+                                .setExactBalance(amount)
                                 .setName(account.getName())
                                 .setBankIdentifier(account.getApiIdentifier())
                                 .build();

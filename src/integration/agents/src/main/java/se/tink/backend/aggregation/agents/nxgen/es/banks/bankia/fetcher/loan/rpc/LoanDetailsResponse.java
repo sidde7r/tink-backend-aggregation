@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class LoanDetailsResponse {
@@ -70,7 +70,7 @@ public class LoanDetailsResponse {
         List<String> applicants = getApplicants();
         AmountEntity grantedAmount = loan.getGrantedAmount();
         AmountEntity amortizedAmount = loanAmountEntity.getAmortizedAmount();
-        amortizedAmount.setCurrencyName(grantedAmount.toTinkAmount().getCurrency());
+        amortizedAmount.setCurrencyName(grantedAmount.toTinkAmount().getCurrencyCode());
 
         return LoanDetails.builder(getType(loan))
                 .setAmortized(amortizedAmount.toTinkAmount())
@@ -78,14 +78,14 @@ public class LoanDetailsResponse {
                 .setInitialDate(productInformation.getInitialDate().toJavaLangDate())
                 .setLoanNumber(loan.getLoanIdentifier())
                 .setMonthlyAmortization(
-                        getMonthlyAmortization(grantedAmount.toTinkAmount().getCurrency()))
+                        getMonthlyAmortization(grantedAmount.toTinkAmount().getCurrencyCode()))
                 .setApplicants(applicants)
                 .setCoApplicant(applicants.size() > 1)
                 .build();
     }
 
     @JsonIgnore
-    private Amount getMonthlyAmortization(String currency) {
+    private ExactCurrencyAmount getMonthlyAmortization(String currency) {
         AmountEntity amortizationAmount = null;
 
         if (loanInstallments != null) {

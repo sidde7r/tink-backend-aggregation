@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountSummaryListEntity {
@@ -91,7 +91,7 @@ public class AccountSummaryListEntity {
                                         .setBankIdentifier(id)
                                         .addIdentifier(new IbanIdentifier(iban))
                                         .setAccountNumber(iban)
-                                        .setBalance(Amount.inEUR(balance))
+                                        .setExactBalance(ExactCurrencyAmount.of(balance, "EUR"))
                                         .setName(name)
                                         .setHolderName(new HolderName(primaryOwnerName))
                                         .build());

@@ -67,7 +67,7 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
 
         Portfolio portfolio = new Portfolio();
         portfolio.setInstruments(instruments);
-        portfolio.setTotalValue(account.getAvailableBalance().toTinkAmount().doubleValue());
+        portfolio.setTotalValue(account.getAvailableBalance().toTinkAmount().getDoubleValue());
         portfolio.setType(Portfolio.Type.DEPOT);
         portfolio.setUniqueIdentifier(account.getContract().getIdentifierProductContractInternal());
 
@@ -145,7 +145,7 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
         instrument.setIsin(qualification.getIsin());
         instrument.setQuantity(qualification.getQuantity());
         instrument.setMarketPlace(qualification.getIdentifierMarketplaceGroup());
-        instrument.setPrice(qualification.getValuationUnitEUR().toTinkAmount().doubleValue());
+        instrument.setPrice(qualification.getValuationUnitEUR().toTinkAmount().getDoubleValue());
         instrument.setUniqueIdentifier(qualification.getIsin());
         instrument.setName(qualification.getTickerCode());
 

@@ -153,8 +153,8 @@ public class CardEntity {
         return CreditCardAccount.builderFromFullNumber(cardNumber, description)
                 .setAccountNumber(accountNumber)
                 .setName(description)
-                .setBalance(getBalanceUsed().toTinkAmount())
-                .setAvailableCredit(getBalanceAvailable().toTinkAmount())
+                .setExactBalance(getBalanceUsed().toTinkAmount())
+                .setExactAvailableCredit(getBalanceAvailable().toTinkAmount())
                 .setBankIdentifier(cardNumber)
                 .putInTemporaryStorage(
                         OpenbankConstants.Storage.PRODUCT_CODE_NEW, contract.getProductCode())

@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -163,7 +164,7 @@ public class AccountEntity {
     private CreditCardAccount toTinkCreditCardAccount() {
         return CreditCardAccount.builder(accountNumber)
                 .setName(accountName)
-                .setBalance(new Amount(currency, balance))
+                .setExactBalance(ExactCurrencyAmount.of(balance, currency))
                 .setHolderName(new HolderName(username))
                 .setBankIdentifier(accountNumber)
                 .setAccountNumber(accountNumber)

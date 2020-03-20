@@ -137,12 +137,6 @@ public abstract class AggregationTransaction {
         private Map<TransactionPayloadTypes, String> payload = Maps.newHashMap();
 
         @Deprecated
-        Amount getAmount() {
-            Preconditions.checkNotNull(amount);
-            return new Amount(amount.getCurrencyCode(), amount.getDoubleValue());
-        }
-
-        @Deprecated
         public Builder setAmount(Amount amount) {
             this.amount = ExactCurrencyAmount.of(amount.toBigDecimal(), amount.getCurrency());
             return this;

@@ -51,12 +51,6 @@ public class CountryDateHelper {
         return calendar.getTime();
     }
 
-    public Date addMonths(Date date, int months) {
-        Calendar calendar = getCalendar(date);
-        calendar.add(Calendar.MONTH, months);
-        return calendar.getTime();
-    }
-
     /**
      * Flattens a date by setting the time of day to noon (used in the case where we don't get time
      * information from upstream information providers).
@@ -87,23 +81,6 @@ public class CountryDateHelper {
         }
 
         return businessDay;
-    }
-
-    public Date getFutureBusinessDay(Date date, int numberOfBusinessDays) {
-        Calendar calendar = getCalendar();
-        calendar.setTime(date);
-        return getFutureBusinessDay(calendar, numberOfBusinessDays).getTime();
-    }
-
-    private Calendar getFutureBusinessDay(Calendar calendar, int numberOfBusinessDays) {
-        Calendar futureBusinessDay = getCurrentOrNextBusinessDay(calendar);
-
-        for (int i = 0; i < numberOfBusinessDays; i++) {
-            futureBusinessDay.add(Calendar.DAY_OF_MONTH, 1);
-            futureBusinessDay = getCurrentOrNextBusinessDay(futureBusinessDay);
-        }
-
-        return futureBusinessDay;
     }
 
     public Date getNextBusinessDay() {
