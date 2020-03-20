@@ -802,7 +802,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "c3p0_c3p0",
+    name = "c3p0_c3p0",  # Do not use, but do not remove
     artifact = "c3p0:c3p0:0.9.1.1",
     sha1 = "302704f30c6e7abb7a0457f7771739e03c973e80",
 )

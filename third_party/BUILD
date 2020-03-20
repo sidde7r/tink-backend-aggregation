@@ -12,7 +12,7 @@ java_library(
     name = "c3p0_c3p0",
     visibility = ["//visibility:public"],
     exports = [
-        "@c3p0_c3p0//jar",
+        "@aggregation//:c3p0_c3p0",
     ],
 )
 
