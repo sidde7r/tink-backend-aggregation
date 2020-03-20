@@ -210,7 +210,6 @@ junit_test(
         "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:io_vavr",
         "//third_party:jfree_jcommon",
-        "//third_party:net_sourceforge_htmlunit_htmlunit",
         "//third_party:oauth_signpost_signpost_commonshttp4",
         "//third_party:org_apache_curator_curator_x_discovery",
         "//third_party:org_assertj_assertj_core",
