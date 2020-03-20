@@ -1428,7 +1428,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_lang_commons_lang",
+    name = "commons_lang_commons_lang",  # Do not use, but do not remove
     artifact = "commons-lang:commons-lang:2.6",
     sha1 = "0ce1edb914c94ebc388f086c6827e8bdeec71ac2",
 )

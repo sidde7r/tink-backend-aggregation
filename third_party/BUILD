@@ -459,7 +459,7 @@ java_library(
     runtime_deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
-        "@commons_lang_commons_lang//jar",
+        "@aggregation//:commons_lang_commons_lang",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_validation//jar",
     ],
@@ -489,6 +489,7 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_sun_jersey_jersey_core",
+        "@aggregation//:commons_lang_commons_lang",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
@@ -505,7 +506,6 @@ java_library(
         "@com_codahale_metrics_metrics_servlets//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
-        "@commons_lang_commons_lang//jar",
         "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
@@ -907,7 +907,7 @@ java_library(
     name = "org_apache_commons_commons_lang",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_lang_commons_lang//jar",
+        "@aggregation//:commons_lang_commons_lang",
     ],
 )
 
@@ -1082,7 +1082,7 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:commons_collections_commons_collections",
-        "@commons_lang_commons_lang//jar",
+        "@aggregation//:commons_lang_commons_lang",
         "@org_apache_velocity_velocity//jar",
     ],
 )
