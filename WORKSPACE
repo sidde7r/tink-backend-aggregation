@@ -2582,6 +2582,7 @@ maven_install(
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-io:commons-io:2.5",
+        "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:%s" % NETTY_VERSION,
