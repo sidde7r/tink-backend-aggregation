@@ -214,7 +214,6 @@ junit_test(
         "//third_party:net_sourceforge_htmlunit_htmlunit",
         "//third_party:oauth_signpost_signpost_commonshttp4",
         "//third_party:org_apache_curator_curator_x_discovery",
-        "//third_party:org_apache_kafka_kafka_streams",
         "//third_party:org_apache_velocity_velocity",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_codehaus_jackson_jackson_core_asl",

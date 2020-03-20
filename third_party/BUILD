@@ -1048,22 +1048,6 @@ java_library(
 )
 
 java_library(
-    # is this used?
-    name = "org_apache_kafka_kafka_streams",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@net_jpountz_lz4_lz4//jar",
-        "@org_apache_kafka_connect_api//jar",
-        "@org_apache_kafka_connect_json//jar",
-        "@org_apache_kafka_kafka_clients//jar",
-        "@org_apache_kafka_kafka_streams//jar",
-        "@org_xerial_snappy_snappy_java//jar",
-    ],
-)
-
-java_library(
     # TODO: check is this used?
     name = "org_apache_lucene_lucene_core",
     visibility = ["//visibility:public"],
