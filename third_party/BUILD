@@ -1048,27 +1048,6 @@ java_library(
 )
 
 java_library(
-    # TODO: check is this used?
-    name = "org_apache_mahout_mahout_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:org_apache_commons_commons_lang3",
-        "@aggregation//:org_apache_mahout_commons_commons_cli",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@com_thoughtworks_xstream_xstream//jar",
-        "@org_apache_commons_commons_math3//jar",
-        "@org_apache_lucene_lucene_analyzers_common//jar",
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_mahout_mahout_core//jar",
-        "@org_apache_mahout_mahout_math//jar",
-        "@org_codehaus_jackson_jackson_core_asl//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
-        "@xmlpull_xmlpull//jar",
-        "@xpp3_xpp3_min//jar",
-    ],
-)
-
-java_library(
     name = "org_apache_velocity_velocity",
     visibility = ["//visibility:public"],
     exports = [
