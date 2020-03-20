@@ -830,35 +830,6 @@ java_library(
 )
 
 java_library(
-    # TODO: check is this used?
-    name = "net_sourceforge_htmlunit_htmlunit",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:commons_codec_commons_codec",
-        "@aggregation//:commons_collections_commons_collections",
-        "@aggregation//:commons_io_commons_io",
-        "@aggregation//:commons_logging_commons_logging",
-        "@aggregation//:net_sourceforge_cssparser_cssparser",
-        "@aggregation//:org_apache_commons_commons_lang3",
-        "@aggregation//:org_apache_httpcomponents_httpclient",
-        "@aggregation//:org_apache_httpcomponents_httpcore",
-        "@aggregation//:org_eclipse_jetty_jetty_http",
-        "@aggregation//:org_eclipse_jetty_jetty_io",
-        "@aggregation//:org_eclipse_jetty_jetty_util",
-        "@aggregation//:org_w3c_css_sac",
-        "@aggregation//:xerces_xercesImpl",
-        "@aggregation//:xml_apis_xml_apis",
-        "@net_sourceforge_htmlunit_htmlunit//jar",
-        "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
-        "@net_sourceforge_nekohtml_nekohtml//jar",
-        "@org_apache_httpcomponents_httpmime//jar",
-        "@org_eclipse_jetty_jetty_websocket//jar",
-        "@xalan_serializer//jar",
-        "@xalan_xalan//jar",
-    ],
-)
-
-java_library(
     name = "net_spy_spymemcached",
     visibility = ["//visibility:public"],
     exports = [
