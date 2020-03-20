@@ -2,7 +2,6 @@ package se.tink.libraries.http.apache;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
-import org.apache.http.ConnectionClosedException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -39,7 +38,7 @@ public class CloseableHttpResponseTest {
     }
 
     @Test
-    public void readingResponseBeforeCloseWorks() throws IOException {
+    public void readingResponseBeforeCloseWorks() throws Exception {
         final CloseableHttpResponse response;
         HttpPost post = new HttpPost("http://127.0.0.1:11111");
         try (CloseableHttpResponse r = httpClient.execute(post)) {
@@ -49,8 +48,8 @@ public class CloseableHttpResponseTest {
         }
     }
 
-    @Test(expected = ConnectionClosedException.class)
-    public void readingResponseAfterCloseFails() throws IOException {
+    @Test
+    public void readingResponseAfterCloseWorks() throws Exception {
         final CloseableHttpResponse response;
         HttpPost post = new HttpPost("http://127.0.0.1:11111");
         try (CloseableHttpResponse r = httpClient.execute(post)) {

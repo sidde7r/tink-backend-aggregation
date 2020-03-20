@@ -751,8 +751,8 @@ maven_jar(
 
 maven_jar(
     name = "org_apache_httpcomponents_httpclient",  # Do not use, but do not remove
-    artifact = "org.apache.httpcomponents:httpclient:4.5.3",
-    sha1 = "ba2c3d7d3a2ec43abbb832c60f46e333e6624723",
+    artifact = "org.apache.httpcomponents:httpclient:4.3.4",
+    sha1 = "a9a1fef2faefed639ee0d0fba5b3b8e4eb2ff2d8",
 )
 
 maven_jar(
@@ -1255,8 +1255,8 @@ maven_jar(
 
 maven_jar(
     name = "org_apache_httpcomponents_httpcore",  # Do not use, but do not remove
-    artifact = "org.apache.httpcomponents:httpcore:4.4.6",
-    sha1 = "2e59eb4b0c775df9ae5f8bd73e6a45fe0c8371e8",
+    artifact = "org.apache.httpcomponents:httpcore:4.3.2",
+    sha1 = "31fbbff1ddbf98f3aa7377c94d33b0447c646b6e",
 )
 
 maven_jar(
@@ -2627,8 +2627,8 @@ maven_install(
         "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-collections4:4.0",
         "org.apache.commons:commons-lang3:3.4",
-        "org.apache.httpcomponents:httpclient:4.5.3",
-        "org.apache.httpcomponents:httpcore:4.4.6",
+        "org.apache.httpcomponents:httpclient:4.3.4",
+        "org.apache.httpcomponents:httpcore:4.3.2",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
