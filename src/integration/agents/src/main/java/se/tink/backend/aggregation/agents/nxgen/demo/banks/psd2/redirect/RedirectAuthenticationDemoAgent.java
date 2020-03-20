@@ -281,6 +281,16 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                         }
 
                         @Override
+                        public Optional<Double> getAvailableBalance() {
+                            return Optional.of(StaticAccountUK.AVAILABLE_BALANCE);
+                        }
+
+                        @Override
+                        public Optional<Double> getCreditLimit() {
+                            return Optional.of(StaticAccountUK.CREDIT_LIMIT);
+                        }
+
+                        @Override
                         public List<AccountIdentifier> getIdentifiers() {
                             return Lists.newArrayList(
                                     AccountIdentifier.create(
