@@ -1401,15 +1401,15 @@
                 "file": "v1/https/repo.maven.apache.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1.jar",
                 "directDependencies": [
                     "com.sun.jersey:jersey-client:1.18.1",
-                    "org.apache.httpcomponents:httpclient:4.5.3"
+                    "org.apache.httpcomponents:httpclient:4.3.4"
                 ],
                 "dependencies": [
                     "commons-logging:commons-logging:1.2",
                     "com.sun.jersey:jersey-core:1.18.1",
+                    "org.apache.httpcomponents:httpclient:4.3.4",
+                    "org.apache.httpcomponents:httpcore:4.3.2",
                     "commons-codec:commons-codec:1.10",
-                    "com.sun.jersey:jersey-client:1.18.1",
-                    "org.apache.httpcomponents:httpclient:4.5.3",
-                    "org.apache.httpcomponents:httpcore:4.4.6"
+                    "com.sun.jersey:jersey-client:1.18.1"
                 ],
                 "url": "https://repo.maven.apache.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1.jar",
                 "mirror_urls": [
@@ -1422,13 +1422,13 @@
                 "file": "v1/https/repo.maven.apache.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1-sources.jar",
                 "directDependencies": [
                     "com.sun.jersey:jersey-client:jar:sources:1.18.1",
-                    "org.apache.httpcomponents:httpclient:jar:sources:4.5.3"
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4"
                 ],
                 "dependencies": [
+                    "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
                     "commons-codec:commons-codec:jar:sources:1.10",
                     "commons-logging:commons-logging:jar:sources:1.2",
-                    "org.apache.httpcomponents:httpcore:jar:sources:4.4.6",
-                    "org.apache.httpcomponents:httpclient:jar:sources:4.5.3",
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
                     "com.sun.jersey:jersey-core:jar:sources:1.18.1",
                     "com.sun.jersey:jersey-client:jar:sources:1.18.1"
                 ],
@@ -2377,64 +2377,64 @@
                 "sha256": "4709f16a9e0f8fd83ae155083d63044e23045aac8f6f0183a2db09f492491b12"
             },
             {
-                "coord": "org.apache.httpcomponents:httpclient:4.5.3",
-                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.3/httpclient-4.5.3.jar",
+                "coord": "org.apache.httpcomponents:httpclient:4.3.4",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
                 "directDependencies": [
                     "commons-codec:commons-codec:1.10",
                     "commons-logging:commons-logging:1.2",
-                    "org.apache.httpcomponents:httpcore:4.4.6"
+                    "org.apache.httpcomponents:httpcore:4.3.2"
                 ],
                 "dependencies": [
                     "commons-codec:commons-codec:1.10",
-                    "commons-logging:commons-logging:1.2",
-                    "org.apache.httpcomponents:httpcore:4.4.6"
+                    "org.apache.httpcomponents:httpcore:4.3.2",
+                    "commons-logging:commons-logging:1.2"
                 ],
-                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.3/httpclient-4.5.3.jar",
+                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.3/httpclient-4.5.3.jar"
+                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar"
                 ],
-                "sha256": "db3d1b6c2d6a5e5ad47577ad61854e2f0e0936199b8e05eb541ed52349263135"
+                "sha256": "a77f2bbc346af46028d63e8807eacac3fbe8478e3d2f039f9f6053248a743cf6"
             },
             {
-                "coord": "org.apache.httpcomponents:httpclient:jar:sources:4.5.3",
-                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.3/httpclient-4.5.3-sources.jar",
+                "coord": "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
                 "directDependencies": [
                     "commons-codec:commons-codec:jar:sources:1.10",
                     "commons-logging:commons-logging:jar:sources:1.2",
-                    "org.apache.httpcomponents:httpcore:jar:sources:4.4.6"
+                    "org.apache.httpcomponents:httpcore:jar:sources:4.3.2"
                 ],
                 "dependencies": [
-                    "org.apache.httpcomponents:httpcore:jar:sources:4.4.6",
+                    "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
                     "commons-logging:commons-logging:jar:sources:1.2",
                     "commons-codec:commons-codec:jar:sources:1.10"
                 ],
-                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.3/httpclient-4.5.3-sources.jar",
+                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.5.3/httpclient-4.5.3-sources.jar"
+                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar"
                 ],
-                "sha256": "6475ea5ce5bce787f88f449c4d29dc8cafbeba9f172683fcad15c2e4b5e2ed84"
+                "sha256": "67fd2d124e3aa166b97b6dd4e55f3b34ac4000289cef8d870b72337f44f4c0ea"
             },
             {
-                "coord": "org.apache.httpcomponents:httpcore:4.4.6",
-                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.6/httpcore-4.4.6.jar",
+                "coord": "org.apache.httpcomponents:httpcore:4.3.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.6/httpcore-4.4.6.jar",
+                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.6/httpcore-4.4.6.jar"
+                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar"
                 ],
-                "sha256": "d7f853dee87680b07293d30855b39b9eb56c1297bd16ff1cd6f19ddb8fa745fb"
+                "sha256": "abd02320e2356f89d054dae4cf02306bef20a9cf7865b3ac94ec7552b4f1528b"
             },
             {
-                "coord": "org.apache.httpcomponents:httpcore:jar:sources:4.4.6",
-                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.6/httpcore-4.4.6-sources.jar",
+                "coord": "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2-sources.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.6/httpcore-4.4.6-sources.jar",
+                "url": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2-sources.jar",
                 "mirror_urls": [
-                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.4.6/httpcore-4.4.6-sources.jar"
+                    "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2-sources.jar"
                 ],
-                "sha256": "292895822468716a4b8c65b07f9e45c8a9ff9946aa5407c883f5f455d09cdf9e"
+                "sha256": "947b7078b3ff3dfa21d9fc2a3e451feacd30fa6f5df8e699c508b24845886c5b"
             },
             {
                 "coord": "org.apache.mahout.commons:commons-cli:2.0-mahout",
@@ -2817,6 +2817,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -649278728
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1091936623
     }
 }
