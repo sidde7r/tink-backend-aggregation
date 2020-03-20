@@ -43,12 +43,14 @@ public class InvestmentAccount extends Account {
     }
 
     /** @deprecated use {@link #nxBuilder()} instead */
+    @Deprecated
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
             String uniqueIdentifier) {
         return new DefaultInvestmentAccountsBuilder(uniqueIdentifier);
     }
 
     /** @deprecated Use {@link #nxBuilder()} instead */
+    @Deprecated
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
             String uniqueIdentifier, Amount balance) {
         return builder(uniqueIdentifier).setBalance(balance);

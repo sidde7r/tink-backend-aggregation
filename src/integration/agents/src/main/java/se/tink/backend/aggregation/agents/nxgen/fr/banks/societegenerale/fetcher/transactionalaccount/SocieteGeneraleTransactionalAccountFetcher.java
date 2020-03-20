@@ -64,7 +64,7 @@ public class SocieteGeneraleTransactionalAccountFetcher
         builder.setAccountNumber(entity.getNumber());
         builder.setBankIdentifier(entity.getTechnicalId());
 
-        builder.setBalance(entity.getBalance().toTinkAmount());
+        builder.setExactBalance(entity.getBalance().toTinkAmount());
 
         builder.putInTemporaryStorage(
                 SocieteGeneraleConstants.StorageKey.TECHNICAL_ID, entity.getTechnicalId());

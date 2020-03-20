@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountItem {
@@ -100,14 +100,14 @@ public class AccountItem {
                 .filter(isInvalidAccount())
                 .map(
                         accountTypes -> {
-                            final Amount accountBalance =
-                                    new Amount(currency, getBalance(baseCurrencyId));
-                            final Amount availableCredit =
-                                    new Amount(currency, getFreeCredit(baseCurrencyId));
+                            final ExactCurrencyAmount accountBalance =
+                                    ExactCurrencyAmount.of(getBalance(baseCurrencyId), currency);
+                            final ExactCurrencyAmount availableCredit =
+                                    ExactCurrencyAmount.of(getFreeCredit(baseCurrencyId), currency);
 
                             return CreditCardAccount.builder(iban, accountBalance, availableCredit)
                                     .addIdentifier(new IbanIdentifier(iban))
-                                    .setBalance(accountBalance)
+                                    .setExactBalance(accountBalance)
                                     .setName(getAccountName())
                                     .setHolderName(new HolderName(currentUser))
                                     .setBankIdentifier(portfolioId)
@@ -125,12 +125,12 @@ public class AccountItem {
                 .filter(isInvalidAccount())
                 .map(
                         accountType -> {
-                            final Amount accountBalance =
-                                    new Amount(currency, getBalance(baseCurrencyId));
+                            final ExactCurrencyAmount accountBalance =
+                                    ExactCurrencyAmount.of(getBalance(baseCurrencyId), currency);
 
                             return TransactionalAccount.builder(accountType, iban)
                                     .addIdentifier(new IbanIdentifier(iban))
-                                    .setBalance(accountBalance)
+                                    .setExactBalance(accountBalance)
                                     .setName(getAccountName())
                                     .setHolderName(new HolderName(currentUser))
                                     .setBankIdentifier(portfolioId)

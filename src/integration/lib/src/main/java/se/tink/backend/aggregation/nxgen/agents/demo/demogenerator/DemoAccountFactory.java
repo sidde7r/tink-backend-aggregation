@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 
@@ -154,16 +153,16 @@ public class DemoAccountFactory {
         return CreditCardAccount.builderFromFullNumber(accountDefinition.getCreditCardNumber())
                 .setName(catalog.getString(accountDefinition.getAccountName()))
                 .setHolderName(accountDefinition.getNameOnCreditCard())
-                .setBalance(
-                        new Amount(
-                                currency,
+                .setExactBalance(
+                        ExactCurrencyAmount.of(
                                 DemoConstants.getSekToCurrencyConverter(
-                                        currency, accountDefinition.getBalance())))
-                .setAvailableCredit(
-                        new Amount(
-                                currency,
+                                        currency, accountDefinition.getBalance()),
+                                currency))
+                .setExactAvailableCredit(
+                        ExactCurrencyAmount.of(
                                 DemoConstants.getSekToCurrencyConverter(
-                                        currency, accountDefinition.getAvailableCredit())))
+                                        currency, accountDefinition.getAvailableCredit()),
+                                currency))
                 .build();
     }
 }

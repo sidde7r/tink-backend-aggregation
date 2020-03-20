@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class InvestmentGenerator {
 
@@ -22,18 +22,20 @@ public class InvestmentGenerator {
 
         investmentAccounts.add(
                 InvestmentAccount.builder(accountDefinition.getAccountId())
-                        .setBalance(
-                                new Amount(
-                                        currency,
+                        .setExactBalance(
+                                ExactCurrencyAmount.of(
                                         DemoConstants.getSekToCurrencyConverter(
-                                                currency, accountDefinition.getAccountBalance())))
+                                                currency, accountDefinition.getAccountBalance()),
+                                        currency))
                         .setName("")
                         .setAccountNumber(accountDefinition.getAccountId())
                         .setPortfolios(
                                 InvestmentGenerator.generateFakePortfolios(
                                         accountDefinition.getAccountId(),
                                         accountDefinition.getAccountBalance()))
-                        .setCashBalance(new Amount(currency, accountDefinition.getAccountBalance()))
+                        .setCashBalance(
+                                ExactCurrencyAmount.of(
+                                        accountDefinition.getAccountBalance(), currency))
                         .build());
 
         return investmentAccounts;

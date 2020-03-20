@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -85,7 +86,8 @@ public class AccountEntity {
                                 .findFirst()
                                 .orElse(null))
                 .setName(nickname)
-                .setBalance(new Amount(NordeaFIConstants.CURRENCY, availableBalance))
+                .setExactBalance(
+                        ExactCurrencyAmount.of(availableBalance, NordeaFIConstants.CURRENCY))
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .setAccountNumber(displayAccountNumber)
                 .setBankIdentifier(accountId)

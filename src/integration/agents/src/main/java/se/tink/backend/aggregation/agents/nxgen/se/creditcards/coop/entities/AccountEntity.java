@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -124,7 +125,7 @@ public class AccountEntity {
                                 AccountTypes.OTHER, getUniqueId(credentialsId, accountNumber))
                         .setName(accountName)
                         .setAccountNumber(accountNumber)
-                        .setBalance(Amount.inSEK(totalBalance))
+                        .setExactBalance(ExactCurrencyAmount.of(totalBalance, "SEK"))
                         .setHolderName(holdername)
                         .setBankIdentifier(String.valueOf(this.accountType))
                         .addIdentifiers(identifiers)

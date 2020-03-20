@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -130,7 +130,7 @@ public class AccountEntity {
                         .setAccountNumber(accountId)
                         .setName(name)
                         .setHolderName(holderName)
-                        .setBalance(Amount.inSEK(ownCapital))
+                        .setExactBalance(ExactCurrencyAmount.of(ownCapital, "SEK"))
                         .setBankIdentifier(accountId)
                         .build();
 

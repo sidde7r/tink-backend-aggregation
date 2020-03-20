@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.user.rpc.User;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,7 +66,7 @@ public final class UpdateControllerTest {
         final LoanAccount loanAccount =
                 LoanAccount.builder("1337")
                         .setAccountNumber("777")
-                        .setBalance(new Amount("SEK", -7.0))
+                        .setExactBalance(ExactCurrencyAmount.of(-7.0, "SEK"))
                         .build();
 
         final Collection<AggregationTransaction> transactions = Collections.emptySet();

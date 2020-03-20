@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -71,7 +72,7 @@ public class AccountEntity {
                 .setAccountNumber(iban)
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .setBankIdentifier(number)
-                .setBalance(new Amount(IberCajaConstants.currency, balance))
+                .setExactBalance(ExactCurrencyAmount.of(balance, IberCajaConstants.currency))
                 .setName(alias)
                 .build();
     }

@@ -482,12 +482,7 @@ public abstract class Account {
             return self();
         }
 
-        public Amount getAvailableCredit() {
-            return Optional.ofNullable(thisObj.exactAvailableCredit)
-                    .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()))
-                    .orElseThrow(NullPointerException::new);
-        }
-
+        @Deprecated
         public T setAvailableCredit(Amount availableCredit) {
             this.exactAvailableCredit =
                     ExactCurrencyAmount.of(

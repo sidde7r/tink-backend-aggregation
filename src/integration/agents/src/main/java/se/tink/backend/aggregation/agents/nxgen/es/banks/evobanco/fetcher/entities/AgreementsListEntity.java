@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -141,15 +142,18 @@ public class AgreementsListEntity {
     }
 
     public Optional<CreditCardAccount> toTinkCreditCard() {
-        Amount balance = Amount.inEUR(AgentParsingUtils.parseAmount(cardData.getCreditUsed()));
+        ExactCurrencyAmount balance =
+                ExactCurrencyAmount.of(
+                        AgentParsingUtils.parseAmount(cardData.getCreditUsed()), "EUR");
 
-        Amount availableCredit =
-                Amount.inEUR(AgentParsingUtils.parseAmount(cardData.getCreditAvailableBalance()));
+        ExactCurrencyAmount availableCredit =
+                ExactCurrencyAmount.of(
+                        AgentParsingUtils.parseAmount(cardData.getCreditAvailableBalance()), "EUR");
 
         return Optional.of(
                 CreditCardAccount.builderFromFullNumber(cardData.getPanToken(), aliasbe)
-                        .setBalance(balance)
-                        .setAvailableCredit(availableCredit)
+                        .setExactBalance(balance)
+                        .setExactAvailableCredit(availableCredit)
                         .setHolderName(new HolderName(cardData.getHolder()))
                         .setBankIdentifier(cardData.getPanToken())
                         .putInTemporaryStorage(Storage.CARD_STATE, cardData.getStateDescription())

@@ -111,7 +111,7 @@ public class AccountEntity {
         return TransactionalAccount.builder(getTinkAccountType(), accountNumber.toLowerCase())
                 .setAccountNumber(accountNumber)
                 .setName(getAccountName())
-                .setBalance(balance.toTinkAmount())
+                .setExactBalance(balance.toTinkAmount())
                 .setBankIdentifier(accountNumber)
                 .putInTemporaryStorage(
                         OpenbankConstants.Storage.PRODUCT_CODE_OLD,

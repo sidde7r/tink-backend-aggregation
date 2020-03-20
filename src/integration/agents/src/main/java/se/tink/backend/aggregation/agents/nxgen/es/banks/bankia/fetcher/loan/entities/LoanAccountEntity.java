@@ -53,7 +53,7 @@ public class LoanAccountEntity {
         return LoanAccount.builder(contractNumber)
                 .setAccountNumber(contractNumber)
                 .setName(loanDetailsResponse.getLoanName())
-                .setBalance(pendingDebt.toTinkAmount().negate())
+                .setExactBalance(pendingDebt.toTinkAmount().negate())
                 // NB! interest rates are hard to understand in Spain, we have 4 of them in the
                 // detailed response
                 .setInterestRate(loanDetailsResponse.getInterestRate())
