@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -73,5 +75,24 @@ public class CreditorAccountEntity {
             default:
                 return new Creditor(new IbanIdentifier(iban));
         }
+    }
+
+    @JsonIgnore
+    public static CreditorAccountEntity create(String accountNumber, String paymentProduct)
+            throws CreditorValidationException {
+        if (Stream.of(
+                        PaymentProduct.SWEDISH_DOMESTIC_PRIVATE_CREDIT_TRANSFERS.getValue(),
+                        PaymentProduct.SEPA_CREDIT_TRANSFER.getValue())
+                .anyMatch(paymentProduct::equalsIgnoreCase)) {
+            IbanIdentifier creditorIban = new IbanIdentifier(accountNumber);
+            if (!creditorIban.isValidIban()) {
+                throw CreditorValidationException.invalidIbanFormat(
+                        "", new IllegalArgumentException());
+            }
+        }
+
+        return paymentProductsMapper
+                .get(PaymentProduct.fromString(paymentProduct))
+                .apply(accountNumber);
     }
 }

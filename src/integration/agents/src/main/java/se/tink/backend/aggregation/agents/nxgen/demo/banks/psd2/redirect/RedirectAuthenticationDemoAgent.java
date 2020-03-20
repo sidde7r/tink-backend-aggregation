@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.Redirec
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.IdentityData;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.InvestmentAccounts;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.LoanAccount;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.StaticAccountUK;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
@@ -262,7 +263,32 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                     DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                             USERNAME, this.provider, 0),
                     DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                            USERNAME, this.provider, 1));
+                            USERNAME, this.provider, 1),
+                    new DemoTransactionAccount() {
+                        @Override
+                        public String getAccountId() {
+                            return StaticAccountUK.ACCOUNT_ID;
+                        }
+
+                        @Override
+                        public String getAccountName() {
+                            return StaticAccountUK.ACCOUNT_NAME;
+                        }
+
+                        @Override
+                        public double getBalance() {
+                            return StaticAccountUK.BALANCE;
+                        }
+
+                        @Override
+                        public List<AccountIdentifier> getIdentifiers() {
+                            return Lists.newArrayList(
+                                    AccountIdentifier.create(
+                                            AccountIdentifier.Type.SORT_CODE,
+                                            getAccountId(),
+                                            StaticAccountUK.ACCOUNT_IDENTIFIERS));
+                        }
+                    });
 
         } else {
             return Lists.newArrayList(

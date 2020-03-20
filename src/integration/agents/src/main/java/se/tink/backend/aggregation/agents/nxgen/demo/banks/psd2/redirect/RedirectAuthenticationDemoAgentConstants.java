@@ -67,4 +67,11 @@ public class RedirectAuthenticationDemoAgentConstants {
         public static final String SUFFICIENT_FUNDS = "SUFFICIENT_FUNDS";
         public static final String EXECUTE_PAYMENT = "EXECUTE_PAYMENT";
     }
+
+    public static class StaticAccountUK {
+        public static final String ACCOUNT_ID = "23147071417779";
+        public static final String ACCOUNT_NAME = "Checking Account tink low balance";
+        public static final double BALANCE = 22;
+        public static final String ACCOUNT_IDENTIFIERS = "staticTestAccount";
+    }
 }
