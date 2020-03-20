@@ -33,5 +33,6 @@ if [ "$BUILDKITE_PULL_REQUEST" != "false" ]; then
     -Dsonar.login="$SONAR_TOKEN"
 else
   sonar-scanner \
-    -Dsonar.login="$SONAR_TOKEN"
+    -Dsonar.login="$SONAR_TOKEN" \
+    -Dsonar.branch.name="$BUILDKITE_BRANCH"
 fi
