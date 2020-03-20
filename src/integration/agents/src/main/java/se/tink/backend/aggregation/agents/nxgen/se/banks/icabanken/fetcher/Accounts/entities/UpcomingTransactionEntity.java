@@ -141,7 +141,9 @@ public class UpcomingTransactionEntity {
         }
 
         SwedishIdentifier sourceAccount = new SwedishIdentifier(fromAccountNumber);
-        return AccountIdentifier.create(URI.create(sourceAccount.toUriAsString()));
+        return sourceAccount.isValid()
+                ? AccountIdentifier.create(URI.create(sourceAccount.toUriAsString()))
+                : null;
     }
 
     @JsonIgnore
@@ -152,11 +154,15 @@ public class UpcomingTransactionEntity {
 
         if (getTypeForHash() == TransferType.BANK_TRANSFER) {
             SwedishIdentifier recipientAccount = new SwedishIdentifier(recipientAccountNumber);
-            return AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+            return recipientAccount.isValid()
+                    ? AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()))
+                    : null;
         }
 
         BankGiroIdentifier bankGiroIdentifier = new BankGiroIdentifier(recipientAccountNumber);
-        return AccountIdentifier.create(URI.create(bankGiroIdentifier.toUriAsString()));
+        return bankGiroIdentifier.isValid()
+                ? AccountIdentifier.create(URI.create(bankGiroIdentifier.toUriAsString()))
+                : null;
     }
 
     @JsonIgnore
