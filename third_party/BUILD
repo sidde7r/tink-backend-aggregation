@@ -760,16 +760,6 @@ java_library(
 )
 
 java_library(
-    # TODO: check is this used?
-    name = "jfree_jcommon",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@jfree_jcommon//jar",
-        "@junit_junit//jar",
-    ],
-)
-
-java_library(
     name = "joda_time_joda_time",
     visibility = ["//visibility:public"],
     exports = [
