@@ -2,9 +2,9 @@ package se.tink.libraries.retrypolicy;
 
 public class RetryExecutor {
 
-    private final RetryPolicy retryPolicy;
+    private RetryPolicy retryPolicy;
 
-    RetryExecutor(final RetryPolicy retryPolicy) {
+    public void setRetryPolicy(final RetryPolicy retryPolicy) {
         this.retryPolicy = retryPolicy;
     }
 

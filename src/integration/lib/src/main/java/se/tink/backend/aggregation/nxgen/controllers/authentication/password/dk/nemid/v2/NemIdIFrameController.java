@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 
 // Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
 public class NemIdIFrameController {
+
     // NemId Javascript Client Integration for mobile:
     // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Integration%20-%20Mobile.pdf
 
@@ -66,6 +67,7 @@ public class NemIdIFrameController {
             // provide credentials and submit
             setUserName(driver, username);
             setPassword(driver, password);
+
             clickLogin(driver);
 
             // validate response
@@ -116,16 +118,21 @@ public class NemIdIFrameController {
 
         sleeper.sleepFor(5_000);
 
-        return webdriverHelper
-                .waitForElement(driver, IFRAME)
-                .map(
-                        element -> {
-                            driver.switchTo().frame(element);
-                            return webdriverHelper
-                                    .waitForElement(driver, USERNAME_INPUT)
-                                    .isPresent();
-                        })
-                .orElse(false);
+        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+
+        boolean result =
+                webdriverHelper
+                        .waitForElement(driver, IFRAME)
+                        .map(
+                                element -> {
+                                    driver.switchTo().frame(element);
+                                    return webdriverHelper
+                                            .waitForElement(driver, USERNAME_INPUT)
+                                            .isPresent();
+                                })
+                        .orElse(false);
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        return result;
     }
 
     private void validateCredentials(WebDriver driver) throws LoginException {
@@ -174,7 +181,7 @@ public class NemIdIFrameController {
         }
 
         if (!isNemIdApproved) {
-            throw new IllegalStateException("NemID request was not approved.");
+            throw new NemIdNoResponseException("NemID request was not approved.");
         }
     }
 
