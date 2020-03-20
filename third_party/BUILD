@@ -1048,16 +1048,6 @@ java_library(
 )
 
 java_library(
-    name = "org_apache_velocity_velocity",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:commons_collections_commons_collections",
-        "@aggregation//:commons_lang_commons_lang",
-        "@org_apache_velocity_velocity//jar",
-    ],
-)
-
-java_library(
     name = "org_assertj_assertj_core",
     visibility = ["//visibility:public"],
     exports = [
