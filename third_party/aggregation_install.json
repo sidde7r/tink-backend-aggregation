@@ -2173,6 +2173,68 @@
                 "sha256": "3018f1fb3bca747a0f8bd384515522a4e07fb12f40af0f944c346095188a6595"
             },
             {
+                "coord": "io.dropwizard:dropwizard-validation:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1.jar",
+                "directDependencies": [
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "org.glassfish.web:javax.el:2.2.6",
+                    "org.hibernate:hibernate-validator:5.1.1.Final"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "com.fasterxml:classmate:1.0.0",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "javax.el:javax.el-api:2.2.5",
+                    "com.google.guava:guava:25.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "org.hibernate:hibernate-validator:5.1.1.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.checkerframework:checker-qual:2.0.0",
+                    "org.glassfish.web:javax.el:2.2.6"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1.jar"
+                ],
+                "sha256": "cdb845d59d3d61d68822c5c16446bbe7d98bea35a3891d7dc14cd2b74e8b743b"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1-sources.jar",
+                "directDependencies": [
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                    "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "javax.el:javax.el-api:jar:sources:2.2.5",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA",
+                    "com.fasterxml:classmate:jar:sources:1.0.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1-sources.jar"
+                ],
+                "sha256": "6c7855c2fbcf1942586cd980d038a2e0d13510a0cbb11be31d44412267374ada"
+            },
+            {
                 "coord": "io.grpc:grpc-context:1.27.0",
                 "file": "v1/https/repo.maven.apache.org/maven2/io/grpc/grpc-context/1.27.0/grpc-context-1.27.0.jar",
                 "directDependencies": [],
@@ -2889,6 +2951,28 @@
                 "sha256": "e88c52fb97591ec5bd8afdf9e74bdb0d60ad12c59f66719fec0b22bca5b1218c"
             },
             {
+                "coord": "javax.el:javax.el-api:2.2.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5.jar"
+                ],
+                "sha256": "07bed15032caa7203b43a145d8f0a0fd7a8fd74452e089627f1abe36bbb7648e"
+            },
+            {
+                "coord": "javax.el:javax.el-api:jar:sources:2.2.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5-sources.jar"
+                ],
+                "sha256": "30a7a8e9f52dfb2397b0032b2fe6625f82277aa8c772269b63c6f0e0224a6273"
+            },
+            {
                 "coord": "javax.inject:javax.inject:1",
                 "file": "v1/https/repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar",
                 "directDependencies": [],
@@ -2909,6 +2993,28 @@
                     "https://repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1-sources.jar"
                 ],
                 "sha256": "c4b87ee2911c139c3daf498a781967f1eb2e75bc1a8529a2e7b328a15d0e433e"
+            },
+            {
+                "coord": "javax.validation:validation-api:1.1.0.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar"
+                ],
+                "sha256": "f39d7ba7253e35f5ac48081ec1bc28c5df9b32ac4b7db20853e5a8e76bf7b0ed"
+            },
+            {
+                "coord": "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar"
+                ],
+                "sha256": "30c421ac184ae6204961304b60cd06db5fde3db5159e81430bcdcb386cf19470"
             },
             {
                 "coord": "javax.xml.stream:stax-api:1.0-2",
@@ -3480,6 +3586,74 @@
                 "sha256": "8686a234c133f8f530b53d317aafa7389061d75a7658f793c89c15f650bc092e"
             },
             {
+                "coord": "org.glassfish.web:javax.el:2.2.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6.jar",
+                "directDependencies": [
+                    "javax.el:javax.el-api:2.2.5"
+                ],
+                "dependencies": [
+                    "javax.el:javax.el-api:2.2.5"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6.jar"
+                ],
+                "sha256": "fc2bf63a313d0ddd6dd99808ececd02ec1bbfa5a0da3bc0c831b599699bde18a"
+            },
+            {
+                "coord": "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6-sources.jar",
+                "directDependencies": [
+                    "javax.el:javax.el-api:jar:sources:2.2.5"
+                ],
+                "dependencies": [
+                    "javax.el:javax.el-api:jar:sources:2.2.5"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6-sources.jar"
+                ],
+                "sha256": "cd01910f5c489e7dec45d564aeea8e00d17a62558ca97600efc56dabb1da673f"
+            },
+            {
+                "coord": "org.hibernate:hibernate-validator:5.1.1.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final.jar",
+                "directDependencies": [
+                    "com.fasterxml:classmate:1.0.0",
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA"
+                ],
+                "dependencies": [
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA",
+                    "com.fasterxml:classmate:1.0.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final.jar"
+                ],
+                "sha256": "5a0cfd8f7536f5c3d95de73d023501859c4e035597aa8d80461ecd42168124f5"
+            },
+            {
+                "coord": "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml:classmate:jar:sources:1.0.0",
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA"
+                ],
+                "dependencies": [
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "com.fasterxml:classmate:jar:sources:1.0.0",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final-sources.jar"
+                ],
+                "sha256": "55a71fc57a2c0ab6c68dc2720a0cf1411d703660c6c39af6f87910a9fcbce648"
+            },
+            {
                 "coord": "org.iban4j:iban4j:3.1.0",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/iban4j/iban4j/3.1.0/iban4j-3.1.0.jar",
                 "directDependencies": [],
@@ -3522,6 +3696,28 @@
                     "https://repo.maven.apache.org/maven2/org/javassist/javassist/3.26.0-GA/javassist-3.26.0-GA-sources.jar"
                 ],
                 "sha256": "32f4ae4e803fb6964ba5c4104e0e997a0d05e07da99b454cf13a63b85e3697f1"
+            },
+            {
+                "coord": "org.jboss.logging:jboss-logging:3.1.3.GA",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar"
+                ],
+                "sha256": "6813931fe607469989f76a73a22515d2489dcd8b6be9fc147093a9cec995f822"
+            },
+            {
+                "coord": "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA-sources.jar"
+                ],
+                "sha256": "7f6ffaaf2a146176051040f9d4e92f84b96a1bf03681dd4e0abfff286c744296"
             },
             {
                 "coord": "org.ow2.asm:asm:5.0.4",
@@ -3737,6 +3933,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1919567795
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -665157162
     }
 }
