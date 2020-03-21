@@ -2197,7 +2197,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_logging_log4j_log4j_api",
+    name = "org_apache_logging_log4j_log4j_api",  # Do not use, but do not remove
     artifact = "org.apache.logging.log4j:log4j-api:2.11.1",
     sha1 = "268f0fe4df3eefe052b57c87ec48517d64fb2a10",
 )
