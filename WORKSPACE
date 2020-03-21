@@ -2263,25 +2263,25 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_vavr_core",
+    name = "io_vavr_core",  # Do not use, but do not remove
     artifact = "io.vavr:vavr:0.10.0",
     sha1 = "c9f28385e6ca99f9c253c4eef879720663905329",
 )
 
 maven_jar(
-    name = "io_vavr_jackson",
+    name = "io_vavr_jackson",  # Do not use, but do not remove
     artifact = "io.vavr:vavr-jackson:0.10.0",
     sha1 = "45896adac70e6e35ec5f718a9dd9ed21e5fdbdf0",
 )
 
 maven_jar(
-    name = "io_vavr_match",
+    name = "io_vavr_match",  # Do not use, but do not remove
     artifact = "io.vavr:vavr-match:0.10.0",
     sha1 = "2088877806b1c07514a134fa10d6a7ad480cac70",
 )
 
 maven_jar(
-    name = "io_vavr_test",
+    name = "io_vavr_test",  # Do not use, but do not remove
     artifact = "io.vavr:vavr-test:0.10.0",
     sha1 = "c4ffe88bfe1f20ff9a88e7ba5771a7faab802703",
 )

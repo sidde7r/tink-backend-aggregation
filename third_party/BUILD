@@ -1443,10 +1443,10 @@ java_library(
     name = "io_vavr",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_vavr_core//jar",
-        "@io_vavr_jackson//jar",
-        "@io_vavr_match//jar",
-        "@io_vavr_test//jar",
+        "@aggregation//:io_vavr_vavr",
+        "@aggregation//:io_vavr_vavr_jackson",
+        "@aggregation//:io_vavr_vavr_match",
+        "@aggregation//:io_vavr_vavr_test",
     ],
 )
 
