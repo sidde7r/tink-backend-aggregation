@@ -2598,6 +2598,7 @@ maven_install(
         "commons-logging:commons-logging:1.2",
         "io.dropwizard:dropwizard-configuration:0.7.1",
         "io.dropwizard:dropwizard-jackson:0.7.1",
+        "io.dropwizard:dropwizard-lifecycle:0.7.1",
         "io.dropwizard:dropwizard-logging:0.7.1",
         "io.dropwizard:dropwizard-util:0.7.1",
         "io.dropwizard:dropwizard-validation:0.7.1",
