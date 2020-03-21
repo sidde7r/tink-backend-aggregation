@@ -996,7 +996,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_metrics",
+    name = "io_dropwizard_dropwizard_metrics",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-metrics:0.7.1",
     sha1 = "6ca1d7d1d1d1bcf7c803a127e0c6696d1c98fdb1",
 )
