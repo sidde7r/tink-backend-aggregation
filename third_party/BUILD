@@ -1103,7 +1103,7 @@ java_library(
     name = "org_iban4j_iban4j",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_iban4j_iban4j//jar",
+        "@aggregation//:org_iban4j_iban4j",
     ],
 )
 

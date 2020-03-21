@@ -1776,7 +1776,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_iban4j_iban4j",
+    name = "org_iban4j_iban4j",  # Do not use, but do not remove
     artifact = "org.iban4j:iban4j:3.1.0",
     sha1 = "ee5e0ee22de269a3ec2785c17a5ff2beecbb76ae",
 )
