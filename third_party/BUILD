@@ -747,7 +747,7 @@ java_library(
     name = "org_javassist_javassist",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_javassist_javassist//jar",
+        "@aggregation//:org_javassist_javassist",
     ],
 )
 
@@ -1070,13 +1070,13 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:asm_asm",
+        "@aggregation//:org_javassist_javassist",
         "@aggregation//:org_slf4j_slf4j_api",
         "@cglib_cglib//jar",
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
         "@org_hibernate_hibernate_entitymanager//jar",
         "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
-        "@org_javassist_javassist//jar",
     ],
 )
 
@@ -1273,11 +1273,11 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_javassist_javassist",
         "@aggregation//:org_slf4j_slf4j_api",
         "@dom4j_dom4j//jar",
         "@javax_servlet_javax_servlet_api//jar",
         "@junit_junit//jar",
-        "@org_javassist_javassist//jar",
     ],
 )
 

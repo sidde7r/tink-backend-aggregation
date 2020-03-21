@@ -1630,7 +1630,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_javassist_javassist",
+    name = "org_javassist_javassist",  # Do not use, but do not remove
     artifact = "org.javassist:javassist:3.26.0-GA",
     sha1 = "bb2890849968d8d8311ffba8c37b0ce16ce284dc",
 )
