@@ -1146,7 +1146,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_lifecycle",
+    name = "io_dropwizard_dropwizard_lifecycle",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-lifecycle:0.7.1",
     sha1 = "12c282d9682628d7c33654e0d62f1dbf2a883d20",
 )

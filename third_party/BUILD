@@ -500,6 +500,7 @@ java_library(
         "@aggregation//:commons_lang_commons_lang",
         "@aggregation//:io_dropwizard_dropwizard_configuration",
         "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_lifecycle",
         "@aggregation//:io_dropwizard_dropwizard_logging",
         "@aggregation//:io_dropwizard_dropwizard_util",
         "@aggregation//:io_dropwizard_dropwizard_validation",
@@ -521,7 +522,6 @@ java_library(
         "@com_codahale_metrics_metrics_json//jar",
         "@com_codahale_metrics_metrics_servlets//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
-        "@io_dropwizard_dropwizard_lifecycle//jar",
         "@io_dropwizard_dropwizard_metrics//jar",
         "@io_dropwizard_dropwizard_servlets//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
@@ -592,7 +592,7 @@ java_library(
     name = "io_dropwizard_dropwizard_lifecycle",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_dropwizard_dropwizard_lifecycle//jar",
+        "@aggregation//:io_dropwizard_dropwizard_lifecycle",
     ],
     runtime_deps = [
         "@aggregation//:com_google_guava_guava",
@@ -631,6 +631,7 @@ java_library(
         "@aggregation//:com_codahale_metrics_metrics_core",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_lifecycle",
         "@aggregation//:io_dropwizard_dropwizard_util",
         "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:org_eclipse_jetty_jetty_http",
@@ -639,7 +640,6 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@io_dropwizard_dropwizard_lifecycle//jar",
         "@io_dropwizard_dropwizard_metrics//jar",
     ],
 )
