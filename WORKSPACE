@@ -1008,7 +1008,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_jackson",
+    name = "io_dropwizard_dropwizard_jackson",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-jackson:0.7.1",
     sha1 = "6bc655d16acdb556001b1d677fab6c69f7ba296a",
 )
