@@ -2215,6 +2215,130 @@
                 "sha256": "b6a75c2987869ffdf44e3e10f7a6068db783b14b7b29a3c89e911a5cae67860f"
             },
             {
+                "coord": "io.vavr:vavr-jackson:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "io.vavr:vavr:0.10.0"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "io.vavr:vavr:0.10.0",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "io.vavr:vavr-match:0.10.0",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0.jar"
+                ],
+                "sha256": "a68535370a6404735f94d9f3fc2a081e8ed2c396915bddaa397143b16981adde"
+            },
+            {
+                "coord": "io.vavr:vavr-jackson:jar:sources:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "io.vavr:vavr:jar:sources:0.10.0"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "io.vavr:vavr-match:jar:sources:0.10.0",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "io.vavr:vavr:jar:sources:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0-sources.jar"
+                ],
+                "sha256": "95c13eb711ffb2d141a7733bab7e8f6a5eb768ff3a50c5c47359614393983032"
+            },
+            {
+                "coord": "io.vavr:vavr-match:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0.jar"
+                ],
+                "sha256": "2efeba230406964b1d7ad7cdcf1491a5e9bd3fc822d5fcc303c5487b2f674653"
+            },
+            {
+                "coord": "io.vavr:vavr-match:jar:sources:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0-sources.jar"
+                ],
+                "sha256": "5715fca8eb73ffd51186dff0b6950e338941014a5a8fbc760fc208fe64008d22"
+            },
+            {
+                "coord": "io.vavr:vavr-test:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0.jar",
+                "directDependencies": [
+                    "io.vavr:vavr:0.10.0"
+                ],
+                "dependencies": [
+                    "io.vavr:vavr-match:0.10.0",
+                    "io.vavr:vavr:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0.jar"
+                ],
+                "sha256": "89c5443b10d1c04d0a77e931641d9a54e9c35495cbfe9cf728b0744c156cdd52"
+            },
+            {
+                "coord": "io.vavr:vavr-test:jar:sources:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0-sources.jar",
+                "directDependencies": [
+                    "io.vavr:vavr:jar:sources:0.10.0"
+                ],
+                "dependencies": [
+                    "io.vavr:vavr-match:jar:sources:0.10.0",
+                    "io.vavr:vavr:jar:sources:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0-sources.jar"
+                ],
+                "sha256": "e227b383e64b75c12fa948efe8ac14ee1b8f7fda52b1f1ce3714eebbba5a7ff6"
+            },
+            {
+                "coord": "io.vavr:vavr:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0.jar",
+                "directDependencies": [
+                    "io.vavr:vavr-match:0.10.0"
+                ],
+                "dependencies": [
+                    "io.vavr:vavr-match:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0.jar"
+                ],
+                "sha256": "0c7966b95c22ac5c4cb809d546696529da29374f8776163177847d38573ede61"
+            },
+            {
+                "coord": "io.vavr:vavr:jar:sources:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0-sources.jar",
+                "directDependencies": [
+                    "io.vavr:vavr-match:jar:sources:0.10.0"
+                ],
+                "dependencies": [
+                    "io.vavr:vavr-match:jar:sources:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0-sources.jar"
+                ],
+                "sha256": "e88c52fb97591ec5bd8afdf9e74bdb0d60ad12c59f66719fec0b22bca5b1218c"
+            },
+            {
                 "coord": "javax.inject:javax.inject:1",
                 "file": "v1/https/repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar",
                 "directDependencies": [],
@@ -2861,6 +2985,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -231601179
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1444321626
     }
 }
