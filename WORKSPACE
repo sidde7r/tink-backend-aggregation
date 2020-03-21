@@ -244,6 +244,8 @@ GRPC_JAVA_NANO_VERSION = "1.21.1"
 
 NETTY_VERSION = "4.1.38.Final"
 
+NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION = "2.0.25.Final"
+
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
     sha256 = "b3823d7bca0c3513d48ef43de63f6a48410040f5f7b16d5eceea0adb98d07f42",
@@ -1621,7 +1623,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_tcnative_boringssl_static",  # Do not use, but do not remove
-    artifact = "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
+    artifact = "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
     sha1 = "185980556f9f083b5339825f19c9641c6c879417",
 )
 
@@ -2617,7 +2619,7 @@ maven_install(
         "io.netty:netty-handler:%s" % NETTY_VERSION,
         "io.netty:netty-resolver-dns:%s" % NETTY_VERSION,
         "io.netty:netty-resolver:%s" % NETTY_VERSION,
-        "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
+        "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
         "io.netty:netty-transport:%s" % NETTY_VERSION,
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
