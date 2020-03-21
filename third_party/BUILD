@@ -497,6 +497,7 @@ java_library(
         "@aggregation//:com_sun_jersey_jersey_core",
         "@aggregation//:com_sun_jersey_jersey_server",
         "@aggregation//:commons_lang_commons_lang",
+        "@aggregation//:io_dropwizard_dropwizard_util",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_server",
@@ -515,7 +516,6 @@ java_library(
         "@io_dropwizard_dropwizard_logging//jar",
         "@io_dropwizard_dropwizard_metrics//jar",
         "@io_dropwizard_dropwizard_servlets//jar",
-        "@io_dropwizard_dropwizard_util//jar",
         "@io_dropwizard_dropwizard_validation//jar",
         "@javax_el_javax_el_api//jar",
         "@javax_validation_validation_api//jar",
@@ -596,13 +596,13 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_dropwizard_dropwizard_util",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_server",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@io_dropwizard_dropwizard_util//jar",
     ],
 )
 
@@ -630,6 +630,7 @@ java_library(
     exports = [
         "@aggregation//:com_codahale_metrics_metrics_core",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_dropwizard_dropwizard_util",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_server",
@@ -639,7 +640,6 @@ java_library(
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
         "@io_dropwizard_dropwizard_metrics//jar",
-        "@io_dropwizard_dropwizard_util//jar",
         "@io_dropwizard_dropwizard_validation//jar",
     ],
 )
