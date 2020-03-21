@@ -2625,6 +2625,7 @@ maven_install(
         "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
         "org.iban4j:iban4j:3.1.0",
+        "org.javassist:javassist:3.26.0-GA",
         "org.ow2.asm:asm:5.0.4",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.slf4j:slf4j-api:1.7.22",
