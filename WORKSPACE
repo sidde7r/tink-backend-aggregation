@@ -242,6 +242,8 @@ GRPC_JAVA_VERSION = "1.23.0"
 
 GRPC_JAVA_NANO_VERSION = "1.21.1"
 
+NETTY_VERSION = "4.1.38.Final"
+
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
     sha256 = "b3823d7bca0c3513d48ef43de63f6a48410040f5f7b16d5eceea0adb98d07f42",
@@ -397,7 +399,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_resolver",  # Do not use, but do not remove
-    artifact = "io.netty:netty-resolver:4.1.38.Final",
+    artifact = "io.netty:netty-resolver:%s" % NETTY_VERSION,
     sha1 = "b00be4aa309e9b56e498191aa8c73e4f393759ed",
 )
 
@@ -405,7 +407,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_resolver_dns",  # Do not use, but do not remove
-    artifact = "io.netty:netty-resolver-dns:4.1.38.Final",
+    artifact = "io.netty:netty-resolver-dns:%s" % NETTY_VERSION,
     sha1 = "a628b322a1a7fadc427edc15eb3c141d50706437",
 )
 
@@ -413,7 +415,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_dns",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec-dns:4.1.38.Final",
+    artifact = "io.netty:netty-codec-dns:%s" % NETTY_VERSION,
     sha1 = "cfc06c8566e4bf060a0360e28865e70e37d150e8",
 )
 
@@ -691,7 +693,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec:4.1.38.Final",
+    artifact = "io.netty:netty-codec:%s" % NETTY_VERSION,
     sha1 = "ccfbdfc727cbf702350572a0b12fe92185ebf162",
 )
 
@@ -807,7 +809,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_handler_proxy",  # Do not use, but do not remove
-    artifact = "io.netty:netty-handler-proxy:4.1.38.Final",
+    artifact = "io.netty:netty-handler-proxy:%s" % NETTY_VERSION,
     sha1 = "dbb09abb0c9c494cb651234eed428189eb730872",
 )
 
@@ -1163,7 +1165,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_common",  # Do not use, but do not remove
-    artifact = "io.netty:netty-common:4.1.38.Final",
+    artifact = "io.netty:netty-common:%s" % NETTY_VERSION,
     sha1 = "6f8aae763f743d91fb1ba1e9011dae0ef4f6ff34",
 )
 
@@ -1189,7 +1191,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_handler",  # Do not use, but do not remove
-    artifact = "io.netty:netty-handler:4.1.38.Final",
+    artifact = "io.netty:netty-handler:%s" % NETTY_VERSION,
     sha1 = "ebf1f2bd0dad5e16aa1fc48d32e5dbe507b38d53",
 )
 
@@ -1317,7 +1319,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_socks",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec-socks:4.1.38.Final",
+    artifact = "io.netty:netty-codec-socks:%s" % NETTY_VERSION,
     sha1 = "9a6b2c27383061ac9b6de10e6f0f81a7283216f5",
 )
 
@@ -1325,7 +1327,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_buffer",  # Do not use, but do not remove
-    artifact = "io.netty:netty-buffer:4.1.38.Final",
+    artifact = "io.netty:netty-buffer:%s" % NETTY_VERSION,
     sha1 = "d16cf15d29c409987cecde77407fbb6f1e16d262",
 )
 
@@ -1411,7 +1413,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_http2",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec-http2:4.1.38.Final",
+    artifact = "io.netty:netty-codec-http2:%s" % NETTY_VERSION,
     sha1 = "0dc353dd011c512d5e631a4bee517b17ed3155c1",
 )
 
@@ -1473,7 +1475,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_transport",  # Do not use, but do not remove
-    artifact = "io.netty:netty-transport:4.1.38.Final",
+    artifact = "io.netty:netty-transport:%s" % NETTY_VERSION,
     sha1 = "cd8b612d5daa42d1be3bb3203e4857597d5db79b",
 )
 
@@ -1699,7 +1701,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_http",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec-http:4.1.38.Final",
+    artifact = "io.netty:netty-codec-http:%s" % NETTY_VERSION,
     sha1 = "4d55b3cdb74cd140d262de96987ebd369125a64c",
 )
 
@@ -2326,7 +2328,7 @@ maven_jar(
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_dev_tools",  # Do not use, but do not remove
-    artifact = "io.netty:netty-dev-tools:4.1.38.Final",
+    artifact = "io.netty:netty-dev-tools:%s" % NETTY_VERSION,
     sha1 = "1208cf0fb96a4faa8030c735af3410cfd04012f9",
 )
 
@@ -2603,20 +2605,20 @@ maven_install(
         "commons-io:commons-io:2.5",
         "commons-logging:commons-logging:1.2",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
-        "io.netty:netty-buffer:4.1.38.Final",
-        "io.netty:netty-codec-dns:4.1.38.Final",
-        "io.netty:netty-codec-http2:4.1.38.Final",
-        "io.netty:netty-codec-http:4.1.38.Final",
-        "io.netty:netty-codec-socks:4.1.38.Final",
-        "io.netty:netty-codec:4.1.38.Final",
-        "io.netty:netty-common:4.1.38.Final",
-        "io.netty:netty-dev-tools:4.1.38.Final",
-        "io.netty:netty-handler-proxy:4.1.38.Final",
-        "io.netty:netty-handler:4.1.38.Final",
-        "io.netty:netty-resolver-dns:4.1.38.Final",
-        "io.netty:netty-resolver:4.1.38.Final",
+        "io.netty:netty-buffer:%s" % NETTY_VERSION,
+        "io.netty:netty-codec-dns:%s" % NETTY_VERSION,
+        "io.netty:netty-codec-http2:%s" % NETTY_VERSION,
+        "io.netty:netty-codec-http:%s" % NETTY_VERSION,
+        "io.netty:netty-codec-socks:%s" % NETTY_VERSION,
+        "io.netty:netty-codec:%s" % NETTY_VERSION,
+        "io.netty:netty-common:%s" % NETTY_VERSION,
+        "io.netty:netty-dev-tools:%s" % NETTY_VERSION,
+        "io.netty:netty-handler-proxy:%s" % NETTY_VERSION,
+        "io.netty:netty-handler:%s" % NETTY_VERSION,
+        "io.netty:netty-resolver-dns:%s" % NETTY_VERSION,
+        "io.netty:netty-resolver:%s" % NETTY_VERSION,
         "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
-        "io.netty:netty-transport:4.1.38.Final",
+        "io.netty:netty-transport:%s" % NETTY_VERSION,
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
