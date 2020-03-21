@@ -2595,6 +2595,7 @@ maven_install(
         "commons-io:commons-io:2.5",
         "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
+        "io.dropwizard:dropwizard-util:0.7.1",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:%s" % NETTY_VERSION,
         "io.netty:netty-codec-dns:%s" % NETTY_VERSION,
