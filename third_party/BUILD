@@ -1451,31 +1451,6 @@ java_library(
 )
 
 java_library(
-    name = "java_spark",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:commons_logging_commons_logging",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@com_sparkjava_spark_core//jar",
-        "@javax_servlet_javax_servlet_api_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_client_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_http_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_io_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_security_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_server_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_servlet_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_util_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_webapp_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_xml_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_api_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_client_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_common_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_server_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_servlet_spark_dep//jar",
-    ],
-)
-
-java_library(
     name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
     visibility = ["//visibility:public"],
     exports = [
