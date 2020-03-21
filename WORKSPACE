@@ -2615,6 +2615,7 @@ maven_install(
         "org.apache.commons:commons-lang3:3.4",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
+        "org.apache.logging.log4j:log4j-api:2.11.1",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
