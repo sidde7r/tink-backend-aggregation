@@ -1029,18 +1029,6 @@ java_library(
 )
 
 java_library(
-    name = "org_eclipse_jetty_jetty_servlets",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:org_eclipse_jetty_jetty_http",
-        "@aggregation//:org_eclipse_jetty_jetty_io",
-        "@aggregation//:org_eclipse_jetty_jetty_util",
-        "@org_eclipse_jetty_jetty_continuation//jar",
-        "@org_eclipse_jetty_jetty_servlets//jar",
-    ],
-)
-
-java_library(
     name = "org_eclipse_jetty_orbit_javax_servlet",
     visibility = ["//visibility:public"],
     exports = [
