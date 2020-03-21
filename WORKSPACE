@@ -1538,7 +1538,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_orbit_javax_servlet",
+    name = "org_eclipse_jetty_orbit_javax_servlet",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
     sha1 = "0aaaa85845fb5c59da00193f06b8e5278d8bf3f8",
 )

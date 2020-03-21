@@ -494,6 +494,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
         "@com_codahale_metrics_metrics_annotation//jar",
@@ -523,7 +524,6 @@ java_library(
         "@org_eclipse_jetty_jetty_server//jar",
         "@org_eclipse_jetty_jetty_servlet//jar",
         "@org_eclipse_jetty_jetty_servlets//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
         "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
         "@org_glassfish_web_javax_el//jar",
         "@org_hibernate_hibernate_validator//jar",
@@ -541,9 +541,9 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:ch_qos_logback_logback_classic",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@com_codahale_metrics_metrics_core//jar",
         "@org_eclipse_jetty_jetty_servlet//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
     ],
 )
 
@@ -577,6 +577,7 @@ java_import(
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:com_sun_jersey_jersey_core",
         "@aggregation//:com_sun_jersey_jersey_server",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@com_codahale_metrics_metrics_annotation//jar",
         "@com_codahale_metrics_metrics_core//jar",
         "@com_codahale_metrics_metrics_jersey//jar",
@@ -584,7 +585,6 @@ java_import(
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_logging//jar",
         "@io_dropwizard_dropwizard_validation//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
     ],
 )
 
@@ -599,10 +599,10 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@aggregation//:org_slf4j_slf4j_api",
         "@io_dropwizard_dropwizard_util//jar",
         "@org_eclipse_jetty_jetty_server//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
     ],
 )
 
@@ -632,6 +632,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_codahale_metrics_metrics_core//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
@@ -640,7 +641,6 @@ java_library(
         "@io_dropwizard_dropwizard_util//jar",
         "@io_dropwizard_dropwizard_validation//jar",
         "@org_eclipse_jetty_jetty_server//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
     ],
 )
 
@@ -1044,7 +1044,7 @@ java_library(
     name = "org_eclipse_jetty_orbit_javax_servlet",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
     ],
 )
 
