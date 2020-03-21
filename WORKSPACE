@@ -2625,6 +2625,7 @@ maven_install(
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
         "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
         "org.iban4j:iban4j:3.1.0",
         "org.javassist:javassist:3.26.0-GA",
