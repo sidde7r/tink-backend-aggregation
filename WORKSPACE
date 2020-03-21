@@ -822,7 +822,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_slf4j_jul_to_slf4j",
+    name = "org_slf4j_jul_to_slf4j",  # Do not use, but do not remove
     artifact = "org.slf4j:jul-to-slf4j:1.7.6",
     sha1 = "322e2af1694ccc75d33f4d11216c852121d8fefd",
 )
@@ -858,7 +858,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_logging",
+    name = "io_dropwizard_dropwizard_logging",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-logging:0.7.1",
     sha1 = "039d41453b0cb37c4c6239566ccb52787a68d270",
 )
@@ -1410,7 +1410,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_slf4j_jcl_over_slf4j",
+    name = "org_slf4j_jcl_over_slf4j",  # Do not use, but do not remove
     artifact = "org.slf4j:jcl-over-slf4j:1.7.6",
     sha1 = "ab1648fe1dd6f1e5c2ec6d12f394672bb8c1036a",
 )

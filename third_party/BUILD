@@ -498,6 +498,7 @@ java_library(
         "@aggregation//:com_sun_jersey_jersey_server",
         "@aggregation//:commons_lang_commons_lang",
         "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_logging",
         "@aggregation//:io_dropwizard_dropwizard_util",
         "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:javax_el_javax_el_api",
@@ -510,6 +511,8 @@ java_library(
         "@aggregation//:org_glassfish_web_javax_el",
         "@aggregation//:org_hibernate_hibernate_validator",
         "@aggregation//:org_jboss_logging_jboss_logging",
+        "@aggregation//:org_slf4j_jcl_over_slf4j",
+        "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
         "@com_codahale_metrics_metrics_healthchecks//jar",
@@ -519,7 +522,6 @@ java_library(
         "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
-        "@io_dropwizard_dropwizard_logging//jar",
         "@io_dropwizard_dropwizard_metrics//jar",
         "@io_dropwizard_dropwizard_servlets//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
@@ -528,8 +530,6 @@ java_library(
         "@org_eclipse_jetty_jetty_servlet//jar",
         "@org_eclipse_jetty_jetty_servlets//jar",
         "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
-        "@org_slf4j_jcl_over_slf4j//jar",
-        "@org_slf4j_jul_to_slf4j//jar",
     ],
 )
 
@@ -581,10 +581,10 @@ java_import(
         "@aggregation//:com_sun_jersey_jersey_core",
         "@aggregation//:com_sun_jersey_jersey_server",
         "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_logging",
         "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@com_sun_jersey_jersey_servlet//jar",
-        "@io_dropwizard_dropwizard_logging//jar",
     ],
 )
 
@@ -615,12 +615,12 @@ java_library(
         "@aggregation//:com_codahale_metrics_metrics_core",
         "@aggregation//:com_codahale_metrics_metrics_logback",
         "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_logging",
         "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:org_eclipse_jetty_jetty_util",
+        "@aggregation//:org_slf4j_jcl_over_slf4j",
+        "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@io_dropwizard_dropwizard_logging//jar",
-        "@org_slf4j_jcl_over_slf4j//jar",
-        "@org_slf4j_jul_to_slf4j//jar",
     ],
 )
 
