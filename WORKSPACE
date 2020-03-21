@@ -500,7 +500,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_validation_validation_api",
+    name = "javax_validation_validation_api",  # Do not use, but do not remove
     artifact = "javax.validation:validation-api:1.1.0.Final",
     sha1 = "8613ae82954779d518631e05daa73a6a954817d5",
 )
@@ -700,7 +700,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_el_javax_el_api",
+    name = "javax_el_javax_el_api",  # Do not use, but do not remove
     artifact = "javax.el:javax.el-api:2.2.5",
     sha1 = "370140e991eefb212a6d6baedbce585f00ef76e0",
 )
@@ -894,7 +894,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_validation",
+    name = "io_dropwizard_dropwizard_validation",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-validation:0.7.1",
     sha1 = "59a73cdcab2489b6dd342926bb4250e9c62e6938",
 )
@@ -960,7 +960,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_glassfish_web_javax_el",
+    name = "org_glassfish_web_javax_el",  # Do not use, but do not remove
     artifact = "org.glassfish.web:javax.el:2.2.6",
     sha1 = "0232abfe1f919127e9cfcd6e4e2c6324bb394535",
 )
@@ -1116,7 +1116,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_jboss_logging_jboss_logging",
+    name = "org_jboss_logging_jboss_logging",  # Do not use, but do not remove
     artifact = "org.jboss.logging:jboss-logging:3.1.3.GA",
     sha1 = "64499e907f19e5e1b3fdc02f81440c1832fe3545",
 )
@@ -1642,7 +1642,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_validator",
+    name = "org_hibernate_hibernate_validator",  # Do not use, but do not remove
     artifact = "org.hibernate:hibernate-validator:5.1.1.Final",
     sha1 = "2bd44618dc13c2be39231776a0edf0e1f867dedc",
 )
