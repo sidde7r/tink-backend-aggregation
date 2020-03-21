@@ -374,7 +374,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_httpclient",
+    name = "com_codahale_metrics_metrics_httpclient",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-httpclient:3.0.2",
     sha1 = "c658daf41b1ecf934ccd21e83eeeb18703355afb",
 )
@@ -494,7 +494,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_logback",
+    name = "com_codahale_metrics_metrics_logback",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-logback:3.0.2",
     sha1 = "3bfec071f1ec390d10b17959271dc54195d2ab0d",
 )
@@ -620,7 +620,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_jvm",
+    name = "com_codahale_metrics_metrics_jvm",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-jvm:3.0.2",
     sha1 = "d0c6032905a3c6793c3ddcfade79e2b5f3ec1e25",
 )
@@ -644,7 +644,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_core",
+    name = "com_codahale_metrics_metrics_core",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-core:3.0.2",
     sha1 = "c6a7fb32776e984b64ff1a548e3044238ea5a931",
 )
@@ -1026,7 +1026,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_jetty9",
+    name = "com_codahale_metrics_metrics_jetty9",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-jetty9:3.0.2",
     sha1 = "39cc25ad4db6320f6a97f755ebe00ed5def71b9a",
 )
@@ -1056,7 +1056,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_annotation",
+    name = "com_codahale_metrics_metrics_annotation",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-annotation:3.0.2",
     sha1 = "49cee8ba1d76f67c59146546448fc0f3eef32b75",
 )
@@ -1330,7 +1330,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_jersey",
+    name = "com_codahale_metrics_metrics_jersey",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-jersey:3.0.2",
     sha1 = "6ece3e06de45ee7a7e73b66ca36862f27ca88717",
 )
@@ -1434,13 +1434,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_healthchecks",
+    name = "com_codahale_metrics_metrics_healthchecks",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-healthchecks:3.0.2",
     sha1 = "d99c34c33eceb7bc0e23c5b63fc517b0a53871c4",
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_servlets",
+    name = "com_codahale_metrics_metrics_servlets",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-servlets:3.0.2",
     sha1 = "58f7749af5c0f66d74e23cacf1bd94b30694ee51",
 )
@@ -1788,7 +1788,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_json",
+    name = "com_codahale_metrics_metrics_json",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-json:3.0.2",
     sha1 = "46198fe0284104519b60ff2ad49f71c98ba942f2",
 )
