@@ -2143,7 +2143,7 @@ bind(
 )
 
 maven_jar(
-    name = "org_reflections_reflections",
+    name = "org_reflections_reflections",  # Do not use, but do not remove
     artifact = "org.reflections:reflections:0.9.11",
     sha1 = "4c686033d918ec1727e329b7222fcb020152e32b",
 )

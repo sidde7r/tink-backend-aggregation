@@ -1267,7 +1267,7 @@ java_library(
     name = "org_reflections_reflections",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_reflections_reflections//jar",
+        "@aggregation//:org_reflections_reflections",
     ],
     runtime_deps = [
         "@aggregation//:com_google_code_findbugs_jsr305",
