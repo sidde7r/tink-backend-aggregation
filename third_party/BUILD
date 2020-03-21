@@ -477,10 +477,13 @@ java_library(
         "@aggregation//:ch_qos_logback_logback_core",
         "@aggregation//:com_codahale_metrics_metrics_annotation",
         "@aggregation//:com_codahale_metrics_metrics_core",
+        "@aggregation//:com_codahale_metrics_metrics_healthchecks",
         "@aggregation//:com_codahale_metrics_metrics_jersey",
         "@aggregation//:com_codahale_metrics_metrics_jetty9",
+        "@aggregation//:com_codahale_metrics_metrics_json",
         "@aggregation//:com_codahale_metrics_metrics_jvm",
         "@aggregation//:com_codahale_metrics_metrics_logback",
+        "@aggregation//:com_codahale_metrics_metrics_servlets",
         "@aggregation//:com_fasterxml_classmate",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
@@ -519,9 +522,6 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@com_codahale_metrics_metrics_healthchecks//jar",
-        "@com_codahale_metrics_metrics_json//jar",
-        "@com_codahale_metrics_metrics_servlets//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
         "@io_dropwizard_dropwizard_servlets//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
@@ -551,7 +551,7 @@ java_library(
     name = "com_codahale_metrics_metrics_healthchecks",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_codahale_metrics_metrics_healthchecks//jar",
+        "@aggregation//:com_codahale_metrics_metrics_healthchecks",
     ],
 )
 
