@@ -2123,6 +2123,114 @@
                 "sha256": "8be1ceba5de50331197ca6cfb4ac2378c93879b9a2c3f1c6506498610812c2a5"
             },
             {
+                "coord": "io.dropwizard:dropwizard-logging:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1.jar",
+                "directDependencies": [
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "org.slf4j:jul-to-slf4j:1.7.6",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "com.codahale.metrics:metrics-logback:3.0.2",
+                    "io.dropwizard:dropwizard-validation:0.7.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "org.slf4j:jcl-over-slf4j:1.7.6",
+                    "org.slf4j:log4j-over-slf4j:1.7.6",
+                    "io.dropwizard:dropwizard-jackson:0.7.1"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "com.fasterxml:classmate:1.0.0",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
+                    "javax.el:javax.el-api:2.2.5",
+                    "com.google.guava:guava:25.1-jre",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "org.slf4j:jul-to-slf4j:1.7.6",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.codahale.metrics:metrics-logback:3.0.2",
+                    "org.hibernate:hibernate-validator:5.1.1.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA",
+                    "io.dropwizard:dropwizard-validation:0.7.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "org.slf4j:jcl-over-slf4j:1.7.6",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "org.slf4j:log4j-over-slf4j:1.7.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.checkerframework:checker-qual:2.0.0",
+                    "io.dropwizard:dropwizard-jackson:0.7.1",
+                    "org.glassfish.web:javax.el:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1.jar"
+                ],
+                "sha256": "ff2fa595ab4eed35c8c0dacdac926fdd4fff6b7bc6c89a9a45ecfbb020bfed04"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-logging:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-logback:jar:sources:3.0.2",
+                    "org.slf4j:jcl-over-slf4j:jar:sources:1.7.6",
+                    "org.slf4j:jul-to-slf4j:jar:sources:1.7.6",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "org.slf4j:log4j-over-slf4j:jar:sources:1.7.6",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-logback:jar:sources:3.0.2",
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "org.slf4j:jcl-over-slf4j:jar:sources:1.7.6",
+                    "org.slf4j:jul-to-slf4j:jar:sources:1.7.6",
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "javax.el:javax.el-api:jar:sources:2.2.5",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:sources:2.9.9",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:sources:2.9.9",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:jar:sources:2.9.9",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA",
+                    "org.slf4j:log4j-over-slf4j:jar:sources:1.7.6",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "com.fasterxml:classmate:jar:sources:1.0.0",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1-sources.jar"
+                ],
+                "sha256": "acf046e2766e37a6a14958a219adb0bc67e2a78ceee122d5703877a4cae3ef4a"
+            },
+            {
                 "coord": "io.dropwizard:dropwizard-util:0.7.1",
                 "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-util/0.7.1/dropwizard-util-0.7.1.jar",
                 "directDependencies": [
@@ -3808,6 +3916,96 @@
                 "sha256": "f9ed0772ffa1423a332076a20fb5f181b2c77d6cc06d11463794a866db0276e8"
             },
             {
+                "coord": "org.slf4j:jcl-over-slf4j:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6.jar"
+                ],
+                "sha256": "d52f5e9a861f4e124ec43d711b566b4c2afe6e0709b490497fb9ca33e1ca0ba5"
+            },
+            {
+                "coord": "org.slf4j:jcl-over-slf4j:jar:sources:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6-sources.jar"
+                ],
+                "sha256": "db8a2ac0475d26b28925b16e1f796b76984ae2fbe84996c4e2396fcf3e60600e"
+            },
+            {
+                "coord": "org.slf4j:jul-to-slf4j:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6.jar"
+                ],
+                "sha256": "b71451847d2643a1bfe83df69fbf696860fe2689b95c9bd96188fb7808444f64"
+            },
+            {
+                "coord": "org.slf4j:jul-to-slf4j:jar:sources:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6-sources.jar"
+                ],
+                "sha256": "3704c5ef867e6873f253230371a01adcc266afb10ba40582ce777c5329e98068"
+            },
+            {
+                "coord": "org.slf4j:log4j-over-slf4j:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6.jar"
+                ],
+                "sha256": "316715ba18aaea9ec5a7a06edc2d4a634c0f6a213762cc9e387575b5be419b05"
+            },
+            {
+                "coord": "org.slf4j:log4j-over-slf4j:jar:sources:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6-sources.jar"
+                ],
+                "sha256": "ac723dc2914c7a9bd1e85c00711ed62fca4c2d357a34d0843d895f073eaa459b"
+            },
+            {
                 "coord": "org.slf4j:slf4j-api:1.7.22",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.7.22/slf4j-api-1.7.22.jar",
                 "directDependencies": [],
@@ -3933,6 +4131,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -665157162
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1634064567
     }
 }
