@@ -2622,6 +2622,7 @@ maven_install(
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
         "org.codehaus.woodstox:stax2-api:4.1",
+        "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
         "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
