@@ -1349,7 +1349,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
         "@aggregation//:org_apache_logging_log4j_log4j_api",
-        "@org_apache_logging_log4j_log4j_core//jar",
+        "@aggregation//:org_apache_logging_log4j_log4j_core",
     ],
 )
 
@@ -1545,9 +1545,9 @@ java_library(
         "@aggregation//:io_netty_netty_dev_tools",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_apache_logging_log4j_log4j_api",
+        "@aggregation//:org_apache_logging_log4j_log4j_core",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_oracle_substratevm_svm//jar",
-        "@org_apache_logging_log4j_log4j_core//jar",
         "@org_mockito_mockito_core//jar",
     ],
 )
