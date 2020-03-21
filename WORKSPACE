@@ -237,7 +237,7 @@ http_file(
 PROTOBUF_VERSION = "3.9.0"
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 GRPC_JAVA_VERSION = "1.23.0"
 
 GRPC_JAVA_NANO_VERSION = "1.21.1"
@@ -394,7 +394,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_resolver",  # Do not use, but do not remove
     artifact = "io.netty:netty-resolver:4.1.38.Final",
@@ -402,7 +402,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_resolver_dns",  # Do not use, but do not remove
     artifact = "io.netty:netty-resolver-dns:4.1.38.Final",
@@ -410,7 +410,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_dns",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec-dns:4.1.38.Final",
@@ -688,7 +688,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec:4.1.38.Final",
@@ -804,7 +804,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_handler_proxy",  # Do not use, but do not remove
     artifact = "io.netty:netty-handler-proxy:4.1.38.Final",
@@ -1160,7 +1160,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_common",  # Do not use, but do not remove
     artifact = "io.netty:netty-common:4.1.38.Final",
@@ -1186,7 +1186,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_handler",  # Do not use, but do not remove
     artifact = "io.netty:netty-handler:4.1.38.Final",
@@ -1314,7 +1314,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_socks",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec-socks:4.1.38.Final",
@@ -1322,7 +1322,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_buffer",  # Do not use, but do not remove
     artifact = "io.netty:netty-buffer:4.1.38.Final",
@@ -1408,7 +1408,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_http2",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec-http2:4.1.38.Final",
@@ -1470,7 +1470,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_transport",  # Do not use, but do not remove
     artifact = "io.netty:netty-transport:4.1.38.Final",
@@ -1616,7 +1616,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_tcnative_boringssl_static",  # Do not use, but do not remove
     artifact = "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
@@ -1696,7 +1696,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_http",  # Do not use, but do not remove
     artifact = "io.netty:netty-codec-http:4.1.38.Final",
@@ -2323,7 +2323,7 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_dev_tools",  # Do not use, but do not remove
     artifact = "io.netty:netty-dev-tools:4.1.38.Final",
