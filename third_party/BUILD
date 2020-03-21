@@ -454,7 +454,7 @@ java_library(
     name = "io_dropwizard_dropwizard_configuration",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_dropwizard_dropwizard_configuration//jar",
+        "@aggregation//:io_dropwizard_dropwizard_configuration",
     ],
     runtime_deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
@@ -497,6 +497,7 @@ java_library(
         "@aggregation//:com_sun_jersey_jersey_core",
         "@aggregation//:com_sun_jersey_jersey_server",
         "@aggregation//:commons_lang_commons_lang",
+        "@aggregation//:io_dropwizard_dropwizard_configuration",
         "@aggregation//:io_dropwizard_dropwizard_jackson",
         "@aggregation//:io_dropwizard_dropwizard_logging",
         "@aggregation//:io_dropwizard_dropwizard_util",
@@ -519,7 +520,6 @@ java_library(
         "@com_codahale_metrics_metrics_json//jar",
         "@com_codahale_metrics_metrics_servlets//jar",
         "@com_sun_jersey_jersey_servlet//jar",
-        "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
         "@io_dropwizard_dropwizard_metrics//jar",
