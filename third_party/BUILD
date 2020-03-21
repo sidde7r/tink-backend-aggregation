@@ -718,16 +718,6 @@ java_library(
 )
 
 java_library(
-    name = "io_prometheus_simpleclient_servlet",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_prometheus_simpleclient//jar",
-        "@io_prometheus_simpleclient_common//jar",
-        "@io_prometheus_simpleclient_servlet//jar",
-    ],
-)
-
-java_library(
     name = "io_protostuff_protostuff_api",
     visibility = ["//visibility:public"],
     exports = [
