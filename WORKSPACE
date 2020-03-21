@@ -2471,14 +2471,6 @@ maven_jar(
 
 ### === END === Java Spark dependencies
 
-# Newer version than what's loaded by @io_grpc_grpc_java grpc_java_repositories()
-http_archive(
-    name = "com_google_protobuf_javalite",
-    sha256 = "a8cb9b8db16aff743a4bc8193abec96cf6ac0b0bc027121366b43ae8870f6fd3",
-    strip_prefix = "protobuf-fa08222434bc58d743e8c2cc716bc219c3d0f44e",
-    urls = ["https://github.com/google/protobuf/archive/fa08222434bc58d743e8c2cc716bc219c3d0f44e.zip"],
-)
-
 # Used by java_grpc_library
 
 http_archive(
