@@ -674,7 +674,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_jersey_server",
+    name = "com_sun_jersey_jersey_server",  # Do not use, but do not remove
     artifact = "com.sun.jersey:jersey-server:1.18.1",
     sha1 = "6e4e4fb491ea360a0f4d672729224cbbb9cb456d",
 )
