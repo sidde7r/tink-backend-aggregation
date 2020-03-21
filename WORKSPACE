@@ -1592,7 +1592,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_jersey_servlet",
+    name = "com_sun_jersey_jersey_servlet",  # Do not use, but do not remove
     artifact = "com.sun.jersey:jersey-servlet:1.18.1",
     sha1 = "ecec31589375845cbd42e75c32b64a1475c44bb4",
 )

@@ -496,6 +496,7 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_sun_jersey_jersey_core",
         "@aggregation//:com_sun_jersey_jersey_server",
+        "@aggregation//:com_sun_jersey_jersey_servlet",
         "@aggregation//:commons_lang_commons_lang",
         "@aggregation//:io_dropwizard_dropwizard_configuration",
         "@aggregation//:io_dropwizard_dropwizard_jackson",
@@ -519,7 +520,6 @@ java_library(
         "@com_codahale_metrics_metrics_healthchecks//jar",
         "@com_codahale_metrics_metrics_json//jar",
         "@com_codahale_metrics_metrics_servlets//jar",
-        "@com_sun_jersey_jersey_servlet//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
         "@io_dropwizard_dropwizard_lifecycle//jar",
         "@io_dropwizard_dropwizard_metrics//jar",
@@ -580,11 +580,11 @@ java_import(
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:com_sun_jersey_jersey_core",
         "@aggregation//:com_sun_jersey_jersey_server",
+        "@aggregation//:com_sun_jersey_jersey_servlet",
         "@aggregation//:io_dropwizard_dropwizard_jackson",
         "@aggregation//:io_dropwizard_dropwizard_logging",
         "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
-        "@com_sun_jersey_jersey_servlet//jar",
     ],
 )
 
