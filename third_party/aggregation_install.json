@@ -225,6 +225,400 @@
                 "sha256": "045a7f572b8432062ce735451930569824bc1bec53a6cb51c73cf8ee1985f5a8"
             },
             {
+                "coord": "com.codahale.metrics:metrics-annotation:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2.jar"
+                ],
+                "sha256": "26dad71e3dee3ad44a007fea76ee7a9d5e86485b27c619f2db9a6ee329cb6bf6"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-annotation:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2-sources.jar"
+                ],
+                "sha256": "65dc98d5e81bebe64928ca336f951767fb1bc487bd4cac6f6bdf6125035b59c7"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-core:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar"
+                ],
+                "sha256": "9e819c6f4d5f446e00cb05b08d0127226683b725a94d161288aea870c1bd2f63"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2-sources.jar"
+                ],
+                "sha256": "35a0ffa4209ca501244e0d1e87ab1864d2b119b5b62f90b5f13eddc4910bf182"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-healthchecks:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2.jar"
+                ],
+                "sha256": "87b983760bc3e1aad32340c6106d9c344d14c48e3582a2091492a483874d8e04"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-healthchecks:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2-sources.jar"
+                ],
+                "sha256": "8a8c590cefec4c71d0c3c04fad6086bca24b625935712dbaa24e283d57aca743"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-httpclient:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.apache.httpcomponents:httpclient:4.3.4",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "commons-logging:commons-logging:1.2",
+                    "org.apache.httpcomponents:httpclient:4.3.4",
+                    "org.apache.httpcomponents:httpcore:4.3.2",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "commons-codec:commons-codec:1.10"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2.jar"
+                ],
+                "sha256": "ab439905726312898393e66852e3b77b1125f3ffbb411238be298246a676866b"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-httpclient:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                    "commons-codec:commons-codec:jar:sources:1.10",
+                    "commons-logging:commons-logging:jar:sources:1.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2-sources.jar"
+                ],
+                "sha256": "dba742a013f1850ddd1603f56cebcf22fcc96f46f479f162954173a2dff27125"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jersey:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-annotation:3.0.2",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.sun.jersey:jersey-server:1.18.1",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-annotation:3.0.2",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.sun.jersey:jersey-core:1.18.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.sun.jersey:jersey-server:1.18.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2.jar"
+                ],
+                "sha256": "5e45cf6873c55debebab2458517684a9526800de3c58baa26b59334e31b03645"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jersey:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-annotation:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "com.sun.jersey:jersey-server:jar:sources:1.18.1",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-annotation:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.sun.jersey:jersey-server:jar:sources:1.18.1",
+                    "com.sun.jersey:jersey-core:jar:sources:1.18.1",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2-sources.jar"
+                ],
+                "sha256": "03251c874a828b33bf62613fbbcc4152207d1e98ff1d4fd462d03f161e66d917"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jetty9:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2.jar"
+                ],
+                "sha256": "2b286464f7b344fc31182886eb18a73e1deed3a686d46e58be3e6d1b5b53b2c8"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jetty9:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
+                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2-sources.jar"
+                ],
+                "sha256": "b698906a0cf42644ce284f4cc094404d23a5ba1d1361097cade1c1f7d5862f11"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-json:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2.jar"
+                ],
+                "sha256": "d4ae62ec07ab5b4fc7e4e4321cf7b96b96f9002a755e26f14661abf4917e7aad"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-json:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2-sources.jar"
+                ],
+                "sha256": "08f91d17949ee4fe3466029d7b107c9a585ebcd824f5548c44326ba4a49e1687"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jvm:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.codahale.metrics:metrics-core:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2.jar"
+                ],
+                "sha256": "3037359ca538d98c5a7bcf070f98a9b9023379853276826b4902d64bc358911a"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jvm:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2-sources.jar"
+                ],
+                "sha256": "b0f9c361aff94ce8e7eb9e5360673e7eb95067ebd239befa21a5bfebf7db9943"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-logback:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2.jar",
+                "directDependencies": [
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "com.codahale.metrics:metrics-core:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2.jar"
+                ],
+                "sha256": "5ed2a1cc08259a67fb4db1b0a49a38ac82d9bd732d089bb6d68640f5630b495b"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-logback:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2-sources.jar",
+                "directDependencies": [
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2-sources.jar"
+                ],
+                "sha256": "eb0fbf3f3b0d1e3b8c3eb735b55d56d56b90459119861bc1d5fe23bab5856d02"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-servlets:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "com.codahale.metrics:metrics-jvm:3.0.2",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.codahale.metrics:metrics-healthchecks:3.0.2",
+                    "com.codahale.metrics:metrics-json:3.0.2"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "com.codahale.metrics:metrics-jvm:3.0.2",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "com.codahale.metrics:metrics-healthchecks:3.0.2",
+                    "com.codahale.metrics:metrics-json:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2.jar"
+                ],
+                "sha256": "dd5470632d0ffa7d1d315ad86fc827afc57f917a8d68b8c06ed60214ddd4bfbc"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-servlets:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.codahale.metrics:metrics-jvm:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-json:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-healthchecks:jar:sources:3.0.2"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.codahale.metrics:metrics-jvm:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-json:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-healthchecks:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2-sources.jar"
+                ],
+                "sha256": "f400798fd0a6503226eaa074c2efe7156c83a50b4da1cb0a96c013c2fe405b42"
+            },
+            {
                 "coord": "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.9.9/jackson-annotations-2.9.9.jar",
                 "directDependencies": [],
@@ -3217,6 +3611,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -1397483629
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1011571798
     }
 }
