@@ -2628,6 +2628,7 @@ maven_install(
         "org.javassist:javassist:3.26.0-GA",
         "org.ow2.asm:asm:5.0.4",
         "org.reactivestreams:reactive-streams:1.0.3",
+        "org.reflections:reflections:0.9.11",
         "org.slf4j:slf4j-api:1.7.22",
         "org.w3c.css:sac:1.3",
         "org.yaml:snakeyaml:1.23",
