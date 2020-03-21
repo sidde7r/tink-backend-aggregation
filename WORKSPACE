@@ -2600,6 +2600,7 @@ maven_install(
         "io.dropwizard:dropwizard-jackson:0.7.1",
         "io.dropwizard:dropwizard-lifecycle:0.7.1",
         "io.dropwizard:dropwizard-logging:0.7.1",
+        "io.dropwizard:dropwizard-metrics:0.7.1",
         "io.dropwizard:dropwizard-util:0.7.1",
         "io.dropwizard:dropwizard-validation:0.7.1",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,

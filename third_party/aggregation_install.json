@@ -2417,6 +2417,106 @@
                 "sha256": "acf046e2766e37a6a14958a219adb0bc67e2a78ceee122d5703877a4cae3ef4a"
             },
             {
+                "coord": "io.dropwizard:dropwizard-metrics:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "io.dropwizard:dropwizard-lifecycle:0.7.1",
+                    "io.dropwizard:dropwizard-validation:0.7.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "io.dropwizard:dropwizard-jackson:0.7.1"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "com.fasterxml:classmate:1.0.0",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
+                    "javax.el:javax.el-api:2.2.5",
+                    "com.google.guava:guava:25.1-jre",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "io.dropwizard:dropwizard-lifecycle:0.7.1",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "org.hibernate:hibernate-validator:5.1.1.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA",
+                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+                    "io.dropwizard:dropwizard-validation:0.7.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
+                    "org.checkerframework:checker-qual:2.0.0",
+                    "io.dropwizard:dropwizard-jackson:0.7.1",
+                    "org.glassfish.web:javax.el:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1.jar"
+                ],
+                "sha256": "64b6e0ee3bd87e5977d2b90b139537fc393ba685136eb64a03c929ade6e22dd1"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-metrics:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1-sources.jar",
+                "directDependencies": [
+                    "io.dropwizard:dropwizard-lifecycle:jar:sources:0.7.1",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "javax.el:javax.el-api:jar:sources:2.2.5",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:sources:2.9.9",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "io.dropwizard:dropwizard-lifecycle:jar:sources:0.7.1",
+                    "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:sources:2.9.9",
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:jar:sources:2.9.9",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "com.fasterxml:classmate:jar:sources:1.0.0",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1-sources.jar"
+                ],
+                "sha256": "f59bde98a300368f2b41251e86c9473175e0858707cea66b69ce948de3174ce3"
+            },
+            {
                 "coord": "io.dropwizard:dropwizard-util:0.7.1",
                 "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-util/0.7.1/dropwizard-util-0.7.1.jar",
                 "directDependencies": [
@@ -4317,6 +4417,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1241329607
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -186551253
     }
 }
