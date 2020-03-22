@@ -19,10 +19,6 @@ public class IBClient extends Client {
     private static final String SESSION_COOKIE_NAME = "SMSession";
     private static final String DEFAULT_LANGUAGE = "en";
 
-    private final AbnAmroProductsConfiguration productsConfiguration;
-    private final Counter authenticationErrors;
-    private final MetricRegistry metricRegistry;
-
     protected IBClient(
             Class<? extends Client> cls,
             AbnAmroConfiguration abnAmroConfiguration,
@@ -32,11 +28,10 @@ public class IBClient extends Client {
                 abnAmroConfiguration.getTrustStoreConfiguration(),
                 abnAmroConfiguration.getInternetBankingConfiguration().getHost());
 
-        this.productsConfiguration =
+        AbnAmroProductsConfiguration productsConfiguration =
                 abnAmroConfiguration.getInternetBankingConfiguration().getProducts();
 
-        this.metricRegistry = metricRegistry;
-        this.authenticationErrors =
+        Counter authenticationErrors =
                 metricRegistry.meter(MetricId.newId("ib_client_authenticate_errors"));
     }
 
