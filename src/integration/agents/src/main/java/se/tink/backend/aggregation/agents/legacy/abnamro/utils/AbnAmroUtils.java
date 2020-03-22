@@ -1,17 +1,12 @@
 package se.tink.backend.aggregation.agents.abnamro.utils;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import java.util.Map;
-import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.enums.AccountTypes;
-import se.tink.libraries.account.rpc.Account;
 
 public class AbnAmroUtils {
 
@@ -28,14 +23,6 @@ public class AbnAmroUtils {
         public static final String MERCHANT_DESCRIPTION = "MERCHANT_DESCRIPTION";
     }
 
-    public static class InternalAccountPayloadKeys {
-        public static final String IBAN = "iban";
-        public static final String CURRENCY = "currency";
-        public static final String REJECTED_DATE = "rejected-date";
-        public static final String REJECTED_REASON_CODE = "rejected-reason-code";
-        public static final String SUBSCRIBED = "subscribed";
-    }
-
     public static final Map<String, AccountTypes> ACCOUNT_TYPE_BY_PRODUCT_GROUP =
             ImmutableMap.<String, AccountTypes>builder()
                     .put("PAYMENT_ACCOUNTS", AccountTypes.CHECKING)
@@ -46,12 +33,6 @@ public class AbnAmroUtils {
                     .put("PAYMENT_SERVICES", AccountTypes.CREDIT_CARD)
                     .build();
 
-    public static final Set<String> CREDIT_CARD_PRODUCT_GROUPS =
-            ImmutableSet.<String>builder()
-                    .add("CREDIT_CARDS_PRIVATE_AND_RETAIL")
-                    .add("PAYMENT_SERVICES")
-                    .build();
-
     public static class DescriptionKeys {
         public static String CARD_NUMBER = "kaartnummer";
         public static String DESCRIPTION = "omschrijving";
@@ -59,10 +40,6 @@ public class AbnAmroUtils {
         public static String FULL = "full";
         public static String NAME = "naam";
         public static String IBAN = "iban";
-    }
-
-    public static Long getAccountNumber(String bankId) {
-        return Long.valueOf(bankId);
     }
 
     public static AccountTypes getAccountType(String productGroup) {
@@ -108,14 +85,6 @@ public class AbnAmroUtils {
 
         // Insert space after every 4th character
         return iban.replaceAll("(.{4})(?!$)", "$1 ");
-    }
-
-    public static void markAccountAsRejected(Account account, Integer rejectedReasonCode) {
-        Preconditions.checkNotNull(account);
-        account.putPayload(InternalAccountPayloadKeys.REJECTED_DATE, new DateTime().toString());
-        account.putPayload(
-                InternalAccountPayloadKeys.REJECTED_REASON_CODE,
-                String.valueOf(rejectedReasonCode));
     }
 
     public static String creditCardIdToAccountId(String ccId) {
