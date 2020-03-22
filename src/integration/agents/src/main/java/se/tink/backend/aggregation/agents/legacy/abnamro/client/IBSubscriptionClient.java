@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroCon
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroInternetBankingConfiguration;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.metrics.types.counters.Counter;
 
 /** Service client for handling with grip subscriptions. */
 public class IBSubscriptionClient extends IBClient {
@@ -39,9 +38,8 @@ public class IBSubscriptionClient extends IBClient {
 
         this.configuration = abnAmroConfiguration.getInternetBankingConfiguration();
 
-        Counter rejectedContracts =
-                metricRegistry.meter(
-                        MetricId.newId("ib_subscription_client_timers_rejected_contracts"));
+        // Remove maybe
+        metricRegistry.meter(MetricId.newId("ib_subscription_client_timers_rejected_contracts"));
     }
 
     public List<PfmContractEntity> getContracts(String bcNumber)
