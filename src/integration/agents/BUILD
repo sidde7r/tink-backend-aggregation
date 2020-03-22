@@ -93,7 +93,6 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_jersey",
         "//third_party:io_dropwizard_dropwizard_metrics",
-        "//third_party:io_protostuff_protostuff_api",
         "//third_party:io_vavr",
         "//third_party:javax_validation_validation_api",
         "//third_party:net_minidev_json_smart",

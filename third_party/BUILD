@@ -718,14 +718,6 @@ java_library(
 )
 
 java_library(
-    name = "io_protostuff_protostuff_api",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_protostuff_protostuff_api//jar",
-    ],
-)
-
-java_library(
     name = "io_swagger_swagger_annotations",
     visibility = ["//visibility:public"],
     exports = [
