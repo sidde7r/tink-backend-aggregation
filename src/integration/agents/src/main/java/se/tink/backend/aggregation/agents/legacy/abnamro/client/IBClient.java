@@ -13,7 +13,6 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
  */
 public class IBClient extends Client {
 
-    private static final String SERVICE_VERSION_HEADER = "x-aab-serviceversion";
     private static final String SESSION_COOKIE_NAME = "SMSession";
     private static final String DEFAULT_LANGUAGE = "en";
 
