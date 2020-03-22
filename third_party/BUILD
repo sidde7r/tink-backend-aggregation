@@ -1229,7 +1229,6 @@ java_library(
 )
 
 java_library(
-    # TODO: check is this used?
     name = "org_hamcrest_hamcrest_library",
     visibility = ["//visibility:public"],
     exports = [
