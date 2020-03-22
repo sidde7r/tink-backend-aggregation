@@ -35,7 +35,6 @@ public class IBClient extends Client {
 
         private Builder builder;
         private String sessionToken;
-        private String language;
         private String serviceVersion;
 
         IBClientRequestBuilder(String path) {
@@ -48,10 +47,7 @@ public class IBClient extends Client {
         }
 
         Builder build() {
-            builder =
-                    builder.header(
-                            "Accept-Language",
-                            Strings.isNullOrEmpty(language) ? DEFAULT_LANGUAGE : language);
+            builder = builder.header("Accept-Language", DEFAULT_LANGUAGE);
 
             if (!Strings.isNullOrEmpty(serviceVersion)) {
                 builder = builder.header(SERVICE_VERSION_HEADER, serviceVersion);
