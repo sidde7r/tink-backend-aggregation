@@ -1223,14 +1223,18 @@ java_library(
 java_library(
     name = "org_hamcrest_hamcrest_core",
     visibility = ["//visibility:public"],
-    exports = ["@org_hamcrest_hamcrest_core//jar"],
+    exports = [
+        "@org_hamcrest_hamcrest_core//jar",
+    ],
 )
 
 java_library(
     # TODO: check is this used?
     name = "org_hamcrest_hamcrest_library",
     visibility = ["//visibility:public"],
-    exports = ["@org_hamcrest_hamcrest_library//jar"],
+    exports = [
+        "@org_hamcrest_hamcrest_library//jar",
+    ],
 )
 
 java_library(
