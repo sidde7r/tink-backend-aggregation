@@ -33,15 +33,6 @@ public class AbnAmroUtils {
                     .put("PAYMENT_SERVICES", AccountTypes.CREDIT_CARD)
                     .build();
 
-    public static class DescriptionKeys {
-        public static String CARD_NUMBER = "kaartnummer";
-        public static String DESCRIPTION = "omschrijving";
-        public static String DIRECT_DEBIT = "machtiging";
-        public static String FULL = "full";
-        public static String NAME = "naam";
-        public static String IBAN = "iban";
-    }
-
     public static AccountTypes getAccountType(String productGroup) {
         if (ACCOUNT_TYPE_BY_PRODUCT_GROUP.containsKey(productGroup)) {
             return ACCOUNT_TYPE_BY_PRODUCT_GROUP.get(productGroup);
