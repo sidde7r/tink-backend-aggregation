@@ -53,13 +53,14 @@ public final class VolvoFinansApiClient {
 
     public URL getAuthorizeUrl(String state) {
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl() + "?state=" + state;
+        final String redirectUri = getConfiguration().getRedirectUrl();
 
         return createRequest(Urls.AUTH)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParam(QueryKeys.STATE, state)
                 .getUrl();
     }
 
