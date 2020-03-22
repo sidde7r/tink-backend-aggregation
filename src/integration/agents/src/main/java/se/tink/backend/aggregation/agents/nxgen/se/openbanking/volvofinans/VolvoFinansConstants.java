@@ -30,10 +30,10 @@ public final class VolvoFinansConstants {
     }
 
     public static class Endpoints {
-        public static final String BASE_AUTH = "https://secure.volvofinans.se/openbanking";
+        public static final String BASE_AUTH = "https://auth.volvofinans.se/token/openbanking";
         public static final String BASE_URL = "https://openbanking.api.volvofinans.se";
-        public static final String AUTH = "/oauth/auth";
-        public static final String TOKEN = "/oauth/token";
+        public static final String AUTH = "/authorize";
+        public static final String TOKEN = "/token";
         public static final String ACCOUNTS = "/openbanking/v1/accounts";
         public static final String TRANSACTIONS = ACCOUNTS + "/{accountId}/transactions";
     }
