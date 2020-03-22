@@ -146,7 +146,7 @@ public class UkobRegisterCommand {
     }
 
     private static String readWholeFile(File file) throws IOException {
-        try(Scanner scanner = new Scanner(file)) {
+        try (Scanner scanner = new Scanner(file)) {
             return scanner.useDelimiter("\\Z").next();
         } catch (NoSuchElementException e) {
             throw new IOException(String.format("File %s is empty.", file.getName()));

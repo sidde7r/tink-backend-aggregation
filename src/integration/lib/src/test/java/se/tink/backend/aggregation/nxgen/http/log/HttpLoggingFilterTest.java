@@ -265,8 +265,7 @@ public class HttpLoggingFilterTest {
     }
 
     private static int findFreePort() {
-        try {
-            ServerSocket socket = new ServerSocket(0);
+        try (ServerSocket socket = new ServerSocket(0)) {
             int result = socket.getLocalPort();
             socket.close();
 
