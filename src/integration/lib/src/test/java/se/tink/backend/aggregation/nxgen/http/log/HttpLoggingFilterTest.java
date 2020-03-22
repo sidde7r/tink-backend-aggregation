@@ -13,6 +13,7 @@ import com.sun.jersey.api.client.WebResource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.util.Arrays;
 import javax.ws.rs.core.MediaType;
@@ -266,12 +267,9 @@ public class HttpLoggingFilterTest {
 
     private static int findFreePort() {
         try (ServerSocket socket = new ServerSocket(0)) {
-            int result = socket.getLocalPort();
-            socket.close();
-
-            return result;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return socket.getLocalPort();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 
