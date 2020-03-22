@@ -4,10 +4,8 @@ import com.google.common.base.Strings;
 import com.sun.jersey.api.client.WebResource.Builder;
 import javax.ws.rs.core.NewCookie;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroProductsConfiguration;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.metrics.types.counters.Counter;
 
 /**
  * In the context of ABN AMRO, the "IB" prefix stands for Internet Banking. The IB endpoints are the
@@ -28,11 +26,9 @@ public class IBClient extends Client {
                 abnAmroConfiguration.getTrustStoreConfiguration(),
                 abnAmroConfiguration.getInternetBankingConfiguration().getHost());
 
-        AbnAmroProductsConfiguration productsConfiguration =
-                abnAmroConfiguration.getInternetBankingConfiguration().getProducts();
+        abnAmroConfiguration.getInternetBankingConfiguration().getProducts(); // Remove maybe
 
-        Counter authenticationErrors =
-                metricRegistry.meter(MetricId.newId("ib_client_authenticate_errors"));
+        metricRegistry.meter(MetricId.newId("ib_client_authenticate_errors")); // Remove maybe
     }
 
     public class IBClientRequestBuilder {
