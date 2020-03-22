@@ -35,7 +35,6 @@ public class IBClient extends Client {
 
         private Builder builder;
         private String sessionToken;
-        private String serviceVersion;
 
         IBClientRequestBuilder(String path) {
             this.builder = createClientRequest(path);
@@ -48,10 +47,6 @@ public class IBClient extends Client {
 
         Builder build() {
             builder = builder.header("Accept-Language", DEFAULT_LANGUAGE);
-
-            if (!Strings.isNullOrEmpty(serviceVersion)) {
-                builder = builder.header(SERVICE_VERSION_HEADER, serviceVersion);
-            }
 
             if (!Strings.isNullOrEmpty(sessionToken)) {
                 builder = builder.cookie(new NewCookie(SESSION_COOKIE_NAME, sessionToken));
