@@ -60,7 +60,7 @@ public final class VolvoFinansConstants {
 
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
-        public static final String SCOPE = "oauth2";
+        public static final String SCOPE = "openbanking";
         public static final Object GRANT_TYPE = "authorization_code";
         public static final String TRUE = "true";
         public static final String BOOKED = "booked";
