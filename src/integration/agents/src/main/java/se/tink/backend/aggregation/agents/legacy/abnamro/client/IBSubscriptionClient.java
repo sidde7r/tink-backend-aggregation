@@ -31,9 +31,6 @@ import se.tink.libraries.metrics.types.counters.Counter;
 /** Service client for handling with grip subscriptions. */
 public class IBSubscriptionClient extends IBClient {
 
-    private final MetricRegistry metricRegistry;
-    private final Counter rejectedContracts;
-
     private AbnAmroInternetBankingConfiguration configuration;
 
     public IBSubscriptionClient(
@@ -42,8 +39,7 @@ public class IBSubscriptionClient extends IBClient {
 
         this.configuration = abnAmroConfiguration.getInternetBankingConfiguration();
 
-        this.metricRegistry = metricRegistry;
-        rejectedContracts =
+        Counter rejectedContracts =
                 metricRegistry.meter(
                         MetricId.newId("ib_subscription_client_timers_rejected_contracts"));
     }
