@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.abnamro.utils;
 
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -11,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.abnamro.client.model.RejectedContractEntity;
 import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.libraries.account.rpc.Account;
 
@@ -61,12 +59,6 @@ public class AbnAmroUtils {
         public static String FULL = "full";
         public static String NAME = "naam";
         public static String IBAN = "iban";
-    }
-
-    // Complement to se.tink.backend.utils.guavaimpl.Functions
-    public static class Functions {
-        public static final Function<RejectedContractEntity, Long>
-                REJECTED_CONTRACT_TO_CONTRACT_NUMBER = RejectedContractEntity::getContractNumber;
     }
 
     public static Long getAccountNumber(String bankId) {
