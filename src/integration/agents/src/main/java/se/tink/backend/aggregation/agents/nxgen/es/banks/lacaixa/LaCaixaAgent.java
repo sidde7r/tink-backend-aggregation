@@ -53,7 +53,7 @@ public class LaCaixaAgent extends NextGenerationAgent
     public LaCaixaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         configureHttpClient(client);
-        apiClient = new LaCaixaApiClient(client);
+        apiClient = new LaCaixaApiClient(client, persistentStorage);
 
         LaCaixaInvestmentFetcher investmentFetcher = new LaCaixaInvestmentFetcher(apiClient);
         investmentRefreshController =

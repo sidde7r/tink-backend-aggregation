@@ -93,8 +93,6 @@ public class LaCaixaConstants {
                 "51402"; // Can seemingly be anything as long as it exists, purpose unknown.
         public static final String CHANNEL =
                 "O"; // Only some valid values (1, 2, O, ...), purpose unknown.
-        public static final String INSTALLATION_ID =
-                "CIAPPLPh8,1XAEvy+IW9P82Pl+fvzwnfiAzzxs="; // App install ID?
 
         public static final int NUM_CARDS = 0;
         public static final String OPTION_FILTER = "02";
@@ -104,6 +102,11 @@ public class LaCaixaConstants {
         public static final String ZERO_BALANCE_CONTRACTS = "N";
         public static final String GLOBAL_POSITION_TYPE_P = "P"; // only la caixa engagements
         public static final String GLOBAL_POSITION_TYPE_A = "A"; // la caixa and imagin engagemants
+    }
+
+    public static class AuthenticationParams {
+        public static final String INSTALLATION_ID_PREFIX = "cIAPPLPh9,3";
+        public static final String DEVICE_NAME = "Tink";
     }
 
     public static class QueryParams {
@@ -118,6 +121,10 @@ public class LaCaixaConstants {
 
     public static class TemporaryStorage {
         public static final String ACCOUNT_REFERENCE = "accountRef";
+    }
+
+    public static class StorageKeys {
+        public static final String INSTALLATION_ID = "installationId";
     }
 
     public static class StatusCodes {
