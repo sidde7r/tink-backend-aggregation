@@ -21,17 +21,12 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
     private OAuth2AuthorizationSpecification authorizationParamProvider;
 
     @Before
-    public void init() {
+    public void init() throws MalformedURLException {
         this.authorizationParamProvider = Mockito.mock(OAuth2AuthorizationSpecification.class);
-        try {
-            Mockito.when(authorizationParamProvider.getAccessTokenEndpoint())
-                    .thenReturn(
-                            new EndpointSpecification(new URL(getOrigin() + ACCESS_TOKEN_PATH)));
-            objectUnderTest =
-                    new OAuth2CodeTypeTokenIssueStrategy(authorizationParamProvider, httpClient);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        Mockito.when(authorizationParamProvider.getAccessTokenEndpoint())
+                .thenReturn(new EndpointSpecification(new URL(getOrigin() + ACCESS_TOKEN_PATH)));
+        objectUnderTest =
+                new OAuth2CodeTypeTokenIssueStrategy(authorizationParamProvider, httpClient);
     }
 
     @Test(expected = RuntimeException.class)
