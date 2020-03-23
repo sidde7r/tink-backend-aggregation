@@ -97,7 +97,6 @@ public abstract class LansforsakringarConstants {
         public static final String PSU_ID = "PSU-ID";
         public static final String TPP_EXPLICIT_AUTH_PREFERRED =
                 "TPP-Explicit-Authorisation-Preferred";
-        public static final String X_TINK_DEBUG = "X-Tink-Debug";
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String CACHE_CONTROL = "Cache-Control";
         public static final String AUTHORIZATION = "Authorization";
@@ -108,7 +107,6 @@ public abstract class LansforsakringarConstants {
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
         public static final String PSU_USER_AGENT = "Desktop Mode";
         public static final String PSU_ID_TYPE = "SSSN";
-        public static final String TRUST_ALL = "trust_all";
         public static final String NO_CACHE = "no-cache";
         public static final String BEARER = "Bearer";
     }

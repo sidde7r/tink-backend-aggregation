@@ -84,9 +84,6 @@ public final class LansforsakringarApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.X_TINK_DEBUG,
-                        LansforsakringarConstants.HeaderValues.TRUST_ALL)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
@@ -169,9 +166,6 @@ public final class LansforsakringarApiClient {
 
         return client.request(tokenUrl)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(
-                        LansforsakringarConstants.HeaderKeys.X_TINK_DEBUG,
-                        LansforsakringarConstants.HeaderValues.TRUST_ALL)
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .header(HeaderKeys.CACHE_CONTROL, HeaderValues.NO_CACHE)
                 .accept(MediaType.APPLICATION_JSON)
