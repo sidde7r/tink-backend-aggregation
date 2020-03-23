@@ -13,6 +13,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/agents",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/icabanken",
         "//src/integration/amount",
         "//src/integration/api",
@@ -20,7 +21,11 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "//src/libraries/account_identifier",
         "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@commons_lang_commons_lang//jar",
     ],
 )
