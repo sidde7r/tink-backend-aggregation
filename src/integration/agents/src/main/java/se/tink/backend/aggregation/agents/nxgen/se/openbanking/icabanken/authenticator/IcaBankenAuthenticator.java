@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenResponse;
@@ -38,22 +40,11 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
     public URL buildAuthorizeUrl(String state) {
         final Form params =
                 Form.builder()
-                        .put(
-                                IcaBankenConstants.QueryKeys.RESPONSE_TYPE,
-                                IcaBankenConstants.QueryValues.CODE)
-                        .put(
-                                IcaBankenConstants.QueryKeys.CLIENT_ID,
-                                icaBankenConfiguration.getClientId())
-                        .put(
-                                IcaBankenConstants.QueryKeys.SCOPE,
-                                IcaBankenConstants.QueryValues.SCOPE)
-                        .put(
-                                IcaBankenConstants.QueryKeys.REDIRECT_URI,
-                                icaBankenConfiguration.getRedirectUrl())
-                        .put(IcaBankenConstants.QueryKeys.STATE, state)
-                        .put(
-                                IcaBankenConstants.QueryKeys.SSN,
-                                credentials.getField(Field.Key.USERNAME))
+                        .put(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
+                        .put(QueryKeys.CLIENT_ID, icaBankenConfiguration.getClientId())
+                        .put(QueryKeys.SCOPE, QueryValues.SCOPE)
+                        .put(QueryKeys.REDIRECT_URI, icaBankenConfiguration.getRedirectUrl())
+                        .put(QueryKeys.SSN, credentials.getField(Field.Key.USERNAME))
                         .build();
 
         return new URL(IcaBankenConstants.ProductionUrls.AUTH_PATH + "?" + params.toString());
