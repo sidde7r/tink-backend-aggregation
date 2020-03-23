@@ -86,8 +86,8 @@ public class NemIdIFrameController {
             // wait some time for user's 2nd factor and token
             waitForNemidToken(driver);
             log.info(
-                "Whole 2fa process took {} ms.",
-                System.currentTimeMillis() - askForNemIdStartTime);
+                    "Whole 2fa process took {} ms.",
+                    System.currentTimeMillis() - askForNemIdStartTime);
 
             return collectToken(driver);
         } finally {
