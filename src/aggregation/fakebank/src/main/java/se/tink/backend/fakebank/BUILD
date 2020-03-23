@@ -4,7 +4,7 @@ java_binary(
     data = [
         "//src/aggregation/fakebank/src/main/java/se/tink/backend/fakebank/resources",
     ],
-    main_class = "se.tink.backend.wiremock.FakeBankServer",
+    main_class = "se.tink.backend.fakebank.FakeBankServer",
     visibility = ["//visibility:public"],
     runtime_deps = [
         "@org_slf4j_slf4j_simple//jar",
