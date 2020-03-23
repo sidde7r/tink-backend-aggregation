@@ -284,4 +284,32 @@ public class UpcomingTransactionEntity {
     public boolean isRejectedIsViewed() {
         return rejectedIsViewed;
     }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public void setDestinationAccountNumber(String recipientAccountNumber) {
+        this.recipientAccountNumber = recipientAccountNumber;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setTransferMessage(String reference) {
+        this.reference = reference;
+    }
+
+    public void setSourceAccountNumber(String fromAccountNumber) {
+        this.fromAccountNumber = fromAccountNumber;
+    }
 }
