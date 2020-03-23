@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
@@ -25,6 +26,18 @@ public class SystemTest {
 
     private static final String AGGREGATION_CONTROLLER_HOST = "appundertest";
     private static final int AGGREGATION_CONTROLLER_PORT = 8080;
+
+    @Before
+    public void resetFakeAggregationControllerCache() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", "application/json");
+        ResponseEntity<String> dataResult =
+                makeGetRequest(
+                        String.format(
+                                "http://%s:%d/reset",
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
+                        headers);
+    }
 
     @Test
     public void getPingShouldReturnPongAnd200MessageInHttpResponse() throws Exception {
