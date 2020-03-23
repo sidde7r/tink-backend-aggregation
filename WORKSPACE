@@ -237,10 +237,14 @@ http_file(
 PROTOBUF_VERSION = "3.9.0"
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
-GRPC_JAVA_VERSION = "1.23.0"
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
+GRPC_JAVA_VERSION = "1.27.0"
 
 GRPC_JAVA_NANO_VERSION = "1.21.1"
+
+NETTY_VERSION = "4.1.42.Final"
+
+NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION = "2.0.26.Final"
 
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
@@ -394,27 +398,27 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_resolver",  # Do not use, but do not remove
-    artifact = "io.netty:netty-resolver:4.1.38.Final",
-    sha1 = "b00be4aa309e9b56e498191aa8c73e4f393759ed",
+    artifact = "io.netty:netty-resolver:%s" % NETTY_VERSION,
+    sha1 = "ccaacf418a9e486b65e82c47bed66439119c5fdb",
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_resolver_dns",  # Do not use, but do not remove
-    artifact = "io.netty:netty-resolver-dns:4.1.38.Final",
-    sha1 = "a628b322a1a7fadc427edc15eb3c141d50706437",
+    artifact = "io.netty:netty-resolver-dns:%s" % NETTY_VERSION,
+    sha1 = "385e8b85dce81f8ac61d8b161c5b39020b5d789f",
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_dns",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec-dns:4.1.38.Final",
-    sha1 = "cfc06c8566e4bf060a0360e28865e70e37d150e8",
+    artifact = "io.netty:netty-codec-dns:%s" % NETTY_VERSION,
+    sha1 = "67528de727bae6c4a2ff4dce0afa2a4c3c8f60bd",
 )
 
 maven_jar(
@@ -688,11 +692,11 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec:4.1.38.Final",
-    sha1 = "ccfbdfc727cbf702350572a0b12fe92185ebf162",
+    artifact = "io.netty:netty-codec:%s" % NETTY_VERSION,
+    sha1 = "b1d5ed85a558fbbadc2783f869fbd0adcd32b07b",
 )
 
 maven_jar(
@@ -804,11 +808,11 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_handler_proxy",  # Do not use, but do not remove
-    artifact = "io.netty:netty-handler-proxy:4.1.38.Final",
-    sha1 = "dbb09abb0c9c494cb651234eed428189eb730872",
+    artifact = "io.netty:netty-handler-proxy:%s" % NETTY_VERSION,
+    sha1 = "7b816d9f37ddcb68f6c1b9b0d7b5a98bfac40911",
 )
 
 maven_jar(
@@ -1159,14 +1163,6 @@ maven_jar(
     sha1 = "89ac043b711248ba512b98493d2266328d1f1045",
 )
 
-# Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
-maven_jar(
-    name = "io_netty_netty_common",  # Do not use, but do not remove
-    artifact = "io.netty:netty-common:4.1.38.Final",
-    sha1 = "6f8aae763f743d91fb1ba1e9011dae0ef4f6ff34",
-)
-
 maven_jar(
     name = "org_codehaus_plexus_plexus_utils",
     artifact = "org.codehaus.plexus:plexus-utils:3.0.17",
@@ -1183,14 +1179,6 @@ maven_jar(
     name = "org_eclipse_jetty_jetty_servlets",
     artifact = "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
     sha1 = "bffeae9b9f75f53d3e5dc1bfd56725f67f2f67c0",
-)
-
-# Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
-maven_jar(
-    name = "io_netty_netty_handler",  # Do not use, but do not remove
-    artifact = "io.netty:netty-handler:4.1.38.Final",
-    sha1 = "ebf1f2bd0dad5e16aa1fc48d32e5dbe507b38d53",
 )
 
 maven_jar(
@@ -1314,19 +1302,19 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_socks",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec-socks:4.1.38.Final",
-    sha1 = "9a6b2c27383061ac9b6de10e6f0f81a7283216f5",
+    artifact = "io.netty:netty-codec-socks:%s" % NETTY_VERSION,
+    sha1 = "dd355f01dc00f93aaebe805b05026d7cf57c60ec",
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_buffer",  # Do not use, but do not remove
-    artifact = "io.netty:netty-buffer:4.1.38.Final",
-    sha1 = "d16cf15d29c409987cecde77407fbb6f1e16d262",
+    artifact = "io.netty:netty-buffer:%s" % NETTY_VERSION,
+    sha1 = "6e6fc9178d1f1401aa0d6b843341efb91720f2cd",
 )
 
 maven_jar(
@@ -1408,11 +1396,11 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_http2",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec-http2:4.1.38.Final",
-    sha1 = "0dc353dd011c512d5e631a4bee517b17ed3155c1",
+    artifact = "io.netty:netty-codec-http2:%s" % NETTY_VERSION,
+    sha1 = "819e7b5f2005770cf7558c04276fff080331c6df",
 )
 
 maven_jar(
@@ -1470,11 +1458,11 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_transport",  # Do not use, but do not remove
-    artifact = "io.netty:netty-transport:4.1.38.Final",
-    sha1 = "cd8b612d5daa42d1be3bb3203e4857597d5db79b",
+    artifact = "io.netty:netty-transport:%s" % NETTY_VERSION,
+    sha1 = "857502e863c02c829fdafea61c3fda6bda01d0af",
 )
 
 maven_jar(
@@ -1616,11 +1604,11 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_tcnative_boringssl_static",  # Do not use, but do not remove
-    artifact = "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
-    sha1 = "185980556f9f083b5339825f19c9641c6c879417",
+    artifact = "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
+    sha1 = "e5459c4e54cb31f2926af2291f968d5839ebe21b",
 )
 
 maven_jar(
@@ -1696,11 +1684,11 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_codec_http",  # Do not use, but do not remove
-    artifact = "io.netty:netty-codec-http:4.1.38.Final",
-    sha1 = "4d55b3cdb74cd140d262de96987ebd369125a64c",
+    artifact = "io.netty:netty-codec-http:%s" % NETTY_VERSION,
+    sha1 = "5f71267aa784d0e6c5ec09fb988339d244b205a0",
 )
 
 maven_jar(
@@ -2068,25 +2056,25 @@ maven_jar(
 maven_jar(
     name = "io_grpc_grpc_protobuf",
     artifact = "io.grpc:grpc-protobuf:%s" % GRPC_JAVA_VERSION,
-    sha1 = "01428515d3aca8964dfdc4d4ba912d0fda0f41f2",
+    sha1 = "885d3d9ee69fe247550fda01ef1b7c0acab370e5",
 )
 
 maven_jar(
     name = "io_grpc_grpc_auth",
     artifact = "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
-    sha1 = "19d71f19653d2cc786498819557431312d0dbf2d",
+    sha1 = "33c389f9c153140f69018020dec535bd730f42ac",
 )
 
 maven_jar(
     name = "io_grpc_grpc_context",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
-    sha1 = "94aedfbfeebc5a32bdfe6984289bb18abf93cf20",
+    sha1 = "8ce5cf5d907d02bdce47d3be6e5983aa758f3644",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_lite",
     artifact = "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
-    sha1 = "c030daf2f8c4185ee003e206c38e28987fe2684d",
+    sha1 = "a304b00fb35959c5036c033551732de6a4b7d881",
 )
 
 maven_jar(
@@ -2098,37 +2086,37 @@ maven_jar(
 maven_jar(
     name = "io_grpc_grpc_stub",
     artifact = "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
-    sha1 = "2e9e6890a7e8402a9b715ce1fad0d1827e733e49",
+    sha1 = "e6f36c227bfa3b9a6721bed274dd0b5c854b4925",
 )
 
 maven_jar(
     name = "io_grpc_grpc_core",
     artifact = "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
-    sha1 = "82d0c88d65acf92fb3d66a0ee800b5da85258c39",
+    sha1 = "a264f24ffa3340752a678680fd41381836b1d03f",
 )
 
 maven_jar(
     name = "io_grpc_grpc_api",
     artifact = "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
-    sha1 = "903f250bc1d01299480e526a25cd974088699a48",
+    sha1 = "f86f59df729cde94e5d85d1b3587d6b00c998d65",
 )
 
 maven_jar(
     name = "io_grpc_grpc_netty",
     artifact = "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
-    sha1 = "a166b3e2abb4b47810434ee6883435b6d789b2a6",
+    sha1 = "0c979f611ea3b3add6fa77d41318dd21d20d6aef",
 )
 
 maven_jar(
     name = "io_grpc_grpc_testing",
     artifact = "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
-    sha1 = "9397894991efc626d8b95c74691285a4468f55af",
+    sha1 = "71e31c2c69d5b91f87246b389bf1a230a9836901",
 )
 
 maven_jar(
     name = "io_grpc_grpc_services",
     artifact = "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
-    sha1 = "fc18ad19c48b58df090ad9f07646bc68780c3b8d",
+    sha1 = "0f101c3ec1bbfe08f9221ca3cc7b316f09a3e130",
 )
 
 maven_jar(
@@ -2323,10 +2311,10 @@ maven_jar(
 )
 
 # Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/v1.23.x/SECURITY.md#netty
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 maven_jar(
     name = "io_netty_netty_dev_tools",  # Do not use, but do not remove
-    artifact = "io.netty:netty-dev-tools:4.1.38.Final",
+    artifact = "io.netty:netty-dev-tools:%s" % NETTY_VERSION,
     sha1 = "1208cf0fb96a4faa8030c735af3410cfd04012f9",
 )
 
@@ -2483,19 +2471,11 @@ maven_jar(
 
 ### === END === Java Spark dependencies
 
-# Newer version than what's loaded by @io_grpc_grpc_java grpc_java_repositories()
-http_archive(
-    name = "com_google_protobuf_javalite",
-    sha256 = "a8cb9b8db16aff743a4bc8193abec96cf6ac0b0bc027121366b43ae8870f6fd3",
-    strip_prefix = "protobuf-fa08222434bc58d743e8c2cc716bc219c3d0f44e",
-    urls = ["https://github.com/google/protobuf/archive/fa08222434bc58d743e8c2cc716bc219c3d0f44e.zip"],
-)
-
 # Used by java_grpc_library
 
 http_archive(
     name = "io_grpc_grpc_java",
-    sha256 = "b1dcce395bdb6c620d3142597b5017f7175c527b0f9ae46c456726940876347e",
+    sha256 = "49a723e1aef022567a5e2c8d6395b908b431329530c1b8024b43eb9ca360fa1e",
     strip_prefix = "grpc-java-%s" % GRPC_JAVA_VERSION,
     urls = [
         "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_VERSION,
@@ -2504,7 +2484,7 @@ http_archive(
 
 load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 
-grpc_java_repositories(omit_com_google_protobuf = True)
+grpc_java_repositories()
 
 RULES_JVM_EXTERNAL_TAG = "3.2"
 
@@ -2603,20 +2583,20 @@ maven_install(
         "commons-io:commons-io:2.5",
         "commons-logging:commons-logging:1.2",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
-        "io.netty:netty-buffer:4.1.38.Final",
-        "io.netty:netty-codec-dns:4.1.38.Final",
-        "io.netty:netty-codec-http2:4.1.38.Final",
-        "io.netty:netty-codec-http:4.1.38.Final",
-        "io.netty:netty-codec-socks:4.1.38.Final",
-        "io.netty:netty-codec:4.1.38.Final",
-        "io.netty:netty-common:4.1.38.Final",
-        "io.netty:netty-dev-tools:4.1.38.Final",
-        "io.netty:netty-handler-proxy:4.1.38.Final",
-        "io.netty:netty-handler:4.1.38.Final",
-        "io.netty:netty-resolver-dns:4.1.38.Final",
-        "io.netty:netty-resolver:4.1.38.Final",
-        "io.netty:netty-tcnative-boringssl-static:2.0.25.Final",
-        "io.netty:netty-transport:4.1.38.Final",
+        "io.netty:netty-buffer:%s" % NETTY_VERSION,
+        "io.netty:netty-codec-dns:%s" % NETTY_VERSION,
+        "io.netty:netty-codec-http2:%s" % NETTY_VERSION,
+        "io.netty:netty-codec-http:%s" % NETTY_VERSION,
+        "io.netty:netty-codec-socks:%s" % NETTY_VERSION,
+        "io.netty:netty-codec:%s" % NETTY_VERSION,
+        "io.netty:netty-common:%s" % NETTY_VERSION,
+        "io.netty:netty-dev-tools:%s" % NETTY_VERSION,
+        "io.netty:netty-handler-proxy:%s" % NETTY_VERSION,
+        "io.netty:netty-handler:%s" % NETTY_VERSION,
+        "io.netty:netty-resolver-dns:%s" % NETTY_VERSION,
+        "io.netty:netty-resolver:%s" % NETTY_VERSION,
+        "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
+        "io.netty:netty-transport:%s" % NETTY_VERSION,
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "javax.inject:javax.inject:1",
         "javax.xml.stream:stax-api:1.0-2",
