@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 public class FakeAggregationController extends Application<Configuration> {
 
     private static final Logger log = LoggerFactory.getLogger(FakeAggregationController.class);
+    private Map<String, List<String>> cache = new HashMap<>();
 
     public static void main(String[] args) throws Exception {
         log.info("Starting FakeAggregationController");
@@ -35,12 +36,14 @@ public class FakeAggregationController extends Application<Configuration> {
     @Override
     public void run(Configuration c, Environment e) throws Exception {
         e.jersey().register(new DataController());
+        e.jersey().register(new ResetController());
         e.jersey().register(new PingController());
     }
 
     @Path("/ping")
     @Produces(MediaType.TEXT_PLAIN)
     public class PingController {
+
         @GET
         @Produces(MediaType.TEXT_PLAIN)
         public Response ping() {
@@ -48,11 +51,21 @@ public class FakeAggregationController extends Application<Configuration> {
         }
     }
 
+    @Path("/reset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public class ResetController {
+
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Response resetCache() {
+            cache = new HashMap<>();
+            return Response.ok().build();
+        }
+    }
+
     @Path("/data")
     @Produces(MediaType.APPLICATION_JSON)
     public class DataController {
-
-        private Map<String, List<String>> cache = new HashMap<>();
 
         @GET
         @Produces(MediaType.APPLICATION_JSON)
