@@ -9,5 +9,6 @@ java_library(
     runtime_deps = [
     ],
     deps = [
+        "//third_party:com_google_inject_guice",
     ],
 )

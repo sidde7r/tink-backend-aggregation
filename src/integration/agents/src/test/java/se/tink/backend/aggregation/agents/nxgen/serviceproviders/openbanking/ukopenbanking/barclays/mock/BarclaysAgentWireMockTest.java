@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.barclays.mock;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.AbstractModule;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,8 @@ public class BarclaysAgentWireMockTest {
                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml",
                         ImmutableMap.<String, String>builder()
                                 .put("code", "DUMMY_AUTH_CODE")
-                                .build());
+                                .build(),
+                        new AbstractModule() {}); // TODO: Fix constructor
 
         AgentContractEntitiesJsonFileParser contractParser =
                 new AgentContractEntitiesJsonFileParser();
@@ -95,7 +97,8 @@ public class BarclaysAgentWireMockTest {
                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml",
                         ImmutableMap.<String, String>builder()
                                 .put("code", "DUMMY_AUTH_CODE")
-                                .build());
+                                .build(),
+                        new AbstractModule() {});
 
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("uk", "uk-barclays-oauth2")

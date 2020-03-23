@@ -23,23 +23,25 @@ public final class AgentPackageModuleLoaderTest {
     }
 
     @Test
-    public void ensureAllModules_inNestedPackageStructure_areLoaded() throws Exception {
+    public void ensureAllModulesInNestedPackageStructureAreLoaded()
+            throws ReflectiveOperationException {
 
-        final String correctnestedmodules = "correctnestedmodules";
+        final String correctNestedModules = "correctnestedmodules";
         final Set<Module> expectedResult =
                 ImmutableSet.of(new TopLevelModule(), new SubPackageModule());
 
         Set<Module> loadedModules =
-                loader.getModulesInPackage(thisPackage + "." + correctnestedmodules);
+                loader.getModulesInPackage(thisPackage + "." + correctNestedModules);
 
         Assert.assertThat(loadedModules, equalTo(expectedResult));
     }
 
     @Test(expected = NoSuchMethodException.class)
-    public void ensureModule_thatCantBeInstantiated_throwsException() throws Exception {
+    public void ensureModuleThatCantBeInstantiatedThrowsException()
+            throws ReflectiveOperationException {
 
-        final String incorrectmodule = "incorrectmodule";
+        final String incorrectModule = "incorrectmodule";
 
-        loader.getModulesInPackage(thisPackage + "." + incorrectmodule);
+        loader.getModulesInPackage(thisPackage + "." + incorrectModule);
     }
 }
