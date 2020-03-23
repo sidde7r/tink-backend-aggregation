@@ -1113,6 +1113,12 @@ public class LansforsakringarAgent extends AbstractAgent
             throws TransferExecutionException {
         if (clientResponse.getStatus() == HttpStatus.SC_BAD_REQUEST
                 && clientResponse.getHeaders().getFirst("Error-Message") != null) {
+            String errorCode = clientResponse.getHeaders().getFirst("Error-Code");
+            if (!Strings.isNullOrEmpty(errorCode)) {
+                if ("122111".equals(errorCode)) { // when amount > balance
+                    throw cancelTransfer(EndUserMessage.EXCESS_AMOUNT);
+                }
+            }
             throw failTransferWithMessage(
                     String.format(
                             "Error code: %s, error message: %s",
