@@ -1,14 +1,15 @@
-java_library(
-    name = "factory",
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "loader_test",
     srcs = glob(
-        ["*.java"],
+        ["**/*.java"],
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/credentials:service",
-        "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/loader",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
+        "//third_party:org_reflections_reflections",
     ],
 )

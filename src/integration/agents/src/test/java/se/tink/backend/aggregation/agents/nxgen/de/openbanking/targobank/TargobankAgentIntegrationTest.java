@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
+import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
@@ -132,7 +133,10 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
             this.configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
 
             // Provide AgentFactory with 'production' components.
-            AgentFactory factory = new AgentFactory(new AgentPackageModuleFactory(), configuration);
+            AgentFactory factory =
+                    new AgentFactory(
+                            new AgentPackageModuleFactory(new PackageModuleLoader()),
+                            configuration);
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(this.provider);
             return factory.create(cls, credentialsRequest, this.context);
         } catch (FileNotFoundException e) {
