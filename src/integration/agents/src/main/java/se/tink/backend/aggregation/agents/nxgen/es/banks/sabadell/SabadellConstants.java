@@ -149,6 +149,7 @@ public final class SabadellConstants {
         public static final String RELATIONSHIP_ACCOUNT = "CUENTA RELACIÓN";
 
         public static final String SALARY_ACCOUNT = "CUENTA EXPANSIÓN";
+        public static final String SALARY_PREMIUM_ACCOUNT = "CUENTA EXPANSIÓN PREMIUM";
         public static final String UNDERAGED_ACCOUNT = "CUENTA EXPANSIÓN PRIMERA";
         public static final String MANAGED_ACCOUNT = "CUENTA GESTIONADA";
         public static final String CREDIT_CARD_CREDIT = "credit";
