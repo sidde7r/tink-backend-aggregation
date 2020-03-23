@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.Transaction
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.TransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.TransactionsMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.UserDataCall;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.UserDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.UserDataMapper;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -87,6 +89,14 @@ public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistr
                         getBean(DateTimeProvider.class),
                         getBean(TransactionsCall.class),
                         getBean(TransactionsMapper.class)));
+
+        registerBean(new UserDataMapper());
+
+        registerBean(
+                new UserDataFetcher(
+                        getBean(HVBStorage.class),
+                        getBean(UserDataCall.class),
+                        getBean(UserDataMapper.class)));
     }
 
     protected ConfigurationProvider configurationProvider() {
