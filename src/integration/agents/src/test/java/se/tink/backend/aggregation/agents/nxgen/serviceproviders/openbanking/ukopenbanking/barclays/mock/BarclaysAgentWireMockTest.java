@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
-import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
@@ -24,7 +24,7 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
-public class BarclaysAgentWireMockTest extends AgentIntegrationMockServerTest {
+public class BarclaysAgentWireMockTest {
 
     private final String SOURCE_IDENTIFIER = "2314701111111";
     private final String DESTINATION_IDENTIFIER = "04000469430924";
@@ -33,7 +33,9 @@ public class BarclaysAgentWireMockTest extends AgentIntegrationMockServerTest {
     public void test() throws Exception {
 
         // Given
-        prepareMockServer(
+        WireMockTestServer server = new WireMockTestServer();
+
+        server.prepareMockServer(
                 new AapFileParser(
                         new ResourceFileReader()
                                 .read(
@@ -41,7 +43,7 @@ public class BarclaysAgentWireMockTest extends AgentIntegrationMockServerTest {
 
         final WireMockConfiguration configuration =
                 new WireMockConfiguration(
-                        "localhost:" + getWireMockPort(),
+                        "localhost:" + server.getHttpsPort(),
                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml",
                         ImmutableMap.<String, String>builder()
                                 .put("code", "DUMMY_AUTH_CODE")
@@ -80,7 +82,8 @@ public class BarclaysAgentWireMockTest extends AgentIntegrationMockServerTest {
     public void testPayment() throws Exception {
 
         // Given
-        prepareMockServer(
+        WireMockTestServer server = new WireMockTestServer();
+        server.prepareMockServer(
                 new AapFileParser(
                         new ResourceFileReader()
                                 .read(
@@ -88,7 +91,7 @@ public class BarclaysAgentWireMockTest extends AgentIntegrationMockServerTest {
 
         final WireMockConfiguration configuration =
                 new WireMockConfiguration(
-                        "localhost:" + getWireMockPort(),
+                        "localhost:" + server.getHttpsPort(),
                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml",
                         ImmutableMap.<String, String>builder()
                                 .put("code", "DUMMY_AUTH_CODE")

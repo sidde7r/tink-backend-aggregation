@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.aggregationcontroller;
 
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -19,17 +20,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.libraries.credentials.rpc.Credentials;
 
-public final class AggregationControllerAggregationClientTest
-        extends AgentIntegrationMockServerTest {
+public final class AggregationControllerAggregationClientTest {
 
     private static class TestModule extends AbstractModule {
 
@@ -98,7 +97,9 @@ public final class AggregationControllerAggregationClientTest
     @Test
     public void clientShouldTryUpdatingCredentialsAgainWhenRequestFailed() {
 
-        prepareMockServer(
+        WireMockTestServer server = new WireMockTestServer();
+
+        server.prepareMockServer(
                 new AapFileParser(
                         new ResourceFileReader()
                                 .read(
@@ -109,7 +110,7 @@ public final class AggregationControllerAggregationClientTest
                         .getInstance(AggregationControllerAggregationClientImpl.class);
 
         HostConfiguration hostConfiguration = new HostConfiguration();
-        hostConfiguration.setHost("http://localhost:" + getPort());
+        hostConfiguration.setHost("http://localhost:" + server.getHttpPort());
         hostConfiguration.setBase64encodedclientcert("");
         hostConfiguration.setDisablerequestcompression(false);
         hostConfiguration.setApiToken("devtoken");

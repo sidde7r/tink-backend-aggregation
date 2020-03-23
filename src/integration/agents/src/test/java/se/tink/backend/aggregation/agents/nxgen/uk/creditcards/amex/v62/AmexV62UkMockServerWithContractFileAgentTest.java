@@ -9,14 +9,14 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
-import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.S3LogFormatAdapter;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
-public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrationMockServerTest {
+public class AmexV62UkMockServerWithContractFileAgentTest {
 
     private final String USERNAME = "testUser";
     private final String PASSWORD = "testPassword";
@@ -24,7 +24,8 @@ public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrati
     @Test
     public void testRefreshWithJSONContractFile() throws Exception {
         // Given
-        prepareMockServer(
+        WireMockTestServer server = new WireMockTestServer();
+        server.prepareMockServer(
                 new AapFileParser(
                         new S3LogFormatAdapter()
                                 .toMockFileFormat(
@@ -42,7 +43,7 @@ public class AmexV62UkMockServerWithContractFileAgentTest extends AgentIntegrati
         List<Transaction> expectedTransactions = expected.getTransactions();
 
         final WireMockConfiguration configuration =
-                new WireMockConfiguration("localhost:" + getWireMockPort());
+                new WireMockConfiguration("localhost:" + server.getHttpsPort());
 
         // When
         NewAgentTestContext context =

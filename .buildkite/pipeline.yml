@@ -72,8 +72,7 @@ steps:
       queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
-  - command: .buildkite/run-system-tests.sh
-    plugins:
+  - plugins:
       docker-compose#v3.0.3:
         run: app
         config: docker/docker-compose-system-tests.bazel.yml

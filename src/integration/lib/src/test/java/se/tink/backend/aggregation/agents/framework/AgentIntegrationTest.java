@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,6 +40,8 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.agentfactory.production.ProductionModule;
+import se.tink.backend.aggregation.agents.agentfactory.wiremocked.WiremockedModule;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
@@ -46,16 +50,6 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapp
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.MockSupplementalInformationProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.WireMockTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
@@ -229,33 +223,16 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
 
-            AgentFactory factory;
+            final Injector injector;
             if (wireMockConfiguration != null) {
                 // Provide AgentFactory with mocked http client and supplemental information.
-                factory =
-                        new AgentFactory(
-                                configuration,
-                                new WireMockTinkHttpClientProviderFactory(
-                                        wireMockConfiguration.getServerUrl()),
-                                new MockSupplementalInformationProviderFactory(
-                                        wireMockConfiguration.getCallbackData()),
-                                new AgentContextProviderFactoryImpl(),
-                                new GeneratedValueProviderImpl(
-                                        new ConstantLocalDateTimeSource(),
-                                        new MockRandomValueGenerator()));
+                injector = Guice.createInjector(new WiremockedModule(wireMockConfiguration));
 
             } else {
                 // Provide AgentFactory with 'production' components.
-                factory =
-                        new AgentFactory(
-                                configuration,
-                                new NextGenTinkHttpClientProviderFactory(),
-                                new SupplementalInformationProviderFactoryImpl(),
-                                new AgentContextProviderFactoryImpl(),
-                                new GeneratedValueProviderImpl(
-                                        new ActualLocalDateTimeSource(),
-                                        new RandomValueGeneratorImpl()));
+                injector = Guice.createInjector(new ProductionModule());
             }
+            final AgentFactory factory = injector.getInstance(AgentFactory.class);
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);

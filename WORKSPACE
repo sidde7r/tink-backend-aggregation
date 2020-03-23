@@ -83,10 +83,10 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "513c12397db1bc9aa46dd62f02dd94b49a9b5d17444d49b5a04c5a89f3053c1c",
+    sha256 = "e6a6c016b0663e06fa5fccf1cd8152eab8aa8180c583ec20c872f4f9953a7ac5",
     urls = [
-        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/rules_go/releases/download/v0.19.5/rules_go-v0.19.5.tar.gz",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.19.5/rules_go-v0.19.5.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.22.1/rules_go-v0.22.1.tar.gz",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.22.1/rules_go-v0.22.1.tar.gz",
     ],
 )
 
@@ -2647,6 +2647,12 @@ SPRING_BOOT_VERSION = "2.1.3.RELEASE"
 maven_install(
     name = "system_tests",
     artifacts = [
+        "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+        "com.google.guava:guava:23.1-jre",
+        "commons-io:commons-io:2.5",
+        "org.apache.httpcomponents:httpclient:4.5.10",
+        "org.hamcrest:hamcrest-core:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
         "org.springframework.boot:spring-boot-test:%s" % SPRING_BOOT_VERSION,
         "org.springframework:spring-aop:%s" % SPRING_FRAMEWORK_VERSION,
         "org.springframework:spring-beans:%s" % SPRING_FRAMEWORK_VERSION,
@@ -2669,6 +2675,29 @@ maven_install(
 load("@system_tests//:defs.bzl", system_tests_pin = "pinned_maven_install")
 
 system_tests_pin()
+
+maven_install(
+    name = "fakebank_server",
+    artifacts = [
+        "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+        "com.fasterxml.jackson.core:jackson-core:2.9.9",
+        "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+        "com.google.guava:guava:23.1-jre",
+        "commons-io:commons-io:2.5",
+        "org.apache.httpcomponents:httpclient:4.5.10",
+        "org.hamcrest:hamcrest-core:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party/fakebank_server:fakebank_server_install.json",
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+
+load("@fakebank_server//:defs.bzl", fakebank_server_pin = "pinned_maven_install")
+
+fakebank_server_pin()
 
 # Use via //third_party/jetty_server9
 maven_install(
@@ -2811,3 +2840,14 @@ maven_install(
 load("@com_github_javafaker_javafaker//:defs.bzl", com_github_javafaker_javafaker_pin = "pinned_maven_install")
 
 com_github_javafaker_javafaker_pin()
+
+git_repository(
+    name = "com_github_atlassian_bazel_tools",
+    commit = "72f7db723e7723842042922344dd690c359a87a5",
+    remote = "https://github.com/atlassian/bazel-tools.git",
+    shallow_since = "1490898663 +0200",
+)
+
+load("@com_github_atlassian_bazel_tools//multirun:deps.bzl", "multirun_dependencies")
+
+multirun_dependencies()

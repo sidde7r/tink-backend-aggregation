@@ -9,13 +9,13 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
-import se.tink.backend.aggregation.agents.framework.wiremock.AgentIntegrationMockServerTest;
+import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
-public class LaCaixaMockServerAgentTest extends AgentIntegrationMockServerTest {
+public class LaCaixaMockServerAgentTest {
 
     private static final String USERNAME = "dummyUsername";
     private static final String PASSWORD = "dummyPassword";
@@ -24,14 +24,15 @@ public class LaCaixaMockServerAgentTest extends AgentIntegrationMockServerTest {
     public void testRefresh() throws Exception {
 
         // Given
-        prepareMockServer(
+        WireMockTestServer server = new WireMockTestServer();
+        server.prepareMockServer(
                 new AapFileParser(
                         new ResourceFileReader()
                                 .read(
                                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa/resources/caixa-refresh-traffic.aap")));
 
         final WireMockConfiguration configuration =
-                new WireMockConfiguration("localhost:" + getWireMockPort());
+                new WireMockConfiguration("localhost:" + server.getHttpsPort());
 
         AgentContractEntitiesJsonFileParser contractParser =
                 new AgentContractEntitiesJsonFileParser();

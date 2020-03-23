@@ -2,9 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "framework",
-    srcs = glob(
-        ["**/*.java"],
-    ),
+    srcs = glob(["**/*.java"]),
     data = [],
     visibility = ["//visibility:public"],
     deps = [
@@ -14,6 +12,7 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/identity_data",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
@@ -27,7 +26,8 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/masker",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/production",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/wiremocked",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/models",
         "//src/integration/payment:enums",
@@ -46,6 +46,7 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_code_findbugs_jsr305",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:junit_junit",
