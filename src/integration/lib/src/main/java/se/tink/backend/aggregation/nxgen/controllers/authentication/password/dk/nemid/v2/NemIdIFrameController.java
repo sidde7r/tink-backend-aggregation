@@ -11,12 +11,17 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 
 // Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
 public class NemIdIFrameController {
+
+    private static final Logger log =
+        LoggerFactory.getLogger(NemIdIFrameController.class);
 
     // NemId Javascript Client Integration for mobile:
     // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Integration%20-%20Mobile.pdf
@@ -59,25 +64,30 @@ public class NemIdIFrameController {
     }
 
     public String doLoginWith(String username, String password) throws AuthenticationException {
+        log.info("Start authentication process with nem-id iframe.");
         WebDriver driver = webdriverHelper.constructWebDriver(PHANTOMJS_TIMEOUT_SECONDS);
         try {
             // inject nemId form into iframe
             instantiateIFrameWithNemIdForm(driver);
+            log.info("NemId iframe is initialized");
 
             // provide credentials and submit
             setUserName(driver, username);
             setPassword(driver, password);
-
             clickLogin(driver);
 
             // validate response
             validateCredentials(driver);
+            log.info("Provided credentials are valid.");
 
+            final long askForNemIdStartTime = System.currentTimeMillis();
             // credentials are valid let's ask for 2nd factor
             pollNemidApp(driver);
 
             // wait some time for user's 2nd factor and token
             waitForNemidToken(driver);
+            log.info("Whole 2fa process took {} ms.",
+                System.currentTimeMillis() - askForNemIdStartTime);
 
             return collectToken(driver);
         } finally {
