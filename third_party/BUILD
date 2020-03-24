@@ -12,7 +12,7 @@ java_library(
     name = "c3p0_c3p0",
     visibility = ["//visibility:public"],
     exports = [
-        "@c3p0_c3p0//jar",
+        "@aggregation//:c3p0_c3p0",
     ],
 )
 
@@ -459,7 +459,7 @@ java_library(
     runtime_deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
-        "@commons_lang_commons_lang//jar",
+        "@aggregation//:commons_lang_commons_lang",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_validation//jar",
     ],
@@ -489,6 +489,7 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_sun_jersey_jersey_core",
+        "@aggregation//:commons_lang_commons_lang",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_util",
@@ -505,7 +506,6 @@ java_library(
         "@com_codahale_metrics_metrics_servlets//jar",
         "@com_sun_jersey_jersey_server//jar",
         "@com_sun_jersey_jersey_servlet//jar",
-        "@commons_lang_commons_lang//jar",
         "@io_dropwizard_dropwizard_configuration//jar",
         "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
@@ -760,16 +760,6 @@ java_library(
 )
 
 java_library(
-    # TODO: check is this used?
-    name = "jfree_jcommon",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@jfree_jcommon//jar",
-        "@junit_junit//jar",
-    ],
-)
-
-java_library(
     name = "joda_time_joda_time",
     visibility = ["//visibility:public"],
     exports = [
@@ -830,60 +820,10 @@ java_library(
 )
 
 java_library(
-    # TODO: check is this used?
-    name = "net_sourceforge_htmlunit_htmlunit",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:commons_codec_commons_codec",
-        "@aggregation//:commons_collections_commons_collections",
-        "@aggregation//:commons_io_commons_io",
-        "@aggregation//:commons_logging_commons_logging",
-        "@aggregation//:net_sourceforge_cssparser_cssparser",
-        "@aggregation//:org_apache_commons_commons_lang3",
-        "@aggregation//:org_apache_httpcomponents_httpclient",
-        "@aggregation//:org_apache_httpcomponents_httpcore",
-        "@aggregation//:org_eclipse_jetty_jetty_http",
-        "@aggregation//:org_eclipse_jetty_jetty_io",
-        "@aggregation//:org_eclipse_jetty_jetty_util",
-        "@aggregation//:org_w3c_css_sac",
-        "@aggregation//:xerces_xercesImpl",
-        "@aggregation//:xml_apis_xml_apis",
-        "@net_sourceforge_htmlunit_htmlunit//jar",
-        "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
-        "@net_sourceforge_nekohtml_nekohtml//jar",
-        "@org_apache_httpcomponents_httpmime//jar",
-        "@org_eclipse_jetty_jetty_websocket//jar",
-        "@xalan_serializer//jar",
-        "@xalan_xalan//jar",
-    ],
-)
-
-java_library(
     name = "net_spy_spymemcached",
     visibility = ["//visibility:public"],
     exports = [
         "@net_spy_spymemcached//jar",
-    ],
-)
-
-java_library(
-    # TODO: check is this used?
-    name = "oauth_signpost_signpost_commonshttp4",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:org_apache_httpcomponents_httpclient",
-        "@aggregation//:org_apache_httpcomponents_httpcore",
-        "@oauth_signpost_signpost_commonshttp4//jar",
-        "@oauth_signpost_signpost_core//jar",
-    ],
-)
-
-java_library(
-    name = "oauth_signpost_signpost_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:commons_codec_commons_codec",
-        "@oauth_signpost_signpost_core//jar",
     ],
 )
 
@@ -907,7 +847,7 @@ java_library(
     name = "org_apache_commons_commons_lang",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_lang_commons_lang//jar",
+        "@aggregation//:commons_lang_commons_lang",
     ],
 )
 
@@ -1048,62 +988,6 @@ java_library(
 )
 
 java_library(
-    # is this used?
-    name = "org_apache_kafka_kafka_streams",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@net_jpountz_lz4_lz4//jar",
-        "@org_apache_kafka_connect_api//jar",
-        "@org_apache_kafka_connect_json//jar",
-        "@org_apache_kafka_kafka_clients//jar",
-        "@org_apache_kafka_kafka_streams//jar",
-        "@org_xerial_snappy_snappy_java//jar",
-    ],
-)
-
-java_library(
-    # TODO: check is this used?
-    name = "org_apache_lucene_lucene_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-    ],
-)
-
-java_library(
-    # TODO: check is this used?
-    name = "org_apache_mahout_mahout_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:org_apache_commons_commons_lang3",
-        "@aggregation//:org_apache_mahout_commons_commons_cli",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@com_thoughtworks_xstream_xstream//jar",
-        "@org_apache_commons_commons_math3//jar",
-        "@org_apache_lucene_lucene_analyzers_common//jar",
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_mahout_mahout_core//jar",
-        "@org_apache_mahout_mahout_math//jar",
-        "@org_codehaus_jackson_jackson_core_asl//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
-        "@xmlpull_xmlpull//jar",
-        "@xpp3_xpp3_min//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_velocity_velocity",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:commons_collections_commons_collections",
-        "@commons_lang_commons_lang//jar",
-        "@org_apache_velocity_velocity//jar",
-    ],
-)
-
-java_library(
     name = "org_assertj_assertj_core",
     visibility = ["//visibility:public"],
     exports = [
@@ -1133,17 +1017,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@org_codehaus_jackson_jackson_core_asl//jar",
-    ],
-)
-
-java_library(
-    name = "org_codehaus_jackson_jackson",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_codehaus_jackson_jackson_core_asl//jar",
-        "@org_codehaus_jackson_jackson_jaxrs//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
-        "@org_codehaus_jackson_jackson_xc//jar",
     ],
 )
 
@@ -1574,31 +1447,6 @@ java_library(
         "@io_vavr_jackson//jar",
         "@io_vavr_match//jar",
         "@io_vavr_test//jar",
-    ],
-)
-
-java_library(
-    name = "java_spark",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:commons_logging_commons_logging",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@com_sparkjava_spark_core//jar",
-        "@javax_servlet_javax_servlet_api_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_client_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_http_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_io_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_security_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_server_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_servlet_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_util_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_webapp_spark_dep//jar",
-        "@org_eclipse_jetty_jetty_xml_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_api_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_client_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_common_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_server_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_servlet_spark_dep//jar",
     ],
 )
 

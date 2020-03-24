@@ -802,7 +802,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "c3p0_c3p0",
+    name = "c3p0_c3p0",  # Do not use, but do not remove
     artifact = "c3p0:c3p0:0.9.1.1",
     sha1 = "302704f30c6e7abb7a0457f7771739e03c973e80",
 )
@@ -1428,7 +1428,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_lang_commons_lang",
+    name = "commons_lang_commons_lang",  # Do not use, but do not remove
     artifact = "commons-lang:commons-lang:2.6",
     sha1 = "0ce1edb914c94ebc388f086c6827e8bdeec71ac2",
 )
@@ -2539,6 +2539,7 @@ maven_install(
     artifacts = [
         "aopalliance:aopalliance:1.0",
         "asm:asm:3.1",
+        "c3p0:c3p0:0.9.1.1",
         "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-classic:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
@@ -2581,6 +2582,7 @@ maven_install(
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-io:commons-io:2.5",
+        "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:%s" % NETTY_VERSION,
