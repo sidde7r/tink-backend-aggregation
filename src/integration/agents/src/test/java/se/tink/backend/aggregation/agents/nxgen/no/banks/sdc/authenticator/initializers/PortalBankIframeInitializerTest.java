@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdc.authenticator.initializers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -62,8 +62,7 @@ public class PortalBankIframeInitializerTest {
         given(webDriverHelper.getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH))
                 .willThrow(HtmlElementNotFoundException.class);
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> objUnderTest.initializeBankIdAuthentication());
+        Throwable throwable = catchThrowable(() -> objUnderTest.initializeBankIdAuthentication());
         // then
         assertThat(throwable)
                 .isInstanceOf(ScreenScrapingException.class)

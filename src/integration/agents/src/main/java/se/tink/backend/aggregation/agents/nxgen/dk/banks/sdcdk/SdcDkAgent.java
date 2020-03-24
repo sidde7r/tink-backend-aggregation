@@ -36,7 +36,7 @@ public class SdcDkAgent extends SdcAgent
         implements RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
-    private static Logger LOG = LoggerFactory.getLogger(SdcDkAgent.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SdcDkAgent.class);
     private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 8;
 
     private final CreditCardRefreshController creditCardRefreshController;

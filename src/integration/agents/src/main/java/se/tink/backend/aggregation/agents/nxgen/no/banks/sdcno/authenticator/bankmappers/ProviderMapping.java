@@ -91,7 +91,7 @@ public enum ProviderMapping {
     }
 
     public static AuthenticationType getAuthenticationTypeByBankCode(String bankCodeToCheck) {
-        return Arrays.asList(values()).stream()
+        return Arrays.stream(values())
                 .filter(e -> e.bankCode.equals(bankCodeToCheck))
                 .findAny()
                 .map(e -> e.authenticationType)
