@@ -56,9 +56,11 @@ public class SdcNoBankIdIFrameSSAuthenticator implements AutoAuthenticator, Type
 
         if ((AuthenticationType.NETTBANK).equals(authenticationType)) {
             return new BankIdIframeInitializer(username, driver, webDriverHelper);
-        } else if ((AuthenticationType.PORTAL).equals(authenticationType)) {
+        }
+        if ((AuthenticationType.PORTAL).equals(authenticationType)) {
             return new PortalBankIframeInitializer(username, driver, webDriverHelper);
         }
+
         throw new IllegalArgumentException(
                 String.format("Unsupported Iframe Initializer for  %s", authenticationType));
     }

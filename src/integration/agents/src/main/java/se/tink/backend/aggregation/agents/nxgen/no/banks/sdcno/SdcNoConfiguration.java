@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public class SdcNoConfiguration implements ClientConfiguration {
     private String bankCode;
-    private String baseUrl;
     private AuthenticationType authenticationType;
 
     private static final Pattern PATTERN = Pattern.compile("\\{bankcode}");
@@ -23,30 +22,26 @@ public class SdcNoConfiguration implements ClientConfiguration {
             PATTERN.matcher(Authentication.PORTALBANK_LOGIN_URL);
 
     public SdcNoConfiguration(Provider provider) {
-        this.bankCode = setBankCode(provider.getPayload());
+        this.bankCode = getBankCode(provider.getPayload());
         this.authenticationType = ProviderMapping.getAuthenticationTypeByBankCode(bankCode);
-        this.baseUrl = setBaseUrl();
     }
 
-    private String setBankCode(String payload) {
+    public String getBankCode(String payload) {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(payload),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Bank Code"));
         return payload;
     }
 
-    private String setBaseUrl() {
+    public String getBaseUrl() {
         if ((AuthenticationType.NETTBANK).equals(authenticationType)) {
             return NETTBANK_MATCHER.replaceAll(bankCode);
-        } else if ((AuthenticationType.PORTAL).equals(authenticationType)) {
+        }
+        if ((AuthenticationType.PORTAL).equals(authenticationType)) {
             return PORTALBANK_MATCHER.replaceAll(bankCode);
         }
         throw new IllegalArgumentException(
                 String.format("Not found base url for %s", authenticationType));
-    }
-
-    public String getBaseUrl() {
-        return baseUrl;
     }
 
     public AuthenticationType getAuthenticationType() {
