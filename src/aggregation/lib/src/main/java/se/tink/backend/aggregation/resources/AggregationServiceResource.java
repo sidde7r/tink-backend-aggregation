@@ -36,7 +36,7 @@ import se.tink.backend.aggregation.rpc.SecretsNamesValidationRequest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.aggregation.startupchecks.StartupChecksHandlerImpl;
+import se.tink.backend.aggregation.startupchecks.StartupChecksHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
@@ -65,7 +65,7 @@ public class AggregationServiceResource implements AggregationService {
     private ProviderSessionCacheController providerSessionCacheController;
     private ApplicationDrainMode applicationDrainMode;
     private ProviderConfigurationService providerConfigurationService;
-    private StartupChecksHandlerImpl startupChecksHandler;
+    private StartupChecksHandler startupChecksHandler;
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
     @Inject
@@ -77,7 +77,7 @@ public class AggregationServiceResource implements AggregationService {
             ProviderSessionCacheController providerSessionCacheController,
             ApplicationDrainMode applicationDrainMode,
             ProviderConfigurationService providerConfigurationService,
-            StartupChecksHandlerImpl startupChecksHandler) {
+            StartupChecksHandler startupChecksHandler) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.startupchecks;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +19,11 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
     // check again
     private boolean firstCheckPassed = false;
 
-    private final List<HealthCheck> healthChecks = new ArrayList<>();
+    private final Collection<HealthCheck> healthChecks;
 
     @Inject
     public StartupChecksHandlerImpl(ManagedTppSecretsServiceClient tppSecretsServiceClient) {
-        healthChecks.add(new SecretsServiceHealthCheck(tppSecretsServiceClient));
+        healthChecks = ImmutableSet.of(new SecretsServiceHealthCheck(tppSecretsServiceClient));
     }
 
     @Override
