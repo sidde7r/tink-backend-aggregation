@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public final class AxaConstants {
@@ -11,11 +10,18 @@ public final class AxaConstants {
     }
 
     public static class Url {
-        private static String BASE = "https://esg.services.axabank.be/";
+        private static String BASE = "https://mobile.axabank.be/";
+        private static String AUTH_BASE = BASE + "AXA_BANK_TransmitApi/api/v2/auth/";
+
+        static final String ANONYMOUS_INVOKE = AUTH_BASE + "anonymous_invoke?aid=mobile";
+        static final String ASSERT = AUTH_BASE + "assert?aid=mobile";
+        static final String BIND = AUTH_BASE + "bind?aid=mobile";
+        static final String LOGIN = AUTH_BASE + "login?aid=mobile&did={deviceId}";
+
+        public static final String LOGON = BASE + "AXA_BE_MOBILE_logon03";
         public static final String GENERATE_CHALLENGE = BASE + "AXA_BE_MOBILE_generateUCRChallenge";
         public static final String GENERATE_OTP_CHALLENGE =
                 BASE + "AXA_BE_MOBILE_generateOTPChallenge";
-        public static final String LOGON = BASE + "AXA_BE_MOBILE_logon";
         public static final String REGISTER_USER = BASE + "AXA_BE_MOBILE_registerUser";
         public static final String STORE_DERIVATION_CD = BASE + "AXA_BE_MOBILE_storeDerivationCd";
         public static final String PENDING_PRODUCT_REQUESTS =
@@ -24,46 +30,28 @@ public final class AxaConstants {
         public static final String FETCH_TRANSACTIONS = BASE + "AXA_BE_MOBILE_getAccountHistory01";
     }
 
-    public enum Storage {
-        ACCESS_TOKEN,
-        ACTIVATION_PASSWORD,
-        BASIC_AUTH,
-        CHALLENGE,
-        CLIENT_INITIAL_VECTOR_DECRYPT,
-        CLIENT_INITIAL_VECTOR_INIT,
-        DERIVATION_CODE,
-        DEVICE_ID,
-        DIGIPASS,
-        DIGI_OTP_CHALLENGE_RESPONSE,
-        ENCRYPTED_NONCES,
-        ENCRYPTED_PUBLIC_KEY_AND_NONCE,
-        ENCRYPTED_SERVER_NONCE,
-        ENCRYPTED_SERVER_PUBLIC_KEY,
-        GENERATE_OTP_CHALLENGE_RESPONSE,
-        LANGUAGE,
-        LOGON_RESPONSE,
-        REGISTER_CHALLENGE,
-        SERIAL_NO,
-        SERVER_INITIAL_VECTOR,
-        STORE_REGISTRATION_CD_RESPONSE,
-        UCRID,
-        XFAD,
-        ;
-    }
+    public static final ImmutableMap<String, Object> AUTH_HEADERS_JSON =
+            ImmutableMap.<String, Object>builder()
+                    .put("Host", "mobile.axabank.be")
+                    .put("User-Agent", "axamobileiOS/2.30.7 (iPhone; iOS 13.3.1; Scale/2.00)")
+                    .put("Content-Type", "application/json")
+                    .put(
+                            "Authorization",
+                            "TSToken 3b20ff25-4b71-4736-8c72-7533f861e4e9; tid=mobile")
+                    .put("X-TS-Client-Version", "3.6.13;[1,2,3,6,7,8,10,11,12,14,19]")
+                    .build();
 
     public static final ImmutableMap<String, Object> HEADERS_JSON =
             ImmutableMap.<String, Object>builder()
-                    .put("Host", "esg.services.axabank.be")
+                    .put("Host", "mobile.axabank.be")
                     .put("User-Agent", Request.USER_AGENT)
                     .put("Axa-Version", Request.AXA_VERSION)
                     .put("Content-Type", "application/json; charset=utf-8")
                     .build();
+
     public static final ImmutableMap<String, Object> HEADERS_FORM =
             ImmutableMap.<String, Object>builder()
-                    .put("Connection", "keep-alive")
-                    .put("Accept-Encoding", "gzip, deflate")
-                    .put("Host", "esg.services.axabank.be")
-                    .put("Accept", "*/*")
+                    .put("Host", "mobile.axabank.be")
                     .put("User-Agent", Request.USER_AGENT)
                     .put("Axa-Version", Request.AXA_VERSION)
                     .put("Content-Type", "application/x-www-form-urlencoded")
@@ -105,10 +93,10 @@ public final class AxaConstants {
                     .build();
 
     public static class Request {
-
-        public static final String USER_AGENT = "AXA mobile API-v1.0 (axa-mobile-2.23)";
+        public static final String TS_CLIENT_VERSION = "3.6.13;[1,2,3,6,7,8,10,11,12,14,19]";
+        public static final String USER_AGENT = "AXA mobile API-v1.0 (axa-mobile-2.30)";
         public static final String APPL_CD = "MOBILEBANK";
-        public static final String VERSION_NUMBER = "2.23";
+        public static final String VERSION_NUMBER = "2.30";
         public static final String OPERATING_SYSTEM = "11.1.1";
         public static final String MODEL = "Tinkdevice";
         public static final String BRAND = "Tink";
@@ -159,17 +147,5 @@ public final class AxaConstants {
         public static final String INCORRECT_CHALLENGE_RESPONSE_SUBSTRING = "nicht korrekt";
 
         public static final String BLOCKED_SUBSTRING = "Dieser Benutzer wird endgültig gesperrt";
-    }
-
-    public static class MultiFactorAuthentication {
-        public static final String CODE = "code";
-    }
-
-    public enum LogTags {
-        PERSISTENT_STORAGE;
-
-        public LogTag toTag() {
-            return LogTag.from(name());
-        }
     }
 }

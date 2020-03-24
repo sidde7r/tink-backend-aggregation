@@ -1,24 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.ClientInfoEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public final class LogonResponse {
-    private String access_token;
+
+    @JsonProperty("access_token")
+    private String accessToken;
+
     private String applicationEnvStatusCd;
     private String applicationStatusCd;
     private ClientInfoEntity clientInfo;
     private String degradedOperationsParam;
-    private Integer expires_in;
-    private String refresh_token;
+
+    @JsonProperty("expires_in")
+    private Integer expiresIn;
+
+    @JsonProperty("refresh_token")
+    private String refreshToken;
+
     private String scope;
     private String subscriptionProfile;
-    private String token_type;
+
+    @JsonProperty("token_type")
+    private String tokenType;
 
     public Optional<String> getAccessToken() {
-        return Optional.ofNullable(access_token);
+        return Optional.ofNullable(accessToken);
     }
 
     public Optional<String> getCustomerId() {

@@ -144,6 +144,28 @@
                     "numeric": true,
                     "pattern": "^[0-9]{6,8}$",
                     "patternError": "Enter your 6 to 8 digit response code from your card reader."
+                },
+                {
+                    "description": "Sign challenge",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'M2'.\nEnter your PIN.\nPress 'OK'.\nEnter the challenge.\nPress 'OK'.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodedescription"
+                },
+                {
+                    "description": "Card number challenge",
+                    "helpText": "Enter partial card number challenge.\nPress 'OK' twice.\nEnter the response from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "additionalInformation"
+                },
+                {
+                    "description": "Sign Response Code",
+                    "helpText": "Enter your 7 or 8 digit response code from your card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodeinput",
+                    "numeric": true
                 }
             ],
             "transactional": true,
