@@ -117,6 +117,8 @@ public final class SbabConstants {
         // waiting for more details from SBAB support.
         public static final String INVALID_DATE =
                 "Supplied date is not valid, ensure it's not set to a non business day and try again.";
+        public static final String KYC_MESSAGE =
+                "To continue using this app you must answer some questions from your bank. Please log in with your bank's app or website.";
     }
 
     public static class HttpClient {
