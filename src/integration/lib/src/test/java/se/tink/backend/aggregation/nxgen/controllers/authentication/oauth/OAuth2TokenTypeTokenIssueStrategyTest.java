@@ -74,6 +74,6 @@ public class OAuth2TokenTypeTokenIssueStrategyTest {
         authorizationCallbackData.put("token_type", tokenType);
         authorizationCallbackData.put("scope", scope);
         // when
-        OAuth2Token result = objectUnderTest.issueToken(authorizationCallbackData);
+        objectUnderTest.issueToken(authorizationCallbackData);
     }
 }

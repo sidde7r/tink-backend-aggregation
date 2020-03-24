@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.oauth;
 
 public class OAuth2AuthorizationUrlParam {
 
+    private OAuth2AuthorizationUrlParam() {}
+
     public static final String RESPONSE_TYPE = "response_type";
     public static final String SCOPE = "scope";
     public static final String CLIENT_ID = "client_id";

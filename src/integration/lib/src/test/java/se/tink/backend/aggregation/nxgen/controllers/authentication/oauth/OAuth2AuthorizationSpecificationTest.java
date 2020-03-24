@@ -95,7 +95,7 @@ public class OAuth2AuthorizationSpecificationTest {
         // when
         OAuth2AuthorizationSpecification result = objectUnderTest.build();
         // then
-        Assert.assertEquals(new Long(3600), result.getDefaultAccessTokenLifetime().get());
+        Assert.assertEquals(3600l, result.getDefaultAccessTokenLifetime().get().longValue());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class OAuth2AuthorizationSpecificationTest {
     @Test(expected = IllegalStateException.class)
     public void builderShouldThrowExceptionWhenResponseTypeWasNotProvided() {
         // given
-        OAuth2AuthorizationSpecification.Builder objectUnderTest =
+        objectUnderTest =
                 new OAuth2AuthorizationSpecification.Builder()
                         .withClientId(CLIENT_ID)
                         .withRedirectUrl(REDIRECT_URL)
@@ -125,7 +125,7 @@ public class OAuth2AuthorizationSpecificationTest {
     @Test(expected = IllegalStateException.class)
     public void builderShouldThrowExceptionWhenAuthorizationEndpointWasNotProvided() {
         // given
-        OAuth2AuthorizationSpecification.Builder objectUnderTest =
+        objectUnderTest =
                 new OAuth2AuthorizationSpecification.Builder()
                         .withClientId(CLIENT_ID)
                         .withRedirectUrl(REDIRECT_URL)

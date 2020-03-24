@@ -5,7 +5,6 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class StrongAuthenticationState {
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
-    private static final String UUID_TINK_TAG = "feed";
 
     private final String state;
 

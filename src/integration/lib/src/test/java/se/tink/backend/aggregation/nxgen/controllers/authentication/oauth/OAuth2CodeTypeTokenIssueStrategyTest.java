@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.ws.rs.core.HttpHeaders;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
         WireMock.stubFor(
                 WireMock.post(WireMock.urlPathEqualTo(ACCESS_TOKEN_PATH))
                         .withHeader(
-                                "Content-Type",
+                                HttpHeaders.CONTENT_TYPE,
                                 WireMock.equalTo("application/x-www-form-urlencoded"))
                         .withRequestBody(WireMock.matching(".*grant_type=authorization_code.*"))
                         .withRequestBody(WireMock.matching(".*code=" + code + ".*"))
@@ -76,7 +77,7 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
                         .willReturn(
                                 WireMock.aResponse()
                                         .withBody(accessTokenResponse)
-                                        .withHeader("Content-Type", "application/json")));
+                                        .withHeader(HttpHeaders.CONTENT_TYPE, "application/json")));
 
         Map<String, String> callbackData = new HashMap();
         callbackData.put("code", code);
@@ -85,7 +86,7 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
         // then
         Assert.assertEquals("2YotnFZFEjr1zCsicMWpAA", result.getAccessToken());
         Assert.assertEquals("example", result.getTokenType());
-        Assert.assertEquals(new Long(3600), result.getExpiresIn());
+        Assert.assertEquals(3600l, result.getExpiresIn().longValue());
         Assert.assertEquals("tGzv3JOkF0XG5Qx2TlKWIA", result.getRefreshToken());
     }
 
@@ -111,7 +112,7 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
         WireMock.stubFor(
                 WireMock.post(WireMock.urlPathEqualTo(ACCESS_TOKEN_PATH))
                         .withHeader(
-                                "Content-Type",
+                                HttpHeaders.CONTENT_TYPE,
                                 WireMock.equalTo("application/x-www-form-urlencoded"))
                         .withHeader("clientHeader", WireMock.equalTo("value"))
                         .withRequestBody(WireMock.matching(".*grant_type=authorization_code.*"))
@@ -135,7 +136,7 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
                         .willReturn(
                                 WireMock.aResponse()
                                         .withBody(accessTokenResponse)
-                                        .withHeader("Content-Type", "application/json")));
+                                        .withHeader(HttpHeaders.CONTENT_TYPE, "application/json")));
 
         Map<String, String> callbackData = new HashMap();
         callbackData.put("code", code);
@@ -144,7 +145,7 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
         // then
         Assert.assertEquals("2YotnFZFEjr1zCsicMWpAA", result.getAccessToken());
         Assert.assertEquals("example", result.getTokenType());
-        Assert.assertEquals(new Long(3600), result.getExpiresIn());
+        Assert.assertEquals(3600l, result.getExpiresIn().longValue());
         Assert.assertEquals("tGzv3JOkF0XG5Qx2TlKWIA", result.getRefreshToken());
     }
 
@@ -165,12 +166,12 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
         WireMock.stubFor(
                 WireMock.post(WireMock.urlPathEqualTo(ACCESS_TOKEN_PATH))
                         .withHeader(
-                                "Content-Type",
+                                HttpHeaders.CONTENT_TYPE,
                                 WireMock.equalTo("application/x-www-form-urlencoded"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withBody(accessTokenResponse)
-                                        .withHeader("Content-Type", "application/json")));
+                                        .withHeader(HttpHeaders.CONTENT_TYPE, "application/json")));
 
         Map<String, String> callbackData = new HashMap();
         callbackData.put("code", code);
@@ -199,7 +200,7 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
         WireMock.stubFor(
                 WireMock.post(WireMock.urlPathEqualTo(ACCESS_TOKEN_PATH))
                         .withHeader(
-                                "Content-Type",
+                                HttpHeaders.CONTENT_TYPE,
                                 WireMock.equalTo("application/x-www-form-urlencoded"))
                         .willReturn(
                                 WireMock.aResponse()
