@@ -1,8 +1,8 @@
 {
-  "data": {
-    "nextNotAccounting": 2,
-    "numberTransactionsAccounting": 50,
-    "numberTransactionsNotAccounting": 88,
-    "showNotAccounting": true
-  }
+    "data": {
+        "nextNotAccounting": 2,
+        "numberTransactionsAccounting": 50,
+        "numberTransactionsNotAccounting": 88,
+        "showNotAccounting": true
+    }
 }
