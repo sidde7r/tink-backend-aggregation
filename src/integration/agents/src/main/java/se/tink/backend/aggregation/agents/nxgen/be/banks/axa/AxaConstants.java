@@ -16,16 +16,9 @@ public final class AxaConstants {
         static final String ANONYMOUS_INVOKE = AUTH_BASE + "anonymous_invoke?aid=mobile";
         static final String ASSERT = AUTH_BASE + "assert?aid=mobile";
         static final String BIND = AUTH_BASE + "bind?aid=mobile";
-        static final String LOGIN = AUTH_BASE + "login?aid=mobile&did={deviceId}";
+        static final String LOGIN = AUTH_BASE + "login?aid=mobile";
 
         public static final String LOGON = BASE + "AXA_BE_MOBILE_logon03";
-        public static final String GENERATE_CHALLENGE = BASE + "AXA_BE_MOBILE_generateUCRChallenge";
-        public static final String GENERATE_OTP_CHALLENGE =
-                BASE + "AXA_BE_MOBILE_generateOTPChallenge";
-        public static final String REGISTER_USER = BASE + "AXA_BE_MOBILE_registerUser";
-        public static final String STORE_DERIVATION_CD = BASE + "AXA_BE_MOBILE_storeDerivationCd";
-        public static final String PENDING_PRODUCT_REQUESTS =
-                BASE + "AXA_BE_MOBILE_getPendingProductRequests01";
         public static final String FETCH_ACCOUNTS = BASE + "AXA_BE_MOBILE_getAccounts01";
         public static final String FETCH_TRANSACTIONS = BASE + "AXA_BE_MOBILE_getAccountHistory01";
     }
