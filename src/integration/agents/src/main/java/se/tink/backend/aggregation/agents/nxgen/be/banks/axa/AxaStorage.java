@@ -254,10 +254,12 @@ public final class AxaStorage {
                         .orElseThrow(NoSuchElementException::new);
         sessionStorage.put(ASSERTION_ID, assertionId);
         sessionStorage.put(RESPONSE_CHALLENGE, response.getData().getChallenge());
+        persistentStorage.put(HEADER_SESSION_ID, response.getSessionId());
     }
 
     public void storeValuesFromAssertPinAuthenticationResponse(AssertFormResponse response) {
         sessionStorage.put(TOKEN, response.getData().getToken());
+        persistentStorage.put(HEADER_SESSION_ID, response.getSessionId());
     }
 
     public void storeValuesFromLogonResponse(LogonResponse response) {
