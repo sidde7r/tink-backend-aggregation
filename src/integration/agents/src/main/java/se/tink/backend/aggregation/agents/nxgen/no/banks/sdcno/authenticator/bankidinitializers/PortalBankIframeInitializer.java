@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankIdinitializers;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankidinitializers;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
