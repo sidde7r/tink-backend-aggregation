@@ -12608,7 +12608,7 @@
             "name": "de-hypovereinsbank-password",
             "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
             "popular": false,
-            "status": "TEMPORARY_DISABLED",
+            "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
         },

@@ -34,6 +34,7 @@ public class HVBAgentTest {
                 .addCredentialField(
                         Field.Key.PASSWORD, helper.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .build()
-                .testRefresh();
+                .testRefresh()
+                .printIdentityData();
     }
 }
