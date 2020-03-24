@@ -10,22 +10,26 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankIdinitializers.PortalBankIframeInitializer;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankmappers.AuthenticationType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.BankIdIframeSSAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.initializer.BankIdIframeInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.initializer.IframeInitializer;
 import se.tink.libraries.selenium.WebDriverHelper;
 
 public class SdcNoBankIdIFrameSSAuthenticator implements AutoAuthenticator, TypedAuthenticator {
-    private final BankIdIframeSSAuthenticationController controller;
     private final WebDriver driver;
-    private final String baseUrl;
+    private final SdcNoConfiguration configuration;
+    private final WebDriverHelper webDriverHelper;
 
-    public SdcNoBankIdIFrameSSAuthenticator(String baseUrl) {
-        WebDriverHelper webDriverHelper = new WebDriverHelper();
+    public SdcNoBankIdIFrameSSAuthenticator(SdcNoConfiguration configuration) {
+        this.webDriverHelper = new WebDriverHelper();
         this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
-        this.baseUrl = baseUrl;
-        this.controller = new BankIdIframeSSAuthenticationController(webDriverHelper, driver);
+        this.configuration = configuration;
     }
 
     @Override
@@ -34,12 +38,29 @@ public class SdcNoBankIdIFrameSSAuthenticator implements AutoAuthenticator, Type
 
         String username = credentials.getField(Key.USERNAME);
         String password = credentials.getField(Key.PASSWORD);
+        IframeInitializer iframeInitializer = constructBankIdIframeInitializer(username);
 
-        driver.get(baseUrl);
+        BankIdIframeSSAuthenticationController controller =
+                new BankIdIframeSSAuthenticationController(
+                        iframeInitializer, driver, webDriverHelper);
 
-        controller.doLogin(username, password);
+        driver.get(configuration.getBaseUrl());
+
+        controller.doLogin(password);
 
         driver.close();
+    }
+
+    private IframeInitializer constructBankIdIframeInitializer(String username) {
+        AuthenticationType authenticationType = configuration.getAuthenticationType();
+
+        if ((AuthenticationType.NETTBANK).equals(authenticationType)) {
+            return new BankIdIframeInitializer(username, driver, webDriverHelper);
+        } else if ((AuthenticationType.PORTAL).equals(authenticationType)) {
+            return new PortalBankIframeInitializer(username, driver, webDriverHelper);
+        }
+        throw new IllegalArgumentException(
+                String.format("Unsupported Iframe Initializer for  %s", authenticationType));
     }
 
     @Override
