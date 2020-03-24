@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.business.seb.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.business.seb.SebConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.se.business.seb.SebSessionStorage;
@@ -14,12 +15,15 @@ import se.tink.backend.aggregation.agents.nxgen.se.business.seb.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.se.business.seb.entities.UserInformation;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class SebAuthenticator implements BankIdAuthenticator<String> {
     private final SebApiClient apiClient;
     private final SebSessionStorage sessionStorage;
     private String autoStartToken;
     private String csrfToken;
+    private String ssn;
 
     public SebAuthenticator(SebApiClient apiClient, SebSessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -29,6 +33,7 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
     @Override
     public String init(String ssn) throws BankServiceException {
         final AuthenticationResponse response = apiClient.initiateBankId();
+        this.ssn = ssn;
         csrfToken = response.getCsrfToken();
         autoStartToken = response.getAutoStartToken();
         return response.getCsrfToken();
@@ -36,7 +41,7 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public String refreshAutostartToken() throws BankServiceException {
-        return init("");
+        return init(this.ssn);
     }
 
     @Override
@@ -82,8 +87,23 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
     }
 
     private void activateSession() throws AuthenticationException, AuthorizationException {
-        apiClient.initiateSession();
+        try {
+            apiClient.initiateSession();
+        } catch (HttpResponseException e) {
+            SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(this.ssn);
+            if (!ssn.isValid()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            }
+
+            throw e;
+        }
+
         final UserInformation userInformation = apiClient.activateSession();
+        // Check that the SSN from the credentials matches the logged in user
+        if (!userInformation.getSSN().equals(this.ssn)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
         sessionStorage.putUserInformation(userInformation);
     }
 }
