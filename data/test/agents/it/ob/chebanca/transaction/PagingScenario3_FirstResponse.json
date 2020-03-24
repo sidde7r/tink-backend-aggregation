@@ -1,9 +1,9 @@
 {
-  "data": {
-    "nextAccounting": 12,
-    "nextNotAccounting": 2,
-    "numberTransactionsAccounting": 50,
-    "numberTransactionsNotAccounting": 88,
-    "showNotAccounting": true
-  }
+    "data": {
+        "nextAccounting": 12,
+        "nextNotAccounting": 2,
+        "numberTransactionsAccounting": 50,
+        "numberTransactionsNotAccounting": 88,
+        "showNotAccounting": true
+    }
 }
