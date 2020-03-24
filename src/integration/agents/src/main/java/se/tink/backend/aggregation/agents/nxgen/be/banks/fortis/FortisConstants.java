@@ -50,6 +50,7 @@ public class FortisConstants {
         public static String WRONG_PASSWORD = "EEBA0028";
         public static String MAXIMUM_NUMBER_OF_TRIES = "EEBA0026";
         public static String INVALID_SIGNATURE_KO = "EWAS0372";
+        public static String COMBINATION_HARDWARE_ID_AND_LOGIN_ID_NOT_FOUND = "EEBW6112";
         public static String MUID_OK = "EBW0000";
     }
 

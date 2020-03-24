@@ -90,8 +90,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             String smid,
             String agreementId,
             String deviceFingerprint)
-            throws SupplementalInfoException, LoginException, AuthorizationException,
-                    SessionException {
+            throws SupplementalInfoException, LoginException, AuthorizationException {
         GenerateChallangeRequest challangeRequest =
                 new GenerateChallangeRequest(apiClient.getDistributorId(), authenticationProcessID);
         String challenge = apiClient.fetchChallenges(challangeRequest);
@@ -117,11 +116,11 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                         .withMeanId(FortisConstants.Values.UCR)
                         .build();
 
-        sendChallenges(authResponse, false);
+        sendChallenges(authResponse);
     }
 
-    private void sendChallenges(AuthResponse response, boolean inAutoAuthenticationFlow)
-            throws LoginException, AuthorizationException, SessionException {
+    private void sendChallenges(AuthResponse response)
+            throws LoginException, AuthorizationException {
         HttpResponse httpResponse;
         try {
             httpResponse = apiClient.authenticationRequest(response.getUrlEncodedFormat());
@@ -133,18 +132,17 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
 
         if (!Strings.isNullOrEmpty(responseBody)
                 && responseBody.contains(FortisConstants.ErrorCode.ERROR_CODE)) {
+            clearAuthenticationData();
             if (responseBody.contains(FortisConstants.ErrorCode.INVALID_SIGNATURE)) {
                 throw LoginError.PASSWORD_CHANGED.exception();
-            }
-            if (responseBody.contains(FortisConstants.ErrorCode.MAXIMUM_NUMBER_OF_TRIES)) {
+            } else if (responseBody.contains(FortisConstants.ErrorCode.MAXIMUM_NUMBER_OF_TRIES)) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
-            }
-            if (responseBody.contains(FortisConstants.ErrorCode.INVALID_SIGNATURE_KO)) {
-                if (inAutoAuthenticationFlow) {
-                    throw SessionError.SESSION_EXPIRED.exception();
-                } else {
-                    throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
-                }
+            } else if (responseBody.contains(FortisConstants.ErrorCode.INVALID_SIGNATURE_KO)) {
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            } else if (responseBody.contains(
+                    FortisConstants.ErrorCode.COMBINATION_HARDWARE_ID_AND_LOGIN_ID_NOT_FOUND)) {
+
+                throw LoginError.REGISTER_DEVICE_ERROR.exception();
             } else {
                 throw new IllegalStateException(String.format("Unknown error: %s", responseBody));
             }
@@ -350,7 +348,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, AuthorizationException {
+    public void autoAuthenticate() throws SessionException, AuthorizationException, LoginException {
 
         final String authenticatorFactorId =
                 persistentStorage.get(FortisConstants.Storage.ACCOUNT_PRODUCT_ID);
@@ -362,7 +360,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         final String muid = persistentStorage.get(FortisConstants.Storage.MUID);
 
         if (Strings.isNullOrEmpty(password)) {
-            throw SessionError.SESSION_EXPIRED.exception();
+            SessionError.SESSION_EXPIRED.exception();
         }
 
         EbankingUsersResponse ebankingUsersResponse =
@@ -418,12 +416,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                             .build();
 
             UserInfoResponse userInfoResponse;
-            try {
-                sendChallenges(authResponse, true);
-            } catch (LoginException | AuthorizationException l) {
-                clearAuthenticationData();
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
+            sendChallenges(authResponse);
             userInfoResponse = apiClient.getUserInfo();
             validateMuid(userInfoResponse);
             persistentStorage.put(
