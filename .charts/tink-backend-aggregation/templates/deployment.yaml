@@ -303,7 +303,7 @@ spec:
         {{- if eq "local" .Values.Cluster }}
         resources:
           limits:
-            memory: {{ default "200Mi" .Values.podMemoryLimit }}
+            memory: {{ default "400Mi" .Values.podMemoryLimit }}
             cpu: {{ default "500m" .Values.podCpuLimit }}
         {{ else }}
         resources:
@@ -352,7 +352,12 @@ spec:
           periodSeconds: 10
           failureThreshold: 10
           timeoutSeconds: 1
+          {{- if  (eq .Values.Environment "development") }}
+          initialDelaySeconds: 120
+          {{- else }}
           initialDelaySeconds: 300
+          {{- end }}
+
         # The pod will only receive traffic if the readinessProbe is succeeding,
         # it's also used when rolling out a new version, to know if the new version
         # is working or not
@@ -360,14 +365,22 @@ spec:
           httpGet:
             # This is named start as this is emulating a startupProbe which will not be ready until
             # we upgrade to k8s 1.17+
+            {{- if or (eq .Values.Environment "staging") (eq .Values.Environment "development") }}
             path: /aggregation/started
+            {{- else }}
+            path: /aggregation/ping
+            {{- end }}
             port: 8443
             scheme: HTTPS
           periodSeconds: 10
           failureThreshold: 3
           successThreshold: 3
           timeoutSeconds: 1
+          {{- if  (eq .Values.Environment "development") }}
+          initialDelaySeconds: 120
+          {{- else }}
           initialDelaySeconds: 300
+          {{- end }}
 
         volumeMounts:
         - name: tmp
