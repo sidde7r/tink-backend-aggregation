@@ -1,11 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
+import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntityImpl;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.SebPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.creditcards.SebCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.creditcards.SebCreditCardTransactionsFetcher;
@@ -21,10 +30,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SebAgent extends SebBaseAgent<SebApiClient>
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SebStorage instanceStorage;
@@ -105,5 +117,23 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
                 new SebPaymentExecutor(apiClient, supplementalRequester);
 
         return Optional.of(new PaymentController(sebPaymentExecutor, sebPaymentExecutor));
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return new FetchTransferDestinationsResponse(
+                new TransferDestinationPatternBuilder()
+                        .setTinkAccounts(accounts)
+                        .setSourceAccounts(
+                                accounts.stream()
+                                        .map(GeneralAccountEntityImpl::createFromCoreAccount)
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .collect(Collectors.toList()))
+                        .setDestinationAccounts(new ArrayList<>())
+                        .addMultiMatchPattern(Type.SE_BG, TransferDestinationPattern.ALL)
+                        .addMultiMatchPattern(Type.SE_PG, TransferDestinationPattern.ALL)
+                        .addMultiMatchPattern(Type.IBAN, TransferDestinationPattern.ALL)
+                        .build());
     }
 }
