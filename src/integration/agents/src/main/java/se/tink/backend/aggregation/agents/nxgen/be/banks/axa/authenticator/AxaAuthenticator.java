@@ -171,7 +171,6 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
         AssertFormResponse response = apiClient.assertFormWithSignature(request);
         verifyBaseResponse(response);
         storage.storeValuesFromAssertConfirmationResponse(response);
-        storage.registerDevice();
         return executeNextStep(response);
     }
 
@@ -241,6 +240,7 @@ public class AxaAuthenticator extends StatelessProgressiveAuthenticator {
 
     private AuthenticationStepResponse executeNextStep(AssertFormResponse response) {
         if ("completed".equals(response.getData().getState())) {
+            storage.registerDevice();
             return AuthenticationStepResponse.executeStepWithId(LOGON_FINAL_STEP);
         }
 
