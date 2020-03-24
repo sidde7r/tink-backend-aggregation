@@ -15,24 +15,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.initializer.IframeInitializer;
 import se.tink.libraries.selenium.WebDriverHelper;
-import se.tink.libraries.selenium.exceptions.HtmlElementNotFoundException;
-import se.tink.libraries.selenium.exceptions.ScreenScrapingException;
 
 public class BankIdIframeSSAuthenticationControllerTest {
     private BankIdIframeSSAuthenticationController controller;
+    private IframeInitializer iframeInitializer;
     private WebDriverHelper webDriverHelper;
     private InOrder inOrder;
     private PhantomJSDriver driver;
 
     private WebElement buttonbankId;
     private WebElement selectAuthenticationButton;
-    private WebElement usernameInput;
     private WebElement passwordInputMock;
     private WebElement iframeMock;
 
     private static final By FORM_XPATH = By.xpath("//form");
-    private static final By USERNAME_INPUT_XPATH = By.xpath("//form//input[@maxlength='11']");
     private static final By PASSWORD_INPUT_XPATH =
             By.xpath("//form//input[@type='password'][@maxlength]");
     private static final By AUTHENTICATION_LIST_BUTTON_XPATH =
@@ -42,24 +40,21 @@ public class BankIdIframeSSAuthenticationControllerTest {
                     "//ul/child::li/child::button[span[contains(text(),'mobil') and contains(text(),'BankID')]]");
 
     private static final By IFRAME_XPATH = By.tagName("iframe");
-    private static String USERNAME_INPUT = "USERNAME-INPUT";
     private static String PASSWORD_INPUT = "PASSWORD-INPUT";
-    private static String LOGIN_INPUT = "LOGIN-EXAMPLE";
 
     @Before
     public void init() {
         driver = mock(PhantomJSDriver.class);
         webDriverHelper = mock(WebDriverHelper.class);
-
-        inOrder = Mockito.inOrder(driver, webDriverHelper);
-        controller = new BankIdIframeSSAuthenticationController(webDriverHelper, driver);
+        iframeInitializer = mock(IframeInitializer.class);
+        inOrder = Mockito.inOrder(iframeInitializer, driver, webDriverHelper);
+        controller =
+                new BankIdIframeSSAuthenticationController(
+                        iframeInitializer, driver, webDriverHelper);
         initializeWebElements();
     }
 
     private void initializeWebElements() {
-        // username input
-        given(driver.findElements(USERNAME_INPUT_XPATH)).willReturn(Arrays.asList(usernameInput));
-
         // authentication list button
         selectAuthenticationButton = mock(WebElement.class);
         given(webDriverHelper.getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH))
@@ -84,15 +79,11 @@ public class BankIdIframeSSAuthenticationControllerTest {
     public void authenticateShouldFinishWithoutError() throws AuthenticationException {
         // given
         // when
-        controller.doLogin(USERNAME_INPUT, PASSWORD_INPUT);
+        controller.doLogin(PASSWORD_INPUT);
         // then
-        // get to Bank ID iframe
-        inOrder.verify(webDriverHelper).switchToIframe(driver);
 
-        // Insert and submit Fodelsnummer
-        inOrder.verify(webDriverHelper).getElement(driver, USERNAME_INPUT_XPATH);
-        inOrder.verify(webDriverHelper).sendInputValue(usernameInput, USERNAME_INPUT);
-        inOrder.verify(webDriverHelper).submitForm(driver, FORM_XPATH);
+        // initialize bank id iframe
+        inOrder.verify(iframeInitializer).initializeBankIdAuthentication();
 
         // List authentication methods
         inOrder.verify(webDriverHelper).getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
@@ -110,28 +101,13 @@ public class BankIdIframeSSAuthenticationControllerTest {
     }
 
     @Test
-    public void doLoginShouldThrowExceptionWhenBankIdTemplateNotLoaded() {
-        // given
-        given(webDriverHelper.getElement(driver, USERNAME_INPUT_XPATH))
-                .willThrow(new HtmlElementNotFoundException("Element not found"));
-        // when
-        Throwable throwable =
-                Assertions.catchThrowable(
-                        () -> controller.doLogin("USERNAME-EXAMPLE", "PASSWORD-EXAMPLE"));
-        // then
-        assertThat(throwable)
-                .isInstanceOf(ScreenScrapingException.class)
-                .hasMessage("Bank Id template not loaded");
-    }
-
-    @Test
     public void doLoginShouldThrowExceptionWhenNoPasswordInputAvailable() {
         // given
+
         given(webDriverHelper.checkIfElementEnabledIfNotWait(passwordInputMock)).willReturn(false);
         // when
         Throwable throwable =
-                Assertions.catchThrowable(
-                        () -> controller.doLogin("USERNAME-EXAMPLE", "PASSWORD-EXAMPLE"));
+                Assertions.catchThrowable(() -> controller.doLogin("PASSWORD-EXAMPLE"));
         // then
         assertThat(throwable)
                 .isInstanceOf(LoginException.class)
