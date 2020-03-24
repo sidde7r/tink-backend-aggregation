@@ -132,14 +132,17 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
 
         if (!Strings.isNullOrEmpty(responseBody)
                 && responseBody.contains(FortisConstants.ErrorCode.ERROR_CODE)) {
+            clearAuthenticationData();
             if (responseBody.contains(FortisConstants.ErrorCode.INVALID_SIGNATURE)) {
                 throw LoginError.PASSWORD_CHANGED.exception();
-            }
-            if (responseBody.contains(FortisConstants.ErrorCode.MAXIMUM_NUMBER_OF_TRIES)) {
+            } else if (responseBody.contains(FortisConstants.ErrorCode.MAXIMUM_NUMBER_OF_TRIES)) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
-            }
-            if (responseBody.contains(FortisConstants.ErrorCode.INVALID_SIGNATURE_KO)) {
+            } else if (responseBody.contains(FortisConstants.ErrorCode.INVALID_SIGNATURE_KO)) {
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            } else if (responseBody.contains(
+                    FortisConstants.ErrorCode.COMBINATION_HARDWARE_ID_AND_LOGIN_ID_NOT_FOUND)) {
+
+                throw LoginError.REGISTER_DEVICE_ERROR.exception();
             } else {
                 throw new IllegalStateException(String.format("Unknown error: %s", responseBody));
             }
@@ -288,7 +291,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
 
         if (!Strings.isNullOrEmpty(userInfoResponse.getValue().getUserData().getMuidCode())
                 && !FortisConstants.ErrorCode.MUID_OK.equalsIgnoreCase(
-                userInfoResponse.getValue().getUserData().getMuidCode())) {
+                        userInfoResponse.getValue().getUserData().getMuidCode())) {
             LOGGER.warnExtraLong(
                     String.format(
                             "muidcode %s, daysPasswordStillValid %s",
@@ -345,7 +348,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, AuthorizationException {
+    public void autoAuthenticate() throws SessionException, AuthorizationException, LoginException {
 
         final String authenticatorFactorId =
                 persistentStorage.get(FortisConstants.Storage.ACCOUNT_PRODUCT_ID);
@@ -357,7 +360,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         final String muid = persistentStorage.get(FortisConstants.Storage.MUID);
 
         if (Strings.isNullOrEmpty(password)) {
-            throw AuthorizationError.UNAUTHORIZED.exception()SessionError.SESSION_EXPIRED.exception();
+            SessionError.SESSION_EXPIRED.exception();
         }
 
         EbankingUsersResponse ebankingUsersResponse =
@@ -413,12 +416,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                             .build();
 
             UserInfoResponse userInfoResponse;
-            try {
-                sendChallenges(authResponse);
-            } catch (LoginException | AuthorizationException l) {
-                clearAuthenticationData();
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
+            sendChallenges(authResponse);
             userInfoResponse = apiClient.getUserInfo();
             validateMuid(userInfoResponse);
             persistentStorage.put(
