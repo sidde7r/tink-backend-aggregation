@@ -7,6 +7,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/v31",
         "//src/integration/amount",
         "//src/integration/lib",
+        "//third_party:com_google_inject_guice",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
         "@aggregation//:com_google_guava_guava",

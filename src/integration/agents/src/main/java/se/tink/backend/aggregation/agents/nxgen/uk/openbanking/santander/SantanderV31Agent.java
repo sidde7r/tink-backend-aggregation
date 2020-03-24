@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
@@ -39,6 +40,7 @@ public class SantanderV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    @Inject
     public SantanderV31Agent(AgentComponentProvider componentProvider) {
         super(componentProvider, aisConfig, false);
         pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);

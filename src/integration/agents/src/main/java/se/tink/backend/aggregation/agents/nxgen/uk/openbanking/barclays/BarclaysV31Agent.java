@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
@@ -38,6 +39,7 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    @Inject
     public BarclaysV31Agent(AgentComponentProvider componentProvider) {
         super(componentProvider, aisConfig, true);
         pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);

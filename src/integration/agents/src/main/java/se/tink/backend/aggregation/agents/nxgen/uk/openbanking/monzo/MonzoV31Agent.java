@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
@@ -36,6 +37,7 @@ public class MonzoV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    @Inject
     public MonzoV31Agent(AgentComponentProvider componentProvider) {
         super(componentProvider, aisConfig, false);
         pisConfig = new UkOpenBankingV31PisConfiguration(Urls.PIS_API_URL);
