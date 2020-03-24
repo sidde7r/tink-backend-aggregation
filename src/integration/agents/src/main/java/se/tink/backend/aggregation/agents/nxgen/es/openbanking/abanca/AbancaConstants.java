@@ -23,20 +23,21 @@ public final class AbancaConstants {
 
     public static class Urls {
 
-        public static final String BASE_API_URL = "https://api.abanca.com/sandbox/psd2";
-        public static final String BASE_AUTH_URL = "https://api.abanca.com/oauth2";
+        public static final String BASE_API_URL = "https://api.abanca.com/psd2";
+        public static final String BASE_AUTH_URL = "https://api.abanca.com";
 
+        public static final URL AUTHORIZATION = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZATION);
         public static final URL TOKEN = new URL(BASE_AUTH_URL + Endpoints.TOKEN);
-
         public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
         public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
         public static final URL BALANCE = new URL(BASE_API_URL + Endpoints.BALANCE);
     }
 
     public static class Endpoints {
+        public static final String AUTHORIZATION = "/oauth/{clientId}/Abanca";
         public static final String ACCOUNTS = "/me/accounts";
         public static final String TRANSACTIONS = "/me/accounts/{accountId}/transactions";
-        public static final String TOKEN = "/token";
+        public static final String TOKEN = "/oauth2/token";
         public static final String BALANCE = "/me/accounts/{accountId}/balance";
     }
 
@@ -45,8 +46,8 @@ public final class AbancaConstants {
     }
 
     public static class HeaderKeys {
-        public static final String AUTH_KEY = "authkey";
-        public static final String AUTHORIZATION = "authorization";
+        public static final String AUTH_KEY = "AuthKey";
+        public static final String AUTHORIZATION = "Authorization";
     }
 
     public static class ErrorMessages {
@@ -59,15 +60,24 @@ public final class AbancaConstants {
     public class UrlParameters {
 
         public static final String ACCOUNT_ID = "accountId";
+        public static final String CLIENT_ID = "clientId";
     }
 
     public class QueryKeys {
-
-        public static final String APPLICATION = "aplicacion";
-        public static final String GRANT_TYPE = "grant_type";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
         public static final String API_KEY = "api_key";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String STATE = "state";
+        public static final String CODE = "code";
+    }
+
+    public class QueryValues {
+        public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String CODE = "CODE";
+        public static final String GRANT_TYPE = "grant_type";
     }
 
     public static class HeaderValues {
@@ -75,9 +85,20 @@ public final class AbancaConstants {
         public static final String TOKEN_PREFIX = "Bearer ";
     }
 
-    public static class FormValues {
+    public static class FormKeys {
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String APPLICATION = "APLICACION";
+        public static final String CODE = "code";
+        public static final String REFRESH_TOKEN = "refresh_token";
+    }
 
-        public static final String APPLICATION = "SANDEX0001";
-        public static final String GRANT_TYPE = "password";
+    public static class FormValues {
+        public static final String GRANT_TYPE_CODE = "authorization_code";
+        public static final String GRANT_TYPE_REFRESH = "refresh_token";
+    }
+
+    public class Market {
+        public static final String INTEGRATION_NAME = "abanca";
+        public static final String CLIENT_NAME = "tink";
     }
 }

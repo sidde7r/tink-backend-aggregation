@@ -1,35 +1,45 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.http.form.Form;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.FormKeys;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
-@JsonObject
-public class TokenRequest {
+public class TokenRequest extends AbstractForm {
 
-    private String application;
-    private String grantType;
-    private String username;
-    private String password;
-    private String apiKey;
-
-    public TokenRequest(
-            String application, String grantType, String username, String password, String apiKey) {
-        this.application = application;
-        this.grantType = grantType;
-        this.username = username;
-        this.password = password;
-        this.apiKey = apiKey;
+    private TokenRequest(Builder builder) {
+        put(FormKeys.GRANT_TYPE, builder.grantType);
+        put(FormKeys.APPLICATION, builder.clientId);
+        Optional.ofNullable(builder.code).ifPresent(c -> put(FormKeys.CODE, c));
+        Optional.ofNullable(builder.refreshToken).ifPresent(rt -> put(FormKeys.REFRESH_TOKEN, rt));
     }
 
-    public String toData() {
-        return Form.builder()
-                .put(AbancaConstants.QueryKeys.APPLICATION, application)
-                .put(AbancaConstants.QueryKeys.GRANT_TYPE, grantType)
-                .put(AbancaConstants.QueryKeys.USERNAME, username)
-                .put(AbancaConstants.QueryKeys.PASSWORD, password)
-                .put(AbancaConstants.QueryKeys.API_KEY, apiKey)
-                .build()
-                .serialize();
+    public static Builder builder(String clientId, String grantType) {
+        return new Builder(clientId, grantType);
+    }
+
+    public static class Builder {
+        private String clientId;
+        private String grantType;
+        private String code;
+        private String refreshToken;
+
+        private Builder(String clientId, String grantType) {
+            this.clientId = clientId;
+            this.grantType = grantType;
+        }
+
+        public Builder setCode(String code) {
+            this.code = code;
+            return this;
+        }
+
+        public Builder setRefreshToken(String refreshToken) {
+            this.refreshToken = refreshToken;
+            return this;
+        }
+
+        public TokenRequest build() {
+            return new TokenRequest(this);
+        }
     }
 }

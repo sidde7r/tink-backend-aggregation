@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca;
 
 import java.util.Optional;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authenticator.rpc.TokenResponse;
@@ -16,20 +18,29 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.tr
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class AbancaApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private AbancaConfiguration configuration;
+    private final AbancaConfiguration configuration;
+    private final SessionStorage sessionStorage;
 
-    public AbancaApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public AbancaApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            AbancaConfiguration abancaConfiguration,
+            SessionStorage sessionStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.configuration = abancaConfiguration;
+        this.sessionStorage = sessionStorage;
     }
 
     private AbancaConfiguration getConfiguration() {
@@ -37,13 +48,9 @@ public final class AbancaApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(AbancaConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
-    private String getTokenFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.OAUTH_TOKEN, String.class)
+    private OAuth2Token getTokenFromSession() {
+        return sessionStorage
+                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Token not found!"));
     }
 
@@ -55,10 +62,8 @@ public final class AbancaApiClient {
 
     public RequestBuilder createRequestInSession(URL url) {
         return createRequest(url)
-                .header(AbancaConstants.HeaderKeys.AUTH_KEY, configuration.getAuthKey())
-                .header(
-                        AbancaConstants.HeaderKeys.AUTHORIZATION,
-                        AbancaConstants.HeaderValues.TOKEN_PREFIX + getTokenFromStorage());
+                .header(HeaderKeys.AUTH_KEY, configuration.getApiKey())
+                .addBearerToken(getTokenFromSession());
     }
 
     public AccountsResponse fetchAccounts() {
@@ -86,22 +91,26 @@ public final class AbancaApiClient {
         return createRequestInSession(url).get(TransactionsResponse.class);
     }
 
-    public void authenticate(Credentials credentials) {
+    public URL getAuthorizeUrl(String state) {
+        return client.request(
+                        Urls.AUTHORIZATION.parameter(
+                                UrlParameters.CLIENT_ID, configuration.getClientId()))
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
+                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
+                .queryParam(QueryKeys.STATE, state)
+                .getUrl();
+    }
 
-        TokenRequest tokenRequest =
-                new TokenRequest(
-                        AbancaConstants.FormValues.APPLICATION,
-                        AbancaConstants.FormValues.GRANT_TYPE,
-                        credentials.getField(Key.USERNAME),
-                        credentials.getField(Key.PASSWORD),
-                        configuration.getApiKey());
+    public OAuth2Token getToken(TokenRequest tokenRequest) {
+        return client.request(Urls.TOKEN)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .header(HeaderKeys.AUTH_KEY, configuration.getApiKey())
+                .body(tokenRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(TokenResponse.class)
+                .toTinkToken();
+    }
 
-        TokenResponse tokenResponse =
-                client.request(Urls.TOKEN)
-                        .header(HeaderKeys.AUTH_KEY, getConfiguration().getAuthKey())
-                        .type(MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(TokenResponse.class, tokenRequest.toData());
-
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, tokenResponse.getAccessToken());
+    public void setTokenToSession(OAuth2Token accessToken) {
+        sessionStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
     }
 }

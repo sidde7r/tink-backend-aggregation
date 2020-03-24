@@ -31,6 +31,8 @@ public class AbancaAgentTest {
                         .addCredentialField(
                                 Field.Key.PASSWORD,
                                 helper.get(UsernamePasswordArgumentEnum.PASSWORD))
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("abanca")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
