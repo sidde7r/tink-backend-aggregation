@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.Session;
 import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.framework.AgentTestContext;
@@ -29,6 +32,8 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
     public LansforsakringarAgentTest() {
         super(LansforsakringarAgent.class);
     }
+
+    @Rule public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testUser1AuthenticationError() throws Exception {
@@ -136,6 +141,22 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
         t.setType(TransferType.PAYMENT);
         t.setDueDate(DateUtils.addDays(new Date(), 2));
 
+        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
+    }
+
+    @Test
+    public void testPaymentBGExcessAmount() throws Exception {
+        expectedException.expect(TransferExecutionException.class);
+        expectedException.expectMessage(
+                TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get());
+        Transfer t = new Transfer();
+        t.setAmount(Amount.inSEK(14500000));
+        t.setSource(new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH));
+        t.setDestination(new BankGiroIdentifier("7308596"));
+        t.setDestinationMessage("37578936060100475");
+        t.setSourceMessage("AmEx Test1");
+        t.setType(TransferType.PAYMENT);
+        t.setDueDate(DateUtils.addDays(new Date(), 2));
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
     }
 

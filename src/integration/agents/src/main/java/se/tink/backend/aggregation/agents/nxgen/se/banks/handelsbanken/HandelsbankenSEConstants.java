@@ -5,11 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule.InstrumentType;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -120,28 +121,11 @@ public class HandelsbankenSEConstants {
         public static final String KF_AND_PENSION = "kapital";
         public static final String ERROR_TOO_YOUNG_INVESTMENTS = "10001";
         public static final String KF_TYPE_PREFIX = "kapitalspar";
-    }
-
-    public enum InstrumentType {
-        STOCK("stock", Instrument.Type.STOCK),
-        FUND("fund", Instrument.Type.FUND),
-        OTHER("", Instrument.Type.OTHER);
-        private final String rawType;
-        private final Instrument.Type type;
-
-        InstrumentType(String rawType, Instrument.Type type) {
-            this.rawType = rawType;
-            this.type = type;
-        }
-
-        public static InstrumentType asType(String type) {
-            for (InstrumentType instrumentType : values()) {
-                if (instrumentType.rawType.equalsIgnoreCase(type)) {
-                    return instrumentType;
-                }
-            }
-            return OTHER;
-        }
+        public static final TypeMapper<InstrumentType> INSTRUMENT_TYPE_MAPPER =
+                TypeMapper.<InstrumentType>builder()
+                        .put(InstrumentType.STOCK, "stock")
+                        .put(InstrumentType.FUND, "fund", "etf")
+                        .build();
     }
 
     public enum PortfolioType {
