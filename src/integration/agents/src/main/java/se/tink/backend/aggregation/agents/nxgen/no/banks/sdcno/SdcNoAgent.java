@@ -1,48 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.SdcNoBankIdIFrameSSAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.parser.SdcNoTransactionParser;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-/*
- * Configure market specific client, this is NO
- */
-public class SdcNoAgent extends SdcAgent {
-    private static final Pattern PATTERN = Pattern.compile("\\{bankcode}");
-    private static final Matcher NETTBANK_MATCHER =
-            PATTERN.matcher(Authentication.IFRAME_BANKID_LOGIN_URL);
+public class SdcNoAgent extends NextGenerationAgent {
+    private SdcNoConfiguration configuration;
 
     public SdcNoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(
-                request,
-                context,
-                signatureKeyPair,
-                new SdcNoConfiguration(request.getProvider()),
-                new SdcNoTransactionParser());
+        super(request, context, signatureKeyPair);
+
+        this.configuration = new SdcNoConfiguration(request.getProvider());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SdcNoBankIdIFrameSSAuthenticator(getLoginUrl());
+        return new SdcNoBankIdIFrameSSAuthenticator(configuration);
     }
 
     @Override
-    protected SdcApiClient createApiClient(SdcConfiguration agentConfiguration) {
-        return new SdcApiClient(client, agentConfiguration);
-    }
-
-    private String getLoginUrl() {
-        String bankCode = agentConfiguration.getBankCode();
-        return NETTBANK_MATCHER.replaceAll(bankCode);
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
     }
 }
