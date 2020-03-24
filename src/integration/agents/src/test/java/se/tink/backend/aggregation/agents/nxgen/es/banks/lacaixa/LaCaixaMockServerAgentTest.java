@@ -32,7 +32,7 @@ public class LaCaixaMockServerAgentTest {
                                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa/resources/caixa-refresh-traffic.aap")));
 
         final WireMockConfiguration configuration =
-                new WireMockConfiguration("localhost:" + server.getHttpsPort());
+                WireMockConfiguration.builder("localhost:" + server.getHttpsPort()).build();
 
         AgentContractEntitiesJsonFileParser contractParser =
                 new AgentContractEntitiesJsonFileParser();

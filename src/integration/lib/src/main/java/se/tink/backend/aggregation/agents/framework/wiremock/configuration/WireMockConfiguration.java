@@ -12,14 +12,7 @@ public final class WireMockConfiguration {
     private final Map<String, String> callbackData;
     private final Module agentModule;
 
-    public WireMockConfiguration(String serverUrl) {
-        this.serverUrl = serverUrl;
-        this.agentConfigurationPath = null;
-        this.callbackData = Collections.emptyMap();
-        this.agentModule = new AbstractModule() {}; // Empty module
-    }
-
-    public WireMockConfiguration(
+    private WireMockConfiguration(
             String serverUrl,
             String agentConfigurationPath,
             Map<String, String> callbackData,
@@ -44,5 +37,50 @@ public final class WireMockConfiguration {
 
     public Module getAgentModule() {
         return agentModule;
+    }
+
+    public static Builder builder(String serverUrl) {
+        return new Builder(serverUrl);
+    }
+
+    public static class Builder {
+
+        private final String serverUrl;
+        private String configurationPath;
+        private Map<String, String> callbackData;
+        private Module agentModule;
+
+        private Builder(String serverUrl) {
+            this.serverUrl = serverUrl;
+        }
+
+        public Builder setConfigurationPath(String configurationPath) {
+            this.configurationPath = configurationPath;
+            return this;
+        }
+
+        public Builder setCallbackData(Map<String, String> callbackData) {
+            this.callbackData = callbackData;
+            return this;
+        }
+
+        public Builder setAgentModule(Module agentModule) {
+            this.agentModule = agentModule;
+            return this;
+        }
+
+        public WireMockConfiguration build() {
+
+            if (callbackData == null) {
+                callbackData = Collections.emptyMap();
+            }
+
+            if (agentModule == null) {
+                agentModule = new AbstractModule() {}; // Empty Module
+            }
+
+            return new WireMockConfiguration(
+                    serverUrl, configurationPath, callbackData, agentModule);
+        }
     }
 }
