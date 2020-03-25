@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.startupchecks;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
+import io.prometheus.client.Histogram;
 import java.util.Collection;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
@@ -21,9 +22,20 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
 
     private final Collection<HealthCheck> healthChecks;
 
+    private static final Histogram healthCheckDuration =
+            Histogram.build()
+                    .namespace("tink_aggregation")
+                    .name("healthcheck_duration_seconds")
+                    .labelNames("name", "healthy")
+                    .help("healthchecks durations")
+                    .register();
+
     @Inject
     public StartupChecksHandlerImpl(ManagedTppSecretsServiceClient tppSecretsServiceClient) {
-        healthChecks = ImmutableSet.of(new SecretsServiceHealthCheck(tppSecretsServiceClient));
+        healthChecks =
+                ImmutableSet.of(
+                        new SecretsServiceHealthCheck(
+                                tppSecretsServiceClient, healthCheckDuration));
     }
 
     @Override
@@ -38,6 +50,12 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
             }
             firstCheckPassed = true;
             logger.info("All startup checks passed, they will not be checked again.");
+        } else {
+            try {
+                isHealthy();
+            } catch (NotHealthyException e) {
+                logger.warn("Got unexpected exception when running healthcheck with SS client.", e);
+            }
         }
         return "started";
     }
