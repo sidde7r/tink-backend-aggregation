@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstant
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventInformation;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventsRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusIdGenerationUtils;
 
 public class DoubleClickPaymentRequest extends BelfiusRequest {
     public static BelfiusRequest.Builder create() {
@@ -14,6 +14,6 @@ public class DoubleClickPaymentRequest extends BelfiusRequest {
                         WidgetEventsRequest.create(
                                 WidgetEventInformation.newButtonClickedWidgetEvent(
                                         BelfiusConstants.Widget.DOUBLE_CONFIRM_CLICK)))
-                .setTransactionId(BelfiusSecurityUtils.generateTransactionId());
+                .setTransactionId(BelfiusIdGenerationUtils.generateTransactionId());
     }
 }

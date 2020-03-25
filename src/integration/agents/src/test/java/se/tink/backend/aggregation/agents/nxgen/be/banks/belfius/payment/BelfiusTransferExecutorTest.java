@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.Payment;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payment;
 
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -16,6 +16,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusTest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferExecutor;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
@@ -86,7 +87,8 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
                         sessionStorage,
                         new Catalog(new Locale("fr", "BE")),
                         new SupplementalInformationHelperImpl(
-                                provider, supplementalInformationController));
+                                provider, supplementalInformationController),
+                        new BelfiusSignatureCreator());
 
         bte.executeTransfer(t);
         verify(this.apiClient, times(1)).login(anyNoneBlank(), anyNoneBlank(), anyNoneBlank());
@@ -121,7 +123,8 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
                         sessionStorage,
                         new Catalog(new Locale("fr", "BE")),
                         new SupplementalInformationHelperImpl(
-                                provider, supplementalInformationController));
+                                provider, supplementalInformationController),
+                        new BelfiusSignatureCreator());
 
         bte.executeTransfer(t);
         verify(this.apiClient, times(1)).login(anyNoneBlank(), anyNoneBlank(), anyNoneBlank());
@@ -156,7 +159,8 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
                         sessionStorage,
                         new Catalog(new Locale("fr", "BE")),
                         new SupplementalInformationHelperImpl(
-                                provider, supplementalInformationController));
+                                provider, supplementalInformationController),
+                        new BelfiusSignatureCreator());
 
         bte.executeTransfer(t);
         verify(this.apiClient, times(1)).login(anyNoneBlank(), anyNoneBlank(), anyNoneBlank());

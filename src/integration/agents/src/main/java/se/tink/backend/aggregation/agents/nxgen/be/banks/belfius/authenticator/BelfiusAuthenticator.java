@@ -8,14 +8,21 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.LoginResponseStatus;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.responsevalidator.LoginResponseValidator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.SendCardNumberResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusIdGenerationUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
@@ -31,7 +38,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     private final PersistentStorage persistentStorage;
     private final BelfiusSessionStorage sessionStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final String aggregator;
+    private final BelfiusSignatureCreator belfiusSignatureCreator;
+    private final LoginResponseValidator loginResponseValidator;
+    private final AuthenticatorSleepHelper authenticatorSleepHelper;
     private boolean requestConfigIosSent;
 
     public BelfiusAuthenticator(
@@ -40,13 +49,16 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
             final PersistentStorage persistentStorage,
             final BelfiusSessionStorage sessionStorage,
             final SupplementalInformationHelper supplementalInformationHelper,
-            final String aggregator) {
+            final BelfiusSignatureCreator belfiusSignatureCreator,
+            final AuthenticatorSleepHelper authenticatorSleepHelper) {
         this.apiClient = apiClient;
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
-        this.aggregator = aggregator;
+        this.belfiusSignatureCreator = belfiusSignatureCreator;
+        this.authenticatorSleepHelper = authenticatorSleepHelper;
+        this.loginResponseValidator = new LoginResponseValidator();
     }
 
     private static String generateModel() {
@@ -66,16 +78,17 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         String deviceToken = persistentStorage.get(BelfiusConstants.Storage.DEVICE_TOKEN);
 
         if (deviceToken == null
-                || !isDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken))) {
-            deviceToken = BelfiusSecurityUtils.generateDeviceToken();
+                || !isDeviceRegistered(panNumber, belfiusSignatureCreator.hash(deviceToken))) {
+            deviceToken = BelfiusIdGenerationUtils.generateDeviceToken();
             registerDevice(panNumber, deviceToken);
         }
 
-        login(panNumber, password, deviceToken);
+        final LoginResponseStatus loginResponseStatus = login(panNumber, password, deviceToken);
+        handleManualLoginResponseErrors(loginResponseStatus);
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException {
+    public void autoAuthenticate() throws SessionException, LoginException, AuthorizationException {
 
         if (!requestConfigIosSent) {
             apiClient.requestConfigIos();
@@ -94,11 +107,8 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         panNumber = BelfiusStringUtils.formatPanNumber(panNumber);
 
-        try {
-            loginAuto(panNumber, password, deviceToken);
-        } catch (AuthenticationException | AuthorizationException e) {
-            throw SessionError.SESSION_EXPIRED.exception(e);
-        }
+        final LoginResponseStatus loginResponseStatus = loginAuto(panNumber, password, deviceToken);
+        handleAutoLoginResponseErrors(loginResponseStatus);
     }
 
     private boolean isDeviceRegistered(String panNumber, String deviceToken) {
@@ -108,7 +118,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     }
 
     private void registerDevice(String panNumber, String deviceToken)
-            throws AuthenticationException, AuthorizationException {
+            throws AuthenticationException {
 
         // sleepForMilliseconds(5869); // Observed from app
         apiClient.openSession();
@@ -117,7 +127,7 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.bacProductList();
 
         // sleepForMilliseconds(45724); // Observed from app
-        apiClient.sendIsDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken));
+        apiClient.sendIsDeviceRegistered(panNumber, belfiusSignatureCreator.hash(deviceToken));
 
         // sleepForMilliseconds(2911); // Observed from app
         String challenge = apiClient.prepareAuthentication(panNumber);
@@ -129,11 +139,10 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         apiClient.keepAlive();
 
-        sleepForMilliseconds(500);
+        authenticatorSleepHelper.sleepForMilliseconds(500);
 
         apiClient.authenticateWithCode(code);
 
-        final String deviceBrand = aggregator;
         final String deviceName = generateModel();
 
         logger.info("Belfius - Generated model name: {}", deviceName);
@@ -144,7 +153,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         // sleepForMilliseconds(135); // Observed from app
 
-        challenge = apiClient.prepareDeviceRegistration(deviceToken, deviceBrand, deviceName);
+        challenge =
+                apiClient.prepareDeviceRegistration(
+                        deviceToken, BelfiusConstants.BRAND, deviceName);
 
         final String sign =
                 supplementalInformationHelper
@@ -159,8 +170,8 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         apiClient.closeSession(sessionStorage.getSessionId());
     }
 
-    private void login(String panNumber, String password, String deviceToken)
-            throws AuthenticationException, AuthorizationException {
+    private LoginResponseStatus login(String panNumber, String password, String deviceToken)
+            throws AuthenticationException {
         final String machineIdentifier = sessionStorage.getMachineIdentifier();
 
         apiClient.openSessionWithMachineIdentifier(machineIdentifier);
@@ -173,14 +184,19 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         // sessionStorage.setChallenge(challenge);
 
-        String deviceTokenHashed = BelfiusSecurityUtils.hash(deviceToken);
-        String deviceTokenHashedIosComparison = BelfiusSecurityUtils.hash(deviceTokenHashed);
+        String deviceTokenHashed = belfiusSignatureCreator.hash(deviceToken);
+        String deviceTokenHashedIosComparison = belfiusSignatureCreator.hash(deviceTokenHashed);
         String signature =
-                BelfiusSecurityUtils.createSignatureSoft(
-                        challenge, deviceToken, panNumber, contractNumber, password);
+                belfiusSignatureCreator.createSignatureSoft(challenge, deviceToken, panNumber);
 
         apiClient.bacProductList();
-        apiClient.login(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
+
+        final LoginResponseStatus loginResponseStatus =
+                doLogin(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
+        if (loginResponseStatus != LoginResponseStatus.NO_ERRORS) {
+            return loginResponseStatus;
+        }
+
         apiClient.actorInformation();
         apiClient.closeSession(sessionStorage.getSessionId());
 
@@ -193,16 +209,16 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         sessionStorage.setChallenge(challenge2);
 
         String signaturePw =
-                BelfiusSecurityUtils.createSignaturePw(
+                belfiusSignatureCreator.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
-        sleepForMilliseconds(5000); // Entering password
+        authenticatorSleepHelper.sleepForMilliseconds(5000); // Entering password
 
-        apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
+        return doLoginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
     }
 
-    private void loginAuto(String panNumber, String password, String deviceToken)
-            throws AuthenticationException, AuthorizationException {
+    private LoginResponseStatus loginAuto(String panNumber, String password, String deviceToken)
+            throws LoginException {
         apiClient.openSession();
 
         apiClient.startFlow();
@@ -211,28 +227,63 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         String contractNumber = response.getContractNumber();
 
-        String deviceTokenHashed = BelfiusSecurityUtils.hash(deviceToken);
-        String deviceTokenHashedIosComparison = BelfiusSecurityUtils.hash(deviceTokenHashed);
+        String deviceTokenHashed = belfiusSignatureCreator.hash(deviceToken);
+        String deviceTokenHashedIosComparison = belfiusSignatureCreator.hash(deviceTokenHashed);
 
         SendCardNumberResponse sendCardNumberResponse = apiClient.sendCardNumber(panNumber);
         String challenge2 = sendCardNumberResponse.getChallenge();
 
         sessionStorage.setChallenge(challenge2);
 
-        sleepForMilliseconds(5000); // Entering password
+        authenticatorSleepHelper.sleepForMilliseconds(5000); // Entering password
 
         String signaturePw =
-                BelfiusSecurityUtils.createSignaturePw(
+                belfiusSignatureCreator.createSignaturePw(
                         challenge2, deviceToken, panNumber, contractNumber, password);
 
-        apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
+        return doLoginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signaturePw);
     }
 
-    private static void sleepForMilliseconds(final int milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
+    private LoginResponseStatus doLogin(
+            String deviceTokenHashed, String deviceTokenHashedIosComparison, String signature) {
+
+        final LoginResponse loginResponse =
+                apiClient.login(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
+
+        return loginResponseValidator.validate(loginResponse);
+    }
+
+    private LoginResponseStatus doLoginPw(
+            String deviceTokenHashed, String deviceTokenHashedIosComparison, String signature) {
+
+        final LoginResponse loginResponse =
+                apiClient.loginPw(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
+
+        return loginResponseValidator.validate(loginResponse);
+    }
+
+    private static void handleManualLoginResponseErrors(LoginResponseStatus loginResponseStatus)
+            throws AuthorizationException, LoginException {
+
+        if (loginResponseStatus == LoginResponseStatus.ACCOUNT_BLOCKED) {
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+        } else if (loginResponseStatus == LoginResponseStatus.INCORRECT_CREDENTIALS) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        } else if (loginResponseStatus == LoginResponseStatus.SESSION_EXPIRED) {
+            throw new IllegalArgumentException("Got session expired status during manual login.");
+        }
+    }
+
+    private static void handleAutoLoginResponseErrors(LoginResponseStatus loginResponseStatus)
+            throws AuthorizationException, LoginException, SessionException {
+
+        if (loginResponseStatus == LoginResponseStatus.ACCOUNT_BLOCKED) {
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+        } else if (loginResponseStatus == LoginResponseStatus.INCORRECT_CREDENTIALS) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        } else if (loginResponseStatus == LoginResponseStatus.SESSION_EXPIRED) {
+            throw SessionError.SESSION_EXPIRED.exception(
+                    "SCA required do to an extended period of inactivity.");
         }
     }
 }

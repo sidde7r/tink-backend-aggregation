@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.PrepareLoginResponse;
@@ -19,16 +17,6 @@ public class BelfiusLoginErrorsTest {
                         PrepareLoginResponse.class);
         MessageResponse.validate(prepareLoginResponse);
         prepareLoginResponse.validate();
-    }
-
-    @Test(expected = LoginException.class)
-    public void shouldHandleWrongCredentials()
-            throws AuthenticationException, AuthorizationException {
-        LoginResponse loginResponse =
-                SerializationUtils.deserializeFromString(
-                        BelfiusLoginErrorData.WRONG_CREDENTIALS, LoginResponse.class);
-        MessageResponse.validate(loginResponse);
-        loginResponse.validate();
     }
 
     @Test(expected = IllegalStateException.class)

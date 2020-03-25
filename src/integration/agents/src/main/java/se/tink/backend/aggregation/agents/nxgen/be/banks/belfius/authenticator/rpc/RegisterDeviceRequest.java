@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstant
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventInformation;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventsRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusIdGenerationUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -13,7 +13,7 @@ public class RegisterDeviceRequest extends BelfiusRequest {
     public static Builder create(String signature) {
         return BelfiusRequest.builder()
                 .setRetry(false)
-                .setTransactionId(BelfiusSecurityUtils.generateTransactionIdRegisterDevice())
+                .setTransactionId(BelfiusIdGenerationUtils.generateTransactionIdRegisterDevice())
                 .setRequests(
                         WidgetEventsRequest.create(
                                 WidgetEventInformation.newButtonClickedWidgetEvent(
