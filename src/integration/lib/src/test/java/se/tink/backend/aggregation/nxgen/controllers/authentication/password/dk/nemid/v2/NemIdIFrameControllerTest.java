@@ -263,7 +263,7 @@ public class NemIdIFrameControllerTest {
                 Assertions.catchThrowable(() -> controller.doLoginWith(USERNAME, PASSWORD));
 
         // then
-        verify(sleeper, times(60)).sleepFor(1_000);
+        verify(sleeper, times(120)).sleepFor(1_000);
         // and
         assertThat(throwable)
                 .isInstanceOf(NemIdNoResponseException.class)

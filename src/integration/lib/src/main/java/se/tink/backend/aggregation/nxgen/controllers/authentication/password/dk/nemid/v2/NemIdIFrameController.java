@@ -180,7 +180,7 @@ public class NemIdIFrameController {
 
     private void waitForNemidToken(WebDriver driver) {
         boolean isNemIdApproved = false;
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 120; i++) {
 
             Optional<WebElement> otpIconPhone = webdriverHelper.waitForElement(driver, OTP_ICON);
             if (!otpIconPhone.isPresent()) {
