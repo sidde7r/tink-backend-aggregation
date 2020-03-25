@@ -32,14 +32,15 @@ public final class UnicreditConstants {
 
     public static class Endpoints {
 
-        public static final String CONSENTS = "/v1/consents";
-        public static final String UPDATE_CONSENT = "/v1/consents/{consent-id}";
-        public static final String CONSENT_STATUS = "/v1/consents/{consent-id}/status";
-        public static final String ACCOUNTS = "/v1/accounts";
-        public static final String BALANCES = "/v1/accounts/{account-id}/balances";
-        public static final String TRANSACTIONS = "/v1/accounts/{account-id}/transactions";
-        public static final String PAYMENT_INITIATION = "/v1/payments/{payment-product}";
-        public static final String FETCH_PAYMENT = "/v1/payments/{payment-product}/{paymentId}";
+        public static final String CONSENTS = "/hydrogen/v1/consents";
+        public static final String UPDATE_CONSENT = "/hydrogen/v1/consents/{consent-id}";
+        public static final String CONSENT_STATUS = "/hydrogen/v1/consents/{consent-id}/status";
+        public static final String ACCOUNTS = "/hydrogen/v1/accounts";
+        public static final String BALANCES = "/hydrogen/v1/accounts/{account-id}/balances";
+        public static final String TRANSACTIONS = "/hydrogen/v1/accounts/{account-id}/transactions";
+        public static final String PAYMENT_INITIATION = "/hydrogen/v1/payments/{payment-product}";
+        public static final String FETCH_PAYMENT =
+                "/hydrogen/v1/payments/{payment-product}/{paymentId}";
     }
 
     public static class PathParameters {

@@ -22,7 +22,6 @@ public class BalanceEntity {
     }
 
     public int getBalanceMappingPriority() {
-
         return Arrays.stream(BalanceType.values())
                 .filter(enumBalanceType -> enumBalanceType.getValue().equalsIgnoreCase(balanceType))
                 .findAny()

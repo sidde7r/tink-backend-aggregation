@@ -73,10 +73,17 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
             accessExpiresInSeconds =
                     Integer.parseInt(credentials.getField(Field.Key.SESSION_EXPIRY_TIME));
         }
+        long refreshExpiresInSeconds = accessExpiresInSeconds;
+
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
         String refreshToken = BASE64_ENCODER.encodeToString("fakeRefreshToken".getBytes());
 
-        return OAuth2Token.createBearer(accessToken, refreshToken, accessExpiresInSeconds);
+        return OAuth2Token.create(
+                "bearer",
+                accessToken,
+                refreshToken,
+                accessExpiresInSeconds,
+                refreshExpiresInSeconds);
     }
 
     @Override

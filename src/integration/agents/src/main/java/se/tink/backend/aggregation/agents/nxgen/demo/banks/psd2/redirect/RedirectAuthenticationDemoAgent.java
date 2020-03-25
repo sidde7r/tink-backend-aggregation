@@ -1,10 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX;
-
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,7 +12,6 @@ import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -78,27 +74,13 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
                 new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, credentials);
 
-        final OAuth2AuthenticationController controller;
-
-        if (provider.matches(DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX)) {
-            controller =
-                    new OAuth2AuthenticationController(
-                            persistentStorage,
-                            supplementalInformationHelper,
-                            redirectOAuth2Authenticator,
-                            credentials,
-                            strongAuthenticationState,
-                            Integer.parseInt(credentials.getField(Field.Key.SESSION_EXPIRY_TIME)),
-                            ChronoUnit.SECONDS);
-        } else {
-            controller =
-                    new OAuth2AuthenticationController(
-                            persistentStorage,
-                            supplementalInformationHelper,
-                            redirectOAuth2Authenticator,
-                            credentials,
-                            strongAuthenticationState);
-        }
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        redirectOAuth2Authenticator,
+                        credentials,
+                        strongAuthenticationState);
 
         return new AutoAuthenticationController(
                 request,
