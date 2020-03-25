@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessPro
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdConstantsV2;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdIFrameController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdNoResponseException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.v2.NemIdParametersV2;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
@@ -34,8 +33,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.retrypolicy.RetryExecutor;
-import se.tink.libraries.retrypolicy.RetryPolicy;
 
 public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticator
         implements NemIdParametersFetcher {
@@ -48,7 +45,6 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
 
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
-    private final RetryExecutor retryExecutor;
 
     public NordeaNemIdAuthenticatorV2(
             final NordeaDkApiClient bankClient,
@@ -58,8 +54,6 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
         this.iFrameController = new NemIdIFrameController(this);
-        this.retryExecutor = new RetryExecutor();
-        this.retryExecutor.setRetryPolicy(new RetryPolicy(3, NemIdNoResponseException.class));
     }
 
     public void authenticate(String username, String password) throws AuthenticationException {
@@ -68,12 +62,8 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        String token;
-        try {
-            token = retryExecutor.execute(() -> iFrameController.doLoginWith(username, password));
-        } catch (NemIdNoResponseException e) {
-            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
-        }
+        String token = iFrameController.doLoginWith(username, password);
+
         final String code = exchangeNemIdToken(token);
 
         saveToken(exchangeOauthToken(code));
