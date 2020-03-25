@@ -10,7 +10,7 @@ public enum OAuth2AuthorizationErrorType {
     INVALID_SCOPE("invalid_scope"),
     SERVER_ERROR("server_error"),
     TEMPORARILY_UNAVAILABLE("temporarily_unavailable"),
-    CUSTOM("");
+    UNKNOWN("");
 
     private String code;
 
@@ -23,6 +23,6 @@ public enum OAuth2AuthorizationErrorType {
     }
 
     static OAuth2AuthorizationErrorType getByCode(final String code) {
-        return Arrays.stream(values()).filter(v -> code.equals(v.code)).findAny().orElse(CUSTOM);
+        return Arrays.stream(values()).filter(v -> code.equals(v.code)).findAny().orElse(UNKNOWN);
     }
 }

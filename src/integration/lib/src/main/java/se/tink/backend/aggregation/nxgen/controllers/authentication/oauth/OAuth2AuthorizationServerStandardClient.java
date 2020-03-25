@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class OAuth2AuthorizationServerStandardClient implements OAuth2AuthorizationServerClient {
 
-    static final long DEFAULT_WAIT_FOR_MINUTES = 9;
+    private static final long DEFAULT_WAIT_FOR_MINUTES = 9;
 
     private final TinkHttpClient httpClient;
     private final OAuth2AuthorizationSpecification authorizationSpecification;

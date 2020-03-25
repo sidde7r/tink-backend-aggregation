@@ -8,7 +8,7 @@ public class OAuth2TokenTest {
     @Test
     public void tokenShouldNotBeExpired() {
         // given
-        OAuth2Token objectUnderTest = new OAuth2Token();
+        OAuth2Token objectUnderTest = new OAuth2Token(getCurrentTimeInSeconds());
         objectUnderTest.setExpiresIn(3600l);
         // when
         boolean result = objectUnderTest.hasAccessExpired();
@@ -19,8 +19,8 @@ public class OAuth2TokenTest {
     @Test
     public void tokenShouldBeExpired() {
         // given
-        OAuth2Token objectUnderTest = new OAuth2Token();
-        objectUnderTest.setExpiresIn(-3600l);
+        OAuth2Token objectUnderTest = new OAuth2Token(getCurrentTimeInSeconds() - 3600l);
+        objectUnderTest.setExpiresIn(3600l);
         // when
         boolean result = objectUnderTest.hasAccessExpired();
         // then
@@ -30,7 +30,7 @@ public class OAuth2TokenTest {
     @Test
     public void tokenShouldBeValid() {
         // given
-        OAuth2Token objectUnderTest = new OAuth2Token();
+        OAuth2Token objectUnderTest = new OAuth2Token(getCurrentTimeInSeconds());
         objectUnderTest.setExpiresIn(3600l);
         // when
         boolean result = objectUnderTest.isValid();
@@ -41,8 +41,8 @@ public class OAuth2TokenTest {
     @Test
     public void tokenShouldBeNotValid() {
         // given
-        OAuth2Token objectUnderTest = new OAuth2Token();
-        objectUnderTest.setExpiresIn(-3600l);
+        OAuth2Token objectUnderTest = new OAuth2Token(getCurrentTimeInSeconds() - 3600l);
+        objectUnderTest.setExpiresIn(3600l);
         // when
         boolean result = objectUnderTest.isValid();
         // then
@@ -52,7 +52,7 @@ public class OAuth2TokenTest {
     @Test
     public void canRefresh() {
         // given
-        OAuth2Token objectUnderTest = new OAuth2Token();
+        OAuth2Token objectUnderTest = new OAuth2Token(getCurrentTimeInSeconds());
         objectUnderTest.setRefreshToken("423543543534");
         // when
         boolean result = objectUnderTest.canRefresh();
@@ -63,10 +63,14 @@ public class OAuth2TokenTest {
     @Test
     public void canNotRefresh() {
         // given
-        OAuth2Token objectUnderTest = new OAuth2Token();
+        OAuth2Token objectUnderTest = new OAuth2Token(getCurrentTimeInSeconds());
         // when
         boolean result = objectUnderTest.canRefresh();
         // then
         Assert.assertFalse(result);
+    }
+
+    private long getCurrentTimeInSeconds() {
+        return System.currentTimeMillis() / 1000;
     }
 }

@@ -49,7 +49,7 @@ public class OAuth2AuthorizationSpecificationTest {
     @Test
     public void builderShouldCreateSpecificationWithScope() {
         // given
-        objectUnderTest.withScope("scope1", "scope2");
+        objectUnderTest.withScopes("scope1", "scope2");
         // when
         OAuth2AuthorizationSpecification result = objectUnderTest.build();
         // then

@@ -21,13 +21,11 @@ public class OAuth2AuthenticatorTest {
 
     private OAuth2AuthorizationServerClient authorizationServerClient;
     private OAuth2TokenStorage tokenStorage;
-    private OAuth2Authenticator objectUnderTest;
 
     @Before
     public void init() {
         authorizationServerClient = Mockito.mock(OAuth2AuthorizationServerClient.class);
         tokenStorage = Mockito.mock(OAuth2TokenStorage.class);
-        objectUnderTest = new OAuth2Authenticator(authorizationServerClient, tokenStorage);
     }
 
     @Test
@@ -45,6 +43,8 @@ public class OAuth2AuthenticatorTest {
                 .thenReturn(waitRequest);
         SteppableAuthenticationRequest steppableAuthenticationRequest =
                 SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
+        OAuth2Authenticator objectUnderTest =
+                new OAuth2Authenticator(authorizationServerClient, tokenStorage);
         // when
         SteppableAuthenticationResponse result =
                 objectUnderTest.processAuthentication(steppableAuthenticationRequest);
@@ -75,6 +75,8 @@ public class OAuth2AuthenticatorTest {
                                 .withCallbackData(callbackData));
         Mockito.when(authorizationServerClient.handleAuthorizationResponse(Mockito.anyMap()))
                 .thenReturn(token);
+        OAuth2Authenticator objectUnderTest =
+                new OAuth2Authenticator(authorizationServerClient, tokenStorage);
         // when
         SteppableAuthenticationResponse result =
                 objectUnderTest.processAuthentication(steppableAuthenticationRequest);
@@ -93,6 +95,8 @@ public class OAuth2AuthenticatorTest {
         Mockito.when(tokenStorage.fetchToken()).thenReturn(Optional.of(token));
         SteppableAuthenticationRequest steppableAuthenticationRequest =
                 SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
+        OAuth2Authenticator objectUnderTest =
+                new OAuth2Authenticator(authorizationServerClient, tokenStorage);
         // when
         SteppableAuthenticationResponse result =
                 objectUnderTest.processAuthentication(steppableAuthenticationRequest);
@@ -111,11 +115,12 @@ public class OAuth2AuthenticatorTest {
         Mockito.when(token.getRefreshToken()).thenReturn(refreshToken);
         Mockito.when(tokenStorage.fetchToken()).thenReturn(Optional.of(token));
         OAuth2Token newToken = Mockito.mock(OAuth2Token.class);
-        ;
         Mockito.when(authorizationServerClient.refreshAccessToken(refreshToken))
                 .thenReturn(newToken);
         SteppableAuthenticationRequest steppableAuthenticationRequest =
                 SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
+        OAuth2Authenticator objectUnderTest =
+                new OAuth2Authenticator(authorizationServerClient, tokenStorage);
         // when
         SteppableAuthenticationResponse result =
                 objectUnderTest.processAuthentication(steppableAuthenticationRequest);
@@ -125,7 +130,7 @@ public class OAuth2AuthenticatorTest {
     }
 
     @Test
-    public void shouldRequestForAuthorizationWhenTokeCanNotBeRefreshed()
+    public void shouldRequestForAuthorizationWhenTokenCanNotBeRefreshed()
             throws AuthenticationException, AuthorizationException {
         // given
         OAuth2Token token = Mockito.mock(OAuth2Token.class);
@@ -142,6 +147,8 @@ public class OAuth2AuthenticatorTest {
                 .thenReturn(waitRequest);
         SteppableAuthenticationRequest steppableAuthenticationRequest =
                 SteppableAuthenticationRequest.initialRequest(Mockito.mock(Credentials.class));
+        OAuth2Authenticator objectUnderTest =
+                new OAuth2Authenticator(authorizationServerClient, tokenStorage);
         // when
         SteppableAuthenticationResponse result =
                 objectUnderTest.processAuthentication(steppableAuthenticationRequest);

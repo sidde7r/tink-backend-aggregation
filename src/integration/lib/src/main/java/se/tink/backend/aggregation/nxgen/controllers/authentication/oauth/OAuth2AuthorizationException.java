@@ -23,6 +23,13 @@ public class OAuth2AuthorizationException extends RuntimeException {
         this.description = description;
     }
 
+    public OAuth2AuthorizationException(
+            Throwable cause, OAuth2AuthorizationErrorType errorType, String description) {
+        super(cause);
+        this.errorType = errorType;
+        this.description = description;
+    }
+
     public OAuth2AuthorizationErrorType getErrorType() {
         return errorType;
     }

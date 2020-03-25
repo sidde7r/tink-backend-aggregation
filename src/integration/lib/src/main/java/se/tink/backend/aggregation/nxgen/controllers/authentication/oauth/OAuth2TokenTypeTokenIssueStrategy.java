@@ -14,7 +14,7 @@ public class OAuth2TokenTypeTokenIssueStrategy implements OAuth2TokenIssueStrate
 
     @Override
     public OAuth2Token issueToken(Map<String, String> authorizationResponseParams) {
-        OAuth2Token token = new OAuth2Token();
+        OAuth2Token token = new OAuth2Token(System.currentTimeMillis() / 1000);
         token.setAccessToken(authorizationResponseParams.get("access_token"));
         token.setExpiresIn(
                 Optional.ofNullable(authorizationResponseParams.get("expires_in"))

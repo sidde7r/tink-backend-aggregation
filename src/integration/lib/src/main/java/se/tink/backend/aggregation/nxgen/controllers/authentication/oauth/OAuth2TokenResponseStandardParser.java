@@ -35,27 +35,31 @@ public class OAuth2TokenResponseStandardParser implements OAuth2TokenResponsePar
     public OAuth2Token parse(final String accessTokenRawResponse) {
         try {
             JSONObject jsonObjectResponse = new JSONObject(accessTokenRawResponse);
-            final OAuth2Token token = new OAuth2Token();
+            final OAuth2Token token = new OAuth2Token(System.currentTimeMillis() / 1000);
             parseStandardProperties(jsonObjectResponse, token);
             parseClientSpecificProperties(jsonObjectResponse, token);
-            ensureThatExpirationTimeISet(token);
+            ensureThatExpirationTimeIsSet(token);
             return token;
         } catch (JSONException e) {
             throw new OAuth2AuthorizationException(
+                    e,
                     OAuth2AuthorizationErrorType.UNSUPPORTED_RESPONSE_TYPE,
                     "Response has incorrect format");
         }
     }
 
-    private void ensureThatExpirationTimeISet(final OAuth2Token token) {
+    private void ensureThatExpirationTimeIsSet(final OAuth2Token token) {
         if (token.getExpiresIn() == null) {
-            token.setExpiresIn(
-                    Optional.ofNullable(defaultTokenLifetime)
-                            .orElseThrow(
-                                    () ->
-                                            new IllegalStateException(
-                                                    "Access token lifetime can't be find neither in authorization server response, neither in authorization params provider")));
+            token.setExpiresIn(getDefaultTokenLifetime());
         }
+    }
+
+    private long getDefaultTokenLifetime() {
+        return Optional.ofNullable(defaultTokenLifetime)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Access token lifetime can't be find neither in authorization server response, neither in authorization params provider"));
     }
 
     private void parseStandardProperties(

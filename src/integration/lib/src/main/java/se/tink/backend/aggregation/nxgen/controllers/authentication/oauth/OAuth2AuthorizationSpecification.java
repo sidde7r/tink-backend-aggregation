@@ -75,7 +75,7 @@ public class OAuth2AuthorizationSpecification {
             endpointProvider = new OAuth2AuthorizationSpecification();
         }
 
-        public Builder withScope(final String... scopes) {
+        public Builder withScopes(final String... scopes) {
             endpointProvider.scope = String.join(" ", scopes);
             return this;
         }

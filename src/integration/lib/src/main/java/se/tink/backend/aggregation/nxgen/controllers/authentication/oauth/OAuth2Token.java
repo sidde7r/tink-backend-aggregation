@@ -23,9 +23,18 @@ public class OAuth2Token {
 
     @JsonProperty private String scope;
 
-    @JsonProperty private long issuedAt = getCurrentEpoch();
+    @JsonProperty private long issuedAt;
 
     private Map<String, String> clientSpecificProperties = new HashMap<>();
+
+    /** Dedicated constructor for Jackson */
+    private OAuth2Token() {
+        this(getCurrentEpoch());
+    }
+
+    OAuth2Token(long issuedAtInSeconds) {
+        this.issuedAt = issuedAtInSeconds;
+    }
 
     public boolean hasAccessExpired() {
         long currentTime = getCurrentEpoch();
