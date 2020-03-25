@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-public class SdcNoScreenScrapingIFrameTest {
+public class SdcNoAgentTest {
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {
         USERNAME,
@@ -19,8 +19,8 @@ public class SdcNoScreenScrapingIFrameTest {
         }
     }
 
-    private final ArgumentManager<SdcNoScreenScrapingIFrameTest.Arg> manager =
-            new ArgumentManager<>(SdcNoScreenScrapingIFrameTest.Arg.values());
+    private final ArgumentManager<SdcNoAgentTest.Arg> manager =
+            new ArgumentManager<>(SdcNoAgentTest.Arg.values());
 
     @Before
     public void setUp() throws Exception {
@@ -32,11 +32,9 @@ public class SdcNoScreenScrapingIFrameTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("no", "no-cultura-bank")
                         .addCredentialField(
-                                Field.Key.USERNAME,
-                                manager.get(SdcNoScreenScrapingIFrameTest.Arg.USERNAME))
+                                Field.Key.USERNAME, manager.get(SdcNoAgentTest.Arg.USERNAME))
                         .addCredentialField(
-                                Field.Key.PASSWORD,
-                                manager.get(SdcNoScreenScrapingIFrameTest.Arg.PASSWORD))
+                                Field.Key.PASSWORD, manager.get(SdcNoAgentTest.Arg.PASSWORD))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
                         .expectLoggedIn(false);
