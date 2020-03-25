@@ -364,11 +364,7 @@ spec:
           httpGet:
             # This is named start as this is emulating a startupProbe which will not be ready until
             # we upgrade to k8s 1.17+
-            {{- if or (eq .Values.Environment "staging") (eq .Values.Environment "development") }}
             path: /aggregation/started
-            {{- else }}
-            path: /aggregation/ping
-            {{- end }}
             port: 8443
             scheme: HTTPS
           periodSeconds: 10
