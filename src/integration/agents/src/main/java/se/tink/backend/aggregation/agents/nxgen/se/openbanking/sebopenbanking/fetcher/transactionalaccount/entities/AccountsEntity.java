@@ -12,9 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -76,10 +74,6 @@ public class AccountsEntity {
                                 .withUniqueIdentifier(bban)
                                 .withAccountNumber(bban)
                                 .withAccountName(name)
-                                .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.SE, bban, ownerName))
-                                .addIdentifier(new SwedishIdentifier(bban))
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .addHolderName(getOwnerName())
