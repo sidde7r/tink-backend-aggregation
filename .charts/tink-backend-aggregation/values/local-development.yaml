@@ -31,8 +31,9 @@ clients:
 initialDelaySeconds: 10
 
 tppSecretsServiceConfiguration:
-  certificatesLocation: "development-local"
-  enabled: false
+  certificatesLocation: "cluster"
+  enabled: true
+  enabledRetryPolicy: true
 
 providerConfigurationServiceConfiguration:
   enabled: false

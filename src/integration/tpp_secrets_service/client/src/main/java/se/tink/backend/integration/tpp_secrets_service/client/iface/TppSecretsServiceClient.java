@@ -7,5 +7,7 @@ public interface TppSecretsServiceClient {
     Optional<SecretsEntityCore> getAllSecrets(
             String financialInstitutionId, String appId, String clusterId);
 
+    void ping();
+
     boolean isEnabled();
 }

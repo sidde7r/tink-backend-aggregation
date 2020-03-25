@@ -45,6 +45,8 @@ import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.FakeCreditSafeService;
 import se.tink.backend.aggregation.resources.FakeProviderConfigurationService;
 import se.tink.backend.aggregation.resources.MonitoringServiceResource;
+import se.tink.backend.aggregation.startupchecks.StartupChecksHandler;
+import se.tink.backend.aggregation.startupchecks.StartupChecksHandlerImpl;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
@@ -203,6 +205,7 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
                 .in(Scopes.SINGLETON);
+        bind(StartupChecksHandler.class).to(StartupChecksHandlerImpl.class).in(Scopes.SINGLETON);
         bind(ClientConfig.class).toInstance(new DefaultApacheHttpClient4Config());
         bind(InterProcessSemaphoreMutexFactory.class)
                 .to(InterProcessSemaphoreMutexFactoryStub.class);

@@ -430,6 +430,7 @@ java_library(
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/startupchecks",
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agent_data_availability_tracker/client:module",
