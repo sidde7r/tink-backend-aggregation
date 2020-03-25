@@ -144,6 +144,7 @@ public abstract class UnicreditBaseApiClient {
                 createRequest(new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENTS))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.PSU_ID_TYPE, getConfiguration().getPsuIdType())
+                        .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(getConfiguration().getRedirectUrl())
