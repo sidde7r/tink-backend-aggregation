@@ -225,6 +225,400 @@
                 "sha256": "045a7f572b8432062ce735451930569824bc1bec53a6cb51c73cf8ee1985f5a8"
             },
             {
+                "coord": "com.codahale.metrics:metrics-annotation:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2.jar"
+                ],
+                "sha256": "26dad71e3dee3ad44a007fea76ee7a9d5e86485b27c619f2db9a6ee329cb6bf6"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-annotation:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2-sources.jar"
+                ],
+                "sha256": "65dc98d5e81bebe64928ca336f951767fb1bc487bd4cac6f6bdf6125035b59c7"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-core:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar"
+                ],
+                "sha256": "9e819c6f4d5f446e00cb05b08d0127226683b725a94d161288aea870c1bd2f63"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2-sources.jar"
+                ],
+                "sha256": "35a0ffa4209ca501244e0d1e87ab1864d2b119b5b62f90b5f13eddc4910bf182"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-healthchecks:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2.jar"
+                ],
+                "sha256": "87b983760bc3e1aad32340c6106d9c344d14c48e3582a2091492a483874d8e04"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-healthchecks:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-healthchecks/3.0.2/metrics-healthchecks-3.0.2-sources.jar"
+                ],
+                "sha256": "8a8c590cefec4c71d0c3c04fad6086bca24b625935712dbaa24e283d57aca743"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-httpclient:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.apache.httpcomponents:httpclient:4.3.4",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "commons-logging:commons-logging:1.2",
+                    "org.apache.httpcomponents:httpclient:4.3.4",
+                    "org.apache.httpcomponents:httpcore:4.3.2",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "commons-codec:commons-codec:1.10"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2.jar"
+                ],
+                "sha256": "ab439905726312898393e66852e3b77b1125f3ffbb411238be298246a676866b"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-httpclient:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                    "commons-codec:commons-codec:jar:sources:1.10",
+                    "commons-logging:commons-logging:jar:sources:1.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2-sources.jar"
+                ],
+                "sha256": "dba742a013f1850ddd1603f56cebcf22fcc96f46f479f162954173a2dff27125"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jersey:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-annotation:3.0.2",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.sun.jersey:jersey-server:1.18.1",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-annotation:3.0.2",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.sun.jersey:jersey-core:1.18.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.sun.jersey:jersey-server:1.18.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2.jar"
+                ],
+                "sha256": "5e45cf6873c55debebab2458517684a9526800de3c58baa26b59334e31b03645"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jersey:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-annotation:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "com.sun.jersey:jersey-server:jar:sources:1.18.1",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-annotation:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.sun.jersey:jersey-server:jar:sources:1.18.1",
+                    "com.sun.jersey:jersey-core:jar:sources:1.18.1",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jersey/3.0.2/metrics-jersey-3.0.2-sources.jar"
+                ],
+                "sha256": "03251c874a828b33bf62613fbbcc4152207d1e98ff1d4fd462d03f161e66d917"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jetty9:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2.jar"
+                ],
+                "sha256": "2b286464f7b344fc31182886eb18a73e1deed3a686d46e58be3e6d1b5b53b2c8"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jetty9:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
+                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jetty9/3.0.2/metrics-jetty9-3.0.2-sources.jar"
+                ],
+                "sha256": "b698906a0cf42644ce284f4cc094404d23a5ba1d1361097cade1c1f7d5862f11"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-json:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2.jar"
+                ],
+                "sha256": "d4ae62ec07ab5b4fc7e4e4321cf7b96b96f9002a755e26f14661abf4917e7aad"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-json:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-json/3.0.2/metrics-json-3.0.2-sources.jar"
+                ],
+                "sha256": "08f91d17949ee4fe3466029d7b107c9a585ebcd824f5548c44326ba4a49e1687"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jvm:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.codahale.metrics:metrics-core:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2.jar"
+                ],
+                "sha256": "3037359ca538d98c5a7bcf070f98a9b9023379853276826b4902d64bc358911a"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-jvm:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-jvm/3.0.2/metrics-jvm-3.0.2-sources.jar"
+                ],
+                "sha256": "b0f9c361aff94ce8e7eb9e5360673e7eb95067ebd239befa21a5bfebf7db9943"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-logback:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2.jar",
+                "directDependencies": [
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "com.codahale.metrics:metrics-core:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2.jar"
+                ],
+                "sha256": "5ed2a1cc08259a67fb4db1b0a49a38ac82d9bd732d089bb6d68640f5630b495b"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-logback:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2-sources.jar",
+                "directDependencies": [
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-logback/3.0.2/metrics-logback-3.0.2-sources.jar"
+                ],
+                "sha256": "eb0fbf3f3b0d1e3b8c3eb735b55d56d56b90459119861bc1d5fe23bab5856d02"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-servlets:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "com.codahale.metrics:metrics-jvm:3.0.2",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.codahale.metrics:metrics-healthchecks:3.0.2",
+                    "com.codahale.metrics:metrics-json:3.0.2"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "com.codahale.metrics:metrics-jvm:3.0.2",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "com.codahale.metrics:metrics-healthchecks:3.0.2",
+                    "com.codahale.metrics:metrics-json:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2.jar"
+                ],
+                "sha256": "dd5470632d0ffa7d1d315ad86fc827afc57f917a8d68b8c06ed60214ddd4bfbc"
+            },
+            {
+                "coord": "com.codahale.metrics:metrics-servlets:jar:sources:3.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.codahale.metrics:metrics-jvm:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-json:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-healthchecks:jar:sources:3.0.2"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.codahale.metrics:metrics-jvm:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-json:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "com.codahale.metrics:metrics-healthchecks:jar:sources:3.0.2"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/codahale/metrics/metrics-servlets/3.0.2/metrics-servlets-3.0.2-sources.jar"
+                ],
+                "sha256": "f400798fd0a6503226eaa074c2efe7156c83a50b4da1cb0a96c013c2fe405b42"
+            },
+            {
                 "coord": "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.9.9/jackson-annotations-2.9.9.jar",
                 "directDependencies": [],
@@ -1513,6 +1907,68 @@
                 "sha256": "20893563211edc58ae508720951121fd49b90593f0850ec86cc12eb9dc1d901f"
             },
             {
+                "coord": "com.sun.jersey:jersey-server:1.18.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/sun/jersey/jersey-server/1.18.1/jersey-server-1.18.1.jar",
+                "directDependencies": [
+                    "com.sun.jersey:jersey-core:1.18.1"
+                ],
+                "dependencies": [
+                    "com.sun.jersey:jersey-core:1.18.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-server/1.18.1/jersey-server-1.18.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-server/1.18.1/jersey-server-1.18.1.jar"
+                ],
+                "sha256": "f4007a4be13fafffaabfc0ce2a34edd1d6d7a02a5822d9dde4d07eabede5ad7c"
+            },
+            {
+                "coord": "com.sun.jersey:jersey-server:jar:sources:1.18.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/sun/jersey/jersey-server/1.18.1/jersey-server-1.18.1-sources.jar",
+                "directDependencies": [
+                    "com.sun.jersey:jersey-core:jar:sources:1.18.1"
+                ],
+                "dependencies": [
+                    "com.sun.jersey:jersey-core:jar:sources:1.18.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-server/1.18.1/jersey-server-1.18.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-server/1.18.1/jersey-server-1.18.1-sources.jar"
+                ],
+                "sha256": "4ae24395ab3d2abf8174617510026aea9117fb4543529fd3735b5b608aa2bf46"
+            },
+            {
+                "coord": "com.sun.jersey:jersey-servlet:1.18.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/sun/jersey/jersey-servlet/1.18.1/jersey-servlet-1.18.1.jar",
+                "directDependencies": [
+                    "com.sun.jersey:jersey-server:1.18.1"
+                ],
+                "dependencies": [
+                    "com.sun.jersey:jersey-core:1.18.1",
+                    "com.sun.jersey:jersey-server:1.18.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-servlet/1.18.1/jersey-servlet-1.18.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-servlet/1.18.1/jersey-servlet-1.18.1.jar"
+                ],
+                "sha256": "5f650730576fd5a6dc6e5a5afa6942c3a17706e4c77341a5a037031405736283"
+            },
+            {
+                "coord": "com.sun.jersey:jersey-servlet:jar:sources:1.18.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/sun/jersey/jersey-servlet/1.18.1/jersey-servlet-1.18.1-sources.jar",
+                "directDependencies": [
+                    "com.sun.jersey:jersey-server:jar:sources:1.18.1"
+                ],
+                "dependencies": [
+                    "com.sun.jersey:jersey-core:jar:sources:1.18.1",
+                    "com.sun.jersey:jersey-server:jar:sources:1.18.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-servlet/1.18.1/jersey-servlet-1.18.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-servlet/1.18.1/jersey-servlet-1.18.1-sources.jar"
+                ],
+                "sha256": "5d3c5efda4831b64ea4436ba26ee7b34d7bb7c30b6da77e448466cf24bc3edf4"
+            },
+            {
                 "coord": "commons-codec:commons-codec:1.10",
                 "file": "v1/https/repo.maven.apache.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
                 "directDependencies": [],
@@ -1621,6 +2077,556 @@
                     "https://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar"
                 ],
                 "sha256": "44347acfe5860461728e9cb33251e97345be36f8a0dfd5c5130c172559455f41"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-configuration:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-configuration/0.7.1/dropwizard-configuration-0.7.1.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9",
+                    "commons-lang:commons-lang:2.6",
+                    "io.dropwizard:dropwizard-jackson:0.7.1",
+                    "io.dropwizard:dropwizard-validation:0.7.1"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "com.fasterxml:classmate:1.0.0",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
+                    "javax.el:javax.el-api:2.2.5",
+                    "commons-lang:commons-lang:2.6",
+                    "com.google.guava:guava:25.1-jre",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9",
+                    "org.hibernate:hibernate-validator:5.1.1.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA",
+                    "io.dropwizard:dropwizard-validation:0.7.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.checkerframework:checker-qual:2.0.0",
+                    "org.yaml:snakeyaml:1.23",
+                    "io.dropwizard:dropwizard-jackson:0.7.1",
+                    "org.glassfish.web:javax.el:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-configuration/0.7.1/dropwizard-configuration-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-configuration/0.7.1/dropwizard-configuration-0.7.1.jar"
+                ],
+                "sha256": "1371cf624c843a532865893f3c04b2d98a4e9691557e3d16a634a45cedc988ab"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-configuration:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-configuration/0.7.1/dropwizard-configuration-0.7.1-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:sources:2.9.9",
+                    "commons-lang:commons-lang:jar:sources:2.6",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "javax.el:javax.el-api:jar:sources:2.2.5",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "commons-lang:commons-lang:jar:sources:2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:sources:2.9.9",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:sources:2.9.9",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final",
+                    "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:jar:sources:2.9.9",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "com.fasterxml:classmate:jar:sources:1.0.0",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11",
+                    "org.yaml:snakeyaml:jar:sources:1.23"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-configuration/0.7.1/dropwizard-configuration-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-configuration/0.7.1/dropwizard-configuration-0.7.1-sources.jar"
+                ],
+                "sha256": "9c9a0c4603db1785a02aba77a5a45fe9697f032a8672fa44c6a0f40465f8ce3a"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-jackson:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-jackson/0.7.1/dropwizard-jackson-0.7.1.jar",
+                "directDependencies": [
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
+                    "com.google.guava:guava:25.1-jre",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
+                    "com.google.guava:guava:25.1-jre",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "org.checkerframework:checker-qual:2.0.0",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-jackson/0.7.1/dropwizard-jackson-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-jackson/0.7.1/dropwizard-jackson-0.7.1.jar"
+                ],
+                "sha256": "0e5a9effc5318c95e7a8d7e745be128694470d9ee1c356b62a5ccbdc1d940c87"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-jackson/0.7.1/dropwizard-jackson-0.7.1-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:sources:2.9.9",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:jar:sources:2.9.9",
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:sources:2.9.9",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:sources:2.9.9",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:jar:sources:2.9.9",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-jackson/0.7.1/dropwizard-jackson-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-jackson/0.7.1/dropwizard-jackson-0.7.1-sources.jar"
+                ],
+                "sha256": "8be1ceba5de50331197ca6cfb4ac2378c93879b9a2c3f1c6506498610812c2a5"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-lifecycle:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-lifecycle/0.7.1/dropwizard-lifecycle-0.7.1.jar",
+                "directDependencies": [
+                    "com.google.guava:guava:25.1-jre",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.google.guava:guava:25.1-jre",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
+                    "org.checkerframework:checker-qual:2.0.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-lifecycle/0.7.1/dropwizard-lifecycle-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-lifecycle/0.7.1/dropwizard-lifecycle-0.7.1.jar"
+                ],
+                "sha256": "1219d463139d20c0954187a0d5d77a1a8ae623fb619e590d86456a294c452ef3"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-lifecycle:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-lifecycle/0.7.1/dropwizard-lifecycle-0.7.1-sources.jar",
+                "directDependencies": [
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-lifecycle/0.7.1/dropwizard-lifecycle-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-lifecycle/0.7.1/dropwizard-lifecycle-0.7.1-sources.jar"
+                ],
+                "sha256": "e6ebbd2515703f4981800181018ea71312571889907c3b025b497e870f5c9b3c"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-logging:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1.jar",
+                "directDependencies": [
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "org.slf4j:jul-to-slf4j:1.7.6",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "com.codahale.metrics:metrics-logback:3.0.2",
+                    "io.dropwizard:dropwizard-validation:0.7.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "org.slf4j:jcl-over-slf4j:1.7.6",
+                    "org.slf4j:log4j-over-slf4j:1.7.6",
+                    "io.dropwizard:dropwizard-jackson:0.7.1"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "com.fasterxml:classmate:1.0.0",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
+                    "javax.el:javax.el-api:2.2.5",
+                    "com.google.guava:guava:25.1-jre",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "org.slf4j:jul-to-slf4j:1.7.6",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.codahale.metrics:metrics-logback:3.0.2",
+                    "org.hibernate:hibernate-validator:5.1.1.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA",
+                    "io.dropwizard:dropwizard-validation:0.7.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "org.slf4j:jcl-over-slf4j:1.7.6",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "org.slf4j:log4j-over-slf4j:1.7.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.checkerframework:checker-qual:2.0.0",
+                    "io.dropwizard:dropwizard-jackson:0.7.1",
+                    "org.glassfish.web:javax.el:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1.jar"
+                ],
+                "sha256": "ff2fa595ab4eed35c8c0dacdac926fdd4fff6b7bc6c89a9a45ecfbb020bfed04"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-logging:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1-sources.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-logback:jar:sources:3.0.2",
+                    "org.slf4j:jcl-over-slf4j:jar:sources:1.7.6",
+                    "org.slf4j:jul-to-slf4j:jar:sources:1.7.6",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "org.slf4j:log4j-over-slf4j:jar:sources:1.7.6",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11"
+                ],
+                "dependencies": [
+                    "com.codahale.metrics:metrics-logback:jar:sources:3.0.2",
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "org.slf4j:jcl-over-slf4j:jar:sources:1.7.6",
+                    "org.slf4j:jul-to-slf4j:jar:sources:1.7.6",
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "javax.el:javax.el-api:jar:sources:2.2.5",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:sources:2.9.9",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:sources:2.9.9",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:jar:sources:2.9.9",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA",
+                    "org.slf4j:log4j-over-slf4j:jar:sources:1.7.6",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "com.fasterxml:classmate:jar:sources:1.0.0",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-logging/0.7.1/dropwizard-logging-0.7.1-sources.jar"
+                ],
+                "sha256": "acf046e2766e37a6a14958a219adb0bc67e2a78ceee122d5703877a4cae3ef4a"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-metrics:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1.jar",
+                "directDependencies": [
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "io.dropwizard:dropwizard-lifecycle:0.7.1",
+                    "io.dropwizard:dropwizard-validation:0.7.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "io.dropwizard:dropwizard-jackson:0.7.1"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "com.codahale.metrics:metrics-core:3.0.2",
+                    "ch.qos.logback:logback-classic:1.1.11",
+                    "com.fasterxml:classmate:1.0.0",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
+                    "javax.el:javax.el-api:2.2.5",
+                    "com.google.guava:guava:25.1-jre",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "io.dropwizard:dropwizard-lifecycle:0.7.1",
+                    "ch.qos.logback:logback-core:1.1.11",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "org.hibernate:hibernate-validator:5.1.1.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA",
+                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+                    "io.dropwizard:dropwizard-validation:0.7.1",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
+                    "org.checkerframework:checker-qual:2.0.0",
+                    "io.dropwizard:dropwizard-jackson:0.7.1",
+                    "org.glassfish.web:javax.el:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1.jar"
+                ],
+                "sha256": "64b6e0ee3bd87e5977d2b90b139537fc393ba685136eb64a03c929ade6e22dd1"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-metrics:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1-sources.jar",
+                "directDependencies": [
+                    "io.dropwizard:dropwizard-lifecycle:jar:sources:0.7.1",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "javax.el:javax.el-api:jar:sources:2.2.5",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-joda:jar:sources:2.9.9",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "io.dropwizard:dropwizard-lifecycle:jar:sources:0.7.1",
+                    "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                    "com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:sources:2.9.9",
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "com.fasterxml.jackson.module:jackson-module-afterburner:jar:sources:2.9.9",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA",
+                    "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                    "io.dropwizard:dropwizard-jackson:jar:sources:0.7.1",
+                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "com.fasterxml:classmate:jar:sources:1.0.0",
+                    "ch.qos.logback:logback-core:jar:sources:1.1.11",
+                    "com.codahale.metrics:metrics-core:jar:sources:3.0.2",
+                    "ch.qos.logback:logback-classic:jar:sources:1.1.11"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-metrics/0.7.1/dropwizard-metrics-0.7.1-sources.jar"
+                ],
+                "sha256": "f59bde98a300368f2b41251e86c9473175e0858707cea66b69ce948de3174ce3"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-util:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-util/0.7.1/dropwizard-util-0.7.1.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.google.guava:guava:25.1-jre",
+                    "joda-time:joda-time:2.9.9"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.google.guava:guava:25.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "org.checkerframework:checker-qual:2.0.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-util/0.7.1/dropwizard-util-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-util/0.7.1/dropwizard-util-0.7.1.jar"
+                ],
+                "sha256": "78d79a6740908fa9189679a613a09e7d289fb7738c77fc88d30428980f4960b3"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-util/0.7.1/dropwizard-util-0.7.1-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "joda-time:joda-time:jar:sources:2.9.9"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-util/0.7.1/dropwizard-util-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-util/0.7.1/dropwizard-util-0.7.1-sources.jar"
+                ],
+                "sha256": "3018f1fb3bca747a0f8bd384515522a4e07fb12f40af0f944c346095188a6595"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-validation:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1.jar",
+                "directDependencies": [
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "org.glassfish.web:javax.el:2.2.6",
+                    "org.hibernate:hibernate-validator:5.1.1.Final"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "joda-time:joda-time:2.9.9",
+                    "com.fasterxml:classmate:1.0.0",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "javax.el:javax.el-api:2.2.5",
+                    "com.google.guava:guava:25.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "org.hibernate:hibernate-validator:5.1.1.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "io.dropwizard:dropwizard-util:0.7.1",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.checkerframework:checker-qual:2.0.0",
+                    "org.glassfish.web:javax.el:2.2.6"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1.jar"
+                ],
+                "sha256": "cdb845d59d3d61d68822c5c16446bbe7d98bea35a3891d7dc14cd2b74e8b743b"
+            },
+            {
+                "coord": "io.dropwizard:dropwizard-validation:jar:sources:0.7.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1-sources.jar",
+                "directDependencies": [
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                    "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "javax.el:javax.el-api:jar:sources:2.2.5",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "io.dropwizard:dropwizard-util:jar:sources:0.7.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA",
+                    "com.fasterxml:classmate:jar:sources:1.0.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/dropwizard/dropwizard-validation/0.7.1/dropwizard-validation-0.7.1-sources.jar"
+                ],
+                "sha256": "6c7855c2fbcf1942586cd980d038a2e0d13510a0cbb11be31d44412267374ada"
             },
             {
                 "coord": "io.grpc:grpc-context:1.27.0",
@@ -2215,6 +3221,152 @@
                 "sha256": "b6a75c2987869ffdf44e3e10f7a6068db783b14b7b29a3c89e911a5cae67860f"
             },
             {
+                "coord": "io.vavr:vavr-jackson:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "io.vavr:vavr:0.10.0"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
+                    "io.vavr:vavr:0.10.0",
+                    "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+                    "io.vavr:vavr-match:0.10.0",
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0.jar"
+                ],
+                "sha256": "a68535370a6404735f94d9f3fc2a081e8ed2c396915bddaa397143b16981adde"
+            },
+            {
+                "coord": "io.vavr:vavr-jackson:jar:sources:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "io.vavr:vavr:jar:sources:0.10.0"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9",
+                    "com.fasterxml.jackson.core:jackson-databind:jar:sources:2.9.9",
+                    "io.vavr:vavr-match:jar:sources:0.10.0",
+                    "com.fasterxml.jackson.core:jackson-annotations:jar:sources:2.9.9",
+                    "io.vavr:vavr:jar:sources:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0-sources.jar"
+                ],
+                "sha256": "95c13eb711ffb2d141a7733bab7e8f6a5eb768ff3a50c5c47359614393983032"
+            },
+            {
+                "coord": "io.vavr:vavr-match:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0.jar"
+                ],
+                "sha256": "2efeba230406964b1d7ad7cdcf1491a5e9bd3fc822d5fcc303c5487b2f674653"
+            },
+            {
+                "coord": "io.vavr:vavr-match:jar:sources:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-match/0.10.0/vavr-match-0.10.0-sources.jar"
+                ],
+                "sha256": "5715fca8eb73ffd51186dff0b6950e338941014a5a8fbc760fc208fe64008d22"
+            },
+            {
+                "coord": "io.vavr:vavr-test:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0.jar",
+                "directDependencies": [
+                    "io.vavr:vavr:0.10.0"
+                ],
+                "dependencies": [
+                    "io.vavr:vavr-match:0.10.0",
+                    "io.vavr:vavr:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0.jar"
+                ],
+                "sha256": "89c5443b10d1c04d0a77e931641d9a54e9c35495cbfe9cf728b0744c156cdd52"
+            },
+            {
+                "coord": "io.vavr:vavr-test:jar:sources:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0-sources.jar",
+                "directDependencies": [
+                    "io.vavr:vavr:jar:sources:0.10.0"
+                ],
+                "dependencies": [
+                    "io.vavr:vavr-match:jar:sources:0.10.0",
+                    "io.vavr:vavr:jar:sources:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr-test/0.10.0/vavr-test-0.10.0-sources.jar"
+                ],
+                "sha256": "e227b383e64b75c12fa948efe8ac14ee1b8f7fda52b1f1ce3714eebbba5a7ff6"
+            },
+            {
+                "coord": "io.vavr:vavr:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0.jar",
+                "directDependencies": [
+                    "io.vavr:vavr-match:0.10.0"
+                ],
+                "dependencies": [
+                    "io.vavr:vavr-match:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0.jar"
+                ],
+                "sha256": "0c7966b95c22ac5c4cb809d546696529da29374f8776163177847d38573ede61"
+            },
+            {
+                "coord": "io.vavr:vavr:jar:sources:0.10.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0-sources.jar",
+                "directDependencies": [
+                    "io.vavr:vavr-match:jar:sources:0.10.0"
+                ],
+                "dependencies": [
+                    "io.vavr:vavr-match:jar:sources:0.10.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/io/vavr/vavr/0.10.0/vavr-0.10.0-sources.jar"
+                ],
+                "sha256": "e88c52fb97591ec5bd8afdf9e74bdb0d60ad12c59f66719fec0b22bca5b1218c"
+            },
+            {
+                "coord": "javax.el:javax.el-api:2.2.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5.jar"
+                ],
+                "sha256": "07bed15032caa7203b43a145d8f0a0fd7a8fd74452e089627f1abe36bbb7648e"
+            },
+            {
+                "coord": "javax.el:javax.el-api:jar:sources:2.2.5",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5-sources.jar"
+                ],
+                "sha256": "30a7a8e9f52dfb2397b0032b2fe6625f82277aa8c772269b63c6f0e0224a6273"
+            },
+            {
                 "coord": "javax.inject:javax.inject:1",
                 "file": "v1/https/repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar",
                 "directDependencies": [],
@@ -2235,6 +3387,28 @@
                     "https://repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1-sources.jar"
                 ],
                 "sha256": "c4b87ee2911c139c3daf498a781967f1eb2e75bc1a8529a2e7b328a15d0e433e"
+            },
+            {
+                "coord": "javax.validation:validation-api:1.1.0.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar"
+                ],
+                "sha256": "f39d7ba7253e35f5ac48081ec1bc28c5df9b32ac4b7db20853e5a8e76bf7b0ed"
+            },
+            {
+                "coord": "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final-sources.jar"
+                ],
+                "sha256": "30c421ac184ae6204961304b60cd06db5fde3db5159e81430bcdcb386cf19470"
             },
             {
                 "coord": "javax.xml.stream:stax-api:1.0-2",
@@ -2481,6 +3655,58 @@
                 "sha256": "947b7078b3ff3dfa21d9fc2a3e451feacd30fa6f5df8e699c508b24845886c5b"
             },
             {
+                "coord": "org.apache.logging.log4j:log4j-api:2.11.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1.jar"
+                ],
+                "sha256": "493b37b5a6c49c4f5fb609b966375e4dc1783df436587584ca1dc7e861d0742b"
+            },
+            {
+                "coord": "org.apache.logging.log4j:log4j-api:jar:sources:2.11.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1-sources.jar"
+                ],
+                "sha256": "8843aaa6dcffef0fa6c270e5e579e0a2efeda6bfc153fdee45caa8ec1b4b2e15"
+            },
+            {
+                "coord": "org.apache.logging.log4j:log4j-core:2.11.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1.jar",
+                "directDependencies": [
+                    "org.apache.logging.log4j:log4j-api:2.11.1"
+                ],
+                "dependencies": [
+                    "org.apache.logging.log4j:log4j-api:2.11.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1.jar"
+                ],
+                "sha256": "a20c34cdac4978b76efcc9d0db66e95600bd807c6a0bd3f5793bcb45d07162ec"
+            },
+            {
+                "coord": "org.apache.logging.log4j:log4j-core:jar:sources:2.11.1",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1-sources.jar",
+                "directDependencies": [
+                    "org.apache.logging.log4j:log4j-api:jar:sources:2.11.1"
+                ],
+                "dependencies": [
+                    "org.apache.logging.log4j:log4j-api:jar:sources:2.11.1"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1-sources.jar"
+                ],
+                "sha256": "1cfdbe61b869c6df76d09087f3a248c5eb29fc0ccc242333e24a5a79795e30a5"
+            },
+            {
                 "coord": "org.apache.mahout.commons:commons-cli:2.0-mahout",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/apache/mahout/commons/commons-cli/2.0-mahout/commons-cli-2.0-mahout.jar",
                 "directDependencies": [],
@@ -2610,6 +3836,28 @@
                 "sha256": "ec9015aa86d73cbd1c2426e38e7c71e888f4908637cb626278a8376ef7239f17"
             },
             {
+                "coord": "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar"
+                ],
+                "sha256": "a2cc192a076d9effd10becee8aacbe157f0fe2010fd4322e58aaeff198e56dbe"
+            },
+            {
+                "coord": "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016-sources.jar"
+                ],
+                "sha256": "5e26e8f9ae3c5a032a9dd6a0560bed3aadd4cd00bd58f3be8411d74e79b2c322"
+            },
+            {
                 "coord": "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-http/9.0.7.v20131107/jetty-http-9.0.7.v20131107.jar",
                 "directDependencies": [
@@ -2670,6 +3918,46 @@
                 "sha256": "0fd6ffb5f207f11fab992e2ccf0da0c733345c9165248494e377705c240b0f99"
             },
             {
+                "coord": "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-server/9.0.7.v20131107/jetty-server-9.0.7.v20131107.jar",
+                "directDependencies": [
+                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016"
+                ],
+                "dependencies": [
+                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-server/9.0.7.v20131107/jetty-server-9.0.7.v20131107.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-server/9.0.7.v20131107/jetty-server-9.0.7.v20131107.jar"
+                ],
+                "sha256": "2ee63e49d9955bb8b7e1fcfa8db0bb15e4b49c17c374b6426c7c7afb86e8159e"
+            },
+            {
+                "coord": "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-server/9.0.7.v20131107/jetty-server-9.0.7.v20131107-sources.jar",
+                "directDependencies": [
+                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016"
+                ],
+                "dependencies": [
+                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-server/9.0.7.v20131107/jetty-server-9.0.7.v20131107-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-server/9.0.7.v20131107/jetty-server-9.0.7.v20131107-sources.jar"
+                ],
+                "sha256": "1b4d8526178817db6fc0ac565c180c44a491ea7510ed9a534bd92c645c8b7486"
+            },
+            {
                 "coord": "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-util/9.0.7.v20131107/jetty-util-9.0.7.v20131107.jar",
                 "directDependencies": [],
@@ -2690,6 +3978,140 @@
                     "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-util/9.0.7.v20131107/jetty-util-9.0.7.v20131107-sources.jar"
                 ],
                 "sha256": "8686a234c133f8f530b53d317aafa7389061d75a7658f793c89c15f650bc092e"
+            },
+            {
+                "coord": "org.glassfish.web:javax.el:2.2.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6.jar",
+                "directDependencies": [
+                    "javax.el:javax.el-api:2.2.5"
+                ],
+                "dependencies": [
+                    "javax.el:javax.el-api:2.2.5"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6.jar"
+                ],
+                "sha256": "fc2bf63a313d0ddd6dd99808ececd02ec1bbfa5a0da3bc0c831b599699bde18a"
+            },
+            {
+                "coord": "org.glassfish.web:javax.el:jar:sources:2.2.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6-sources.jar",
+                "directDependencies": [
+                    "javax.el:javax.el-api:jar:sources:2.2.5"
+                ],
+                "dependencies": [
+                    "javax.el:javax.el-api:jar:sources:2.2.5"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/glassfish/web/javax.el/2.2.6/javax.el-2.2.6-sources.jar"
+                ],
+                "sha256": "cd01910f5c489e7dec45d564aeea8e00d17a62558ca97600efc56dabb1da673f"
+            },
+            {
+                "coord": "org.hibernate:hibernate-validator:5.1.1.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final.jar",
+                "directDependencies": [
+                    "com.fasterxml:classmate:1.0.0",
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA"
+                ],
+                "dependencies": [
+                    "javax.validation:validation-api:1.1.0.Final",
+                    "org.jboss.logging:jboss-logging:3.1.3.GA",
+                    "com.fasterxml:classmate:1.0.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final.jar"
+                ],
+                "sha256": "5a0cfd8f7536f5c3d95de73d023501859c4e035597aa8d80461ecd42168124f5"
+            },
+            {
+                "coord": "org.hibernate:hibernate-validator:jar:sources:5.1.1.Final",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml:classmate:jar:sources:1.0.0",
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA"
+                ],
+                "dependencies": [
+                    "javax.validation:validation-api:jar:sources:1.1.0.Final",
+                    "com.fasterxml:classmate:jar:sources:1.0.0",
+                    "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/hibernate/hibernate-validator/5.1.1.Final/hibernate-validator-5.1.1.Final-sources.jar"
+                ],
+                "sha256": "55a71fc57a2c0ab6c68dc2720a0cf1411d703660c6c39af6f87910a9fcbce648"
+            },
+            {
+                "coord": "org.iban4j:iban4j:3.1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/iban4j/iban4j/3.1.0/iban4j-3.1.0.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/iban4j/iban4j/3.1.0/iban4j-3.1.0.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/iban4j/iban4j/3.1.0/iban4j-3.1.0.jar"
+                ],
+                "sha256": "f659e891a3f39b13f0f8ba4ddd6e5d34817cbeedfbfcac510372d4c75045f479"
+            },
+            {
+                "coord": "org.iban4j:iban4j:jar:sources:3.1.0",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/iban4j/iban4j/3.1.0/iban4j-3.1.0-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/iban4j/iban4j/3.1.0/iban4j-3.1.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/iban4j/iban4j/3.1.0/iban4j-3.1.0-sources.jar"
+                ],
+                "sha256": "31ebb91d35dcccef80bf3d3fa49eac7d6127afaa945d734ad2275486ef01ba40"
+            },
+            {
+                "coord": "org.javassist:javassist:3.26.0-GA",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/javassist/javassist/3.26.0-GA/javassist-3.26.0-GA.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/javassist/javassist/3.26.0-GA/javassist-3.26.0-GA.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/javassist/javassist/3.26.0-GA/javassist-3.26.0-GA.jar"
+                ],
+                "sha256": "ca5625874ff0a34f2422173a511b33c225218c146a3c961b18940efff430462d"
+            },
+            {
+                "coord": "org.javassist:javassist:jar:sources:3.26.0-GA",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/javassist/javassist/3.26.0-GA/javassist-3.26.0-GA-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/javassist/javassist/3.26.0-GA/javassist-3.26.0-GA-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/javassist/javassist/3.26.0-GA/javassist-3.26.0-GA-sources.jar"
+                ],
+                "sha256": "32f4ae4e803fb6964ba5c4104e0e997a0d05e07da99b454cf13a63b85e3697f1"
+            },
+            {
+                "coord": "org.jboss.logging:jboss-logging:3.1.3.GA",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar"
+                ],
+                "sha256": "6813931fe607469989f76a73a22515d2489dcd8b6be9fc147093a9cec995f822"
+            },
+            {
+                "coord": "org.jboss.logging:jboss-logging:jar:sources:3.1.3.GA",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA-sources.jar"
+                ],
+                "sha256": "7f6ffaaf2a146176051040f9d4e92f84b96a1bf03681dd4e0abfff286c744296"
             },
             {
                 "coord": "org.ow2.asm:asm:5.0.4",
@@ -2734,6 +4156,140 @@
                     "https://repo.maven.apache.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3-sources.jar"
                 ],
                 "sha256": "d5b4070a22c9b1ca5b9b5aa668466bcca391dbe5d5fe8311c300765c1621feba"
+            },
+            {
+                "coord": "org.reflections:reflections:0.9.11",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/reflections/reflections/0.9.11/reflections-0.9.11.jar",
+                "directDependencies": [
+                    "com.google.guava:guava:25.1-jre",
+                    "org.javassist:javassist:3.26.0-GA"
+                ],
+                "dependencies": [
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.google.guava:guava:25.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "org.javassist:javassist:3.26.0-GA",
+                    "com.google.errorprone:error_prone_annotations:2.1.3",
+                    "org.checkerframework:checker-qual:2.0.0"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/reflections/reflections/0.9.11/reflections-0.9.11.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/reflections/reflections/0.9.11/reflections-0.9.11.jar"
+                ],
+                "sha256": "cca88428f8a8919df885105833d45ff07bd26f985f96ee55690551216b58b4a1"
+            },
+            {
+                "coord": "org.reflections:reflections:jar:sources:0.9.11",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/reflections/reflections/0.9.11/reflections-0.9.11-sources.jar",
+                "directDependencies": [
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.javassist:javassist:jar:sources:3.26.0-GA"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.1.3",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "org.javassist:javassist:jar:sources:3.26.0-GA"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/reflections/reflections/0.9.11/reflections-0.9.11-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/reflections/reflections/0.9.11/reflections-0.9.11-sources.jar"
+                ],
+                "sha256": "f9ed0772ffa1423a332076a20fb5f181b2c77d6cc06d11463794a866db0276e8"
+            },
+            {
+                "coord": "org.slf4j:jcl-over-slf4j:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6.jar"
+                ],
+                "sha256": "d52f5e9a861f4e124ec43d711b566b4c2afe6e0709b490497fb9ca33e1ca0ba5"
+            },
+            {
+                "coord": "org.slf4j:jcl-over-slf4j:jar:sources:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/jcl-over-slf4j/1.7.6/jcl-over-slf4j-1.7.6-sources.jar"
+                ],
+                "sha256": "db8a2ac0475d26b28925b16e1f796b76984ae2fbe84996c4e2396fcf3e60600e"
+            },
+            {
+                "coord": "org.slf4j:jul-to-slf4j:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6.jar"
+                ],
+                "sha256": "b71451847d2643a1bfe83df69fbf696860fe2689b95c9bd96188fb7808444f64"
+            },
+            {
+                "coord": "org.slf4j:jul-to-slf4j:jar:sources:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/jul-to-slf4j/1.7.6/jul-to-slf4j-1.7.6-sources.jar"
+                ],
+                "sha256": "3704c5ef867e6873f253230371a01adcc266afb10ba40582ce777c5329e98068"
+            },
+            {
+                "coord": "org.slf4j:log4j-over-slf4j:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6.jar"
+                ],
+                "sha256": "316715ba18aaea9ec5a7a06edc2d4a634c0f6a213762cc9e387575b5be419b05"
+            },
+            {
+                "coord": "org.slf4j:log4j-over-slf4j:jar:sources:1.7.6",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6-sources.jar",
+                "directDependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/slf4j/log4j-over-slf4j/1.7.6/log4j-over-slf4j-1.7.6-sources.jar"
+                ],
+                "sha256": "ac723dc2914c7a9bd1e85c00711ed62fca4c2d357a34d0843d895f073eaa459b"
             },
             {
                 "coord": "org.slf4j:slf4j-api:1.7.22",
@@ -2861,6 +4417,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -231601179
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -186551253
     }
 }

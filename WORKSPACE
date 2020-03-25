@@ -362,7 +362,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_server",
+    name = "org_eclipse_jetty_jetty_server",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
     sha1 = "682ae23f9e4a5e397d96f215b62641755d2a59b7",
 )
@@ -374,7 +374,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_httpclient",
+    name = "com_codahale_metrics_metrics_httpclient",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-httpclient:3.0.2",
     sha1 = "c658daf41b1ecf934ccd21e83eeeb18703355afb",
 )
@@ -494,13 +494,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_logback",
+    name = "com_codahale_metrics_metrics_logback",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-logback:3.0.2",
     sha1 = "3bfec071f1ec390d10b17959271dc54195d2ab0d",
 )
 
 maven_jar(
-    name = "javax_validation_validation_api",
+    name = "javax_validation_validation_api",  # Do not use, but do not remove
     artifact = "javax.validation:validation-api:1.1.0.Final",
     sha1 = "8613ae82954779d518631e05daa73a6a954817d5",
 )
@@ -620,7 +620,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_jvm",
+    name = "com_codahale_metrics_metrics_jvm",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-jvm:3.0.2",
     sha1 = "d0c6032905a3c6793c3ddcfade79e2b5f3ec1e25",
 )
@@ -644,7 +644,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_core",
+    name = "com_codahale_metrics_metrics_core",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-core:3.0.2",
     sha1 = "c6a7fb32776e984b64ff1a548e3044238ea5a931",
 )
@@ -674,7 +674,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_jersey_server",
+    name = "com_sun_jersey_jersey_server",  # Do not use, but do not remove
     artifact = "com.sun.jersey:jersey-server:1.18.1",
     sha1 = "6e4e4fb491ea360a0f4d672729224cbbb9cb456d",
 )
@@ -700,7 +700,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_el_javax_el_api",
+    name = "javax_el_javax_el_api",  # Do not use, but do not remove
     artifact = "javax.el:javax.el-api:2.2.5",
     sha1 = "370140e991eefb212a6d6baedbce585f00ef76e0",
 )
@@ -822,7 +822,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_slf4j_jul_to_slf4j",
+    name = "org_slf4j_jul_to_slf4j",  # Do not use, but do not remove
     artifact = "org.slf4j:jul-to-slf4j:1.7.6",
     sha1 = "322e2af1694ccc75d33f4d11216c852121d8fefd",
 )
@@ -858,7 +858,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_logging",
+    name = "io_dropwizard_dropwizard_logging",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-logging:0.7.1",
     sha1 = "039d41453b0cb37c4c6239566ccb52787a68d270",
 )
@@ -894,7 +894,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_validation",
+    name = "io_dropwizard_dropwizard_validation",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-validation:0.7.1",
     sha1 = "59a73cdcab2489b6dd342926bb4250e9c62e6938",
 )
@@ -960,7 +960,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_glassfish_web_javax_el",
+    name = "org_glassfish_web_javax_el",  # Do not use, but do not remove
     artifact = "org.glassfish.web:javax.el:2.2.6",
     sha1 = "0232abfe1f919127e9cfcd6e4e2c6324bb394535",
 )
@@ -996,7 +996,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_metrics",
+    name = "io_dropwizard_dropwizard_metrics",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-metrics:0.7.1",
     sha1 = "6ca1d7d1d1d1bcf7c803a127e0c6696d1c98fdb1",
 )
@@ -1008,7 +1008,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_jackson",
+    name = "io_dropwizard_dropwizard_jackson",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-jackson:0.7.1",
     sha1 = "6bc655d16acdb556001b1d677fab6c69f7ba296a",
 )
@@ -1020,13 +1020,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_util",
+    name = "io_dropwizard_dropwizard_util",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-util:0.7.1",
     sha1 = "49c3b2764b4f6ad1a97ae7148ac8a640488b0b29",
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_jetty9",
+    name = "com_codahale_metrics_metrics_jetty9",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-jetty9:3.0.2",
     sha1 = "39cc25ad4db6320f6a97f755ebe00ed5def71b9a",
 )
@@ -1050,13 +1050,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_configuration",
+    name = "io_dropwizard_dropwizard_configuration",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-configuration:0.7.1",
     sha1 = "161539b50579dffbcd00eff796adc2020c02a6f9",
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_annotation",
+    name = "com_codahale_metrics_metrics_annotation",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-annotation:3.0.2",
     sha1 = "49cee8ba1d76f67c59146546448fc0f3eef32b75",
 )
@@ -1116,7 +1116,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_jboss_logging_jboss_logging",
+    name = "org_jboss_logging_jboss_logging",  # Do not use, but do not remove
     artifact = "org.jboss.logging:jboss-logging:3.1.3.GA",
     sha1 = "64499e907f19e5e1b3fdc02f81440c1832fe3545",
 )
@@ -1146,7 +1146,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_lifecycle",
+    name = "io_dropwizard_dropwizard_lifecycle",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-lifecycle:0.7.1",
     sha1 = "12c282d9682628d7c33654e0d62f1dbf2a883d20",
 )
@@ -1330,7 +1330,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_jersey",
+    name = "com_codahale_metrics_metrics_jersey",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-jersey:3.0.2",
     sha1 = "6ece3e06de45ee7a7e73b66ca36862f27ca88717",
 )
@@ -1410,7 +1410,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_slf4j_jcl_over_slf4j",
+    name = "org_slf4j_jcl_over_slf4j",  # Do not use, but do not remove
     artifact = "org.slf4j:jcl-over-slf4j:1.7.6",
     sha1 = "ab1648fe1dd6f1e5c2ec6d12f394672bb8c1036a",
 )
@@ -1434,13 +1434,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_healthchecks",
+    name = "com_codahale_metrics_metrics_healthchecks",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-healthchecks:3.0.2",
     sha1 = "d99c34c33eceb7bc0e23c5b63fc517b0a53871c4",
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_servlets",
+    name = "com_codahale_metrics_metrics_servlets",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-servlets:3.0.2",
     sha1 = "58f7749af5c0f66d74e23cacf1bd94b30694ee51",
 )
@@ -1538,7 +1538,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_orbit_javax_servlet",
+    name = "org_eclipse_jetty_orbit_javax_servlet",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
     sha1 = "0aaaa85845fb5c59da00193f06b8e5278d8bf3f8",
 )
@@ -1592,7 +1592,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_jersey_jersey_servlet",
+    name = "com_sun_jersey_jersey_servlet",  # Do not use, but do not remove
     artifact = "com.sun.jersey:jersey-servlet:1.18.1",
     sha1 = "ecec31589375845cbd42e75c32b64a1475c44bb4",
 )
@@ -1630,7 +1630,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_javassist_javassist",
+    name = "org_javassist_javassist",  # Do not use, but do not remove
     artifact = "org.javassist:javassist:3.26.0-GA",
     sha1 = "bb2890849968d8d8311ffba8c37b0ce16ce284dc",
 )
@@ -1642,7 +1642,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_validator",
+    name = "org_hibernate_hibernate_validator",  # Do not use, but do not remove
     artifact = "org.hibernate:hibernate-validator:5.1.1.Final",
     sha1 = "2bd44618dc13c2be39231776a0edf0e1f867dedc",
 )
@@ -1776,7 +1776,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_iban4j_iban4j",
+    name = "org_iban4j_iban4j",  # Do not use, but do not remove
     artifact = "org.iban4j:iban4j:3.1.0",
     sha1 = "ee5e0ee22de269a3ec2785c17a5ff2beecbb76ae",
 )
@@ -1788,7 +1788,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_json",
+    name = "com_codahale_metrics_metrics_json",  # Do not use, but do not remove
     artifact = "com.codahale.metrics:metrics-json:3.0.2",
     sha1 = "46198fe0284104519b60ff2ad49f71c98ba942f2",
 )
@@ -2143,7 +2143,7 @@ bind(
 )
 
 maven_jar(
-    name = "org_reflections_reflections",
+    name = "org_reflections_reflections",  # Do not use, but do not remove
     artifact = "org.reflections:reflections:0.9.11",
     sha1 = "4c686033d918ec1727e329b7222fcb020152e32b",
 )
@@ -2191,13 +2191,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_logging_log4j_log4j_core",
+    name = "org_apache_logging_log4j_log4j_core",  # Do not use, but do not remove
     artifact = "org.apache.logging.log4j:log4j-core:2.11.1",
     sha1 = "592a48674c926b01a9a747c7831bcd82a9e6d6e4",
 )
 
 maven_jar(
-    name = "org_apache_logging_log4j_log4j_api",
+    name = "org_apache_logging_log4j_log4j_api",  # Do not use, but do not remove
     artifact = "org.apache.logging.log4j:log4j-api:2.11.1",
     sha1 = "268f0fe4df3eefe052b57c87ec48517d64fb2a10",
 )
@@ -2263,25 +2263,25 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_vavr_core",
+    name = "io_vavr_core",  # Do not use, but do not remove
     artifact = "io.vavr:vavr:0.10.0",
     sha1 = "c9f28385e6ca99f9c253c4eef879720663905329",
 )
 
 maven_jar(
-    name = "io_vavr_jackson",
+    name = "io_vavr_jackson",  # Do not use, but do not remove
     artifact = "io.vavr:vavr-jackson:0.10.0",
     sha1 = "45896adac70e6e35ec5f718a9dd9ed21e5fdbdf0",
 )
 
 maven_jar(
-    name = "io_vavr_match",
+    name = "io_vavr_match",  # Do not use, but do not remove
     artifact = "io.vavr:vavr-match:0.10.0",
     sha1 = "2088877806b1c07514a134fa10d6a7ad480cac70",
 )
 
 maven_jar(
-    name = "io_vavr_test",
+    name = "io_vavr_test",  # Do not use, but do not remove
     artifact = "io.vavr:vavr-test:0.10.0",
     sha1 = "c4ffe88bfe1f20ff9a88e7ba5771a7faab802703",
 )
@@ -2545,6 +2545,16 @@ maven_install(
         "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
         "ch.qos.logback:logback-classic:1.1.11",
         "ch.qos.logback:logback-core:1.1.11",
+        "com.codahale.metrics:metrics-annotation:3.0.2",
+        "com.codahale.metrics:metrics-core:3.0.2",
+        "com.codahale.metrics:metrics-healthchecks:3.0.2",
+        "com.codahale.metrics:metrics-httpclient:3.0.2",
+        "com.codahale.metrics:metrics-jersey:3.0.2",
+        "com.codahale.metrics:metrics-jetty9:3.0.2",
+        "com.codahale.metrics:metrics-json:3.0.2",
+        "com.codahale.metrics:metrics-jvm:3.0.2",
+        "com.codahale.metrics:metrics-logback:3.0.2",
+        "com.codahale.metrics:metrics-servlets:3.0.2",
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-databind:2.9.9",
@@ -2579,11 +2589,20 @@ maven_install(
         "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
         "com.sun.jersey:jersey-client:1.18.1",
         "com.sun.jersey:jersey-core:1.18.1",
+        "com.sun.jersey:jersey-server:1.18.1",
+        "com.sun.jersey:jersey-servlet:1.18.1",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-io:commons-io:2.5",
         "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
+        "io.dropwizard:dropwizard-configuration:0.7.1",
+        "io.dropwizard:dropwizard-jackson:0.7.1",
+        "io.dropwizard:dropwizard-lifecycle:0.7.1",
+        "io.dropwizard:dropwizard-logging:0.7.1",
+        "io.dropwizard:dropwizard-metrics:0.7.1",
+        "io.dropwizard:dropwizard-util:0.7.1",
+        "io.dropwizard:dropwizard-validation:0.7.1",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:%s" % NETTY_VERSION,
         "io.netty:netty-codec-dns:%s" % NETTY_VERSION,
@@ -2600,7 +2619,13 @@ maven_install(
         "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
         "io.netty:netty-transport:%s" % NETTY_VERSION,
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
+        "io.vavr:vavr-jackson:0.10.0",
+        "io.vavr:vavr-match:0.10.0",
+        "io.vavr:vavr-test:0.10.0",
+        "io.vavr:vavr:0.10.0",
+        "javax.el:javax.el-api:2.2.5",
         "javax.inject:javax.inject:1",
+        "javax.validation:validation-api:1.1.0.Final",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
         "log4j:log4j:1.2.14",
@@ -2611,15 +2636,27 @@ maven_install(
         "org.apache.commons:commons-lang3:3.4",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
+        "org.apache.logging.log4j:log4j-api:2.11.1",
+        "org.apache.logging.log4j:log4j-core:2.11.1",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
         "org.codehaus.woodstox:stax2-api:4.1",
+        "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
         "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+        "org.glassfish.web:javax.el:2.2.6",
+        "org.hibernate:hibernate-validator:5.1.1.Final",
+        "org.iban4j:iban4j:3.1.0",
+        "org.javassist:javassist:3.26.0-GA",
+        "org.jboss.logging:jboss-logging:3.1.3.GA",
         "org.ow2.asm:asm:5.0.4",
         "org.reactivestreams:reactive-streams:1.0.3",
+        "org.reflections:reflections:0.9.11",
+        "org.slf4j:jcl-over-slf4j:1.7.6",
+        "org.slf4j:jul-to-slf4j:1.7.6",
         "org.slf4j:slf4j-api:1.7.22",
         "org.w3c.css:sac:1.3",
         "org.yaml:snakeyaml:1.23",

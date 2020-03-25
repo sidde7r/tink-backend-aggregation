@@ -185,6 +185,7 @@ java_library(
         "@aggregation//:org_apache_httpcomponents_httpcore",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
+        "@aggregation//:org_eclipse_jetty_jetty_server",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_flipkart_zjsonpatch_zjsonpatch//jar",
@@ -196,7 +197,6 @@ java_library(
         "@net_sf_jopt_simple_jopt_simple//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_security//jar",
-        "@org_eclipse_jetty_jetty_server//jar",
         "@org_eclipse_jetty_jetty_servlet//jar",
         "@org_eclipse_jetty_jetty_servlets//jar",
         "@org_eclipse_jetty_jetty_webapp//jar",
@@ -369,7 +369,7 @@ java_library(
     name = "com_sun_jersey_jersey_server",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_sun_jersey_jersey_server//jar",
+        "@aggregation//:com_sun_jersey_jersey_server",
     ],
     runtime_deps = [
         "@aggregation//:com_sun_jersey_jersey_core",
@@ -439,13 +439,13 @@ java_library(
         "@io_dropwizard_dropwizard_client//jar",
     ],
     runtime_deps = [
+        "@aggregation//:com_codahale_metrics_metrics_core",
+        "@aggregation//:com_codahale_metrics_metrics_httpclient",
         "@aggregation//:com_sun_jersey_contribs_jersey_apache_client4",
         "@aggregation//:com_sun_jersey_jersey_client",
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_codahale_metrics_metrics_httpclient//jar",
         "@io_dropwizard_dropwizard_core//jar",
     ],
 )
@@ -454,14 +454,14 @@ java_library(
     name = "io_dropwizard_dropwizard_configuration",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_dropwizard_dropwizard_configuration//jar",
+        "@aggregation//:io_dropwizard_dropwizard_configuration",
     ],
     runtime_deps = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
         "@aggregation//:commons_lang_commons_lang",
-        "@io_dropwizard_dropwizard_jackson//jar",
-        "@io_dropwizard_dropwizard_validation//jar",
+        "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_validation",
     ],
 )
 
@@ -475,6 +475,15 @@ java_library(
         ":io_dropwizard_dropwizard_jersey",
         "@aggregation//:ch_qos_logback_logback_classic",
         "@aggregation//:ch_qos_logback_logback_core",
+        "@aggregation//:com_codahale_metrics_metrics_annotation",
+        "@aggregation//:com_codahale_metrics_metrics_core",
+        "@aggregation//:com_codahale_metrics_metrics_healthchecks",
+        "@aggregation//:com_codahale_metrics_metrics_jersey",
+        "@aggregation//:com_codahale_metrics_metrics_jetty9",
+        "@aggregation//:com_codahale_metrics_metrics_json",
+        "@aggregation//:com_codahale_metrics_metrics_jvm",
+        "@aggregation//:com_codahale_metrics_metrics_logback",
+        "@aggregation//:com_codahale_metrics_metrics_servlets",
         "@aggregation//:com_fasterxml_classmate",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
@@ -489,47 +498,38 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_sun_jersey_jersey_core",
+        "@aggregation//:com_sun_jersey_jersey_server",
+        "@aggregation//:com_sun_jersey_jersey_servlet",
         "@aggregation//:commons_lang_commons_lang",
+        "@aggregation//:io_dropwizard_dropwizard_configuration",
+        "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_lifecycle",
+        "@aggregation//:io_dropwizard_dropwizard_logging",
+        "@aggregation//:io_dropwizard_dropwizard_metrics",
+        "@aggregation//:io_dropwizard_dropwizard_util",
+        "@aggregation//:io_dropwizard_dropwizard_validation",
+        "@aggregation//:javax_el_javax_el_api",
+        "@aggregation//:javax_validation_validation_api",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
+        "@aggregation//:org_eclipse_jetty_jetty_server",
         "@aggregation//:org_eclipse_jetty_jetty_util",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
+        "@aggregation//:org_glassfish_web_javax_el",
+        "@aggregation//:org_hibernate_hibernate_validator",
+        "@aggregation//:org_jboss_logging_jboss_logging",
+        "@aggregation//:org_slf4j_jcl_over_slf4j",
+        "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@com_codahale_metrics_metrics_annotation//jar",
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_codahale_metrics_metrics_healthchecks//jar",
-        "@com_codahale_metrics_metrics_jersey//jar",
-        "@com_codahale_metrics_metrics_jetty9//jar",
-        "@com_codahale_metrics_metrics_json//jar",
-        "@com_codahale_metrics_metrics_jvm//jar",
-        "@com_codahale_metrics_metrics_logback//jar",
-        "@com_codahale_metrics_metrics_servlets//jar",
-        "@com_sun_jersey_jersey_server//jar",
-        "@com_sun_jersey_jersey_servlet//jar",
-        "@io_dropwizard_dropwizard_configuration//jar",
-        "@io_dropwizard_dropwizard_jackson//jar",
         "@io_dropwizard_dropwizard_jetty//jar",
-        "@io_dropwizard_dropwizard_lifecycle//jar",
-        "@io_dropwizard_dropwizard_logging//jar",
-        "@io_dropwizard_dropwizard_metrics//jar",
         "@io_dropwizard_dropwizard_servlets//jar",
-        "@io_dropwizard_dropwizard_util//jar",
-        "@io_dropwizard_dropwizard_validation//jar",
-        "@javax_el_javax_el_api//jar",
-        "@javax_validation_validation_api//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
         "@org_eclipse_jetty_jetty_continuation//jar",
         "@org_eclipse_jetty_jetty_security//jar",
-        "@org_eclipse_jetty_jetty_server//jar",
         "@org_eclipse_jetty_jetty_servlet//jar",
         "@org_eclipse_jetty_jetty_servlets//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
         "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
-        "@org_glassfish_web_javax_el//jar",
-        "@org_hibernate_hibernate_validator//jar",
-        "@org_jboss_logging_jboss_logging//jar",
-        "@org_slf4j_jcl_over_slf4j//jar",
-        "@org_slf4j_jul_to_slf4j//jar",
     ],
 )
 
@@ -541,9 +541,9 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:ch_qos_logback_logback_classic",
-        "@com_codahale_metrics_metrics_core//jar",
+        "@aggregation//:com_codahale_metrics_metrics_core",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@org_eclipse_jetty_jetty_servlet//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
     ],
 )
 
@@ -551,7 +551,7 @@ java_library(
     name = "com_codahale_metrics_metrics_healthchecks",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_codahale_metrics_metrics_healthchecks//jar",
+        "@aggregation//:com_codahale_metrics_metrics_healthchecks",
     ],
 )
 
@@ -572,19 +572,19 @@ java_import(
     ],
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_codahale_metrics_metrics_annotation",
+        "@aggregation//:com_codahale_metrics_metrics_core",
+        "@aggregation//:com_codahale_metrics_metrics_jersey",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:com_sun_jersey_jersey_core",
-        "@com_codahale_metrics_metrics_annotation//jar",
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_codahale_metrics_metrics_jersey//jar",
-        "@com_sun_jersey_jersey_server//jar",
-        "@com_sun_jersey_jersey_servlet//jar",
-        "@io_dropwizard_dropwizard_jackson//jar",
-        "@io_dropwizard_dropwizard_logging//jar",
-        "@io_dropwizard_dropwizard_validation//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
+        "@aggregation//:com_sun_jersey_jersey_server",
+        "@aggregation//:com_sun_jersey_jersey_servlet",
+        "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_logging",
+        "@aggregation//:io_dropwizard_dropwizard_validation",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
     ],
 )
 
@@ -592,17 +592,17 @@ java_library(
     name = "io_dropwizard_dropwizard_lifecycle",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_dropwizard_dropwizard_lifecycle//jar",
+        "@aggregation//:io_dropwizard_dropwizard_lifecycle",
     ],
     runtime_deps = [
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_dropwizard_dropwizard_util",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
+        "@aggregation//:org_eclipse_jetty_jetty_server",
         "@aggregation//:org_eclipse_jetty_jetty_util",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@io_dropwizard_dropwizard_util//jar",
-        "@org_eclipse_jetty_jetty_server//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
     ],
 )
 
@@ -612,15 +612,15 @@ java_library(
     exports = [
         "@aggregation//:ch_qos_logback_logback_classic",
         "@aggregation//:ch_qos_logback_logback_core",
+        "@aggregation//:com_codahale_metrics_metrics_core",
+        "@aggregation//:com_codahale_metrics_metrics_logback",
+        "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_logging",
+        "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:org_eclipse_jetty_jetty_util",
+        "@aggregation//:org_slf4j_jcl_over_slf4j",
+        "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_codahale_metrics_metrics_logback//jar",
-        "@io_dropwizard_dropwizard_jackson//jar",
-        "@io_dropwizard_dropwizard_logging//jar",
-        "@io_dropwizard_dropwizard_validation//jar",
-        "@org_slf4j_jcl_over_slf4j//jar",
-        "@org_slf4j_jul_to_slf4j//jar",
     ],
 )
 
@@ -628,19 +628,19 @@ java_library(
     name = "io_dropwizard_dropwizard_metrics",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_codahale_metrics_metrics_core",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_lifecycle",
+        "@aggregation//:io_dropwizard_dropwizard_metrics",
+        "@aggregation//:io_dropwizard_dropwizard_util",
+        "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
+        "@aggregation//:org_eclipse_jetty_jetty_server",
         "@aggregation//:org_eclipse_jetty_jetty_util",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@com_codahale_metrics_metrics_core//jar",
-        "@io_dropwizard_dropwizard_jackson//jar",
-        "@io_dropwizard_dropwizard_lifecycle//jar",
-        "@io_dropwizard_dropwizard_metrics//jar",
-        "@io_dropwizard_dropwizard_util//jar",
-        "@io_dropwizard_dropwizard_validation//jar",
-        "@org_eclipse_jetty_jetty_server//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
     ],
 )
 
@@ -747,7 +747,7 @@ java_library(
     name = "org_javassist_javassist",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_javassist_javassist//jar",
+        "@aggregation//:org_javassist_javassist",
     ],
 )
 
@@ -755,7 +755,7 @@ java_library(
     name = "javax_validation_validation_api",
     visibility = ["//visibility:public"],
     exports = [
-        "@javax_validation_validation_api//jar",
+        "@aggregation//:javax_validation_validation_api",
     ],
 )
 
@@ -1044,7 +1044,7 @@ java_library(
     name = "org_eclipse_jetty_orbit_javax_servlet",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
     ],
 )
 
@@ -1070,13 +1070,13 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:asm_asm",
+        "@aggregation//:org_javassist_javassist",
         "@aggregation//:org_slf4j_slf4j_api",
         "@cglib_cglib//jar",
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
         "@org_hibernate_hibernate_entitymanager//jar",
         "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
-        "@org_javassist_javassist//jar",
     ],
 )
 
@@ -1085,9 +1085,9 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:com_fasterxml_classmate",
-        "@javax_validation_validation_api//jar",
-        "@org_hibernate_hibernate_validator//jar",
-        "@org_jboss_logging_jboss_logging//jar",
+        "@aggregation//:javax_validation_validation_api",
+        "@aggregation//:org_hibernate_hibernate_validator",
+        "@aggregation//:org_jboss_logging_jboss_logging",
     ],
 )
 
@@ -1103,7 +1103,7 @@ java_library(
     name = "org_iban4j_iban4j",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_iban4j_iban4j//jar",
+        "@aggregation//:org_iban4j_iban4j",
     ],
 )
 
@@ -1267,17 +1267,17 @@ java_library(
     name = "org_reflections_reflections",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_reflections_reflections//jar",
+        "@aggregation//:org_reflections_reflections",
     ],
     runtime_deps = [
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:org_javassist_javassist",
         "@aggregation//:org_slf4j_slf4j_api",
         "@dom4j_dom4j//jar",
         "@javax_servlet_javax_servlet_api//jar",
         "@junit_junit//jar",
-        "@org_javassist_javassist//jar",
     ],
 )
 
@@ -1348,8 +1348,8 @@ java_library(
     exports = [
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
-        "@org_apache_logging_log4j_log4j_api//jar",
-        "@org_apache_logging_log4j_log4j_core//jar",
+        "@aggregation//:org_apache_logging_log4j_log4j_api",
+        "@aggregation//:org_apache_logging_log4j_log4j_core",
     ],
 )
 
@@ -1443,10 +1443,10 @@ java_library(
     name = "io_vavr",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_vavr_core//jar",
-        "@io_vavr_jackson//jar",
-        "@io_vavr_match//jar",
-        "@io_vavr_test//jar",
+        "@aggregation//:io_vavr_vavr",
+        "@aggregation//:io_vavr_vavr_jackson",
+        "@aggregation//:io_vavr_vavr_match",
+        "@aggregation//:io_vavr_vavr_test",
     ],
 )
 
@@ -1544,10 +1544,10 @@ java_library(
         "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:io_netty_netty_dev_tools",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_apache_logging_log4j_log4j_api",
+        "@aggregation//:org_apache_logging_log4j_log4j_core",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_oracle_substratevm_svm//jar",
-        "@org_apache_logging_log4j_log4j_api//jar",
-        "@org_apache_logging_log4j_log4j_core//jar",
         "@org_mockito_mockito_core//jar",
     ],
 )
