@@ -353,7 +353,6 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/nordnet",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/resursbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sbab",
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/seb",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sebkort/circlek",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sebkort/eurocard",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/openbanking/sebkort/finnair",
