@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SessionResponse {
 
     @JsonProperty("iteraciones")
-    private String iterations;
+    private int iterations;
 
     @JsonProperty("semilla")
     private String seed;
@@ -18,7 +18,7 @@ public class SessionResponse {
     @JsonProperty("constante")
     private String constant;
 
-    public String getIterations() {
+    public int getIterations() {
         return iterations;
     }
 

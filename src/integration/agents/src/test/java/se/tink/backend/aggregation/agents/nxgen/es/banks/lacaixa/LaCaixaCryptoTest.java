@@ -20,6 +20,6 @@ public class LaCaixaCryptoTest {
     }
 
     private String getPasswordHash(String seed, int iterations, String password) {
-        return new LaCaixaPasswordHash(seed, iterations, password).createOtp();
+        return LaCaixaPasswordHash.hash(seed, iterations, password);
     }
 }

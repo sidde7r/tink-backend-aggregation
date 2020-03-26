@@ -28,14 +28,9 @@ public class LaCaixaPasswordAuthenticator implements PasswordAuthenticator {
         // Also gets seed for password hashing.
         SessionResponse sessionResponse = apiClient.initializeSession();
 
-        // Initialize password hasher with seed from initialization request.
-        LaCaixaPasswordHash otpHelper =
-                new LaCaixaPasswordHash(
-                        sessionResponse.getSeed(),
-                        Integer.parseInt(sessionResponse.getIterations()),
-                        password);
-
-        String pin = otpHelper.createOtp();
+        final String pin =
+                LaCaixaPasswordHash.hash(
+                        sessionResponse.getSeed(), sessionResponse.getIterations(), password);
         logMasker.addNewSensitiveValuesToMasker(Collections.singleton(pin));
 
         // Construct login request from username and hashed password

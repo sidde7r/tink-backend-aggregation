@@ -22,7 +22,11 @@ public class LaCaixaPasswordHash {
      * Create caixa otp (hashed password).
      * Arguments are seed (semilla), iterations (iteraciones) and pin.
      */
-    public LaCaixaPasswordHash(String seed, int iterations, String password) {
+    public static String hash(String seed, int iterations, String password) {
+        return new LaCaixaPasswordHash(seed, iterations, password).createOtp();
+    }
+
+    private LaCaixaPasswordHash(String seed, int iterations, String password) {
         this.seed = seed;
         this.iterations = iterations;
         this.password = convertPassword(password);
@@ -36,7 +40,7 @@ public class LaCaixaPasswordHash {
         return new String(passwordBytes, StandardCharsets.ISO_8859_1);
     }
 
-    public String createOtp() {
+    private String createOtp() {
         byte[] result = null;
 
         // md5 string [seed + uppercase password] padded with spaces to 64
