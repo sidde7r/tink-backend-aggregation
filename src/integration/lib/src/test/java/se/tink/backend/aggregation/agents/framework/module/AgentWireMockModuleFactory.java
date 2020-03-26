@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.AgentModuleFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.module.AgentRequestScopeModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;

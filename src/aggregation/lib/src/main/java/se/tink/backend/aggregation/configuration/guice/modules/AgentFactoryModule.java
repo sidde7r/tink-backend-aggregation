@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import se.tink.backend.aggregation.agents.AgentFactory;
-import se.tink.backend.aggregation.agents.AgentModuleFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 
 public final class AgentFactoryModule extends AbstractModule {

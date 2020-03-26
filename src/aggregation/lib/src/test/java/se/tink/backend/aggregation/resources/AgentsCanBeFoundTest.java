@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.resources;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.AgentClassFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentClassFactory;
 
 public final class AgentsCanBeFoundTest {
 

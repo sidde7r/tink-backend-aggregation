@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents;
+package se.tink.backend.aggregation.agents.agentfactory;
 
 import com.google.common.base.Objects;
 import com.google.inject.Guice;
@@ -11,6 +11,8 @@ import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -134,9 +136,7 @@ public class AgentFactory {
         return agentClass;
     }
 
-    private static boolean hasInjectAnnotatedConstructor(Class<? extends Agent> agentClass) {
 
-        Constructor[] constructors = agentClass.getDeclaredConstructors();
         for (Constructor constructor : constructors) {
             if (constructor.getAnnotation(Inject.class) != null) {
                 return true;
