@@ -18,6 +18,9 @@ public class SessionRequest {
     @JsonProperty("idInstalacion")
     private String installationId;
 
+    @JsonProperty("adaptadoPushAutDiferido")
+    private boolean adaptedForDeferredPushAuthentication = true;
+
     public SessionRequest(String idioma, String origen, String canal, String idInstalacion) {
         this.language = idioma;
         this.origin = origen;

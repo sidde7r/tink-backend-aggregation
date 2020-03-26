@@ -399,7 +399,20 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "supplementalFields": [
+                {
+                    "description": "Verification code",
+                    "helpText": "Insert the verification code you received from the bank",
+                    "name": "otpinput",
+                    "numeric": true,
+                    "pattern": "^[0-9]{6}$",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "patternError": "The code you entered is not valid",
+                    "sensitive": false
+                }
+            ]
         },
         {
             "accessType": "OTHER",

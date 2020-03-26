@@ -85,6 +85,16 @@ public class LaCaixaConstants {
         public static final URL FUND_DETAILS = new URL(BASE + "fondos/detalleFondos");
 
         public static final URL USER_DATA = new URL(BASE + "login/loginDatosUsuario");
+
+        public static final URL INIT_ENROLMENT =
+                new URL(BASE + "login/enrolmentDispositivo/autorizacion/inicio");
+        public static final URL INIT_AUTH_SIGNATURE =
+                new URL(BASE + "autorizacion/pushAutDiferido");
+        public static final URL VERIFY_AUTH_SIGNATURE =
+                new URL(BASE + "autorizacion/verificaFirmaOperacion");
+        public static final URL AUTHORIZE_SCA = new URL(BASE + "autorizacion/autorizacionSCA");
+        public static final URL FINALIZE_ENROLMENT =
+                new URL(BASE + "login/enrolmentDispositivo/autorizacion/resultado");
     }
 
     public static class DefaultRequestParams {
@@ -107,6 +117,10 @@ public class LaCaixaConstants {
     public static class AuthenticationParams {
         public static final String INSTALLATION_ID_PREFIX = "cIAPPLPh9,3";
         public static final String DEVICE_NAME = "Tink";
+        public static final String SCA_TYPE_APP = "MOTP";
+        public static final String SCA_TYPE_PASSWORD = "PIN1_SCA";
+        public static final String SCA_TYPE_SMS = "OTPSMS";
+        public static final String SIGNING_URL = "caixabanksign://app2app";
     }
 
     public static class QueryParams {
@@ -121,6 +135,8 @@ public class LaCaixaConstants {
 
     public static class TemporaryStorage {
         public static final String ACCOUNT_REFERENCE = "accountRef";
+        public static final String SCA_SMS = "scaSms";
+        public static final String ENROLMENT_CODE = "enrolmentCode";
     }
 
     public static class StorageKeys {
