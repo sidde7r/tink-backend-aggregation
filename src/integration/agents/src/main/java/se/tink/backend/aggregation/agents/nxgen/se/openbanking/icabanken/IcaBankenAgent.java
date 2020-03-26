@@ -39,7 +39,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        apiClient = new IcaBankenApiClient(client, sessionStorage);
+        apiClient = new IcaBankenApiClient(client, persistentStorage);
         credentialsRequest = request.getCredentials();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
@@ -59,7 +59,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
                         supplementalInformationHelper,
                         new IcaBankenAuthenticator(
                                 apiClient,
-                                sessionStorage,
+                                persistentStorage,
                                 icaBankenConfiguration,
                                 credentialsRequest),
                         credentials,

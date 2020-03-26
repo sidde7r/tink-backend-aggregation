@@ -27,19 +27,19 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public final class IcaBankenApiClient {
 
     private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private IcaBankenConfiguration configuration;
 
-    public IcaBankenApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public IcaBankenApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     public void setConfiguration(
@@ -77,7 +77,7 @@ public final class IcaBankenApiClient {
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
                 .header(
                         HeaderKeys.AUTHORIZATION,
-                        HeaderValues.BEARER + sessionStorage.get(StorageKeys.TOKEN))
+                        HeaderValues.BEARER + persistentStorage.get(StorageKeys.TOKEN))
                 .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
                 .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
                 .get(FetchAccountsResponse.class);
@@ -96,7 +96,7 @@ public final class IcaBankenApiClient {
                 .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
                 .header(
                         HeaderKeys.AUTHORIZATION,
-                        HeaderValues.BEARER + sessionStorage.get(StorageKeys.TOKEN))
+                        HeaderValues.BEARER + persistentStorage.get(StorageKeys.TOKEN))
                 .header(HeaderKeys.SCOPE, HeaderValues.ACCOUNT)
                 .get(FetchTransactionsResponse.class);
     }
@@ -143,7 +143,7 @@ public final class IcaBankenApiClient {
     }
 
     private OAuth2Token getApplicationTokenFromSession() {
-        return sessionStorage
+        return persistentStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
