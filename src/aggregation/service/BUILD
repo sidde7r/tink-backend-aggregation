@@ -160,11 +160,19 @@ command(
     command = "//src/aggregation/service:bin_decoupled",
 )
 
+command(
+    name = "run_fake_aggregation_controller",
+    arguments = [
+        "--debug_mode",
+    ],
+    command = "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/aggregationcontroller:fake_aggregationcontroller_bin",
+)
+
 multirun(
     name = "run_aggregation_decoupled_and_external_deps",
     commands = [
         "//src/aggregation/fakebank/src/main/java/se/tink/backend/fakebank",
-        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/aggregationcontroller:fake_aggregationcontroller_bin",
+        ":run_fake_aggregation_controller",
         ":run_aggregation_decoupled",
     ],
     parallel = True,

@@ -23,11 +23,22 @@ public class FakeAggregationController extends Application<Configuration> {
 
     private static final Logger log = LoggerFactory.getLogger(FakeAggregationController.class);
     private Map<String, List<String>> cache = new ConcurrentHashMap<>();
+    private final boolean debugMode;
 
     public static void main(String[] args) throws Exception {
         log.info("Starting FakeAggregationController");
-        new FakeAggregationController().run(new String[] {"server"});
+        boolean debugModeInArgs = false;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase("--debug_mode")) {
+                debugModeInArgs = true;
+            }
+        }
+        new FakeAggregationController(debugModeInArgs).run(new String[] {"server"});
         log.info("Started FakeAggregationController");
+    }
+
+    public FakeAggregationController(final boolean debugMode) {
+        this.debugMode = debugMode;
     }
 
     @Override
@@ -81,6 +92,12 @@ public class FakeAggregationController extends Application<Configuration> {
                     cache.put(key, new ArrayList<>());
                 }
                 cache.get(key).add(data.get(key));
+            }
+
+            if (debugMode) {
+                synchronized (cache) {
+                    log.info(data.toString());
+                }
             }
 
             return Response.status(Status.OK).build();
