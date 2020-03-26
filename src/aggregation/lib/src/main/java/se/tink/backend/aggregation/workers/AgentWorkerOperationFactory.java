@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentClassFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentClassFactory;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;

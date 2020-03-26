@@ -16,7 +16,6 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
@@ -24,17 +23,13 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -68,14 +63,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         }
 
         // Provide AgentFactory with 'production' components.
-        factory =
-                new AgentFactory(
-                        configuration,
-                        new NextGenTinkHttpClientProviderFactory(),
-                        new SupplementalInformationProviderFactoryImpl(),
-                        new AgentContextProviderFactoryImpl(),
-                        new GeneratedValueProviderImpl(
-                                new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl()));
+        factory = new AgentFactory(new AgentPackageModuleFactory(), configuration);
     }
 
     protected Provider constructProvider() {

@@ -445,6 +445,7 @@ java_library(
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/factory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/locks",

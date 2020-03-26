@@ -22,8 +22,6 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentClassFactory;
-import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.PersistentLogin;
@@ -32,17 +30,14 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.agentfactory.AgentClassFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
+import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
@@ -188,15 +183,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
 
-            AgentFactory factory =
-                    new AgentFactory(
-                            configuration,
-                            new NextGenTinkHttpClientProviderFactory(),
-                            new SupplementalInformationProviderFactoryImpl(),
-                            new AgentContextProviderFactoryImpl(),
-                            new GeneratedValueProviderImpl(
-                                    new ActualLocalDateTimeSource(),
-                                    new RandomValueGeneratorImpl()));
+            AgentFactory factory = new AgentFactory(new AgentPackageModuleFactory(), configuration);
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
             return factory.create(cls, credentialsRequest, context);
         } catch (FileNotFoundException e) {

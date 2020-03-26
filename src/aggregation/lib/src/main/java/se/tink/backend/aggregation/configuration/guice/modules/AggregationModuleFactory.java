@@ -13,7 +13,9 @@ public class AggregationModuleFactory {
     public static ImmutableList<Module> build(
             AggregationServiceConfiguration configuration, Environment environment) {
         if (configuration.isDecoupledMode()) {
-            return ImmutableList.of(new AggregationDecoupledModule(configuration, environment));
+            return ImmutableList.of(
+                    new AggregationDecoupledModule(configuration, environment),
+                    new AgentFactoryModule());
         }
         if (configuration.isDevelopmentMode()) {
             return buildForDevelopment(configuration, environment).build();
@@ -27,6 +29,7 @@ public class AggregationModuleFactory {
         return new ImmutableList.Builder<Module>()
                 .add(new AggregationCommonModule())
                 .add(new CoordinationModule())
+                .add(new AgentFactoryModule())
                 .add(new AgentWorkerCommandModule())
                 .add(new AggregationConfigurationModule(configuration))
                 .add(new AggregationModule(configuration, environment.jersey()))

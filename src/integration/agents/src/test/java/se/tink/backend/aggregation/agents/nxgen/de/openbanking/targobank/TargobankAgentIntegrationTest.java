@@ -21,22 +21,17 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentClassFactory;
-import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.agentfactory.AgentClassFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
+import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.NextGenTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -137,15 +132,7 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
             this.configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
 
             // Provide AgentFactory with 'production' components.
-            AgentFactory factory =
-                    new AgentFactory(
-                            this.configuration,
-                            new NextGenTinkHttpClientProviderFactory(),
-                            new SupplementalInformationProviderFactoryImpl(),
-                            new AgentContextProviderFactoryImpl(),
-                            new GeneratedValueProviderImpl(
-                                    new ActualLocalDateTimeSource(),
-                                    new RandomValueGeneratorImpl()));
+            AgentFactory factory = new AgentFactory(new AgentPackageModuleFactory(), configuration);
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(this.provider);
             return factory.create(cls, credentialsRequest, this.context);
         } catch (FileNotFoundException e) {

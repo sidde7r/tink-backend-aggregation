@@ -29,18 +29,6 @@ import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ConstantLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.MockRandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.MockSupplementalInformationProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.TinkHttpClientProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.WireMockTinkHttpClientProviderFactory;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.FakeCreditSafeService;
 import se.tink.backend.aggregation.resources.FakeProviderConfigurationService;
@@ -172,19 +160,14 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AggregationServiceConfiguration.class).toInstance(configuration);
         bind(AgentsServiceConfiguration.class)
                 .toInstance(configuration.getAgentsServiceConfiguration());
+
         bind(String.class)
                 .annotatedWith(Names.named("wireMockServerHost"))
                 .toInstance("localhost:10000");
-        bind(TinkHttpClientProviderFactory.class).to(WireMockTinkHttpClientProviderFactory.class);
         bind(new TypeLiteral<Map<String, String>>() {})
                 .annotatedWith(Names.named("mockCallbackData"))
                 .toInstance(Collections.emptyMap());
-        bind(SupplementalInformationProviderFactory.class)
-                .to(MockSupplementalInformationProviderFactory.class);
-        bind(AgentContextProviderFactory.class).to(AgentContextProviderFactoryImpl.class);
-        bind(GeneratedValueProvider.class).to(GeneratedValueProviderImpl.class);
-        bind(LocalDateTimeSource.class).to(ConstantLocalDateTimeSource.class);
-        bind(RandomValueGenerator.class).to(MockRandomValueGenerator.class);
+
         bind(TppSecretsServiceConfiguration.class)
                 .toInstance(
                         configuration
