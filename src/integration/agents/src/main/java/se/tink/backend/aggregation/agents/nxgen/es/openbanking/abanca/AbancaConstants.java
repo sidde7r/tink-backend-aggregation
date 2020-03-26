@@ -4,6 +4,8 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public final class AbancaConstants {
 
@@ -48,6 +50,8 @@ public final class AbancaConstants {
     public static class HeaderKeys {
         public static final String AUTH_KEY = "AuthKey";
         public static final String AUTHORIZATION = "Authorization";
+        public static final String CHALLENGE_ID = "x-challenge-id";
+        public static final String CHALLENGE_RESPONSE = "x-challenge-response";
     }
 
     public static class ErrorMessages {
@@ -80,11 +84,6 @@ public final class AbancaConstants {
         public static final String GRANT_TYPE = "grant_type";
     }
 
-    public static class HeaderValues {
-
-        public static final String TOKEN_PREFIX = "Bearer ";
-    }
-
     public static class FormKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String APPLICATION = "APLICACION";
@@ -97,8 +96,30 @@ public final class AbancaConstants {
         public static final String GRANT_TYPE_REFRESH = "refresh_token";
     }
 
-    public class Market {
+    public static class Market {
         public static final String INTEGRATION_NAME = "abanca";
         public static final String CLIENT_NAME = "tink";
+    }
+
+    public static class ResponseErrorCodes {
+        public static final String CHALLENGE_REQUIRED = "API_00005";
+        public static final String INVALID_CHALLENGE_VALUE = "API_00006";
+    }
+
+    public enum UserMessage implements LocalizableEnum {
+        GET_CHALLENGE_RESPONSE_DESCRIPTION(
+                new LocalizableKey("Enter the code you received from the bank")),
+        INVALID_CHALLENGE_RESPONSE(new LocalizableKey("Failed to read user input"));
+
+        private final LocalizableKey userMessage;
+
+        UserMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return this.userMessage;
+        }
     }
 }

@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public final class AbancaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final AbancaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AbancaConfiguration abancaConfiguration;
@@ -34,8 +33,13 @@ public final class AbancaAgent extends NextGenerationAgent
         abancaConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(AbancaConfiguration.class);
         apiClient =
-                new AbancaApiClient(client, persistentStorage, abancaConfiguration, sessionStorage);
-        clientName = request.getProvider().getPayload();
+                new AbancaApiClient(
+                        client,
+                        agentComponentProvider.getContext().getCatalog(),
+                        abancaConfiguration,
+                        sessionStorage,
+                        credentials,
+                        supplementalRequester);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
