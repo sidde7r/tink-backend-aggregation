@@ -718,24 +718,6 @@ java_library(
 )
 
 java_library(
-    name = "io_prometheus_simpleclient_servlet",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_prometheus_simpleclient//jar",
-        "@io_prometheus_simpleclient_common//jar",
-        "@io_prometheus_simpleclient_servlet//jar",
-    ],
-)
-
-java_library(
-    name = "io_protostuff_protostuff_api",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_protostuff_protostuff_api//jar",
-    ],
-)
-
-java_library(
     name = "io_swagger_swagger_annotations",
     visibility = ["//visibility:public"],
     exports = [
@@ -1029,18 +1011,6 @@ java_library(
 )
 
 java_library(
-    name = "org_eclipse_jetty_jetty_servlets",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:org_eclipse_jetty_jetty_http",
-        "@aggregation//:org_eclipse_jetty_jetty_io",
-        "@aggregation//:org_eclipse_jetty_jetty_util",
-        "@org_eclipse_jetty_jetty_continuation//jar",
-        "@org_eclipse_jetty_jetty_servlets//jar",
-    ],
-)
-
-java_library(
     name = "org_eclipse_jetty_orbit_javax_servlet",
     visibility = ["//visibility:public"],
     exports = [
@@ -1253,14 +1223,17 @@ java_library(
 java_library(
     name = "org_hamcrest_hamcrest_core",
     visibility = ["//visibility:public"],
-    exports = ["@org_hamcrest_hamcrest_core//jar"],
+    exports = [
+        "@org_hamcrest_hamcrest_core//jar",
+    ],
 )
 
 java_library(
-    # TODO: check is this used?
     name = "org_hamcrest_hamcrest_library",
     visibility = ["//visibility:public"],
-    exports = ["@org_hamcrest_hamcrest_library//jar"],
+    exports = [
+        "@org_hamcrest_hamcrest_library//jar",
+    ],
 )
 
 java_library(
