@@ -9,10 +9,12 @@ java_library(
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/libraries/health_check_handler",
         "//src/libraries/http:http_utils",
+        "//src/libraries/metrics:core",
+        "//src/libraries/metrics:histograms",
+        "//src/libraries/metrics:registry",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_slf4j_slf4j_api",
-        "//third_party:prometheus",
         "@aggregation//:com_google_guava_guava",
     ],
 )

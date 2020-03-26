@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.startupchecks;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
-import io.prometheus.client.Histogram;
 import java.util.Collection;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsS
 import se.tink.backend.libraries.healthcheckhandler.HealthCheck;
 import se.tink.backend.libraries.healthcheckhandler.NotHealthyException;
 import se.tink.libraries.http.utils.HttpResponseHelper;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class StartupChecksHandlerImpl implements StartupChecksHandler {
 
@@ -22,20 +22,16 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
 
     private final Collection<HealthCheck> healthChecks;
 
-    private static final Histogram healthCheckDuration =
-            Histogram.build()
-                    .namespace("tink_aggregation")
-                    .name("healthcheck_duration_seconds")
-                    .labelNames("name", "healthy")
-                    .help("healthchecks durations")
-                    .register();
+    private final HealthCheckDurationHistogram healthCheckDurationHistogram;
 
     @Inject
-    public StartupChecksHandlerImpl(ManagedTppSecretsServiceClient tppSecretsServiceClient) {
+    public StartupChecksHandlerImpl(
+            ManagedTppSecretsServiceClient tppSecretsServiceClient, MetricRegistry metricRegistry) {
+        this.healthCheckDurationHistogram = new HealthCheckDurationHistogram(metricRegistry);
         healthChecks =
                 ImmutableSet.of(
                         new SecretsServiceHealthCheck(
-                                tppSecretsServiceClient, healthCheckDuration));
+                                tppSecretsServiceClient, healthCheckDurationHistogram));
     }
 
     @Override
