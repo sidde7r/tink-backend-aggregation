@@ -3,6 +3,9 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "service",
     srcs = glob(["*.java"]),
+    data = [
+        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources",
+    ],
     tags = [
         "external",
         "manual",

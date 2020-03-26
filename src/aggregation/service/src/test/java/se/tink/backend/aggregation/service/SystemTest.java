@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 import static se.tink.backend.aggregation.service.SystemTestUtils.makeGetRequest;
 import static se.tink.backend.aggregation.service.SystemTestUtils.makePostRequest;
 import static se.tink.backend.aggregation.service.SystemTestUtils.pollAggregationController;
+import static se.tink.backend.aggregation.service.SystemTestUtils.readRequestBodyFromFile;
 
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,8 @@ public class SystemTest {
     @Test
     public void getAuthenticateShouldSetCredentialsStatusUpdated() throws Exception {
         String requestBody =
-                "{\"manual\": true, \"create\": true, \"callbackUri\": \"callbackUri\", \"appUriId\": \"appUriId\", \"userDeviceId\": \"userDeviceId\", \"credentials\": {\"debugUntil\": 695260800, \"providerLatency\": 0, \"id\": \"aaaa\", \"nextUpdate\": null, \"fields\": {\"username\": \"testUser\", \"password\": \"testPassword\"}, \"payload\": \"\", \"providerName\": \"uk-americanexpress-password\", \"sessionExpiryDate\": null, \"status\": \"CREATED\", \"statusPayload\": \"CREATED\", \"statusPrompt\": \"\", \"statusUpdated\": null, \"supplementalInformation\": \"\", \"type\": \"PASSWORD\", \"updated\": null, \"userId\": \"userId\", \"dataVersion\": 1 }, \"provider\": {\"accessType\": \"OTHER\", \"className\": \"nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent\", \"credentialsType\": \"PASSWORD\", \"displayName\": \"American Express\", \"fields\": [{\"description\":\"Username\",\"immutable\":true,\"minLength\":1,\"name\":\"username\"},{\"description\":\"Password\",\"masked\":true,\"minLength\":1,\"name\":\"password\",\"sensitive\":true}], \"supplementalFields\": [], \"financialInstitutionId\": \"dummyId\", \"financialInstitutionName\": \"dummyName\", \"groupDisplayName\": \"American Express\", \"multiFactor\": false, \"name\": \"uk-americanexpress-password\", \"passwordhelptext\": \"Use the same password as you would in your banks mobile app.\", \"popular\": true, \"refreshFrequency\": 1, \"refreshFrequencyFactor\": 1, \"status\": \"ENABLED\", \"transactional\": true, \"type\": \"CREDIT_CARD\", \"currency\": \"GBP\", \"market\": \"UK\", \"payload\": \"\"}, \"user\": {\"flags\": [], \"flagsSerialized\": \"[]\", \"id\": \"userId\", \"profile\": {\"locale\": \"en_US\"}, \"username\": \"username\", \"debugUntil\": 695260800 }, \"accounts\": [] }";
+                readRequestBodyFromFile(
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body.json");
 
         ResponseEntity<String> authenticationCallResult =
                 makePostRequest(
