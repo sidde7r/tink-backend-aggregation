@@ -152,7 +152,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-
+        LOGGER.info("Trying to authenticate manually...");
         final String authenticatorFactorId =
                 credentials.getField(se.tink.backend.agents.rpc.Field.Key.USERNAME);
         final String smid = credentials.getField(FortisConstants.Field.CLIENTNUMBER);
@@ -363,6 +363,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             SessionError.SESSION_EXPIRED.exception();
         }
 
+        LOGGER.info("Trying to authenticate automatic....");
         EbankingUsersResponse ebankingUsersResponse =
                 getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
 
@@ -456,6 +457,6 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                         FortisConstants.Storage.PASSWORD,
                         FortisConstants.Storage.DEVICE_FINGERPRINT,
                         FortisConstants.Storage.MUID);
-        valuesToClean.forEach(v -> persistentStorage.remove(v));
+        valuesToClean.forEach(v -> persistentStorage.put(v, null));
     }
 }
