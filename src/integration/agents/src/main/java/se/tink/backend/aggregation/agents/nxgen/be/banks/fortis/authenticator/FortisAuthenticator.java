@@ -456,6 +456,6 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                         FortisConstants.Storage.PASSWORD,
                         FortisConstants.Storage.DEVICE_FINGERPRINT,
                         FortisConstants.Storage.MUID);
-        valuesToClean.forEach(v -> persistentStorage.remove(v));
+        valuesToClean.forEach(v -> persistentStorage.put(v, null));
     }
 }
