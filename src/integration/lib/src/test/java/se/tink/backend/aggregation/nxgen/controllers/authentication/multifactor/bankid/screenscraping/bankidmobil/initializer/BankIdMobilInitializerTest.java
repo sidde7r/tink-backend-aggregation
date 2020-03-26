@@ -23,7 +23,7 @@ public class BankIdMobilInitializerTest {
     private static final String DUMMY_MOBILE_NATIONAL_ID_NUMBER = "DUMMY_MOBILE_NATIONAL_ID_NUMBER";
 
     private static final By MOBILENUMBER_INPUT_XPATH = By.xpath("//input[@id='phoneNumber']");
-    private static final By NATIONAL_ID_NUMBER_INPUT_XPATH = By.xpath("//input[@id='phoneAlias']");
+    private static final By DATE_OF_BIRTH_INPUT_XPATH = By.xpath("//input[@id='phoneAlias']");
     private static final By FORM_XPATH = By.xpath("//input[@id='submit_button']");
 
     @Before
@@ -45,7 +45,7 @@ public class BankIdMobilInitializerTest {
         WebElement dummyElement = mock(WebElement.class);
         given(webDriverHelper.getElement(driver, MOBILENUMBER_INPUT_XPATH))
                 .willReturn(dummyElement);
-        given(webDriverHelper.getElement(driver, NATIONAL_ID_NUMBER_INPUT_XPATH))
+        given(webDriverHelper.getElement(driver, DATE_OF_BIRTH_INPUT_XPATH))
                 .willReturn(dummyElement);
         given(webDriverHelper.getElement(driver, FORM_XPATH)).willReturn(dummyElement);
         // when
@@ -53,7 +53,7 @@ public class BankIdMobilInitializerTest {
         // then
         inOrder.verify(webDriverHelper).getElement(driver, MOBILENUMBER_INPUT_XPATH);
         inOrder.verify(webDriverHelper).sendInputValue(dummyElement, DUMMY_MOBILE_NUMBER);
-        inOrder.verify(webDriverHelper).getElement(driver, NATIONAL_ID_NUMBER_INPUT_XPATH);
+        inOrder.verify(webDriverHelper).getElement(driver, DATE_OF_BIRTH_INPUT_XPATH);
         inOrder.verify(webDriverHelper)
                 .sendInputValue(dummyElement, DUMMY_MOBILE_NATIONAL_ID_NUMBER);
         inOrder.verify(webDriverHelper).getElement(driver, FORM_XPATH);

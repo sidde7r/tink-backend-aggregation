@@ -12,7 +12,7 @@ public class BankIdMobilInitializer implements MobilInitializer {
     private final WebDriverHelper webDriverHelper;
 
     private static final By MOBILENUMBER_INPUT_XPATH = By.xpath("//input[@id='phoneNumber']");
-    private static final By NATIONAL_ID_NUMBER_INPUT_XPATH = By.xpath("//input[@id='phoneAlias']");
+    private static final By DATE_OF_BIRTH_INPUT_XPATH = By.xpath("//input[@id='phoneAlias']");
     private static final By FORM_XPATH = By.xpath("//input[@id='submit_button']");
 
     public BankIdMobilInitializer(
@@ -31,8 +31,7 @@ public class BankIdMobilInitializer implements MobilInitializer {
         WebElement mobileNumberInput = webDriverHelper.getElement(driver, MOBILENUMBER_INPUT_XPATH);
         webDriverHelper.sendInputValue(mobileNumberInput, mobileNumber);
 
-        WebElement dateOfBirthInput =
-                webDriverHelper.getElement(driver, NATIONAL_ID_NUMBER_INPUT_XPATH);
+        WebElement dateOfBirthInput = webDriverHelper.getElement(driver, DATE_OF_BIRTH_INPUT_XPATH);
         webDriverHelper.sendInputValue(dateOfBirthInput, dateOfBirth);
 
         WebElement formButton = webDriverHelper.getElement(driver, FORM_XPATH);
