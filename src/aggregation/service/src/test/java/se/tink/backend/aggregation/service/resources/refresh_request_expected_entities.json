@@ -1,0 +1,66 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "XXX-11111",
+            "accountExclusion": "NONE",
+            "currencyCode": "GBP",
+            "bankId": "XXX11111",
+            "excluded": false,
+            "favored": false,
+            "name": "American Express Basic Card - 11111",
+            "ownership": 1.0,
+            "type": "CREDIT_CARD",
+            "userModifiedExcluded": false,
+            "userModifiedName": false,
+            "userModifiedType": false,
+            "flags": "[]",
+            "identifiers": "[]",
+            "closed": false,
+            "holderName": "MR M LASTNAME",
+            "availableCredit": 0.0,
+            "balance": 0.0
+        }
+    ],
+    "transactions": [
+        {
+            "amount": -403.25,
+            "date": 1552561200000,
+            "description": "interesting transaction",
+            "originalAmount": 0.0,
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -64.84,
+            "date": 1553770800000,
+            "description": "good transaction",
+            "originalAmount": 0.0,
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 64.84,
+            "date": 1554285600000,
+            "description": "PAYMENT RECEIVED - THANK YOU",
+            "originalAmount": 0.0,
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 551.4,
+            "date": 1553511600000,
+            "description": "PAYMENT RECEIVED - THANK YOU",
+            "originalAmount": 0.0,
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        }
+    ]
+}

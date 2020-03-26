@@ -14,6 +14,7 @@ junit_test(
     runtime_deps = [
     ],
     deps = [
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "@system_tests//:com_fasterxml_jackson_core_jackson_databind",
         "@system_tests//:com_google_guava_guava",
         "@system_tests//:commons_io_commons_io",
