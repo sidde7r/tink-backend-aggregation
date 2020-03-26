@@ -17,7 +17,7 @@ public class SdcNoConfiguration implements ClientConfiguration {
 
     private static final Pattern PATTERN = Pattern.compile("\\{bankcode}");
     private static final Matcher NETTBANK_MATCHER =
-            PATTERN.matcher(Authentication.IFRAME_BANKID_LOGIN_URL);
+            PATTERN.matcher(Authentication.NETTBANK_BANKID_LOGIN_URL);
     private static final Matcher PORTALBANK_MATCHER =
             PATTERN.matcher(Authentication.PORTALBANK_LOGIN_URL);
 
