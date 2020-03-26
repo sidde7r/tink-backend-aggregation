@@ -49,12 +49,13 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
                 HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
             }
             firstCheckPassed = true;
-            logger.info("All startup checks passed, they will not be checked again.");
+            logger.info("All startup checks passed.");
         } else {
             try {
                 isHealthy();
             } catch (NotHealthyException e) {
                 logger.warn("Got unexpected exception when running healthcheck with SS client.", e);
+                return "experiencing problems";
             }
         }
         return "started";
