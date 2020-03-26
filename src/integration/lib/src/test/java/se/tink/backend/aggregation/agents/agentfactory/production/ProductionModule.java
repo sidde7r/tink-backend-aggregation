@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.agentfactory.production;
 
 import com.google.inject.AbstractModule;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
@@ -16,6 +17,12 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclien
 
 public class ProductionModule extends AbstractModule {
 
+    private final AgentsServiceConfiguration configuration;
+
+    public ProductionModule(AgentsServiceConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     @Override
     protected void configure() {
         bind(TinkHttpClientProviderFactory.class).to(NextGenTinkHttpClientProviderFactory.class);
@@ -25,5 +32,6 @@ public class ProductionModule extends AbstractModule {
         bind(GeneratedValueProvider.class).to(GeneratedValueProviderImpl.class);
         bind(LocalDateTimeSource.class).to(ActualLocalDateTimeSource.class);
         bind(RandomValueGenerator.class).to(RandomValueGeneratorImpl.class);
+        bind(AgentsServiceConfiguration.class).toInstance(configuration);
     }
 }
