@@ -4,14 +4,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static se.tink.backend.aggregation.service.SystemTestUtils.makeGetRequest;
 import static se.tink.backend.aggregation.service.SystemTestUtils.makePostRequest;
+import static se.tink.backend.aggregation.service.SystemTestUtils.pollAggregationController;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,32 +66,13 @@ public class SystemTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", "application/json");
 
-        Map<String, List<String>> pushedData = new HashMap<>();
-        while (pushedData.keySet().size() == 0) {
-
-            ResponseEntity<String> dataResult =
-                    makeGetRequest(
-                            String.format(
-                                    "http://%s:%d/data",
-                                    AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
-                            headers);
-
-            pushedData = new ObjectMapper().readValue(dataResult.getBody(), Map.class);
-            if (pushedData.keySet().size() == 0) {
-                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                continue;
-            }
-
-            List<String> credentialsUpdateCallbacks = pushedData.get("updateCredentials");
-            String latestCredentialsUpdate =
-                    credentialsUpdateCallbacks.get(credentialsUpdateCallbacks.size() - 1);
-            JsonNode node = new ObjectMapper().readTree(latestCredentialsUpdate);
-            String credentialsStatus = node.get("credentials").get("status").asText();
-            if (!credentialsStatus.equals("UPDATED")) {
-                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                continue;
-            }
-            Assert.assertEquals("UPDATED", credentialsStatus);
-        }
+        Map<String, List<String>> pushedData =
+                pollAggregationController(
+                        String.format(
+                                "http://%s:%d/data",
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
+                        headers,
+                        "UPDATED",
+                        null);
     }
 }
