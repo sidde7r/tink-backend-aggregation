@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.SdcNoBankIdIFrameSSAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.SdcNoBankIdSSAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -20,7 +20,7 @@ public class SdcNoAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SdcNoBankIdIFrameSSAuthenticator(configuration);
+        return new SdcNoBankIdSSAuthenticator(configuration);
     }
 
     @Override
