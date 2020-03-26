@@ -55,8 +55,9 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         ConfigurationValidator validator = injector.getInstance(ConfigurationValidator.class);
         validator.validate();
 
-        environment.lifecycle().manage(injector.getInstance(ManagedTppSecretsServiceClient.class));
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
+
+        environment.lifecycle().manage(injector.getInstance(ManagedTppSecretsServiceClient.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
         environment
                 .lifecycle()
