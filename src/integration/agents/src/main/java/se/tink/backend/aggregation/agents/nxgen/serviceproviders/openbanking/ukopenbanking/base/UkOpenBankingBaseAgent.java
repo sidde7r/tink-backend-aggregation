@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationFlow;
@@ -67,7 +68,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     private final UkOpenBankingAisConfig agentConfig;
     private AccountFetcher<TransactionalAccount> transactionalAccountFetcher;
 
-    private final RandomValueGenerator randomValueGenerator;
+    protected final RandomValueGenerator randomValueGenerator;
+    protected final LocalDateTimeSource localDateTimeSource;
 
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
@@ -78,6 +80,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.disableSslVerification = disableSslVerification;
         this.agentConfig = agentConfig;
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
 
         client.addFilter(new BankServiceInternalErrorFilter());
     }
