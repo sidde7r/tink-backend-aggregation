@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -76,8 +77,12 @@ public class BarclaysAgentWireMockTest {
         List<Account> givenAccounts = context.getUpdatedAccounts();
 
         // Then
-        AgentContractEntitiesAsserts.compareAccounts(expectedAccounts, givenAccounts);
-        AgentContractEntitiesAsserts.compareTransactions(expectedTransactions, givenTransactions);
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedAccounts, givenAccounts));
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransactions, givenTransactions));
     }
 
     @Test

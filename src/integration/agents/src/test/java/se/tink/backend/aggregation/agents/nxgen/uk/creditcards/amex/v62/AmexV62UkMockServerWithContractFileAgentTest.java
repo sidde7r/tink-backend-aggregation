@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.creditcards.amex.v62;
 
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Field;
@@ -60,7 +61,11 @@ public class AmexV62UkMockServerWithContractFileAgentTest {
         List<Account> givenAccounts = context.getUpdatedAccounts();
 
         // Then
-        AgentContractEntitiesAsserts.compareAccounts(expectedAccounts, givenAccounts);
-        AgentContractEntitiesAsserts.compareTransactions(expectedTransactions, givenTransactions);
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedAccounts, givenAccounts));
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransactions, givenTransactions));
     }
 }
