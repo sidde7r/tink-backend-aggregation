@@ -136,7 +136,9 @@ public class AgentFactory {
         return agentClass;
     }
 
+    static boolean hasInjectAnnotatedConstructor(Class cls) {
 
+        Constructor[] constructors = cls.getDeclaredConstructors();
         for (Constructor constructor : constructors) {
             if (constructor.getAnnotation(Inject.class) != null) {
                 return true;
