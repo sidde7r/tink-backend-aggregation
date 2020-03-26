@@ -76,5 +76,17 @@
       "type": "DEFAULT",
       "upcoming": false
     }
-  ]
+  ],
+  "identityData": {
+    "nameElements": [
+      {
+        "type": "FIRST_NAME",
+        "value": "FIRSTNAME"
+      },
+      {
+        "type": "SURNAME",
+        "value": "LASTNAME"
+      }
+    ]
+  }
 }

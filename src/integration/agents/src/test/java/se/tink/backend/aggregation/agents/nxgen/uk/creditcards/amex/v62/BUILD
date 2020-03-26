@@ -97,6 +97,8 @@ junit_test(
     ],
     deps = [
         "//src/integration/api",
+        "//src/integration/credentials:service",
+        "//src/integration/identity_data",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",

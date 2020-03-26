@@ -989,5 +989,35 @@
             "type": "DEFAULT",
             "upcoming": false
         }
-    ]
+    ],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FIRST_NAME",
+                "value": "Dummy Name"
+            },
+            {
+                "type": "SURNAME",
+                "value": "DummyName"
+            },
+            {
+                "type": "SURNAME",
+                "value": "Dummy Name"
+            }
+        ],
+        "dateOfBirth": {
+            "year": 1992,
+            "month": "JANUARY",
+            "chronology": {
+                "id": "ISO",
+                "calendarType": "iso8601"
+            },
+            "era": "CE",
+            "dayOfYear": 13,
+            "dayOfWeek": "MONDAY",
+            "leapYear": true,
+            "dayOfMonth": 13,
+            "monthValue": 1
+        }
+    }
 }
