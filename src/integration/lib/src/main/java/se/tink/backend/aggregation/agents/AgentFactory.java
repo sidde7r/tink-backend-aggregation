@@ -1,84 +1,88 @@
 package se.tink.backend.aggregation.agents;
 
 import com.google.common.base.Objects;
+import com.google.inject.Guice;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
+import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.factory.SupplementalInformationProviderFactory;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.factory.TinkHttpClientProviderFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AgentFactory {
-    private AgentsServiceConfiguration configuration;
-    private final TinkHttpClientProviderFactory tinkHttpClientProviderFactory;
-    private final SupplementalInformationProviderFactory supplementalInformationProviderFactory;
-    private final AgentContextProviderFactory agentContextProviderFactory;
-    private final GeneratedValueProvider generatedValueProvider;
+    private final AgentsServiceConfiguration configuration;
+    private final AgentModuleFactory moduleLoader;
 
     @Inject
-    public AgentFactory(
-            AgentsServiceConfiguration configuration,
-            TinkHttpClientProviderFactory tinkHttpClientProviderFactory,
-            SupplementalInformationProviderFactory supplementalInformationProviderFactory,
-            AgentContextProviderFactory agentContextProviderFactory,
-            GeneratedValueProvider generatedValueProvider) {
+    public AgentFactory(AgentModuleFactory moduleLoader, AgentsServiceConfiguration configuration) {
+        this.moduleLoader = moduleLoader;
         this.configuration = configuration;
-        this.tinkHttpClientProviderFactory = tinkHttpClientProviderFactory;
-        this.supplementalInformationProviderFactory = supplementalInformationProviderFactory;
-        this.agentContextProviderFactory = agentContextProviderFactory;
-        this.generatedValueProvider = generatedValueProvider;
-    }
-
-    public static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider)
-            throws Exception {
-        Class<? extends Agent> agentClass;
-
-        // Check if this is demo account.
-
-        if (credentials.isDemoCredentials()
-                && !Objects.equal(credentials.getType(), CredentialsTypes.FRAUD)) {
-            agentClass = AgentClassFactory.getAgentClass("demo.DemoAgent");
-            credentials.setPassword("demo");
-        } else {
-            agentClass = AgentClassFactory.getAgentClass(provider);
-        }
-
-        return agentClass;
-    }
-
-    public Agent create(CredentialsRequest request, AgentContext context) throws Exception {
-        Class<? extends Agent> agentClass =
-                getAgentClass(request.getCredentials(), request.getProvider());
-
-        return create(agentClass, request, context);
     }
 
     /**
+     * Creates agent from the className specified in the provider contained in the {@code request}
+     * using one of the supported constructor signatures.
+     *
+     * @param request Request that the agent will serve.
+     * @param context Context to execute the agent within.
+     * @return An agent.
+     * @throws ReflectiveOperationException If appropriate constructor or module can't be found.
+     */
+    public Agent create(CredentialsRequest request, AgentContext context)
+            throws ReflectiveOperationException {
+
+        Class<? extends Agent> agentClass =
+                getAgentClass(request.getCredentials(), request.getProvider());
+
+        if (hasInjectAnnotatedConstructor(agentClass)) {
+
+            return create(
+                    agentClass, moduleLoader.getAgentModules(request, context, configuration));
+        } else {
+
+            // Backwards compatibility with non guice enabled agents.
+            return create(agentClass, request, context);
+        }
+    }
+
+    /**
+     * Creates an agent using guice dependency injection using dependencies specified in {@code
+     * modules}.
+     *
+     * @param agentClass Agent to be instantiated.
+     * @param modules Modules to be bound by guice.
+     * @return An agent constructed using guice dependency injection constructor.
+     */
+    private Agent create(Class<? extends Agent> agentClass, Set<? extends Module> modules) {
+
+        final Injector injector = Guice.createInjector(modules);
+        final Agent agent = injector.getInstance(agentClass);
+        agent.setConfiguration(configuration);
+
+        return agent;
+    }
+
+    /**
+     * @deprecated Agents should implement guice injection constructor.
      * @return An agent constructed using its {@link AgentComponentProvider } constructor or, if it
      *     doesn't exist, its {@link AgentsServiceConfiguration } constructor or, if it doesn't
      *     exist, its {@link SignatureKeyPair } constructor.
      */
+    @Deprecated
     public Agent create(
             Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context)
-            throws Exception {
-
-        final Class<?>[] strategyParameterList = {AgentComponentProvider.class};
+            throws ReflectiveOperationException {
 
         final Class<?>[] agentsServiceConfigurationParameterList = {
             CredentialsRequest.class, AgentContext.class, AgentsServiceConfiguration.class
         };
-
-        final boolean hasStrategyConstructor =
-                Arrays.stream(agentClass.getConstructors())
-                        .anyMatch(c -> Arrays.equals(c.getParameterTypes(), strategyParameterList));
 
         final boolean hasAgentsServiceConfigurationConstructor =
                 Arrays.stream(agentClass.getConstructors())
@@ -91,27 +95,7 @@ public class AgentFactory {
         final Agent agent;
         context.setConfiguration(configuration);
 
-        if (hasStrategyConstructor) {
-            Constructor<?> agentConstructor =
-                    agentClass.getConstructor(AgentComponentProvider.class);
-
-            agent =
-                    (Agent)
-                            agentConstructor.newInstance(
-                                    new AgentComponentProvider(
-                                            tinkHttpClientProviderFactory
-                                                    .createTinkHttpClientProvider(
-                                                            request,
-                                                            context,
-                                                            configuration.getSignatureKeyPair()),
-                                            supplementalInformationProviderFactory
-                                                    .createSupplementalInformationProvider(
-                                                            context, request),
-                                            agentContextProviderFactory.createAgentContextProvider(
-                                                    request, context),
-                                            generatedValueProvider));
-
-        } else if (hasAgentsServiceConfigurationConstructor) {
+        if (hasAgentsServiceConfigurationConstructor) {
             Constructor<?> agentConstructor =
                     agentClass.getConstructor(
                             CredentialsRequest.class,
@@ -134,23 +118,31 @@ public class AgentFactory {
         return agent;
     }
 
-    public static Class<? extends Agent> getAgentClass(String className) throws Exception {
-        return AgentClassFactory.getAgentClass(className);
+    private static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider)
+            throws ReflectiveOperationException {
+        Class<? extends Agent> agentClass;
+
+        // Check if this is demo account.
+        if (credentials.isDemoCredentials()
+                && !Objects.equal(credentials.getType(), CredentialsTypes.FRAUD)) {
+            agentClass = AgentClassFactory.getAgentClass("demo.DemoAgent");
+            credentials.setPassword("demo");
+        } else {
+            agentClass = AgentClassFactory.getAgentClass(provider);
+        }
+
+        return agentClass;
     }
 
-    public Agent createForIntegration(
-            String className, CredentialsRequest request, AgentContext context) throws Exception {
-        Class<? extends Agent> agentClass = getAgentClass(className);
-        Constructor<?> agentConstructor =
-                agentClass.getConstructor(
-                        CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
+    private static boolean hasInjectAnnotatedConstructor(Class<? extends Agent> agentClass) {
 
-        Agent agent =
-                (Agent)
-                        agentConstructor.newInstance(
-                                request, context, configuration.getSignatureKeyPair());
-        agent.setConfiguration(configuration);
+        Constructor[] constructors = agentClass.getDeclaredConstructors();
+        for (Constructor constructor : constructors) {
+            if (constructor.getAnnotation(Inject.class) != null) {
+                return true;
+            }
+        }
 
-        return agent;
+        return false;
     }
 }

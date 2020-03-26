@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,7 +28,6 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
@@ -40,9 +37,9 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
-import se.tink.backend.aggregation.agents.agentfactory.production.ProductionModule;
-import se.tink.backend.aggregation.agents.agentfactory.wiremocked.WiremockedModule;
+import se.tink.backend.aggregation.agents.framework.module.AgentWireMockModuleFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
+import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -222,20 +219,22 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     .addSensitiveValuesSetObservable(
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
+            context.setConfiguration(configuration);
 
-            final Injector injector;
+            AgentFactory factory;
             if (wireMockConfiguration != null) {
                 // Provide AgentFactory with mocked http client and supplemental information.
-                injector = Guice.createInjector(new WiremockedModule(wireMockConfiguration));
+                factory =
+                        new AgentFactory(
+                                new AgentWireMockModuleFactory(wireMockConfiguration),
+                                configuration);
 
             } else {
                 // Provide AgentFactory with 'production' components.
-                injector = Guice.createInjector(new ProductionModule(configuration));
+                factory = new AgentFactory(new AgentPackageModuleFactory(), configuration);
             }
-            final AgentFactory factory = injector.getInstance(AgentFactory.class);
 
-            Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
-            return factory.create(cls, credentialsRequest, context);
+            return factory.create(credentialsRequest, context);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
