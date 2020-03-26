@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.creditcards.amex.v62;
 
 import java.util.List;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
@@ -40,8 +41,8 @@ public class AmexV62UkMockServerWithContractFileAgentTest {
                 contractParser.parseContractOnBasisOfFile(
                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/agent-contract.json");
 
-        List<Account> expectedAccounts = expected.getAccounts();
-        List<Transaction> expectedTransactions = expected.getTransactions();
+        List<Map<String, Object>> expectedAccounts = expected.getAccounts();
+        List<Map<String, Object>> expectedTransactions = expected.getTransactions();
 
         final WireMockConfiguration configuration =
                 WireMockConfiguration.builder("localhost:" + server.getHttpsPort()).build();

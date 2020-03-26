@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
 import java.util.List;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
@@ -41,8 +42,8 @@ public class LaCaixaMockServerAgentTest {
                 contractParser.parseContractOnBasisOfFile(
                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/banks/lacaixa/resources/agent-contract.json");
 
-        List<Account> expectedAccounts = expected.getAccounts();
-        List<Transaction> expectedTransactions = expected.getTransactions();
+        List<Map<String, Object>> expectedAccounts = expected.getAccounts();
+        List<Map<String, Object>> expectedTransactions = expected.getTransactions();
 
         // When
         NewAgentTestContext context =
