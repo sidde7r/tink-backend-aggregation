@@ -8,6 +8,7 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//third_party:com_google_code_findbugs_jsr305",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:org_apache_commons_commons_lang3",

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -13,6 +14,7 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
 
     private final TinkHttpClient tinkHttpClient;
 
+    @Inject
     public NextGenTinkHttpClientProvider(
             final CredentialsRequest credentialsRequest,
             final AgentContext context,

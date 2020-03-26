@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.markandspencer;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
@@ -28,6 +29,7 @@ public class MarkAndSpencerV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    @Inject
     public MarkAndSpencerV31Agent(AgentComponentProvider componentProvider) {
         super(componentProvider, aisConfig, false);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
