@@ -230,7 +230,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
             } else {
                 // Provide AgentFactory with 'production' components.
-                injector = Guice.createInjector(new ProductionModule());
+                injector = Guice.createInjector(new ProductionModule(configuration));
             }
             final AgentFactory factory = injector.getInstance(AgentFactory.class);
 
