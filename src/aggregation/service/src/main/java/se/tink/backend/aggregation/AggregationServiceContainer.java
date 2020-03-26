@@ -47,11 +47,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
                             }
                         });
 
-        Injector injector =
-                DropwizardLifecycleInjectorFactory.build(
-                        environment.lifecycle(),
-                        AggregationModuleFactory.build(
-                                aggregationServiceConfiguration, environment));
+        Injector injector = generateInjector(aggregationServiceConfiguration, environment);
 
         setupCryptoConfiguration(injector, aggregationServiceConfiguration.isDevelopmentMode());
 
@@ -60,11 +56,12 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         validator.validate();
 
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
+
+        environment.lifecycle().manage(injector.getInstance(ManagedTppSecretsServiceClient.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
         environment
                 .lifecycle()
                 .manage(injector.getInstance(AgentDataAvailabilityTrackerClient.class));
-        environment.lifecycle().manage(injector.getInstance(ManagedTppSecretsServiceClient.class));
     }
 
     /**
@@ -79,5 +76,13 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         }
 
         injector.getInstance(CryptoConfigurationDao.class).populateCryptoConfiguration();
+    }
+
+    public Injector generateInjector(
+            AggregationServiceConfiguration aggregationServiceConfiguration,
+            Environment environment) {
+        return DropwizardLifecycleInjectorFactory.build(
+                environment.lifecycle(),
+                AggregationModuleFactory.build(aggregationServiceConfiguration, environment));
     }
 }

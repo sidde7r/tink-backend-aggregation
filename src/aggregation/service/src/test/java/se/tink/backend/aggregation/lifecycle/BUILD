@@ -1,0 +1,28 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "lifecycle",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        # Intentionally drag in transitive dependency closure of aggregation service to classpath
+        "//src/aggregation/service",
+    ],
+    deps = [
+        "//src/aggregation/api",
+        "//src/aggregation/lib",
+        "//src/aggregation/service",
+        "//src/integration/agent_data_availability_tracker/client",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
+        "//src/libraries/draining",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_inject_guice",
+        "//third_party:io_dropwizard_dropwizard_configuration",
+        "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_dropwizard_dropwizard_jetty",
+        "//third_party:io_dropwizard_dropwizard_metrics",
+        "//third_party:javax_validation_validation_api",
+        "//third_party:jetty_server9",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)

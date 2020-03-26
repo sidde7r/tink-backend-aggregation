@@ -21,7 +21,7 @@ public final class ConfigurationValidator {
     private final CryptoConfigurationDao cryptoConfigurationDao;
 
     @Inject
-    ConfigurationValidator(
+    public ConfigurationValidator(
             @Named("clientConfigurationByClientKey")
                     Map<String, ClientConfiguration> clientConfigurations,
             @Named("clusterConfigurations") Map<String, ClusterConfiguration> clusterConfigurations,
