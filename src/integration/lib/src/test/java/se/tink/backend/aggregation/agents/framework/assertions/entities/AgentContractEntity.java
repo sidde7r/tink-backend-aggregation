@@ -9,11 +9,17 @@ public class AgentContractEntity {
 
     private List<Map<String, Object>> transactions;
 
+    private Map<String, Object> identityData;
+
     public List<Map<String, Object>> getAccounts() {
         return accounts;
     }
 
     public List<Map<String, Object>> getTransactions() {
         return transactions;
+    }
+
+    public Map<String, Object> getIdentityData() {
+        return identityData;
     }
 }

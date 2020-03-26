@@ -126,6 +126,10 @@ public final class NewAgentTestContext extends AgentContext {
                 .collect(Collectors.toList());
     }
 
+    public IdentityData getIdentityData() {
+        return identityData;
+    }
+
     public Map<String, List<Transaction>> getTransactionsByAccountBankId() {
         return transactionsByAccountBankId;
     }
