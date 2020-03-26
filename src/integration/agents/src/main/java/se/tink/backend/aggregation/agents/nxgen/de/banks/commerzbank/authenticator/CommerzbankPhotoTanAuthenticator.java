@@ -1,9 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator;
 
-import com.google.common.base.Preconditions;
+import com.github.rholder.retry.RetryException;
+import com.github.rholder.retry.Retryer;
+import com.github.rholder.retry.RetryerBuilder;
+import com.github.rholder.retry.StopStrategies;
+import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Strings;
 import java.security.KeyPair;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -11,45 +18,40 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Error;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Storage;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.SupplementalFieldName;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Values;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.entities.LoginInfoEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.entities.PrepareApprovalEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.ApprovalResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.InitScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.PrepareApprovalResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorMessageEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
-    private final SupplementalInformationHelper supplementalInformationHelper;
-    private final Catalog catalog;
+@AllArgsConstructor
+@Slf4j
+public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
+
+    private static final long SLEEP_TIME = 3_000L;
+    private static final int RETRY_ATTEMPTS = 60;
+
     private final PersistentStorage persistentStorage;
     private final CommerzbankApiClient apiClient;
+    private final long sleepTime;
+    private final int retryAttempts;
 
-    public CommerzbankQrCodeAuthenticator(
-            Catalog catalog,
-            PersistentStorage persistentStorage,
-            CommerzbankApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper) {
-        this.catalog = catalog;
-        this.persistentStorage = persistentStorage;
-        this.apiClient = apiClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
+    public CommerzbankPhotoTanAuthenticator(
+            final PersistentStorage persistentStorage, final CommerzbankApiClient apiClient) {
+        this(persistentStorage, apiClient, SLEEP_TIME, RETRY_ATTEMPTS);
     }
 
     @Override
@@ -85,34 +87,40 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
         pinDevice();
     }
 
-    private void scaWithQrCode() throws LoginException, SupplementalInfoException {
+    private void scaWithQrCode() throws LoginException {
         InitScaResponse initScaResponse = apiClient.initScaFlow();
 
-        if (!initScaResponse.getInitScaEntity().isPhotoTanScanningAvailable()) {
+        if (!initScaResponse.getInitScaEntity().isPushPhotoTanAvailable()) {
             throw LoginError.NOT_SUPPORTED.exception(
                     new LocalizableKey(
-                            "We currently only support photo TAN with QR code scanning, which is not available for your user."));
+                            "We currently only support push PhotoTAN method, which is not available for your user."));
         }
 
         String processContextId = initScaResponse.getMetaData().getProcessContextId();
 
-        PrepareApprovalResponse prepareApprovalResponse =
-                apiClient.prepareScaApproval(processContextId);
+        apiClient.prepareScaApproval(processContextId);
 
-        PrepareApprovalEntity prepareApprovalEntity =
-                prepareApprovalResponse.getPrepareApprovalEntity();
-        String qrCodeImage = prepareApprovalEntity.getImageBase64();
+        Retryer<ApprovalResponse> approvalStatusRetryer = getApprovalStatusRetryer();
 
-        Preconditions.checkNotNull(qrCodeImage);
+        try {
+            approvalStatusRetryer.call(() -> apiClient.approveSca(processContextId));
+        } catch (ExecutionException | RetryException e) {
+            log.warn("Authorization failed, approval status of SCA was not OK.", e);
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
+        }
 
-        Map<String, String> supplementalInformation =
-                supplementalInformationHelper.askSupplementalInformation(
-                        getQrCodeImageField(qrCodeImage.trim()), getPhotoTanCodeField());
-
-        String photoTanCode = supplementalInformation.get(SupplementalFieldName.PHOTO_TAN_CODE);
-
-        apiClient.approveSca(photoTanCode, processContextId);
         apiClient.finaliseScaApproval(processContextId);
+    }
+
+    private Retryer<ApprovalResponse> getApprovalStatusRetryer() {
+        return RetryerBuilder.<ApprovalResponse>newBuilder()
+                .retryIfResult(
+                        approvalResponse ->
+                                approvalResponse == null
+                                        || !approvalResponse.getStatusEntity().isApprovalOk())
+                .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.MILLISECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
+                .build();
     }
 
     /** Pin device and store appId and keypair which is necessary for the auto authentication. */
@@ -129,7 +137,6 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
     }
 
     private void handleLoginError(ErrorEntity error) throws LoginException, SessionException {
-
         ErrorMessageEntity errorMessage =
                 error.getErrorMessage()
                         .orElseThrow(
@@ -153,24 +160,5 @@ public class CommerzbankQrCodeAuthenticator implements TypedAuthenticator {
     @Override
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
-    }
-
-    private Field getQrCodeImageField(String qrCodeImage) {
-
-        return Field.builder()
-                .description(catalog.getString("Scan the QR code with the photoTAN app."))
-                .name(SupplementalFieldName.BASE64_IMAGE)
-                .value(qrCodeImage)
-                .immutable(true)
-                .build();
-    }
-
-    private Field getPhotoTanCodeField() {
-        return Field.builder()
-                .description(catalog.getString("TAN"))
-                .name(SupplementalFieldName.PHOTO_TAN_CODE)
-                .helpText(catalog.getString("Enter the TAN from the photoTAN app."))
-                .numeric(true)
-                .build();
     }
 }
