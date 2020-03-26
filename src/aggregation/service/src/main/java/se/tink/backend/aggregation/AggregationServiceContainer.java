@@ -47,11 +47,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
                             }
                         });
 
-        Injector injector =
-                DropwizardLifecycleInjectorFactory.build(
-                        environment.lifecycle(),
-                        AggregationModuleFactory.build(
-                                aggregationServiceConfiguration, environment));
+        Injector injector = generateInjector(aggregationServiceConfiguration, environment);
 
         setupCryptoConfiguration(injector, aggregationServiceConfiguration.isDevelopmentMode());
 
@@ -79,5 +75,13 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
         }
 
         injector.getInstance(CryptoConfigurationDao.class).populateCryptoConfiguration();
+    }
+
+    public Injector generateInjector(
+            AggregationServiceConfiguration aggregationServiceConfiguration,
+            Environment environment) {
+        return DropwizardLifecycleInjectorFactory.build(
+                environment.lifecycle(),
+                AggregationModuleFactory.build(aggregationServiceConfiguration, environment));
     }
 }
