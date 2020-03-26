@@ -10,8 +10,9 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 public class SdcNoAgentTest {
 
     private enum Arg implements ArgumentManager.ArgumentManagerEnum {
-        USERNAME,
-        PASSWORD;
+        MOBILE_NUMBER,
+        NATIONAL_ID_NUMBER,
+        DATE_OF_BIRTH;
 
         @Override
         public boolean isOptional() {
@@ -32,9 +33,14 @@ public class SdcNoAgentTest {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("no", "no-cultura-bank")
                         .addCredentialField(
-                                Field.Key.USERNAME, manager.get(SdcNoAgentTest.Arg.USERNAME))
+                                Field.Key.MOBILENUMBER,
+                                manager.get(SdcNoAgentTest.Arg.MOBILE_NUMBER))
                         .addCredentialField(
-                                Field.Key.PASSWORD, manager.get(SdcNoAgentTest.Arg.PASSWORD))
+                                Field.Key.NATIONAL_ID_NUMBER,
+                                manager.get(SdcNoAgentTest.Arg.NATIONAL_ID_NUMBER))
+                        .addCredentialField(
+                                Field.Key.DATE_OF_BIRTH,
+                                manager.get(SdcNoAgentTest.Arg.DATE_OF_BIRTH))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
                         .expectLoggedIn(false);

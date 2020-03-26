@@ -263,6 +263,8 @@ public class Field {
         ACCESS_TOKEN("access-token"),
         MOBILENUMBER("mobilenumber"),
         CORPORATE_ID("psu-corporate-id"),
+        NATIONAL_ID_NUMBER("national-id-number"),
+        DATE_OF_BIRTH("date-of-birth"),
 
         // Supplemental field names.
         ADD_BENEFICIARY_INPUT("addbeneficiaryinput"),
