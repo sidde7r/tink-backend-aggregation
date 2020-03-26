@@ -843,8 +843,14 @@ public class SEBApiAgent extends AbstractAgent
                 case CANCELLED:
                     throw BankIdError.CANCELLED.exception();
                 case FAILED_UNKNOWN:
-                    throw new IllegalStateException(
-                            "Unhandled BankID response: " + response.getEntity(String.class));
+                    switch (authenticationResponse.getHintCode().toLowerCase()) {
+                        case "seb_unknown_bankid":
+                            throw BankIdError.BLOCKED.exception();
+                        default:
+                            throw new IllegalStateException(
+                                    "Unhandled BankID response: "
+                                            + response.getEntity(String.class));
+                    }
                 case EXPIRED_AUTOSTART_TOKEN:
                     csrfToken = initiateBankId();
                     break;
