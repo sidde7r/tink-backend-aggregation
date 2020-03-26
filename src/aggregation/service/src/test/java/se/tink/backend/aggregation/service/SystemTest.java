@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public class SystemTest {
 
         List<Map<String, Object>> expectedTransactions = expected.getTransactions();
         List<Map<String, Object>> expectedAccounts = expected.getAccounts();
+        Map<String, Object> expectedIdentityData = expected.getIdentityData();
 
         String requestBody =
                 readRequestBodyFromFile(
@@ -163,5 +165,22 @@ public class SystemTest {
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedAccounts, givenAccounts));
+
+        // Check identity data
+        Map<String, Object> givenIdentityData =
+                mapper.readValue(
+                        mapper.readValue(
+                                        pushedData
+                                                .get("updateIdentity")
+                                                .get(pushedData.get("updateIdentity").size() - 1),
+                                        JsonNode.class)
+                                .get("identityData")
+                                .toString(),
+                        Map.class);
+
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        Collections.singletonList(expectedIdentityData),
+                        Collections.singletonList(givenIdentityData)));
     }
 }
