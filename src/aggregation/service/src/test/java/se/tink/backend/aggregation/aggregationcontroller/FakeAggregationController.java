@@ -5,9 +5,9 @@ import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 public class FakeAggregationController extends Application<Configuration> {
 
     private static final Logger log = LoggerFactory.getLogger(FakeAggregationController.class);
-    private Map<String, List<String>> cache = new HashMap<>();
+    private Map<String, List<String>> cache = new ConcurrentHashMap<>();
 
     public static void main(String[] args) throws Exception {
         log.info("Starting FakeAggregationController");
@@ -58,7 +58,7 @@ public class FakeAggregationController extends Application<Configuration> {
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         public Response resetCache() {
-            cache = new HashMap<>();
+            cache = new ConcurrentHashMap<>();
             return Response.ok().build();
         }
     }
