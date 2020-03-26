@@ -42,8 +42,8 @@ public final class AmexV62UkMockServerAgentTest {
         account.setAccountNumber(accountNumber);
         account.setAccountExclusion(AccountExclusion.NONE);
         account.setExactAvailableCredit(
-                new ExactCurrencyAmount(new BigDecimal(availableCredit), currencyCode));
-        account.setExactBalance(new ExactCurrencyAmount(new BigDecimal(balance), currencyCode));
+                new ExactCurrencyAmount(BigDecimal.valueOf(availableCredit), currencyCode));
+        account.setExactBalance(new ExactCurrencyAmount(BigDecimal.valueOf(balance), currencyCode));
         account.setCurrencyCode(currencyCode);
         account.setBankId(bankId);
         account.setExcluded(false);
