@@ -9,6 +9,7 @@ import se.tink.libraries.user.rpc.User;
 public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty private boolean manual;
     private Set<RefreshableItem> itemsToRefresh;
+    private String refreshId;
 
     public RefreshInformationRequest() {}
 
@@ -51,5 +52,13 @@ public class RefreshInformationRequest extends CredentialsRequest {
 
     public void setItemsToRefresh(Set<RefreshableItem> itemsToRefresh) {
         this.itemsToRefresh = itemsToRefresh;
+    }
+
+    public String getRefreshId() {
+        return refreshId;
+    }
+
+    public void setRefreshId(String refreshId) {
+        this.refreshId = refreshId;
     }
 }
