@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.LoginForm;
@@ -134,7 +135,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
             // error message
             final String errorMessage = getErrorMessage(driver);
             LOG.info("Login error: " + errorMessage);
-            throw AuthorizationError.UNAUTHORIZED.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else if (getCurrentUrl(driver)
                 .toUri()
                 .getPath()
