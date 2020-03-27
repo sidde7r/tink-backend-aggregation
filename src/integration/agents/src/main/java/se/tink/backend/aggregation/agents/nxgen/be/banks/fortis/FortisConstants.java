@@ -113,6 +113,7 @@ public class FortisConstants {
         public static final String CALCULATED_CHALLENGE = "calculatedChallenge";
         public static final String DISTRIBUTOR_ID = "distributorId";
         public static final String CHALLENGE = "challenge";
+        public static final String MANUAL_AUTHENTICATION_REQUIRED = "manualAuthenticationRequired";
     }
 
     public static class LoggingTag {

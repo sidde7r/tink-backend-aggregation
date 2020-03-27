@@ -225,6 +225,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         getUserInfoAndPersistMuid();
+        persistentStorage.put(FortisConstants.Storage.MANUAL_AUTHENTICATION_REQUIRED, false);
     }
 
     private PrepareContractUpdateResponse prepareContractUpdate(String password) {
@@ -358,8 +359,13 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         final String deviceFingerprint =
                 persistentStorage.get(FortisConstants.Storage.DEVICE_FINGERPRINT);
         final String muid = persistentStorage.get(FortisConstants.Storage.MUID);
-
-        if (Strings.isNullOrEmpty(password)) {
+        final Boolean manualAuthenticationRequired =
+                persistentStorage
+                        .get(FortisConstants.Storage.MANUAL_AUTHENTICATION_REQUIRED, Boolean.class)
+                        .orElse(true);
+        LOGGER.info(
+                "Password is null/empty (during auto auth): " + Strings.isNullOrEmpty(password));
+        if (manualAuthenticationRequired) {
             SessionError.SESSION_EXPIRED.exception();
         }
 
@@ -458,5 +464,10 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                         FortisConstants.Storage.DEVICE_FINGERPRINT,
                         FortisConstants.Storage.MUID);
         valuesToClean.forEach(v -> persistentStorage.put(v, null));
+        LOGGER.info(
+                "Password is null/empty (after cleaning): "
+                        + Strings.isNullOrEmpty(
+                                persistentStorage.get(FortisConstants.Storage.PASSWORD)));
+        persistentStorage.put(FortisConstants.Storage.MANUAL_AUTHENTICATION_REQUIRED, true);
     }
 }
