@@ -22,7 +22,7 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
     private static final String CLIENT_SECRET =
-            "jj08kJWrwFQDLqaxlMAt9ZxGA6WeiEMrk39L9BmkXUkBgZs1w8";
+            "BMOAMKgx2LDb6kXU6tBS8Ys8sBzGqE0bNQjbtfmJrkGBAWYytX";
 
     @Override
     public String getAppVersionHeader() {
