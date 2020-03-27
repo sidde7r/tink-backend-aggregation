@@ -314,8 +314,13 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     @Override
     public void postProcess() throws Exception {
+
         // If we did not successfully execute, there's no point in doing anything here.
-        if (!weHavePreviouslyLoggedInSuccessfully || agent == null) {
+        // Note: Are we sure about the comment above? We need to investigate it further...
+        // For now we implement a custom logic for Fortis CardReader agent to persist the
+        // storage even if login attempt is not successful
+        if ((!weHavePreviouslyLoggedInSuccessfully || agent == null)
+                && !context.getRequest().getProvider().getName().equals("be-fortis-cardreader")) {
             return;
         }
 
