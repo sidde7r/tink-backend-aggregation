@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.agents;
+package se.tink.backend.aggregation.nxgen.agents.agenttest;
 
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.framework.AgentTestContext;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 

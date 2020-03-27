@@ -7,8 +7,8 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.framework.AgentTestContext;
-import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
+import se.tink.backend.aggregation.agents.utils.currency.CurrencyConstants;
+import se.tink.backend.aggregation.nxgen.agents.agenttest.NextGenerationAgentTest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 

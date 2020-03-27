@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.utils;
+package se.tink.backend.aggregation.agents.utils.currency;
 
 public enum CurrencyConstants {
     SE("SEK", "kr"),
