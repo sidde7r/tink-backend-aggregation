@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-03-19 10:18+0000\n"
-"PO-Revision-Date: 2020-03-19 10:18+0000\n"
+"POT-Creation-Date: 2020-03-27 12:42+0000\n"
+"PO-Revision-Date: 2020-03-27 12:42+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -13,6 +13,18 @@ msgstr ""
 
 msgid "Invalid username type"
 msgstr "Tipo de usuario inválido"
+
+msgid "The code you entered is not valid"
+msgstr "La clave que has introducido no es válida"
+
+msgid "Input the code from your code card"
+msgstr "Introduce la clave de tu tarjeta de coordenadas"
+
+msgid "Key card index"
+msgstr "Número de coordenada"
+
+msgid "Key card code"
+msgstr "Clave"
 
 msgid "Incorrect login credentials. Please try again."
 msgstr "Credenciales incorrectas. Inténtelo de nuevo."
