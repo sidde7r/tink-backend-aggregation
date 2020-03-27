@@ -79,7 +79,11 @@ public abstract class BaseRequestPart {
         }
 
         public RawGroup element(Boolean value) {
-            elements.add(value == null ? "" : value ? "J" : "N");
+            if (value == null) {
+                elements.add("");
+            } else {
+                elements.add(value ? "J" : "N");
+            }
             return this;
         }
 

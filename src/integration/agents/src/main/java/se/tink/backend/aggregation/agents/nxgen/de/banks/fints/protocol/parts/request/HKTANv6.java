@@ -24,7 +24,7 @@ public class HKTANv6 extends BaseRequestPart {
     protected void compile() {
         super.compile();
         addGroup().element(tanProcess);
-        addGroup().element(segmentType != null ? segmentType.getSegmentType() : "");
+        addGroup().element(segmentType != null ? segmentType.getSegmentName() : "");
         addGroup();
         addGroup().element(taskHashValue);
         addGroup().element(taskReference);

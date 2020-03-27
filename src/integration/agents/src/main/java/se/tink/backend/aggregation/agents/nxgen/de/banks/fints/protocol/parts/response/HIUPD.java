@@ -81,7 +81,7 @@ public class HIUPD extends BaseResponsePart {
 
         for (int i = 10; i < 10 + 999; i++) {
             group = rawSegment.getGroup(i);
-            if (group.isEmpty()) break; // TODO tests for this, and refactor
+            if (group.isEmpty()) break;
             allowedBusinessOperations.add(
                     new AllowedBusinessOperation(group.getString(0), group.getInteger(1)));
         }
@@ -96,6 +96,6 @@ public class HIUPD extends BaseResponsePart {
 
     public boolean isOperationSupported(SegmentType segmentType) {
         return allowedBusinessOperations.stream()
-                .anyMatch(x -> segmentType.getSegmentType().equals(x.getOperationName()));
+                .anyMatch(x -> segmentType.getSegmentName().equals(x.getOperationName()));
     }
 }

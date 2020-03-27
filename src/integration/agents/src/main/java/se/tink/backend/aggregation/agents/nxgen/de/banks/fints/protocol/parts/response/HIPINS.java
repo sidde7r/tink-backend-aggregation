@@ -22,7 +22,7 @@ public class HIPINS extends BaseResponsePart {
     private String userIdFieldText;
     private String customerIdFieldText;
 
-    private List<Pair<String, Boolean>> operations;
+    private List<Pair<String, Boolean>> operations = new ArrayList<>();
 
     public HIPINS(RawSegment rawSegment) {
         super(rawSegment);
@@ -37,16 +37,9 @@ public class HIPINS extends BaseResponsePart {
         userIdFieldText = rawGroup.getString(3);
         customerIdFieldText = rawGroup.getString(4);
 
-        operations = parseOperations(rawGroup, 5);
-    }
-
-    private List<Pair<String, Boolean>> parseOperations(RawGroup items, int startIdx) {
-        List<Pair<String, Boolean>> operations = new ArrayList<>();
-
-        for (int i = startIdx; i < items.size(); i += 2) {
-            operations.add(Pair.of(items.getString(i), items.getBoolean(i + 1)));
+        for (int i = 5; i < rawGroup.size(); i += 2) {
+            operations.add(Pair.of(rawGroup.getString(i), rawGroup.getBoolean(i + 1)));
         }
-        return operations;
     }
 
     @Override

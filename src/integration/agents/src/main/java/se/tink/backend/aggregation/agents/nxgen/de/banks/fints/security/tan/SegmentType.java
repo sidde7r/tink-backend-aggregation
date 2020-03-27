@@ -155,24 +155,24 @@ public enum SegmentType {
     DKEEA("DKEEA"),
     UNKNOWN("UNKNOWN");
 
-    SegmentType(String segmentType) {
-        this.segmentType = segmentType;
+    SegmentType(String segmentName) {
+        this.segmentName = segmentName;
     }
 
-    public static SegmentType of(String segmentType) {
+    public static SegmentType of(String segmentName) {
         return Arrays.stream(values())
-                .filter(segment -> segment.segmentType.equals(segmentType))
+                .filter(segment -> segment.segmentName.equals(segmentName))
                 .findFirst()
                 .orElseGet(
                         () -> {
-                            log.warn("Could not map {}", segmentType);
+                            log.warn("Could not map {}", segmentName);
                             return UNKNOWN;
                         });
     }
 
-    private String segmentType;
+    private String segmentName;
 
-    public String getSegmentType() {
-        return segmentType;
+    public String getSegmentName() {
+        return segmentName;
     }
 }

@@ -14,10 +14,7 @@ public class TanByOperationLookup {
 
     public TanByOperationLookup(HIPINS hipins) {
         List<Pair<String, Boolean>> operationsData = hipins.getOperations();
-        operationsData.forEach(
-                op -> {
-                    operations.put(SegmentType.of(op.getLeft()), op.getRight());
-                });
+        operationsData.forEach(op -> operations.put(SegmentType.of(op.getLeft()), op.getRight()));
     }
 
     public boolean doesOperationRequireTAN(SegmentType segmentType) {

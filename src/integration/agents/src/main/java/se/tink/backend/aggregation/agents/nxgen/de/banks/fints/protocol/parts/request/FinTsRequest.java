@@ -24,7 +24,7 @@ public class FinTsRequest {
     }
 
     public void addSegment(BaseRequestPart segment) {
-        if (HNHBK.getSegmentType().equals(segment.getSegmentName())) {
+        if (HNHBK.getSegmentName().equals(segment.getSegmentName())) {
             hasHeaderSegment = true;
         }
         segments.add(segment);
