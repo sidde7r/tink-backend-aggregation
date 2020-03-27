@@ -17,7 +17,6 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/seb",
         "//src/integration/api",
         "//src/integration/credentials:service",
-        "//src/integration/lib:lib_test",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
     ],
