@@ -20,8 +20,16 @@ public final class BecUrlConfiguration {
         return getMobilbankUrl() + BecConstants.Url.APP_SYNC;
     }
 
-    public String getLoginChallenge() {
-        return getMobilbankUrl() + BecConstants.Url.LOGIN_CHALLENGE;
+    public String getNemIdPoll() {
+        return getMobilbankUrl() + BecConstants.Url.NEMID_POLL;
+    }
+
+    public String getPrepareSca() {
+        return getMobilbankUrl() + BecConstants.Url.PREPARE_SCA;
+    }
+
+    public String getSca() {
+        return getMobilbankUrl() + BecConstants.Url.SCA;
     }
 
     public String getFetchAccounts() {

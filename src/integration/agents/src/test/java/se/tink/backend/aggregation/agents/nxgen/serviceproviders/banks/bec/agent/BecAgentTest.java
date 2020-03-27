@@ -19,7 +19,7 @@ public class BecAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-        new AgentIntegrationTest.Builder("dk", "dk-nykredit-password")
+        new AgentIntegrationTest.Builder("dk", "dk-albank-password")
                 .addCredentialField(
                         Field.Key.USERNAME, manager.get(UsernamePasswordArgumentEnum.USERNAME))
                 .addCredentialField(

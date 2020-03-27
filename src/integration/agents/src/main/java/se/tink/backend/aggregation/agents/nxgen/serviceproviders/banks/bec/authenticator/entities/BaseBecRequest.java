@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.auth
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AppSyncAndroidRequest {
+public class BaseBecRequest {
 
     private String cipher;
     private String encryptedPayload;

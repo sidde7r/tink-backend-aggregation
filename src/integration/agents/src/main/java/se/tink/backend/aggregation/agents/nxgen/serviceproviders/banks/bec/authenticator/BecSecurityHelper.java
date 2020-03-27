@@ -94,12 +94,12 @@ public final class BecSecurityHelper {
     }
 
     // NOTE keep it in case we need to use the data from encrypted payload in authentication phase.
-    public byte[] decrypt(String paramString) {
+    public String decrypt(String paramString) {
         try {
             if (paramString != null) {
                 byte[] arrayOfByte =
                         Base64.decodeBase64(paramString.getBytes(StandardCharsets.UTF_8));
-                return decryptPayload(symmetricKey, arrayOfByte);
+                return new String(decryptPayload(symmetricKey, arrayOfByte));
             }
             return null;
         } catch (GeneralSecurityException e) {
@@ -110,19 +110,19 @@ public final class BecSecurityHelper {
     private byte[] decryptPayload(byte[] key, byte[] dataToDec) throws GeneralSecurityException {
         SecretKeySpec localSecretKeySpec = new SecretKeySpec(key, BecConstants.Crypto.AES);
         Cipher localCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        byte[] arrayOfByte1 = new byte[16];
-        byte[] arrayOfByte2 = null;
+        byte[] ivBytes = new byte[16];
+        byte[] decryptedPayloadBytes = null;
         if (dataToDec != null) {
             int i = dataToDec.length;
-            arrayOfByte2 = null;
             if (16 <= i) {
-                localCipher.init(2, localSecretKeySpec, new IvParameterSpec(arrayOfByte1));
+                localCipher.init(2, localSecretKeySpec, new IvParameterSpec(ivBytes));
                 byte[] arrayOfByte3 = localCipher.doFinal(dataToDec);
-                arrayOfByte2 = new byte[-16 + arrayOfByte3.length];
-                System.arraycopy(arrayOfByte3, 16, arrayOfByte2, 0, arrayOfByte2.length);
+                decryptedPayloadBytes = new byte[-16 + arrayOfByte3.length];
+                System.arraycopy(
+                        arrayOfByte3, 16, decryptedPayloadBytes, 0, decryptedPayloadBytes.length);
             }
         }
-        return arrayOfByte2;
+        return decryptedPayloadBytes;
     }
 
     private byte[] encryptPayload(byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)

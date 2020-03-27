@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.libraries.i18n.LocalizableKey;
 
 public enum NemIdError implements AgentError {
+    TIMEOUT(new LocalizableKey("Authenticating with Mobile BankID timed out. Please try again.")),
     INTERRUPTED(
             new LocalizableKey(
                     "Another authentication attempt was initiated while authenticating. Please try again."));
