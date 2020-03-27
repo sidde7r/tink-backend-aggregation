@@ -98,8 +98,7 @@ public class CommerzbankConstants {
     }
 
     public static class ScaMethod {
-        public static final String APP2APP_PHOTO_TAN = "APP2APP_PHOTO_TAN";
-        public static final String PHOTO_TAN = "PHOTO_TAN";
+        public static final String PUSH_PHOTO_TAN = "PUSH_PHOTO_TAN";
     }
 
     public static class Storage {

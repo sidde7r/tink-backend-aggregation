@@ -1,18 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Values;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginInfoEntity {
     private String challenge;
-    private String firstName;
     private String loginStatus;
-    private String sessionToken;
-    private String surname;
-    private String userIdHash;
-    private String userid;
 
     public String getChallenge() {
         return challenge;

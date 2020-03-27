@@ -2,9 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.rpc;
 
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResultEntity<T> {
     private T data;
     private List<T> items;

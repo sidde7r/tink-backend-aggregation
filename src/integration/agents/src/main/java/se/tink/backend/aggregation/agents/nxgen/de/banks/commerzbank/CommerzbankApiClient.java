@@ -88,27 +88,19 @@ public class CommerzbankApiClient {
     }
 
     public PrepareApprovalResponse prepareScaApproval(String processContextId) {
-
         PrepareApprovalRequest request =
-                PrepareApprovalRequest.create(ScaMethod.PHOTO_TAN, processContextId);
+                PrepareApprovalRequest.create(ScaMethod.PUSH_PHOTO_TAN, processContextId);
 
         return getPostRequest(Url.PREPARE_SCA).post(PrepareApprovalResponse.class, request);
     }
 
-    public void approveSca(String photoTanCode, String processContextId) {
+    public ApprovalResponse approveSca(String processContextId) {
+        ApprovalRequest request = ApprovalRequest.create(processContextId);
 
-        ApprovalRequest request = ApprovalRequest.create(photoTanCode, processContextId);
-
-        ApprovalResponse response =
-                getPostRequest(Url.APPROVE_SCA).post(ApprovalResponse.class, request);
-
-        if (!response.getStatusEntity().isApprovalOk()) {
-            throw new IllegalStateException("Approval status of SCA was not OK.");
-        }
+        return getPostRequest(Url.APPROVE_SCA).post(ApprovalResponse.class, request);
     }
 
     public void finaliseScaApproval(String processContextId) {
-
         FinaliseApprovalRequest request = FinaliseApprovalRequest.create(processContextId);
 
         FinaliseApprovalResponse response =

@@ -50,7 +50,7 @@ public class ResponseParsingTest {
         InitScaResponse initScaResponse =
                 MAPPER.readValue(initScaResponseString, InitScaResponse.class);
 
-        assertTrue(initScaResponse.getInitScaEntity().isPhotoTanScanningAvailable());
+        assertTrue(initScaResponse.getInitScaEntity().isPushPhotoTanAvailable());
     }
 
     @Test

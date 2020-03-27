@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.CommerzbankAutoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.CommerzbankQrCodeAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.CommerzbankPhotoTanAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.account.CommerzbankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.credit.CommerzbankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.CommerzbankTransactionFetcher;
@@ -46,8 +46,7 @@ public class CommerzbankAgent extends NextGenerationAgent
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new CommerzbankQrCodeAuthenticator(
-                        catalog, persistentStorage, apiClient, supplementalInformationHelper),
+                new CommerzbankPhotoTanAuthenticator(persistentStorage, apiClient),
                 new CommerzbankAutoAuthenticator(credentials, persistentStorage, apiClient));
     }
 
