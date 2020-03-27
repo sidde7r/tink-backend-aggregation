@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -42,7 +43,11 @@ public class CommerzbankPhotoTanAuthenticatorTest {
         apiClient = mock(CommerzbankApiClient.class);
         authenticator =
                 new CommerzbankPhotoTanAuthenticator(
-                        mock(PersistentStorage.class), apiClient, 100L, 3);
+                        mock(PersistentStorage.class),
+                        apiClient,
+                        mock(SupplementalRequester.class),
+                        100L,
+                        3);
     }
 
     @Test
