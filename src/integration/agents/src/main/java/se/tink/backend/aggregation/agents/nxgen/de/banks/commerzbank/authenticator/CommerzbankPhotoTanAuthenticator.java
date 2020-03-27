@@ -7,13 +7,16 @@ import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Strings;
 import java.security.KeyPair;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -46,12 +49,15 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
 
     private final PersistentStorage persistentStorage;
     private final CommerzbankApiClient apiClient;
+    private final SupplementalRequester supplementalRequester;
     private final long sleepTime;
     private final int retryAttempts;
 
     public CommerzbankPhotoTanAuthenticator(
-            final PersistentStorage persistentStorage, final CommerzbankApiClient apiClient) {
-        this(persistentStorage, apiClient, SLEEP_TIME, RETRY_ATTEMPTS);
+            final PersistentStorage persistentStorage,
+            final CommerzbankApiClient apiClient,
+            final SupplementalRequester supplementalRequester) {
+        this(persistentStorage, apiClient, supplementalRequester, SLEEP_TIME, RETRY_ATTEMPTS);
     }
 
     @Override
@@ -82,12 +88,12 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
                             Values.TAN_REQUESTED, loginInfoEntity.getLoginStatus()));
         }
 
-        scaWithQrCode();
+        scaWithPhotoTan(credentials);
 
         pinDevice();
     }
 
-    private void scaWithQrCode() throws LoginException {
+    private void scaWithPhotoTan(Credentials credentials) throws LoginException {
         InitScaResponse initScaResponse = apiClient.initScaFlow();
 
         if (!initScaResponse.getInitScaEntity().isPushPhotoTanAvailable()) {
@@ -100,6 +106,30 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
 
         apiClient.prepareScaApproval(processContextId);
 
+        displayPrompt(credentials);
+
+        approveSca(processContextId);
+
+        apiClient.finaliseScaApproval(processContextId);
+    }
+
+    private void displayPrompt(Credentials credentials) {
+        Field field =
+                Field.builder()
+                        .immutable(true)
+                        .description("Please open PhotoTAN application and confirm the order")
+                        .value("waiting for confirmation")
+                        .name("name")
+                        .build();
+
+        credentials.setSupplementalInformation(
+                SerializationUtils.serializeToString(Collections.singletonList(field)));
+        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+
+        supplementalRequester.requestSupplementalInformation(credentials, false);
+    }
+
+    private void approveSca(String processContextId) throws LoginException {
         Retryer<ApprovalResponse> approvalStatusRetryer = getApprovalStatusRetryer();
 
         try {
@@ -108,8 +138,6 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
             log.warn("Authorization failed, approval status of SCA was not OK.", e);
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
         }
-
-        apiClient.finaliseScaApproval(processContextId);
     }
 
     private Retryer<ApprovalResponse> getApprovalStatusRetryer() {
