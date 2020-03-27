@@ -20,6 +20,8 @@ public final class VolvoFinansConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String NINETY_DAYS_TRANSACTIONS_ONLY =
+                "only allowed to view last 90 days";
     }
 
     public static class Urls {

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -107,7 +108,8 @@ public final class VolvoFinansApiClient {
                         DateFormat.formatDateTime(endDate, DateFormat.YEAR_MONTH_DAY, Zone.UTC))
                 .queryParam(
                         QueryKeys.DATE_FROM,
-                        DateFormat.formatDateTime(startDate, DateFormat.YEAR_MONTH_DAY, Zone.UTC))
+                        DateFormat.formatDateTime(
+                                get90DaysDate(endDate), DateFormat.YEAR_MONTH_DAY, Zone.UTC))
                 .header(HeaderKeys.X_API_KEY, apiKey)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .accept(MediaType.APPLICATION_JSON)
@@ -126,5 +128,12 @@ public final class VolvoFinansApiClient {
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    }
+
+    private static Date get90DaysDate(Date toDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(toDate);
+        calendar.add(Calendar.DATE, -89);
+        return calendar.getTime();
     }
 }
