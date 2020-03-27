@@ -57,6 +57,7 @@ public class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
         apiClient = new LaCaixaApiClient(client, persistentStorage);
         authenticator =
                 new LaCaixaMultifactorAuthenticator(
+                        catalog,
                         apiClient,
                         componentProvider.getCredentialsRequest(),
                         supplementalInformationFormer,

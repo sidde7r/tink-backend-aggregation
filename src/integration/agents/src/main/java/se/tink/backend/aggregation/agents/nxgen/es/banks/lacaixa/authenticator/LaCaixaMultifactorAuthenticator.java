@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -30,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AbstractAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
@@ -39,20 +36,22 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.i18n.Catalog;
 
 public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthenticator {
-    private static final Logger log =
-            LoggerFactory.getLogger(LaCaixaMultifactorAuthenticator.class);
-
     private final LaCaixaApiClient apiClient;
     private final CredentialsRequest credentialsRequest;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final Storage authStorage;
     private final LogMasker logMasker;
     private final List<? extends AuthenticationStep> authenticationSteps;
-    private final AbstractAuthenticationStep otpStep, appStep, finalizeStep;
+    private final AuthenticationStep otpStep;
+    private final AuthenticationStep codeCardStep;
+    private final AuthenticationStep appStep;
+    private final AuthenticationStep finalizeStep;
 
     public LaCaixaMultifactorAuthenticator(
+            Catalog catalog,
             LaCaixaApiClient apiClient,
             CredentialsRequest credentialsRequest,
             SupplementalInformationFormer supplementalInformationFormer,
@@ -66,6 +65,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
         this.logMasker = logMasker;
 
         this.otpStep = new OtpStep(this::processOtp, supplementalInformationFormer);
+        this.codeCardStep = new CodeCardStep(catalog, authStorage);
         this.appStep = new AutomaticAuthenticationStep(this::waitForAppSign, "caixabankSign");
         this.finalizeStep =
                 new AutomaticAuthenticationStep(this::finalizeEnrolment, "finalizeEnrolment");
@@ -75,7 +75,9 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
                         new AutomaticAuthenticationStep(
                                 this::initiateEnrolment, "initiateEnrolment"),
                         appStep,
-                        otpStep, // OtpStep will always execute the next step
+                        codeCardStep,
+                        finalizeStep,
+                        otpStep,
                         finalizeStep);
     }
 
@@ -126,6 +128,10 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
                 // SCA with OTP SMS
                 authStorage.put(TemporaryStorage.SCA_SMS, response.getSms());
                 return AuthenticationStepResponse.executeStepWithId(otpStep.getIdentifier());
+            case AuthenticationParams.SCA_TYPE_CODECARD:
+                // SCA with code card
+                authStorage.put(TemporaryStorage.CODE_CARD, response.getCodeCard());
+                return AuthenticationStepResponse.executeStepWithId(codeCardStep.getIdentifier());
             default:
                 throw new IllegalStateException("Unknown SCA type: " + response.getScaType());
         }
@@ -147,12 +153,12 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
                         .orElseThrow(() -> new IllegalStateException("SCA SMS Entity not found"));
         final String code =
                 LaCaixaPasswordHash.hash(smsData.getSeed(), smsData.getIterations(), otp);
-        logMasker.addNewSensitiveValuesToMasker(Collections.singleton(code));
         authStorage.put(TemporaryStorage.ENROLMENT_CODE, code);
     }
 
     private AuthenticationStepResponse finalizeEnrolment() {
         final String code = Strings.nullToEmpty(authStorage.get(TemporaryStorage.ENROLMENT_CODE));
+        logMasker.addNewSensitiveValuesToMasker(Collections.singleton(code));
         apiClient.finalizeEnrolment(code);
         return AuthenticationStepResponse.authenticationSucceeded();
     }

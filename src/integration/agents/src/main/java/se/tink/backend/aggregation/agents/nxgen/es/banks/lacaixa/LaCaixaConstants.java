@@ -121,6 +121,7 @@ public class LaCaixaConstants {
         public static final String SCA_TYPE_APP = "MOTP";
         public static final String SCA_TYPE_PASSWORD = "PIN1_SCA";
         public static final String SCA_TYPE_SMS = "OTPSMS";
+        public static final String SCA_TYPE_CODECARD = "TCO";
         public static final String SIGNING_URL = "caixabanksign://app2app";
     }
 
@@ -137,6 +138,7 @@ public class LaCaixaConstants {
     public static class TemporaryStorage {
         public static final String ACCOUNT_REFERENCE = "accountRef";
         public static final String SCA_SMS = "scaSms";
+        public static final String CODE_CARD = "codeCard";
         public static final String ENROLMENT_CODE = "enrolmentCode";
     }
 
