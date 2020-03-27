@@ -6,15 +6,17 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 public class FinTsConstants {
     public static final String INTEGRATION_NAME = "fints";
     public static final String CURRENCY = "EUR";
-    public static final String TINK_REGISTERED_PRODUCT_ID =
-            "DCF3902F7888F5A831EA0F1D6"; // TODO we may want to add this as a secret
 
     public static class StatusCode {
         public static final String SUCCESS = "0020";
+        public static final String TAN_GENERATED_SUCCESSFULLY = "0030";
         public static final String NO_ENTRY = "3010";
         public static final String TAN_VERSION = "3920";
         public static final String PIN_TEMP_BLOCKED = "3931";
         public static final String MORE_INFORMATION_AVAILABLE = "3040";
+        public static final String STRONG_CUSTOMER_AUTHORIZATION_REQUIRED = "3075";
+        public static final String WEAK_CUSTOMER_AUTHORIZATION_ALLOWED = "3076";
+        public static final String APPROVED_TAN_PROCEDURES = "3920";
         public static final String NO_DATA_AVAILABLE = "9910";
         public static final String TECHNICAL_ERROR = "9110";
         public static final String INVALID_USER = "9000";
@@ -31,38 +33,6 @@ public class FinTsConstants {
                 "Angabe eines Endedatums nicht unterstützt.";
         public static final String NO_ACTIVE_PHONE_NUMBER_WARNING =
                 "Keine aktive Mobilfunknr.Bitte wenden Sie sich an Ihren Berater";
-    }
-
-    public enum Segments {
-        HKCCS, // Transfer Request
-        HICCS, // Transfer Response
-        HKCDE, // Payment Request
-        HICDE, // Payment Response
-        HKSAL, // Balance Request
-        HISAL, // Balance Response
-        HKSPA, // SEPA information Request
-        HISPA, // SEPA information Response
-        HKIDN, // Identification
-        HKSYN, // Synchronization Request
-        HISYN, // Synchronization Response
-        HKVVB, // Processing preparation
-        HKEND, // End session
-        HNHBK, // Request Header
-        HNHBS, // News completion
-        HNSHA, // Signature hash
-        HNSHK, // Signature Header
-        HNVSD, // Encrypted Data
-        HNVSK, // Encrypted Header
-        HIRMS, // Feedback on Segments
-        HIRMG, // Global feedback
-        HKKAZ, // Statements/Transactions Request
-        HIKAZ, // Statements/Transactions Response
-        HKWPD, // Depot Request
-        HIWPD, // Depot Response
-        HIBPA, // Bank parameter
-        HISALS, // Balance query parameter
-        HIKAZS, // Account sales/period parameter
-        HIUPD // Account information
     }
 
     public static class AccountType {
@@ -82,7 +52,6 @@ public class FinTsConstants {
     }
 
     public static class SegData {
-        public static final String PRODUCT_VERSION = "0.1";
         public static final String CUSTOMER_ID = "1";
         public static final String COUNTRY_CODE = "280"; // Germany
         public static final int LANGUAGE_STANDARD = 0;
