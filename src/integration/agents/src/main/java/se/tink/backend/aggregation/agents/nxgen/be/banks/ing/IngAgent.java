@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -62,6 +63,7 @@ public class IngAgent extends SubsequentGenerationAgent<AutoAuthenticationProgre
     private final InvestmentRefreshController investmentRefreshController;
     private final AutoAuthenticationProgressiveController authenticator;
 
+    @Inject
     public IngAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
         configureHttpClient(client);
