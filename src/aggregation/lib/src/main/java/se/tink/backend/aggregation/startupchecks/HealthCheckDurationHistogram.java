@@ -6,7 +6,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 public class HealthCheckDurationHistogram {
 
     private static final MetricId HEALTHCHECK_DURATION_HISTOGRAM =
-            MetricId.newId("healthcheck_duration_seconds");
+            MetricId.newId("aggregation_healthcheck_duration_seconds");
     private final MetricRegistry metricRegistry;
 
     public HealthCheckDurationHistogram(MetricRegistry metricRegistry) {
