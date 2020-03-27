@@ -170,7 +170,6 @@ junit_test(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/integration/lib:lib_test",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
