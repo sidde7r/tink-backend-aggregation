@@ -82,6 +82,15 @@ steps:
     agents:
       queue: default
 
+  - name: ':male-detective: run detect-secrets on new commits'
+    command: "/bin/sh /opt/detect-secrets"
+    soft_fail:
+      - exit_status: 1
+    plugins:
+      - docker#v3.3.0:
+          image: gcr.io/tink-containers/detect-secrets:latest
+          always-pull: true
+
   - wait
 
   - name: ':docker: tink-backend-aggregation'
