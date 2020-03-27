@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,10 +16,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.rpc.CardDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.rpc.FetchCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecSecurityHelper;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.AppSyncAndroidRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.BaseBecRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppScaEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppTokenEncryptedPayload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.EncryptedPayloadAndroidEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.PayloadAndroidEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.ScaOptionsEncryptedPayload;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.EncryptedResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.NemIdPollResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.entities.InstrumentDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.rpc.DepositDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.rpc.FetchInvestmentResponse;
@@ -38,6 +43,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class BecApiClient {
 
     private static final ObjectMapper mapper = new ObjectMapper();
+    public static final String JSON_PROCESSING_FAILED = "Json processing failed";
     private BecSecurityHelper securityHelper;
     private final TinkHttpClient apiClient;
     private final BecUrlConfiguration agentUrl;
@@ -52,7 +58,7 @@ public class BecApiClient {
 
     public void appSync() {
 
-        AppSyncAndroidRequest request = new AppSyncAndroidRequest();
+        BaseBecRequest request = baseRequest();
 
         PayloadAndroidEntity payloadAndroidEntity = new PayloadAndroidEntity();
 
@@ -62,47 +68,114 @@ public class BecApiClient {
         payloadAndroidEntity.setOsVersion(BecConstants.Meta.OS_VERSION);
         payloadAndroidEntity.setDeviceType(BecConstants.Meta.DEVICE_TYPE);
 
-        request.setLabel(BecConstants.Meta.LABEL);
-        request.setCipher(BecConstants.Meta.CIPHER);
-        request.setKey(securityHelper.getKey());
         request.setPayload(payloadAndroidEntity);
 
         createRequest(this.agentUrl.getAppSync())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(LoginResponse.class, request);
+                .post(EncryptedResponse.class, request);
     }
 
-    public void logonChallenge(String username, String password) {
+    public ScaOptionsEncryptedPayload scaPrepare(String username, String password) {
         try {
-            EncryptedPayloadAndroidEntity payloadAndroidEntity =
-                    new EncryptedPayloadAndroidEntity();
-            payloadAndroidEntity.setAppType(BecConstants.Meta.APP_TYPE);
-            payloadAndroidEntity.setAppVersion(BecConstants.Meta.APP_VERSION);
-            payloadAndroidEntity.setLocale(BecConstants.Meta.LOCALE);
-            payloadAndroidEntity.setOsVersion(BecConstants.Meta.OS_VERSION);
-            payloadAndroidEntity.setDeviceType(BecConstants.Meta.DEVICE_TYPE);
-
-            payloadAndroidEntity.setBankId(BecConstants.Meta.BANK_ID);
-            payloadAndroidEntity.setNemidChallenge("");
-            payloadAndroidEntity.setNemidResponse("");
-            payloadAndroidEntity.setScreenSize(BecConstants.Meta.SCREEN_SIZE);
-            payloadAndroidEntity.setPincode(password);
-            payloadAndroidEntity.setUserId(username);
-
-            AppSyncAndroidRequest request = new AppSyncAndroidRequest();
-            request.setLabel(BecConstants.Meta.LABEL);
-            request.setKey(securityHelper.getKey());
+            BaseBecRequest request = baseRequest();
+            EncryptedPayloadAndroidEntity payloadEntity = scaPrepareRequest(username, password);
             request.setEncryptedPayload(
-                    securityHelper.encrypt(
-                            mapper.writeValueAsString(payloadAndroidEntity).getBytes()));
-            request.setCipher(BecConstants.Meta.CIPHER);
-
-            createRequest(this.agentUrl.getLoginChallenge())
-                    .type(MediaType.APPLICATION_JSON_TYPE)
-                    .post(LoginResponse.class, request);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Json processing failed", e);
+                    securityHelper.encrypt(mapper.writeValueAsString(payloadEntity).getBytes()));
+            EncryptedResponse respone =
+                    createRequest(this.agentUrl.getPrepareSca())
+                            .type(MediaType.APPLICATION_JSON_TYPE)
+                            .post(EncryptedResponse.class, request);
+            String decryptedRespone = securityHelper.decrypt(respone.getEncryptedPayload());
+            return mapper.readValue(decryptedRespone, ScaOptionsEncryptedPayload.class);
+        } catch (IOException e) {
+            throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
         }
+    }
+
+    public CodeAppTokenEncryptedPayload scaPrepare2(String username, String password) {
+        try {
+            BaseBecRequest request = baseRequest();
+            EncryptedPayloadAndroidEntity payloadEntity = scaPrepare2Request(username, password);
+            request.setEncryptedPayload(
+                    securityHelper.encrypt(mapper.writeValueAsString(payloadEntity).getBytes()));
+            EncryptedResponse respone =
+                    createRequest(this.agentUrl.getPrepareSca())
+                            .type(MediaType.APPLICATION_JSON_TYPE)
+                            .post(EncryptedResponse.class, request);
+            String decryptedResponse = securityHelper.decrypt(respone.getEncryptedPayload());
+            return mapper.readValue(decryptedResponse, CodeAppTokenEncryptedPayload.class);
+        } catch (IOException e) {
+            throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
+        }
+    }
+
+    public NemIdPollResponse pollNemId(String token) {
+        return createRequest(this.agentUrl.getNemIdPoll())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .queryParam("token", token)
+                .get(NemIdPollResponse.class);
+    }
+
+    public void sca(String username, String password, String token) {
+
+        try {
+            BaseBecRequest request = baseRequest();
+            EncryptedPayloadAndroidEntity payloadEntity = scaRequest(username, password, token);
+            request.setEncryptedPayload(
+                    securityHelper.encrypt(mapper.writeValueAsString(payloadEntity).getBytes()));
+            createRequest(this.agentUrl.getSca())
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .post(request);
+
+        } catch (IOException e) {
+            throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
+        }
+    }
+
+    private EncryptedPayloadAndroidEntity scaRequest(
+            String username, String password, String token) {
+        EncryptedPayloadAndroidEntity result = scaPrepareRequest(username, password);
+        result.setSecondFactor("codeapp");
+        result.setCodeapp(new CodeAppScaEntity(token));
+        return result;
+    }
+
+    private EncryptedPayloadAndroidEntity scaPrepareRequest(String username, String password) {
+
+        EncryptedPayloadAndroidEntity payloadAndroidEntity =
+                baseScaPrepareRequest(username, password);
+        payloadAndroidEntity.setSecondFactor("default");
+        return payloadAndroidEntity;
+    }
+
+    private EncryptedPayloadAndroidEntity baseScaPrepareRequest(String username, String password) {
+        EncryptedPayloadAndroidEntity payloadAndroidEntity = new EncryptedPayloadAndroidEntity();
+        payloadAndroidEntity.setAppType(BecConstants.Meta.APP_TYPE);
+        payloadAndroidEntity.setAppVersion(BecConstants.Meta.APP_VERSION);
+        payloadAndroidEntity.setLocale(BecConstants.Meta.LOCALE);
+        payloadAndroidEntity.setOsVersion(BecConstants.Meta.OS_VERSION);
+        payloadAndroidEntity.setDeviceType(BecConstants.Meta.DEVICE_TYPE);
+        payloadAndroidEntity.setScreenSize(BecConstants.Meta.SCREEN_SIZE);
+
+        payloadAndroidEntity.setPincode(password);
+        payloadAndroidEntity.setUserId(username);
+
+        return payloadAndroidEntity;
+    }
+
+    private EncryptedPayloadAndroidEntity scaPrepare2Request(String username, String password) {
+        EncryptedPayloadAndroidEntity payloadAndroidEntity =
+                baseScaPrepareRequest(username, password);
+        payloadAndroidEntity.setSecondFactor("codeapp");
+        return payloadAndroidEntity;
+    }
+
+    private BaseBecRequest baseRequest() {
+        BaseBecRequest request = new BaseBecRequest();
+        request.setLabel(BecConstants.Meta.LABEL);
+        request.setCipher(BecConstants.Meta.CIPHER);
+        request.setKey(securityHelper.getKey());
+        return request;
     }
 
     public BecErrorResponse parseBodyAsError(HttpResponse response) {

@@ -48,7 +48,7 @@ public class UserDataMapper {
     }
 
     /**
-     * Assumes the date of birth is for a person 1-100 years old.
+     * Assumption of the date of birth for a person 1-100 years old.
      *
      * @param year 2 digit year representation
      * @return 4 digit year representation with assumed century

@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
-public class BecFilter extends Filter {
+public class BecBankSideFailureHandlingFilter extends Filter {
 
     private static final ImmutableList<String> BANK_SIDE_FAILURES =
             ImmutableList.of("connection reset", "connect timed out", "read timed out");
@@ -19,7 +19,6 @@ public class BecFilter extends Filter {
         try {
             return nextFilter(httpRequest);
         } catch (HttpClientException e) {
-
             BANK_SIDE_FAILURES.stream()
                     .filter((f -> f.contains(e.getMessage().toLowerCase())))
                     .findAny()

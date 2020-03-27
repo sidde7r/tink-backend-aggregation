@@ -15,7 +15,9 @@ public class EncryptedPayloadAndroidEntity {
     private String osVersion;
     private String pincode;
     private String screenSize;
+    private String secondFactor;
     private String userId;
+    private CodeAppScaEntity codeapp;
 
     public String getAppType() {
         return appType;
@@ -105,11 +107,27 @@ public class EncryptedPayloadAndroidEntity {
         this.screenSize = screenSize;
     }
 
+    public String getSecondFactor() {
+        return secondFactor;
+    }
+
+    public void setSecondFactor(String secondFactor) {
+        this.secondFactor = secondFactor;
+    }
+
     public String getUserId() {
         return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public void setCodeapp(CodeAppScaEntity codeapp) {
+        this.codeapp = codeapp;
+    }
+
+    public CodeAppScaEntity getCodeapp() {
+        return codeapp;
     }
 }
