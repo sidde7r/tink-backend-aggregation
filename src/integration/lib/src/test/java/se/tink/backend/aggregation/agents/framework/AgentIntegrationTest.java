@@ -726,7 +726,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         Agent agent = createAgent(credentialsRequest);
 
         try {
-            login(agent, credentialsRequest);
+            if (isLoginRequiredForPIS()) {
+                login(agent, credentialsRequest);
+            }
             if (agent instanceof PaymentControllerable) {
                 doGenericPaymentBankTransfer(agent, paymentList);
             } else {
@@ -746,6 +748,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         context.printCollectedData();
+    }
+
+    private boolean isLoginRequiredForPIS() {
+        return !"it-unicredit-oauth2".equals(provider.getName());
     }
 
     private List<Payment> createItalianPayments(List<Account> accounts, String desinationAccount) {

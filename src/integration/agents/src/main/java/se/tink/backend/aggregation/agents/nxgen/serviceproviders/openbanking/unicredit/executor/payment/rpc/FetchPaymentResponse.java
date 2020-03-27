@@ -7,7 +7,6 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.CreditorAddressEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.PaymentStatusEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.RemittanceInformationStructuredEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.enums.UnicreditPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -35,7 +34,7 @@ public class FetchPaymentResponse {
     private Date requestExecutionDate;
 
     private String requestExecutionTime;
-    private PaymentStatusEntity paymentStatus;
+    private String transactionStatus;
 
     public PaymentResponse toTinkPayment(String paymentId, PaymentType type) {
         Payment.Builder buildingPaymentResponse =
@@ -47,8 +46,7 @@ public class FetchPaymentResponse {
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(
-                                UnicreditPaymentStatus.fromString(
-                                                paymentStatus.getTransactionStatus())
+                                UnicreditPaymentStatus.fromString(transactionStatus)
                                         .getPaymentStatus())
                         .withType(type);
 
@@ -58,6 +56,10 @@ public class FetchPaymentResponse {
     }
 
     private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if (dateToConvert == null) {
+            return null;
+        } else {
+            return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
     }
 }
