@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.wiremock;
+package se.tink.backend.aggregation.wiremock;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class WireMockIntegrationTest {
 
-    private static final String PROTOCOL_AND_HOST = "http://127.0.0.1";
+    protected static final String PROTOCOL_AND_HOST = "http://127.0.0.1";
 
     @Rule public WireMockRule wireMock;
     protected TinkHttpClient httpClient;

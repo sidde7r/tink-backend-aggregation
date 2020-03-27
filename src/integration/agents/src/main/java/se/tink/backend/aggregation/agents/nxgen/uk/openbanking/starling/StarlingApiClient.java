@@ -8,9 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants.UrlParams;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.CodeExchangeForm;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.OAuthTokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.TokenRefreshForm;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.entity.TransferStatusEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentResponse;
@@ -43,22 +40,6 @@ public class StarlingApiClient {
     public StarlingApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-    }
-
-    public OAuth2Token exchangeCode(CodeExchangeForm codeExchangeForm) {
-        return client.request(StarlingConstants.Url.GET_OAUTH2_TOKEN)
-                .body(codeExchangeForm, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(OAuthTokenResponse.class)
-                .toOauth2Token();
-    }
-
-    public OAuth2Token refreshAccessToken(TokenRefreshForm refreshForm) {
-        return client.request(StarlingConstants.Url.GET_OAUTH2_TOKEN)
-                .body(refreshForm, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(OAuthTokenResponse.class)
-                .toOauth2Token();
     }
 
     public AccountsResponse fetchAccounts() {
