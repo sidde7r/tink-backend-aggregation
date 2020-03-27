@@ -12,7 +12,7 @@ RESPONSE 1
 Connection: Keep-Alive
 Content-Type: application/json; charset=utf-8
 
-{"codigo":null,"mensaje":"SesiÃ³n expirada"}
+{"codigo":null,"mensaje":"Sesión expirada"}
 
 REQUEST 2
 POST https://loapp.caixabank.es/xmlapps/rest/login/loginInicio
@@ -192,3 +192,70 @@ Connection: Keep-Alive
 Content-Type: application/json; charset=utf-8
 
 {"listaMovimientos":{"listaMovimientos":{"movimiento":[{"id":"0","fechaOperacion":{"valor":"11/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"11/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-6.70000000000000017763568394002504646778106689453125,"moneda":"EUR","saldoCuenta":778.470000000000027284841053187847137451171875,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeXim5Iwc5wh5eKbkgAAAXDmR2rWXO95g9J_R9A","indComunicados":"N","refValConsultaCom":"MHOcIeQA5Q8wc5wh5ADlDwAAAXDmR2rW8EXKhLSrHUU","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"1","fechaOperacion":{"valor":"11/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"11/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":132,"moneda":"EUR","saldoCuenta":785.1699999999999590727384202182292938232421875,"referencia":"M82XEMDFVC","accesoDetalleMov":"MHOcIeRRUh0wc5wh5FFSHQAAAXDmR2rVqa8SUhZKCUg","indComunicados":"N","refValConsultaCom":"MHOcIeWE8howc5wh5YTyGgAAAXDmR2rVc5y09zh5M8w","claseMovimiento":"002","subClaseMovimiento":"00049","indIngresoPorValidar":"N"},{"id":"2","fechaOperacion":{"valor":"10/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"10/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-54.780000000000001136868377216160297393798828125,"moneda":"EUR","saldoCuenta":653.1699999999999590727384202182292938232421875,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeXKiiYwc5wh5cqKJgAAAXDmR2rV2y6ybP7o7fM","indComunicados":"N","refValConsultaCom":"MHOcIeWmZNowc5wh5aZk2gAAAXDmR2rVA5lGP1bdC78","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"3","fechaOperacion":{"valor":"10/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"10/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-35.43999999999999772626324556767940521240234375,"moneda":"EUR","saldoCuenta":707.950000000000045474735088646411895751953125,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeXCCTUwc5wh5cIJNQAAAXDmR2rV5w8ZH~VyVOA","indComunicados":"N","refValConsultaCom":"MHOcIeQxj2gwc5wh5DGPaAAAAXDmR2rVrsyuwbOizNM","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"4","fechaOperacion":{"valor":"09/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"09/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-30,"moneda":"EUR","saldoCuenta":743.3899999999999863575794734060764312744140625,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeQt6kowc5wh5C3qSgAAAXDmR2rVrkZw8ymUNnA","indComunicados":"N","refValConsultaCom":"MHOcIeW4VAUwc5wh5bhUBQAAAXDmR2rVT0aJnbFT0BQ","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"5","fechaOperacion":{"valor":"08/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"08/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":110,"moneda":"EUR","saldoCuenta":773.3899999999999863575794734060764312744140625,"referencia":"","accesoDetalleMov":"MHOcIeQfRQAwc5wh5B9FAAAAAXDmR2rVDxzX7qiqoH4","indComunicados":"N","refValConsultaCom":"MHOcIeRG~FMwc5wh5Eb4UwAAAXDmR2rVLY7Zj3UMOLQ","claseMovimiento":"067","subClaseMovimiento":"00065","indIngresoPorValidar":"N"},{"id":"6","fechaOperacion":{"valor":"08/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"08/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-5,"moneda":"EUR","saldoCuenta":663.3899999999999863575794734060764312744140625,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeTXR7cwc5wh5NdHtwAAAXDmR2rVeEXlLuvxPHg","indComunicados":"N","refValConsultaCom":"MHOcIeRUPDowc5wh5FQ8OgAAAXDmR2rV~Zd7_yle7wE","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"7","fechaOperacion":{"valor":"07/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"07/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-7.29999999999999982236431605997495353221893310546875,"moneda":"EUR","saldoCuenta":668.3899999999999863575794734060764312744140625,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeR_5fkwc5wh5H_l~QAAAXDmR2rUTUTOirEIVAM","indComunicados":"N","refValConsultaCom":"MHOcIeT2cC8wc5wh5PZwLwAAAXDmR2rU6W6Yl2qG1_s","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"8","fechaOperacion":{"valor":"07/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"07/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-20,"moneda":"EUR","saldoCuenta":675.69000000000005456968210637569427490234375,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeSez4cwc5wh5J7PhwAAAXDmR2rU1ARNe1WMIwM","indComunicados":"N","refValConsultaCom":"MHOcIeSa6O4wc5wh5Jro7gAAAXDmR2rUReJt55XdGfI","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"9","fechaOperacion":{"valor":"07/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"07/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-14.199999999999999289457264239899814128875732421875,"moneda":"EUR","saldoCuenta":695.69000000000005456968210637569427490234375,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeRosQgwc5wh5GixCAAAAXDmR2rUYx2gaEQWE1g","indComunicados":"N","refValConsultaCom":"MHOcIeTYXckwc5wh5NhdyQAAAXDmR2rUiJidWCQ3LgY","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"10","fechaOperacion":{"valor":"05/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"05/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-5,"moneda":"EUR","saldoCuenta":709.8899999999999863575794734060764312744140625,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeTrCI0wc5wh5OsIjQAAAXDmR2rUwZ5KWeLdBY8","indComunicados":"N","refValConsultaCom":"MHOcIeSZ5c4wc5wh5JnlzgAAAXDmR2rUVMka7ZfLLwc","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"11","fechaOperacion":{"valor":"05/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"05/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-442,"moneda":"EUR","saldoCuenta":714.8899999999999863575794734060764312744140625,"referencia":"","accesoDetalleMov":"MHOcIeMWyNowc5wh4xbI2gAAAXDmR2rUnAjIZaWJD2c","indComunicados":"N","refValConsultaCom":"MHOcIeSJvg8wc5wh5Im~DwAAAXDmR2rUpYqHoRxoJkE","claseMovimiento":"067","subClaseMovimiento":"00065","indIngresoPorValidar":"N"},{"id":"12","fechaOperacion":{"valor":"04/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"04/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-22.5,"moneda":"EUR","saldoCuenta":1156.890000000000100044417195022106170654296875,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeMG1PAwc5wh4wbU8AAAAXDmR2rTFt0dlaFr90w","indComunicados":"N","refValConsultaCom":"MHOcIeNSl4Qwc5wh41KXhAAAAXDmR2rTrAo7R7okM5M","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"13","fechaOperacion":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-29.6700000000000017053025658242404460906982421875,"moneda":"EUR","saldoCuenta":1179.390000000000100044417195022106170654296875,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIePdVcgwc5wh491VyAAAAXDmR2rTAiM6Y1SdJGc","indComunicados":"N","refValConsultaCom":"MHOcIeIa1T8wc5wh4hrVPwAAAXDmR2rT9lrF1SXyNd8","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"14","fechaOperacion":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-66.5199999999999960209606797434389591217041015625,"moneda":"EUR","saldoCuenta":1209.05999999999994543031789362430572509765625,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeOlxa8wc5wh46XFrwAAAXDmR2rT3Bnb2MuNUbY","indComunicados":"N","refValConsultaCom":"MHOcIeJRf3cwc5wh4lF_dwAAAXDmR2rTbEXTTTHxBSs","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"15","fechaOperacion":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-49.590000000000003410605131648480892181396484375,"moneda":"EUR","saldoCuenta":1275.579999999999927240423858165740966796875,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeJDMewwc5wh4kMx7AAAAXDmR2rTRtXePO4uK3w","indComunicados":"N","refValConsultaCom":"MHOcIeINLkEwc5wh4g0uQQAAAXDmR2rTam_RvOb~Mkk","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"16","fechaOperacion":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-20,"moneda":"EUR","saldoCuenta":1325.170000000000072759576141834259033203125,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeJKX48wc5wh4kpfjwAAAXDmR2rTdc6wex365OA","indComunicados":"N","refValConsultaCom":"MHOcIeL_8v0wc5wh4v_y_QAAAXDmR2rTnwsR3bsfE6U","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"17","fechaOperacion":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"02/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-5,"moneda":"EUR","saldoCuenta":1345.170000000000072759576141834259033203125,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIeI8~4cwc5wh4jz7hwAAAXDmR2rTUWiMeyy3ljw","indComunicados":"N","refValConsultaCom":"MHOcIeIRT5Mwc5wh4hFPkwAAAXDmR2rTL~rU3vWCVrs","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"18","fechaOperacion":{"valor":"01/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"01/02/2020","formato":"dd/MM/yyyy"},"remitente":"dummy_remitente","concepto":"dummy_concepto","importe":-12.699999999999999289457264239899814128875732421875,"moneda":"EUR","saldoCuenta":1350.170000000000072759576141834259033203125,"referencia":"4766642366402019","accesoDetalleMov":"MHOcIePortQwc5wh4~iu1AAAAXDmR2rToqf1PS9nK7M","indComunicados":"N","refValConsultaCom":"MHOcIeNSpi4wc5wh41KmLgAAAXDmR2rSvrkMOx1w6Nw","claseMovimiento":"040","subClaseMovimiento":"00022","indIngresoPorValidar":"N"},{"id":"19","fechaOperacion":{"valor":"01/02/2020","formato":"dd/MM/yyyy"},"fechaValor":{"valor":"01/02/2020","formato":"dd/MM/yyyy"},"remitente":"9690.20.8401400-31","concepto":"dummy_concepto","importe":-52.5,"moneda":"EUR","saldoCuenta":1362.8699999999998908606357872486114501953125,"referencia":"","accesoDetalleMov":"MHOcIeNKd~Qwc5wh40p35AAAAXDmR2rScqEvlAqe4dk","indComunicados":"N","refValConsultaCom":"MHOcIeNUZPIwc5wh41Rk8gAAAXDmR2rS1w1QIzhzjlA","claseMovimiento":"051","subClaseMovimiento":"00555","indIngresoPorValidar":"N"}],"masDatos":false}},"detalleCuenta":{"indDisponibleNomina":"N","disponibleNomina":0,"disponibleNominaEfectivo":0,"numeroCuenta":{"iban":"ES5804874233163224687413","codigoPais":"ES","dcIban":"58","numeroCuenta":"3224687413","entidad":"0487","oficina":"4233","dc":"16","longitudModalidad":0,"longitudCuenta":0},"alias":"","moneda":"EUR","esTitular":false,"esRepresentante":false,"esApoderado":false}}
+
+REQUEST 15
+GET https://loapp.caixabank.es/xmlapps/rest/login/enrolmentDispositivo/autorizacion/inicio
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 15
+200
+Connection: Keep-Alive
+Content-Type: application/json; charset=utf-8
+
+{"autorizacionSCA":false,"caixaPIN":null,"clv":null,"motp":{"periodicidadVerificacion":"5000"},"pin1SCA":null,"pin2":null,"pinParcialMultiple":null,"sinAutorizacion":null,"sms":null,"tarjetaCoordenadas":null,"teleID":null,"tipoValidador":"MOTP","visaCodeSure":null}
+
+REQUEST 16
+POST https://loapp.caixabank.es/xmlapps/rest/autorizacion/pushAutDiferido
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 16
+409
+Connection: Keep-Alive
+Content-Type: application/json; charset=utf-8
+
+{"codigo":"9999","mensaje":"LOWebClientException: Clase:es.lacaixa.canalxml.connector.LOWebClient Método:instantiator.getXmlAsObject Descripción:0000;LOWebClientArqException: Clase:es.lacaixa.canalxml.connector.LOWebXMLInstantiatorEjb Método:getXmlAsObject Descripción:Error de instanciacion del xml de respuesta: no es de un tipo conocido  Error=javax.xml.bind.UnmarshalException\n - with linked exception:\n[org.xml.sax.SAXParseException; lineNumber: 1; columnNumber: 1; Final de archivo prematuro.]"}
+
+REQUEST 17
+GET https://loapp.caixabank.es/xmlapps/rest/autorizacion/verificaFirmaOperacion
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 17 SET STATE_POLLING_SCA
+200
+Connection: Keep-Alive
+Content-Type: application/json; charset=utf-8
+
+{"operacionFirmada":false}
+
+REQUEST 18 MATCH STATE_POLLING_SCA
+GET https://loapp.caixabank.es/xmlapps/rest/autorizacion/verificaFirmaOperacion
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 18
+200
+Connection: Keep-Alive
+Content-Type: application/json; charset=utf-8
+
+{"operacionFirmada":true}
+
+REQUEST 19
+POST https://loapp.caixabank.es/xmlapps/rest/login/enrolmentDispositivo/autorizacion/resultado
+Content-Type: application/json
+Accept: application/json
+X-Aggregator: Tink Testing
+
+{"codigo":[""],"adaptadoOTPSMS":true}
+
+RESPONSE 19
+200
+Connection: Keep-Alive
+Content-Type: application/json; charset=utf-8
+
+{"estado":"OK"}
