@@ -20,7 +20,7 @@ Content-Type: application/json
 Accept: application/json
 X-Aggregator: Tink Testing
 
-{"idioma":"es","origen":"51402","canal":"O","idInstalacion":"CIAPPLPh8,1XAEvy+IW9P82Pl+fvzwnfiAzzxs="}
+{"idioma":"es","origen":"51402","canal":"O","idInstalacion":"cIAPPLPh9,3bMj2Zyth3YZ53zKOpn6Cf9OSA9Lf"}
 
 RESPONSE 2
 200

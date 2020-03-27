@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
 import com.google.inject.Inject;
+import java.util.Base64;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -12,6 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.AuthenticationParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaMultifactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.LaCaixaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.identitydata.LaCaixaIdentityDataFetcher;
@@ -20,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.La
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.LaCaixaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.LaCaixaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.session.LaCaixaSessionHandler;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
@@ -54,7 +58,7 @@ public class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
     public LaCaixaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         configureHttpClient(client);
-        apiClient = new LaCaixaApiClient(client, persistentStorage);
+        apiClient = new LaCaixaApiClient(client, getInstallationId(request.getCredentials()));
         authenticator =
                 new LaCaixaMultifactorAuthenticator(
                         catalog,
@@ -83,6 +87,13 @@ public class LaCaixaAgent extends SubsequentProgressiveGenerationAgent
 
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new TimeoutFilter());
+    }
+
+    private String getInstallationId(Credentials credentials) {
+        final String deviceId = credentials.getId();
+        final byte[] hash = Hash.sha256(AuthenticationParams.DEVICE_NAME + deviceId);
+        return AuthenticationParams.INSTALLATION_ID_PREFIX
+                + Base64.getEncoder().encodeToString(hash).substring(0, 28);
     }
 
     @Override

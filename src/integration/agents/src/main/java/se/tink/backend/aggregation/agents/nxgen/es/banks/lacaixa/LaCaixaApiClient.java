@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
 import com.google.common.base.Strings;
-import java.util.Base64;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.AuthenticationParams;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.AuthenticationRequest;
@@ -39,38 +36,22 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.Use
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.uuid.UUIDUtils;
 
 public class LaCaixaApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
+    private final String installationId;
 
     private UserDataResponse userDataCache;
 
-    public LaCaixaApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public LaCaixaApiClient(TinkHttpClient client, String installationId) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
-    }
-
-    private String getInstallationId() {
-        if (!persistentStorage.containsKey(StorageKeys.INSTALLATION_ID)) {
-            final String deviceId = UUIDUtils.generateUUID();
-            final byte[] hash = Hash.sha256(AuthenticationParams.DEVICE_NAME + deviceId);
-            final String installationId =
-                    AuthenticationParams.INSTALLATION_ID_PREFIX
-                            + Base64.getEncoder().encodeToString(hash).substring(0, 28);
-            persistentStorage.put(StorageKeys.INSTALLATION_ID, installationId);
-        }
-
-        return persistentStorage.get(StorageKeys.INSTALLATION_ID);
+        this.installationId = installationId;
     }
 
     public SessionResponse initializeSession() {
@@ -80,7 +61,7 @@ public class LaCaixaApiClient {
                         LaCaixaConstants.DefaultRequestParams.LANGUAGE_ES,
                         LaCaixaConstants.DefaultRequestParams.ORIGIN,
                         LaCaixaConstants.DefaultRequestParams.CHANNEL,
-                        getInstallationId());
+                        installationId);
 
         return createRequest(LaCaixaConstants.Urls.INIT_LOGIN).post(SessionResponse.class, request);
     }
