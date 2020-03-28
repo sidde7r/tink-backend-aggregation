@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.StatusCode.TAN_GENERATED_SUCCESSFULLY;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.BaseRequestPart;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
@@ -26,7 +26,6 @@ public class FinTsRequestProcessor {
         this.tanAnswerProvider = tanAnswerProvider;
     }
 
-    /** Transfers request to the bank and handles TAN if needed */
     public FinTsResponse process(FinTsRequest request) {
         FinTsResponse response = sendRequest(request);
         if (hasTANBeenGenerated(response)) {
@@ -48,12 +47,13 @@ public class FinTsRequestProcessor {
     }
 
     private FinTsResponse sendRequest(FinTsRequest request) {
+        final String FIRST_MESSAGE_ID = "0";
         FinTsResponse response = requestSender.sendRequest(request);
 
         dialogContext.setMessageNumber(dialogContext.getMessageNumber() + 1);
         dialogContext.generateNewSecurityReference();
 
-        if ("0".equals(dialogContext.getDialogId())) {
+        if (FIRST_MESSAGE_ID.equals(dialogContext.getDialogId())) {
             response.findSegment(HNHBK.class)
                     .ifPresent(hnhbk -> dialogContext.setDialogId(hnhbk.getDialogId()));
         }
@@ -66,13 +66,13 @@ public class FinTsRequestProcessor {
     }
 
     private FinTsRequest challengeSolvedRequest() {
-        List<BaseRequestPart> additionalSegments = new ArrayList<>();
-        additionalSegments.add(
-                HKTANv6.builder()
-                        .tanProcess("2")
-                        .taskReference(dialogContext.getTaskReference())
-                        .furtherTanFollows(false)
-                        .build());
+        List<BaseRequestPart> additionalSegments =
+                Collections.singletonList(
+                        HKTANv6.builder()
+                                .tanProcess("2")
+                                .taskReference(dialogContext.getTaskReference())
+                                .furtherTanFollows(false)
+                                .build());
         return FinTsRequest.createEncryptedRequest(dialogContext, additionalSegments);
     }
 

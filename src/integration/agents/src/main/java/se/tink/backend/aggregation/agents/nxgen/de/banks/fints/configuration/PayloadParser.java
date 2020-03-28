@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration;
 
+import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public class PayloadParser {
+    private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
+
     @AllArgsConstructor
     @Getter
     public static class Payload {
@@ -13,7 +16,7 @@ public class PayloadParser {
     }
 
     public static Payload parse(String payload) {
-        String[] splitPayload = payload.split(" ");
+        String[] splitPayload = SPACE_PATTERN.split(payload);
         return new Payload(splitPayload[0], splitPayload[1], splitPayload[2]);
     }
 }

@@ -17,6 +17,7 @@ import lombok.NonNull;
 @Builder
 public class HNVSKv3 extends BaseRequestPart {
 
+    private static final byte[] SEQUENCE_OF_ZEROES = "00000000".getBytes();
     @NonNull private Integer securityProcedureVersion;
     @NonNull private String systemId;
     @Builder.Default private LocalDateTime creationTime = LocalDateTime.now();
@@ -44,7 +45,7 @@ public class HNVSKv3 extends BaseRequestPart {
                 .element(2)
                 .element(2)
                 .element(13)
-                .element("00000000".getBytes())
+                .element(SEQUENCE_OF_ZEROES)
                 .element(5)
                 .element(1); // Crypto algorithm
         addGroup()
@@ -53,7 +54,7 @@ public class HNVSKv3 extends BaseRequestPart {
                 .element(username)
                 .element("S")
                 .element(0)
-                .element(0); //
+                .element(0);
         addGroup().element(COMPRESSION_NONE);
     }
 }

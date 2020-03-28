@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.configuration.ProviderConfig;
 public class FinTsProviderConfigTest {
 
     @Test
-    public void allPayloadsShouldHaveProperParameters() throws IOException {
+    public void allPayloadsShouldHaveSetRequiredParameters() throws IOException {
         List<Provider> finTsProviders = readFinTsProviders();
         for (Provider provider : finTsProviders) {
             PayloadParser.Payload payload = PayloadParser.parse(provider.getPayload());
