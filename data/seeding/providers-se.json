@@ -23,6 +23,7 @@
             ],
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
+            "groupDisplayName": "Alandsbanken",
             "market": "SE",
             "multiFactor": true,
             "name": "alandsbanken",
@@ -32,6 +33,25 @@
             "refreshFrequencyFactor": 1,
             "status": "DISABLED",
             "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.se.openbanking.alandsbanke.AlandsbankenAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayName": "Ålandsbanken",
+            "fields": [],
+            "financialInstitutionId": "dummyId",
+            "financialInstitutionName": "dummyName",
+            "groupDisplayName": "Alandsbanken",
+            "multiFactor": false,
+            "name": "se-alandsbanken-ob",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
             "type": "BANK"
         },
         {
