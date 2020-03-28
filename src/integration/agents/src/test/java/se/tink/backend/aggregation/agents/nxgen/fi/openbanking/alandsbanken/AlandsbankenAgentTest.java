@@ -13,7 +13,9 @@ public class AlandsbankenAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fi", "fi-alandsbanken-oauth2")
+                new AgentIntegrationTest.Builder("fi", "fi-alandsbanken-ob")
+                        .setFinancialInstitutionId("alandsbank-fi")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
