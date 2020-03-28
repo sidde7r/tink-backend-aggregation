@@ -98,7 +98,7 @@
             "financialInstitutionId": "dummyId",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
-            "name": "fi-alandsbanken-oauth2",
+            "name": "fi-alandsbanken-ob",
             "passwordHelpText": null,
             "payload": "tink",
             "popular": true,
