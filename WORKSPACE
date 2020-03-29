@@ -852,7 +852,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_jetty",
+    name = "io_dropwizard_dropwizard_jetty",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-jetty:0.7.1",
     sha1 = "269303642030a9e093b4cc19e8036e174113a04a",
 )
