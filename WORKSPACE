@@ -2630,6 +2630,7 @@ maven_install(
         "javax.el:javax.el-api:2.2.5",
         "javax.inject:javax.inject:1",
         "javax.validation:validation-api:1.1.0.Final",
+        "javax.xml.bind:jaxb-api:2.2.7",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
         "log4j:log4j:1.2.14",
