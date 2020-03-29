@@ -2604,6 +2604,7 @@ maven_install(
         "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
         "io.dropwizard:dropwizard-configuration:0.7.1",
         "io.dropwizard:dropwizard-jackson:0.7.1",
+        "io.dropwizard:dropwizard-jetty:0.7.1",
         "io.dropwizard:dropwizard-lifecycle:0.7.1",
         "io.dropwizard:dropwizard-logging:0.7.1",
         "io.dropwizard:dropwizard-metrics:0.7.1",
