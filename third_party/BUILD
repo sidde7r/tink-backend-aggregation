@@ -286,7 +286,7 @@ java_library(
     name = "com_google_protobuf_protobuf_java",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_protobuf_protobuf_java//jar",
+        "@aggregation//:com_google_protobuf_protobuf_java",
     ],
 )
 
@@ -1412,6 +1412,7 @@ java_library(
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_google_instrumentation_instrumentation_api",
+        "@aggregation//:com_google_protobuf_protobuf_java",
         "@aggregation//:io_grpc_grpc_context",
         "@aggregation//:io_netty_netty_buffer",
         "@aggregation//:io_netty_netty_codec",
@@ -1426,7 +1427,6 @@ java_library(
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
         "@com_google_api_grpc_proto_google_common_protos//jar",
-        "@com_google_protobuf_protobuf_java//jar",
         "@com_google_protobuf_protobuf_java_util//jar",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_auth//jar",
@@ -1681,7 +1681,6 @@ java_library(
     licenses = ["notice"],
     visibility = ["//visibility:public"],
     exports = [
-        "//third_party:com_google_protobuf_protobuf_java",
         "//third_party:lombok_plugin",
         "//third_party:netty",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
@@ -1689,6 +1688,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:com_google_protobuf_protobuf_java",
         "@aggregation//:commons_io_commons_io",
         "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
