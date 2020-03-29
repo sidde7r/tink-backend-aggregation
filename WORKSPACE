@@ -930,7 +930,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_xml_bind_jaxb_api",
+    name = "javax_xml_bind_jaxb_api",  # Do not use, but do not remove
     artifact = "javax.xml.bind:jaxb-api:2.2.7",
     sha1 = "2f51c4bb4724ea408096ee9100ff2827e07e5b7c",
 )

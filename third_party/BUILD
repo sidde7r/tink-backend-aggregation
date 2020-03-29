@@ -419,8 +419,8 @@ java_library(
         "@de_jollyday_jollyday//jar",
     ],
     runtime_deps = [
+        "@aggregation//:javax_xml_bind_jaxb_api",
         "@aggregation//:joda_time_joda_time",
-        "@javax_xml_bind_jaxb_api//jar",
     ],
 )
 
