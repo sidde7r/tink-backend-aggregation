@@ -2601,6 +2601,7 @@ maven_install(
         "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
         "de.jollyday:jollyday:0.4.7",
+        "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
         "io.dropwizard:dropwizard-configuration:0.7.1",
         "io.dropwizard:dropwizard-jackson:0.7.1",
         "io.dropwizard:dropwizard-lifecycle:0.7.1",
