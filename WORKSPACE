@@ -1728,7 +1728,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_continuation",
+    name = "org_eclipse_jetty_jetty_continuation",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-continuation:9.0.7.v20131107",
     sha1 = "4a26ae30011d933ac2c5f8d840e3374bc0d136eb",
 )
