@@ -900,7 +900,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "eu_geekplace_javapinning_java_pinning_jar",
+    name = "eu_geekplace_javapinning_java_pinning_jar",  # Do not use, but do not remove
     artifact = "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
     sha1 = "bdd2809fdc4b67c4fbcdaede96355825b57febcf",
 )

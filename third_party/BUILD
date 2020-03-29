@@ -428,7 +428,7 @@ java_library(
     name = "eu_geekplace_javapinning_java_pinning_jar",
     visibility = ["//visibility:public"],
     exports = [
-        "@eu_geekplace_javapinning_java_pinning_jar//jar",
+        "@aggregation//:eu_geekplace_javapinning_java_pinning_jar",
     ],
 )
 
