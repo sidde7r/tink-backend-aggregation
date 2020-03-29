@@ -2582,6 +2582,7 @@ maven_install(
         "com.google.inject.extensions:guice-multibindings:4.2.2",
         "com.google.inject:guice:4.2.2",
         "com.google.instrumentation:instrumentation-api:0.4.3",
+        "com.google.protobuf:protobuf-java:3.5.1",
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
