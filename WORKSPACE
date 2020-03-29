@@ -2576,6 +2576,7 @@ maven_install(
         "com.google.code.gson:gson:2.8.2",
         "com.google.errorprone:error_prone_annotations:2.1.3",
         "com.google.guava:guava:25.1-jre",
+        "com.google.http-client:google-http-client:1.17.0-rc",
         "com.google.inject.extensions:guice-assistedinject:4.2.2",
         "com.google.inject.extensions:guice-grapher:4.2.2",
         "com.google.inject.extensions:guice-multibindings:4.2.2",
