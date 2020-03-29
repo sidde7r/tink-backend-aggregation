@@ -2596,6 +2596,7 @@ maven_install(
         "com.yubico:yubico-validation-client2:2.0.1",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
+        "commons-httpclient:commons-httpclient:3.1",
         "commons-io:commons-io:2.5",
         "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
