@@ -766,7 +766,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_httpclient_commons_httpclient",
+    name = "commons_httpclient_commons_httpclient",  # Do not use, but do not remove
     artifact = "commons-httpclient:commons-httpclient:3.1",
     sha1 = "964cd74171f427720480efdec40a7c7f6e58426a",
 )
