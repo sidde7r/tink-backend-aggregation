@@ -1472,7 +1472,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_yubico_yubico_validation_client2",
+    name = "com_yubico_yubico_validation_client2",  # Do not use, but do not remove
     artifact = "com.yubico:yubico-validation-client2:2.0.1",
     sha1 = "dea29261814ff36357d4bdbf8f57832e275bc2e8",
 )

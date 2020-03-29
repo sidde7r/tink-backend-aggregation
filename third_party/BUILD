@@ -380,7 +380,7 @@ java_library(
     name = "com_yubico_yubico_validation_client2",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_yubico_yubico_validation_client2//jar",
+        "@aggregation//:com_yubico_yubico_validation_client2",
     ],
     runtime_deps = [
         "@aggregation//:commons_codec_commons_codec",
