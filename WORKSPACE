@@ -1176,7 +1176,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_servlets",
+    name = "org_eclipse_jetty_jetty_servlets",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
     sha1 = "bffeae9b9f75f53d3e5dc1bfd56725f67f2f67c0",
 )
