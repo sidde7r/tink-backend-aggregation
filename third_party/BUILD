@@ -512,6 +512,7 @@ java_library(
         "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:javax_el_javax_el_api",
         "@aggregation//:javax_validation_validation_api",
+        "@aggregation//:net_sourceforge_argparse4j_argparse4j",
         "@aggregation//:org_eclipse_jetty_jetty_continuation",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
@@ -528,7 +529,6 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@net_sourceforge_argparse4j_argparse4j//jar",
         "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
     ],
 )
@@ -559,7 +559,7 @@ java_library(
     name = "net_sourceforge_argparse4j_argparse4j",
     visibility = ["//visibility:public"],
     exports = [
-        "@net_sourceforge_argparse4j_argparse4j//jar",
+        "@aggregation//:net_sourceforge_argparse4j_argparse4j",
     ],
 )
 
@@ -635,6 +635,7 @@ java_library(
         "@aggregation//:io_dropwizard_dropwizard_validation",
         "@aggregation//:javax_el_javax_el_api",
         "@aggregation//:javax_validation_validation_api",
+        "@aggregation//:net_sourceforge_argparse4j_argparse4j",
         "@aggregation//:org_eclipse_jetty_jetty_continuation",
         "@aggregation//:org_eclipse_jetty_jetty_http",
         "@aggregation//:org_eclipse_jetty_jetty_io",
@@ -651,7 +652,6 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@net_sourceforge_argparse4j_argparse4j//jar",
         "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
     ],
 )

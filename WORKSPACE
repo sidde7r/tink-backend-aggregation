@@ -422,7 +422,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_sourceforge_argparse4j_argparse4j",
+    name = "net_sourceforge_argparse4j_argparse4j",  # Do not use, but do not remove
     artifact = "net.sourceforge.argparse4j:argparse4j:0.4.3",
     sha1 = "f4c256934d79940477a35b6c4c182b47ee5f0a6f",
 )
