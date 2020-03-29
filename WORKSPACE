@@ -1734,7 +1734,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_security",
+    name = "org_eclipse_jetty_jetty_security",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-security:9.0.7.v20131107",
     sha1 = "023e7943c18e5c340455a40876ce5093c980c210",
 )
