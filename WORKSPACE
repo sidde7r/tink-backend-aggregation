@@ -2600,6 +2600,7 @@ maven_install(
         "commons-io:commons-io:2.5",
         "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
+        "de.jollyday:jollyday:0.4.7",
         "io.dropwizard:dropwizard-configuration:0.7.1",
         "io.dropwizard:dropwizard-jackson:0.7.1",
         "io.dropwizard:dropwizard-lifecycle:0.7.1",
