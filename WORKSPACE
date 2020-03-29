@@ -2656,6 +2656,7 @@ maven_install(
         "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-security:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-servlet:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
         "org.glassfish.web:javax.el:2.2.6",
