@@ -416,7 +416,7 @@ java_library(
     name = "de_jollyday_jollyday",
     visibility = ["//visibility:public"],
     exports = [
-        "@de_jollyday_jollyday//jar",
+        "@aggregation//:de_jollyday_jollyday",
     ],
     runtime_deps = [
         "@aggregation//:javax_xml_bind_jaxb_api",

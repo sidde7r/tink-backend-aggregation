@@ -1612,7 +1612,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "de_jollyday_jollyday",
+    name = "de_jollyday_jollyday",  # Do not use, but do not remove
     artifact = "de.jollyday:jollyday:0.4.7",
     sha1 = "aa1c57aa11494985854b8ec8d39574754db67f22",
 )
