@@ -1580,7 +1580,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_http_client_google_http_client",
+    name = "com_google_http_client_google_http_client",  # Do not use, but do not remove
     artifact = "com.google.http-client:google-http-client:1.17.0-rc",
     sha1 = "637da6cca16f4a97c4771137bce02e7c291e67af",
 )
