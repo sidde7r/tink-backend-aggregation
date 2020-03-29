@@ -188,6 +188,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_security",
         "@aggregation//:org_eclipse_jetty_jetty_server",
+        "@aggregation//:org_eclipse_jetty_jetty_servlet",
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_slf4j_slf4j_api",
@@ -198,7 +199,6 @@ java_library(
         "@net_minidev_asm//jar",
         "@net_minidev_json_smart//jar",
         "@net_sf_jopt_simple_jopt_simple//jar",
-        "@org_eclipse_jetty_jetty_servlet//jar",
         "@org_eclipse_jetty_jetty_webapp//jar",
         "@org_eclipse_jetty_jetty_xml//jar",
         "@org_xmlunit_xmlunit_core//jar",
@@ -516,6 +516,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_security",
         "@aggregation//:org_eclipse_jetty_jetty_server",
+        "@aggregation//:org_eclipse_jetty_jetty_servlet",
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
@@ -528,7 +529,6 @@ java_library(
         "@aggregation//:org_yaml_snakeyaml",
         "@io_dropwizard_dropwizard_jetty//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
-        "@org_eclipse_jetty_jetty_servlet//jar",
         "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
     ],
 )
@@ -542,8 +542,8 @@ java_library(
     runtime_deps = [
         "@aggregation//:ch_qos_logback_logback_classic",
         "@aggregation//:com_codahale_metrics_metrics_core",
+        "@aggregation//:org_eclipse_jetty_jetty_servlet",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
-        "@org_eclipse_jetty_jetty_servlet//jar",
     ],
 )
 
@@ -639,6 +639,7 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_io",
         "@aggregation//:org_eclipse_jetty_jetty_security",
         "@aggregation//:org_eclipse_jetty_jetty_server",
+        "@aggregation//:org_eclipse_jetty_jetty_servlet",
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
@@ -651,7 +652,6 @@ java_library(
         "@aggregation//:org_yaml_snakeyaml",
         "@io_dropwizard_dropwizard_jetty//jar",
         "@net_sourceforge_argparse4j_argparse4j//jar",
-        "@org_eclipse_jetty_jetty_servlet//jar",
         "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
     ],
 )
