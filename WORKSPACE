@@ -422,7 +422,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_sourceforge_argparse4j_argparse4j",
+    name = "net_sourceforge_argparse4j_argparse4j",  # Do not use, but do not remove
     artifact = "net.sourceforge.argparse4j:argparse4j:0.4.3",
     sha1 = "f4c256934d79940477a35b6c4c182b47ee5f0a6f",
 )
@@ -530,7 +530,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_servlet",
+    name = "org_eclipse_jetty_jetty_servlet",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-servlet:9.0.7.v20131107",
     sha1 = "f7d8ce6ecb2318b906ba4df1b8625ab2b34e305b",
 )
@@ -766,7 +766,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_httpclient_commons_httpclient",
+    name = "commons_httpclient_commons_httpclient",  # Do not use, but do not remove
     artifact = "commons-httpclient:commons-httpclient:3.1",
     sha1 = "964cd74171f427720480efdec40a7c7f6e58426a",
 )
@@ -852,7 +852,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_jetty",
+    name = "io_dropwizard_dropwizard_jetty",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-jetty:0.7.1",
     sha1 = "269303642030a9e093b4cc19e8036e174113a04a",
 )
@@ -900,7 +900,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "eu_geekplace_javapinning_java_pinning_jar",
+    name = "eu_geekplace_javapinning_java_pinning_jar",  # Do not use, but do not remove
     artifact = "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
     sha1 = "bdd2809fdc4b67c4fbcdaede96355825b57febcf",
 )
@@ -930,7 +930,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_xml_bind_jaxb_api",
+    name = "javax_xml_bind_jaxb_api",  # Do not use, but do not remove
     artifact = "javax.xml.bind:jaxb-api:2.2.7",
     sha1 = "2f51c4bb4724ea408096ee9100ff2827e07e5b7c",
 )
@@ -1176,7 +1176,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_servlets",
+    name = "org_eclipse_jetty_jetty_servlets",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
     sha1 = "bffeae9b9f75f53d3e5dc1bfd56725f67f2f67c0",
 )
@@ -1472,7 +1472,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_yubico_yubico_validation_client2",
+    name = "com_yubico_yubico_validation_client2",  # Do not use, but do not remove
     artifact = "com.yubico:yubico-validation-client2:2.0.1",
     sha1 = "dea29261814ff36357d4bdbf8f57832e275bc2e8",
 )
@@ -1502,7 +1502,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_servlets",
+    name = "io_dropwizard_dropwizard_servlets",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-servlets:0.7.1",
     sha1 = "b9d2016bbeb2df39cc90632338923273d708b55e",
 )
@@ -1580,7 +1580,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_http_client_google_http_client",
+    name = "com_google_http_client_google_http_client",  # Do not use, but do not remove
     artifact = "com.google.http-client:google-http-client:1.17.0-rc",
     sha1 = "637da6cca16f4a97c4771137bce02e7c291e67af",
 )
@@ -1612,7 +1612,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "de_jollyday_jollyday",
+    name = "de_jollyday_jollyday",  # Do not use, but do not remove
     artifact = "de.jollyday:jollyday:0.4.7",
     sha1 = "aa1c57aa11494985854b8ec8d39574754db67f22",
 )
@@ -1728,13 +1728,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_continuation",
+    name = "org_eclipse_jetty_jetty_continuation",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-continuation:9.0.7.v20131107",
     sha1 = "4a26ae30011d933ac2c5f8d840e3374bc0d136eb",
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_security",
+    name = "org_eclipse_jetty_jetty_security",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-security:9.0.7.v20131107",
     sha1 = "023e7943c18e5c340455a40876ce5093c980c210",
 )
@@ -2209,7 +2209,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_protobuf_protobuf_java",
+    name = "com_google_protobuf_protobuf_java",  # Do not use, but do not remove
     artifact = "com.google.protobuf:protobuf-java:3.5.1",
     sha1 = "8c3492f7662fa1cbf8ca76a0f5eb1146f7725acd",
 )
@@ -2576,11 +2576,13 @@ maven_install(
         "com.google.code.gson:gson:2.8.2",
         "com.google.errorprone:error_prone_annotations:2.1.3",
         "com.google.guava:guava:25.1-jre",
+        "com.google.http-client:google-http-client:1.17.0-rc",
         "com.google.inject.extensions:guice-assistedinject:4.2.2",
         "com.google.inject.extensions:guice-grapher:4.2.2",
         "com.google.inject.extensions:guice-multibindings:4.2.2",
         "com.google.inject:guice:4.2.2",
         "com.google.instrumentation:instrumentation-api:0.4.3",
+        "com.google.protobuf:protobuf-java:3.5.1",
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
@@ -2591,16 +2593,22 @@ maven_install(
         "com.sun.jersey:jersey-core:1.18.1",
         "com.sun.jersey:jersey-server:1.18.1",
         "com.sun.jersey:jersey-servlet:1.18.1",
+        "com.yubico:yubico-validation-client2:2.0.1",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
+        "commons-httpclient:commons-httpclient:3.1",
         "commons-io:commons-io:2.5",
         "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
+        "de.jollyday:jollyday:0.4.7",
+        "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
         "io.dropwizard:dropwizard-configuration:0.7.1",
         "io.dropwizard:dropwizard-jackson:0.7.1",
+        "io.dropwizard:dropwizard-jetty:0.7.1",
         "io.dropwizard:dropwizard-lifecycle:0.7.1",
         "io.dropwizard:dropwizard-logging:0.7.1",
         "io.dropwizard:dropwizard-metrics:0.7.1",
+        "io.dropwizard:dropwizard-servlets:0.7.1",
         "io.dropwizard:dropwizard-util:0.7.1",
         "io.dropwizard:dropwizard-validation:0.7.1",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
@@ -2626,11 +2634,13 @@ maven_install(
         "javax.el:javax.el-api:2.2.5",
         "javax.inject:javax.inject:1",
         "javax.validation:validation-api:1.1.0.Final",
+        "javax.xml.bind:jaxb-api:2.2.7",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
         "log4j:log4j:1.2.14",
         "net.bytebuddy:byte-buddy-agent:1.10.1",
         "net.bytebuddy:byte-buddy:1.10.1",
+        "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-collections4:4.0",
         "org.apache.commons:commons-lang3:3.4",
@@ -2643,9 +2653,13 @@ maven_install(
         "org.bouncycastle:bcprov-jdk15on:1.59",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+        "org.eclipse.jetty:jetty-continuation:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-security:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-servlet:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
         "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
         "org.glassfish.web:javax.el:2.2.6",
         "org.hibernate:hibernate-validator:5.1.1.Final",
