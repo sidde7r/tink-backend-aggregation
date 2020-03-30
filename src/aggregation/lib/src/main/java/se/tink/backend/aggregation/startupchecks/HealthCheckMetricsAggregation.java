@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.startupchecks;
 
 import com.google.common.base.Stopwatch;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.libraries.healthcheckhandler.HealthCheck;
 import se.tink.backend.libraries.healthcheckhandler.NotHealthyException;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
@@ -21,20 +21,19 @@ public class HealthCheckMetricsAggregation {
         this.metricRegistry = metricRegistry;
     }
 
-    public <E> E checkAndObserve(String name, Callable<E> healthCheckToObserve)
-            throws NotHealthyException {
+    public void checkAndObserve(HealthCheck healthCheck) throws NotHealthyException {
+        String name = healthCheck.getClass().getSimpleName();
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
-            E result = healthCheckToObserve.call();
-            metricRegistry.meter(HEALTH_CHECK_SUCCESSFUL_CHECKS_COUNTER).inc();
-            return result;
+            healthCheck.check();
+            metricRegistry.meter(HEALTH_CHECK_SUCCESSFUL_CHECKS_COUNTER.label("name", name)).inc();
         } catch (Exception e) {
             throw new NotHealthyException(name + " failed.", e);
         } finally {
             metricRegistry
                     .histogram(HEALTH_CHECK_DURATION_HISTOGRAM.label("name", name))
                     .update(stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000.0);
-            metricRegistry.meter(HEALTH_CHECK_TOTAL_CHECKS_COUNTER).inc();
+            metricRegistry.meter(HEALTH_CHECK_TOTAL_CHECKS_COUNTER.label("name", name)).inc();
         }
     }
 }
