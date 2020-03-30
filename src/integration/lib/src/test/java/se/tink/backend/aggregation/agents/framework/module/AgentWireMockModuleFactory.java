@@ -29,6 +29,7 @@ public final class AgentWireMockModuleFactory implements AgentModuleFactory {
         return ImmutableSet.of(
                 new AgentWireMockComponentProviderModule(
                         request, context, agentConfiguration, wireMockConfiguration),
-                new AgentRequestScopeModule(request, context, agentConfiguration));
+                new AgentRequestScopeModule(request, context, agentConfiguration),
+                wireMockConfiguration.getAgentModule());
     }
 }

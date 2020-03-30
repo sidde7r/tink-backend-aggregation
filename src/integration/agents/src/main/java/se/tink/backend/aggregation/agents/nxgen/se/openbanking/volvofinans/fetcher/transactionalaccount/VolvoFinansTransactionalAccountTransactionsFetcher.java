@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetc
 
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants.ErrorMessages;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class VolvoFinansTransactionalAccountTransactionsFetcher
         implements TransactionDatePaginator<TransactionalAccount> {
@@ -18,6 +21,15 @@ public class VolvoFinansTransactionalAccountTransactionsFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date startDate, Date endDate) {
-        return apiClient.fetchTransactions(account, startDate, endDate);
+        try {
+            return apiClient.fetchTransactions(account, startDate, endDate);
+        } catch (HttpResponseException e) {
+            final String errorMessage = e.getResponse().getBody(String.class);
+            if (errorMessage.contains(ErrorMessages.NINETY_DAYS_TRANSACTIONS_ONLY)) {
+                return PaginatorResponseImpl.createEmpty(false);
+            } else {
+                throw e;
+            }
+        }
     }
 }

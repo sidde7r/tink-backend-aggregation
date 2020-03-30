@@ -11,6 +11,7 @@ public class UpdateCredentialsStatusRequest {
     private String userId;
     private boolean isManual;
     private boolean isMigrationUpdate;
+    private String refreshId;
 
     public boolean isManual() {
         return isManual;
@@ -40,6 +41,10 @@ public class UpdateCredentialsStatusRequest {
         return userId;
     }
 
+    public String getRefreshId() {
+        return refreshId;
+    }
+
     public boolean isUpdateContextTimestamp() {
         return updateContextTimestamp;
     }
@@ -58,5 +63,9 @@ public class UpdateCredentialsStatusRequest {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public void setRefreshId(String refreshId) {
+        this.refreshId = refreshId;
     }
 }

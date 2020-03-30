@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.enums.StatisticMode;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
@@ -447,6 +448,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             eventListener.onUpdateCredentialsStatus();
         }
 
+        // Defensive. We *Should* only end up in the if iff we're refreshing credentials.
+        String refreshId = null;
+        if (request instanceof RefreshInformationRequest) {
+            refreshId = ((RefreshInformationRequest) request).getRefreshId();
+        }
+
         // Clone the credentials here so that we can pass a copy with no
         // secrets back to the system service.
 
@@ -465,6 +472,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
         updateCredentialsStatusRequest.setMigrationUpdate(isMigrationUpdate);
+        updateCredentialsStatusRequest.setRefreshId(refreshId);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }

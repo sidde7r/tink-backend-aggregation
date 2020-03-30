@@ -42,12 +42,14 @@ public class BarclaysAgentWireMockTest {
                                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_mock_log.aap")));
 
         final WireMockConfiguration configuration =
-                new WireMockConfiguration(
-                        "localhost:" + server.getHttpsPort(),
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml",
-                        ImmutableMap.<String, String>builder()
-                                .put("code", "DUMMY_AUTH_CODE")
-                                .build());
+                WireMockConfiguration.builder("localhost:" + server.getHttpsPort())
+                        .setConfigurationPath(
+                                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml")
+                        .setCallbackData(
+                                ImmutableMap.<String, String>builder()
+                                        .put("code", "DUMMY_AUTH_CODE")
+                                        .build())
+                        .build();
 
         AgentContractEntitiesJsonFileParser contractParser =
                 new AgentContractEntitiesJsonFileParser();
@@ -90,12 +92,14 @@ public class BarclaysAgentWireMockTest {
                                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_payment_mock_log.aap")));
 
         final WireMockConfiguration configuration =
-                new WireMockConfiguration(
-                        "localhost:" + server.getHttpsPort(),
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml",
-                        ImmutableMap.<String, String>builder()
-                                .put("code", "DUMMY_AUTH_CODE")
-                                .build());
+                WireMockConfiguration.builder("localhost:" + server.getHttpsPort())
+                        .setConfigurationPath(
+                                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml")
+                        .setCallbackData(
+                                ImmutableMap.<String, String>builder()
+                                        .put("code", "DUMMY_AUTH_CODE")
+                                        .build())
+                        .build();
 
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("uk", "uk-barclays-oauth2")

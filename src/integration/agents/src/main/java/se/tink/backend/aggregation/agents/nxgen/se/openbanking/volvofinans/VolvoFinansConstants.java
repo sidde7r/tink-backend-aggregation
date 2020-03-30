@@ -1,15 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class VolvoFinansConstants {
-
-    public static final String INTEGRATION_NAME = "volvofinans";
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "debit").build();
 
     private VolvoFinansConstants() {
         throw new AssertionError();
@@ -19,7 +13,8 @@ public final class VolvoFinansConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String NINETY_DAYS_TRANSACTIONS_ONLY =
+                "only allowed to view last 90 days";
     }
 
     public static class Urls {
@@ -30,10 +25,10 @@ public final class VolvoFinansConstants {
     }
 
     public static class Endpoints {
-        public static final String BASE_AUTH = "https://secure.volvofinans.se/openbanking";
+        public static final String BASE_AUTH = "https://auth.volvofinans.se/token/openbanking";
         public static final String BASE_URL = "https://openbanking.api.volvofinans.se";
-        public static final String AUTH = "/oauth/auth";
-        public static final String TOKEN = "/oauth/token";
+        public static final String AUTH = "/authorize";
+        public static final String TOKEN = "/token";
         public static final String ACCOUNTS = "/openbanking/v1/accounts";
         public static final String TRANSACTIONS = ACCOUNTS + "/{accountId}/transactions";
     }
@@ -50,20 +45,17 @@ public final class VolvoFinansConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String SCOPE = "scope";
         public static final String CLIENT_SECRET = "client_secret";
-        public static final String REFRESH_TOKEN = "refresh_token";
         public static final String STATE = "state";
         public static final String WITH_BALANCE = "withBalance";
         public static final String DATE_TO = "dateTo";
         public static final String DATE_FROM = "dateFrom";
-        public static final String BOOKING_STATUS = "bookingStatus";
     }
 
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
-        public static final String SCOPE = "oauth2";
+        public static final String SCOPE = "openbanking";
         public static final Object GRANT_TYPE = "authorization_code";
         public static final String TRUE = "true";
-        public static final String BOOKED = "booked";
     }
 
     public static class HeaderKeys {
@@ -78,7 +70,6 @@ public final class VolvoFinansConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
-        public static final String REFRESH_CODE = "refresh_code";
     }
 
     public static class FormValues {

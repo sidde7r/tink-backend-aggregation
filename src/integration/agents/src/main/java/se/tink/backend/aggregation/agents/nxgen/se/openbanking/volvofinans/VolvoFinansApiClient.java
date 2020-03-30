@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.authe
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.configuration.VolvoFinansConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -43,19 +45,23 @@ public final class VolvoFinansApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(VolvoFinansConfiguration configuration) {
+    protected void setConfiguration(
+            VolvoFinansConfiguration configuration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
         this.configuration = configuration;
+        this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
     public URL getAuthorizeUrl(String state) {
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl() + "?state=" + state;
+        final String redirectUri = getConfiguration().getRedirectUrl();
 
         return createRequest(Urls.AUTH)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParam(QueryKeys.STATE, state)
                 .getUrl();
     }
 
@@ -102,7 +108,8 @@ public final class VolvoFinansApiClient {
                         DateFormat.formatDateTime(endDate, DateFormat.YEAR_MONTH_DAY, Zone.UTC))
                 .queryParam(
                         QueryKeys.DATE_FROM,
-                        DateFormat.formatDateTime(startDate, DateFormat.YEAR_MONTH_DAY, Zone.UTC))
+                        DateFormat.formatDateTime(
+                                get90DaysDate(endDate), DateFormat.YEAR_MONTH_DAY, Zone.UTC))
                 .header(HeaderKeys.X_API_KEY, apiKey)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .accept(MediaType.APPLICATION_JSON)
@@ -121,5 +128,12 @@ public final class VolvoFinansApiClient {
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    }
+
+    private static Date get90DaysDate(Date toDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(toDate);
+        calendar.add(Calendar.DATE, -89);
+        return calendar.getTime();
     }
 }

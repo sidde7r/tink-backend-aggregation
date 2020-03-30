@@ -24,7 +24,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class VolvoFinansAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final VolvoFinansApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -35,21 +34,17 @@ public final class VolvoFinansAgent extends NextGenerationAgent
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         apiClient = new VolvoFinansApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        VolvoFinansConfiguration volvoFinansConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(volvoFinansConfiguration);
+        apiClient.setConfiguration(
+                getClientConfiguration(), agentsServiceConfiguration.getEidasProxy());
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
     protected VolvoFinansConfiguration getClientConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        VolvoFinansConstants.INTEGRATION_NAME,
-                        clientName,
-                        VolvoFinansConfiguration.class);
+                .getAgentConfiguration(VolvoFinansConfiguration.class);
     }
 
     @Override

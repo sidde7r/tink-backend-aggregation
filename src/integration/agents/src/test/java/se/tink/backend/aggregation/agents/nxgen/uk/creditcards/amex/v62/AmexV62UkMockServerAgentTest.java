@@ -90,7 +90,7 @@ public final class AmexV62UkMockServerAgentTest {
                 Arrays.asList(transaction1, transaction2, transaction3, transaction4);
 
         final WireMockConfiguration configuration =
-                new WireMockConfiguration("localhost:" + server.getHttpsPort());
+                WireMockConfiguration.builder("localhost:" + server.getHttpsPort()).build();
 
         // When
         NewAgentTestContext context =

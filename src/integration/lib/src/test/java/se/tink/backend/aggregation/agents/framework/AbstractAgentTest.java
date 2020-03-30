@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
+import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -63,7 +64,9 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         }
 
         // Provide AgentFactory with 'production' components.
-        factory = new AgentFactory(new AgentPackageModuleFactory(), configuration);
+        factory =
+                new AgentFactory(
+                        new AgentPackageModuleFactory(new PackageModuleLoader()), configuration);
     }
 
     protected Provider constructProvider() {

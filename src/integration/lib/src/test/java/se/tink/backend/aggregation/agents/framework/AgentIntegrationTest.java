@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.module.AgentWireMockModuleFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
+import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -231,7 +232,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
             } else {
                 // Provide AgentFactory with 'production' components.
-                factory = new AgentFactory(new AgentPackageModuleFactory(), configuration);
+                factory =
+                        new AgentFactory(
+                                new AgentPackageModuleFactory(new PackageModuleLoader()),
+                                configuration);
             }
 
             return factory.create(credentialsRequest, context);
