@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework.module;
+package se.tink.backend.aggregation.agents.framework.wiremock.module;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
