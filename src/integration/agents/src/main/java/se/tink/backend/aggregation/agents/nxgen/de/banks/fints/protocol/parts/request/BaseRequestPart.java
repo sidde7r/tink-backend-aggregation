@@ -11,7 +11,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parser.F
 
 public abstract class BaseRequestPart {
 
-    protected int segmentPosition = Constants.UNINITIALIZED_SEGMENT_POSITION;
+    private static final int UNINITIALIZED_SEGMENT_POSITION = 1;
+
+    protected int segmentPosition = UNINITIALIZED_SEGMENT_POSITION;
     private List<List<String>> compiledData = new ArrayList<>();
 
     public String getSegmentName() {

@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.r
 
 public class Constants {
 
-    public static final int UNINITIALIZED_SEGMENT_POSITION = 1;
-
     public static final String SECURITY_PROCEDURE = "PIN";
     public static final String ENCRYPTION_FUNCTION_CODE = "998"; // PlainText
     public static final String ENCRYPTION_SUPPLIER_ROLE =
