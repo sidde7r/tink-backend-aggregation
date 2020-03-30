@@ -20,11 +20,20 @@ public class AuthenticationResponse {
         return autoStartToken;
     }
 
+    public String getHintCode() {
+        return hintCode;
+    }
+
     @JsonIgnore
     public BankIdStatus toBankIdStatus() {
         switch (status.toLowerCase()) {
             case "complete":
-                return BankIdStatus.DONE;
+                switch (Strings.nullToEmpty(hintCode).toLowerCase()) {
+                    case "seb_unknown_bankid":
+                        return BankIdStatus.FAILED_UNKNOWN;
+                    default:
+                        return BankIdStatus.DONE;
+                }
             case "pending":
                 return BankIdStatus.WAITING;
             case "failed":
