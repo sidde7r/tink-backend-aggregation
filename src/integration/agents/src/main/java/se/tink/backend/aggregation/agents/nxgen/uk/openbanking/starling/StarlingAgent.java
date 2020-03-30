@@ -22,9 +22,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAge
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.EndpointSpecification;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationSpecification;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -131,35 +128,9 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
         if (authenticator == null) {
-            authenticator = createAuthenticator();
+            authenticator =
+                    new StarlingOAut2Authenticator(persistentStorage, client, aisConfiguration);
         }
         return authenticator;
-    }
-
-    private StatelessProgressiveAuthenticator createAuthenticator() {
-        final String[] scopes =
-                new String[] {
-                    "account-holder-type:read",
-                    "customer:read",
-                    "account-identifier:read",
-                    "account:read",
-                    "transaction:read",
-                    "balance:read"
-                };
-        OAuth2AuthorizationSpecification authorizationSpecification =
-                new OAuth2AuthorizationSpecification.Builder()
-                        .withAuthenticationEndpoint(
-                                new EndpointSpecification(StarlingConstants.Url.AUTH_STARLING))
-                        .withRedirectUrl(aisConfiguration.getRedirectUrl())
-                        .withClientId(aisConfiguration.getClientId())
-                        .withResponseTypeCode(
-                                new EndpointSpecification(
-                                        StarlingConstants.Url.GET_OAUTH2_TOKEN.toString()))
-                        .withTokenRefreshEndpoint(
-                                new EndpointSpecification(
-                                        StarlingConstants.Url.GET_OAUTH2_TOKEN.toString()))
-                        .withScopes(scopes)
-                        .build();
-        return new OAuth2Authenticator(authorizationSpecification, persistentStorage, client);
     }
 }

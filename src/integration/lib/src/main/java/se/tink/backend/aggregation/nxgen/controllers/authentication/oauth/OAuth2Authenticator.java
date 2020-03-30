@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.oauth;
 
-import java.util.LinkedList;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -20,8 +20,9 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuth2Authenticator.class);
     private static final String REFRESH_TOKEN_STEP_ID = "refreshAccessTokenStep";
+    private static final String AUTOMATIC_AUTHORIZATION_STEP_ID = "authorizationStep";
     static final String AUTHORIZATION_SERVER_THIRD_PARTY_APP_STEP_ID = "issueAccessTokenStep";
-    private List<AuthenticationStep> authSteps = new LinkedList<>();
+    private final List<AuthenticationStep> authSteps;
     private final OAuth2TokenStorage tokenStorage;
     private final OAuth2AuthorizationServerClient authorizationServerClient;
 
@@ -49,13 +50,16 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
             final OAuth2TokenStorage tokenStorage) {
         this.tokenStorage = tokenStorage;
         this.authorizationServerClient = authorizationServerClient;
-        authSteps.add(
+        this.authSteps = createAuthenticationSteps();
+    }
+
+    private List<AuthenticationStep> createAuthenticationSteps() {
+        return ImmutableList.of(
                 new AutomaticAuthenticationStep(
-                        this::authorizationStepHandler, "authorizationStep"));
-        authSteps.add(
+                        this::authorizationStepHandler, AUTOMATIC_AUTHORIZATION_STEP_ID),
                 new AutomaticAuthenticationStep(
-                        this::refreshTokenStepHandler, REFRESH_TOKEN_STEP_ID));
-        authSteps.add(createOAuth2ThirdPartyAppStep());
+                        this::refreshTokenStepHandler, REFRESH_TOKEN_STEP_ID),
+                createOAuth2ThirdPartyAppStep());
     }
 
     private ThirdPartyAppAuthenticationStep createOAuth2ThirdPartyAppStep() {

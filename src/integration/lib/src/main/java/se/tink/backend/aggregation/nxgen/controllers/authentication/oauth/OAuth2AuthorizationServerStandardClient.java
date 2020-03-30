@@ -149,6 +149,9 @@ public class OAuth2AuthorizationServerStandardClient implements OAuth2Authorizat
                         .put("grant_type", "refresh_token")
                         .put("refresh_token", refreshToken);
         authorizationSpecification.getScope().ifPresent(scope -> formBuilder.put("scope", scope));
+        authorizationSpecification.getRefreshTokenEndpoint().getClientSpecificParameters()
+                .entrySet().stream()
+                .forEach(entry -> formBuilder.put(entry.getKey(), entry.getValue()));
         return formBuilder.build().serialize();
     }
 

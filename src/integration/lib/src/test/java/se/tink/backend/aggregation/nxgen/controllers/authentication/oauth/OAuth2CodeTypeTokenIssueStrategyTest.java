@@ -20,12 +20,16 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
     private static final String ACCESS_TOKEN_PATH = "/accessToken";
     private OAuth2CodeTypeTokenIssueStrategy objectUnderTest;
     private OAuth2AuthorizationSpecification authorizationParamProvider;
+    private EndpointSpecification accessTokenEndpointSpecification;
 
     @Before
     public void init() throws MalformedURLException {
         this.authorizationParamProvider = Mockito.mock(OAuth2AuthorizationSpecification.class);
+        accessTokenEndpointSpecification = Mockito.mock(EndpointSpecification.class);
+        Mockito.when(accessTokenEndpointSpecification.getUrl())
+                .thenReturn(new URL(getOrigin() + ACCESS_TOKEN_PATH));
         Mockito.when(authorizationParamProvider.getAccessTokenEndpoint())
-                .thenReturn(new EndpointSpecification(new URL(getOrigin() + ACCESS_TOKEN_PATH)));
+                .thenReturn(accessTokenEndpointSpecification);
         objectUnderTest =
                 new OAuth2CodeTypeTokenIssueStrategy(authorizationParamProvider, httpClient);
     }
@@ -48,7 +52,7 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
         Mockito.when(authorizationParamProvider.getClientId()).thenReturn("clientId");
         Mockito.when(authorizationParamProvider.getRedirectUrl())
                 .thenReturn(new URL("http://127.0.0.1/redirectUrl"));
-        Mockito.when(authorizationParamProvider.getAccessTokenRequestClientSpecificParameters())
+        Mockito.when(accessTokenEndpointSpecification.getClientSpecificParameters())
                 .thenReturn(accessTokenClientSpecificParams);
 
         WireMock.stubFor(
@@ -102,13 +106,11 @@ public class OAuth2CodeTypeTokenIssueStrategyTest extends WireMockIntegrationTes
         Mockito.when(authorizationParamProvider.getClientId()).thenReturn("clientId");
         Mockito.when(authorizationParamProvider.getRedirectUrl())
                 .thenReturn(new URL("http://127.0.0.1/redirectUrl"));
-        Mockito.when(authorizationParamProvider.getAccessTokenRequestClientSpecificParameters())
+        Mockito.when(accessTokenEndpointSpecification.getClientSpecificParameters())
                 .thenReturn(accessTokenClientSpecificParams);
-        Mockito.when(authorizationParamProvider.getAccessTokenEndpoint())
-                .thenReturn(
-                        new EndpointSpecification(new URL(getOrigin() + ACCESS_TOKEN_PATH))
-                                .withHeader("clientHeader", "value"));
-
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("clientHeader", "value");
+        Mockito.when(accessTokenEndpointSpecification.getHeaders()).thenReturn(headers);
         WireMock.stubFor(
                 WireMock.post(WireMock.urlPathEqualTo(ACCESS_TOKEN_PATH))
                         .withHeader(

@@ -57,24 +57,6 @@ public class OAuth2AuthorizationSpecificationTest {
     }
 
     @Test
-    public void builderShouldCreateSpecificationWithAccessTokenRequestClientSpecificParameters() {
-        // given
-        objectUnderTest.withAccessTokenRequestClientSpecificParameter(
-                "specificKey1", "specificValue1");
-        objectUnderTest.withAccessTokenRequestClientSpecificParameter(
-                "specificKey2", "specificValue2");
-        // when
-        OAuth2AuthorizationSpecification result = objectUnderTest.build();
-        // then
-        Assert.assertEquals(
-                "specificValue1",
-                result.getAccessTokenRequestClientSpecificParameters().get("specificKey1"));
-        Assert.assertEquals(
-                "specificValue2",
-                result.getAccessTokenRequestClientSpecificParameters().get("specificKey2"));
-    }
-
-    @Test
     public void builderShouldCreateSpecificationWithAccessTokenResponseClientSpecificProperties() {
         // given
         objectUnderTest.withAccessTokenResponseClientSpecificProperty("specificKey1");
