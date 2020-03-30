@@ -3,8 +3,10 @@
 # Explicitly not setting `-e` here to be able to contain errors from bazel-wrapper.
 set -x
 
+commit="$(git rev-parse HEAD)"
+
 # Shared volume
-LOGFILE="/cache/aggregation_decoupled.log"
+LOGFILE="/cache/aggregation_decoupled-$commit.log"
 
 ./bazel-wrapper run \
     --workspace_status_command $(pwd)/stamp.sh \

@@ -19,7 +19,8 @@ teardown() {
     .buildkite/upload-test-files.sh
 
     # Upload aggregation service logs
-    LOGFILE="/cache/aggregation_decoupled.log"
+    commit="$(git rev-parse HEAD)"
+    LOGFILE="/cache/aggregation_decoupled-$commit.log"
     buildkite-agent artifact upload "$LOGFILE"
 }
 
