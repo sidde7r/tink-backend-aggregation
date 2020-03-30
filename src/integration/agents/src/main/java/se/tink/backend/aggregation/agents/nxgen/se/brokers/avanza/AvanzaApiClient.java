@@ -140,60 +140,71 @@ public class AvanzaApiClient {
         if (instrumentType == null) {
             return null;
         }
-
         String type = instrumentType.toLowerCase();
-        switch (type) {
-            case InstrumentTypes.AUTO_PORTFOLIO:
-            case InstrumentTypes.FUND:
-                return fetchMarketInfoResponse(
-                        InstrumentTypes.FUND,
+        try {
+            switch (type) {
+                case InstrumentTypes.AUTO_PORTFOLIO:
+                case InstrumentTypes.FUND:
+                    return fetchMarketInfoResponse(
+                            InstrumentTypes.FUND,
+                            orderbookId,
+                            authSession,
+                            FundMarketInfoResponse.class);
+                case InstrumentTypes.STOCK:
+                    return fetchMarketInfoResponse(
+                            type, orderbookId, authSession, StockMarketInfoResponse.class);
+                case InstrumentTypes.CERTIFICATE:
+                    return fetchMarketInfoResponse(
+                            type, orderbookId, authSession, CertificateMarketInfoResponse.class);
+                case InstrumentTypes.FUTURE_FORWARD:
+                    return fetchMarketInfoResponse(
+                            type, orderbookId, authSession, FutureForwardMarketInfoResponse.class);
+                case InstrumentTypes.EQUITY_LINKED_BOND:
+                    return fetchMarketInfoResponse(
+                            type,
+                            orderbookId,
+                            authSession,
+                            EquityLinkedBondMarketInfoResponse.class);
+                case InstrumentTypes.BOND:
+                    return fetchMarketInfoResponse(
+                            type, orderbookId, authSession, BondMarketInfoResponse.class);
+                case InstrumentTypes.WARRANT:
+                    return fetchMarketInfoResponse(
+                            type, orderbookId, authSession, WarrantMarketInfoResponse.class);
+                case InstrumentTypes.EXCHANGE_TRADED_FUND:
+                    return fetchMarketInfoResponse(
+                            type, orderbookId, authSession, ExchangeTradedFundInfoResponse.class);
+                default:
+                    // If we don't get orderbookId, fetching anything unknown further is not
+                    // possible
+                    // atm. It should also handle the case when we get InstrumentTypes as UNKNOWN
+
+                    String response =
+                            fetchMarketInfoResponse(type, orderbookId, authSession, String.class);
+                    LOGGER.warn(
+                            "avanza - portfolio type not handled in switch - type: {}, orderbookId: {}, response: {}",
+                            instrumentType,
+                            orderbookId,
+                            response);
+
+                    return null;
+            }
+        } catch (HttpResponseException exception) {
+            if (!Strings.isNullOrEmpty(orderbookId)) {
+                LOGGER.warn(
+                        "avanza - cannot fetch MarketInfo for portfolio - type: {}, orderbookId: {}, response: {}",
+                        instrumentType,
                         orderbookId,
-                        authSession,
-                        FundMarketInfoResponse.class);
-            case InstrumentTypes.STOCK:
-                return fetchMarketInfoResponse(
-                        type, orderbookId, authSession, StockMarketInfoResponse.class);
-            case InstrumentTypes.CERTIFICATE:
-                return fetchMarketInfoResponse(
-                        type, orderbookId, authSession, CertificateMarketInfoResponse.class);
-            case InstrumentTypes.FUTURE_FORWARD:
-                return fetchMarketInfoResponse(
-                        type, orderbookId, authSession, FutureForwardMarketInfoResponse.class);
-            case InstrumentTypes.EQUITY_LINKED_BOND:
-                return fetchMarketInfoResponse(
-                        type, orderbookId, authSession, EquityLinkedBondMarketInfoResponse.class);
-            case InstrumentTypes.BOND:
-                return fetchMarketInfoResponse(
-                        type, orderbookId, authSession, BondMarketInfoResponse.class);
-            case InstrumentTypes.WARRANT:
-                return fetchMarketInfoResponse(
-                        type, orderbookId, authSession, WarrantMarketInfoResponse.class);
-            case InstrumentTypes.EXCHANGE_TRADED_FUND:
-                return fetchMarketInfoResponse(
-                        type, orderbookId, authSession, ExchangeTradedFundInfoResponse.class);
-            default:
-                // If we don't get orderbookId, fetching anything unknown further is not possible
-                // atm. It should also handle the case when we get InstrumentTypes as UNKNOWN
-                if (!Strings.isNullOrEmpty(orderbookId)) {
-                    try {
-                        String response =
-                                fetchMarketInfoResponse(
-                                        type, orderbookId, authSession, String.class);
-                        LOGGER.warn(
-                                "avanza - portfolio type not handled in switch - type: {}, orderbookId: {}, reseponse: {}",
-                                instrumentType,
-                                orderbookId,
-                                response);
-                    } catch (HttpResponseException exception) {
-                        LOGGER.warn(
-                                "avanza - cannot fetch MarketInfo for portfolio - type: {}, orderbookId: {}, reseponse: {}",
-                                instrumentType,
-                                orderbookId,
-                                exception.getLocalizedMessage(),
-                                exception);
-                    }
-                }
-                return null;
+                        exception.getLocalizedMessage(),
+                        exception);
+            } else {
+                LOGGER.warn(
+                        "avanza - cannot fetch MarketInfo for portfolio - type: {}, orderbookId: MISSING, response: {}",
+                        instrumentType,
+                        exception.getLocalizedMessage(),
+                        exception);
+            }
+            return null;
         }
     }
 

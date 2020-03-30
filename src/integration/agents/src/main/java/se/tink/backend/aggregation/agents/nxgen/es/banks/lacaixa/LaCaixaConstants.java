@@ -46,8 +46,9 @@ public class LaCaixaConstants {
     }
 
     public static class ErrorCode {
-        public static String EMPTY_LIST = "ERR_TRXM01_007";
-        public static String NO_SECURITIES = "131";
+        public static final String EMPTY_LIST = "ERR_TRXM01_007";
+        public static final String NO_SECURITIES = "131";
+        public static final String NO_ACCOUNTS = "1575";
         public static final String NO_OWN_CARDS = "LIT_NO_PERMITE_CONSULTA_TARJETAS";
         public static final String UNAVAILABLE = "0001";
         public static final String NO_ASSOCIATED_ACCOUNTS = "0007";
@@ -85,6 +86,16 @@ public class LaCaixaConstants {
         public static final URL FUND_DETAILS = new URL(BASE + "fondos/detalleFondos");
 
         public static final URL USER_DATA = new URL(BASE + "login/loginDatosUsuario");
+
+        public static final URL INIT_ENROLMENT =
+                new URL(BASE + "login/enrolmentDispositivo/autorizacion/inicio");
+        public static final URL INIT_AUTH_SIGNATURE =
+                new URL(BASE + "autorizacion/pushAutDiferido");
+        public static final URL VERIFY_AUTH_SIGNATURE =
+                new URL(BASE + "autorizacion/verificaFirmaOperacion");
+        public static final URL AUTHORIZE_SCA = new URL(BASE + "autorizacion/autorizacionSCA");
+        public static final URL FINALIZE_ENROLMENT =
+                new URL(BASE + "login/enrolmentDispositivo/autorizacion/resultado");
     }
 
     public static class DefaultRequestParams {
@@ -93,8 +104,6 @@ public class LaCaixaConstants {
                 "51402"; // Can seemingly be anything as long as it exists, purpose unknown.
         public static final String CHANNEL =
                 "O"; // Only some valid values (1, 2, O, ...), purpose unknown.
-        public static final String INSTALLATION_ID =
-                "CIAPPLPh8,1XAEvy+IW9P82Pl+fvzwnfiAzzxs="; // App install ID?
 
         public static final int NUM_CARDS = 0;
         public static final String OPTION_FILTER = "02";
@@ -104,6 +113,16 @@ public class LaCaixaConstants {
         public static final String ZERO_BALANCE_CONTRACTS = "N";
         public static final String GLOBAL_POSITION_TYPE_P = "P"; // only la caixa engagements
         public static final String GLOBAL_POSITION_TYPE_A = "A"; // la caixa and imagin engagemants
+    }
+
+    public static class AuthenticationParams {
+        public static final String INSTALLATION_ID_PREFIX = "cIAPPLPh9,3";
+        public static final String DEVICE_NAME = "Tink";
+        public static final String SCA_TYPE_APP = "MOTP";
+        public static final String SCA_TYPE_PASSWORD = "PIN1_SCA";
+        public static final String SCA_TYPE_SMS = "OTPSMS";
+        public static final String SCA_TYPE_CODECARD = "TCO";
+        public static final String SIGNING_URL = "caixabanksign://app2app";
     }
 
     public static class QueryParams {
@@ -118,6 +137,13 @@ public class LaCaixaConstants {
 
     public static class TemporaryStorage {
         public static final String ACCOUNT_REFERENCE = "accountRef";
+        public static final String SCA_SMS = "scaSms";
+        public static final String CODE_CARD = "codeCard";
+        public static final String ENROLMENT_CODE = "enrolmentCode";
+    }
+
+    public static class StorageKeys {
+        public static final String INSTALLATION_ID = "installationId";
     }
 
     public static class StatusCodes {

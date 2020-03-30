@@ -15,7 +15,7 @@ public class AggregationModuleFactory {
         if (configuration.isDecoupledMode()) {
             return ImmutableList.of(
                     new AggregationDecoupledModule(configuration, environment),
-                    new AgentFactoryModule());
+                    new AgentFactoryWireMockModule());
         }
         if (configuration.isDevelopmentMode()) {
             return buildForDevelopment(configuration, environment).build();

@@ -13,6 +13,7 @@ java_library(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/module",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/factory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/loader",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",

@@ -11,22 +11,22 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankidinitializers.PortalBankIframeInitializer;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankidinitializers.PortalBankIdMobilInitializer;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankmappers.AuthenticationType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.BankIdIframeSSAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.initializer.BankIdIframeInitializer;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.initializer.IframeInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.BankIdMobilSSAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.BankIdMobilInitializer;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.libraries.selenium.WebDriverHelper;
 
-public class SdcNoBankIdIFrameSSAuthenticator implements AutoAuthenticator, TypedAuthenticator {
+public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthenticator {
     private final WebDriver driver;
     private final SdcNoConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
 
-    public SdcNoBankIdIFrameSSAuthenticator(SdcNoConfiguration configuration) {
+    public SdcNoBankIdSSAuthenticator(SdcNoConfiguration configuration) {
         this.webDriverHelper = new WebDriverHelper();
         this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
         this.configuration = configuration;
@@ -36,33 +36,38 @@ public class SdcNoBankIdIFrameSSAuthenticator implements AutoAuthenticator, Type
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
 
-        String username = credentials.getField(Key.USERNAME);
-        String password = credentials.getField(Key.PASSWORD);
-        IframeInitializer iframeInitializer = constructBankIdIframeInitializer(username);
+        AuthenticationType authenticationType = configuration.getAuthenticationType();
+        Key credentialsAdditionalKey = authenticationType.getCredentialsAdditionalKey();
 
-        BankIdIframeSSAuthenticationController controller =
-                new BankIdIframeSSAuthenticationController(
-                        iframeInitializer, driver, webDriverHelper);
+        String mobileNumber = credentials.getField(Key.MOBILENUMBER);
+        String idNumber = credentials.getField(credentialsAdditionalKey);
+
+        MobilInitializer mobilInitializer =
+                constructMobilInitializer(mobileNumber, idNumber, authenticationType);
+
+        BankIdMobilSSAuthenticationController controller =
+                new BankIdMobilSSAuthenticationController(
+                        mobilInitializer, driver, webDriverHelper);
 
         driver.get(configuration.getBaseUrl());
 
-        controller.doLogin(password);
+        controller.doLogin();
 
         driver.close();
     }
 
-    private IframeInitializer constructBankIdIframeInitializer(String username) {
-        AuthenticationType authenticationType = configuration.getAuthenticationType();
-
+    private MobilInitializer constructMobilInitializer(
+            String mobileNummer, String idNumber, AuthenticationType authenticationType) {
         if ((AuthenticationType.NETTBANK).equals(authenticationType)) {
-            return new BankIdIframeInitializer(username, driver, webDriverHelper);
+            return new BankIdMobilInitializer(mobileNummer, idNumber, driver, webDriverHelper);
         }
         if ((AuthenticationType.PORTAL).equals(authenticationType)) {
-            return new PortalBankIframeInitializer(username, driver, webDriverHelper);
+            return new PortalBankIdMobilInitializer(
+                    mobileNummer, idNumber, driver, webDriverHelper);
         }
 
         throw new IllegalArgumentException(
-                String.format("Unsupported Iframe Initializer for  %s", authenticationType));
+                ("Unsupported bank id mobil Initializer for " + authenticationType));
     }
 
     @Override

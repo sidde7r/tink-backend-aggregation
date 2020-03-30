@@ -1,14 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
+import com.google.common.base.Strings;
+import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.ScaResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.StatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.VerifySignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardTransactionsRequest;
@@ -40,12 +45,13 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class LaCaixaApiClient {
 
     private final TinkHttpClient client;
+    private final String installationId;
 
     private UserDataResponse userDataCache;
 
-    public LaCaixaApiClient(TinkHttpClient client) {
-
+    public LaCaixaApiClient(TinkHttpClient client, String installationId) {
         this.client = client;
+        this.installationId = installationId;
     }
 
     public SessionResponse initializeSession() {
@@ -55,17 +61,17 @@ public class LaCaixaApiClient {
                         LaCaixaConstants.DefaultRequestParams.LANGUAGE_ES,
                         LaCaixaConstants.DefaultRequestParams.ORIGIN,
                         LaCaixaConstants.DefaultRequestParams.CHANNEL,
-                        LaCaixaConstants.DefaultRequestParams.INSTALLATION_ID);
+                        installationId);
 
         return createRequest(LaCaixaConstants.Urls.INIT_LOGIN).post(SessionResponse.class, request);
     }
 
-    public LoginResponse login(LoginRequest loginRequest) throws LoginException {
+    public StatusResponse login(LoginRequest loginRequest) throws LoginException {
 
         try {
 
             return createRequest(LaCaixaConstants.Urls.SUBMIT_LOGIN)
-                    .post(LoginResponse.class, loginRequest);
+                    .post(StatusResponse.class, loginRequest);
 
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
@@ -76,6 +82,32 @@ public class LaCaixaApiClient {
 
             throw e;
         }
+    }
+
+    public ScaResponse initiateEnrolment() {
+        return createRequest(Urls.INIT_ENROLMENT).get(ScaResponse.class);
+    }
+
+    public HttpResponse initiateAuthSignature() {
+        try {
+            return createRequest(Urls.INIT_AUTH_SIGNATURE).post(HttpResponse.class);
+        } catch (HttpResponseException e) {
+            return e.getResponse();
+        }
+    }
+
+    public VerifySignatureResponse verifyAuthSignature() {
+        return createRequest(Urls.VERIFY_AUTH_SIGNATURE).get(VerifySignatureResponse.class);
+    }
+
+    public ScaResponse authorizeSCA(String code) {
+        final AuthenticationRequest body = new AuthenticationRequest(code);
+        return createRequest(Urls.AUTHORIZE_SCA).post(ScaResponse.class, body);
+    }
+
+    public StatusResponse finalizeEnrolment(@Nullable String code) {
+        final AuthenticationRequest body = new AuthenticationRequest(Strings.nullToEmpty(code));
+        return createRequest(Urls.FINALIZE_ENROLMENT).post(StatusResponse.class, body);
     }
 
     public void logout() {

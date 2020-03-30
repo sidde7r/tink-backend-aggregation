@@ -23,6 +23,14 @@ public class LaCaixaErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isNoAccounts() {
+        return Strings.nullToEmpty(code)
+                .trim()
+                .toUpperCase()
+                .equalsIgnoreCase(LaCaixaConstants.ErrorCode.NO_ACCOUNTS);
+    }
+
+    @JsonIgnore
     public boolean isNoSecurities() {
         return Strings.nullToEmpty(code)
                 .trim()

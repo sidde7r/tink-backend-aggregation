@@ -31,8 +31,8 @@ public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
         SessionResponse sessionResponse = apiClient.initializeSession();
 
         // Initialize password hasher with seed from initialization request.
-        LaCaixaPasswordHash otpHelper =
-                new LaCaixaPasswordHash(
+        final String passwordHash =
+                LaCaixaPasswordHash.hash(
                         sessionResponse.getSeed(),
                         Integer.parseInt(sessionResponse.getIterations()),
                         password);
@@ -42,7 +42,7 @@ public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
                 apiClient.login(
                         new LoginRequest(
                                 username,
-                                otpHelper.createOtp(),
+                                passwordHash,
                                 ImaginBankConstants.DefaultRequestParams.DEMO,
                                 ImaginBankConstants.DefaultRequestParams.ALTA_IMAGINE));
 

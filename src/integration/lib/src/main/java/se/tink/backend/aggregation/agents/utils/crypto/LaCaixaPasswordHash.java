@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 
 public class LaCaixaPasswordHash {
@@ -21,7 +22,11 @@ public class LaCaixaPasswordHash {
      * Create caixa otp (hashed password).
      * Arguments are seed (semilla), iterations (iteraciones) and pin.
      */
-    public LaCaixaPasswordHash(String seed, int iterations, String password) {
+    public static String hash(String seed, int iterations, String password) {
+        return new LaCaixaPasswordHash(seed, iterations, password).createOtp();
+    }
+
+    private LaCaixaPasswordHash(String seed, int iterations, String password) {
         this.seed = seed;
         this.iterations = iterations;
         this.password = convertPassword(password);
@@ -35,11 +40,13 @@ public class LaCaixaPasswordHash {
         return new String(passwordBytes, StandardCharsets.ISO_8859_1);
     }
 
-    public String createOtp() {
-        String result = null;
+    private String createOtp() {
+        byte[] result = null;
 
         // md5 string [seed + uppercase password] padded with spaces to 64
-        String md5BaseData = StringUtils.rightPad(seed + password, MESSAGE_LENGTH, ' ');
+        byte[] md5BaseData =
+                StringUtils.rightPad(seed + password, MESSAGE_LENGTH, ' ')
+                        .getBytes(StandardCharsets.ISO_8859_1);
 
         // calculate otp
         for (int i = 0; i < iterations; i++) {
@@ -49,10 +56,10 @@ public class LaCaixaPasswordHash {
             md5BaseData = result;
         }
 
-        return result;
+        return Hex.encodeHexString(result);
     }
 
-    private byte[] calculateMD5(String md5BaseData) {
+    private byte[] calculateMD5(byte[] data) {
 
         MessageDigest md = null;
 
@@ -66,10 +73,10 @@ public class LaCaixaPasswordHash {
                     "Algorithm: (" + HASH_ALGORITHM + ") could not be found.");
         }
 
-        return md.digest(md5BaseData.getBytes(StandardCharsets.ISO_8859_1));
+        return md.digest(data);
     }
 
-    private String calculateFoldedHash(byte[] md5Sum) {
+    private byte[] calculateFoldedHash(byte[] md5Sum) {
         byte[] outbuf = new byte[8];
         long[] foldedData = null;
 
@@ -89,7 +96,7 @@ public class LaCaixaPasswordHash {
             foldLast4 >>= 8;
         }
 
-        return org.apache.commons.codec.binary.Hex.encodeHexString(outbuf);
+        return outbuf;
     }
 
     private long[] fold(byte[] md5Sum) {

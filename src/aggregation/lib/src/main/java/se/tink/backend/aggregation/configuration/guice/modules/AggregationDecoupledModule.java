@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
@@ -160,13 +159,6 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AggregationServiceConfiguration.class).toInstance(configuration);
         bind(AgentsServiceConfiguration.class)
                 .toInstance(configuration.getAgentsServiceConfiguration());
-
-        bind(String.class)
-                .annotatedWith(Names.named("wireMockServerHost"))
-                .toInstance("localhost:10000");
-        bind(new TypeLiteral<Map<String, String>>() {})
-                .annotatedWith(Names.named("mockCallbackData"))
-                .toInstance(Collections.emptyMap());
 
         bind(TppSecretsServiceConfiguration.class)
                 .toInstance(

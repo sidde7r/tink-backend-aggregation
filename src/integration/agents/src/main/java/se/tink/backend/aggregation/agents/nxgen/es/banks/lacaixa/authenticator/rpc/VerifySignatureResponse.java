@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class LoginResponse {
+public class VerifySignatureResponse {
+    @JsonProperty("operacionFirmada")
+    private boolean operationSigned;
 
-    @JsonProperty("estado")
-    private String status;
+    public boolean isOperationSigned() {
+        return operationSigned;
+    }
 }
