@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentVisitor;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -27,6 +28,12 @@ public class ManualOrAutoAuthenticationAgentVisitor implements AgentVisitor {
                         ((AuthenticationControllerType)
                                         subsequentGenerationAgent.getAuthenticator())
                                 .isManualAuthentication(request);
+            }
+        }
+        // Legacy Agents
+        else {
+            if (request.getProvider().getCredentialsType() != CredentialsTypes.PASSWORD) {
+                manualAuthentication = true;
             }
         }
     }
