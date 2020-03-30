@@ -152,6 +152,7 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                                 new EndpointSpecification(StarlingConstants.Url.AUTH_STARLING))
                         .withRedirectUrl(aisConfiguration.getRedirectUrl())
                         .withClientId(aisConfiguration.getClientId())
+                        .withAccessTokenRequestClientSpecificParameter(StarlingConstants.RequestKey.CLIENT_SECRET, aisConfiguration.getClientSecret())
                         .withResponseTypeCode(
                                 new EndpointSpecification(
                                         StarlingConstants.Url.GET_OAUTH2_TOKEN.toString()))
