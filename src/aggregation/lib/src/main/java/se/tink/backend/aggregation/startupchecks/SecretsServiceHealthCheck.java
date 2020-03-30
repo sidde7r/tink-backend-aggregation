@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.startupchecks;
 
-import com.google.common.base.Stopwatch;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Callable;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.backend.libraries.healthcheckhandler.HealthCheck;
@@ -10,29 +9,24 @@ import se.tink.backend.libraries.healthcheckhandler.NotHealthyException;
 public class SecretsServiceHealthCheck implements HealthCheck {
 
     private final TppSecretsServiceClient tppSecretsServiceClient;
-    private final HealthCheckDurationHistogram healthCheckDurationHistogram;
+    private final HealthCheckMetricsAggregation healthCheckMetricsAggregation;
 
     public SecretsServiceHealthCheck(
             ManagedTppSecretsServiceClient tppSecretsServiceClient,
-            HealthCheckDurationHistogram healthCheckDurationHistogram) {
+            HealthCheckMetricsAggregation healthCheckMetricsAggregation) {
         this.tppSecretsServiceClient = tppSecretsServiceClient;
-        this.healthCheckDurationHistogram = healthCheckDurationHistogram;
+        this.healthCheckMetricsAggregation = healthCheckMetricsAggregation;
     }
 
     @Override
     public void check() throws NotHealthyException {
-        boolean healthy = false;
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        try {
+        healthCheckMetricsAggregation.checkAndObserve(this.getClass().getSimpleName(), rawCheck());
+    }
+
+    private Callable<Void> rawCheck() {
+        return () -> {
             tppSecretsServiceClient.ping();
-            healthy = true;
-        } catch (Exception e) {
-            throw new NotHealthyException(e);
-        } finally {
-            healthCheckDurationHistogram.update(
-                    this.getClass().getSimpleName(),
-                    healthy,
-                    stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000.0);
-        }
+            return null;
+        };
     }
 }

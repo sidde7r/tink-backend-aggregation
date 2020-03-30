@@ -22,16 +22,16 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
 
     private final Collection<HealthCheck> healthChecks;
 
-    private final HealthCheckDurationHistogram healthCheckDurationHistogram;
+    private final HealthCheckMetricsAggregation healthCheckMetricsAggregation;
 
     @Inject
     public StartupChecksHandlerImpl(
             ManagedTppSecretsServiceClient tppSecretsServiceClient, MetricRegistry metricRegistry) {
-        this.healthCheckDurationHistogram = new HealthCheckDurationHistogram(metricRegistry);
+        this.healthCheckMetricsAggregation = new HealthCheckMetricsAggregation(metricRegistry);
         healthChecks =
                 ImmutableSet.of(
                         new SecretsServiceHealthCheck(
-                                tppSecretsServiceClient, healthCheckDurationHistogram));
+                                tppSecretsServiceClient, healthCheckMetricsAggregation));
     }
 
     @Override
