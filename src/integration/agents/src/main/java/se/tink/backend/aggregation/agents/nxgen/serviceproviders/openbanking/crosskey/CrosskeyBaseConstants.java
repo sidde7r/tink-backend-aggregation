@@ -26,6 +26,7 @@ public abstract class CrosskeyBaseConstants {
         public static final String TOKEN = "OAUTH_TOKEN";
         public static final String CONSENT = "CONSENT";
         public static final String INTERNATIONAL_ID = "internationalId";
+        public static final String ACCOUNT_ID = "ACCOUNT_ID";
     }
 
     public static class QueryKeys {
