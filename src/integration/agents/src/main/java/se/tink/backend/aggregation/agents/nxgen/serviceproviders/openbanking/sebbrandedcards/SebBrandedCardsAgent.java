@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.SebCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.fetcher.cardaccounts.SebCardTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.filter.SebBankFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.filter.SebRetryFilter;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -38,7 +37,6 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
     private void configureHttpClient(TinkHttpClient client) {
         client.addFilter(
                 new SebRetryFilter(HttpClient.MAX_RETRIES, HttpClient.RETRY_SLEEP_MILLISECONDS));
-        client.addFilter(new SebBankFailureFilter());
     }
 
     @Override
