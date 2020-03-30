@@ -149,16 +149,24 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         OAuth2AuthorizationSpecification authorizationSpecification =
                 new OAuth2AuthorizationSpecification.Builder()
                         .withAuthenticationEndpoint(
-                                new EndpointSpecification(StarlingConstants.Url.AUTH_STARLING))
+                                new EndpointSpecification(StarlingConstants.Url.AUTH_STARLING)
+                                        .withClientSpecificParameter(
+                                                StarlingConstants.RequestKey.CLIENT_SECRET,
+                                                aisConfiguration.getClientSecret()))
                         .withRedirectUrl(aisConfiguration.getRedirectUrl())
                         .withClientId(aisConfiguration.getClientId())
-                        .withAccessTokenRequestClientSpecificParameter(StarlingConstants.RequestKey.CLIENT_SECRET, aisConfiguration.getClientSecret())
                         .withResponseTypeCode(
                                 new EndpointSpecification(
                                         StarlingConstants.Url.GET_OAUTH2_TOKEN.toString()))
                         .withTokenRefreshEndpoint(
                                 new EndpointSpecification(
-                                        StarlingConstants.Url.GET_OAUTH2_TOKEN.toString()))
+                                                StarlingConstants.Url.GET_OAUTH2_TOKEN.toString())
+                                        .withClientSpecificParameter(
+                                                StarlingConstants.RequestKey.CLIENT_ID,
+                                                aisConfiguration.getClientId())
+                                        .withClientSpecificParameter(
+                                                StarlingConstants.RequestKey.CLIENT_SECRET,
+                                                aisConfiguration.getClientSecret()))
                         .withScopes(scopes)
                         .build();
         return new OAuth2Authenticator(authorizationSpecification, persistentStorage, client);
