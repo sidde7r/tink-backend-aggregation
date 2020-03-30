@@ -22,7 +22,6 @@ public class StarlingConstants {
 
     private static class ApiEndpoint {
 
-        static final String GET_OAUTH2_TOKEN = "/oauth/access-token";
         static final String GET_ACCOUNTS = "/api/v2/accounts";
         static final String GET_ACCOUNT_HOLDER = "/api/v2/account-holder";
         static final String GET_INDIVIDUAL_ACCOUNT_HOLDER = "/api/v2/account-holder/individual";
@@ -51,11 +50,8 @@ public class StarlingConstants {
     }
 
     public static class Url {
-        public static final String AUTH_STARLING = "https://oauth.starlingbank.com";
         private static final String API_STARLING = "https://api.starlingbank.com";
 
-        public static final URL GET_OAUTH2_TOKEN =
-                new URL(API_STARLING + ApiEndpoint.GET_OAUTH2_TOKEN);
         public static final URL GET_ACCOUNTS = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNTS);
         public static final URL GET_ACCOUNT_HOLDER =
                 new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_HOLDER);
@@ -88,12 +84,10 @@ public class StarlingConstants {
     public class RequestKey {
         public static final String FROM = "minTransactionTimestamp";
         public static final String TO = "maxTransactionTimestamp";
-        public static final String CLIENT_ID = "client_id";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String RESPONSE_TYPE = "response_type";
         public static final String STATE = "state";
         public static final String GRANT_TYPE = "grant_type";
-        public static final String CLIENT_SECRET = "client_secret";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE = OAuth2Constants.CallbackParams.CODE;
     }
