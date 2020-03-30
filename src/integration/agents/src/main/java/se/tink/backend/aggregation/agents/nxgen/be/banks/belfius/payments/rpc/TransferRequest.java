@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstant
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventInformation;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventsRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusIdGenerationUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
@@ -96,6 +96,6 @@ public class TransferRequest extends BelfiusRequest {
                                         getDateString(transfer.getDueDate())),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.SHA1_CLIENT, clientHash)))
-                .setTransactionId(BelfiusSecurityUtils.generateTransferId());
+                .setTransactionId(BelfiusIdGenerationUtils.generateTransferId());
     }
 }

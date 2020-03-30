@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.integration;
 
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstant
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventInformation;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventsRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusIdGenerationUtils;
 
 public class SignBeneficiaryRequest extends BelfiusRequest {
     public static BelfiusRequest.Builder create(String challenge) {
@@ -16,6 +16,6 @@ public class SignBeneficiaryRequest extends BelfiusRequest {
                                         BelfiusConstants.Widget.UPGRADE_BENEFICIARIES),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.BENEFICIARY_SIGNATURE, challenge)))
-                .setTransactionId(BelfiusSecurityUtils.generateBeneficiaryId());
+                .setTransactionId(BelfiusIdGenerationUtils.generateBeneficiaryId());
     }
 }

@@ -8,8 +8,12 @@ import java.io.File;
 import java.io.IOException;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.AuthenticatorSleepHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
@@ -29,6 +33,7 @@ public class BelfiusTest {
 
     protected BelfiusAuthenticator setupAuthentication(
             PersistentStorage persistentStorage, Credentials credentials) {
+
         this.apiClient =
                 spy(
                         new BelfiusApiClient(
@@ -45,7 +50,8 @@ public class BelfiusTest {
                 persistentStorage,
                 sessionStorage,
                 new SupplementalInformationHelperImpl(provider, supplementalInformation),
-                "Tink");
+                new BelfiusSignatureCreator(),
+                new AuthenticatorSleepHelper());
     }
 
     // TODO Move this out to test helper.
@@ -64,7 +70,8 @@ public class BelfiusTest {
         }
     }
 
-    protected void autoAuthenticate() throws SessionException {
+    protected void autoAuthenticate()
+            throws SessionException, LoginException, AuthorizationException {
         BelfiusAuthenticator authenticator =
                 setupAuthentication(TestConfig.PERSISTENT_STORAGE, TestConfig.CREDENTIALS);
 

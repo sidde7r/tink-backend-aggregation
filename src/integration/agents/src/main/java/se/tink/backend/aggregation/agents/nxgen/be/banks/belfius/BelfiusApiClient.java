@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants.ExecutionMode;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants.Url;
@@ -58,13 +57,12 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.Si
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc.TransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.ExecuteMethodGetAppMessageTextRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.SessionOpenedResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.StartFlowRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.TechnicalResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusIdGenerationUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -73,6 +71,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class BelfiusApiClient {
+
     private final TinkHttpClient client;
     private final BelfiusSessionStorage sessionStorage;
     private final String locale;
@@ -228,33 +227,23 @@ public class BelfiusApiClient {
     }
 
     public LoginResponse login(
-            String deviceTokenHashed, String deviceTokenHashedIosComparison, String signature)
-            throws AuthenticationException, AuthorizationException {
+            String deviceTokenHashed, String deviceTokenHashedIosComparison, String signature) {
 
-        LoginResponse loginResponse =
-                postUserInput(
-                        BelfiusConstants.Url.GEPA_RENDERING_URL,
-                        LoginResponse.class,
-                        LoginRequest.create(
-                                deviceTokenHashed, deviceTokenHashedIosComparison, signature),
-                        ExecutionMode.AGGREGATED);
-        loginResponse.validate();
-        return loginResponse;
+        return postUserInput(
+                BelfiusConstants.Url.GEPA_RENDERING_URL,
+                LoginResponse.class,
+                LoginRequest.create(deviceTokenHashed, deviceTokenHashedIosComparison, signature),
+                ExecutionMode.AGGREGATED);
     }
 
     public LoginResponse loginPw(
-            String deviceTokenHashed, String deviceTokenHashedIosComparison, String signature)
-            throws AuthenticationException, AuthorizationException {
+            String deviceTokenHashed, String deviceTokenHashedIosComparison, String signature) {
 
-        LoginResponse loginResponse =
-                postUserInput(
-                        BelfiusConstants.Url.GEPA_RENDERING_URL,
-                        LoginResponse.class,
-                        LoginRequest.createPw(
-                                deviceTokenHashed, deviceTokenHashedIosComparison, signature),
-                        ExecutionMode.AGGREGATED);
-        loginResponse.validate();
-        return loginResponse;
+        return postUserInput(
+                BelfiusConstants.Url.GEPA_RENDERING_URL,
+                LoginResponse.class,
+                LoginRequest.createPw(deviceTokenHashed, deviceTokenHashedIosComparison, signature),
+                ExecutionMode.AGGREGATED);
     }
 
     public FetchProductsResponse fetchProducts() {
@@ -279,17 +268,14 @@ public class BelfiusApiClient {
                         ? FetchTransactionsRequest.createInitialRequest(key)
                         : FetchTransactionsRequest.createNextPageRequest();
 
-        FetchTransactionsResponse transactionsResponse =
-                post(
-                        BelfiusConstants.Url.GEPA_RENDERING_URL,
-                        FetchTransactionsResponse.class,
-                        requestBuilder,
-                        ExecutionMode.AGGREGATED);
-
-        return transactionsResponse;
+        return post(
+                BelfiusConstants.Url.GEPA_RENDERING_URL,
+                FetchTransactionsResponse.class,
+                requestBuilder,
+                ExecutionMode.AGGREGATED);
     }
 
-    public BelfiusResponse loadMessages() {
+    private BelfiusResponse loadMessages() {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
@@ -297,7 +283,7 @@ public class BelfiusApiClient {
                 ExecutionMode.AGGREGATED);
     }
 
-    public BelfiusResponse documentSign() {
+    private BelfiusResponse documentSign() {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
@@ -305,7 +291,7 @@ public class BelfiusApiClient {
                 ExecutionMode.AGGREGATED);
     }
 
-    public BelfiusResponse appRules() {
+    private BelfiusResponse appRules() {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
@@ -313,7 +299,7 @@ public class BelfiusApiClient {
                 ExecutionMode.AGGREGATED);
     }
 
-    public BelfiusResponse toSignCounters() {
+    private BelfiusResponse toSignCounters() {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
@@ -321,7 +307,7 @@ public class BelfiusApiClient {
                 ExecutionMode.AGGREGATED);
     }
 
-    public BelfiusResponse menuAccess() {
+    private BelfiusResponse menuAccess() {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
@@ -329,7 +315,7 @@ public class BelfiusApiClient {
                 ExecutionMode.AGGREGATED);
     }
 
-    public BelfiusResponse entitySelect() {
+    private BelfiusResponse entitySelect() {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
@@ -353,18 +339,7 @@ public class BelfiusApiClient {
                 ExecutionMode.SERVICES);
     }
 
-    public BelfiusResponse appMessageText() {
-        return post(
-                Url.GEPA_SERVICE_URL,
-                BelfiusResponse.class,
-                BelfiusRequest.builder()
-                        .setApplicationId("services")
-                        .setExecutionMode("sequential")
-                        .setRequests(ExecuteMethodGetAppMessageTextRequest.create()),
-                ExecutionMode.SERVICES);
-    }
-
-    public BelfiusResponse entityClick() {
+    private BelfiusResponse entityClick() {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
@@ -372,7 +347,7 @@ public class BelfiusApiClient {
                 ExecutionMode.AGGREGATED);
     }
 
-    public BelfiusResponse setSecurityType() {
+    private BelfiusResponse setSecurityType() {
         return post(
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 FetchTransactionsResponse.class,
@@ -464,7 +439,7 @@ public class BelfiusApiClient {
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 SignProtocolResponse.class,
                 SignedPaymentResponse.create(
-                        BelfiusSecurityUtils.generateTransactionId(), challenge),
+                        BelfiusIdGenerationUtils.generateTransactionId(), challenge),
                 ExecutionMode.AGGREGATED);
     }
 
@@ -473,7 +448,7 @@ public class BelfiusApiClient {
                 BelfiusConstants.Url.GEPA_RENDERING_URL,
                 SignProtocolResponse.class,
                 DoubleSignTransferRequest.create(
-                        BelfiusSecurityUtils.generateSignTransferId(), challenge),
+                        BelfiusIdGenerationUtils.generateSignTransferId(), challenge),
                 ExecutionMode.AGGREGATED);
     }
 
@@ -484,14 +459,11 @@ public class BelfiusApiClient {
                         ? FetchUpcomingTransactionsRequest.createInitialRequest(key)
                         : FetchUpcomingTransactionsRequest.createNextPageRequest();
 
-        FetchUpcomingTransactionsResponse transactionsResponse =
-                post(
-                        BelfiusConstants.Url.GEPA_RENDERING_URL,
-                        FetchUpcomingTransactionsResponse.class,
-                        requestBuilder,
-                        ExecutionMode.AGGREGATED);
-
-        return transactionsResponse;
+        return post(
+                BelfiusConstants.Url.GEPA_RENDERING_URL,
+                FetchUpcomingTransactionsResponse.class,
+                requestBuilder,
+                ExecutionMode.AGGREGATED);
     }
 
     private static String urlEncode(final String string) {

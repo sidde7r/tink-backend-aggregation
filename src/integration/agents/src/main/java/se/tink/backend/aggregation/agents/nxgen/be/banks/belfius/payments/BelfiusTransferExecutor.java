@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments;
 
-import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils.createTransferSignature;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils.getFormattedAmount;
 
 import java.time.LocalDate;
@@ -18,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusProduct;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol.SignProtocolResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -38,6 +38,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private BelfiusApiClient apiClient;
+    private BelfiusSignatureCreator belfiusSignatureCreator;
+
     private static final AggregationLogger LOGGER =
             new AggregationLogger(BelfiusTransferExecutor.class);
 
@@ -45,14 +47,16 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
             BelfiusApiClient apiClient,
             BelfiusSessionStorage belfiusSessionStorage,
             Catalog catalog,
-            final SupplementalInformationHelper supplementalInformationHelper) {
+            final SupplementalInformationHelper supplementalInformationHelper,
+            final BelfiusSignatureCreator belfiusSignatureCreator) {
         this.catalog = catalog;
         this.apiClient = apiClient;
         this.belfiusSessionStorage = belfiusSessionStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
+        this.belfiusSignatureCreator = belfiusSignatureCreator;
     }
 
-    public static String formatStructuredMessage(String structuredMessage) {
+    private static String formatStructuredMessage(String structuredMessage) {
         structuredMessage = structuredMessage.replace("+++", "");
         String[] parts = structuredMessage.split("/");
         String special = Character.toString((char) 92);
@@ -140,7 +144,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                                         .build());
     }
 
-    public void signPayments() {
+    private void signPayments() {
         apiClient.getSignProtocol().cardReaderAllowed();
         SignProtocolResponse transferSignChallenge = apiClient.getTransferSignChallenge();
         String response;
@@ -164,7 +168,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         }
     }
 
-    public void checkThrowableErrors(SignProtocolResponse signProtocolResponse)
+    private void checkThrowableErrors(SignProtocolResponse signProtocolResponse)
             throws TransferExecutionException {
         if (signProtocolResponse.weeklyCardLimitReached()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
@@ -184,7 +188,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         }
     }
 
-    public void multiSignTransfer(SignProtocolResponse signProtocolResponse)
+    private void multiSignTransfer(SignProtocolResponse signProtocolResponse)
             throws TransferExecutionException {
         boolean success = false;
         if (signProtocolResponse.signTempError()) {
@@ -206,13 +210,13 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         }
     }
 
-    public TransferExecutionException createFailedTransferException(
+    private TransferExecutionException createFailedTransferException(
             TransferExecutionException.EndUserMessage message,
             TransferExecutionException.EndUserMessage endUserMessage) {
         return createFailedTransferException(message, endUserMessage, null);
     }
 
-    public TransferExecutionException createFailedTransferException(
+    private TransferExecutionException createFailedTransferException(
             TransferExecutionException.EndUserMessage message,
             TransferExecutionException.EndUserMessage endUserMessage,
             SupplementalInfoException e) {
@@ -223,16 +227,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                 .build();
     }
 
-    public TransferExecutionException createCancelledTransferException(
-            TransferExecutionException.EndUserMessage message,
-            TransferExecutionException.EndUserMessage endUserMessage) {
-        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(catalog.getString(message))
-                .setEndUserMessage(catalog.getString(endUserMessage))
-                .build();
-    }
-
-    public boolean doubleSignedPayment()
+    private boolean doubleSignedPayment()
             throws SupplementalInfoException, TransferExecutionException {
         apiClient.getSignProtocol().cardReaderAllowed();
         SignProtocolResponse transferSignChallenge = apiClient.getTransferSignChallenge();
@@ -257,7 +252,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return false;
     }
 
-    public void addBeneficiary(Transfer transfer, boolean isStructuredMessage)
+    private void addBeneficiary(Transfer transfer, boolean isStructuredMessage)
             throws TransferExecutionException {
         String response;
         try {
@@ -287,7 +282,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         checkThrowableErrors(apiClient.signBeneficiary(response));
     }
 
-    public void validateAndSetDueDate(Transfer transfer) {
+    private void validateAndSetDueDate(Transfer transfer) {
         if (transfer.getDueDate() == null) {
             transfer.setDueDate(
                     Date.from(
@@ -325,8 +320,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return accountFetcher.fetchTransactionalAccountPairedWithBelfiusProduct();
     }
 
-    public String createClientSha(Transfer transfer) {
-        return createTransferSignature(
+    private String createClientSha(Transfer transfer) {
+        return belfiusSignatureCreator.createTransferSignature(
                 belfiusSessionStorage.getChallenge(),
                 "I" + ((SepaEurIdentifier) (transfer.getSource())).getIban(),
                 "I" + ((SepaEurIdentifier) (transfer.getDestination())).getIban(),

@@ -12,12 +12,14 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.AuthenticatorSleepHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.BelfiusSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.signature.BelfiusSignatureCreator;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.PasswordBasedProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -44,6 +46,7 @@ public class BelfiusAgent extends NextGenerationAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final BelfiusSignatureCreator belfiusSignatureCreator;
 
     public BelfiusAgent(
             CredentialsRequest request,
@@ -67,6 +70,8 @@ public class BelfiusAgent extends NextGenerationAgent
                     proxyConfiguration.getPassword());
         }
 
+        this.belfiusSignatureCreator = new BelfiusSignatureCreator();
+
         this.apiClient =
                 new BelfiusApiClient(
                         this.client,
@@ -88,7 +93,8 @@ public class BelfiusAgent extends NextGenerationAgent
                         persistentStorage,
                         belfiusSessionStorage,
                         supplementalInformationHelper,
-                        BelfiusConstants.BRAND);
+                        belfiusSignatureCreator,
+                        new AuthenticatorSleepHelper());
 
         return new AutoAuthenticationController(
                 request,
@@ -183,7 +189,8 @@ public class BelfiusAgent extends NextGenerationAgent
                                 apiClient,
                                 belfiusSessionStorage,
                                 context.getCatalog(),
-                                supplementalInformationHelper),
+                                supplementalInformationHelper,
+                                belfiusSignatureCreator),
                         null,
                         null));
     }

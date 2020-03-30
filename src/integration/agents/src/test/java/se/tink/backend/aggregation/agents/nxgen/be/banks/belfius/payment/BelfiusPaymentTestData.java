@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.Payment;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payment;
 
 public class BelfiusPaymentTestData {
 
