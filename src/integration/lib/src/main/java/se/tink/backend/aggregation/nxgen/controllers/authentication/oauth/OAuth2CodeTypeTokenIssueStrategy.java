@@ -25,10 +25,10 @@ public class OAuth2CodeTypeTokenIssueStrategy implements OAuth2TokenIssueStrateg
     }
 
     public OAuth2CodeTypeTokenIssueStrategy(
-            OAuth2AuthorizationSpecification authorizationParamProvider,
+            OAuth2AuthorizationSpecification authorizationSpecification,
             TinkHttpClient tinkHttpClient,
             OAuth2TokenResponseParser tokenResponseParser) {
-        this.authorizationSpecification = authorizationParamProvider;
+        this.authorizationSpecification = authorizationSpecification;
         this.httpClient = tinkHttpClient;
         this.tokenResponseParser = tokenResponseParser;
     }

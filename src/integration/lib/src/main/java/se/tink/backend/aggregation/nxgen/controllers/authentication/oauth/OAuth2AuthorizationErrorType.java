@@ -10,6 +10,8 @@ public enum OAuth2AuthorizationErrorType {
     INVALID_SCOPE("invalid_scope"),
     SERVER_ERROR("server_error"),
     TEMPORARILY_UNAVAILABLE("temporarily_unavailable"),
+    UNSUPPORTED_GRANT_TPE("unsupported_grant_type"),
+    INVALID_GRANT("invalid_grant"),
     UNKNOWN("");
 
     private String code;

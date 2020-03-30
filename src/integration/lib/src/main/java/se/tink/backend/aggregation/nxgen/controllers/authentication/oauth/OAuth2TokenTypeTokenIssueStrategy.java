@@ -18,7 +18,7 @@ public class OAuth2TokenTypeTokenIssueStrategy implements OAuth2TokenIssueStrate
         token.setAccessToken(authorizationResponseParams.get("access_token"));
         token.setExpiresIn(
                 Optional.ofNullable(authorizationResponseParams.get("expires_in"))
-                        .map(v -> new Long(v))
+                        .map(v -> Long.parseLong(v))
                         .orElseGet(
                                 () ->
                                         authorizationParamProvider
