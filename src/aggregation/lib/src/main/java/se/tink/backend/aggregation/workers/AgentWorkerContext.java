@@ -307,7 +307,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     public Optional<String> getRefreshId() {
-        CredentialsRequest request = getRequest();
+        CredentialsRequest credentialsRequest = getRequest();
 
         // Defensive. We *Should* only end up in the if iff we're refreshing credentials.
         if (request instanceof RefreshInformationRequest) {

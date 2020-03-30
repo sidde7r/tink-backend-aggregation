@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +68,8 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
     }
 
     private void updateStatus(CredentialsStatus newStatus) {
+        Optional<String> refreshId = context.getRefreshId();
+
         credentials.setStatus(newStatus);
 
         Credentials credentialsCopy = credentials.clone();
@@ -76,6 +79,7 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
                 new UpdateCredentialsStatusRequest();
         updateCredentialsStatusRequest.setCredentials(
                 CoreCredentialsMapper.fromAggregationCredentials(credentialsCopy));
+        refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }
