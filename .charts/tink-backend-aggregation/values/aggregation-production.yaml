@@ -215,6 +215,8 @@ clients:
     aggregatorIdentifier: "Middelfart Sparekasse"
   middelfart-testing:
     aggregatorIdentifier: "Middelfart Sparekasse"
+  nl-abnamro-testing:
+    aggregatorIdentifier: "ABN AMRO"
   no-68-nord-testing:
     aggregatorIdentifier: "Sparebank 68 Nord"
   no-aasen-sparebank:
