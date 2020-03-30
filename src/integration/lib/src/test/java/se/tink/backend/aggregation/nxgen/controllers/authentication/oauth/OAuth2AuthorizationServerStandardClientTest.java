@@ -106,6 +106,46 @@ public class OAuth2AuthorizationServerStandardClientTest extends WireMockIntegra
     }
 
     @Test
+    public void shouldIssuedAccessTokenUsingRefreshTokenWithClientSpecificParams()
+            throws MalformedURLException {
+        // given
+        final String accessTokenResponse =
+                "{\"access_token\":\"2YotnFZFEjr1zCsicMWpAA\",\"token_type\":\"example\",\"expires_in\":3600,\"refresh_token\":\"tGzv3JOkF0XG5Qx2TlKWIA\"}";
+        final String refreshTokenPath = "/refreshToken";
+        final String refreshToken = "12323njmfvnlk31j54r1234";
+        final String scope = "scope_example";
+        Mockito.when(authorizationSpecification.getScope()).thenReturn(Optional.of(scope));
+        Mockito.when(authorizationSpecification.getRefreshTokenEndpoint())
+                .thenReturn(
+                        new EndpointSpecification(getOrigin() + refreshTokenPath)
+                                .withClientSpecificParameter(
+                                        "specificParamKey", "specificParamValue")
+                                .withHeader("specificHeaderKey", "specificHeaderValue"));
+        WireMock.stubFor(
+                WireMock.post(WireMock.urlPathEqualTo(refreshTokenPath))
+                        .withHeader(
+                                "Content-Type",
+                                WireMock.equalTo("application/x-www-form-urlencoded"))
+                        .withHeader("specificHeaderKey", WireMock.equalTo("specificHeaderValue"))
+                        .withRequestBody(WireMock.matching(".*grant_type=refresh_token.*"))
+                        .withRequestBody(
+                                WireMock.matching(".*refresh_token=" + refreshToken + ".*"))
+                        .withRequestBody(WireMock.matching(".*scope=" + scope + ".*"))
+                        .withRequestBody(WireMock.matching(".*specificParamKey=specificParamValue"))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withBody(accessTokenResponse)
+                                        .withHeader("Content-Type", "application/json")));
+        // when
+        OAuth2Token result = objectUnderTest.refreshAccessToken(refreshToken);
+        // then
+        Assert.assertEquals("2YotnFZFEjr1zCsicMWpAA", result.getAccessToken());
+        Assert.assertEquals("example", result.getTokenType());
+        Assert.assertEquals(new Long(3600), result.getExpiresIn());
+        Assert.assertEquals("tGzv3JOkF0XG5Qx2TlKWIA", result.getRefreshToken());
+    }
+
+    @Test
     public void shouldIssuedAccessTokenUsingRefreshTokenNewRefreshTokenIsNotReturned()
             throws MalformedURLException {
         // given

@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public class OAuth2CodeTypeTokenIssueStrategy implements OAuth2TokenIssueStrategy {
 
-    private final OAuth2AuthorizationSpecification authorizationParamProvider;
+    private final OAuth2AuthorizationSpecification authorizationSpecification;
     private final TinkHttpClient httpClient;
     private final OAuth2TokenResponseParser tokenResponseParser;
 
@@ -28,7 +28,7 @@ public class OAuth2CodeTypeTokenIssueStrategy implements OAuth2TokenIssueStrateg
             OAuth2AuthorizationSpecification authorizationParamProvider,
             TinkHttpClient tinkHttpClient,
             OAuth2TokenResponseParser tokenResponseParser) {
-        this.authorizationParamProvider = authorizationParamProvider;
+        this.authorizationSpecification = authorizationParamProvider;
         this.httpClient = tinkHttpClient;
         this.tokenResponseParser = tokenResponseParser;
     }
@@ -42,11 +42,11 @@ public class OAuth2CodeTypeTokenIssueStrategy implements OAuth2TokenIssueStrateg
         String tokenRawResponse =
                 httpClient
                         .request(
-                                authorizationParamProvider
+                                authorizationSpecification
                                         .getAccessTokenEndpoint()
                                         .getUrl()
                                         .toString())
-                        .headers(authorizationParamProvider.getAccessTokenEndpoint().getHeaders())
+                        .headers(authorizationSpecification.getAccessTokenEndpoint().getHeaders())
                         .body(
                                 buildBody(authorizationResponseParams.get("code")),
                                 MediaType.APPLICATION_FORM_URLENCODED_TYPE)
@@ -60,11 +60,11 @@ public class OAuth2CodeTypeTokenIssueStrategy implements OAuth2TokenIssueStrateg
                 Form.builder()
                         .put("grant_type", "authorization_code")
                         .put("code", code)
-                        .put("redirect_uri", authorizationParamProvider.getRedirectUrl().toString())
-                        .put("client_id", authorizationParamProvider.getClientId());
-        authorizationParamProvider.getAccessTokenRequestClientSpecificParameters().entrySet()
+                        .put("redirect_uri", authorizationSpecification.getRedirectUrl().toString())
+                        .put("client_id", authorizationSpecification.getClientId());
+        authorizationSpecification.getAccessTokenEndpoint().getClientSpecificParameters().entrySet()
                 .stream()
-                .forEach((entry) -> formBuilder.put(entry.getKey(), entry.getValue()));
+                .forEach(entry -> formBuilder.put(entry.getKey(), entry.getValue()));
         return formBuilder.build().serialize();
     }
 }

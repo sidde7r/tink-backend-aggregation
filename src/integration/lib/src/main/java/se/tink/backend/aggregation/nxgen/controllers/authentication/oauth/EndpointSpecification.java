@@ -9,6 +9,7 @@ public class EndpointSpecification {
 
     private URL url;
     private Map<String, Object> headers = new HashMap<>();
+    private Map<String, String> clientSpecificParams = new HashMap<>();
 
     public EndpointSpecification(URL url) {
         this.url = url;
@@ -30,6 +31,16 @@ public class EndpointSpecification {
     public EndpointSpecification withHeaders(Map<String, Object> headers) {
         headers.putAll(headers);
         return this;
+    }
+
+    public EndpointSpecification withClientSpecificParameter(
+            final String name, final String value) {
+        clientSpecificParams.put(name, value);
+        return this;
+    }
+
+    public Map<String, String> getClientSpecificParameters() {
+        return clientSpecificParams;
     }
 
     public URL getUrl() {

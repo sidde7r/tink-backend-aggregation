@@ -17,7 +17,6 @@ public class OAuth2AuthorizationSpecification {
     private EndpointSpecification authenticationEndpoint;
     private EndpointSpecification refreshTokenEndpoint;
     private EndpointSpecification accessTokenEndpoint;
-    private Map<String, String> accessTokenRequestClientSpecificParameters = new HashMap<>();
     private Long defaultAccessTokenLifetime;
     private Set<String> accessTokenResponseClientSpecificProperties = new HashSet<>();
 
@@ -53,10 +52,6 @@ public class OAuth2AuthorizationSpecification {
 
     public EndpointSpecification getAccessTokenEndpoint() {
         return accessTokenEndpoint;
-    }
-
-    public Map<String, String> getAccessTokenRequestClientSpecificParameters() {
-        return accessTokenRequestClientSpecificParameters;
     }
 
     public Optional<Long> getDefaultAccessTokenLifetime() {
@@ -118,12 +113,6 @@ public class OAuth2AuthorizationSpecification {
 
         public Builder withResponseTypeToken() {
             endpointProvider.responseType = RESPONSE_TYPE_TOKEN;
-            return this;
-        }
-
-        public Builder withAccessTokenRequestClientSpecificParameter(
-                final String key, final String value) {
-            endpointProvider.accessTokenRequestClientSpecificParameters.put(key, value);
             return this;
         }
 
