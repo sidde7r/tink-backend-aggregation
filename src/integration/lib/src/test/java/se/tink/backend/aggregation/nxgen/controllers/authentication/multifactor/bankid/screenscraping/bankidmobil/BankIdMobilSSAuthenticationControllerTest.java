@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -50,7 +50,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
                 .willThrow(new HtmlElementNotFoundException(""));
 
         // when
-        Throwable throwable = Assertions.catchThrowable(() -> objUnderTest.doLogin());
+        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin());
 
         // then
         assertThat(throwable)
@@ -68,7 +68,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
                 .willReturn(Arrays.asList(dummyElement));
 
         // when
-        Throwable throwable = Assertions.catchThrowable(() -> objUnderTest.doLogin());
+        Throwable throwable = catchThrowable(() -> objUnderTest.doLogin());
 
         // then
         assertThat(throwable)

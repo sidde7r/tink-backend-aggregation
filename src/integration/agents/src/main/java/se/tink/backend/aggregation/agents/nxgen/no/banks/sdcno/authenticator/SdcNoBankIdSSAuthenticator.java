@@ -67,7 +67,7 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
         }
 
         throw new IllegalArgumentException(
-                String.format("Unsupported bank id mobil Initializer for  %s", authenticationType));
+                ("Unsupported bank id mobil Initializer for " + authenticationType));
     }
 
     @Override
