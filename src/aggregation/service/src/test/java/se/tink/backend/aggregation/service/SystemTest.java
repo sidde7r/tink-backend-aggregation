@@ -9,12 +9,13 @@ import static se.tink.backend.aggregation.service.SystemTestUtils.readRequestBod
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
+import se.tink.backend.aggregation.service.SystemTestUtils.ExpectedCredentialsStatus;
 
 public class SystemTest {
 
@@ -76,17 +78,13 @@ public class SystemTest {
 
         Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
-
         Map<String, List<String>> pushedData =
                 pollAggregationController(
                         String.format(
                                 "http://%s:%d/data",
                                 AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
-                        headers,
-                        "UPDATED",
-                        null);
+                        Optional.of(ExpectedCredentialsStatus.UPDATED),
+                        Collections.emptySet());
     }
 
     @Test
@@ -115,17 +113,13 @@ public class SystemTest {
 
         Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
-
         Map<String, List<String>> pushedData =
                 pollAggregationController(
                         String.format(
                                 "http://%s:%d/data",
                                 AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
-                        headers,
-                        null,
-                        Arrays.asList(
+                        Optional.empty(),
+                        ImmutableSet.of(
                                 "updateCredentials",
                                 "updateTransactionsAsynchronously",
                                 "updateAccount",

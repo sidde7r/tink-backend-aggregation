@@ -10,6 +10,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,11 @@ public class SystemTestUtils {
 
     private static ObjectMapper mapper = new ObjectMapper();
     private static Logger log = LoggerFactory.getLogger(SystemTestUtils.class);
+
+    public static enum ExpectedCredentialsStatus {
+        TEMPORARY_ERROR,
+        UPDATED
+    };
 
     public static ResponseEntity<String> makePostRequest(String url, Object requestBody)
             throws Exception {
@@ -73,10 +80,13 @@ public class SystemTestUtils {
 
     public static Map<String, List<String>> pollAggregationController(
             String url,
-            HttpHeaders headers,
-            String expectedCredentialsStatus,
-            List<String> expectedCallbacks)
+            Optional<ExpectedCredentialsStatus> expectedCredentialsStatus,
+            Set<String> expectedCallbacks)
             throws Exception {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", "application/json");
+
         Map<String, List<String>> pushedData = new HashMap<>();
         while (true) {
 
@@ -89,7 +99,7 @@ public class SystemTestUtils {
                 continue;
             }
 
-            if (expectedCredentialsStatus != null) {
+            if (expectedCredentialsStatus.isPresent()) {
                 if (!pushedData.containsKey("updateCredentials")) {
                     log.info("Waiting for updateCredentials");
                     Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
@@ -102,25 +112,24 @@ public class SystemTestUtils {
                                         credentialsUpdateCallbacks.size() - 1));
                 String credentialsStatus =
                         latestCredentialsUpdateCallback.get("credentials").get("status").asText();
-                if (!credentialsStatus.equalsIgnoreCase(expectedCredentialsStatus)) {
+                if (!credentialsStatus.equalsIgnoreCase(
+                        expectedCredentialsStatus.get().toString())) {
                     log.info("Waiting for credentials to get status " + expectedCredentialsStatus);
                     Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                     continue;
                 }
             }
 
-            if (expectedCallbacks != null) {
-                boolean isThereMissingCallback = false;
-                for (String callbackKey : expectedCallbacks) {
-                    if (!pushedData.containsKey(callbackKey)) {
-                        log.info("Waiting for " + callbackKey);
-                        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                        isThereMissingCallback = true;
-                    }
+            boolean isThereMissingCallback = false;
+            for (String callbackKey : expectedCallbacks) {
+                if (!pushedData.containsKey(callbackKey)) {
+                    log.info("Waiting for " + callbackKey);
+                    Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+                    isThereMissingCallback = true;
                 }
-                if (isThereMissingCallback) {
-                    continue;
-                }
+            }
+            if (isThereMissingCallback) {
+                continue;
             }
 
             break;
