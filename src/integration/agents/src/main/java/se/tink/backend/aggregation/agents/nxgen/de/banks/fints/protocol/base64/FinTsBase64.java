@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 public class FinTsBase64 {
     private static final Pattern REPLACE_PATTERN = Pattern.compile("\\R");
 
+    private FinTsBase64() {}
+
     public static String decodeResponseFromBase64(String b64EncodedResponse) {
         String responseToDecode = REPLACE_PATTERN.matcher(b64EncodedResponse).replaceAll("");
         return new String(

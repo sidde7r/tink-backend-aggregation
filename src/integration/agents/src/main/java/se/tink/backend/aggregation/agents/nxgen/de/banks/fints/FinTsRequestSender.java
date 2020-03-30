@@ -25,9 +25,7 @@ class FinTsRequestSender {
 
         String plainResponse = FinTsBase64.decodeResponseFromBase64(b64Response);
         log.info("Response: {}", REPLACE_PATTERN.matcher(plainResponse).replaceAll("0"));
-        FinTsResponse response = new FinTsResponse(plainResponse);
-
-        return response;
+        return new FinTsResponse(plainResponse);
     }
 
     private String send(String request) {

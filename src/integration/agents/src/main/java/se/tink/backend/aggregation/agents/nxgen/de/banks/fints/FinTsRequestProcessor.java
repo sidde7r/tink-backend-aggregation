@@ -42,8 +42,7 @@ public class FinTsRequestProcessor {
         updateTanContext(taskReference, tanAnswer);
 
         FinTsRequest request = challengeSolvedRequest();
-        FinTsResponse response = sendRequest(request);
-        return response;
+        return sendRequest(request);
     }
 
     private FinTsResponse sendRequest(FinTsRequest request) {

@@ -7,6 +7,8 @@ import lombok.Getter;
 public class PayloadParser {
     private static final Pattern SPACE_PATTERN = Pattern.compile(" ");
 
+    private PayloadParser() {}
+
     @AllArgsConstructor
     @Getter
     public static class Payload {
