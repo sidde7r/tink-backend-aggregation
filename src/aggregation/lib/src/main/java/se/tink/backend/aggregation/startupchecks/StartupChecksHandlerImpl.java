@@ -28,29 +28,26 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
     public StartupChecksHandlerImpl(
             ManagedTppSecretsServiceClient tppSecretsServiceClient, MetricRegistry metricRegistry) {
         this.healthCheckMetricsAggregation = new HealthCheckMetricsAggregation(metricRegistry);
-        healthChecks =
-                ImmutableSet.of(
-                        new SecretsServiceHealthCheck(
-                                tppSecretsServiceClient, healthCheckMetricsAggregation));
+        healthChecks = ImmutableSet.of(new SecretsServiceHealthCheck(tppSecretsServiceClient));
     }
 
     @Override
     public String handle() {
         if (!firstCheckPassed) {
-            logger.info("All startup checks didn't pass yet.");
+            logger.info("Health checks haven't passed yet.");
             try {
                 isHealthy();
             } catch (NotHealthyException e) {
-                logger.error("Startup checks failed", e);
+                logger.error("Health checks failed.", e);
                 HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
             }
             firstCheckPassed = true;
-            logger.info("All startup checks passed.");
+            logger.info("Health checks passed.");
         } else {
             try {
                 isHealthy();
             } catch (NotHealthyException e) {
-                logger.warn("Got unexpected exception when running healthcheck with SS client.", e);
+                logger.warn("Health checks failed.", e);
                 return "experiencing problems";
             }
         }
@@ -59,7 +56,7 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
 
     private void isHealthy() throws NotHealthyException {
         for (HealthCheck healthCheck : healthChecks) {
-            healthCheck.check();
+            healthCheckMetricsAggregation.checkAndObserve(healthCheck);
         }
     }
 }
