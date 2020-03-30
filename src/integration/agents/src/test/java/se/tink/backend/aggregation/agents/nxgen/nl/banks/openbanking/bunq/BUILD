@@ -19,7 +19,6 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/tools",
         "//src/integration/amount",
         "//src/integration/lib",
-        "//src/integration/lib:lib_test",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/integration/payment:rpc",
