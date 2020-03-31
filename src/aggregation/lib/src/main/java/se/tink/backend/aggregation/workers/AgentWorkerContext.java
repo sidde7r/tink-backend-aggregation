@@ -311,7 +311,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         // Defensive. We *Should* only end up in the if iff we're refreshing credentials.
         if (request instanceof RefreshInformationRequest) {
-            return Optional.of(((RefreshInformationRequest) request).getRefreshId());
+            return Optional.ofNullable(((RefreshInformationRequest) request).getRefreshId());
         }
         return Optional.empty();
     }
