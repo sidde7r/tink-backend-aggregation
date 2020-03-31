@@ -261,8 +261,6 @@ public class KbcApiClient {
         byte[] decryptedResponse =
                 AES.decryptCbc(cipherKey, getCipherIv(cipherBytes), getCipherBody(cipherBytes));
         String response = new String(decryptedResponse, Charsets.UTF_8);
-        // Uncomment to decrypted response in log logger.infoExtraLong(response,
-        // KbcConstants.LogTags.ACCOUNTS);
         return deserializeFromString(response, responseClass);
     }
 
