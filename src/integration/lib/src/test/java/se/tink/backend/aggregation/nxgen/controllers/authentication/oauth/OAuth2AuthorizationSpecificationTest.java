@@ -26,7 +26,7 @@ public class OAuth2AuthorizationSpecificationTest {
         Assert.assertEquals(CLIENT_ID, result.getClientId());
         Assert.assertEquals(REDIRECT_URL, result.getRedirectUrl().toString());
         Assert.assertEquals(
-                AUTHORIZATION_URL, result.getAuthenticationEndpoint().getUrl().toString());
+                AUTHORIZATION_URL, result.getAuthorizationEndpoint().getUrl().toString());
         Assert.assertEquals("token", result.getResponseType());
     }
 
@@ -40,7 +40,7 @@ public class OAuth2AuthorizationSpecificationTest {
         Assert.assertEquals(CLIENT_ID, result.getClientId());
         Assert.assertEquals(REDIRECT_URL, result.getRedirectUrl().toString());
         Assert.assertEquals(
-                AUTHORIZATION_URL, result.getAuthenticationEndpoint().getUrl().toString());
+                AUTHORIZATION_URL, result.getAuthorizationEndpoint().getUrl().toString());
         Assert.assertEquals("code", result.getResponseType());
         Assert.assertEquals(
                 ACCESS_TOKEN_ENDPOINT, result.getAccessTokenEndpoint().getUrl().toString());
@@ -99,7 +99,7 @@ public class OAuth2AuthorizationSpecificationTest {
                 new OAuth2AuthorizationSpecification.Builder()
                         .withClientId(CLIENT_ID)
                         .withRedirectUrl(REDIRECT_URL)
-                        .withAuthenticationEndpoint(new EndpointSpecification(AUTHORIZATION_URL));
+                        .withAuthorizationEndpoint(new EndpointSpecification(AUTHORIZATION_URL));
         // when
         objectUnderTest.build();
     }
@@ -123,7 +123,7 @@ public class OAuth2AuthorizationSpecificationTest {
                 new OAuth2AuthorizationSpecification.Builder()
                         .withRedirectUrl(REDIRECT_URL)
                         .withResponseTypeToken()
-                        .withAuthenticationEndpoint(new EndpointSpecification(AUTHORIZATION_URL));
+                        .withAuthorizationEndpoint(new EndpointSpecification(AUTHORIZATION_URL));
         // when
         objectUnderTest.build();
     }
@@ -135,7 +135,7 @@ public class OAuth2AuthorizationSpecificationTest {
                 new OAuth2AuthorizationSpecification.Builder()
                         .withClientId(CLIENT_ID)
                         .withResponseTypeToken()
-                        .withAuthenticationEndpoint(new EndpointSpecification(AUTHORIZATION_URL));
+                        .withAuthorizationEndpoint(new EndpointSpecification(AUTHORIZATION_URL));
         // when
         objectUnderTest.build();
     }
@@ -145,6 +145,6 @@ public class OAuth2AuthorizationSpecificationTest {
                 .withClientId(CLIENT_ID)
                 .withRedirectUrl(REDIRECT_URL)
                 .withResponseTypeToken()
-                .withAuthenticationEndpoint(new EndpointSpecification(AUTHORIZATION_URL));
+                .withAuthorizationEndpoint(new EndpointSpecification(AUTHORIZATION_URL));
     }
 }

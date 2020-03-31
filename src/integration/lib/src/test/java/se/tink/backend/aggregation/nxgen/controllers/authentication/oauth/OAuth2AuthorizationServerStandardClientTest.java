@@ -189,7 +189,7 @@ public class OAuth2AuthorizationServerStandardClientTest extends WireMockIntegra
         final String clientId = "clientId";
         final String redirectUrl = "http://127.0.0.1/callbackHandler";
         final String scope = "example_scope";
-        Mockito.when(authorizationSpecification.getAuthenticationEndpoint())
+        Mockito.when(authorizationSpecification.getAuthorizationEndpoint())
                 .thenReturn(new EndpointSpecification(authorizationEndpoint));
         Mockito.when(authorizationSpecification.getResponseType()).thenReturn(responseType);
         Mockito.when(authorizationSpecification.getClientId()).thenReturn(clientId);
