@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
@@ -26,6 +27,8 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         Provider provider = context.getRequest().getProvider();
         Credentials credentials = context.getRequest().getCredentials();
 
+        Optional<String> refreshId = context.getRefreshId();
+
         if (!Objects.equals(provider.getStatus(), ProviderStatuses.TEMPORARY_DISABLED)
                 && !Objects.equals(provider.getStatus(), ProviderStatuses.DISABLED)) {
             return AgentWorkerCommandResult.CONTINUE;
@@ -44,6 +47,7 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
 
         updateCredentialsStatusRequest.setCredentials(coreCredentials);
         updateCredentialsStatusRequest.setUserId(credentials.getUserId());
+        refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
 

@@ -306,6 +306,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return request;
     }
 
+    public Optional<String> getRefreshId() {
+        CredentialsRequest credentialsRequest = getRequest();
+
+        // Defensive. We *Should* only end up in the if iff we're refreshing credentials.
+        if (request instanceof RefreshInformationRequest) {
+            return Optional.of(((RefreshInformationRequest) request).getRefreshId());
+        }
+        return Optional.empty();
+    }
+
     @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         AccountFeatures accountFeaturesToCache = accountFeatures;
@@ -448,11 +458,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             eventListener.onUpdateCredentialsStatus();
         }
 
-        // Defensive. We *Should* only end up in the if iff we're refreshing credentials.
-        String refreshId = null;
-        if (request instanceof RefreshInformationRequest) {
-            refreshId = ((RefreshInformationRequest) request).getRefreshId();
-        }
+        Optional<String> refreshId = getRefreshId();
 
         // Clone the credentials here so that we can pass a copy with no
         // secrets back to the system service.
@@ -472,7 +478,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
         updateCredentialsStatusRequest.setMigrationUpdate(isMigrationUpdate);
-        updateCredentialsStatusRequest.setRefreshId(refreshId);
+
+        refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
     }
