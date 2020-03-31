@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
 
 public class RawGroupTest {
@@ -11,60 +13,59 @@ public class RawGroupTest {
     @Test
     public void shouldReportEmptyRawGroupAsEmpty() {
         // given
-        RawGroup rawGroup = new RawGroup();
+        RawGroup rawGroup = new RawGroup(Collections.emptyList());
 
         // when
 
         // then
-        assertThat(rawGroup).isEmpty();
+        assertThat(rawGroup.isEmpty()).isTrue();
     }
 
     @Test
     public void shouldReportOneEmptyStringElementRawGroupAsEmpty() {
         // given
-        RawGroup rawGroup = new RawGroup();
+        RawGroup rawGroup = new RawGroup(Collections.singletonList(""));
 
         // when
-        rawGroup.add("");
 
         // then
-        assertThat(rawGroup).isEmpty();
+        assertThat(rawGroup.isEmpty()).isTrue();
     }
 
     @Test
     public void shouldReportOneNullStringElementRawGroupAsEmpty() {
         // given
-        RawGroup rawGroup = new RawGroup();
+        RawGroup rawGroup = new RawGroup(Collections.singletonList(null));
 
         // when
-        rawGroup.add(null);
 
         // then
-        assertThat(rawGroup).isEmpty();
+        assertThat(rawGroup.isEmpty()).isTrue();
     }
 
     @Test
-    public void shouldReportAnythinElseAsNotEmpty() {
+    public void shouldReportAnythingElseAsNotEmpty() {
         // given
-        RawGroup rawGroup = new RawGroup();
+        RawGroup rawGroup = new RawGroup(Collections.singletonList("a"));
 
         // when
-        rawGroup.add("a");
 
         // then
-        assertThat(rawGroup).isNotEmpty();
+        assertThat(rawGroup.isEmpty()).isFalse();
     }
 
     @Test
     public void shouldMapStringsProperly() {
         // given
-        RawGroup rawGroup = new RawGroup();
+        RawGroup rawGroup =
+                new RawGroup(
+                        Arrays.asList(
+                                null,
+                                "",
+                                "AnyOldString",
+                                "ThisIsNotThePlaceThatEscapesOrUnescapesThings????@@@@?@?'"));
 
         // when
-        rawGroup.add(null);
-        rawGroup.add("");
-        rawGroup.add("AnyOldString");
-        rawGroup.add("ThisIsNotThePlaceThatEscapesOrUnescapesThings????@@@@?@?'");
 
         // then
         assertThat(rawGroup.getString(0)).isNull();
@@ -78,13 +79,9 @@ public class RawGroupTest {
     @Test
     public void shouldMapBooleansProperly() {
         // given
-        RawGroup rawGroup = new RawGroup();
+        RawGroup rawGroup = new RawGroup(Arrays.asList(null, "", "J", "N"));
 
         // when
-        rawGroup.add(null);
-        rawGroup.add("");
-        rawGroup.add("J");
-        rawGroup.add("N");
 
         // then
         assertThat(rawGroup.getBoolean(0)).isNull();
@@ -97,8 +94,7 @@ public class RawGroupTest {
     @Test
     public void shouldThrowWhenFailsToMapBoolean() {
         // given
-        RawGroup rawGroup = new RawGroup();
-        rawGroup.add("NotAProperBool");
+        RawGroup rawGroup = new RawGroup(Collections.singletonList("NotAProperBool"));
 
         // when
         Throwable throwable = catchThrowable(() -> rawGroup.getBoolean(0));
@@ -112,13 +108,9 @@ public class RawGroupTest {
     @Test
     public void shouldMapIntegersProperly() {
         // given
-        RawGroup rawGroup = new RawGroup();
+        RawGroup rawGroup = new RawGroup(Arrays.asList(null, "", "15606", "-98989865"));
 
         // when
-        rawGroup.add(null);
-        rawGroup.add("");
-        rawGroup.add("15606");
-        rawGroup.add("-98989865");
 
         // then
         assertThat(rawGroup.getInteger(0)).isNull();
@@ -131,8 +123,7 @@ public class RawGroupTest {
     @Test
     public void shouldThrowWhenFailsToMapInteger() {
         // given
-        RawGroup rawGroup = new RawGroup();
-        rawGroup.add("ThisIsNotInteger");
+        RawGroup rawGroup = new RawGroup(Collections.singletonList("ThisIsNotInteger"));
 
         // when
         Throwable throwable = catchThrowable(() -> rawGroup.getInteger(0));
@@ -146,14 +137,10 @@ public class RawGroupTest {
     @Test
     public void shouldMapDecimalsProperly() {
         // given
-        RawGroup rawGroup = new RawGroup();
+        RawGroup rawGroup =
+                new RawGroup(Arrays.asList(null, "", "15505,00452", "-0,231311", "-100,"));
 
         // when
-        rawGroup.add(null);
-        rawGroup.add("");
-        rawGroup.add("15505,00452");
-        rawGroup.add("-0,231311");
-        rawGroup.add("-100,");
 
         // then
         assertThat(rawGroup.getDecimal(0)).isNull();
@@ -167,8 +154,7 @@ public class RawGroupTest {
     @Test
     public void shouldThrowWhenFailsToMapDecimal() {
         // given
-        RawGroup rawGroup = new RawGroup();
-        rawGroup.add("ThisIsNotDecimal");
+        RawGroup rawGroup = new RawGroup(Collections.singletonList("ThisIsNotDecimal"));
 
         // when
         Throwable throwable = catchThrowable(() -> rawGroup.getDecimal(0));

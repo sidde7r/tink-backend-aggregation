@@ -19,6 +19,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.Segm
 @Setter
 public class HIUPD extends BaseResponsePart {
 
+    private static final int MAX_NUM_OF_ALLOWED_BUSINESS_OPERATIONS_IN_SEGMENT = 999;
+    private static final int ACC_ADDITIONAL_INFO_POSITION = 1009;
+
     @AllArgsConstructor
     @EqualsAndHashCode
     static class Limit {
@@ -79,14 +82,14 @@ public class HIUPD extends BaseResponsePart {
                         group.getString(2),
                         group.getInteger(3));
 
-        for (int i = 10; i < 10 + 999; i++) {
+        for (int i = 10; i < 10 + MAX_NUM_OF_ALLOWED_BUSINESS_OPERATIONS_IN_SEGMENT; i++) {
             group = rawSegment.getGroup(i);
             if (group.isEmpty()) break;
             allowedBusinessOperations.add(
                     new AllowedBusinessOperation(group.getString(0), group.getInteger(1)));
         }
 
-        accountAdditionalInfo = rawSegment.getGroup(1009).getString(0);
+        accountAdditionalInfo = rawSegment.getGroup(ACC_ADDITIONAL_INFO_POSITION).getString(0);
     }
 
     @Override

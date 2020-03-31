@@ -32,7 +32,7 @@ public class HIRMS extends BaseResponsePart {
                                                 group.getString(0),
                                                 group.getString(1),
                                                 group.getString(2),
-                                                group.subList(3, group.size())))
+                                                group.slice(3, group.size())))
                         .collect(Collectors.toList());
     }
 

@@ -9,9 +9,7 @@ public class RawSegmentComposer {
     public static RawSegment compose(String[][] data) {
         RawSegment segment = new RawSegment();
         for (String[] group : data) {
-            RawGroup rawGroup = new RawGroup();
-            rawGroup.addAll(Arrays.asList(group));
-            segment.addGroup(rawGroup);
+            segment.addGroup(new RawGroup(Arrays.asList(group)));
         }
         return segment;
     }

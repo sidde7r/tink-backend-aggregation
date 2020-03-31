@@ -1,23 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parser;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import org.assertj.core.util.Strings;
 
-@EqualsAndHashCode(callSuper = true)
-public class RawGroup extends ArrayList<String> {
+@EqualsAndHashCode
+public class RawGroup {
 
-    static final RawGroup DUMMY = new RawGroup();
+    static final RawGroup DUMMY = new RawGroup(Collections.emptyList());
+
+    private List<String> data;
+
+    public RawGroup(List<String> data) {
+        this.data = Collections.unmodifiableList(data);
+    }
 
     public String getString(int index) {
-        if (index >= this.size()) {
+        if (index >= data.size()) {
             return null;
         }
-        if ("".equals(get(index))) {
+        if ("".equals(data.get(index))) {
             return null;
         }
-        return get(index);
+        return data.get(index);
     }
 
     public Boolean getBoolean(int index) {
@@ -57,8 +64,19 @@ public class RawGroup extends ArrayList<String> {
         }
     }
 
-    @Override
     public boolean isEmpty() {
-        return super.isEmpty() || (this.size() == 1 && Strings.isNullOrEmpty(get(0)));
+        return data.isEmpty() || (data.size() == 1 && Strings.isNullOrEmpty(data.get(0)));
+    }
+
+    public int size() {
+        return data.size();
+    }
+
+    public List<String> asList() {
+        return data;
+    }
+
+    public List<String> slice(int fromIndex, int toIndex) {
+        return data.subList(fromIndex, toIndex);
     }
 }

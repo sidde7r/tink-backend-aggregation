@@ -32,7 +32,7 @@ public class FinTsParserTest {
 
         // then
         assertThat(segments).hasSize(1);
-        assertThat(segments.get(0).getGroup(0)).containsExactly("asdf:zxcv?'?:@zxcv");
+        assertThat(segments.get(0).getGroup(0).asList()).containsExactly("asdf:zxcv?'?:@zxcv");
     }
 
     @Test
@@ -45,7 +45,8 @@ public class FinTsParserTest {
 
         // then
         assertThat(segments).hasSize(1);
-        assertThat(segments.get(0).getGroup(0)).containsExactly("asdf?:zxcv???'???:?@zxcv");
+        assertThat(segments.get(0).getGroup(0).asList())
+                .containsExactly("asdf?:zxcv???'???:?@zxcv");
     }
 
     @Test
@@ -58,7 +59,8 @@ public class FinTsParserTest {
 
         // then
         assertThat(segments).hasSize(1);
-        assertThat(segments.get(0).getGroup(0)).containsExactly("ASDF", "1", "2", "ZXCV:1:2+200");
+        assertThat(segments.get(0).getGroup(0).asList())
+                .containsExactly("ASDF", "1", "2", "ZXCV:1:2+200");
     }
 
     @Test
@@ -72,12 +74,12 @@ public class FinTsParserTest {
         // then
         assertThat(segments).hasSize(2);
         RawSegment s = segments.get(0);
-        assertThat(s.getGroup(0)).containsExactly("RA?Z", "DWA");
-        assertThat(s.getGroup(1)).containsExactly("TRZY");
+        assertThat(s.getGroup(0).asList()).containsExactly("RA?Z", "DWA");
+        assertThat(s.getGroup(1).asList()).containsExactly("TRZY");
 
         s = segments.get(1);
-        assertThat(s.getGroup(0)).containsExactly("CZTERY");
-        assertThat(s.getGroup(1)).containsExactly("PIEC");
+        assertThat(s.getGroup(0).asList()).containsExactly("CZTERY");
+        assertThat(s.getGroup(1).asList()).containsExactly("PIEC");
     }
 
     @Test
@@ -92,32 +94,33 @@ public class FinTsParserTest {
         // then
         assertThat(segments).hasSize(4);
         RawSegment s = segments.get(0);
-        assertThat(s.getGroup(0)).containsExactly("HNHBK", "1", "3");
-        assertThat(s.getGroup(1)).containsExactly("000000000431");
-        assertThat(s.getGroup(2)).containsExactly("300");
-        assertThat(s.getGroup(3)).containsExactly("438842995982=307388524622BLA9=");
-        assertThat(s.getGroup(4)).containsExactly("5");
+        assertThat(s.getGroup(0).asList()).containsExactly("HNHBK", "1", "3");
+        assertThat(s.getGroup(1).asList()).containsExactly("000000000431");
+        assertThat(s.getGroup(2).asList()).containsExactly("300");
+        assertThat(s.getGroup(3).asList()).containsExactly("438842995982=307388524622BLA9=");
+        assertThat(s.getGroup(4).asList()).containsExactly("5");
 
         s = segments.get(1);
-        assertThat(s.getGroup(0)).containsExactly("HNVSK", "998", "3");
-        assertThat(s.getGroup(1)).containsExactly("PIN", "2");
-        assertThat(s.getGroup(2)).containsExactly("998");
-        assertThat(s.getGroup(3)).containsExactly("1");
-        assertThat(s.getGroup(4)).containsExactly("1", "", "06NebYu+qnABAAANpNOVwVkXrAQA");
-        assertThat(s.getGroup(5)).containsExactly("1", "20200305", "150541");
-        assertThat(s.getGroup(6)).containsExactly("2", "2", "13", "00000000", "5", "1");
-        assertThat(s.getGroup(7)).containsExactly("280", "75050000", "1234567890", "v", "0", "0");
-        assertThat(s.getGroup(8)).containsExactly("0");
+        assertThat(s.getGroup(0).asList()).containsExactly("HNVSK", "998", "3");
+        assertThat(s.getGroup(1).asList()).containsExactly("PIN", "2");
+        assertThat(s.getGroup(2).asList()).containsExactly("998");
+        assertThat(s.getGroup(3).asList()).containsExactly("1");
+        assertThat(s.getGroup(4).asList()).containsExactly("1", "", "06NebYu+qnABAAANpNOVwVkXrAQA");
+        assertThat(s.getGroup(5).asList()).containsExactly("1", "20200305", "150541");
+        assertThat(s.getGroup(6).asList()).containsExactly("2", "2", "13", "00000000", "5", "1");
+        assertThat(s.getGroup(7).asList())
+                .containsExactly("280", "75050000", "1234567890", "v", "0", "0");
+        assertThat(s.getGroup(8).asList()).containsExactly("0");
 
         s = segments.get(2);
-        assertThat(s.getGroup(0)).containsExactly("HNVSD", "999", "1");
-        assertThat(s.getGroup(1))
+        assertThat(s.getGroup(0).asList()).containsExactly("HNVSD", "999", "1");
+        assertThat(s.getGroup(1).asList())
                 .containsExactly(
                         "HNSHK:2:4+PIN:2+921+9302018+1+1+1::06NebYu?+qnABAAANpNOVwVkXrAQA+1+1:20200305:150541+1:999:1+6:10:16+280:75050000:1234567890:S:0:0'HKTAN:3:6+2+++8809-03-05-16.04.44.308950+N+++++'HNSHA:4:2+9302018++12345:041254'");
 
         s = segments.get(3);
-        assertThat(s.getGroup(0)).containsExactly("HNHBS", "5", "1");
-        assertThat(s.getGroup(1)).containsExactly("5");
+        assertThat(s.getGroup(0).asList()).containsExactly("HNHBS", "5", "1");
+        assertThat(s.getGroup(1).asList()).containsExactly("5");
     }
 
     @Test
@@ -164,7 +167,7 @@ public class FinTsParserTest {
     }
 
     @Test
-    public void check() {
+    public void shouldReportSixthGroupAsEmpty() {
         // given
         String rawMessage =
                 "HISAL:4:6:3+123456789::280:76030080+Name of account+EUR+D:44,25:EUR:20200316++0,:EUR+0,:EUR'";
@@ -173,6 +176,6 @@ public class FinTsParserTest {
         List<RawSegment> segments = FinTsParser.parse(rawMessage);
 
         // then
-        assertThat(segments.get(0).getGroup(5)).isEmpty();
+        assertThat(segments.get(0).getGroup(5).isEmpty()).isTrue();
     }
 }

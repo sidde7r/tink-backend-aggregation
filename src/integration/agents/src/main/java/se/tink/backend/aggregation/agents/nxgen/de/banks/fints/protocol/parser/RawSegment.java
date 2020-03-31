@@ -21,11 +21,11 @@ public class RawSegment {
      */
     public boolean isProperSegment() {
         boolean groupPresentAndBigEnough = groups.size() > 0 && groups.get(0).size() >= 3;
-        List<String> headerGroup = groups.get(0);
+        RawGroup headerGroup = groups.get(0);
         return groupPresentAndBigEnough
-                && headerGroup.get(0).matches("[A-Z]{4,}")
-                && headerGroup.get(1).matches("\\d+")
-                && headerGroup.get(2).matches("\\d+");
+                && headerGroup.getString(0).matches("[A-Z]{4,}")
+                && headerGroup.getString(1).matches("\\d+")
+                && headerGroup.getString(2).matches("\\d+");
     }
 
     /**
@@ -34,7 +34,7 @@ public class RawSegment {
      * @return First element of first group.
      */
     public String getSegmentName() {
-        return groups.get(0).get(0);
+        return groups.get(0).getString(0);
     }
 
     public List<RawGroup> getGroups() {

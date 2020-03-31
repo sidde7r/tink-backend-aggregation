@@ -33,7 +33,7 @@ public class HICAZS extends BaseResponsePart {
         storagePeriod = rawGroup.getInteger(0);
         canLimitNumberOfEntries = rawGroup.getBoolean(1);
         canQueryAboutAllAcounts = rawGroup.getBoolean(2);
-        supportedCamtFormats.addAll(rawGroup.subList(3, rawGroup.size()));
+        supportedCamtFormats.addAll(rawGroup.slice(3, rawGroup.size()));
     }
 
     @Override

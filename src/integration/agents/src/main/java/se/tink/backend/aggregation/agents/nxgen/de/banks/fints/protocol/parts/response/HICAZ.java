@@ -19,8 +19,8 @@ public class HICAZ extends BaseResponsePart {
     HICAZ(RawSegment rawSegment) {
         super(rawSegment);
         camtFormat = rawSegment.getGroup(2).getString(0);
-        camtFiles.addAll(rawSegment.getGroup(3));
-        camtFiles.addAll(rawSegment.getGroup(4));
+        camtFiles.addAll(rawSegment.getGroup(3).asList());
+        camtFiles.addAll(rawSegment.getGroup(4).asList());
     }
 
     @Override

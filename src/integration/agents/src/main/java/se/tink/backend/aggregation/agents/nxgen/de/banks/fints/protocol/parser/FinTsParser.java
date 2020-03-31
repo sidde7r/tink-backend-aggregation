@@ -20,7 +20,7 @@ public class FinTsParser {
     private static List<RawSegment> rawSegments;
 
     private static RawSegment currentSegment;
-    private static RawGroup currentGroup;
+    private static List<String> currentGroup;
 
     private static String message;
     private static int position;
@@ -47,7 +47,7 @@ public class FinTsParser {
 
         rawSegments = new ArrayList<>();
         currentSegment = new RawSegment();
-        currentGroup = new RawGroup();
+        currentGroup = new ArrayList<>();
 
         message = rawMessage;
         position = 0;
@@ -112,12 +112,12 @@ public class FinTsParser {
             case ELEMENT_DELIMITER:
                 break;
             case ELEMENT_GROUP_DELIMITER:
-                currentSegment.addGroup(currentGroup);
-                currentGroup = new RawGroup();
+                currentSegment.addGroup(new RawGroup(currentGroup));
+                currentGroup = new ArrayList<>();
                 break;
             case SEGMENT_DELIMITER:
-                currentSegment.addGroup(currentGroup);
-                currentGroup = new RawGroup();
+                currentSegment.addGroup(new RawGroup(currentGroup));
+                currentGroup = new ArrayList<>();
                 rawSegments.add(currentSegment);
                 currentSegment = new RawSegment();
                 break;
