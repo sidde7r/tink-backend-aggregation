@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -33,27 +34,29 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rp
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticator {
 
-    private final Catalog catalog;
     private final PersistentStorage persistentStorage;
     private final FortisApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private final SupplementalInformationFormer supplementalInformationFormer;
     private static final AggregationLogger LOGGER =
             new AggregationLogger(FortisAuthenticator.class);
 
     public FortisAuthenticator(
-            Catalog catalog,
+            CredentialsRequest credentialsRequest,
             PersistentStorage persistentStorage,
             FortisApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper) {
-        this.catalog = catalog;
+        this.supplementalInformationFormer =
+                new SupplementalInformationFormer(credentialsRequest.getProvider());
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -156,7 +159,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         final String authenticatorFactorId =
                 credentials.getField(se.tink.backend.agents.rpc.Field.Key.USERNAME);
         final String smid = credentials.getField(FortisConstants.Field.CLIENTNUMBER);
-        final String password = credentials.getField(se.tink.backend.agents.rpc.Field.Key.PASSWORD);
+        final String password = waitForPassword();
         final String deviceFingerprint = FortisUtils.calculateDeviceFingerPrint();
 
         persistentStorage.put(FortisConstants.Storage.ACCOUNT_PRODUCT_ID, authenticatorFactorId);
@@ -436,6 +439,13 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             clearAuthenticationData();
             throw SessionError.SESSION_EXPIRED.exception();
         }
+    }
+
+    private String waitForPassword() throws SupplementalInfoException {
+        return supplementalInformationHelper
+                .askSupplementalInformation(
+                        supplementalInformationFormer.getField(Field.Key.PASSWORD))
+                .get(Field.Key.PASSWORD.getFieldKey());
     }
 
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
