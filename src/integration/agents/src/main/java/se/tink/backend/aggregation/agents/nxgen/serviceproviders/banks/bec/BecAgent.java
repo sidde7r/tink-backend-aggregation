@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filte
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.BecInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.BecLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.session.BecSessionHandler;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -54,7 +55,9 @@ public class BecAgent extends NextGenerationAgent
 
         BecSecurityHelper securityHelper =
                 BecSecurityHelper.getInstance(
-                        BecConstants.Crypto.SIGNING_CERTIFICATE_B64,
+                        new String(
+                                EncodingUtils.decodeBase64String(
+                                        BecConstants.Crypto.SIGNING_CERTIFICATE_B64)),
                         BecConstants.Crypto.PUBLIC_KEY_SALT);
 
         this.apiClient =
