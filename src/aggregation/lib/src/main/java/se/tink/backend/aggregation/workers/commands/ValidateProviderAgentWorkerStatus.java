@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import java.util.Objects;
+import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
+import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
@@ -15,24 +16,35 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     private AgentWorkerCommandContext context;
     private final ControllerWrapper controllerWrapper;
+    private final Set<ProviderStatuses> blacklistedProviderStatuses;
 
     public ValidateProviderAgentWorkerStatus(
             AgentWorkerCommandContext context, ControllerWrapper controllerWrapper) {
+        this(
+                context,
+                controllerWrapper,
+                ImmutableSet.of(ProviderStatuses.DISABLED, ProviderStatuses.TEMPORARY_DISABLED));
+    }
+
+    ValidateProviderAgentWorkerStatus(
+            AgentWorkerCommandContext context,
+            ControllerWrapper controllerWrapper,
+            Set<ProviderStatuses> blacklistedProviderStatuses) {
         this.context = context;
         this.controllerWrapper = controllerWrapper;
+        this.blacklistedProviderStatuses = blacklistedProviderStatuses;
     }
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         Provider provider = context.getRequest().getProvider();
-        Credentials credentials = context.getRequest().getCredentials();
 
-        Optional<String> refreshId = context.getRefreshId();
-
-        if (!Objects.equals(provider.getStatus(), ProviderStatuses.TEMPORARY_DISABLED)
-                && !Objects.equals(provider.getStatus(), ProviderStatuses.DISABLED)) {
+        if (!blacklistedProviderStatuses.contains(provider.getStatus())) {
             return AgentWorkerCommandResult.CONTINUE;
         }
+
+        Credentials credentials = context.getRequest().getCredentials();
+        Optional<String> refreshId = context.getRefreshId();
 
         credentials.setStatus(CredentialsStatus.UNCHANGED);
         credentials.clearSensitiveInformation(provider);
