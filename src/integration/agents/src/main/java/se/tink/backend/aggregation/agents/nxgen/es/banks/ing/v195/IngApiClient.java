@@ -82,8 +82,6 @@ public class IngApiClient {
 
             List<Product> productList = Arrays.asList(products);
 
-            IngUtils.logUnknownProducts(productList);
-
             cachedProductsResponse = ProductsResponse.create(productList);
         }
 

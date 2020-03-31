@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.EsIdentityDocumentType;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class IngAuthenticator implements Authenticator, AuthenticationControllerType {
     private static final AggregationLogger LOGGER = new AggregationLogger(IngAuthenticator.class);
@@ -150,10 +149,6 @@ public class IngAuthenticator implements Authenticator, AuthenticationController
                 }
             }
         } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
-            LOGGER.infoExtraLong(
-                    SerializationUtils.serializeToString(pinPadNumbers),
-                    Logging.INVALID_PINPAD_NUMBERS,
-                    ex);
             throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
 
@@ -163,10 +158,6 @@ public class IngAuthenticator implements Authenticator, AuthenticationController
                     .map(idx -> pwdNumberToIndex[password.get(idx - 1)])
                     .collect(Collectors.toList());
         } catch (IndexOutOfBoundsException ex) {
-            LOGGER.infoExtraLong(
-                    SerializationUtils.serializeToString(pinPositions),
-                    Logging.MISSING_PINPAD_POSITION,
-                    ex);
             throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
     }
