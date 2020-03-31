@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import java.util.Objects;
+import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
+import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
@@ -12,27 +13,54 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 
+/**
+ * Prevents the command chain to advance if provider has one of the not allowed statuses
+ *
+ * <p>Also does the clean up to ensure credentials object is again in a state where other command
+ * chains can be triggered after this one.
+ *
+ * <p>TODO: consider moving the cleaning up to `postProcess` if possible + desired
+ *
+ * <p>TODO: consider renaming the command
+ */
 public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     private AgentWorkerCommandContext context;
     private final ControllerWrapper controllerWrapper;
+    private final Set<ProviderStatuses> blacklistedProviderStatuses;
 
     public ValidateProviderAgentWorkerStatus(
             AgentWorkerCommandContext context, ControllerWrapper controllerWrapper) {
+        this(
+                context,
+                controllerWrapper,
+                ImmutableSet.of(ProviderStatuses.DISABLED, ProviderStatuses.TEMPORARY_DISABLED));
+    }
+
+    ValidateProviderAgentWorkerStatus(
+            AgentWorkerCommandContext context,
+            ControllerWrapper controllerWrapper,
+            Set<ProviderStatuses> blacklistedProviderStatuses) {
         this.context = context;
         this.controllerWrapper = controllerWrapper;
+        this.blacklistedProviderStatuses = blacklistedProviderStatuses;
     }
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         Provider provider = context.getRequest().getProvider();
-        Credentials credentials = context.getRequest().getCredentials();
 
-        Optional<String> refreshId = context.getRefreshId();
-
-        if (!Objects.equals(provider.getStatus(), ProviderStatuses.TEMPORARY_DISABLED)
-                && !Objects.equals(provider.getStatus(), ProviderStatuses.DISABLED)) {
-            return AgentWorkerCommandResult.CONTINUE;
+        if (blacklistedProviderStatuses.contains(provider.getStatus())) {
+            updateCredentialStatusToUnchanged();
+            return AgentWorkerCommandResult.ABORT;
         }
+
+        return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    void updateCredentialStatusToUnchanged() {
+        Provider provider = context.getRequest().getProvider();
+        Credentials credentials = context.getRequest().getCredentials();
+        Optional<String> refreshId = context.getRefreshId();
 
         credentials.setStatus(CredentialsStatus.UNCHANGED);
         credentials.clearSensitiveInformation(provider);
@@ -50,8 +78,6 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
-
-        return AgentWorkerCommandResult.ABORT;
     }
 
     @Override
