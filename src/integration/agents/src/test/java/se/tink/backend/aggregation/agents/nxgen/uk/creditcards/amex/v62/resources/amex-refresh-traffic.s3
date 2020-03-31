@@ -19,7 +19,6 @@
 1 > x-axp-appversion: 6.25.0
 1 > x-axp-locale: en_GB
 1 > x-axp-git-sha: 32e1a867b
-1 > X-Aggregator: Tink Testing
 {"serviceName":"AccountServicing","version":"-1"}
 1 * Client in-bound response
 1 * 2020-01-20--20:48:01.979
@@ -55,7 +54,6 @@
 2 > x-axp-appversion: 6.25.0
 2 > x-axp-locale: en_GB
 2 > x-axp-git-sha: 32e1a867b
-2 > X-Aggregator: Tink Testing
 {"serviceName":"Content","version":"-1"}
 2 * Client in-bound response
 2 * 2020-01-20--20:48:02.277
@@ -91,7 +89,6 @@
 3 > x-axp-appversion: 6.25.0
 3 > x-axp-locale: en_GB
 3 > x-axp-git-sha: 32e1a867b
-3 > X-Aggregator: Tink Testing
 {"cardArtRequest":[{"minimumWidth":"1260","tag":"big-image"}],"loginCredentials":{"userIdLogin":{"rememberMeFlag":true,"userId":"testUser","password":"testPassword","rememberMeToken":null}}}
 3 * Client in-bound response
 3 * 2020-01-20--20:48:03.876
@@ -131,7 +128,6 @@
 4 > x-axp-blueboxvalues: dummyCupcakeValue
 4 > x-axp-gatekeeper: dummyGateKeeperCookie
 4 > authorization: Bearer dummyJWTToken
-4 > X-Aggregator: Tink Testing
 {"timeZone":"GMT+1","timeZoneOffset":"3600000","sortedIndex":0,"pendingChargeEnabled":true,"cmlEnabled":true,"goodsSvcOfferEnabled":false,"payWithPointsEnabled":false,"payYourWayEnabled":false,"pushEnabled":false}
 4 * Client in-bound response
 4 * 2020-01-20--20:48:04.898
@@ -171,7 +167,6 @@
 5 > x-axp-blueboxvalues: dummyCupcakeValue
 5 > x-axp-gatekeeper: dummyGateKeeperCookie
 5 > authorization: Bearer dummyJWTToken
-5 > X-Aggregator: Tink Testing
 {"billingIndexList":[0],"sortedIndex":0}
 5 * Client in-bound response
 5 * 2020-01-20--20:48:05.719
@@ -211,7 +206,6 @@
 6 > x-axp-blueboxvalues: dummyCupcakeValue
 6 > x-axp-gatekeeper: dummyGateKeeperCookie
 6 > authorization: Bearer dummyJWTToken
-6 > X-Aggregator: Tink Testing
 {"billingIndexList":[1],"sortedIndex":0}
 6 * Client in-bound response
 6 * 2020-01-20--20:48:11.147
@@ -251,7 +245,6 @@
 7 > x-axp-blueboxvalues: dummyCupcakeValue
 7 > x-axp-gatekeeper: dummyGateKeeperCookie
 7 > authorization: Bearer dummyJWTToken
-7 > X-Aggregator: Tink Testing
 {"billingIndexList":[2],"sortedIndex":0}
 7 * Client in-bound response
 7 * 2020-01-20--20:48:12.375
@@ -291,7 +284,6 @@
 8 > x-axp-blueboxvalues: dummyCupcakeValue
 8 > x-axp-gatekeeper: dummyGateKeeperCookie
 8 > authorization: Bearer dummyJWTToken
-8 > X-Aggregator: Tink Testing
 {"billingIndexList":[3],"sortedIndex":0}
 8 * Client in-bound response
 8 * 2020-01-20--20:48:14.220
@@ -331,7 +323,6 @@
 9 > x-axp-blueboxvalues: dummyCupcakeValue
 9 > x-axp-gatekeeper: dummyGateKeeperCookie
 9 > authorization: Bearer dummyJWTToken
-9 > X-Aggregator: Tink Testing
 {"billingIndexList":[4],"sortedIndex":0}
 9 * Client in-bound response
 9 * 2020-01-20--20:48:15.342
@@ -371,7 +362,6 @@
 10 > x-axp-blueboxvalues: dummyCupcakeValue
 10 > x-axp-gatekeeper: dummyGateKeeperCookie
 10 > authorization: Bearer dummyJWTToken
-10 > X-Aggregator: Tink Testing
 {"billingIndexList":[5],"sortedIndex":0}
 10 * Client in-bound response
 10 * 2020-01-20--20:48:17.398
@@ -412,7 +402,6 @@
 11 > x-axp-blueboxvalues: dummyCupcakeValue
 11 > x-axp-gatekeeper: dummyGateKeeperCookie
 11 > authorization: Bearer dummyJWTToken
-11 > X-Aggregator: Tink Testing
 11 * Client in-bound response
 11 * 2020-01-20--20:48:31.523
 11 < 200
