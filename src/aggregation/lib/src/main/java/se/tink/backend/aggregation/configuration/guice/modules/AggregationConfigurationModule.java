@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
@@ -65,6 +66,8 @@ public class AggregationConfigurationModule extends AbstractModule {
                 .to(InterProcessSemaphoreMutexFactoryImpl.class);
         bind(ProviderConfigurationServiceConfiguration.class)
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
+        bind(EidasProxyConfiguration.class)
+                .toInstance(configuration.getAgentsServiceConfiguration().getEidasProxy());
 
         if (configuration.isDevelopmentMode()
                 && configuration.getDevelopmentConfiguration().isValid()) {
