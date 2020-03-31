@@ -9,17 +9,13 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class IngCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
-    private static final AggregationLogger AGGR_LOGGER =
-            new AggregationLogger(IngCreditCardFetcher.class);
     private static final Logger LOGGER = LoggerFactory.getLogger(IngCreditCardFetcher.class);
 
     private final IngHelper ingHelper;
@@ -48,11 +44,6 @@ public class IngCreditCardFetcher
             Optional<String> creditCardsRequestUrl = loginResponse.findCreditCardsRequestUrl();
             if (creditCardsRequestUrl.isPresent()) {
                 LOGGER.info("{}: {}", IngConstants.Logs.CREDITCARDS, creditCardsRequestUrl.get());
-
-                String serializedLoginResponse =
-                        SerializationUtils.serializeToString(loginResponse);
-                AGGR_LOGGER.infoExtraLong(
-                        serializedLoginResponse, IngConstants.Logs.LOGIN_RESPONSE);
             }
 
             Optional<String> creditCardTransactionsRequestUrl =
