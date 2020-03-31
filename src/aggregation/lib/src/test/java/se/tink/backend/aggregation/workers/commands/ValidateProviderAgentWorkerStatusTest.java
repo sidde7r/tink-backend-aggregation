@@ -42,4 +42,25 @@ public class ValidateProviderAgentWorkerStatusTest {
         // Assert
         Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
     }
+
+    @Test
+    public void returns_abort_when_provider_has_a_blacklisted_status() throws Exception {
+        // Arrange
+        CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
+        Mockito.when(context.getRequest()).thenReturn(request);
+        Provider provider = Mockito.mock(Provider.class);
+        Mockito.when(request.getProvider()).thenReturn(provider);
+        Mockito.when(provider.getStatus()).thenReturn(ProviderStatuses.ENABLED);
+        Set<ProviderStatuses> blacklisted = ImmutableSet.of(ProviderStatuses.ENABLED);
+        ValidateProviderAgentWorkerStatus command =
+                new ValidateProviderAgentWorkerStatus(context, controllerWrapper, blacklisted);
+        ValidateProviderAgentWorkerStatus commandSpy = Mockito.spy(command);
+        Mockito.doNothing().when(commandSpy).updateCredentialStatusToUnchanged();
+
+        // Act
+        AgentWorkerCommandResult result = commandSpy.execute();
+
+        // Assert
+        Assert.assertEquals(result, AgentWorkerCommandResult.ABORT);
+    }
 }

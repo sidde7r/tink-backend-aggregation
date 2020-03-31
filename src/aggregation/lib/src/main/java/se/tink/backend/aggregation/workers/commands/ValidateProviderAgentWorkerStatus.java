@@ -57,7 +57,7 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    private void updateCredentialStatusToUnchanged() {
+    void updateCredentialStatusToUnchanged() {
         Provider provider = context.getRequest().getProvider();
         Credentials credentials = context.getRequest().getCredentials();
         Optional<String> refreshId = context.getRefreshId();
