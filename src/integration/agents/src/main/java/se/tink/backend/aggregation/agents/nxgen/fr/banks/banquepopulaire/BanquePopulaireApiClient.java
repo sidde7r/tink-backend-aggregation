@@ -155,7 +155,6 @@ public class BanquePopulaireApiClient {
                             .get(HttpResponse.class);
             return rawResponse.getBody(ContractsResponse.class);
         } catch (Exception e) {
-            logPaginationResponse(rawResponse, e);
             throw e;
         }
     }
@@ -194,7 +193,6 @@ public class BanquePopulaireApiClient {
 
             return rawResponse.getBody(BanquePopulaireTransactionsResponse.class);
         } catch (Exception e) {
-            logPaginationResponse(rawResponse, e);
             throw e;
         }
     }
@@ -218,12 +216,6 @@ public class BanquePopulaireApiClient {
                             .get(HttpResponse.class);
             return rawResponse.getBody(ContractsResponse.class);
         } catch (Exception e) {
-            if (rawResponse != null && rawResponse.hasBody()) {
-                LOGGER.warnExtraLong(
-                        rawResponse.getBody(String.class),
-                        BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE,
-                        e);
-            }
             throw e;
         }
     }
@@ -313,15 +305,6 @@ public class BanquePopulaireApiClient {
                     .get(HttpResponse.class);
         } catch (Exception e) {
             LOGGER.info("Error logging out", e);
-        }
-    }
-
-    private void logPaginationResponse(HttpResponse rawResponse, Exception e) {
-        if (rawResponse != null && rawResponse.hasBody()) {
-            LOGGER.warnExtraLong(
-                    rawResponse.getBody(String.class),
-                    BanquePopulaireConstants.LogTags.PAGINATION_RESPONSE,
-                    e);
         }
     }
 
