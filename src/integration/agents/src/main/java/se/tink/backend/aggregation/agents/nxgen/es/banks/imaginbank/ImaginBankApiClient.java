@@ -82,7 +82,7 @@ public class ImaginBankApiClient {
         // currently imagin bank only allows one account for a customer, log if we get more
         if (accountsResponse != null && accountsResponse.getNumberOfAccounts() > 1) {
             LOGGER.warnExtraLong(
-                    accountsResponseRaw, ImaginBankConstants.LogTags.MULTIPLE_ACCOUNTS);
+                    "Got more than one account", ImaginBankConstants.LogTags.MULTIPLE_ACCOUNTS);
         }
 
         return accountsResponse;
