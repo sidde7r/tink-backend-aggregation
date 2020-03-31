@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.aggregationcontroller;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
@@ -29,6 +31,10 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredential
 import se.tink.libraries.credentials.rpc.Credentials;
 
 public final class AggregationControllerAggregationClientTest {
+
+    private static WireMockTestServer server;
+    private static AggregationControllerAggregationClient client;
+    private static HostConfiguration hostConfiguration;
 
     private static class TestModule extends AbstractModule {
 
@@ -94,10 +100,23 @@ public final class AggregationControllerAggregationClientTest {
         }
     }
 
-    @Test
-    public void clientShouldTryUpdatingCredentialsAgainWhenRequestFailed() {
+    private UpdateCredentialsStatusRequest createUpdateCredentialsRequest(String credentialsId) {
+        UpdateCredentialsStatusRequest request = new UpdateCredentialsStatusRequest();
+        Credentials credentials = new Credentials();
+        credentials.setId(credentialsId);
+        request.setCredentials(credentials);
+        credentials.setStatusUpdated(new Date(1));
+        return request;
+    }
 
-        WireMockTestServer server = new WireMockTestServer();
+    @BeforeClass
+    public static void setUp() {
+        // given
+        client =
+                Guice.createInjector(new TestModule())
+                        .getInstance(AggregationControllerAggregationClientImpl.class);
+
+        server = new WireMockTestServer();
 
         server.prepareMockServer(
                 new AapFileParser(
@@ -105,22 +124,36 @@ public final class AggregationControllerAggregationClientTest {
                                 .read(
                                         "src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/resources/aggregation_controller_mock_traffic.aap")));
 
-        AggregationControllerAggregationClient client =
-                Guice.createInjector(new TestModule())
-                        .getInstance(AggregationControllerAggregationClientImpl.class);
-
-        HostConfiguration hostConfiguration = new HostConfiguration();
+        hostConfiguration = new HostConfiguration();
         hostConfiguration.setHost("http://localhost:" + server.getHttpPort());
         hostConfiguration.setBase64encodedclientcert("");
         hostConfiguration.setDisablerequestcompression(false);
         hostConfiguration.setApiToken("devtoken");
         hostConfiguration.setClusterId("local-development");
+    }
 
-        UpdateCredentialsStatusRequest request = new UpdateCredentialsStatusRequest();
-        Credentials credentials = new Credentials();
-        credentials.setId("dummy_id");
-        request.setCredentials(credentials);
-        credentials.setStatusUpdated(new Date(1));
+    @Test
+    public void clientShouldTryUpdatingCredentialsAgainWhenRequestFailedWithStatusCode502() {
+        // given
+        UpdateCredentialsStatusRequest request = createUpdateCredentialsRequest("dummy_id");
+
+        // when
         client.updateCredentials(hostConfiguration, request);
+
+        // then
+        // (No exception is thrown)
+    }
+
+    @Test(expected = UniformInterfaceException.class)
+    public void clientShouldFailWhenRequestFailedWithStatusCode500() {
+        // given
+        UpdateCredentialsStatusRequest request =
+                createUpdateCredentialsRequest("dummy_id_error_500");
+
+        // when
+        client.updateCredentials(hostConfiguration, request);
+
+        // then
+        // (expecting UniformInterfaceException)
     }
 }

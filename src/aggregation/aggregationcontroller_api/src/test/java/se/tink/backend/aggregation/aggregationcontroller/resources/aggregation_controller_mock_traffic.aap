@@ -6,7 +6,7 @@ Content-Type: application/json
 {"credentials":{"providerLatency":0,"id":"dummy_id","statusUpdated":1,"dataVersion":0,"fields":{},"sensitivePayload":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false}
 
 RESPONSE 1 SET STATE1
-500
+502
 Content-Type: application/json;charset=utf-8
 
 {}
@@ -20,6 +20,19 @@ Content-Type: application/json
 
 RESPONSE 2
 200
+Content-Type: application/json;charset=utf-8
+
+{}
+
+REQUEST 3
+POST https://aggregation.com/aggregation/controller/v1/system/update/credentials/update
+Accept: application/json
+Content-Type: application/json
+
+{"credentials":{"providerLatency":0,"id":"dummy_id_error_500","statusUpdated":1,"dataVersion":0,"fields":{},"sensitivePayload":{}},"updateContextTimestamp":false,"userDeviceId":null,"userId":null,"manual":false,"migrationUpdate":false},"updateContextTimestamp":false,"manual":false,"migrationUpdate":false}
+
+RESPONSE 3
+500
 Content-Type: application/json;charset=utf-8
 
 {}
