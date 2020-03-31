@@ -24,7 +24,6 @@ import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.Security;
@@ -145,12 +144,10 @@ import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
-import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
-import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -309,11 +306,6 @@ public class SEBApiAgent extends AbstractAgent
 
         credentials = request.getCredentials();
         client = createClient();
-        client.addFilter(
-                new LoggingFilter(
-                        new PrintStream(System.out),
-                        context.getLogMasker(),
-                        LogMasker.shouldLog(request.getProvider())));
         sebUUID = UUID.randomUUID().toString().toUpperCase();
         catalog = context.getCatalog();
         transferMessageFormatter =
