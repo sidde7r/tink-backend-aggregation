@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Provider;
@@ -14,6 +17,7 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 public class SdcNoConfiguration implements ClientConfiguration {
     private String bankCode;
     private AuthenticationType authenticationType;
+    private Map<AuthenticationType, String> baseUrlMap = new HashMap<>();
 
     private static final Pattern PATTERN = Pattern.compile("\\{bankcode}");
     private static final Matcher NETTBANK_MATCHER =
@@ -24,6 +28,13 @@ public class SdcNoConfiguration implements ClientConfiguration {
     public SdcNoConfiguration(Provider provider) {
         this.bankCode = getBankCode(provider.getPayload());
         this.authenticationType = ProviderMapping.getAuthenticationTypeByBankCode(bankCode);
+        generateBaseUrlMap();
+    }
+
+    private void generateBaseUrlMap() {
+        baseUrlMap.put(AuthenticationType.NETTBANK, NETTBANK_MATCHER.replaceAll(bankCode));
+        baseUrlMap.put(AuthenticationType.PORTAL, PORTALBANK_MATCHER.replaceAll(bankCode));
+        baseUrlMap.put(AuthenticationType.EIKA, Authentication.EIKA_LOGIN_URL);
     }
 
     public String getBankCode(String payload) {
@@ -34,14 +45,11 @@ public class SdcNoConfiguration implements ClientConfiguration {
     }
 
     public String getBaseUrl() {
-        if ((AuthenticationType.NETTBANK).equals(authenticationType)) {
-            return NETTBANK_MATCHER.replaceAll(bankCode);
-        }
-        if ((AuthenticationType.PORTAL).equals(authenticationType)) {
-            return PORTALBANK_MATCHER.replaceAll(bankCode);
-        }
-        throw new IllegalArgumentException(
-                String.format("Not found base url for %s", authenticationType));
+        return Optional.ofNullable(baseUrlMap.get(authenticationType))
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "Not found base url for " + authenticationType));
     }
 
     public AuthenticationType getAuthenticationType() {
