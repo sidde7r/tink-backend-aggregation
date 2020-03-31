@@ -71,6 +71,12 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected final RandomValueGenerator randomValueGenerator;
     protected final LocalDateTimeSource localDateTimeSource;
 
+    /**
+     * @deprecated Use constructor taking JwtSigner directly instead. This is only here to maintain
+     *     backwards compatibility with agents that are not yet setting up all needed guice
+     *     bindings.
+     */
+    @Deprecated
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
             AgentsServiceConfiguration configuration,
@@ -85,15 +91,35 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
 
         client.addFilter(new BankServiceInternalErrorFilter());
-        initializeAgent();
+
+        JwtSigner jwtSigner =
+                getClientConfiguration().getSignerOverride().orElseGet(this::getQsealSigner);
+        initializeAgent(jwtSigner);
     }
 
-    private void initializeAgent() {
+    public UkOpenBankingBaseAgent(
+            AgentComponentProvider componentProvider,
+            AgentsServiceConfiguration configuration,
+            UkOpenBankingAisConfig agentConfig,
+            JwtSigner jwtSigner,
+            boolean disableSslVerification) {
+        super(componentProvider);
+        super.setConfiguration(configuration);
+        this.wellKnownURL = agentConfig.getWellKnownURL();
+        this.disableSslVerification = disableSslVerification;
+        this.agentConfig = agentConfig;
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
+        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
+
+        client.addFilter(new BankServiceInternalErrorFilter());
+        initializeAgent(jwtSigner);
+    }
+
+    private void initializeAgent(JwtSigner jwtSigner) {
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
                 getClientConfiguration();
 
         softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertion();
-
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
 
         if (this.disableSslVerification) {
@@ -109,15 +135,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 .orElse(this::useEidasProxy)
                 .applyConfiguration(client);
 
-        JwtSigner signer =
-                ukOpenBankingConfiguration.getSignerOverride().orElseGet(this::getQsealSigner);
-
-        apiClient = createApiClient(client, signer, softwareStatement, providerConfiguration);
+        apiClient = createApiClient(client, jwtSigner, softwareStatement, providerConfiguration);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
-
         this.creditCardRefreshController = constructCreditCardRefreshController();
-
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
     }
