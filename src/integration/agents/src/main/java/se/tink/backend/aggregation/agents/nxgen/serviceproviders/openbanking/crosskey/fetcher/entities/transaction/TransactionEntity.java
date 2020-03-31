@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
@@ -54,14 +56,14 @@ public class TransactionEntity {
         Amount transactionAmount = new Amount(amount.getCurrency(), amount.getAmount());
 
         transactionAmount =
-                getCreditDebitIndicator().equals(TransactionTypeEntity.CREDIT)
+                getCreditDebitIndicator().equals(TransactionTypeEntity.DEBIT)
                         ? transactionAmount.negate()
                         : transactionAmount;
 
         return CreditCardTransaction.builder()
                 .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
                 .setDate(getBookedDate())
-                .setDescription(creditorAccount.getName())
+                .setDescription(getDescription())
                 .setAmount(transactionAmount)
                 .build();
     }
@@ -99,5 +101,11 @@ public class TransactionEntity {
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @JsonIgnore
+    private String getDescription() {
+        return Optional.ofNullable(transactionInformation)
+                .orElse(StringUtils.capitalize(proprietaryBankTransactionCode.getCode()));
     }
 }
