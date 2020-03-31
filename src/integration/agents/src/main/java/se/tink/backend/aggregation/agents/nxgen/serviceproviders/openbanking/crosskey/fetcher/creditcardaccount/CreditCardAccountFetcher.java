@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,7 +11,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
     private final CrosskeyBaseApiClient apiClient;
@@ -47,10 +51,28 @@ public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccoun
                         .map(AccountDetailsEntity::getIdentification)
                         .orElse(accountEntity.getAccountId());
 
-        return CreditCardAccount.builder(uniqueIdentifier)
-                .setAccountNumber(uniqueIdentifier)
-                .setBalance(new Amount(amount.getCurrency(), amount.getAmount()))
-                .setBankIdentifier(accountEntity.getAccountId())
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(uniqueIdentifier)
+                                .withBalance(
+                                        ExactCurrencyAmount.of(
+                                                BigDecimal.valueOf(amount.getAmount()),
+                                                amount.getCurrency()))
+                                .withAvailableCredit(
+                                        ExactCurrencyAmount.of(
+                                                BigDecimal.ZERO, amount.getCurrency()))
+                                .withCardAlias(accountEntity.getDescription())
+                                .build())
+                .withoutFlags()
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(uniqueIdentifier)
+                                .withAccountNumber(uniqueIdentifier)
+                                .withAccountName(accountDetails.get().getName())
+                                .addIdentifier(new PaymentCardNumberIdentifier(uniqueIdentifier))
+                                .setProductName(accountEntity.getDescription())
+                                .build())
                 .build();
     }
 }
