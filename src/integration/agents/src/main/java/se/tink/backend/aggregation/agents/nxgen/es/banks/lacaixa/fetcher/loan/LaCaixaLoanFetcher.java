@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.LoanTypeName;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.entities.LoanDetailsAggregate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsResponse;
@@ -20,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LaCaixaLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger LOGGER = new AggregationLogger(LaCaixaLoanFetcher.class);
@@ -73,9 +71,6 @@ public class LaCaixaLoanFetcher implements AccountFetcher<LoanAccount> {
                         apiClient.fetchConsumerLoanDetails(loanEntity.getContractId());
                 break;
             default:
-                LOGGER.warnExtraLong(
-                        SerializationUtils.serializeToString(loanEntity),
-                        LogTags.UNKNOWN_LOAN_CATEGORY);
                 return Optional.empty();
         }
 

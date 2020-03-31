@@ -6,7 +6,6 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -14,11 +13,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class AccountEntity {
-    private static final AggregationLogger LOGGER = new AggregationLogger(AccountEntity.class);
 
     private String alias;
 
@@ -39,11 +36,6 @@ public class AccountEntity {
                         .orElse(AccountTypes.OTHER);
 
         if (type == AccountTypes.OTHER) {
-            // log all accounts to try to find out what types we are receiving
-            LOGGER.infoExtraLong(
-                    SerializationUtils.serializeToString(this),
-                    LaCaixaConstants.LogTags.UNKNOWN_ACCOUNT_TYPE);
-
             return Optional.empty();
         }
 
