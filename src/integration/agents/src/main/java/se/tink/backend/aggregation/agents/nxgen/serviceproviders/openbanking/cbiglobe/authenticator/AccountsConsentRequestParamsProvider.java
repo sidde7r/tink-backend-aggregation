@@ -10,7 +10,7 @@ public class AccountsConsentRequestParamsProvider implements CbiThirdPartyAppReq
     private final ConsentManager consentManager;
     private final StrongAuthenticationState strongAuthenticationState;
 
-    AccountsConsentRequestParamsProvider(
+    public AccountsConsentRequestParamsProvider(
             CbiGlobeAuthenticator authenticator,
             ConsentManager consentManager,
             StrongAuthenticationState strongAuthenticationState) {

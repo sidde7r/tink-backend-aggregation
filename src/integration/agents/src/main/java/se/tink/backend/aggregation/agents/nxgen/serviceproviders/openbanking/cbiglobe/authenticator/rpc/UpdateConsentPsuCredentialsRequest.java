@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @NoArgsConstructor
 @Setter
 @JsonObject
-public class UpdateConsentRequest {
-    private String authenticationMethodId;
+@EqualsAndHashCode
+public class UpdateConsentPsuCredentialsRequest {
+    private PsuCredentialsRequest psuCredentials;
 }

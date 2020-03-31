@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.*;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -77,6 +78,10 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
 
     @Override
     public String getIdentifier() {
-        return this.getClass().getSimpleName() + "_" + consentType;
+        return getStepIdentifier(consentType);
+    }
+
+    public static String getStepIdentifier(ConsentType consentType) {
+        return CbiThirdPartyAppAuthenticationStep.class.getSimpleName() + "_" + consentType;
     }
 }

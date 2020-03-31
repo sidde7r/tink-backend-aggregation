@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.GetTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
@@ -159,6 +160,13 @@ public class CbiGlobeApiClient {
                 .put(ConsentResponse.class, body);
     }
 
+    public ConsentResponse updateConsentPsuCredentials(
+            String consentId, UpdateConsentPsuCredentialsRequest body) {
+        return createRequestInSession(Urls.CONSENTS.concat("/" + consentId))
+                .header(HeaderKeys.OPERATION_NAME, HeaderValues.UPDATE_PSU_DATA)
+                .put(ConsentResponse.class, body);
+    }
+
     public GetAccountsResponse getAccounts() {
         return createAccountsRequestWithConsent().get(GetAccountsResponse.class);
     }
@@ -225,7 +233,7 @@ public class CbiGlobeApiClient {
                 .getConsentStatus();
     }
 
-    public String getConsentIdFromStorage(String consentType) throws SessionException {
+    private String getConsentIdFromStorage(String consentType) throws SessionException {
         return persistentStorage
                 .get(consentType, String.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);

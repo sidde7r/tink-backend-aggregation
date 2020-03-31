@@ -1,9 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
+import com.github.rholder.retry.RetryException;
+import com.github.rholder.retry.Retryer;
+import com.github.rholder.retry.RetryerBuilder;
+import com.github.rholder.retry.StopStrategies;
+import com.github.rholder.retry.WaitStrategies;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
@@ -15,18 +29,29 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CredentialsDetailRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.CredentialsDetailResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.PsuCredentialsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentPsuCredentialsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
+@Slf4j
+@AllArgsConstructor
 public class ConsentManager {
+
+    private static final long SLEEP_TIME = 3_000L;
+    private static final int RETRY_ATTEMPTS = 60;
 
     private final CbiGlobeApiClient apiClient;
     private final CbiUserState userState;
+    private final long sleepTime;
+    private final int retryAttempts;
 
     public ConsentManager(CbiGlobeApiClient apiClient, CbiUserState userState) {
-        this.apiClient = apiClient;
-        this.userState = userState;
+        this(apiClient, userState, SLEEP_TIME, RETRY_ATTEMPTS);
     }
 
     public ConsentResponse createAccountConsent(String state) {
@@ -116,5 +141,83 @@ public class ConsentManager {
         UpdateConsentRequest body = new UpdateConsentRequest(authenticationMethodId);
 
         return apiClient.updateConsent(consentId, body);
+    }
+
+    public ConsentResponse updatePsuCredentials(
+            String username, String password, PsuCredentialsResponse psuCredentialsResponse) {
+        String consentId = userState.getConsentId();
+        PsuCredentialsRequest psuCredentials =
+                createPsuCredentialsRequest(username, password, psuCredentialsResponse);
+        UpdateConsentPsuCredentialsRequest body =
+                new UpdateConsentPsuCredentialsRequest(psuCredentials);
+
+        return apiClient.updateConsentPsuCredentials(consentId, body);
+    }
+
+    private PsuCredentialsRequest createPsuCredentialsRequest(
+            String username, String password, PsuCredentialsResponse psuCredentialsResponse) {
+        List<CredentialsDetailResponse> credentialsDetails =
+                Optional.ofNullable(psuCredentialsResponse)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Psu credentials must not be null"))
+                        .getCredentialsDetails();
+
+        String usernameCredentialsId =
+                findCredentialsIdByPredicate(
+                        credentialsDetails,
+                        credentialsDetailResponse -> !credentialsDetailResponse.isSecret());
+
+        String passwordCredentialsId =
+                findCredentialsIdByPredicate(
+                        credentialsDetails, CredentialsDetailResponse::isSecret);
+
+        return new PsuCredentialsRequest(
+                psuCredentialsResponse.getAspspProductCode(),
+                Arrays.asList(
+                        new CredentialsDetailRequest(usernameCredentialsId, username),
+                        new CredentialsDetailRequest(passwordCredentialsId, password)));
+    }
+
+    private String findCredentialsIdByPredicate(
+            List<CredentialsDetailResponse> credentialsDetails,
+            Predicate<CredentialsDetailResponse> predicate) {
+        return credentialsDetails.stream()
+                .filter(predicate)
+                .findAny()
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "No credentials detail matching predicate"))
+                .getCredentialDetailId();
+    }
+
+    public void waitForAcceptance() throws LoginException {
+        Retryer<ConsentStatus> approvalStatusRetryer = getApprovalStatusRetryer();
+
+        try {
+            ConsentStatus consentStatus =
+                    approvalStatusRetryer.call(
+                            () -> apiClient.getConsentStatus(StorageKeys.CONSENT_ID));
+            if (!consentStatus.isAcceptedStatus()) {
+                log.warn("Authorization failed, consents status is not accepted.");
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            }
+        } catch (ExecutionException | RetryException e) {
+            log.warn("Authorization failed, consents status is not accepted.", e);
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(e);
+        }
+
+        userState.finishManualAuthenticationStep();
+    }
+
+    private Retryer<ConsentStatus> getApprovalStatusRetryer() {
+        return RetryerBuilder.<ConsentStatus>newBuilder()
+                .retryIfResult(
+                        consentStatus -> consentStatus == null || !consentStatus.isFinalStatus())
+                .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.MILLISECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
+                .build();
     }
 }
