@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticator.bankid;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 import java.util.Optional;
@@ -126,22 +125,7 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
 
         switch (pollResponse.getStatus().toLowerCase()) {
             case DanskeBankSEConfiguration.BankIdStatus.OK:
-                // Finalize authentication
-                FinalizeAuthenticationResponse finalizeAuthenticationResponse =
-                        finalizeAuthentication();
-
-                // TODO: In about three months, check the logging and remove this block after
-                // implementation
-                if (finalizeAuthenticationResponse.getSessionStatus() != 200) {
-                    try {
-                        log.infoExtraLong(
-                                mapper.writeValueAsString(finalizeAuthenticationResponse),
-                                DanskeBankConstants.LogTags.AUTHENTICATION_BANKID);
-                    } catch (JsonProcessingException e) {
-                        throw new IllegalStateException("Could not serialize response", e);
-                    }
-                }
-
+                finalizeAuthentication();
                 return BankIdStatus.DONE;
             case DanskeBankSEConfiguration.BankIdStatus.OUTSTANDING_TRANSACTION:
             case DanskeBankSEConfiguration.BankIdStatus.USER_SIGN:
