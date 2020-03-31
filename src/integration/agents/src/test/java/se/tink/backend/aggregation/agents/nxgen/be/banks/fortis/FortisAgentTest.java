@@ -23,7 +23,6 @@ public class FortisAgentTest {
                 new AgentIntegrationTest.Builder("be", "be-fortis-cardreader")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.CARDNUMBER))
                         .addCredentialField("clientnumber", manager.get(Arg.CLIENTNUMBER))
-                        .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                         .loadCredentialsBefore(true)
                         .expectLoggedIn(false)
                         .saveCredentialsAfter(true);
@@ -37,8 +36,7 @@ public class FortisAgentTest {
 
     private enum Arg implements ArgumentManagerEnum {
         CARDNUMBER,
-        CLIENTNUMBER,
-        PASSWORD;
+        CLIENTNUMBER;
 
         @Override
         public boolean isOptional() {

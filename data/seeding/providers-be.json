@@ -832,13 +832,6 @@
                     "pattern": "^[0-9]{10}$",
                     "patternError": "Please enter your 10 digit client number.",
                     "sensitive": true
-                },
-                {
-                    "description": "Password",
-                    "hint": "Same password used in the bank apps (if any)",
-                    "masked": true,
-                    "name": "password",
-                    "sensitive": true
                 }
             ],
             "financialInstitutionId": "e63aa8bdecc84e61b2165453fd3780fc",
@@ -851,6 +844,13 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "supplementalFields": [
+                {
+                    "description": "Password",
+                    "hint": "Same password used in the bank apps (if any)",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                },
                 {
                     "description": "Login challenge",
                     "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
