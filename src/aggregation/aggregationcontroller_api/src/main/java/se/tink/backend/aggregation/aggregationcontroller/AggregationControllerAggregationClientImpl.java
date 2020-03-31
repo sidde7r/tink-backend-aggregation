@@ -45,7 +45,7 @@ public class AggregationControllerAggregationClientImpl
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("oxford-staging", "oxford-production");
     private final ClientConfig config;
-    private static final int MAXIMUM_RETRY_ATTEMPT = 5;
+    private static final int MAXIMUM_RETRY_ATTEMPT = 3;
     private static final int WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS = 2000;
 
     @Inject
