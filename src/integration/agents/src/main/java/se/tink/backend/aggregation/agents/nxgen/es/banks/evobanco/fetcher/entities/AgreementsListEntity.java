@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class AgreementsListEntity {
@@ -128,13 +127,7 @@ public class AgreementsListEntity {
 
             case OTHER:
             default:
-                // log all accounts to try to find out what types we are receiving
-                logger.infoExtraLong(
-                        SerializationUtils.serializeToString(this),
-                        EvoBancoConstants.LogTags.UNKNOWN_ACCOUNT_TYPE);
-
                 tinkAccount = Optional.empty();
-
                 break;
         }
 
