@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.FetchAccountResponse;
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     private static final AggregationLogger LOGGER =
@@ -61,10 +59,6 @@ public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
 
         AccountDetailsResponse accountDetails =
                 apiClient.fetchAccountDetails(cardDetails.getAccountNumber());
-        if (accountDetails.isUnknownType()) {
-            // log unknown type
-            logUnknownCardType(account, accountDetails, cardDetails);
-        }
 
         if (!accountDetails.isCreditCardAccount()) {
             return Optional.empty();
@@ -87,18 +81,5 @@ public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
                         .setHolderName(new HolderName(accountDetails.getAccountHolder()))
                         .setName(account.getAccountName())
                         .build());
-    }
-
-    private void logUnknownCardType(
-            AccountEntity account,
-            AccountDetailsResponse accountDetails,
-            CardDetailsResponse cardDetails) {
-        LOGGER.infoExtraLong(
-                String.format(
-                        "Account: %s\nAccountDetails: %s\nCardDetails: %s",
-                        SerializationUtils.serializeToString(account),
-                        SerializationUtils.serializeToString(accountDetails),
-                        SerializationUtils.serializeToString(cardDetails)),
-                BecConstants.Log.UNKNOWN_CREDITCARD);
     }
 }
