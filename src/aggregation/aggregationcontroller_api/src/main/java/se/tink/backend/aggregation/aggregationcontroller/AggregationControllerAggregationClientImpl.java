@@ -273,7 +273,7 @@ public class AggregationControllerAggregationClientImpl
                             errorMessage);
                 }
                 Uninterruptibles.sleepUninterruptibly(
-                        WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS, TimeUnit.MILLISECONDS);
+                        WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS * i, TimeUnit.MILLISECONDS);
             }
         }
         throw new IllegalStateException("Unreachable code");
