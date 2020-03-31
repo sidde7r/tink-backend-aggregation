@@ -170,9 +170,9 @@ git_repository(
 # Docker dependencies
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "aed1c249d4ec8f703edddf35cbe9dfaca0b5f5ea6e4cd9e83e99f3b0d1136c3d",
-    strip_prefix = "rules_docker-0.7.0",
-    urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
+    sha256 = "413bb1ec0895a8d3249a01edf24b82fd06af3c8633c9fb833a0cb1d4b234d46d",
+    strip_prefix = "rules_docker-0.12.0",
+    urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.12.0.tar.gz"],
 )
 
 # Google api types.
@@ -211,6 +211,14 @@ container_pull(
     repository = "tink-containers/openjdk-8-jre",
     tag = "8",
 )
+
+# You *must* import the Go rules before setting up the go_image rules.
+load(
+    "@io_bazel_rules_docker//go:image.bzl",
+    _go_image_repos = "repositories",
+)
+
+_go_image_repos()
 
 ## External dependencies
 # External repositories that are not under Tink control. These should *always*
