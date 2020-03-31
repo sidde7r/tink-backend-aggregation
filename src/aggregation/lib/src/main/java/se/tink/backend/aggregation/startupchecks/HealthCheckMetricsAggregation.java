@@ -27,8 +27,6 @@ public class HealthCheckMetricsAggregation {
         try {
             healthCheck.check();
             metricRegistry.meter(HEALTH_CHECK_SUCCESSFUL_CHECKS_COUNTER.label("name", name)).inc();
-        } catch (Exception e) {
-            throw new NotHealthyException(name + " failed.", e);
         } finally {
             metricRegistry
                     .histogram(HEALTH_CHECK_DURATION_HISTOGRAM.label("name", name))
