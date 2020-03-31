@@ -19,8 +19,6 @@ import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.CreditSafeServiceResource;
 import se.tink.backend.aggregation.resources.MonitoringServiceResource;
 import se.tink.backend.aggregation.resources.ProviderConfigurationServiceResource;
-import se.tink.backend.aggregation.startupchecks.StartupChecksHandler;
-import se.tink.backend.aggregation.startupchecks.StartupChecksHandlerImpl;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
@@ -54,7 +52,7 @@ public class AggregationModule extends AbstractModule {
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
                 .in(Scopes.SINGLETON);
-        bind(StartupChecksHandler.class).to(StartupChecksHandlerImpl.class).in(Scopes.SINGLETON);
+
         bind(ClientConfig.class).toInstance(new DefaultApacheHttpClient4Config());
 
         if (Objects.nonNull(configuration.getS3StorageConfiguration())

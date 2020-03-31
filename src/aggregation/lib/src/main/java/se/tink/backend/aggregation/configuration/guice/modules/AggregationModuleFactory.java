@@ -32,6 +32,7 @@ public class AggregationModuleFactory {
                 .add(new AgentFactoryModule())
                 .add(new AgentWorkerCommandModule())
                 .add(new AggregationConfigurationModule(configuration))
+                .add(new AggregationHealthChecksModule(configuration))
                 .add(new AggregationModule(configuration, environment.jersey()))
                 .add(
                         new AgentDataAvailabilityTrackerModule(

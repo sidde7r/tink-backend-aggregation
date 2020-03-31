@@ -6,7 +6,6 @@ import java.util.Collection;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.libraries.healthcheckhandler.HealthCheck;
 import se.tink.backend.libraries.healthcheckhandler.NotHealthyException;
 import se.tink.libraries.http.utils.HttpResponseHelper;
@@ -26,9 +25,15 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
 
     @Inject
     public StartupChecksHandlerImpl(
-            ManagedTppSecretsServiceClient tppSecretsServiceClient, MetricRegistry metricRegistry) {
+            MetricRegistry metricRegistry,
+            SecretsServiceHealthCheck secretsServiceHealthCheck,
+            EidasProxySignerHealthCheck eidasProxySignerHealthCheck) {
         this.healthCheckMetricsAggregation = new HealthCheckMetricsAggregation(metricRegistry);
-        healthChecks = ImmutableSet.of(new SecretsServiceHealthCheck(tppSecretsServiceClient));
+        healthChecks =
+                ImmutableSet.<HealthCheck>builder()
+                        .add(secretsServiceHealthCheck)
+                        .add(eidasProxySignerHealthCheck)
+                        .build();
     }
 
     @Override
