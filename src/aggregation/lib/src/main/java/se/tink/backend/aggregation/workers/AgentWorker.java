@@ -133,6 +133,7 @@ public class AgentWorker implements Managed {
                         "aggregation_operation_tasks",
                         new MetricId.MetricLabels()
                                 .add("provider", operation.getRequest().getProvider().getName())
+                                .add("market", operation.getRequest().getProvider().getMarket())
                                 .add(
                                         "request_type",
                                         operation.getRequest().isManual() ? "manual" : "automatic"),
@@ -166,6 +167,11 @@ public class AgentWorker implements Managed {
                                 .add(
                                         "provider",
                                         agentWorkerOperationCreatorRunnable.getProviderName())
+                                .add(
+                                        "market",
+                                        agentWorkerOperationCreatorRunnable
+                                                .getProvider()
+                                                .getMarket())
                                 .add("request_type", "automatic"),
                         agentWorkerOperationCreatorRunnable);
 
