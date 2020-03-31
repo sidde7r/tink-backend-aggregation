@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -53,7 +53,8 @@ public class TransactionEntity {
 
     public Transaction constructCreditCardTransaction() {
 
-        Amount transactionAmount = new Amount(amount.getCurrency(), amount.getAmount());
+        ExactCurrencyAmount transactionAmount =
+                ExactCurrencyAmount.of(amount.getAmount(), amount.getCurrency());
 
         transactionAmount =
                 getCreditDebitIndicator().equals(TransactionTypeEntity.DEBIT)
@@ -70,7 +71,8 @@ public class TransactionEntity {
 
     public Transaction constructTransactionalAccountTransaction() {
 
-        Amount transactionAmount = new Amount(amount.getCurrency(), amount.getAmount());
+        ExactCurrencyAmount transactionAmount =
+                ExactCurrencyAmount.of(amount.getAmount(), amount.getCurrency());
 
         transactionAmount =
                 getCreditDebitIndicator().equalsIgnoreCase(CrosskeyBaseConstants.Transactions.DEBIT)
