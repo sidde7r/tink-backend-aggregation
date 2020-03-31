@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 @XmlRootElement
@@ -172,17 +171,7 @@ public class AccountEntity {
     @JsonIgnore
     public boolean isKnownAccountType() {
         // Add more account types as we discover more
-        boolean checkingAccount = isCheckingAccount();
-        if (!checkingAccount) {
-
-            // Log the whole account entity since they only use numbers and we probably need account
-            // name and more
-            // in order to figure out what the code stands for.
-            log.infoExtraLong(
-                    SerializationUtils.serializeToString(this),
-                    SantanderEsConstants.Tags.UNKNOWN_ACCOUNT_TYPE);
-        }
-        return checkingAccount;
+        return isCheckingAccount();
     }
 
     @JsonIgnore

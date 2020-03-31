@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
     private final AggregationLogger log = new AggregationLogger(SabadellLoanFetcher.class);
@@ -28,9 +27,6 @@ public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
         try {
             LoansResponse loansResponse = apiClient.fetchLoans();
             if (!loansResponse.getAccounts().isEmpty()) {
-                log.infoExtraLong(
-                        SerializationUtils.serializeToString(loansResponse),
-                        SabadellConstants.Tags.LOANS);
 
                 return loansResponse.getAccounts().stream()
                         .map(account -> apiClient.fetchLoanDetails(new LoanDetailsRequest(account)))
