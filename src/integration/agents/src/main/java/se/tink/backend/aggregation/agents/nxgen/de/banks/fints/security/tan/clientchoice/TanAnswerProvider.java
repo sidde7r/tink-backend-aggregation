@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.cli
 import java.util.Map;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.exception.ClientAnswerException;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 public class TanAnswerProvider {
@@ -20,7 +21,7 @@ public class TanAnswerProvider {
                     supplementalInformationHelper.askSupplementalInformation(
                             getFieldForGeneratedTan());
         } catch (SupplementalInfoException e) {
-            throw new RuntimeException(e.getMessage()); // TODO throw better exception
+            throw new ClientAnswerException("Could not get TAN Answer", e);
         }
 
         return supplementalInformation.get(GENERATED_TAN_KEY);

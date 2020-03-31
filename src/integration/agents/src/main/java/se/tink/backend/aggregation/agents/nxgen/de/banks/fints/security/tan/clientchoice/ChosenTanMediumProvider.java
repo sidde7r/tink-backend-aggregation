@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.exception.ClientAnswerException;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.utils.RangeRegex;
 
@@ -26,7 +27,7 @@ public class ChosenTanMediumProvider {
                     supplementalInformationHelper.askSupplementalInformation(
                             getFieldForGeneratedTan(tanMediumList));
         } catch (SupplementalInfoException e) {
-            throw new RuntimeException(e.getMessage()); // TODO throw better exception
+            throw new ClientAnswerException("Could not get Tan Medium selection", e);
         }
 
         int index = Integer.parseInt(supplementalInformation.get(TAN_MEDIUM_KEY));
