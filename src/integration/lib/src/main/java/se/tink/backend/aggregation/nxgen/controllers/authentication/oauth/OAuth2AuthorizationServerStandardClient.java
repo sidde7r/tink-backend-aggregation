@@ -116,7 +116,7 @@ public class OAuth2AuthorizationServerStandardClient implements OAuth2Authorizat
             URIBuilder uriBuilder =
                     new URIBuilder(
                                     authorizationSpecification
-                                            .getAuthenticationEndpoint()
+                                            .getAuthorizationEndpoint()
                                             .getUrl()
                                             .toURI())
                             .addParameter(

@@ -14,7 +14,7 @@ public class OAuth2AuthorizationSpecification {
     private String scope;
     private String clientId;
     private URL redirectUrl;
-    private EndpointSpecification authenticationEndpoint;
+    private EndpointSpecification authorizationEndpoint;
     private EndpointSpecification refreshTokenEndpoint;
     private EndpointSpecification accessTokenEndpoint;
     private Long defaultAccessTokenLifetime;
@@ -38,12 +38,12 @@ public class OAuth2AuthorizationSpecification {
         return redirectUrl;
     }
 
-    public EndpointSpecification getAuthenticationEndpoint() {
-        return authenticationEndpoint;
+    public EndpointSpecification getAuthorizationEndpoint() {
+        return authorizationEndpoint;
     }
 
     public EndpointSpecification getRefreshTokenEndpoint() {
-        return Optional.ofNullable(refreshTokenEndpoint).orElse(authenticationEndpoint);
+        return Optional.ofNullable(refreshTokenEndpoint).orElse(authorizationEndpoint);
     }
 
     public boolean isResponseTypeCode() {
@@ -94,8 +94,8 @@ public class OAuth2AuthorizationSpecification {
             return this;
         }
 
-        public Builder withAuthenticationEndpoint(final EndpointSpecification endpoint) {
-            endpointProvider.authenticationEndpoint = endpoint;
+        public Builder withAuthorizationEndpoint(final EndpointSpecification endpoint) {
+            endpointProvider.authorizationEndpoint = endpoint;
             return this;
         }
 
@@ -136,7 +136,7 @@ public class OAuth2AuthorizationSpecification {
                     endpointProvider.redirectUrl != null,
                     "OAuth2 'redirect_uri; param is mandatory");
             Preconditions.checkState(
-                    endpointProvider.authenticationEndpoint != null,
+                    endpointProvider.authorizationEndpoint != null,
                     "OAuth2 authorization server URL is mandatory");
             return endpointProvider;
         }

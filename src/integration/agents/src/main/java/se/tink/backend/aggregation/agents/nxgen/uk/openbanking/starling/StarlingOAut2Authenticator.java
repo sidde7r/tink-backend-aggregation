@@ -37,28 +37,26 @@ public class StarlingOAut2Authenticator extends OAuth2Authenticator {
     private static OAuth2AuthorizationSpecification createAuthorizationSpecification(
             final ClientConfigurationEntity aisConfiguration) {
         return new OAuth2AuthorizationSpecification.Builder()
-                .withAuthenticationEndpoint(
-                        createAuthenticationEndpointSpecification(aisConfiguration))
+                .withAuthorizationEndpoint(new EndpointSpecification(AUTH_STARLING))
                 .withRedirectUrl(aisConfiguration.getRedirectUrl())
                 .withClientId(aisConfiguration.getClientId())
-                .withResponseTypeCode(
-                        new EndpointSpecification(GET_OAUTH2_TOKEN_ENDPOINT.toString()))
+                .withResponseTypeCode(createAccessTokenEndpoint(aisConfiguration))
                 .withTokenRefreshEndpoint(createRefreshTokenEndpointSpecification(aisConfiguration))
                 .withScopes(SCOPES)
                 .build();
-    }
-
-    private static EndpointSpecification createAuthenticationEndpointSpecification(
-            final ClientConfigurationEntity aisConfiguration) {
-        return new EndpointSpecification(AUTH_STARLING)
-                .withClientSpecificParameter(
-                        CLIENT_SECRET_PARAM_KEY, aisConfiguration.getClientSecret());
     }
 
     private static EndpointSpecification createRefreshTokenEndpointSpecification(
             final ClientConfigurationEntity aisConfiguration) {
         return new EndpointSpecification(GET_OAUTH2_TOKEN_ENDPOINT.toString())
                 .withClientSpecificParameter(CLIENT_ID_PARAM_KEY, aisConfiguration.getClientId())
+                .withClientSpecificParameter(
+                        CLIENT_SECRET_PARAM_KEY, aisConfiguration.getClientSecret());
+    }
+
+    private static EndpointSpecification createAccessTokenEndpoint(
+            final ClientConfigurationEntity aisConfiguration) {
+        return new EndpointSpecification(GET_OAUTH2_TOKEN_ENDPOINT.toString())
                 .withClientSpecificParameter(
                         CLIENT_SECRET_PARAM_KEY, aisConfiguration.getClientSecret());
     }
