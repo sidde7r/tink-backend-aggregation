@@ -47,6 +47,8 @@ public class AggregationControllerAggregationClientImpl
     private final ClientConfig config;
     private static final int MAXIMUM_RETRY_ATTEMPT = 3;
     private static final int WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS = 2000;
+    private static final ImmutableSet<Integer> ERROR_CODES_FOR_RETRY =
+            ImmutableSet.of(502, 503, 504);
 
     @Inject
     private AggregationControllerAggregationClientImpl(ClientConfig custom) {
@@ -257,6 +259,10 @@ public class AggregationControllerAggregationClientImpl
                 return operation.execute();
             } catch (UniformInterfaceException e) {
                 String errorMessage = e.getMessage();
+                int statusCode = Integer.parseInt(errorMessage.split(":")[1].trim());
+                if (!ERROR_CODES_FOR_RETRY.contains(statusCode)) {
+                    throw e;
+                }
                 if (i == MAXIMUM_RETRY_ATTEMPT) {
                     log.error(
                             "Tried the operation {} for {} times and stopping (error message: {})",
