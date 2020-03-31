@@ -39,13 +39,12 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     public AgentWorkerCommandResult execute() throws Exception {
         Provider provider = context.getRequest().getProvider();
 
-        if (!blacklistedProviderStatuses.contains(provider.getStatus())) {
-            return AgentWorkerCommandResult.CONTINUE;
+        if (blacklistedProviderStatuses.contains(provider.getStatus())) {
+            updateCredentialStatusToUnchanged();
+            return AgentWorkerCommandResult.ABORT;
         }
 
-        updateCredentialStatusToUnchanged();
-
-        return AgentWorkerCommandResult.ABORT;
+        return AgentWorkerCommandResult.CONTINUE;
     }
 
     private void updateCredentialStatusToUnchanged() {
