@@ -43,6 +43,13 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
             return AgentWorkerCommandResult.CONTINUE;
         }
 
+        updateCredentialStatusToUnchanged();
+
+        return AgentWorkerCommandResult.ABORT;
+    }
+
+    private void updateCredentialStatusToUnchanged() {
+        Provider provider = context.getRequest().getProvider();
         Credentials credentials = context.getRequest().getCredentials();
         Optional<String> refreshId = context.getRefreshId();
 
@@ -62,8 +69,6 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
-
-        return AgentWorkerCommandResult.ABORT;
     }
 
     @Override
