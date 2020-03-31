@@ -73,9 +73,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
+            AgentsServiceConfiguration configuration,
             UkOpenBankingAisConfig agentConfig,
             boolean disableSslVerification) {
         super(componentProvider);
+        super.setConfiguration(configuration);
         this.wellKnownURL = agentConfig.getWellKnownURL();
         this.disableSslVerification = disableSslVerification;
         this.agentConfig = agentConfig;
@@ -83,18 +85,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
 
         client.addFilter(new BankServiceInternalErrorFilter());
+        initializeAgent();
     }
 
-    // Different part between UkOpenBankingBaseAgent and this class
-    public UkOpenBankingClientConfigurationAdapter getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(getClientConfigurationFormat());
-    }
-
-    @Override
-    public final void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
+    private void initializeAgent() {
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
                 getClientConfiguration();
 
@@ -126,6 +120,19 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+    }
+
+    // Different part between UkOpenBankingBaseAgent and this class
+    public UkOpenBankingClientConfigurationAdapter getClientConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentConfiguration(getClientConfigurationFormat());
+    }
+
+    /** @deprecated Configuration is read and set in constructor instead. */
+    @Override
+    @Deprecated
+    public final void setConfiguration(AgentsServiceConfiguration configuration) {
+        // NOOP
     }
 
     private void useEidasProxy(TinkHttpClient httpClient) {

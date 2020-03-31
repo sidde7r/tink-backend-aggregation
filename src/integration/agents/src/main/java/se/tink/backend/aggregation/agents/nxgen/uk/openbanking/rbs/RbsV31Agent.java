@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.rbs.RbsConstants.Urls.V31;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
@@ -33,8 +34,9 @@ public class RbsV31Agent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public RbsV31Agent(AgentComponentProvider componentProvider) {
-        super(componentProvider, aisConfig, false);
+    public RbsV31Agent(
+            AgentComponentProvider componentProvider, AgentsServiceConfiguration configuration) {
+        super(componentProvider, configuration, aisConfig, false);
         pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
