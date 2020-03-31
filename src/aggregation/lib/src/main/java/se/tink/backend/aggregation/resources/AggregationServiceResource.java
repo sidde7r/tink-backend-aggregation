@@ -344,6 +344,11 @@ public class AggregationServiceResource implements AggregationService {
                         .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
                         // Trying to get rid of possible sandbox providers if they exist.
                         .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
+                        // To remove business provider if any.
+                        .filter(
+                                prv ->
+                                        !StringUtils.containsIgnoreCase(
+                                                prv.getType().name(), "BUSINESS_BANK"))
                         .collect(Collectors.toList());
 
         Preconditions.checkState(
