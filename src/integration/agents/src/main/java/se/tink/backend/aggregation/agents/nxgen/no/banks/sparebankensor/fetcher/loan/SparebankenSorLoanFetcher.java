@@ -49,10 +49,7 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
             // loans although the current account is listed there as well.
             URL transigoAccountsUrl =
                     new URL("https://nettbank.sor.no/payment/transigo/json/accounts");
-            String transigoAccountsResponse = apiClient.transigoAccounts(transigoAccountsUrl);
-
-            LOGGER.infoExtraLong(
-                    transigoAccountsResponse, SparebankenSorConstants.LogTags.LOAN_LOG_TAG);
+            apiClient.transigoAccounts(transigoAccountsUrl);
         } catch (Exception e) {
             LOGGER.infoExtraLong(
                     "Failed to retrieve loans", SparebankenSorConstants.LogTags.LOAN_LOG_TAG, e);
@@ -82,9 +79,7 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
         }
 
         try {
-            String loanDetailsResponse = apiClient.fetchLoanDetails(detailsLink.getHref());
-            LOGGER.infoExtraLong(loanDetailsResponse, SparebankenSorConstants.LogTags.LOAN_DETAILS);
-
+            apiClient.fetchLoanDetails(detailsLink.getHref());
         } catch (Exception e) {
             LOGGER.warn(
                     SparebankenSorConstants.LogTags.LOAN_DETAILS.toString()
