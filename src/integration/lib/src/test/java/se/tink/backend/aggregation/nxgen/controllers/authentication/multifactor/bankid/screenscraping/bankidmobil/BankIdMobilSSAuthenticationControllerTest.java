@@ -29,7 +29,7 @@ public class BankIdMobilSSAuthenticationControllerTest {
     private InOrder inOrder;
 
     private static final By WAITING_FOR_AUTHENTICATION_FORM_XPATH =
-            By.xpath("//form[@name='mobileForm' and not(descendant::input)]");
+            By.xpath("//*[contains(text(),'Referanse')]");
 
     @Before
     public void initSetup() {
