@@ -149,7 +149,10 @@ public class FetchLoanDetailsResponse {
                     .filter(interest -> interest.getBaseRate() != null)
                     .findFirst();
         }
-        throw new IllegalStateException("No interest rate found.");
+        LOG.warn(
+                "Could not determine if the interest rate for sub-agreements mismatches or matches for loanid: "
+                        .concat(loanId));
+        return Optional.empty();
     }
 
     // When base rate is missing, the rate is the base rate, so we filter them out and check that
