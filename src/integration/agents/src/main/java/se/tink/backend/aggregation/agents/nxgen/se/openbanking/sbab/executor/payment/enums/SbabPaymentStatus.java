@@ -13,6 +13,7 @@ public enum SbabPaymentStatus {
     DELETE_REQUEST_FAILED("delete_request_failed", PaymentStatus.CANCELLED),
     DELETED("deleted", PaymentStatus.CANCELLED),
     PENDING("pending", PaymentStatus.SIGNED),
+    COMPLETE("complete", PaymentStatus.SIGNED),
     UNKNOWN("unknown", PaymentStatus.UNDEFINED);
 
     private String statusText;

@@ -27,6 +27,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Payment.Builder;
+import se.tink.libraries.payment.rpc.Reference;
 
 public class SbabAgentPaymentTest {
 
@@ -45,7 +46,7 @@ public class SbabAgentPaymentTest {
         creditorDebtorManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("SE", "se-sbab-ob")
+                new AgentIntegrationTest.Builder("se", "se-sbab-ob")
                         .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .loadCredentialsBefore(
                                 Boolean.parseBoolean(
@@ -55,7 +56,9 @@ public class SbabAgentPaymentTest {
                                 Boolean.parseBoolean(
                                         loadBeforeSaveAfterManager.get(
                                                 LoadBeforeSaveAfterArgumentEnum.SAVE_AFTER)))
-                        .expectLoggedIn(false);
+                        .expectLoggedIn(false)
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("sbab");
     }
 
     @Test
@@ -71,6 +74,7 @@ public class SbabAgentPaymentTest {
         AccountIdentifier debtorAccountIdentifier =
                 new SwedishIdentifier(creditorDebtorManager.get(Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
+        Reference reference = new Reference("Message", "ToSomeone111");
 
         Amount amount = Amount.inSEK(1);
         LocalDate executionDate = LocalDate.now();
@@ -83,6 +87,7 @@ public class SbabAgentPaymentTest {
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
+                        .withReference(reference)
                         .build());
     }
 
