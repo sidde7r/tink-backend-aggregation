@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
@@ -136,10 +135,8 @@ public class UpcomingPaymentEntity {
         if (transfer.getDestination() == null || transfer.getType() == null) {
             logger.warnExtraLong(
                     String.format(
-                            "upcoming payment - PaymentType=%d,PaymentTypeName=%s - %s",
-                            paymentType,
-                            paymentTypeName,
-                            SerializationUtils.serializeToString(this)),
+                            "upcoming payment - PaymentType=%d,PaymentTypeName=%s",
+                            paymentType, paymentTypeName),
                     LogTags.UPCOMING_TRANSFER);
             return Optional.empty();
         }
