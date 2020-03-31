@@ -13,6 +13,16 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 
+/**
+ * Prevents the command chain to advance if provider has one of the not allowed statuses
+ *
+ * <p>Also does the clean up to ensure credentials object is again in a state where other command
+ * chains can be triggered after this one.
+ *
+ * <p>TODO: consider moving the cleaning up to `postProcess` if possible + desired
+ *
+ * <p>TODO: consider renaming the command
+ */
 public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
     private AgentWorkerCommandContext context;
     private final ControllerWrapper controllerWrapper;
