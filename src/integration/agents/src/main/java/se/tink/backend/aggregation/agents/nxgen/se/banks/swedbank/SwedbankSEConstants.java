@@ -21,6 +21,9 @@ public class SwedbankSEConstants {
                             "swedbank-youth",
                             new ProfileParameters("swedbank-youth", "ap4TcWEoEGV42UVn", false))
                     .put(
+                            "swedbank-business",
+                            new ProfileParameters("swedbank-business", "IiovbjNo72ULmE27", false))
+                    .put(
                             "savingsbank",
                             new ProfileParameters("savingsbank", "CB2PGrGdDIJKcrRd", true))
                     .put(
