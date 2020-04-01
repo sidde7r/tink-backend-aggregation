@@ -17,6 +17,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/credentials:service",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/utils/currency",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents;
+package se.tink.backend.aggregation.agents.agent;
 
 public interface AgentVisitor {
 

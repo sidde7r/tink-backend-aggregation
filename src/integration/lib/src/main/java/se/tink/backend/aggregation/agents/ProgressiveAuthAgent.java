@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents;
 
+import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 

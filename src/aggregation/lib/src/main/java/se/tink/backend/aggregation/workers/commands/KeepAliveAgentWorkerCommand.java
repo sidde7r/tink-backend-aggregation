@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents;
+package se.tink.backend.aggregation.agents.agent;
 
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 

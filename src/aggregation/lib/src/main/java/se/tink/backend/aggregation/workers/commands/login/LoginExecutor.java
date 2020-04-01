@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
