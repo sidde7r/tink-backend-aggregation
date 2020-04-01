@@ -32,7 +32,6 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -67,6 +66,7 @@ import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.PositionResponse
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.StockMarketInfoResponse;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.WarrantMarketInfoResponse;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;

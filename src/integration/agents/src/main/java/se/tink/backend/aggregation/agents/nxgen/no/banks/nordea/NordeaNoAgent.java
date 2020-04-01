@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.NordeaNoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.parser.NordeaNoParser;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.parser.NordeaNoTransactionParser;

@@ -35,7 +35,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -101,6 +100,7 @@ import se.tink.backend.aggregation.agents.banks.se.icabanken.model.ValidateEInvo
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.ValidateEInvoiceResponse;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.types.IcaDestinationType;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.types.IcaSourceType;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;

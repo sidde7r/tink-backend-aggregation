@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents;
+package se.tink.backend.aggregation.agents.contexts.agent;
 
 import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;

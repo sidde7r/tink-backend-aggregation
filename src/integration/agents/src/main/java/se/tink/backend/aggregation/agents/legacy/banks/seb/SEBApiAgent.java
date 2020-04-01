@@ -61,7 +61,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -125,6 +124,7 @@ import se.tink.backend.aggregation.agents.banks.seb.model.UpcomingTransactionEnt
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentials;
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentialsRequestEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.VODB;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;

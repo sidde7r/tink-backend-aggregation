@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.configuration.SamlinkConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.SamlinkPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.fetcher.transactionalaccount.SamlinkTransactionFetcher;

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa;
 
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -10,6 +9,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.authenticator.CaixaPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaCreditCardTransactionFetcher;

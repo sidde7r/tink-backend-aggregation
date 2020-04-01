@@ -33,7 +33,6 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -80,6 +79,7 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferAccoun
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferDetailsResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferResponse;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;

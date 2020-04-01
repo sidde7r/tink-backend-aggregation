@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.saastopankki;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkV1Configuration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;

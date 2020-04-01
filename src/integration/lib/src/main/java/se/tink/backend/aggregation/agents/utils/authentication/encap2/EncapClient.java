@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.utils.authentication.encap2;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.IdentificationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.RegistrationResultEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.enums.AuthenticationMethod;
