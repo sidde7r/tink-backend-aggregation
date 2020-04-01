@@ -43,9 +43,9 @@ import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFacto
 import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;

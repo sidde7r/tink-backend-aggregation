@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.creditcar
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.loan.OmaspLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transactionalaccount.OmaspTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.sessionhandler.OmaspSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

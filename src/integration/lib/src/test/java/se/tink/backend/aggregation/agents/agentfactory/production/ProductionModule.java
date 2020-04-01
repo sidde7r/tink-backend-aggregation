@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.agentfactory.production;
 
 import com.google.inject.AbstractModule;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;

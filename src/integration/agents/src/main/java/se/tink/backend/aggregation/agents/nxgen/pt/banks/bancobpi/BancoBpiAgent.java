@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.credit
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.creditcard.BancoBpiCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.investment.BancoBpiInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.loan.BancoBpiLoanAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;

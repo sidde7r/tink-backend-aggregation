@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.Redirec
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;

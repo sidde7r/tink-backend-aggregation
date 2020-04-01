@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.accoun
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.creditcard.MontepioCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.investments.MontepioInvestmentAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.montepio.fetcher.loans.MontepioLoansFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;

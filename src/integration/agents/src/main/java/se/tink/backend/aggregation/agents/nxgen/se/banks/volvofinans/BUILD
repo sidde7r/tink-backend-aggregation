@@ -10,6 +10,8 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",

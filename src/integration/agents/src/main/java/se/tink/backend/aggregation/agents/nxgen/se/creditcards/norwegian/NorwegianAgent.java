@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.creditcard.NorwegianDatePaginationController;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.identity.NorwegianIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.fetcher.savingsaccount.NorwegianSavingsAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;

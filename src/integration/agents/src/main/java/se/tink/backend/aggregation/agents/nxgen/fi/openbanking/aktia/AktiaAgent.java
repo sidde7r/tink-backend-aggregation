@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticat
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration.AktiaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.executor.payment.AktiaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.AktiaTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

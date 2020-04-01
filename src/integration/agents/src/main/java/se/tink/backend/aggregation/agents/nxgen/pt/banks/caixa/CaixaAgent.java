@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaCred
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaLoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.caixa.fetcher.CaixaTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;

@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Spar
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.Sparebank1TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.rpc.filters.AddRefererFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.sessionhandler.Sparebank1SessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

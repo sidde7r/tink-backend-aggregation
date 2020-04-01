@@ -7,6 +7,7 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
     ],
 )

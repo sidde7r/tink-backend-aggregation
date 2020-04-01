@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.unregulated.authenticator.PasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.unregulated.authenticator.PasswordAutoAuthenticator;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;

@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.loan
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.SpankkiTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.fetcher.transactionalaccount.SpankkiTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.sessionhandler.SpankkiSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

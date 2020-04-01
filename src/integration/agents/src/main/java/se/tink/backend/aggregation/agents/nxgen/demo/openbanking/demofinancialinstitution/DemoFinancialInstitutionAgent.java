@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialin
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.fetcher.loan.DemoFinancialInstitutionLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.fetcher.transactionalaccount.DemoFinancialInstitutionTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.sessionhandler.DemoFinancialInstitutionSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;

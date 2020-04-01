@@ -19,6 +19,7 @@ junit_test(
     ],
     deps = [
         "//src/integration/api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//third_party:org_mockito_mockito_core",
     ],
@@ -44,6 +45,7 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",

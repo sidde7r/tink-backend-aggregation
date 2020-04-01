@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.authenticato
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.transactionalaccount.RaiffeisenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.transactionalaccount.RaiffeisenTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.session.RaiffeisenSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;

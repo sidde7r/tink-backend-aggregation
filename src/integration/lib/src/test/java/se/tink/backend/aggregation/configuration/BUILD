@@ -5,6 +5,8 @@ java_library(
     deps = [
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_jersey",

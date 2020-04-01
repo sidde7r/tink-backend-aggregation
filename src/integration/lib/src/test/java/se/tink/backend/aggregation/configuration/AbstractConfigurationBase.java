@@ -5,6 +5,7 @@ import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.jackson.Jackson;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 
 public abstract class AbstractConfigurationBase {
 

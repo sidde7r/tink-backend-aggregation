@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.transactionalaccount.NordeaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.transactionalaccount.NordeaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.session.NordeaFISessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;

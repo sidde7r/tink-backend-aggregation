@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.BnpParibasTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.session.BnpParibasSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.storage.BnpParibasPersistentStorage;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.entities.OriginAccount;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.entities.RemoteAccount;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;

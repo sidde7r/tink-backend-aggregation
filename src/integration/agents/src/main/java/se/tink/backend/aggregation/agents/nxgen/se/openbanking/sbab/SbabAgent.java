@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fliter.SbabBadGatewayFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fliter.SbabRetryFilter;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

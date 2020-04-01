@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.HVBAu
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.TransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.UserDataFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;

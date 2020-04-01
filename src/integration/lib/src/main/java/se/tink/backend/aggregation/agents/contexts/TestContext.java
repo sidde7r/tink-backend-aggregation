@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.contexts;
 
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 
 public interface TestContext {
     boolean isTestContext();

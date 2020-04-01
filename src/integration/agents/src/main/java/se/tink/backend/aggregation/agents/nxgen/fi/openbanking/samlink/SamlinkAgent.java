@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.fetcher.transactionalaccount.SamlinkTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;

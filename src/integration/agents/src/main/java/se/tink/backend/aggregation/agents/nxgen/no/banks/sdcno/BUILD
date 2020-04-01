@@ -8,6 +8,8 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/bankid/screenscraping",
         "//src/libraries/selenium",
         "@aggregation//:com_google_guava_guava",

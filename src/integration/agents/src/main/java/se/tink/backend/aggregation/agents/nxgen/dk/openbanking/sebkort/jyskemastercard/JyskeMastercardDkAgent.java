@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sebkort.jyskemas
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbrandedcards.SebBrandedCardsAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbrandedcards.SebBrandedCardsConstants;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class JyskeMastercardDkAgent extends SebBrandedCardsAgent {

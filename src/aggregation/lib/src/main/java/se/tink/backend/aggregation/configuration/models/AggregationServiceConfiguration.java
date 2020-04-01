@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.configuration.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
 import se.tink.libraries.endpoints.dropwizard.EndpointsConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;

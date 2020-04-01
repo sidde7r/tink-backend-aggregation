@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pay
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment.PayPalPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.PayPalTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.PayPalTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

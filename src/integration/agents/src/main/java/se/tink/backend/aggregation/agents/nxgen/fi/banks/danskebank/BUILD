@@ -9,6 +9,7 @@ java_library(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/models",

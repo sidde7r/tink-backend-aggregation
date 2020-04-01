@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPUserAgentHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 

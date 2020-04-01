@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.fetcher.creditcards.CoopCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.fetcher.transactionalaccounts.CoopTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.sessionhandler.CoopSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;

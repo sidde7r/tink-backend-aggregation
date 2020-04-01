@@ -8,6 +8,8 @@ java_library(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/models",
         "//src/integration/signableoperation:enums",
         "//src/integration/transfer:rpc",

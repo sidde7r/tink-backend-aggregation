@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.SebKortTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.identitydata.SebKortIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.session.SebKortSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;

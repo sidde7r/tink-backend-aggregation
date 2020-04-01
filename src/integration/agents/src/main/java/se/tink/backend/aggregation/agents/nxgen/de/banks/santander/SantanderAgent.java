@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.authenticator
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.credit.SantanderCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.SantanderAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.SantanderTransactionFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;

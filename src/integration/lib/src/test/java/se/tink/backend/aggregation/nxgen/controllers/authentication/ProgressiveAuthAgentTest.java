@@ -11,7 +11,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 
 public final class ProgressiveAuthAgentTest {
 

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bpsondrio;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BPSondrioAgent extends CbiGlobeAgent {

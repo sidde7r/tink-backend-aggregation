@@ -8,6 +8,8 @@ java_library(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_commons_commons_lang3",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

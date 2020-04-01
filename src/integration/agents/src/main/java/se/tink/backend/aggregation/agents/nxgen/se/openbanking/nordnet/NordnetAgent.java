@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetCo
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator.NordnetAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.configuration.NordnetConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.fetcher.transactionalaccount.NordnetTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.module.AgentComponentProviderModule;
 import se.tink.backend.aggregation.agents.module.AgentRequestScopeModule;
 import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class AgentPackageModuleFactory implements AgentModuleFactory {

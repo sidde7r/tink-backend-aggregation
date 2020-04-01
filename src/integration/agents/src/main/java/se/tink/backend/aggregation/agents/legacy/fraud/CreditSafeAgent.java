@@ -50,7 +50,7 @@ import se.tink.backend.aggregation.agents.models.fraud.FraudNonPaymentContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudRealEstateEngagementContent;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;

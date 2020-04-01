@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuratio
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.session.KnabSessionHandler;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

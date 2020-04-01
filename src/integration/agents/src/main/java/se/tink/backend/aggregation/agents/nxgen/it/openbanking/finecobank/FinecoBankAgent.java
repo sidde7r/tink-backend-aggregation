@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetche
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.FinecoBankPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.FinecoBankPaymentExecutor;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

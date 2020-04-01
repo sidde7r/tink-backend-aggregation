@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.Fid
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.fetcher.transactional.FidorAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.fetcher.transactional.FidorTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.session.FidorSessionHandler;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;

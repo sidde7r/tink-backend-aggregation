@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.Regist
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.SamlResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.utils.EncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.utils.EncapSoapUtils;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;

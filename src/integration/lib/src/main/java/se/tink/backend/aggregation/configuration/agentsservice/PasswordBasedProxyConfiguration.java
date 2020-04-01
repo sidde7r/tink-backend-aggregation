@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.configuration;
+package se.tink.backend.aggregation.configuration.agentsservice;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 

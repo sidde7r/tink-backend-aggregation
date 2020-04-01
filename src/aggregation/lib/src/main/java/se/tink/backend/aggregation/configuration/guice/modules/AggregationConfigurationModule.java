@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.configuration.guice.modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;

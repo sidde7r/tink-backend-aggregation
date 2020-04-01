@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import com.google.common.collect.ImmutableList;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
-import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.CircuitBreakerConfiguration;
 import se.tink.libraries.concurrency.FakeTicker;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 

@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbAc
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbTransactionFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

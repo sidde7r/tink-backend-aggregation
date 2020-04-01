@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.agents.standalone.mapper.MappingContextKeys;
 import se.tink.backend.aggregation.agents.standalone.mapper.factory.MappersController;
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.CommonExternalParametersProvider;
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.impl.MockCommonExternalParametersProvider;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.*;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;

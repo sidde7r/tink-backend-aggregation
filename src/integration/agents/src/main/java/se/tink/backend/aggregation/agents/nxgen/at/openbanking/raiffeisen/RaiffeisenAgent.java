@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.config
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.executor.payment.RaiffeisenPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.RaiffeisenTransactionalAccountAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.raiffeisen.fetcher.transactionalaccount.RaiffeisenTransactionalAccountTransactionFetcher;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

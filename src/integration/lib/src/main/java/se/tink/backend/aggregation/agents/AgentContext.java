@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.libraries.metrics.registry.MetricRegistry;
