@@ -45,6 +45,8 @@ public class FakeAggregationControllerAggregationClient
     private static final Logger log =
             LoggerFactory.getLogger(FakeAggregationControllerAggregationClient.class);
 
+    private static ObjectMapper mapper = new ObjectMapper();
+
     @Inject
     private FakeAggregationControllerAggregationClient(ClientConfig custom) {
         this.config = custom;
@@ -59,7 +61,8 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response updateTransactionsAsynchronously(
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
+        callFakeAggregationController("updateTransactionsAsynchronously", request);
+        return null;
     }
 
     @Override
@@ -76,7 +79,12 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Account updateAccount(
             HostConfiguration hostConfiguration, UpdateAccountRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
+        callFakeAggregationController("updateAccount", request);
+        try {
+            return mapper.readValue(mapper.writeValueAsString(request.getAccount()), Account.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -94,7 +102,8 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response processAccounts(
             HostConfiguration hostConfiguration, ProcessAccountsRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
+        callFakeAggregationController("processAccounts", request);
+        return null;
     }
 
     @Override
@@ -188,6 +197,7 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response updateIdentity(
             HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
+        callFakeAggregationController("updateIdentity", request);
+        return null;
     }
 }

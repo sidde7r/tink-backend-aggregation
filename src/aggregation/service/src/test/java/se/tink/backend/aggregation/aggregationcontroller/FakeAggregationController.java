@@ -5,9 +5,9 @@ import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,11 +22,23 @@ import org.slf4j.LoggerFactory;
 public class FakeAggregationController extends Application<Configuration> {
 
     private static final Logger log = LoggerFactory.getLogger(FakeAggregationController.class);
+    private Map<String, List<String>> callbacksForControllerEndpoints = new ConcurrentHashMap<>();
+    private final boolean debugMode;
 
     public static void main(String[] args) throws Exception {
         log.info("Starting FakeAggregationController");
-        new FakeAggregationController().run(new String[] {"server"});
+        boolean debugModeInArgs = false;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase("--debug_mode")) {
+                debugModeInArgs = true;
+            }
+        }
+        new FakeAggregationController(debugModeInArgs).run(new String[] {"server"});
         log.info("Started FakeAggregationController");
+    }
+
+    public FakeAggregationController(final boolean debugMode) {
+        this.debugMode = debugMode;
     }
 
     @Override
@@ -35,12 +47,14 @@ public class FakeAggregationController extends Application<Configuration> {
     @Override
     public void run(Configuration c, Environment e) throws Exception {
         e.jersey().register(new DataController());
+        e.jersey().register(new ResetController());
         e.jersey().register(new PingController());
     }
 
     @Path("/ping")
     @Produces(MediaType.TEXT_PLAIN)
     public class PingController {
+
         @GET
         @Produces(MediaType.TEXT_PLAIN)
         public Response ping() {
@@ -48,26 +62,42 @@ public class FakeAggregationController extends Application<Configuration> {
         }
     }
 
+    @Path("/reset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public class ResetController {
+
+        @GET
+        @Produces(MediaType.APPLICATION_JSON)
+        public Response resetCache() {
+            callbacksForControllerEndpoints = new ConcurrentHashMap<>();
+            return Response.ok().build();
+        }
+    }
+
     @Path("/data")
     @Produces(MediaType.APPLICATION_JSON)
     public class DataController {
 
-        private Map<String, List<String>> cache = new HashMap<>();
-
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         public Response getData() {
-            return Response.ok(cache).build();
+            return Response.ok(callbacksForControllerEndpoints).build();
         }
 
         @POST
         @Consumes(MediaType.APPLICATION_JSON)
         public Response putData(Map<String, String> data) {
             for (String key : data.keySet()) {
-                if (!cache.containsKey(key)) {
-                    cache.put(key, new ArrayList<>());
+                if (!callbacksForControllerEndpoints.containsKey(key)) {
+                    callbacksForControllerEndpoints.put(key, new ArrayList<>());
                 }
-                cache.get(key).add(data.get(key));
+                callbacksForControllerEndpoints.get(key).add(data.get(key));
+            }
+
+            if (debugMode) {
+                synchronized (callbacksForControllerEndpoints) {
+                    log.info(data.toString());
+                }
             }
 
             return Response.status(Status.OK).build();

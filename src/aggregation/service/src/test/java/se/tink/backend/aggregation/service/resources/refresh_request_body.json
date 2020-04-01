@@ -1,0 +1,83 @@
+{
+    "manual": true,
+    "refreshId": "dummyId",
+    "itemsToRefresh": [
+        "CREDITCARD_ACCOUNTS",
+        "CREDITCARD_TRANSACTIONS",
+        "IDENTITY_DATA"
+    ],
+    "create": false,
+    "callbackUri": "callbackUri",
+    "appUriId": "appUriId",
+    "userDeviceId": "userDeviceId",
+    "credentials": {
+        "debugUntil": 695260800,
+        "providerLatency": 0,
+        "id": "refresh-test",
+        "nextUpdate": null,
+        "fields": {
+            "username": "testUser",
+            "password": "testPassword"
+        },
+        "payload": "",
+        "providerName": "uk-americanexpress-password",
+        "sessionExpiryDate": null,
+        "status": "CREATED",
+        "statusPayload": "CREATED",
+        "statusPrompt": "",
+        "statusUpdated": "695260800",
+        "supplementalInformation": "",
+        "type": "PASSWORD",
+        "updated": "695260800",
+        "userId": "userId",
+        "dataVersion": 1
+    },
+    "provider": {
+        "accessType": "OTHER",
+        "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
+        "credentialsType": "PASSWORD",
+        "displayName": "American Express",
+        "fields": [
+            {
+                "description": "Username",
+                "immutable": true,
+                "minLength": 1,
+                "name": "username"
+            },
+            {
+                "description": "Password",
+                "masked": true,
+                "minLength": 1,
+                "name": "password",
+                "sensitive": true
+            }
+        ],
+        "supplementalFields": [],
+        "financialInstitutionId": "dummyId",
+        "financialInstitutionName": "dummyName",
+        "groupDisplayName": "American Express",
+        "multiFactor": false,
+        "name": "uk-americanexpress-password",
+        "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+        "popular": true,
+        "refreshFrequency": 1,
+        "refreshFrequencyFactor": 1,
+        "status": "ENABLED",
+        "transactional": true,
+        "type": "CREDIT_CARD",
+        "currency": "GBP",
+        "market": "UK",
+        "payload": ""
+    },
+    "user": {
+        "flags": [],
+        "flagsSerialized": "[]",
+        "id": "userId",
+        "profile": {
+            "locale": "en_US"
+        },
+        "username": "username",
+        "debugUntil": 695260800
+    },
+    "accounts": []
+}
