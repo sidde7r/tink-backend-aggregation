@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.confi
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -95,7 +95,7 @@ public final class VolvoFinansApiClient {
     }
 
     public TransactionsResponse fetchTransactions(
-            TransactionalAccount account, Date startDate, Date endDate) {
+            CreditCardAccount account, Date startDate, Date endDate) {
         final String apiKey = configuration.getClientId();
         final String requestId = UUID.randomUUID().toString();
 
