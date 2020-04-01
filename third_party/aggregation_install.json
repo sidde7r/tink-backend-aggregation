@@ -1165,6 +1165,76 @@
                 "sha256": "1b386664e686694150be8163dc87662cb6ec13cd7104e936fa121a24d3747521"
             },
             {
+                "coord": "com.github.javafaker:javafaker:1.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/javafaker/javafaker/1.0.2/javafaker-1.0.2.jar",
+                "directDependencies": [
+                    "com.github.mifmif:generex:1.0.2",
+                    "org.apache.commons:commons-lang3:3.5",
+                    "org.yaml:snakeyaml:jar:android:1.23"
+                ],
+                "dependencies": [
+                    "dk.brics.automaton:automaton:1.11-8",
+                    "org.apache.commons:commons-lang3:3.5",
+                    "com.github.mifmif:generex:1.0.2",
+                    "org.yaml:snakeyaml:jar:android:1.23"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/github/javafaker/javafaker/1.0.2/javafaker-1.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/github/javafaker/javafaker/1.0.2/javafaker-1.0.2.jar"
+                ],
+                "sha256": "ef95ae468097f378880be69a8c6756f8d15180e0f07547fb0a99617ff421b2ac"
+            },
+            {
+                "coord": "com.github.javafaker:javafaker:jar:sources:1.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/javafaker/javafaker/1.0.2/javafaker-1.0.2-sources.jar",
+                "directDependencies": [
+                    "com.github.mifmif:generex:jar:sources:1.0.2",
+                    "org.apache.commons:commons-lang3:jar:sources:3.5",
+                    "org.yaml:snakeyaml:jar:sources:1.23"
+                ],
+                "dependencies": [
+                    "dk.brics.automaton:automaton:jar:sources:1.11-8",
+                    "com.github.mifmif:generex:jar:sources:1.0.2",
+                    "org.apache.commons:commons-lang3:jar:sources:3.5",
+                    "org.yaml:snakeyaml:jar:sources:1.23"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/github/javafaker/javafaker/1.0.2/javafaker-1.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/github/javafaker/javafaker/1.0.2/javafaker-1.0.2-sources.jar"
+                ],
+                "sha256": "71c960665e83a74c7e8ccd3bffe3454c8e830702676216468e7ec4d3d2044ba2"
+            },
+            {
+                "coord": "com.github.mifmif:generex:1.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/mifmif/generex/1.0.2/generex-1.0.2.jar",
+                "directDependencies": [
+                    "dk.brics.automaton:automaton:1.11-8"
+                ],
+                "dependencies": [
+                    "dk.brics.automaton:automaton:1.11-8"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/github/mifmif/generex/1.0.2/generex-1.0.2.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/github/mifmif/generex/1.0.2/generex-1.0.2.jar"
+                ],
+                "sha256": "8f8ce233c335e08e113a3f9579de1046fb19927e82468b1bbebcd6cba8760b81"
+            },
+            {
+                "coord": "com.github.mifmif:generex:jar:sources:1.0.2",
+                "file": "v1/https/repo.maven.apache.org/maven2/com/github/mifmif/generex/1.0.2/generex-1.0.2-sources.jar",
+                "directDependencies": [
+                    "dk.brics.automaton:automaton:jar:sources:1.11-8"
+                ],
+                "dependencies": [
+                    "dk.brics.automaton:automaton:jar:sources:1.11-8"
+                ],
+                "url": "https://repo.maven.apache.org/maven2/com/github/mifmif/generex/1.0.2/generex-1.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/com/github/mifmif/generex/1.0.2/generex-1.0.2-sources.jar"
+                ],
+                "sha256": "541a99924bbdb1d6d897f82e7d9f526101d1ee7858173aaec17c0a70ab2165be"
+            },
+            {
                 "coord": "com.github.rholder:guava-retrying:2.0.0",
                 "file": "v1/https/repo.maven.apache.org/maven2/com/github/rholder/guava-retrying/2.0.0/guava-retrying-2.0.0.jar",
                 "directDependencies": [
@@ -2241,6 +2311,28 @@
                     "https://repo.maven.apache.org/maven2/de/jollyday/jollyday/0.4.7/jollyday-0.4.7-sources.jar"
                 ],
                 "sha256": "6a5535c81b9bbcd9768045eedb101a9976d2129d769fb261f6191aabd5e21f84"
+            },
+            {
+                "coord": "dk.brics.automaton:automaton:1.11-8",
+                "file": "v1/https/repo.maven.apache.org/maven2/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8.jar"
+                ],
+                "sha256": "a24475f6ccfe1cc7a4fe9e34e05ce687b0ce0c6e8cb781e0eced3b186482c61e"
+            },
+            {
+                "coord": "dk.brics.automaton:automaton:jar:sources:1.11-8",
+                "file": "v1/https/repo.maven.apache.org/maven2/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8-sources.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8-sources.jar"
+                ],
+                "sha256": "6dae38d3515601fb5e59d7b96273dd7f30a694aba5ad0ad1a8dc340ea80f0f27"
             },
             {
                 "coord": "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
@@ -4901,6 +4993,17 @@
                 "sha256": "13009fb5ede3cf2be5a8d0f1602155aeaa0ce5ef5f9366892bd258d8d3d4d2b1"
             },
             {
+                "coord": "org.yaml:snakeyaml:jar:android:1.23",
+                "file": "v1/https/repo.maven.apache.org/maven2/org/yaml/snakeyaml/1.23/snakeyaml-1.23-android.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo.maven.apache.org/maven2/org/yaml/snakeyaml/1.23/snakeyaml-1.23-android.jar",
+                "mirror_urls": [
+                    "https://repo.maven.apache.org/maven2/org/yaml/snakeyaml/1.23/snakeyaml-1.23-android.jar"
+                ],
+                "sha256": "c0f7a90628172970d3ff6d7eaa7a04f73b57290b3b8dba916c8281a76f2214ca"
+            },
+            {
                 "coord": "org.yaml:snakeyaml:jar:sources:1.23",
                 "file": "v1/https/repo.maven.apache.org/maven2/org/yaml/snakeyaml/1.23/snakeyaml-1.23-sources.jar",
                 "directDependencies": [],
@@ -4971,6 +5074,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1038907599
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 2035848394
     }
 }
