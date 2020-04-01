@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.JointAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -28,18 +29,17 @@ import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class StarlingApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
+    private final OAuth2Authenticator authenticator;
 
-    public StarlingApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public StarlingApiClient(TinkHttpClient client, OAuth2Authenticator authenticator) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
+        this.authenticator = authenticator;
     }
 
     public AccountsResponse fetchAccounts() {
@@ -160,11 +160,18 @@ public class StarlingApiClient {
     }
 
     private OAuth2Token getOAuthToken() {
-
-        return persistentStorage
-                .get(StarlingConstants.StorageKey.OAUTH_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+        se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2Token storedToken =
+                authenticator
+                        .getToken()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                SessionError.SESSION_EXPIRED.exception()));
+        return OAuth2Token.create(
+                storedToken.getTokenType(),
+                storedToken.getAccessToken(),
+                storedToken.getRefreshToken(),
+                storedToken.getExpiresIn());
     }
 
     private static String toFormattedDate(final Date date) {

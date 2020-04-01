@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.oauth;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
@@ -116,5 +117,9 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
         tokenStorage.storeToken(
                 authorizationServerClient.handleAuthorizationResponse(callbackData));
         return AuthenticationStepResponse.executeNextStep();
+    }
+
+    public Optional<OAuth2Token> getToken() {
+        return tokenStorage.fetchToken();
     }
 }

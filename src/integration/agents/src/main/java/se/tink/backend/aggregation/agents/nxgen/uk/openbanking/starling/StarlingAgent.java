@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationA
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -35,19 +35,18 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
-    private final StarlingApiClient apiClient;
+    private StarlingApiClient apiClient;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     private ClientConfigurationEntity aisConfiguration;
     private ClientConfigurationEntity pisConfiguration;
     private String redirectUrl;
-    private StatelessProgressiveAuthenticator authenticator;
+    private OAuth2Authenticator authenticator;
 
     public StarlingAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
-        apiClient = new StarlingApiClient(client, persistentStorage);
 
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
@@ -85,11 +84,11 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new StarlingTransactionalAccountFetcher(apiClient),
+                new StarlingTransactionalAccountFetcher(getApiClient()),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                new StarlingTransactionFetcher(apiClient))));
+                                new StarlingTransactionFetcher(getApiClient()))));
     }
 
     @Override
@@ -99,7 +98,7 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
 
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController, new StarlingTransferDestinationFetcher(apiClient));
+                metricRefreshController, new StarlingTransferDestinationFetcher(getApiClient()));
     }
 
     @Override
@@ -115,7 +114,7 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                 new TransferController(
                         null,
                         new StarlingTransferExecutor(
-                                apiClient,
+                                getApiClient(),
                                 pisConfiguration,
                                 redirectUrl,
                                 credentials,
@@ -126,11 +125,18 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
     }
 
     @Override
-    public StatelessProgressiveAuthenticator getAuthenticator() {
+    public OAuth2Authenticator getAuthenticator() {
         if (authenticator == null) {
             authenticator =
                     new StarlingOAut2Authenticator(persistentStorage, client, aisConfiguration);
         }
         return authenticator;
+    }
+
+    private StarlingApiClient getApiClient() {
+        if (apiClient == null) {
+            apiClient = new StarlingApiClient(client, getAuthenticator());
+        }
+        return apiClient;
     }
 }
