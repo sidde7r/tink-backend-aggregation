@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 public class FakeAggregationController extends Application<Configuration> {
 
     private static final Logger log = LoggerFactory.getLogger(FakeAggregationController.class);
-    private Map<String, List<String>> cache = new ConcurrentHashMap<>();
+    private Map<String, List<String>> callbacksForControllerEndpoints = new ConcurrentHashMap<>();
     private final boolean debugMode;
 
     public static void main(String[] args) throws Exception {
@@ -69,7 +69,7 @@ public class FakeAggregationController extends Application<Configuration> {
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         public Response resetCache() {
-            cache = new ConcurrentHashMap<>();
+            callbacksForControllerEndpoints = new ConcurrentHashMap<>();
             return Response.ok().build();
         }
     }
@@ -81,21 +81,21 @@ public class FakeAggregationController extends Application<Configuration> {
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         public Response getData() {
-            return Response.ok(cache).build();
+            return Response.ok(callbacksForControllerEndpoints).build();
         }
 
         @POST
         @Consumes(MediaType.APPLICATION_JSON)
         public Response putData(Map<String, String> data) {
             for (String key : data.keySet()) {
-                if (!cache.containsKey(key)) {
-                    cache.put(key, new ArrayList<>());
+                if (!callbacksForControllerEndpoints.containsKey(key)) {
+                    callbacksForControllerEndpoints.put(key, new ArrayList<>());
                 }
-                cache.get(key).add(data.get(key));
+                callbacksForControllerEndpoints.get(key).add(data.get(key));
             }
 
             if (debugMode) {
-                synchronized (cache) {
+                synchronized (callbacksForControllerEndpoints) {
                     log.info(data.toString());
                 }
             }
