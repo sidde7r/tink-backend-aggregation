@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
@@ -10,7 +11,7 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class FinTsSecretsConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String productId;
-    @JsonProperty @Secret private String productVersion;
+    @JsonProperty @AgentConfigParam private String productVersion;
 
     public FinTsSecretsConfiguration() {}
 
