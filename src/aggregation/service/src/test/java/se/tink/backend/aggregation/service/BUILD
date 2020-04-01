@@ -3,6 +3,9 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "service",
     srcs = glob(["*.java"]),
+    data = [
+        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources",
+    ],
     tags = [
         "external",
         "manual",
@@ -11,6 +14,7 @@ junit_test(
     runtime_deps = [
     ],
     deps = [
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "@system_tests//:com_fasterxml_jackson_core_jackson_databind",
         "@system_tests//:com_google_guava_guava",
         "@system_tests//:commons_io_commons_io",

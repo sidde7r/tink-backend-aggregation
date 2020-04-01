@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.creditcards.amex.v62;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -16,11 +20,68 @@ import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.libraries.account.enums.AccountExclusion;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class AmexV62UkMockServerAgentTest {
 
     private final String USERNAME = "testUser";
     private final String PASSWORD = "testPassword";
+
+    private Account createAccount(
+            String accountNumber,
+            double availableCredit,
+            double balance,
+            String currencyCode,
+            String bankId,
+            String name,
+            AccountTypes accountType,
+            String holderName) {
+
+        Account account = new Account();
+        account.setAccountNumber(accountNumber);
+        account.setAccountExclusion(AccountExclusion.NONE);
+        account.setExactAvailableCredit(
+                new ExactCurrencyAmount(BigDecimal.valueOf(availableCredit), currencyCode));
+        account.setExactBalance(new ExactCurrencyAmount(BigDecimal.valueOf(balance), currencyCode));
+        account.setCurrencyCode(currencyCode);
+        account.setBankId(bankId);
+        account.setExcluded(false);
+        account.setFavored(false);
+        account.setName(name);
+        account.setOwnership(1.0);
+        account.setType(accountType);
+        account.setUserModifiedExcluded(false);
+        account.setUserModifiedName(false);
+        account.setUserModifiedType(false);
+        account.setIdentifiers(new ArrayList<>());
+        account.setClosed(false);
+        account.setHolderName(holderName);
+        account.setFlags(new ArrayList<>());
+        account.setAvailableCredit(availableCredit);
+        account.setBalance(balance);
+        return account;
+    }
+
+    private Transaction createTransaction(
+            String accountId,
+            double amount,
+            long date,
+            String description,
+            boolean pending,
+            boolean upcoming,
+            TransactionTypes type) {
+
+        Transaction transaction = new Transaction();
+        transaction.setAccountId(accountId);
+        transaction.setAmount(amount);
+        transaction.setDate(new Date(date));
+        transaction.setDescription(description);
+        transaction.setPending(pending);
+        transaction.setType(type);
+        transaction.setUpcoming(upcoming);
+        return transaction;
+    }
 
     @Test
     public void testRefresh() throws Exception {
@@ -34,7 +95,7 @@ public final class AmexV62UkMockServerAgentTest {
                                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap")));
 
         Account account =
-                AgentContractEntitiesAsserts.createAccount(
+                createAccount(
                         "XXX-11111",
                         0,
                         0,
@@ -47,7 +108,7 @@ public final class AmexV62UkMockServerAgentTest {
         List<Account> expectedAccounts = Collections.singletonList(account);
 
         Transaction transaction1 =
-                AgentContractEntitiesAsserts.createTransaction(
+                createTransaction(
                         "fabc330b9f804c7ca6c2a21c3fd255ae",
                         -403.25,
                         1552561200000L,
@@ -57,7 +118,7 @@ public final class AmexV62UkMockServerAgentTest {
                         TransactionTypes.DEFAULT);
 
         Transaction transaction2 =
-                AgentContractEntitiesAsserts.createTransaction(
+                createTransaction(
                         "fabc330b9f804c7ca6c2a21c3fd255ae",
                         -64.84,
                         1553770800000L,
@@ -67,7 +128,7 @@ public final class AmexV62UkMockServerAgentTest {
                         TransactionTypes.DEFAULT);
 
         Transaction transaction3 =
-                AgentContractEntitiesAsserts.createTransaction(
+                createTransaction(
                         "fabc330b9f804c7ca6c2a21c3fd255ae",
                         64.84,
                         1554285600000L,
@@ -77,7 +138,7 @@ public final class AmexV62UkMockServerAgentTest {
                         TransactionTypes.DEFAULT);
 
         Transaction transaction4 =
-                AgentContractEntitiesAsserts.createTransaction(
+                createTransaction(
                         "fabc330b9f804c7ca6c2a21c3fd255ae",
                         551.4,
                         1553511600000L,
@@ -107,7 +168,11 @@ public final class AmexV62UkMockServerAgentTest {
         List<Account> givenAccounts = context.getUpdatedAccounts();
 
         // Then
-        AgentContractEntitiesAsserts.compareAccounts(expectedAccounts, givenAccounts);
-        AgentContractEntitiesAsserts.compareTransactions(expectedTransactions, givenTransactions);
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedAccounts, givenAccounts));
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransactions, givenTransactions));
     }
 }

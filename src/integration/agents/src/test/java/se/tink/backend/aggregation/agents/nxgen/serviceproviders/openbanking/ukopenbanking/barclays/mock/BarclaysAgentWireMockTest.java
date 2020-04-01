@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -57,8 +59,8 @@ public class BarclaysAgentWireMockTest {
                 contractParser.parseContractOnBasisOfFile(
                         "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/agent-contract.json");
 
-        List<Account> expectedAccounts = expected.getAccounts();
-        List<Transaction> expectedTransactions = expected.getTransactions();
+        List<Map<String, Object>> expectedAccounts = expected.getAccounts();
+        List<Map<String, Object>> expectedTransactions = expected.getTransactions();
 
         // When
         NewAgentTestContext context =
@@ -76,8 +78,12 @@ public class BarclaysAgentWireMockTest {
         List<Account> givenAccounts = context.getUpdatedAccounts();
 
         // Then
-        AgentContractEntitiesAsserts.compareAccounts(expectedAccounts, givenAccounts);
-        AgentContractEntitiesAsserts.compareTransactions(expectedTransactions, givenTransactions);
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedAccounts, givenAccounts));
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransactions, givenTransactions));
     }
 
     @Test

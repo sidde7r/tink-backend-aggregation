@@ -2,25 +2,29 @@ package se.tink.backend.aggregation.service;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static se.tink.backend.aggregation.service.SystemTestUtils.makeGetRequest;
+import static se.tink.backend.aggregation.service.SystemTestUtils.makePostRequest;
+import static se.tink.backend.aggregation.service.SystemTestUtils.parseAccounts;
+import static se.tink.backend.aggregation.service.SystemTestUtils.parseIdentityData;
+import static se.tink.backend.aggregation.service.SystemTestUtils.parseTransactions;
+import static se.tink.backend.aggregation.service.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
+import static se.tink.backend.aggregation.service.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
+import static se.tink.backend.aggregation.service.SystemTestUtils.readRequestBodyFromFile;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
+import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
+import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 
-@RunWith(SpringRunner.class)
 public class SystemTest {
 
     private static final String APP_UNDER_TEST_HOST = "appundertest";
@@ -28,6 +32,22 @@ public class SystemTest {
 
     private static final String AGGREGATION_CONTROLLER_HOST = "appundertest";
     private static final int AGGREGATION_CONTROLLER_PORT = 8080;
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+    private static AgentContractEntitiesJsonFileParser contractParser =
+            new AgentContractEntitiesJsonFileParser();
+
+    @Before
+    public void resetFakeAggregationControllerCache() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", "application/json");
+        ResponseEntity<String> dataResult =
+                makeGetRequest(
+                        String.format(
+                                "http://%s:%d/reset",
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
+                        headers);
+    }
 
     @Test
     public void getPingShouldReturnPongAnd200MessageInHttpResponse() throws Exception {
@@ -44,96 +64,96 @@ public class SystemTest {
         assertThat(response.getStatusCodeValue(), equalTo(200));
     }
 
-    private ResponseEntity<String> makePostRequest(String url, Object requestBody)
-            throws Exception {
-
-        TestRestTemplate restTemplate = new TestRestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        headers.add("X-Tink-App-Id", "00000000-0000-0000-0000-000000000000");
-        headers.add("X-Tink-Client-Api-Key", "00000000-0000-0000-0000-000000000000");
-
-        HttpEntity<Object> request = new HttpEntity<Object>(requestBody, headers);
-
-        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-
-        int status = response.getStatusCodeValue();
-        if (status >= 300) {
-            throw new Exception(
-                    "Invalid HTTP response status "
-                            + "code "
-                            + status
-                            + " from web service server.");
-        }
-
-        return response;
-    }
-
-    private ResponseEntity<String> makeGetRequest(String url, HttpHeaders headers)
-            throws Exception {
-        TestRestTemplate restTemplate = new TestRestTemplate();
-
-        ResponseEntity<String> response =
-                new TestRestTemplate()
-                        .exchange(
-                                url, HttpMethod.GET, new HttpEntity<Object>(headers), String.class);
-
-        int status = response.getStatusCodeValue();
-        if (status >= 300) {
-            throw new Exception(
-                    "Invalid HTTP response status "
-                            + "code "
-                            + status
-                            + " from web service server.");
-        }
-
-        return response;
-    }
-
     @Test
     public void getAuthenticateShouldSetCredentialsStatusUpdated() throws Exception {
-        String requestBody =
-                "{\"manual\": true, \"create\": true, \"callbackUri\": \"callbackUri\", \"appUriId\": \"appUriId\", \"userDeviceId\": \"userDeviceId\", \"credentials\": {\"debugUntil\": 695260800, \"providerLatency\": 0, \"id\": \"aaaa\", \"nextUpdate\": null, \"fields\": {\"username\": \"testUser\", \"password\": \"testPassword\"}, \"payload\": \"\", \"providerName\": \"uk-americanexpress-password\", \"sessionExpiryDate\": null, \"status\": \"CREATED\", \"statusPayload\": \"CREATED\", \"statusPrompt\": \"\", \"statusUpdated\": null, \"supplementalInformation\": \"\", \"type\": \"PASSWORD\", \"updated\": null, \"userId\": \"userId\", \"dataVersion\": 1 }, \"provider\": {\"accessType\": \"OTHER\", \"className\": \"nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent\", \"credentialsType\": \"PASSWORD\", \"displayName\": \"American Express\", \"fields\": [{\"description\":\"Username\",\"immutable\":true,\"minLength\":1,\"name\":\"username\"},{\"description\":\"Password\",\"masked\":true,\"minLength\":1,\"name\":\"password\",\"sensitive\":true}], \"supplementalFields\": [], \"financialInstitutionId\": \"dummyId\", \"financialInstitutionName\": \"dummyName\", \"groupDisplayName\": \"American Express\", \"multiFactor\": false, \"name\": \"uk-americanexpress-password\", \"passwordhelptext\": \"Use the same password as you would in your banks mobile app.\", \"popular\": true, \"refreshFrequency\": 1, \"refreshFrequencyFactor\": 1, \"status\": \"ENABLED\", \"transactional\": true, \"type\": \"CREDIT_CARD\", \"currency\": \"GBP\", \"market\": \"UK\", \"payload\": \"\"}, \"user\": {\"flags\": [], \"flagsSerialized\": \"[]\", \"id\": \"userId\", \"profile\": {\"locale\": \"en_US\"}, \"username\": \"username\", \"debugUntil\": 695260800 }, \"accounts\": [] }";
 
+        // given
+        String requestBodyForAuthenticateEndpoint =
+                readRequestBodyFromFile(
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body.json");
+
+        // when
         ResponseEntity<String> authenticationCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/authenticate",
                                 APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
-                        requestBody);
+                        requestBodyForAuthenticateEndpoint);
 
+        Optional<String> updateCredentialsCallback =
+                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+                        String.format(
+                                "http://%s:%d/data",
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+
+        // then
+        Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
+        Assert.assertTrue(updateCredentialsCallback.isPresent());
+        Assert.assertEquals("UPDATED", updateCredentialsCallback.get());
+    }
+
+    @Test
+    public void getRefreshShouldUploadEntities() throws Exception {
+
+        // given
+        AgentContractEntity expected =
+                contractParser.parseContractOnBasisOfFile(
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities.json");
+
+        List<Map<String, Object>> expectedTransactions = expected.getTransactions();
+        List<Map<String, Object>> expectedAccounts = expected.getAccounts();
+        Map<String, Object> expectedIdentityData = expected.getIdentityData();
+
+        String requestBodyForRefreshEndpoint =
+                readRequestBodyFromFile(
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body.json");
+
+        String aggregationControllerEndpoint =
+                String.format(
+                        "http://%s:%d/data",
+                        AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT);
+
+        // when
+        ResponseEntity<String> authenticationCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/refresh",
+                                APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
+                        requestBodyForRefreshEndpoint);
+
+        // Why I need "?"
+        List<?> givenAccounts =
+                parseAccounts(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint, "updateAccount", 100, 1));
+
+        List<Map<String, Object>> givenTransactions =
+                parseTransactions(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint,
+                                "updateTransactionsAsynchronously",
+                                100,
+                                1));
+
+        Map<String, Object> givenIdentityData =
+                parseIdentityData(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint, "updateIdentity", 100, 1));
+
+        // then
         Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransactions, givenTransactions));
 
-        Map<String, List<String>> pushedData = new HashMap<>();
-        while (pushedData.keySet().size() == 0) {
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedAccounts, givenAccounts));
 
-            ResponseEntity<String> dataResult =
-                    makeGetRequest(
-                            String.format(
-                                    "http://%s:%d/data",
-                                    AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
-                            headers);
-
-            pushedData = new ObjectMapper().readValue(dataResult.getBody(), Map.class);
-            if (pushedData.keySet().size() == 0) {
-                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                continue;
-            }
-
-            List<String> credentialsUpdateCallbacks = pushedData.get("updateCredentials");
-            String latestCredentialsUpdate =
-                    credentialsUpdateCallbacks.get(credentialsUpdateCallbacks.size() - 1);
-            JsonNode node = new ObjectMapper().readTree(latestCredentialsUpdate);
-            String credentialsStatus = node.get("credentials").get("status").asText();
-            if (!credentialsStatus.equals("UPDATED")) {
-                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                continue;
-            }
-            Assert.assertEquals("UPDATED", credentialsStatus);
-        }
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        Collections.singletonList(expectedIdentityData),
+                        Collections.singletonList(givenIdentityData)));
     }
 }

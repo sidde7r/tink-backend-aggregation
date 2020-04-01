@@ -2,20 +2,6 @@
     "accounts": [
         {
             "accountNumber": "XXX-11111",
-            "exactAvailableCredit": {
-                "currencyCode": "GBP",
-                "exactValue": 0,
-                "scale": 0,
-                "doubleValue": 0.0,
-                "unscaledValue": 0
-            },
-            "exactBalance": {
-                "currencyCode": "GBP",
-                "exactValue": 0.0,
-                "scale": 1,
-                "doubleValue": 0.0,
-                "unscaledValue": 0
-            },
             "accountExclusion": "NONE",
             "currencyCode": "GBP",
             "bankId": "XXX11111",
@@ -78,15 +64,6 @@
         }
     ],
     "identityData": {
-        "nameElements": [
-            {
-                "type": "FIRST_NAME",
-                "value": "FIRSTNAME"
-            },
-            {
-                "type": "SURNAME",
-                "value": "LASTNAME"
-            }
-        ]
+        "name": "FIRSTNAME LASTNAME"
     }
 }
