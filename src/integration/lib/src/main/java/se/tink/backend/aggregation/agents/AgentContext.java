@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker;

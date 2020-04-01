@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents;
 
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
+import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
