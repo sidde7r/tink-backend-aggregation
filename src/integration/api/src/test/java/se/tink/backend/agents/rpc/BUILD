@@ -1,8 +1,8 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "api_test",
-    srcs = glob(["src/test/**/*.java"]),
+    name = "rpc",
+    srcs = glob(["*.java"]),
     data = [
     ],
     visibility = ["//visibility:public"],
