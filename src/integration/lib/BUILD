@@ -21,7 +21,7 @@ java_library(
     runtime_deps = ["//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/scaffold"],
     deps = [
         "annotations",
-        "//src/integration/account:enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/account:rpc",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/configuration",
         "//src/integration/amount",
@@ -173,7 +173,7 @@ junit_test(
         "//third_party:ch_qos_logback_logback_classic",
     ],
     deps = [
-        "//src/integration/account:enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/account:rpc",
         "//src/integration/amount",
         "//src/integration/api",

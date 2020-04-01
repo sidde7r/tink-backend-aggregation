@@ -8,7 +8,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/account:enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/account:rpc",
         "//src/integration/amount",
         "//src/integration/api",
@@ -155,7 +155,7 @@ junit_test(
         "//third_party:ch_qos_logback_logback_classic",
     ],
     deps = [
-        "//src/integration/account:enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/account:rpc",
         "//src/integration/agents",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/demo/banks/bankid",

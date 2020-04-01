@@ -13,7 +13,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/account:enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/kbc",
         "//src/integration/amount",
         "//src/integration/api",

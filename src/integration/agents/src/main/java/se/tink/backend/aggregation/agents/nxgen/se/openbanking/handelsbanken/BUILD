@@ -3,7 +3,7 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/account:enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/handelsbanken",
         "//src/integration/api",
         "//src/integration/credentials:service",

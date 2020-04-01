@@ -3,7 +3,7 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/account:enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/amount",
         "//src/integration/credentials:service",
         "//src/integration/lib",

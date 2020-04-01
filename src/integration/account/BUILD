@@ -1,13 +1,4 @@
 java_library(
-    name = "enums",
-    srcs = glob(["src/main/**/enums/*.java"]),
-    visibility = ["//src/integration:__subpackages__"],
-    deps = [
-        "//src/integration/enums",
-    ],
-)
-
-java_library(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
     visibility = [
@@ -16,7 +7,7 @@ java_library(
         "//src/integration:__subpackages__",
     ],
     deps = [
-        ":enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/account/src/main/java/se/tink/libraries/account/iface",
         "//src/integration/amount",
         "//src/integration/transfer:rpc",
