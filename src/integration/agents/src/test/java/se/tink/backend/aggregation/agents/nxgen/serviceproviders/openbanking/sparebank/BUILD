@@ -11,7 +11,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/sparebank",
         "//src/integration/amount",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",

@@ -9,7 +9,7 @@ junit_test(
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
         "//src/integration/agent_data_availability_tracker/proto:java_grpc",
         "//src/integration/agent_data_availability_tracker/proto:java_proto",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/models",
         "//third_party:com_google_inject_extensions_guice_multibindings",
         "//third_party:com_google_inject_guice",

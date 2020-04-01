@@ -39,7 +39,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/kbc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/berlingroup",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",

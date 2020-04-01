@@ -5,7 +5,7 @@ java_library(
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/handelsbanken",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",

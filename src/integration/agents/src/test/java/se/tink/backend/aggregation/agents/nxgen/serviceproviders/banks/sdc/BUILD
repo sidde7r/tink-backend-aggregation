@@ -17,7 +17,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/sdcse",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/sdc",
         "//src/integration/amount",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/libraries/serialization",
         "//third_party:com_github_tomakehurst_wiremock",

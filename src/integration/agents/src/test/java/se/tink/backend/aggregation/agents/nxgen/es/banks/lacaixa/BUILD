@@ -21,7 +21,7 @@ junit_test(
     ],
     deps = [
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
@@ -58,7 +58,7 @@ junit_test(
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/redsys",
     ],
     deps = [
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",

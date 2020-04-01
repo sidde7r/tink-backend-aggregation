@@ -1,0 +1,20 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+java_library(
+    name = "rpc",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/client/provider_configuration/rpc",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
+        "//src/integration/amount",
+        "//src/integration/credentials:demo",
+        "//src/libraries/account_identifier",
+        "//src/libraries/serialization",
+        "//src/libraries/strings",
+        "//src/libraries/uuid",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_google_guava_guava",
+    ],
+)

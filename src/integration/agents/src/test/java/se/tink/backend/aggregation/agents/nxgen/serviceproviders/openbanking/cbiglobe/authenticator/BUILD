@@ -10,7 +10,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/cbiglobe",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",

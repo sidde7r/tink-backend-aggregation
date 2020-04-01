@@ -8,7 +8,7 @@ java_library(
     deps = [
         "//src/aggregation/api",
         "//src/integration/amount",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/identity_data",
         "//src/integration/lib",

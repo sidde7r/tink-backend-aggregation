@@ -14,7 +14,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/volksbank",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",

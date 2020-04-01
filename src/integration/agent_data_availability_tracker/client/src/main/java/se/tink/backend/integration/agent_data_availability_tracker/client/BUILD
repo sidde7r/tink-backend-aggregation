@@ -11,7 +11,7 @@ java_library(
         "//src/integration/agent_data_availability_tracker/proto",
         "//src/integration/agent_data_availability_tracker/proto:java_grpc",
         "//src/integration/agent_data_availability_tracker/proto:java_proto",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib:annotations",
         "//src/integration/models",
         "//third_party:com_google_inject_guice",

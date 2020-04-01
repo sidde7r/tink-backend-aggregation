@@ -17,7 +17,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/it/openbanking/buddybank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/unicredit",
         "//src/integration/amount",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
