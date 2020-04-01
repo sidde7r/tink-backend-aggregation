@@ -74,7 +74,7 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
     protected EidasIdentity getEidasIdentity() {
         if (context.isTestContext()) {
             return new EidasIdentity(
-                    "oxford-staging", "5f98e87106384b2981c0354a33b51590", NordeaPartnerAgent.class);
+                    "oxford-preprod", "c859501868b742b6bebd7a3f7911cd85", NordeaPartnerAgent.class);
         }
         return super.getEidasIdentity();
     }
