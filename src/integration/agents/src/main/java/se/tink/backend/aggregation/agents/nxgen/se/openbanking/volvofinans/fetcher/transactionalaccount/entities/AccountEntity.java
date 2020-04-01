@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.entities;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -19,49 +20,50 @@ public class AccountEntity {
     private String accountNumber;
     private String currency;
     private String product;
+    private String ownerName;
     private List<BalanceEntity> balances;
     private String accountType;
     private String status;
+    private BalanceAmountEntity creditLimit;
 
     public boolean isEnabled() {
         return status.equalsIgnoreCase(VolvoFinansConstants.Accounts.STATUS_ENABLED);
     }
 
-    public Optional<TransactionalAccount> toTinkAccount() {
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getBalance()))
+    public CreditCardAccount toCreditCardAccount() {
+
+        final Double availableCredit =
+                Double.parseDouble(creditLimit.getAmount()) + getBalance().getDoubleValue();
+
+        return CreditCardAccount.nxBuilder()
+                .withCardDetails(
+                        CreditCardModule.builder()
+                                .withCardNumber(accountNumber)
+                                .withBalance(getBalance())
+                                .withAvailableCredit(
+                                        ExactCurrencyAmount.of(availableCredit, currency))
+                                .withCardAlias(product)
+                                .build())
+                .withoutFlags()
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(product)
-                                .addIdentifier(new SwedishIdentifier(accountNumber))
+                                .addIdentifier(AccountIdentifier.create(Type.TINK, accountNumber))
+                                .setProductName(product)
                                 .build())
                 .putInTemporaryStorage(VolvoFinansConstants.StorageKeys.ACCOUNT_ID, resourceId)
+                .addHolderName(ownerName)
                 .setApiIdentifier(resourceId)
-                .setBankIdentifier(resourceId)
                 .build();
     }
 
-    private Amount getBalance() {
+    private ExactCurrencyAmount getBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
-                .filter(this::isExpected)
+                .filter(BalanceEntity::isExpected)
                 .findFirst()
                 .map(BalanceEntity::getAmount)
-                .orElse(getDefaultAmount());
-    }
-
-    private Amount getDefaultAmount() {
-        return new Amount(currency, 0);
-    }
-
-    private boolean isExpected(final BalanceEntity balance) {
-        return balance.isExpected();
-    }
-
-    public String getAccountNumber() {
-        return resourceId;
+                .orElse(ExactCurrencyAmount.of(BigDecimal.ZERO, currency));
     }
 }

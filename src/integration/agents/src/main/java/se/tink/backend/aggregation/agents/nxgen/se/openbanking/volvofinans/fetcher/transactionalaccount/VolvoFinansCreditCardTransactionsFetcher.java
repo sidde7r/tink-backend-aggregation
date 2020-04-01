@@ -6,23 +6,23 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.Volvo
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
-public class VolvoFinansTransactionalAccountTransactionsFetcher
-        implements TransactionDatePaginator<TransactionalAccount> {
+public class VolvoFinansCreditCardTransactionsFetcher
+        implements TransactionDatePaginator<CreditCardAccount> {
 
     private final VolvoFinansApiClient apiClient;
 
-    public VolvoFinansTransactionalAccountTransactionsFetcher(VolvoFinansApiClient apiClient) {
+    public VolvoFinansCreditCardTransactionsFetcher(VolvoFinansApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(
-            TransactionalAccount account, Date startDate, Date endDate) {
+            CreditCardAccount account, Date fromDate, Date toDate) {
         try {
-            return apiClient.fetchTransactions(account, startDate, endDate);
+            return apiClient.fetchTransactions(account, fromDate, toDate);
         } catch (HttpResponseException e) {
             final String errorMessage = e.getResponse().getBody(String.class);
             if (errorMessage.contains(ErrorMessages.NINETY_DAYS_TRANSACTIONS_ONLY)) {
