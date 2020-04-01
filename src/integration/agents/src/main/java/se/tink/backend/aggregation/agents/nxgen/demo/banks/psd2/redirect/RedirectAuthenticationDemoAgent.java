@@ -60,7 +60,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         super(request, context, signatureKeyPair);
 
         this.provider = request.getProvider().getName();
-        this.redirectToOxfordStaging = Objects.equals("oxford-staging", context.getClusterId());
+        this.redirectToOxfordStaging = Objects.equals("oxford-preprod", context.getClusterId());
     }
 
     @Override

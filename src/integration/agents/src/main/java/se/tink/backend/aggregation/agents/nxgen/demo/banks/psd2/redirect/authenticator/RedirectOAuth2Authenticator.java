@@ -45,7 +45,7 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
             authorizationUrl = authorizationUrl.queryParam("redirectUrl", preferredCallbackUri);
         } else {
             authorizationUrl =
-                    authorizationUrl.queryParam("staging", String.valueOf(redirectToOxfordStaging));
+                    authorizationUrl.queryParam("preprod", String.valueOf(redirectToOxfordStaging));
         }
         return authorizationUrl;
     }
