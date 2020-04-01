@@ -368,7 +368,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                         .orElse(true);
         LOGGER.info(
                 "Password is null/empty (during auto auth): " + Strings.isNullOrEmpty(password));
-        if (manualAuthenticationRequired) {
+        if (manualAuthenticationRequired || Strings.isNullOrEmpty(muid)) {
             SessionError.SESSION_EXPIRED.exception();
         }
 
