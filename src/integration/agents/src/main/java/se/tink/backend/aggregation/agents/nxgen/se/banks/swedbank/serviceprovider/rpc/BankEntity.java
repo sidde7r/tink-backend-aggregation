@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -9,7 +11,9 @@ public class BankEntity {
     private String url;
     private String bankId;
     private PrivateProfileEntity privateProfile;
-    private List<PrivateProfileEntity> corporateProfiles;
+
+    @JsonProperty("corporateProfiles")
+    private List<BusinessProfileEntity> businessProfiles = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -23,10 +27,10 @@ public class BankEntity {
         return bankId;
     }
 
-    public PrivateProfileEntity getPrivateProfile() {
-        if (corporateProfiles.isEmpty()) {
+    public PrivateProfileEntity getProfile() {
+        if (businessProfiles.isEmpty()) {
             return privateProfile;
         }
-        return corporateProfiles.get(0);
+        return businessProfiles.get(0);
     }
 }
