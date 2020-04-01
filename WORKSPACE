@@ -1749,8 +1749,8 @@ maven_jar(
 
 maven_jar(
     name = "org_apache_commons_commons_lang3",  # Do not use, but do not remove
-    artifact = "org.apache.commons:commons-lang3:3.4",
-    sha1 = "5fe28b9518e58819180a43a850fbc0dd24b7c050",
+    artifact = "org.apache.commons:commons-lang3:3.5",
+    sha1 = "6c6c702c89bfff3cd9e80b04d668c5e190d588c6",
 )
 
 maven_jar(
@@ -2578,6 +2578,7 @@ maven_install(
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
         "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
+        "com.github.javafaker:javafaker:1.0.2",
         "com.github.rholder:guava-retrying:2.0.0",
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
         "com.google.code.findbugs:jsr305:3.0.2",
@@ -2651,7 +2652,7 @@ maven_install(
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-collections4:4.0",
-        "org.apache.commons:commons-lang3:3.4",
+        "org.apache.commons:commons-lang3:3.5",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.apache.logging.log4j:log4j-api:2.11.1",
@@ -2882,25 +2883,6 @@ maven_install(
 load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
 
 com_salesforce_servicelibs_grpc_testing_contrib_pin()
-
-maven_install(
-    name = "com_github_javafaker_javafaker",
-    artifacts = [
-        "com.github.javafaker:javafaker:0.11",
-    ],
-    excluded_artifacts = [
-        "com.github.bmoliveira:*",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:com_github_javafaker_javafaker_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
-)
-
-load("@com_github_javafaker_javafaker//:defs.bzl", com_github_javafaker_javafaker_pin = "pinned_maven_install")
-
-com_github_javafaker_javafaker_pin()
 
 git_repository(
     name = "com_github_atlassian_bazel_tools",
