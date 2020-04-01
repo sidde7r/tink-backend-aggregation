@@ -24,14 +24,16 @@ public class FinTsDialogContext {
     private static final int ONE_FACTOR = 1;
     private static final int TWO_FACTOR = 2;
 
+    private static final String UNINITIALIZED_ID = "0";
+
     // Dependencies
     private SecurityReferenceGenerator securityReferenceGenerator;
     @Getter private FinTsConfiguration configuration;
     @Getter private FinTsSecretsConfiguration secretsConfiguration;
 
     // Dialog metadata
-    @Getter @Setter private String systemId = "0";
-    @Getter @Setter private String dialogId = "0";
+    @Getter @Setter private String systemId = UNINITIALIZED_ID;
+    @Getter @Setter private String dialogId = UNINITIALIZED_ID;
     @Getter @Setter private int messageNumber = 1;
     @Getter private int securityReference; // Unique number per message
 
@@ -69,6 +71,10 @@ public class FinTsDialogContext {
 
     public void generateNewSecurityReference() {
         this.securityReference = securityReferenceGenerator.generate();
+    }
+
+    public boolean isDialogIdUninitialized() {
+        return UNINITIALIZED_ID.equals(dialogId);
     }
 
     public int getSecurityProcedureVersion() {

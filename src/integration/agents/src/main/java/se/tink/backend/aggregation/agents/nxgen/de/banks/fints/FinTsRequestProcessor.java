@@ -46,13 +46,12 @@ public class FinTsRequestProcessor {
     }
 
     private FinTsResponse sendRequest(FinTsRequest request) {
-        final String FIRST_MESSAGE_ID = "0";
         FinTsResponse response = requestSender.sendRequest(request);
 
         dialogContext.setMessageNumber(dialogContext.getMessageNumber() + 1);
         dialogContext.generateNewSecurityReference();
 
-        if (FIRST_MESSAGE_ID.equals(dialogContext.getDialogId())) {
+        if (dialogContext.isDialogIdUninitialized()) {
             response.findSegment(HNHBK.class)
                     .ifPresent(hnhbk -> dialogContext.setDialogId(hnhbk.getDialogId()));
         }
