@@ -1,6 +1,6 @@
 java_library(
     name = "rpc",
-    srcs = glob(["src/main/**/rpc/*.java"]),
+    srcs = glob(["*.java"]),
     visibility = [
         "//src/aggregation:__subpackages__",
         "//src/aggregation/aggregationcontroller_api:__subpackages__",

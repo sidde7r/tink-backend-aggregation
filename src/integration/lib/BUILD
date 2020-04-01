@@ -22,7 +22,7 @@ java_library(
     deps = [
         "annotations",
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
-        "//src/integration/account:rpc",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/configuration",
         "//src/integration/amount",
         "//src/integration/api",
@@ -174,7 +174,7 @@ junit_test(
     ],
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
-        "//src/integration/account:rpc",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
         "//src/integration/amount",
         "//src/integration/api",
         "//src/integration/credentials:service",
