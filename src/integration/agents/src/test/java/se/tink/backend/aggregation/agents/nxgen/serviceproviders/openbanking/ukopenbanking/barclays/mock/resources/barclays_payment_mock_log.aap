@@ -49,7 +49,6 @@ x-idempotency-key: 0000000000000000
 Authorization: Bearer DUMMY_TPP_ACCESS_TOKEN
 x-fapi-financial-id: MOCK_ORG_ID
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
-x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 
 {"Risk":{},"Data":{"Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"RemittanceInformation":{"Unstructured":"b900555d03124056b54930e1c53c9cac","Reference":"UK Demo"}}}}
 
@@ -98,7 +97,6 @@ x-idempotency-key: 0000000000000000
 Authorization: Bearer DUMMY_ACCESS_TOKEN
 x-fapi-financial-id: MOCK_ORG_ID
 x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
-x-jws-signature: RkFLRV9TSUdOQVRVUkUK
 
 {"Risk":{},"Data":{"ConsentId":"BARCLAYS-P-10000000245531","Initiation":{"RemittanceInformation":{"Unstructured":"b900555d03124056b54930e1c53c9cac","Reference":"UK Demo"},"EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructionIdentification":"b900555d03124056b54930e1c53c9cac","CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"InstructedAmount":{"Amount":"1.00","Currency":"GBP"}}}}
 

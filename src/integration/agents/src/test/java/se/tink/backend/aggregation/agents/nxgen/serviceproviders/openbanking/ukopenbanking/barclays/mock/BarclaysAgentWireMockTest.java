@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireM
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.barclays.mock.module.BarclaysWireMockTestModule;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -44,7 +43,6 @@ public class BarclaysAgentWireMockTest {
 
         final WireMockConfiguration configuration =
                 WireMockConfiguration.builder("localhost:" + server.getHttpsPort())
-                        .setAgentModule(new BarclaysWireMockTestModule())
                         .setConfigurationPath(
                                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml")
                         .setCallbackData(
@@ -95,7 +93,6 @@ public class BarclaysAgentWireMockTest {
 
         final WireMockConfiguration configuration =
                 WireMockConfiguration.builder("localhost:" + server.getHttpsPort())
-                        .setAgentModule(new BarclaysWireMockTestModule())
                         .setConfigurationPath(
                                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml")
                         .setCallbackData(
