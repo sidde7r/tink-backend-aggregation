@@ -43,7 +43,6 @@ public class BarclaysAgentWireMockTest {
 
         final WireMockConfiguration configuration =
                 WireMockConfiguration.builder("localhost:" + server.getHttpsPort())
-                        .setAgentModule(new BarclaysWireMockTestModule())
                         .setConfigurationPath(
                                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml")
                         .setCallbackData(
@@ -94,7 +93,6 @@ public class BarclaysAgentWireMockTest {
 
         final WireMockConfiguration configuration =
                 WireMockConfiguration.builder("localhost:" + server.getHttpsPort())
-                        .setAgentModule(new BarclaysWireMockTestModule())
                         .setConfigurationPath(
                                 "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml")
                         .setCallbackData(

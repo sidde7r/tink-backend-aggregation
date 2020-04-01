@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.Barclays
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.authenticator.BarclaysAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
 public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
@@ -37,8 +36,8 @@ public class BarclaysV31Agent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public BarclaysV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
-        super(componentProvider, aisConfig, jwtSigner, true);
+    public BarclaysV31Agent(AgentComponentProvider componentProvider) {
+        super(componentProvider, aisConfig, true);
         pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
     }
 
