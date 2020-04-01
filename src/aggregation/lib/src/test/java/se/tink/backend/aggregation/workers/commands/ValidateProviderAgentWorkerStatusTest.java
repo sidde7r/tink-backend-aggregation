@@ -25,7 +25,7 @@ public class ValidateProviderAgentWorkerStatusTest {
     }
 
     @Test
-    public void returns_continue_when_provider_has_a_non_blacklisted_status() throws Exception {
+    public void returnsContinueWhenProviderHasANonBlacklistedStatusTest() throws Exception {
         // Arrange
         CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
         Mockito.when(context.getRequest()).thenReturn(request);
@@ -44,7 +44,7 @@ public class ValidateProviderAgentWorkerStatusTest {
     }
 
     @Test
-    public void returns_abort_when_provider_has_a_blacklisted_status() throws Exception {
+    public void returnsAbortWhenProviderHasABlacklistedStatusTest() throws Exception {
         // Arrange
         CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
         Mockito.when(context.getRequest()).thenReturn(request);
