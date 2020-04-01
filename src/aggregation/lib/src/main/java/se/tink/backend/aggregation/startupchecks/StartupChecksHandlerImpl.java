@@ -15,10 +15,6 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(StartupChecksHandlerImpl.class);
 
-    // Used to fake a startup probe, we wait for this to be true one first time and then we do not
-    // check again
-    private boolean firstCheckPassed = false;
-
     private final Collection<HealthCheck> healthChecks;
 
     private final HealthCheckMetricsAggregation healthCheckMetricsAggregation;
@@ -38,23 +34,11 @@ public class StartupChecksHandlerImpl implements StartupChecksHandler {
 
     @Override
     public String handle() {
-        if (!firstCheckPassed) {
-            logger.info("Health checks haven't passed yet.");
-            try {
-                isHealthy();
-            } catch (NotHealthyException e) {
-                logger.error("Health checks failed.", e);
-                HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
-            }
-            firstCheckPassed = true;
-            logger.info("Health checks passed.");
-        } else {
-            try {
-                isHealthy();
-            } catch (NotHealthyException e) {
-                logger.warn("Health checks failed.", e);
-                return "experiencing problems";
-            }
+        try {
+            isHealthy();
+        } catch (NotHealthyException e) {
+            logger.error("Health checks failed.", e);
+            HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
         }
         return "started";
     }
