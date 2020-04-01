@@ -31,6 +31,7 @@ public class AmericanExpressV62ApiClient {
             PersistentStorage persistentStorage,
             AmericanExpressV62Configuration config) {
         this.client = client;
+        client.disableAggregatorHeader();
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.config = config;

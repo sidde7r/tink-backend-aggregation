@@ -21,7 +21,6 @@ x-axp-appid: uk.co.americanexpress.amexservice
 x-axp-appversion: 6.25.0
 x-axp-locale: en_GB
 x-axp-git-sha: 32e1a867b
-X-Aggregator: Tink Testing
 
 {"serviceName":"AccountServicing","version":"-1"}
 
@@ -58,7 +57,6 @@ x-axp-appid: uk.co.americanexpress.amexservice
 x-axp-appversion: 6.25.0
 x-axp-locale: en_GB
 x-axp-git-sha: 32e1a867b
-X-Aggregator: Tink Testing
 
 {"serviceName":"Content","version":"-1"}
 
@@ -95,7 +93,6 @@ x-axp-appid: uk.co.americanexpress.amexservice
 x-axp-appversion: 6.25.0
 x-axp-locale: en_GB
 x-axp-git-sha: 32e1a867b
-X-Aggregator: Tink Testing
 
 {"cardArtRequest":[{"minimumWidth":"1260","tag":"big-image"}],"loginCredentials":{"userIdLogin":{"rememberMeFlag":true,"userId":"testUser","password":"testPassword","rememberMeToken":null}}}
 
@@ -136,7 +133,6 @@ x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
 x-axp-gatekeeper: dummyGateKeeperCookie
 authorization: Bearer dummyJWTToken
-X-Aggregator: Tink Testing
 
 {"timeZone":"GMT+1","timeZoneOffset":"3600000","sortedIndex":0,"pendingChargeEnabled":true,"cmlEnabled":true,"goodsSvcOfferEnabled":false,"payWithPointsEnabled":false,"payYourWayEnabled":false,"pushEnabled":false}
 
@@ -177,7 +173,6 @@ x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
 x-axp-gatekeeper: dummyGateKeeperCookie
 authorization: Bearer dummyJWTToken
-X-Aggregator: Tink Testing
 
 {"billingIndexList":[0],"sortedIndex":0}
 
@@ -218,7 +213,6 @@ x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
 x-axp-gatekeeper: dummyGateKeeperCookie
 authorization: Bearer dummyJWTToken
-X-Aggregator: Tink Testing
 
 {"billingIndexList":[1],"sortedIndex":0}
 
@@ -259,7 +253,6 @@ x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
 x-axp-gatekeeper: dummyGateKeeperCookie
 authorization: Bearer dummyJWTToken
-X-Aggregator: Tink Testing
 
 {"billingIndexList":[2],"sortedIndex":0}
 
@@ -300,7 +293,6 @@ x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
 x-axp-gatekeeper: dummyGateKeeperCookie
 authorization: Bearer dummyJWTToken
-X-Aggregator: Tink Testing
 
 {"billingIndexList":[3],"sortedIndex":0}
 
@@ -341,7 +333,6 @@ x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
 x-axp-gatekeeper: dummyGateKeeperCookie
 authorization: Bearer dummyJWTToken
-X-Aggregator: Tink Testing
 
 {"billingIndexList":[4],"sortedIndex":0}
 
@@ -382,7 +373,6 @@ x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
 x-axp-gatekeeper: dummyGateKeeperCookie
 authorization: Bearer dummyJWTToken
-X-Aggregator: Tink Testing
 
 {"billingIndexList":[5],"sortedIndex":0}
 
@@ -423,7 +413,6 @@ x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
 x-axp-gatekeeper: dummyGateKeeperCookie
 authorization: Bearer dummyJWTToken
-X-Aggregator: Tink Testing
 
 RESPONSE 11
 200
