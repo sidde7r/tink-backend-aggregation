@@ -2,17 +2,22 @@ package se.tink.backend.aggregation.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -26,10 +31,8 @@ public class SystemTestUtils {
     private static ObjectMapper mapper = new ObjectMapper();
     private static Logger log = LoggerFactory.getLogger(SystemTestUtils.class);
 
-    public static enum ExpectedCredentialsStatus {
-        TEMPORARY_ERROR,
-        UPDATED
-    };
+    private static Set<String> finalCredentialsStatus =
+            ImmutableSet.of("TEMPORARY_ERROR", "AUTHENTICATION_ERROR", "UPDATED");
 
     public static ResponseEntity<String> makePostRequest(String url, Object requestBody)
             throws Exception {
@@ -78,63 +81,86 @@ public class SystemTestUtils {
         return response;
     }
 
-    public static Map<String, List<String>> pollAggregationController(
-            String url,
-            Optional<ExpectedCredentialsStatus> expectedCredentialsStatus,
-            Set<String> expectedCallbacks)
+    public static Optional<List<String>> fetchCallbacksForEndpoint(String url, String endPoint)
             throws Exception {
-
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", "application/json");
 
         Map<String, List<String>> pushedData = new HashMap<>();
-        while (true) {
 
-            ResponseEntity<String> dataResult = makeGetRequest(url, headers);
+        ResponseEntity<String> dataResult = makeGetRequest(url, headers);
 
-            pushedData = new ObjectMapper().readValue(dataResult.getBody(), Map.class);
-            if (pushedData.keySet().size() == 0) {
-                log.info("Waiting for callback");
+        pushedData = new ObjectMapper().readValue(dataResult.getBody(), Map.class);
+        if (pushedData.keySet().size() == 0) {
+            return Optional.empty();
+        }
+
+        if (!pushedData.containsKey(endPoint)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(pushedData.get(endPoint));
+    }
+
+    public static Optional<String> pollForFinalCredentialsUpdateStatusUntilFlowEnds(String url)
+            throws Exception {
+
+        for (int i = 0; i < 100; i++) {
+            Optional<List<String>> updateCredentialsCallback =
+                    fetchCallbacksForEndpoint(url, "updateCredentials");
+
+            if (!updateCredentialsCallback.isPresent()) {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
 
-            if (expectedCredentialsStatus.isPresent()) {
-                if (!pushedData.containsKey("updateCredentials")) {
-                    log.info("Waiting for updateCredentials");
-                    Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                    continue;
-                }
-                List<String> credentialsUpdateCallbacks = pushedData.get("updateCredentials");
-                JsonNode latestCredentialsUpdateCallback =
-                        mapper.readTree(
-                                credentialsUpdateCallbacks.get(
-                                        credentialsUpdateCallbacks.size() - 1));
-                String credentialsStatus =
-                        latestCredentialsUpdateCallback.get("credentials").get("status").asText();
-                if (!credentialsStatus.equalsIgnoreCase(
-                        expectedCredentialsStatus.get().toString())) {
-                    log.info("Waiting for credentials to get status " + expectedCredentialsStatus);
-                    Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                    continue;
-                }
-            }
+            List<String> credentialsUpdateCallbacks = updateCredentialsCallback.get();
+            JsonNode latestCredentialsUpdateCallback =
+                    mapper.readTree(
+                            credentialsUpdateCallbacks.get(credentialsUpdateCallbacks.size() - 1));
+            String credentialsStatus =
+                    latestCredentialsUpdateCallback.get("credentials").get("status").asText();
 
-            boolean isThereMissingCallback = false;
-            for (String callbackKey : expectedCallbacks) {
-                if (!pushedData.containsKey(callbackKey)) {
-                    log.info("Waiting for " + callbackKey);
-                    Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                    isThereMissingCallback = true;
-                }
-            }
-            if (isThereMissingCallback) {
+            if (!finalCredentialsStatus.contains(credentialsStatus)) {
+                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
-
-            break;
+            return Optional.of(credentialsStatus);
         }
-        return pushedData;
+
+        return Optional.empty();
+    }
+
+    public static List<JsonNode> pollForAllCallbacksForAnEndpoint(
+            String url, String endpoint, int retryAmount, int sleepDuration) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", "application/json");
+
+        for (int i = 0; i < retryAmount; i++) {
+            log.info("Trying to fetch callbacks for " + endpoint);
+            Optional<List<String>> callbackList = fetchCallbacksForEndpoint(url, endpoint);
+
+            if (callbackList.isPresent()) {
+                log.info("Callbacks for " + endpoint + " are fetched");
+                return convertToListOfJsonNodes(callbackList.get());
+            }
+            Uninterruptibles.sleepUninterruptibly(sleepDuration, TimeUnit.SECONDS);
+        }
+
+        return Collections.emptyList();
+    }
+
+    private static List<JsonNode> convertToListOfJsonNodes(List<String> input) {
+        return input.stream()
+                .map(
+                        data -> {
+                            try {
+                                return mapper.readValue(data, JsonNode.class);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                .collect(Collectors.toList());
     }
 
     public static String readRequestBodyFromFile(String filePath) {
@@ -144,5 +170,55 @@ public class SystemTestUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static List<?> parseAccounts(List<JsonNode> input) {
+        return input.stream()
+                .map(data -> data.get("account"))
+                .map(
+                        account -> {
+                            try {
+                                return mapper.readValue(account.toString(), Map.class);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                .collect(Collectors.toList());
+    }
+
+    public static List<Map<String, Object>> parseTransactions(List<JsonNode> input) {
+        return input.stream()
+                .map(data -> data.get("transactions").iterator())
+                .map(
+                        iterator -> {
+                            List<Map<String, Object>> temp = new ArrayList<>();
+                            while (iterator.hasNext()) {
+                                try {
+                                    temp.add(
+                                            mapper.readValue(
+                                                    iterator.next().toString(), Map.class));
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            return temp;
+                        })
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    public static Map<String, Object> parseIdentityData(List<JsonNode> input) {
+        return input.stream()
+                .map(
+                        data -> {
+                            try {
+                                return mapper.readValue(
+                                        data.get("identityData").toString(), Map.class);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                .findFirst()
+                .get();
     }
 }

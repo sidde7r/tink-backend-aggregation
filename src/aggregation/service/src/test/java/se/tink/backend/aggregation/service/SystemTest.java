@@ -4,15 +4,15 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static se.tink.backend.aggregation.service.SystemTestUtils.makeGetRequest;
 import static se.tink.backend.aggregation.service.SystemTestUtils.makePostRequest;
-import static se.tink.backend.aggregation.service.SystemTestUtils.pollAggregationController;
+import static se.tink.backend.aggregation.service.SystemTestUtils.parseAccounts;
+import static se.tink.backend.aggregation.service.SystemTestUtils.parseIdentityData;
+import static se.tink.backend.aggregation.service.SystemTestUtils.parseTransactions;
+import static se.tink.backend.aggregation.service.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
+import static se.tink.backend.aggregation.service.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
 import static se.tink.backend.aggregation.service.SystemTestUtils.readRequestBodyFromFile;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableSet;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
-import se.tink.backend.aggregation.service.SystemTestUtils.ExpectedCredentialsStatus;
 
 public class SystemTest {
 
@@ -35,6 +34,8 @@ public class SystemTest {
     private static final int AGGREGATION_CONTROLLER_PORT = 8080;
 
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static AgentContractEntitiesJsonFileParser contractParser =
+            new AgentContractEntitiesJsonFileParser();
 
     @Before
     public void resetFakeAggregationControllerCache() throws Exception {
@@ -65,33 +66,36 @@ public class SystemTest {
 
     @Test
     public void getAuthenticateShouldSetCredentialsStatusUpdated() throws Exception {
-        String requestBody =
+
+        // given
+        String requestBodyForAuthenticateEndpoint =
                 readRequestBodyFromFile(
                         "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body.json");
 
+        // when
         ResponseEntity<String> authenticationCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/authenticate",
                                 APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
-                        requestBody);
+                        requestBodyForAuthenticateEndpoint);
 
-        Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
-
-        Map<String, List<String>> pushedData =
-                pollAggregationController(
+        Optional<String> updateCredentialsCallback =
+                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         String.format(
                                 "http://%s:%d/data",
-                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
-                        Optional.of(ExpectedCredentialsStatus.UPDATED),
-                        Collections.emptySet());
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+
+        // then
+        Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
+        Assert.assertTrue(updateCredentialsCallback.isPresent());
+        Assert.assertEquals("UPDATED", updateCredentialsCallback.get());
     }
 
     @Test
-    public void getRefreshShouldUploadAccountsAndTransactions() throws Exception {
+    public void getRefreshShouldUploadEntities() throws Exception {
 
-        AgentContractEntitiesJsonFileParser contractParser =
-                new AgentContractEntitiesJsonFileParser();
+        // given
         AgentContractEntity expected =
                 contractParser.parseContractOnBasisOfFile(
                         "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities.json");
@@ -100,77 +104,52 @@ public class SystemTest {
         List<Map<String, Object>> expectedAccounts = expected.getAccounts();
         Map<String, Object> expectedIdentityData = expected.getIdentityData();
 
-        String requestBody =
+        String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(
                         "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body.json");
 
+        String aggregationControllerEndpoint =
+                String.format(
+                        "http://%s:%d/data",
+                        AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT);
+
+        // when
         ResponseEntity<String> authenticationCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/refresh",
                                 APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
-                        requestBody);
+                        requestBodyForRefreshEndpoint);
 
-        Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
+        // Why I need "?"
+        List<?> givenAccounts =
+                parseAccounts(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint, "updateAccount", 100, 1));
 
-        Map<String, List<String>> pushedData =
-                pollAggregationController(
-                        String.format(
-                                "http://%s:%d/data",
-                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
-                        Optional.empty(),
-                        ImmutableSet.of(
-                                "updateCredentials",
+        List<Map<String, Object>> givenTransactions =
+                parseTransactions(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint,
                                 "updateTransactionsAsynchronously",
-                                "updateAccount",
-                                "updateIdentity"));
+                                100,
+                                1));
 
-        // Check transactions
-        List<Map<String, Object>> givenTransactions = new ArrayList<>();
+        Map<String, Object> givenIdentityData =
+                parseIdentityData(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint, "updateIdentity", 100, 1));
 
-        for (int i = 0; i < pushedData.get("updateTransactionsAsynchronously").size(); i++) {
-            JsonNode node =
-                    mapper.readValue(
-                            pushedData.get("updateTransactionsAsynchronously").get(i),
-                            JsonNode.class);
-
-            Iterator<JsonNode> transactionsIterator = node.get("transactions").iterator();
-
-            while (transactionsIterator.hasNext()) {
-                givenTransactions.add(
-                        mapper.readValue(transactionsIterator.next().toString(), Map.class));
-            }
-        }
+        // then
+        Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
 
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedTransactions, givenTransactions));
 
-        // Check accounts
-        List<Map<String, Object>> givenAccounts = new ArrayList<>();
-
-        for (int i = 0; i < pushedData.get("updateAccount").size(); i++) {
-            JsonNode node =
-                    mapper.readValue(pushedData.get("updateAccount").get(i), JsonNode.class);
-            JsonNode account = node.get("account");
-            givenAccounts.add(mapper.readValue(account.toString(), Map.class));
-        }
-
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedAccounts, givenAccounts));
-
-        // Check identity data
-        Map<String, Object> givenIdentityData =
-                mapper.readValue(
-                        mapper.readValue(
-                                        pushedData
-                                                .get("updateIdentity")
-                                                .get(pushedData.get("updateIdentity").size() - 1),
-                                        JsonNode.class)
-                                .get("identityData")
-                                .toString(),
-                        Map.class);
 
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
