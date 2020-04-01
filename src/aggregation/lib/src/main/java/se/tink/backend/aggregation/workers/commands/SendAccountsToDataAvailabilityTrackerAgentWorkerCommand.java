@@ -103,10 +103,19 @@ public class SendAccountsToDataAvailabilityTrackerAgentWorkerCommand extends Age
                 .buildList()
                 .forEach(
                         entry -> {
-                            eventData.add(
-                                    new Pair<String, Boolean>(
-                                            entry.getName(),
-                                            !entry.getValue().equalsIgnoreCase("null")));
+                            if (entry.getName().endsWith(".identifiers")) {
+                                eventData.add(
+                                        new Pair<String, Boolean>(
+                                                entry.getName()
+                                                        + "."
+                                                        + entry.getValue().replace("-", ""),
+                                                true));
+                            } else {
+                                eventData.add(
+                                        new Pair<String, Boolean>(
+                                                entry.getName(),
+                                                !entry.getValue().equalsIgnoreCase("null")));
+                            }
                         });
 
         dataTrackerEventProducer.sendDataTrackerEvent(
