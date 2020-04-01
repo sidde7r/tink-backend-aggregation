@@ -69,7 +69,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
                 return BankIdStatus.NO_CLIENT;
             }
             if (e.getMessage().contains(BankIdStatusCodes.AUTHORIZATION_FAILED)) {
-                return BankIdStatus.FAILED_UNKNOWN;
+                return BankIdStatus.CANCELLED;
             }
             return BankIdStatus.FAILED_UNKNOWN;
         }
