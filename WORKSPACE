@@ -1749,8 +1749,8 @@ maven_jar(
 
 maven_jar(
     name = "org_apache_commons_commons_lang3",  # Do not use, but do not remove
-    artifact = "org.apache.commons:commons-lang3:3.4",
-    sha1 = "5fe28b9518e58819180a43a850fbc0dd24b7c050",
+    artifact = "org.apache.commons:commons-lang3:3.5",
+    sha1 = "6c6c702c89bfff3cd9e80b04d668c5e190d588c6",
 )
 
 maven_jar(
@@ -2651,7 +2651,7 @@ maven_install(
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-collections4:4.0",
-        "org.apache.commons:commons-lang3:3.4",
+        "org.apache.commons:commons-lang3:3.5",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.apache.logging.log4j:log4j-api:2.11.1",
