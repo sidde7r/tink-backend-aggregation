@@ -45,7 +45,10 @@ public class TransactionEntity {
     private Transaction toTinkTransaction(boolean isPending) {
 
         String description =
-                Stream.of(remittanceInformationUnstructured, creditorName, debtorName)
+                Stream.of(
+                                cleanUnstructuredInformation(remittanceInformationUnstructured),
+                                creditorName,
+                                debtorName)
                         .filter(Objects::nonNull)
                         .findFirst()
                         .orElse(
@@ -87,7 +90,9 @@ public class TransactionEntity {
                 .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
                         getCounterPartyName())
-                .setPayload(TransactionPayloadTypes.MESSAGE, remittanceInformationUnstructured)
+                .setPayload(
+                        TransactionPayloadTypes.MESSAGE,
+                        cleanUnstructuredInformation(remittanceInformationUnstructured))
                 .build();
     }
 
@@ -97,5 +102,9 @@ public class TransactionEntity {
                 .filter(s -> !s.isEmpty())
                 .findFirst()
                 .orElse("");
+    }
+
+    private String cleanUnstructuredInformation(String data) {
+        return data.substring(0, data.indexOf("<")).replace("Naam: ", "");
     }
 }
