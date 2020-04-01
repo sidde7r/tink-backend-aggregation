@@ -83,10 +83,16 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
 
         client.addFilter(new BankServiceInternalErrorFilter());
-        initializeAgent(componentProvider.getConfiguration());
     }
 
-    private void initializeAgent(AgentsServiceConfiguration configuration) {
+    // Different part between UkOpenBankingBaseAgent and this class
+    public UkOpenBankingClientConfigurationAdapter getClientConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentConfiguration(getClientConfigurationFormat());
+    }
+
+    @Override
+    public final void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
@@ -120,19 +126,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-    }
-
-    // Different part between UkOpenBankingBaseAgent and this class
-    public UkOpenBankingClientConfigurationAdapter getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(getClientConfigurationFormat());
-    }
-
-    /** @deprecated Configuration is read and set in constructor instead. */
-    @Override
-    @Deprecated
-    public final void setConfiguration(AgentsServiceConfiguration configuration) {
-        // NOOP
     }
 
     private void useEidasProxy(TinkHttpClient httpClient) {
