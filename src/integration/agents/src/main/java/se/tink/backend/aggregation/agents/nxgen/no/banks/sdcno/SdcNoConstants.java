@@ -7,6 +7,9 @@ public class SdcNoConstants {
 
         public static final String PORTALBANK_LOGIN_URL =
                 "https://id.portalbank.no/wsl/slogin/Run?n_bank={bankcode}";
+
+        public static final String EIKA_LOGIN_URL =
+                "https://id.portalbank.no/web-kundeid/webresources/identifiser/eika/0770?returnUrl=https%3a%2f%2feika.no%2flogin%3freturnUrl%3d%2foversikt";
     }
 
     public static class ErrorMessages {

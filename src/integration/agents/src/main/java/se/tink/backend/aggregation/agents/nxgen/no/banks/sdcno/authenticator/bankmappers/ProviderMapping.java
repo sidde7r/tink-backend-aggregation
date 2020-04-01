@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.ba
 import java.util.Arrays;
 
 public enum ProviderMapping {
+    STOREBRAND("9680", AuthenticationType.NETTBANK),
     CULTURA_BANK("1254", AuthenticationType.NETTBANK),
     EASY_BANK("9791", AuthenticationType.NETTBANK),
     PERSONELLSERVICE_TRONDELAG("0010", AuthenticationType.NETTBANK),
@@ -76,7 +77,8 @@ public enum ProviderMapping {
     VANG("2153", AuthenticationType.PORTAL),
     VEKSELBANKEN("9581", AuthenticationType.PORTAL),
     VESTRE_SLIDRE("2153", AuthenticationType.PORTAL),
-    VIK("3800", AuthenticationType.PORTAL);
+    VIK("3800", AuthenticationType.PORTAL),
+    EIKA("1821", AuthenticationType.EIKA);
 
     private String bankCode;
     private AuthenticationType authenticationType;

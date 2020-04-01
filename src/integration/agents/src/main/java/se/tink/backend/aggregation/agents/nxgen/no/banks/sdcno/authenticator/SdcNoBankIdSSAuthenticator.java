@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator;
 
+import java.util.Optional;
 import org.openqa.selenium.WebDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -11,13 +12,11 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankidinitializers.PortalBankIdMobilInitializer;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankmappers.AuthenticationType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.WebScrapingConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.BankIdMobilSSAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.BankIdMobilInitializer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.screenscraping.bankidmobil.initializer.MobilInitializer;
 import se.tink.libraries.selenium.WebDriverHelper;
 
@@ -58,16 +57,15 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
 
     private MobilInitializer constructMobilInitializer(
             String mobileNummer, String idNumber, AuthenticationType authenticationType) {
-        if ((AuthenticationType.NETTBANK).equals(authenticationType)) {
-            return new BankIdMobilInitializer(mobileNummer, idNumber, driver, webDriverHelper);
-        }
-        if ((AuthenticationType.PORTAL).equals(authenticationType)) {
-            return new PortalBankIdMobilInitializer(
-                    mobileNummer, idNumber, driver, webDriverHelper);
-        }
 
-        throw new IllegalArgumentException(
-                ("Unsupported bank id mobil Initializer for " + authenticationType));
+        return Optional.ofNullable(
+                        authenticationType.getMobilBankIdInitializer(
+                                mobileNummer, idNumber, driver, webDriverHelper))
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        ("Unsupported bank id mobil Initializer for "
+                                                + authenticationType)));
     }
 
     @Override
