@@ -69,10 +69,11 @@ public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccoun
                         IdModule.builder()
                                 .withUniqueIdentifier(uniqueIdentifier)
                                 .withAccountNumber(uniqueIdentifier)
-                                .withAccountName(accountDetails.get().getName())
+                                .withAccountName(accountEntity.getDescription())
                                 .addIdentifier(new PaymentCardNumberIdentifier(uniqueIdentifier))
                                 .setProductName(accountEntity.getDescription())
                                 .build())
+                .setApiIdentifier(accountEntity.getAccountId())
                 .build();
     }
 }
