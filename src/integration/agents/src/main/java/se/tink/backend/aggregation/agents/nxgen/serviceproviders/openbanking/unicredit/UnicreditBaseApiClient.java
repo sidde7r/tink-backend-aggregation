@@ -8,7 +8,6 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
@@ -34,6 +33,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -203,6 +203,8 @@ public abstract class UnicreditBaseApiClient {
     }
 
     public CreatePaymentResponse createSepaPayment(CreatePaymentRequest request) {
+        persistentStorage.put(
+                StorageKeys.STATE, new StrongAuthenticationState(null).getSupplementalKey());
 
         CreatePaymentResponse createPaymentResponse =
                 createRequest(
@@ -211,14 +213,11 @@ public abstract class UnicreditBaseApiClient {
                                                         + Endpoints.PAYMENT_INITIATION)
                                         .parameter(
                                                 PathParameters.PAYMENT_PRODUCT,
-                                                UnicreditPaymentProduct
-                                                        .INSTANT_SEPA_CREDIT_TRANSFERS
+                                                UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS
                                                         .toString()))
                         .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                         .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                        .header(
-                                HeaderKeys.PSU_ID_TYPE,
-                                credentials.getField(Key.ADDITIONAL_INFORMATION))
+                        .header(HeaderKeys.PSU_ID_TYPE, configuration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(getConfiguration().getRedirectUrl())
@@ -241,8 +240,7 @@ public abstract class UnicreditBaseApiClient {
                         new URL(getConfiguration().getBaseUrl() + Endpoints.FETCH_PAYMENT)
                                 .parameter(
                                         PathParameters.PAYMENT_PRODUCT,
-                                        UnicreditPaymentProduct.INSTANT_SEPA_CREDIT_TRANSFERS
-                                                .toString())
+                                        UnicreditPaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
                                 .parameter(PathParameters.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
