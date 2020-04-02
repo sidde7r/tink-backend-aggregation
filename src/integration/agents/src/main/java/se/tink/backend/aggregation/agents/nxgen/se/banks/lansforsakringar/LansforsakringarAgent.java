@@ -12,12 +12,14 @@ import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.StorageKeys;
@@ -32,8 +34,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transactional.LansforsakringarUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.transfer.LansforsakringarTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.session.LansforsakringarSessionHandler;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -46,6 +48,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 public class LansforsakringarAgent extends NextGenerationAgent
@@ -55,7 +58,8 @@ public class LansforsakringarAgent extends NextGenerationAgent
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshTransferDestinationExecutor,
-                RefreshEInvoiceExecutor {
+                RefreshEInvoiceExecutor,
+                RefreshCreditCardAccountsExecutor {
 
     private final LansforsakringarApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -65,8 +69,9 @@ public class LansforsakringarAgent extends NextGenerationAgent
     private final TransferDestinationRefreshController transferDestinationRefreshController;
     private final EInvoiceRefreshController einvoiceRefreshController;
 
-    public LansforsakringarAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider);
+    public LansforsakringarAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
         apiClient =
                 new LansforsakringarApiClient(client, sessionStorage, catalog, persistentStorage);
         persistentStorage.computeIfAbsent(
@@ -104,13 +109,17 @@ public class LansforsakringarAgent extends NextGenerationAgent
     }
 
     private CreditCardRefreshController constructCreditCardRefreshController() {
-        LansforsakringarCreditCardFetcher lansforsakringarCreditCardFetcher =
+        final LansforsakringarCreditCardFetcher lansforsakringarCreditCardFetcher =
                 new LansforsakringarCreditCardFetcher(apiClient);
         return new CreditCardRefreshController(
                 metricRefreshController,
                 updateController,
                 lansforsakringarCreditCardFetcher,
-                lansforsakringarCreditCardFetcher);
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionPagePaginationController<>(
+                                lansforsakringarCreditCardFetcher,
+                                Fetcher.CREDIT_CARD_START_PAGE)));
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
@@ -178,7 +187,7 @@ public class LansforsakringarAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
-        return new FetchTransactionsResponse(Collections.EMPTY_MAP);
+        return new FetchTransactionsResponse(Collections.emptyMap());
     }
 
     @Override
@@ -188,7 +197,7 @@ public class LansforsakringarAgent extends NextGenerationAgent
 
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
-        return new FetchTransactionsResponse(Collections.EMPTY_MAP);
+        return new FetchTransactionsResponse(Collections.emptyMap());
     }
 
     @Override
@@ -199,6 +208,16 @@ public class LansforsakringarAgent extends NextGenerationAgent
     @Override
     public FetchEInvoicesResponse fetchEInvoices() {
         return new FetchEInvoicesResponse(einvoiceRefreshController.refreshEInvoices());
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 
     /* Handover to payments team

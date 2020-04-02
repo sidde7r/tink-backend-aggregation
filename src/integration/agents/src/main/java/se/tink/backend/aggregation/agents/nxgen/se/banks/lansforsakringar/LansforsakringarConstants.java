@@ -56,6 +56,8 @@ public class LansforsakringarConstants {
                 new URL(BASE + ApiService.PAYMENT_AND_TRANSFER_CREATE_BANKID_REFERENCE);
         public static final URL EXECUTE_PAYMENT_AND_TRANSFER_BANKID_SIGN_VERIFICATION =
                 new URL(BASE + ApiService.PAYMENT_AND_TRANSFER_BANKID_SIGN_VERIFICATION);
+        public static final URL FETCH_CARD_TRANSACTIONS =
+                new URL(BASE + ApiService.CARD_TRANSACTIONS);
     }
 
     public static class ApiService {
@@ -64,7 +66,7 @@ public class LansforsakringarConstants {
         public static final String INIT_BANKID = "appoutlet/security/user/bankid/authenticate";
         public static final String LOGIN_BANKID = "appoutlet/security/user/bankid/login/3.0";
         public static final String FETCH_UPCOMING = "appoutlet/account/upcoming/7.0";
-        public static final String FETCH_CARDS = "appoutlet/card/list/3.0";
+        public static final String FETCH_CARDS = "appoutlet/card/list/5.0";
         public static final String PENSION_WITH_LIFE_INSURANCE =
                 "es/lifeinsurance/getengagements/1.0";
         public static final String PENSION_WITH_LIFE_INSURANCE_AGREEMENT =
@@ -95,6 +97,7 @@ public class LansforsakringarConstants {
                 "appoutlet/unsigned/paymentsandtransfers/bankid/createreference/2.0";
         public static final String PAYMENT_AND_TRANSFER_BANKID_SIGN_VERIFICATION =
                 "appoutlet/unsigned/paymentsandtransfers/bankid/send/2.0";
+        public static final String CARD_TRANSACTIONS = "appoutlet/card/transaction";
     }
 
     public static class StorageKeys {
@@ -121,6 +124,7 @@ public class LansforsakringarConstants {
                         .put(AccountTypes.CHECKING, "CHECKING", "DEBIT")
                         .put(AccountTypes.SAVINGS, "SAVINGS")
                         .put(AccountTypes.PENSION, "PENSION")
+                        .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD_PRIVATE")
                         .build();
         public static final String CURRENCY = "SEK";
         public static final Pattern PATTERN_BG_RECIPIENT = Pattern.compile("^\\d{3,4}-\\d{4}");
@@ -129,6 +133,7 @@ public class LansforsakringarConstants {
 
     public static class Fetcher {
         public static final int START_PAGE = 0;
+        public static final int CREDIT_CARD_START_PAGE = 1;
         public static final String CUSTOMER_PROFILE_TYPE = "CUSTOMER";
         public static final String BOOKED_TRANSACTION_STATUS = "BOOKED";
         public static final String PENDING_TRANSACTION_STATUS = "PENDING";
