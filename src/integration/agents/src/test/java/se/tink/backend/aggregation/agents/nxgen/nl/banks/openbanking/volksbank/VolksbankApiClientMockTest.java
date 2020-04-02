@@ -11,13 +11,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 
 public final class VolksbankApiClientMockTest {
 
@@ -26,12 +24,7 @@ public final class VolksbankApiClientMockTest {
     private static TinkHttpClient createWiremockHttpClient() {
         TinkHttpClient tinkHttpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMaskerImpl.builder()
-                                        .addStringMaskerBuilder(
-                                                new CredentialsStringMaskerBuilder(
-                                                        new Credentials()))
-                                        .build(),
-                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                new FakeLogMasker(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
         tinkHttpClient.setDebugOutput(true);
         tinkHttpClient.setCensorSensitiveHeaders(false);

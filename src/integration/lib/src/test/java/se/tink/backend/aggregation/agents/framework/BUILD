@@ -35,6 +35,7 @@ java_library(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/production",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/wiremocked",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
