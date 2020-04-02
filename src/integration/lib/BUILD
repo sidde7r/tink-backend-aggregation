@@ -6,8 +6,23 @@ alias(
     visibility = ["//visibility:public"],
 )
 
+# Aims to bundle together all packages that are essential to agents. Packages that belong here:
+# Any target below src/integration/lib/... required to be used by most or every agent. Packages that
+# do not belong here: third-party dependencies (e.g. Selenium).
 java_library(
     name = "lib",
+    visibility = ["//visibility:public"],
+    exports = [
+        ":library",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
+    ],
+)
+
+java_library(
+    name = "library",
     srcs = glob(
         ["src/main/**/*.java"],
     ),
