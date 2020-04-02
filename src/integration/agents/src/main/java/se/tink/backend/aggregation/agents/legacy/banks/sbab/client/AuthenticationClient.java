@@ -9,7 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnacceptedTermsAndConditionsException;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.rpc.PollBankIdResponse;

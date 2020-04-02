@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.nordea.executor.payment;
 
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;

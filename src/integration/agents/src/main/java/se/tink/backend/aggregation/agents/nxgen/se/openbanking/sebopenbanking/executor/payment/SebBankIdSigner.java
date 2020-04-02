@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment;
 
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigner;
 import se.tink.libraries.payment.enums.PaymentStatus;

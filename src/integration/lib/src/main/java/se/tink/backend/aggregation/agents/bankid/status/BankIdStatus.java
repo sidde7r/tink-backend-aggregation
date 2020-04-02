@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents;
+package se.tink.backend.aggregation.agents.bankid.status;
 
 public enum BankIdStatus {
     DONE,

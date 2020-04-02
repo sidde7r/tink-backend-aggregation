@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;

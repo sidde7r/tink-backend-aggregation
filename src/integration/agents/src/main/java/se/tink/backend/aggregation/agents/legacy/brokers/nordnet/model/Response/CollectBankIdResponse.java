@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.brokers.nordnet.model.Response;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CollectBankIdResponse {

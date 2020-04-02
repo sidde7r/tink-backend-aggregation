@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.banks.se.collector.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class CollectBankIdResponse {
