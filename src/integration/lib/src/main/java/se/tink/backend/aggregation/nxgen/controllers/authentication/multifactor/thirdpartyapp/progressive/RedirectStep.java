@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.progressive;
 
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.*;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStrongAuthenticator;
 
 final class RedirectStep implements AuthenticationStep {
 
