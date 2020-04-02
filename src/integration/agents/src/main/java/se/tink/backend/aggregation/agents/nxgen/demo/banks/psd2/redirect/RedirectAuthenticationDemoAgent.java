@@ -70,6 +70,9 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         // This is only for customers to test the callbackUri without
         // having to configure it etc.
         String callbackUri = request.getCallbackUri();
+        if ("oxford-preprod".equals(context.getClusterId())) {
+            callbackUri = "https://api.preprod.oxford.tink.com/api/v1/thirdparty/callback";
+        }
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
                 new RedirectOAuth2Authenticator(redirectToOxfordPreprod, callbackUri, credentials);
