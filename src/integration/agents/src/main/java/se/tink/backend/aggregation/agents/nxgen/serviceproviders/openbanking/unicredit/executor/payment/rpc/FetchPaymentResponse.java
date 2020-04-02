@@ -56,10 +56,8 @@ public class FetchPaymentResponse {
     }
 
     private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        if (dateToConvert == null) {
-            return null;
-        } else {
-            return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        }
+        return dateToConvert != null
+                ? dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                : null;
     }
 }
