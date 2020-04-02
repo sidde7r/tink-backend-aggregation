@@ -8,12 +8,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 
 public class VolksbankHttpTest {
 
@@ -31,12 +29,7 @@ public class VolksbankHttpTest {
 
         TinkHttpClient client =
                 NextGenTinkHttpClient.builder(
-                                LogMasker.builder()
-                                        .addStringMaskerBuilder(
-                                                new CredentialsStringMaskerBuilder(
-                                                        new Credentials()))
-                                        .build(),
-                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                new FakeLogMasker(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
 
         String adminResponse = client.request("http://127.0.0.1:8888/__admin").get(String.class);

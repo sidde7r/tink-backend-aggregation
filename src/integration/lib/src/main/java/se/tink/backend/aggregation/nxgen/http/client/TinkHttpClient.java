@@ -98,8 +98,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient> {
 
     void setDebugOutput(boolean debugOutput);
 
-    void setCensorSensitiveHeaders(final boolean censorSensitiveHeadersEnabled);
-
     // --- Configuration ---
 
     // +++ Cookies +++

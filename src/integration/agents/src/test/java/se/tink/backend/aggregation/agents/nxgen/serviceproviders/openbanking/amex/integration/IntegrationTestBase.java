@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactory;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.factory.AgentContextProviderFactoryImpl;
@@ -93,7 +93,7 @@ public abstract class IntegrationTestBase {
                 createAgentConfigurationController(credentialsRequest.getProvider());
         when(agentContext.getAgentConfigurationController())
                 .thenReturn(agentConfigurationController);
-        when(agentContext.getLogMasker()).thenReturn(LogMasker.builder().build());
+        when(agentContext.getLogMasker()).thenReturn(new FakeLogMasker());
 
         final MetricRegistry metricRegistry = createMetricRegistry();
         when(agentContext.getMetricRegistry()).thenReturn(metricRegistry);

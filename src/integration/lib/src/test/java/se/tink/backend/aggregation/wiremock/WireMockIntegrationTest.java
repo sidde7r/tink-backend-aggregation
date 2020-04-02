@@ -3,7 +3,8 @@ package se.tink.backend.aggregation.wiremock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
-import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
@@ -18,8 +19,8 @@ public class WireMockIntegrationTest {
         wireMock = new WireMockRule(WireMockConfiguration.options().dynamicPort());
         httpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMasker.builder().build(),
-                                LogMasker.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                                new FakeLogMasker(),
+                                LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
     }
 

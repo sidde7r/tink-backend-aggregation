@@ -193,11 +193,6 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     public void setDebugOutput(boolean debugOutput) {}
 
     @Override
-    public void setCensorSensitiveHeaders(boolean censorSensitiveHeadersEnabled) {
-        tinkHttpClient.setCensorSensitiveHeaders(censorSensitiveHeadersEnabled);
-    }
-
-    @Override
     public List<Cookie> getCookies() {
         return tinkHttpClient.getCookies();
     }

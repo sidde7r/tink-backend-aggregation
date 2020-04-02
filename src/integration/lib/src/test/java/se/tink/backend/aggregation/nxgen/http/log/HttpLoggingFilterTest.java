@@ -24,7 +24,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 
 @Ignore
@@ -260,7 +261,7 @@ public class HttpLoggingFilterTest {
     }
 
     private static LogMasker createMaskStub() {
-        return LogMasker.builder()
+        return LogMaskerImpl.builder()
                 .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(new Credentials()))
                 .build();
     }

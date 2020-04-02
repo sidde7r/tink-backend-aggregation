@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentManagerEnum;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
@@ -14,12 +13,11 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
-import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 
 public final class VolksbankApiClientTest {
 
@@ -90,12 +88,7 @@ public final class VolksbankApiClientTest {
     private static TinkHttpClient createHttpClient() {
         TinkHttpClient tinkHttpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMasker.builder()
-                                        .addStringMaskerBuilder(
-                                                new CredentialsStringMaskerBuilder(
-                                                        new Credentials()))
-                                        .build(),
-                                LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
+                                new FakeLogMasker(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
         EidasProxyConfiguration proxyConfiguration =
                 EidasProxyConfiguration.createLocal(
@@ -106,7 +99,6 @@ public final class VolksbankApiClientTest {
                         NewAgentTestContext.TEST_APPID,
                         VolksbankAgent.class));
         tinkHttpClient.setDebugOutput(true);
-        tinkHttpClient.setCensorSensitiveHeaders(false);
         return tinkHttpClient;
     }
 

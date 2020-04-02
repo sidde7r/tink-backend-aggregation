@@ -69,7 +69,8 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -218,7 +219,7 @@ public class LegacyTinkHttpClient extends LegacyFilterable<TinkHttpClient>
      * Takes a logMasker that masks sensitive values from logs, the loggingMode parameter should
      * only be passed with the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the
      * logMasker handles the sensitive values in the provider. use {@link
-     * LogMasker#shouldLog(Provider)} if you can.
+     * LogMaskerImpl#shouldLog(Provider)} if you can.
      *
      * @param logMasker Masks values from logs.
      * @param loggingMode determines if logs should be outputted at all.

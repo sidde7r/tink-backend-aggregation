@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -68,7 +69,6 @@ import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.libraries.account.AccountIdentifier;
@@ -157,11 +157,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     this.credential = c;
 
                     // Replace the log masker with one that includes the newly loaded credentials
-                    this.context.setLogMasker(
-                            LogMasker.builder()
-                                    .addStringMaskerBuilder(
-                                            new CredentialsStringMaskerBuilder(this.credential))
-                                    .build());
+                    this.context.setLogMasker(new FakeLogMasker());
                 });
 
         return optionalCredential.isPresent();

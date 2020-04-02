@@ -4,6 +4,9 @@ junit_test(
     name = "bpostbank",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
+    ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/common",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/bpost:bpostbank",

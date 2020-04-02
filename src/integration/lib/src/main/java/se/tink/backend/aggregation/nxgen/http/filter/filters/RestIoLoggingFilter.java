@@ -19,7 +19,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
@@ -45,12 +45,6 @@ public class RestIoLoggingFilter extends Filter {
 
     // Max size that we log is 0,5MB
     private static final int MAX_SIZE = 500 * 1024;
-    private boolean censorSensitiveHeaders;
-
-    public RestIoLoggingFilter(
-            PrintStream loggingStream, LogMasker logMasker, LoggingMode loggingMode) {
-        this(loggingStream, logMasker, true, loggingMode);
-    }
 
     /**
      * Takes a logMasker that masks sensitive values from logs, the loggingMode parameter should *
@@ -60,22 +54,13 @@ public class RestIoLoggingFilter extends Filter {
      *
      * @param loggingStream
      * @param logMasker Masks values from logs.
-     * @param censorSensitiveHeaders
      * @param loggingMode determines if logs should be outputted at all.
      */
     public RestIoLoggingFilter(
-            PrintStream loggingStream,
-            LogMasker logMasker,
-            boolean censorSensitiveHeaders,
-            LoggingMode loggingMode) {
-        this.censorSensitiveHeaders = censorSensitiveHeaders;
+            PrintStream loggingStream, LogMasker logMasker, LoggingMode loggingMode) {
         this.loggingStream = loggingStream;
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
-    }
-
-    public void setCensorSensitiveHeaders(boolean censorSensitiveHeaders) {
-        this.censorSensitiveHeaders = censorSensitiveHeaders;
     }
 
     @Override
@@ -173,7 +158,7 @@ public class RestIoLoggingFilter extends Filter {
                     .append(REQUEST_PREFIX)
                     .append(header)
                     .append(": ")
-                    .append(censorSensitiveHeaders ? censorHeaderValue(header, value) : value)
+                    .append(censorHeaderValue(header, value))
                     .append(LF);
         }
     }
@@ -229,7 +214,7 @@ public class RestIoLoggingFilter extends Filter {
                         .append(RESPONSE_PREFIX)
                         .append(header)
                         .append(": ")
-                        .append(censorSensitiveHeaders ? censorHeaderValue(header, value) : value)
+                        .append(censorHeaderValue(header, value))
                         .append(LF);
             }
         }
