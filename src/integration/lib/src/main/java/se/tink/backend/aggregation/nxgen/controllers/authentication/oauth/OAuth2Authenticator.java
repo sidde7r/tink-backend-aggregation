@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
@@ -23,6 +24,8 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
     private static final String REFRESH_TOKEN_STEP_ID = "refreshAccessTokenStep";
     private static final String AUTOMATIC_AUTHORIZATION_STEP_ID = "authorizationStep";
     static final String AUTHORIZATION_SERVER_THIRD_PARTY_APP_STEP_ID = "issueAccessTokenStep";
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(OAuth2Authenticator.class);
     private final List<AuthenticationStep> authSteps;
     private final OAuth2TokenStorage tokenStorage;
     private final OAuth2AuthorizationServerClient authorizationServerClient;
@@ -78,7 +81,8 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
-        return false;
+        Optional<OAuth2Token> token = getToken();
+        return !token.isPresent() || token.get().hasAccessExpired() || !token.get().canRefresh();
     }
 
     private AuthenticationStepResponse authorizationStepHandler() {
@@ -114,8 +118,10 @@ public class OAuth2Authenticator extends StatelessProgressiveAuthenticator {
 
     private AuthenticationStepResponse handleIssueAccessTokenStep(
             Map<String, String> callbackData) {
-        tokenStorage.storeToken(
-                authorizationServerClient.handleAuthorizationResponse(callbackData));
+        OAuth2Token token = authorizationServerClient.handleAuthorizationResponse(callbackData);
+        tokenStorage.storeToken(token);
+        LOGGER.info(
+                "OAuth2 token with expiration in " + token.getExpiresIn() + " seconds was stored");
         return AuthenticationStepResponse.executeNextStep();
     }
 

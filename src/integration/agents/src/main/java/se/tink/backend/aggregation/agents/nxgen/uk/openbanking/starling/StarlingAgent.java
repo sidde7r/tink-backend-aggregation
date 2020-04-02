@@ -48,9 +48,6 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
 
-        transferDestinationRefreshController = constructTransferDestinationRefreshController();
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-
         StarlingConfiguration starlingConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(StarlingConfiguration.class);
@@ -58,6 +55,10 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         aisConfiguration = starlingConfiguration.getAisConfiguration();
         pisConfiguration = starlingConfiguration.getPisConfiguration();
         redirectUrl = starlingConfiguration.getRedirectUrl();
+        authenticator = new StarlingOAut2Authenticator(persistentStorage, client, aisConfiguration);
+        apiClient = new StarlingApiClient(client, authenticator);
+        transferDestinationRefreshController = constructTransferDestinationRefreshController();
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
     @Override
@@ -84,11 +85,11 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new StarlingTransactionalAccountFetcher(getApiClient()),
+                new StarlingTransactionalAccountFetcher(apiClient),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                new StarlingTransactionFetcher(getApiClient()))));
+                                new StarlingTransactionFetcher(apiClient))));
     }
 
     @Override
@@ -98,7 +99,7 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
 
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController, new StarlingTransferDestinationFetcher(getApiClient()));
+                metricRefreshController, new StarlingTransferDestinationFetcher(apiClient));
     }
 
     @Override
@@ -114,7 +115,7 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
                 new TransferController(
                         null,
                         new StarlingTransferExecutor(
-                                getApiClient(),
+                                apiClient,
                                 pisConfiguration,
                                 redirectUrl,
                                 credentials,
@@ -126,17 +127,6 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public OAuth2Authenticator getAuthenticator() {
-        if (authenticator == null) {
-            authenticator =
-                    new StarlingOAut2Authenticator(persistentStorage, client, aisConfiguration);
-        }
         return authenticator;
-    }
-
-    private StarlingApiClient getApiClient() {
-        if (apiClient == null) {
-            apiClient = new StarlingApiClient(client, getAuthenticator());
-        }
-        return apiClient;
     }
 }
