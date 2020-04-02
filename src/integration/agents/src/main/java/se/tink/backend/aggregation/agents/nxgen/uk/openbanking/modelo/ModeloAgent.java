@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.modelo.ModeloConstants.Urls.V31;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -25,8 +26,9 @@ public class ModeloAgent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public ModeloAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider, aisConfig, false);
+    public ModeloAgent(
+            AgentComponentProvider componentProvider, AgentsServiceConfiguration configuration) {
+        super(componentProvider, configuration, aisConfig, false);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
