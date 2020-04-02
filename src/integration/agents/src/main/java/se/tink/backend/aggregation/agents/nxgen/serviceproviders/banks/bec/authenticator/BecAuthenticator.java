@@ -42,7 +42,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
                                 .description("Please proceed to send NemID authentication request")
                                 .hint("Please proceed to send NemID authentication request")
                                 .immutable(true)
-                                .checkbox(true)
+                                .optional(true)
                                 .minLength(0)
                                 .build()),
                 new AutomaticAuthenticationStep(this::pollNemId, "pollNemId"),
