@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -99,5 +100,31 @@ public class OAuth2Token {
 
     void addClientSpecificProperties(String key, String value) {
         clientSpecificProperties.put(key, value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OAuth2Token that = (OAuth2Token) o;
+        return issuedAt == that.issuedAt
+                && Objects.equals(accessToken, that.accessToken)
+                && Objects.equals(tokenType, that.tokenType)
+                && Objects.equals(expiresIn, that.expiresIn)
+                && Objects.equals(refreshToken, that.refreshToken)
+                && Objects.equals(scope, that.scope)
+                && Objects.equals(clientSpecificProperties, that.clientSpecificProperties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                accessToken,
+                tokenType,
+                expiresIn,
+                refreshToken,
+                scope,
+                issuedAt,
+                clientSpecificProperties);
     }
 }
