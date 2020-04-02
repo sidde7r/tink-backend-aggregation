@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type;
 
 import se.tink.libraries.credentials.service.CredentialsRequest;
 

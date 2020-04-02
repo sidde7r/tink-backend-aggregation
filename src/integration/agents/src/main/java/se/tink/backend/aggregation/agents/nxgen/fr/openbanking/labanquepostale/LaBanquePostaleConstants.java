@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 
 public final class LaBanquePostaleConstants {
 
