@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sdc.authenticator.initializers;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.initializers;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;

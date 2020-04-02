@@ -1,11 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sdc.authenticator.bankmappers;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankmappers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankmappers.AuthenticationType;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankmappers.ProviderMapping;
 
 public class ProviderMappingTest {
 
