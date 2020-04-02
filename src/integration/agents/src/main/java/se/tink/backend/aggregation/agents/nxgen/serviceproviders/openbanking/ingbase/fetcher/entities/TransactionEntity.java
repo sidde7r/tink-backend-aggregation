@@ -105,6 +105,12 @@ public class TransactionEntity {
     }
 
     private String cleanUnstructuredInformation(String data) {
-        return data.substring(0, data.indexOf("<")).replace("Naam: ", "");
+        if (data.contains("<br>")) {
+            return data.substring(0, data.indexOf("<")).replace("Naam: ", "").trim();
+        }
+        if (data.contains("\\n")) {
+            return data.substring(0, data.indexOf("\\n")).replace("Naam: ", "").trim();
+        }
+        return data;
     }
 }
