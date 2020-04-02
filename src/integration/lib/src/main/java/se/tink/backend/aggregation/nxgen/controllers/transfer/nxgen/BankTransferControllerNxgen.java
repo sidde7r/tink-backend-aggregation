@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen;
 import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.Beneficiary;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.OutboxItem;

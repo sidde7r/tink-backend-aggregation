@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.executor;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.executor.rpc.DirectTransferRequest;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;

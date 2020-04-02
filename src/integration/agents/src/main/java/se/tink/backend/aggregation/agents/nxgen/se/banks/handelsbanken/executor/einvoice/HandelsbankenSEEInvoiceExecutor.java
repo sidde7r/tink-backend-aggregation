@@ -1,22 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice;
 
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_AMOUNT;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DUEDATE;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_FAILED;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_NOT_ALLOWED;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_SOURCE;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_SOURCE_MESSAGE;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MULTIPLE_MATCHES;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_SIGN_FAILED;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_VALIDATE_FAILED;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_AMOUNT;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DUEDATE;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_FAILED;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_NOT_ALLOWED;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_SOURCE;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_SOURCE_MESSAGE;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_MULTIPLE_MATCHES;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_SIGN_FAILED;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage.EINVOICE_VALIDATE_FAILED;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.EInvoice;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;

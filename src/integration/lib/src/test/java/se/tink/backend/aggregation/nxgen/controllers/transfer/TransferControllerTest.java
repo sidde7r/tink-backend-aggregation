@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferType;

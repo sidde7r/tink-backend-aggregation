@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor;
 
 import java.util.Collection;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountEntity;

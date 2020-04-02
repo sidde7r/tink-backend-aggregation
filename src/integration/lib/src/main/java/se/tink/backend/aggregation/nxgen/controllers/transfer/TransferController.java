@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.transfer;
 
 import com.google.common.base.Preconditions;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferControllerNxgen;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferExecutorNxgen;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.validators.StructuredMessageValidator;
