@@ -95,8 +95,6 @@ public class AgentFactory {
                                                 agentsServiceConfigurationParameterList));
 
         final Agent agent;
-        context.setConfiguration(configuration);
-
         if (hasAgentsServiceConfigurationConstructor) {
             Constructor<?> agentConstructor =
                     agentClass.getConstructor(

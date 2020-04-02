@@ -118,14 +118,4 @@ public abstract class AgentContext implements CompositeAgentContext {
     public void setLogMasker(LogMasker logMasker) {
         this.logMasker = logMasker;
     }
-
-    @Override
-    public AgentsServiceConfiguration getConfiguration() {
-        return configuration;
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        this.configuration = configuration;
-    }
 }
