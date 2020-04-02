@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.utils.ArgentaCardNumber;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.utils.ArgentaSecurityUtil;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 
 public class ArgentaAuthenticator implements TypedAuthenticator, AutoAuthenticator {
