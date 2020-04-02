@@ -7,6 +7,7 @@ import org.w3c.dom.Node;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
@@ -48,6 +49,10 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
             if (ErrorCodes.INCORRECT_CREDENTIALS.stream()
                     .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
                 throw new LoginException(LoginError.INCORRECT_CREDENTIALS, e);
+
+            } else if (ErrorCodes.BLOCKED_CREDENTIALS.stream()
+                    .anyMatch(code -> code.equalsIgnoreCase(errorCode))) {
+                throw new AuthorizationException(AuthorizationError.ACCOUNT_BLOCKED, e);
             } else {
                 throw e;
             }

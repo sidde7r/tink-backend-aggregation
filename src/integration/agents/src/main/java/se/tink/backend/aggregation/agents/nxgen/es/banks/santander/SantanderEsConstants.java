@@ -40,6 +40,7 @@ public class SantanderEsConstants {
     public static final class ErrorCodes {
         public static final List<String> INCORRECT_CREDENTIALS =
                 Arrays.asList("SBAMOV_00002", "SBAMOV_00003");
+        public static final List<String> BLOCKED_CREDENTIALS = Arrays.asList("SBAMOV_00004");
     }
 
     public static final class Storage {
