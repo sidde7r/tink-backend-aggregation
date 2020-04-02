@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sdc;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
 
 import org.junit.AfterClass;
 import org.junit.Before;
