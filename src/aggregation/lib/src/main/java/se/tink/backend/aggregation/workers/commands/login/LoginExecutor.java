@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -29,6 +28,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LoginExecutor {
 
@@ -228,20 +228,22 @@ public class LoginExecutor {
     public AgentWorkerCommandResult executeLogin(
             final Agent agent,
             final MetricActionIface metricAction,
-            final Credentials credentials) {
+            final CredentialsRequest credentialsRequest) {
         try {
-            return processLoginHandlerChain(agent, metricAction, credentials);
+            return processLoginHandlerChain(agent, metricAction, credentialsRequest);
         } catch (Exception ex) {
             return processLoginExceptionHandlerChain(ex, metricAction);
         }
     }
 
     private AgentWorkerCommandResult processLoginHandlerChain(
-            final Agent agent, final MetricActionIface metricAction, final Credentials credentials)
+            final Agent agent,
+            final MetricActionIface metricAction,
+            final CredentialsRequest credentialsRequest)
             throws Exception {
         for (LoginHandler loginHandler : loginHandlerChain) {
             Optional<AgentWorkerCommandResult> result =
-                    loginHandler.handleLogin(agent, metricAction, credentials);
+                    loginHandler.handleLogin(agent, metricAction, credentialsRequest);
             if (result.isPresent()) {
                 switch (result.get()) {
                     case CONTINUE:

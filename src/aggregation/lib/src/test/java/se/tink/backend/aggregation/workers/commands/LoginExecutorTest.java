@@ -102,7 +102,9 @@ public class LoginExecutorTest {
 
         // when
         executor.executeLogin(
-                agent, Mockito.mock(MetricActionIface.class), Mockito.mock(Credentials.class));
+                agent,
+                Mockito.mock(MetricActionIface.class),
+                Mockito.mock(CredentialsRequest.class));
 
         // then
         Assert.assertEquals(

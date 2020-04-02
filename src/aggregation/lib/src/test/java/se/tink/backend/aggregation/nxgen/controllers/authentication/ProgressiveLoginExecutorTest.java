@@ -18,12 +18,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationControllerImpl;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ProgressiveLoginExecutorTest {
 
     private ProgressiveAuthAgent agent;
     private SupplementalInformationController supplementalInformationController;
     private Credentials credentials;
+    private CredentialsRequest credentialsRequest;
     private ProgressiveLoginExecutor objectUnderTest;
 
     @Before
@@ -32,7 +34,14 @@ public class ProgressiveLoginExecutorTest {
         supplementalInformationController =
                 Mockito.mock(SupplementalInformationControllerImpl.class);
         credentials = Mockito.mock(Credentials.class);
+        initCredentialsRequest();
         objectUnderTest = new ProgressiveLoginExecutor(supplementalInformationController, agent);
+    }
+
+    private void initCredentialsRequest() {
+        credentialsRequest = Mockito.mock(CredentialsRequest.class);
+        Mockito.when(credentialsRequest.getCredentials()).thenReturn(credentials);
+        Mockito.when(credentialsRequest.isManual()).thenReturn(true);
     }
 
     @Test
@@ -65,7 +74,7 @@ public class ProgressiveLoginExecutorTest {
                                                 stepId, authenticationRequest))))
                 .thenReturn(SteppableAuthenticationResponse.finalResponse());
         // when
-        objectUnderTest.login(credentials);
+        objectUnderTest.login(credentialsRequest);
         // then
         Mockito.verify(supplementalInformationController)
                 .askSupplementalInformation(requestedField);
@@ -111,7 +120,7 @@ public class ProgressiveLoginExecutorTest {
                                                 stepId, authenticationRequest))))
                 .thenReturn(SteppableAuthenticationResponse.finalResponse());
         // when
-        objectUnderTest.login(credentials);
+        objectUnderTest.login(credentialsRequest);
         // then
         Mockito.verify(supplementalInformationController)
                 .openThirdPartyApp(thirdPartyAppAuthenticationPayload);
@@ -148,7 +157,7 @@ public class ProgressiveLoginExecutorTest {
                                                 stepId, authenticationRequest))))
                 .thenReturn(SteppableAuthenticationResponse.finalResponse());
         // when
-        objectUnderTest.login(credentials);
+        objectUnderTest.login(credentialsRequest);
         // then
         Mockito.verify(supplementalInformationController)
                 .openThirdPartyApp(thirdPartyAppAuthenticationPayload);
@@ -191,7 +200,7 @@ public class ProgressiveLoginExecutorTest {
                                                 stepId, authenticationRequest))))
                 .thenReturn(SteppableAuthenticationResponse.finalResponse());
         // when
-        objectUnderTest.login(credentials);
+        objectUnderTest.login(credentialsRequest);
         // then
         Mockito.verify(supplementalInformationController)
                 .waitForSupplementalInformation(waitRequestKey, waitLong, TimeUnit.MINUTES);
