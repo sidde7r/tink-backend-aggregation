@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -60,7 +60,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
                         signatureKeyPair,
                         request.getProvider(),
                         context.getLogMasker(),
-                        LogMasker.shouldLog(request.getProvider()));
+                        LogMaskerImpl.shouldLog(request.getProvider()));
         this.client.addMessageReader(
                 new CharacterEncodedMessageBodyReader(StandardCharsets.ISO_8859_1));
     }

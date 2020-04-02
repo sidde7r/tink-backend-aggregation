@@ -14,7 +14,8 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -61,7 +62,7 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
         // Disable logging depending on this.
         if (LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS.equals(
-                LogMasker.shouldLog(context.getRequest().getProvider()))) {
+                LogMaskerImpl.shouldLog(context.getRequest().getProvider()))) {
             return;
         }
 

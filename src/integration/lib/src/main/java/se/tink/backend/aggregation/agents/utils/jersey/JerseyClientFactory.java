@@ -21,7 +21,7 @@ import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.TextUtils;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
 import se.tink.libraries.net.client.factory.AbstractJerseyClientFactory;
 import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;

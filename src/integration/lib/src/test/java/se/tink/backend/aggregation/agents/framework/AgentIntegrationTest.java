@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapp
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
@@ -158,7 +159,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
                     // Replace the log masker with one that includes the newly loaded credentials
                     this.context.setLogMasker(
-                            LogMasker.builder()
+                            LogMaskerImpl.builder()
                                     .addStringMaskerBuilder(
                                             new CredentialsStringMaskerBuilder(this.credential))
                                     .build());

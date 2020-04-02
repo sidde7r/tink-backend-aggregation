@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -26,7 +27,7 @@ public class CreateLogMaskerWorkerCommand extends AgentWorkerCommand {
         }
 
         logMasker =
-                LogMasker.builder()
+                LogMaskerImpl.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
         logMasker.addSensitiveValuesSetObservable(

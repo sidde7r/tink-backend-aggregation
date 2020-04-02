@@ -12,8 +12,8 @@ import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -26,7 +26,7 @@ public final class VolksbankApiClientMockTest {
     private static TinkHttpClient createWiremockHttpClient() {
         TinkHttpClient tinkHttpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMasker.builder()
+                                LogMaskerImpl.builder()
                                         .addStringMaskerBuilder(
                                                 new CredentialsStringMaskerBuilder(
                                                         new Credentials()))

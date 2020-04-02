@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
-import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -90,7 +90,7 @@ public final class VolksbankApiClientTest {
     private static TinkHttpClient createHttpClient() {
         TinkHttpClient tinkHttpClient =
                 NextGenTinkHttpClient.builder(
-                                LogMasker.builder()
+                                LogMaskerImpl.builder()
                                         .addStringMaskerBuilder(
                                                 new CredentialsStringMaskerBuilder(
                                                         new Credentials()))

@@ -21,7 +21,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.log.constants.HttpLoggingConstants;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -107,7 +108,8 @@ public class LoggingFilter extends ClientFilter {
      * Create a logging filter logging the request and response to print stream. Takes a logMasker
      * that masks sensitive values from logs, the loggingMode parameter should only be passed with
      * the value LOGGING_MASKER_COVERS_SECRETS if you are 100% certain that the logMasker handles
-     * the sensitive values in the provider. use {@link LogMasker#shouldLog(Provider)} if you can.
+     * the sensitive values in the provider. use {@link LogMaskerImpl#shouldLog(Provider)} if you
+     * can.
      *
      * @param loggingStream the print stream to log requests and responses.
      * @param logMasker Masks values from logs.

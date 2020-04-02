@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.logmasker.LogMasker;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.utils.CookieContainer;
@@ -36,7 +36,7 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
         this.financialDataCacher = context;
         this.clientFactory =
                 new JerseyClientFactory(
-                        context.getLogMasker(), LogMasker.shouldLog(request.getProvider()));
+                        context.getLogMasker(), LogMaskerImpl.shouldLog(request.getProvider()));
 
         this.log = new AggregationLogger(getAgentClass());
     }

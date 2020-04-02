@@ -9,8 +9,8 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.logmasker.LogMasker.LoggingMode;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl.LoggingMode;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.utils.masker.CredentialsStringMaskerBuilder;
@@ -31,7 +31,7 @@ public class VolksbankHttpTest {
 
         TinkHttpClient client =
                 NextGenTinkHttpClient.builder(
-                                LogMasker.builder()
+                                LogMaskerImpl.builder()
                                         .addStringMaskerBuilder(
                                                 new CredentialsStringMaskerBuilder(
                                                         new Credentials()))

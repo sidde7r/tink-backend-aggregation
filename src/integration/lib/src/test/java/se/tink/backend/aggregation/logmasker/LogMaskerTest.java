@@ -29,7 +29,7 @@ public class LogMaskerTest {
     @Test
     public void testMaskingWithoutClientConfigurationStringMasker() {
         LogMasker logMasker =
-                LogMasker.builder()
+                LogMaskerImpl.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
 
@@ -42,7 +42,7 @@ public class LogMaskerTest {
     @Test
     public void testBasicCredentialsMasking() {
         LogMasker logMasker =
-                LogMasker.builder()
+                LogMaskerImpl.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
 
@@ -59,7 +59,7 @@ public class LogMaskerTest {
         Subject<Collection<String>> testSecretValuesSubject = BehaviorSubject.create();
         testSecretValuesSubject.onNext(Sets.newHashSet("0000"));
         LogMasker logMasker =
-                LogMasker.builder()
+                LogMaskerImpl.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
         logMasker.addSensitiveValuesSetObservable(testSecretValuesSubject);
@@ -102,7 +102,7 @@ public class LogMaskerTest {
     @Test
     public void testIsWhiteListed() {
         LogMasker logMasker =
-                LogMasker.builder()
+                LogMaskerImpl.builder()
                         .addStringMaskerBuilder(
                                 new SensitiveValuesCollectionStringMaskerBuilder(
                                         Arrays.asList("true", "false", "222", "1", "5555")))
@@ -119,7 +119,7 @@ public class LogMaskerTest {
     @Test
     public void testAgentWhiteListedValue() {
         LogMasker logMasker =
-                LogMasker.builder()
+                LogMaskerImpl.builder()
                         .addStringMaskerBuilder(new CredentialsStringMaskerBuilder(credentials))
                         .build();
 
