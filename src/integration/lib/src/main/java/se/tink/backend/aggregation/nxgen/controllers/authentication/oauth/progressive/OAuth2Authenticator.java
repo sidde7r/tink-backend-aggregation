@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.oauth;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
@@ -7,9 +7,15 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationServerClient;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationServerStandardClient;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationSpecification;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2TokenStorage;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2TokenStorageDefaultImpl;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.ThirdPartyAppAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.progressive;
 
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
 
 // TODO auth: once all the agents are migrated to use new login, replace in Agent
 public interface ProgressiveAuthAgent extends Agent {

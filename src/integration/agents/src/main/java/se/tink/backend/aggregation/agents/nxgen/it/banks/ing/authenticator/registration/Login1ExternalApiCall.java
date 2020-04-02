@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.ConfigurationProvider;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.Login1ExternalApiCall.Arg;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.ing.authenticator.registration.Login1ExternalApiCall.Result;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationSteppable;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationSteppable;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.form.Form;

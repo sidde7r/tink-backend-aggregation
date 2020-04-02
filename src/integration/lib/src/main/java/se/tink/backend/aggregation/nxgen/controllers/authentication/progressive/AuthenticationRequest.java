@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.progressive;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Credentialsable;
 
 /** Includes all data the authentication step needs in order to make an authentication response. */
 public final class AuthenticationRequest implements Credentialsable {

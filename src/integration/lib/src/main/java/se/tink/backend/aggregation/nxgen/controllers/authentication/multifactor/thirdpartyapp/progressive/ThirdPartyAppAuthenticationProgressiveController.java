@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import java.util.Arrays;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveTypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStrongAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.ProgressiveTypedAuthenticator;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ThirdPartyAppAuthenticationProgressiveController
