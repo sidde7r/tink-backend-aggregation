@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.BaseRequestPart;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.HKTANv6;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.TanContextV6;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.FinTsResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HITAN;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HNHBK;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.Header;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.TanContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.TanAnswerProvider;
 
 public class FinTsRequestProcessor {
@@ -35,9 +35,9 @@ public class FinTsRequestProcessor {
     }
 
     private FinTsResponse processTAN(FinTsResponse responseWithChallenge) {
-        HITAN hitan = responseWithChallenge.findSegmentThrowable(HITAN.class);
+        TanContext tanContext = responseWithChallenge.findSegmentThrowable(TanContext.class);
 
-        String taskReference = hitan.getTaskReference();
+        String taskReference = tanContext.getTaskReference();
         String tanAnswer = tanAnswerProvider.getTanAnswer();
         updateTanContext(taskReference, tanAnswer);
 
@@ -52,8 +52,8 @@ public class FinTsRequestProcessor {
         dialogContext.generateNewSecurityReference();
 
         if (dialogContext.isDialogIdUninitialized()) {
-            response.findSegment(HNHBK.class)
-                    .ifPresent(hnhbk -> dialogContext.setDialogId(hnhbk.getDialogId()));
+            response.findSegment(Header.class)
+                    .ifPresent(header -> dialogContext.setDialogId(header.getDialogId()));
         }
         return response;
     }
@@ -66,7 +66,7 @@ public class FinTsRequestProcessor {
     private FinTsRequest challengeSolvedRequest() {
         List<BaseRequestPart> additionalSegments =
                 Collections.singletonList(
-                        HKTANv6.builder()
+                        TanContextV6.builder()
                                 .tanProcess("2")
                                 .taskReference(dialogContext.getTaskReference())
                                 .furtherTanFollows(false)

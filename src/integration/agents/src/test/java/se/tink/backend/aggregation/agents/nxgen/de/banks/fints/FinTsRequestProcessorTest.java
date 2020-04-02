@@ -16,11 +16,11 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.Ban
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsSecretsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.base64.FinTsBase64;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.AuthorizeV2;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.BaseRequestPart;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.HKIDNv2;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.HKTANv6;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.HKVVBv3;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.SystemInformationV3;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.TanContextV6;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.FinTsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.SegmentType;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.TanAnswerProvider;
@@ -131,15 +131,15 @@ public class FinTsRequestProcessorTest {
     private FinTsRequest getRequestThatRequireTAN(FinTsDialogContext context) {
         List<BaseRequestPart> additionalSegments = new ArrayList<>();
         additionalSegments.add(
-                HKIDNv2.builder()
+                AuthorizeV2.builder()
                         .systemId(context.getSystemId())
                         .blz(context.getConfiguration().getBlz())
                         .username(context.getConfiguration().getUsername())
                         .build());
         additionalSegments.add(
-                HKVVBv3.builder().productId("123456789").productVersion("0.1").build());
+                SystemInformationV3.builder().productId("123456789").productVersion("0.1").build());
         additionalSegments.add(
-                HKTANv6.builder()
+                TanContextV6.builder()
                         .tanProcess("4")
                         .segmentType(SegmentType.HKIDN)
                         .tanMediumName("Google Phone")
@@ -150,13 +150,13 @@ public class FinTsRequestProcessorTest {
     private FinTsRequest getRequestStatingDoesNotRequireTAN(FinTsDialogContext context) {
         List<BaseRequestPart> additionalSegments = new ArrayList<>();
         additionalSegments.add(
-                HKIDNv2.builder()
+                AuthorizeV2.builder()
                         .systemId(context.getSystemId())
                         .blz(context.getConfiguration().getBlz())
                         .username(context.getConfiguration().getUsername())
                         .build());
         additionalSegments.add(
-                HKVVBv3.builder().productId("123456789").productVersion("0.1").build());
+                SystemInformationV3.builder().productId("123456789").productVersion("0.1").build());
         return FinTsRequest.createEncryptedRequest(context, additionalSegments);
     }
 

@@ -13,16 +13,12 @@ public abstract class BaseRequestPart {
 
     private static final int UNINITIALIZED_SEGMENT_POSITION = 1;
 
-    protected int segmentPosition = UNINITIALIZED_SEGMENT_POSITION;
+    int segmentPosition = UNINITIALIZED_SEGMENT_POSITION;
     private List<List<String>> compiledData = new ArrayList<>();
 
-    public String getSegmentName() {
-        return this.getClass().getSimpleName().split("v")[0];
-    }
+    public abstract String getSegmentName();
 
-    public int getSegmentVersion() {
-        return Integer.parseInt(this.getClass().getSimpleName().split("v")[1]);
-    }
+    public abstract int getSegmentVersion();
 
     public int getSegmentPosition() {
         return segmentPosition;

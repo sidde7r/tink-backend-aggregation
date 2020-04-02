@@ -9,37 +9,11 @@ import org.junit.Test;
 
 public class BaseRequestPartTest {
 
-    private class TESTv1023 extends BaseRequestPart {}
-
-    @Test
-    public void shouldReturnProperSegmentName() {
-        // given
-        BaseRequestPart baseRequestPart = new TESTv1023();
-
-        // when
-        String segmentName = baseRequestPart.getSegmentName();
-
-        // then
-        assertThat(segmentName).isEqualTo("TEST");
-    }
-
-    @Test
-    public void shouldReturnProperSegmentVersion() {
-        // given
-        BaseRequestPart baseRequestPart = new TESTv1023();
-
-        // when
-        int segmentVersion = baseRequestPart.getSegmentVersion();
-
-        // then
-        assertThat(segmentVersion).isEqualTo(1023);
-    }
-
     @Test
     public void shouldSerializeIntoFiveGroups() {
         // given
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup().element("1");
@@ -61,7 +35,7 @@ public class BaseRequestPartTest {
     public void shouldSerializeIntoTwoGroupsWithMultipleElements() {
         // given
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup().element("1").element("2").element("3").element("4");
@@ -79,7 +53,7 @@ public class BaseRequestPartTest {
     @Test
     public void shouldTrimEmptyElementsOrGroupsOnRightSide() {
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup().element("1").element().element().element();
@@ -105,7 +79,7 @@ public class BaseRequestPartTest {
         // given
 
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup()
@@ -126,7 +100,7 @@ public class BaseRequestPartTest {
     public void shouldSerializeIntegerProperly() {
         // given
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup()
@@ -148,7 +122,7 @@ public class BaseRequestPartTest {
     public void shouldSerializeBooleanProperly() {
         // given
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup().element((Boolean) null).element(true).element(false);
@@ -166,7 +140,7 @@ public class BaseRequestPartTest {
     public void shouldSerializeByteArrayProperly() {
         // given
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup()
@@ -187,7 +161,7 @@ public class BaseRequestPartTest {
     public void shouldSerializeBigDecimalProperly() {
         // given
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup()
@@ -210,7 +184,7 @@ public class BaseRequestPartTest {
     public void shouldSerializeLocalDateProperly() {
         // given
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup()
@@ -231,7 +205,7 @@ public class BaseRequestPartTest {
     public void shouldSerializeLocalTimeProperly() {
         // given
         BaseRequestPart segment =
-                new BaseRequestPart() {
+                new TestRequestSegment() {
                     @Override
                     protected void compile() {
                         addGroup()
@@ -247,5 +221,17 @@ public class BaseRequestPartTest {
 
         // then
         assertThat(segmentInFinTsFormat).isEqualTo(":101000:010203:235959");
+    }
+
+    private class TestRequestSegment extends BaseRequestPart {
+        @Override
+        public String getSegmentName() {
+            return "TEST";
+        }
+
+        @Override
+        public int getSegmentVersion() {
+            return 0;
+        }
     }
 }

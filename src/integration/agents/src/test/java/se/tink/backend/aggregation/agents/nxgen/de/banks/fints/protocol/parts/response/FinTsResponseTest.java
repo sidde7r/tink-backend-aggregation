@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,27 +29,33 @@ public class FinTsResponseTest {
     }
 
     @Test
-    public void shouldReturnEmptyListWhenAskedAboutUnsupportedSegment() {
+    public void shouldThrowWhenAskedAboutUnsupportedSegments() {
         // given
         FinTsResponse response = new FinTsResponse(EXAMPLE_UNSUCCESSFUL_RESPONSE);
 
         // when
-        List<UnknownSegment> segments = response.findSegments(UnknownSegment.class);
+        Throwable throwable = catchThrowable(() -> response.findSegments(UnknownSegment.class));
 
         // then
-        assertThat(segments).isEmpty();
+        assertThat(throwable)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(
+                        "Provided type is not supported. Please add an entry in FinTsResponse class.");
     }
 
     @Test
-    public void shouldReturnEmptyOptionalWhenAskedAboutSingleUnsupportedSegment() {
+    public void shouldThrowWhenAskedAboutUnsupportedSegment() {
         // given
         FinTsResponse response = new FinTsResponse(EXAMPLE_UNSUCCESSFUL_RESPONSE);
 
         // when
-        Optional<UnknownSegment> maybeSegment = response.findSegment(UnknownSegment.class);
+        Throwable throwable = catchThrowable(() -> response.findSegment(UnknownSegment.class));
 
         // then
-        assertThat(maybeSegment.isPresent()).isFalse();
+        assertThat(throwable)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(
+                        "Provided type is not supported. Please add an entry in FinTsResponse class.");
     }
 
     @Test
@@ -57,7 +64,7 @@ public class FinTsResponseTest {
         FinTsResponse response = new FinTsResponse(EXAMPLE_JUST_HEADERS_RESPONSE);
 
         // when
-        List<HNHBK> segments = response.findSegments(HNHBK.class);
+        List<Header> segments = response.findSegments(Header.class);
 
         // then
         assertThat(segments).hasSize(3);
@@ -69,7 +76,7 @@ public class FinTsResponseTest {
         FinTsResponse response = new FinTsResponse(EXAMPLE_JUST_HEADERS_RESPONSE);
 
         // when
-        Optional<HNHBK> maybeSegment = response.findSegment(HNHBK.class);
+        Optional<Header> maybeSegment = response.findSegment(Header.class);
 
         // then
         assertThat(maybeSegment.isPresent()).isTrue();
@@ -81,7 +88,7 @@ public class FinTsResponseTest {
         FinTsResponse response = new FinTsResponse(EXAMPLE_JUST_HEADERS_RESPONSE);
 
         // when
-        List<HITAN> maybeSegment = response.findSegments(HITAN.class);
+        List<TanContext> maybeSegment = response.findSegments(TanContext.class);
 
         // then
         assertThat(maybeSegment).hasSize(0);
@@ -93,7 +100,7 @@ public class FinTsResponseTest {
         FinTsResponse response = new FinTsResponse(EXAMPLE_JUST_HEADERS_RESPONSE);
 
         // when
-        Optional<HITAN> maybeSegment = response.findSegment(HITAN.class);
+        Optional<TanContext> maybeSegment = response.findSegment(TanContext.class);
 
         // then
         assertThat(maybeSegment.isPresent()).isFalse();
@@ -105,22 +112,25 @@ public class FinTsResponseTest {
         FinTsResponse response = new FinTsResponse(EXAMPLE_UNSUCCESSFUL_RESPONSE);
 
         // when
-        Optional<HIRMG> maybeSegment = response.findSegment(HIRMG.class);
+        Optional<MessageStatus> maybeSegment = response.findSegment(MessageStatus.class);
 
         // then
         assertThat(maybeSegment.isPresent()).isTrue();
     }
 
     @Test
-    public void shouldReturnEmptyListWhenAskedAboutNull() {
+    public void shouldThrowWhenAskedAboutNull() {
         // given
         FinTsResponse response = new FinTsResponse(EXAMPLE_UNSUCCESSFUL_RESPONSE);
 
         // when
-        List<BaseResponsePart> segments = response.findSegments(null);
+        Throwable throwable = catchThrowable(() -> response.findSegments(null));
 
         // then
-        assertThat(segments).hasSize(0);
+        assertThat(throwable)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(
+                        "Provided type is not supported. Please add an entry in FinTsResponse class.");
     }
 
     @Test

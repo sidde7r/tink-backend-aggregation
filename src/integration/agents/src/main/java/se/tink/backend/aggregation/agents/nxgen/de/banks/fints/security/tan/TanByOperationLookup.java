@@ -6,14 +6,14 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HIPINS;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.TanInformation;
 
 @Slf4j
 public class TanByOperationLookup {
     private Map<SegmentType, Boolean> operations = new HashMap<>();
 
-    public TanByOperationLookup(HIPINS hipins) {
-        List<Pair<String, Boolean>> operationsData = hipins.getOperations();
+    public TanByOperationLookup(TanInformation tanInformationSegment) {
+        List<Pair<String, Boolean>> operationsData = tanInformationSegment.getOperations();
         operationsData.forEach(op -> operations.put(SegmentType.of(op.getLeft()), op.getRight()));
     }
 

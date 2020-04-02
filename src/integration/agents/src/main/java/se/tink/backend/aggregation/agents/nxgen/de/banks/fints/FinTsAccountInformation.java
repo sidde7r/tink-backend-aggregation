@@ -2,18 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HISAL;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HISPA;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HIUPD;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.Balance;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.BasicAccountInformation;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.SepaDetails;
 
 @Data
 @Accessors(chain = true)
 public class FinTsAccountInformation {
-    private HIUPD basicInfo;
-    private HISPA.Detail sepaDetails;
-    private HISAL balance;
+    private BasicAccountInformation basicInfo;
+    private SepaDetails.Detail sepaDetails;
+    private Balance balance;
 
-    public FinTsAccountInformation(HIUPD basicInfo) {
+    public FinTsAccountInformation(BasicAccountInformation basicInfo) {
         this.basicInfo = basicInfo;
     }
 }

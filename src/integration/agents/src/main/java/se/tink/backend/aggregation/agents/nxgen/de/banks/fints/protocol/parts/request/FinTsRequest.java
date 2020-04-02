@@ -61,20 +61,20 @@ public class FinTsRequest {
             FinTsDialogContext context, List<BaseRequestPart> additionalSegments) {
         FinTsRequest request = new FinTsRequest();
         request.addSegment(
-                HNHBKv3.builder()
+                HeaderV3.builder()
                         .dialogId(context.getDialogId())
                         .messageNumber(context.getMessageNumber())
                         .build());
         request.addSegment(
-                HNVSKv3.builder()
+                EncryptionHeaderV3.builder()
                         .securityProcedureVersion(context.getSecurityProcedureVersion())
                         .systemId(context.getSystemId())
                         .blz(context.getConfiguration().getBlz())
                         .username(context.getConfiguration().getUsername())
                         .build());
-        HNVSDv1 hnvsd = new HNVSDv1();
+        EncryptedEnvelopeV1 hnvsd = new EncryptedEnvelopeV1();
         hnvsd.addSegment(
-                HNSHKv4.builder()
+                SignatureHeaderV4.builder()
                         .securityProcedureVersion(context.getSecurityProcedureVersion())
                         .securityFunction(context.getChosenSecurityFunction())
                         .securityReference(context.getSecurityReference())
@@ -86,13 +86,13 @@ public class FinTsRequest {
         additionalSegments.forEach(hnvsd::addSegment);
 
         hnvsd.addSegment(
-                HNSHAv2.builder()
+                SignatureFooterV2.builder()
                         .securityReference(context.getSecurityReference())
                         .password(context.getConfiguration().getPassword())
                         .tanAnswer(context.getTanAnswer())
                         .build());
         request.addSegment(hnvsd);
-        request.addSegment(HNHBSv1.builder().messageNumber(context.getMessageNumber()).build());
+        request.addSegment(FooterV1.builder().messageNumber(context.getMessageNumber()).build());
         return request;
     }
 }
