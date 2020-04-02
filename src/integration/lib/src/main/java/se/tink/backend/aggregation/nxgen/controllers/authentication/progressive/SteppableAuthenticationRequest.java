@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.progressive;
 
+import com.google.common.base.Preconditions;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import org.assertj.core.util.Preconditions;
 import se.tink.backend.agents.rpc.Credentials;
 
 /**

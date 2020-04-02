@@ -28,7 +28,7 @@ junit_test(
     srcs = glob(["src/test/**/service/*.java"]),
     visibility = ["//src/integration:__subpackages__"],
     deps = [
-        "//src/integration/credentials:service",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
@@ -60,21 +60,11 @@ java_library(
     ],
 )
 
-java_library(
+alias(
     name = "service",
-    srcs = glob(["src/main/**/service/*.java"]),
+    actual = "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
     visibility = [
         "//src/aggregation:__subpackages__",
         "//src/integration:__subpackages__",
-    ],
-    deps = [
-        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
-        "//src/integration/user:rpc",
-        "//src/libraries/uuid",
-        "//third_party:commons_codec_commons_codec",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@aggregation//:com_google_guava_guava",
-        "@tink_backend//src/libraries/strings",
     ],
 )

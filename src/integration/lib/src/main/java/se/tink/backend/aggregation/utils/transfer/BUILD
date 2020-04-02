@@ -1,0 +1,14 @@
+java_library(
+    name = "transfer",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",
+        "//src/integration/signableoperation:enums",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "//src/libraries/i18n",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_apache_commons_commons_lang3",
+    ],
+)

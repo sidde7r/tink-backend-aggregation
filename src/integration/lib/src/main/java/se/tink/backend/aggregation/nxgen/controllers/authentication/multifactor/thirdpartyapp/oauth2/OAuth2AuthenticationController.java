@@ -22,7 +22,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.CallbackParams;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.ErrorType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -91,7 +93,7 @@ public class OAuth2AuthenticationController
     public void autoAuthenticate() throws SessionException, BankServiceException {
         OAuth2Token oAuth2Token =
                 persistentStorage
-                        .get(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
+                        .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                         .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         if (oAuth2Token.hasAccessExpired()) {
@@ -120,8 +122,7 @@ public class OAuth2AuthenticationController
             oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
 
             // Store the new access token on the persistent storage again.
-            persistentStorage.rotateStorageValue(
-                    OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
+            persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
 
             // Fall through.
         }
@@ -176,7 +177,7 @@ public class OAuth2AuthenticationController
 
         handleErrors(callbackData);
 
-        String code = callbackData.getOrDefault(OAuth2Constants.CallbackParams.CODE, null);
+        String code = callbackData.getOrDefault(CallbackParams.CODE, null);
         if (Strings.isNullOrEmpty(code)) {
             throw new IllegalStateException("callbackData did not contain 'code'");
         }
@@ -196,7 +197,7 @@ public class OAuth2AuthenticationController
                 OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
                         oAuth2Token, tokenLifetime, tokenLifetimeUnit));
 
-        persistentStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
+        persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
 
         // Tell the authenticator which access token it can use.
         authenticator.useAccessToken(oAuth2Token);
@@ -219,10 +220,9 @@ public class OAuth2AuthenticationController
     }
 
     private void handleErrors(Map<String, String> callbackData) throws AuthenticationException {
-        Optional<String> error =
-                getCallbackElement(callbackData, OAuth2Constants.CallbackParams.ERROR);
+        Optional<String> error = getCallbackElement(callbackData, CallbackParams.ERROR);
         Optional<String> errorDescription =
-                getCallbackElement(callbackData, OAuth2Constants.CallbackParams.ERROR_DESCRIPTION);
+                getCallbackElement(callbackData, CallbackParams.ERROR_DESCRIPTION);
 
         if (!error.isPresent()) {
             logger.info("OAuth2 callback success.");
