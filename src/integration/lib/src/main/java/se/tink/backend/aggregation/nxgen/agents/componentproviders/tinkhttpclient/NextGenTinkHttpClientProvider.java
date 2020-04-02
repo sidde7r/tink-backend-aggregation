@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient;
 
 import com.google.inject.Inject;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
@@ -23,10 +21,7 @@ public final class NextGenTinkHttpClientProvider implements TinkHttpClientProvid
         tinkHttpClient =
                 NextGenTinkHttpClient.builder(
                                 context.getLogMasker(),
-                                LogMaskerImpl.shouldLog(credentialsRequest.getProvider()),
-                                Optional.ofNullable(context.getConfiguration())
-                                        .map(AgentsServiceConfiguration::getTestConfiguration)
-                                        .orElse(null))
+                                LogMaskerImpl.shouldLog(credentialsRequest.getProvider()))
                         .setAggregatorInfo(context.getAggregatorInfo())
                         .setMetricRegistry(context.getMetricRegistry())
                         .setLogOutputStream(context.getLogOutputStream())

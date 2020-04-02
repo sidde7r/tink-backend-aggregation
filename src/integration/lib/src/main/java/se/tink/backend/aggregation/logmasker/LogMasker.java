@@ -8,10 +8,6 @@ public interface LogMasker {
 
     void addAgentWhitelistedValues(ImmutableSet<String> agentWhitelistedValues);
 
-    boolean isCensorSensitiveHeaders();
-
-    void setCensorSensitiveHeaders(boolean censorSensitiveHeaders);
-
     String mask(String dataToMask);
 
     void addSensitiveValuesSetObservable(

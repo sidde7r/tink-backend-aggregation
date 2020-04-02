@@ -27,7 +27,6 @@ public final class VolksbankApiClientMockTest {
                                 new FakeLogMasker(), LoggingMode.LOGGING_MASKER_COVERS_SECRETS)
                         .build();
         tinkHttpClient.setDebugOutput(true);
-        tinkHttpClient.setCensorSensitiveHeaders(false);
         tinkHttpClient.disableSslVerification();
         return tinkHttpClient;
     }

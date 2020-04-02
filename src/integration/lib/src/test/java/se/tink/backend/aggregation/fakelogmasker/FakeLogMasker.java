@@ -15,14 +15,6 @@ public final class FakeLogMasker implements LogMasker {
     public void addAgentWhitelistedValues(ImmutableSet<String> agentWhitelistedValues) {}
 
     @Override
-    public boolean isCensorSensitiveHeaders() {
-        return false;
-    }
-
-    @Override
-    public void setCensorSensitiveHeaders(boolean censorSensitiveHeaders) {}
-
-    @Override
     public String mask(String dataToMask) {
         return dataToMask;
     }

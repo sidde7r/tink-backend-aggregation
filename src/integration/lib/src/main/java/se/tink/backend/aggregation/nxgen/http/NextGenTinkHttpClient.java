@@ -64,7 +64,6 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.configuration.agentsservice.TestConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -148,8 +147,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
 
     private HttpResponseStatusHandler responseStatusHandler;
 
-    private TestConfiguration configuration;
-
     private class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
         private static final int TIMEOUT_MS = 30000;
@@ -225,10 +222,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
      * @param loggingMode determines if logs should be outputted at all.
      */
     private NextGenTinkHttpClient(
-            final Builder builder,
-            LogMasker logMasker,
-            LoggingMode loggingMode,
-            TestConfiguration configuration) {
+            final Builder builder, LogMasker logMasker, LoggingMode loggingMode) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(builder.getSignatureKeyPair());
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
@@ -249,7 +243,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                         : AggregatorInfo.getAggregatorForTesting();
         this.metricRegistry = builder.getMetricRegistry();
         this.provider = builder.getProvider();
-        this.configuration = configuration;
 
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
@@ -273,14 +266,8 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         this.logMasker = logMasker;
         this.loggingMode = loggingMode;
 
-        final boolean censorHeaders =
-                this.configuration == null || this.configuration.isCensorSensitiveHeadersEnabled();
-
-        this.logMasker.setCensorSensitiveHeaders(censorHeaders);
-
         debugOutputLoggingFilter =
-                new RestIoLoggingFilter(
-                        printStream, this.logMasker, censorHeaders, this.loggingMode);
+                new RestIoLoggingFilter(printStream, this.logMasker, this.loggingMode);
 
         addFilter(new SendRequestFilter());
     }
@@ -300,11 +287,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         return new Builder(logMasker, loggingMode);
     }
 
-    public static NextGenTinkHttpClient.Builder builder(
-            LogMasker logMasker, LoggingMode loggingMode, TestConfiguration config) {
-        return new Builder(logMasker, loggingMode, config);
-    }
-
     public static final class Builder {
 
         private final LoggingMode loggingMode;
@@ -315,20 +297,14 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         private Provider provider;
         private PrintStream printStream;
         private LogMasker logMasker;
-        private final TestConfiguration configuration;
 
         public Builder(LogMasker logMasker, LoggingMode loggingMode) {
-            this(logMasker, loggingMode, null);
-        }
-
-        public Builder(LogMasker logMasker, LoggingMode loggingMode, TestConfiguration config) {
             this.logMasker = logMasker;
             this.loggingMode = loggingMode;
-            this.configuration = config;
         }
 
         public NextGenTinkHttpClient build() {
-            return new NextGenTinkHttpClient(this, logMasker, loggingMode, configuration);
+            return new NextGenTinkHttpClient(this, logMasker, loggingMode);
         }
 
         public AggregatorInfo getAggregatorInfo() {
@@ -746,10 +722,6 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         } else if (!debugOutput && isFilterPresent(debugOutputLoggingFilter)) {
             this.removeFilter(debugOutputLoggingFilter);
         }
-    }
-
-    public void setCensorSensitiveHeaders(final boolean censorSensitiveHeadersEnabled) {
-        debugOutputLoggingFilter.setCensorSensitiveHeaders(censorSensitiveHeadersEnabled);
     }
 
     public void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor) {

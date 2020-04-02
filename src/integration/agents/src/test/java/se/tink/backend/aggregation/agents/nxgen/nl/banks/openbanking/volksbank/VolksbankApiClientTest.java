@@ -99,7 +99,6 @@ public final class VolksbankApiClientTest {
                         NewAgentTestContext.TEST_APPID,
                         VolksbankAgent.class));
         tinkHttpClient.setDebugOutput(true);
-        tinkHttpClient.setCensorSensitiveHeaders(false);
         return tinkHttpClient;
     }
 

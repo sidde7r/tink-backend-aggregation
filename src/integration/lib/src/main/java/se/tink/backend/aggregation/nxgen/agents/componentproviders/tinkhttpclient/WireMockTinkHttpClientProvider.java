@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient;
 
 import com.google.inject.Inject;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
@@ -25,10 +23,7 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
         final TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
                                 context.getLogMasker(),
-                                LogMaskerImpl.shouldLog(credentialsRequest.getProvider()),
-                                Optional.ofNullable(context.getConfiguration())
-                                        .map(AgentsServiceConfiguration::getTestConfiguration)
-                                        .orElse(null))
+                                LogMaskerImpl.shouldLog(credentialsRequest.getProvider()))
                         .setAggregatorInfo(context.getAggregatorInfo())
                         .setMetricRegistry(context.getMetricRegistry())
                         .setLogOutputStream(context.getLogOutputStream())
@@ -36,7 +31,6 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
                         .setProvider(credentialsRequest.getProvider())
                         .build();
 
-        httpClient.setCensorSensitiveHeaders(false);
         httpClient.disableSslVerification();
 
         this.tinkHttpClient =

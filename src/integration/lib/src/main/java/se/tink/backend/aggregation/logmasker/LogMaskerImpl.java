@@ -60,27 +60,11 @@ public class LogMaskerImpl implements LogMasker {
 
     private final StringMasker masker;
 
-    private boolean censorSensitiveHeaders = true;
-
     private LogMaskerImpl(Builder builder) {
         masker = new StringMasker(builder.getStringMaskerBuilders(), this::shouldMask);
     }
 
-    @Override
-    public boolean isCensorSensitiveHeaders() {
-        return censorSensitiveHeaders;
-    }
-
-    @Override
-    public void setCensorSensitiveHeaders(boolean censorSensitiveHeaders) {
-        this.censorSensitiveHeaders = censorSensitiveHeaders;
-    }
-
     private boolean shouldMask(Pattern sensitiveValue) {
-
-        if (!this.censorSensitiveHeaders) {
-            return false;
-        }
 
         return sensitiveValue.toString().length() > MINIMUM_LENGTH_TO_BE_CONSIDERED_A_SECRET
                 && !WHITELISTED_SENSITIVE_VALUES.contains(sensitiveValue.toString())
@@ -89,9 +73,6 @@ public class LogMaskerImpl implements LogMasker {
 
     @Override
     public String mask(String dataToMask) {
-        if (!this.censorSensitiveHeaders) {
-            return dataToMask;
-        }
         return masker.getMasked(dataToMask);
     }
 
