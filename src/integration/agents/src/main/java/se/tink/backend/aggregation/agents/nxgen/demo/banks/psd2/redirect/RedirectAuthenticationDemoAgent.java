@@ -53,14 +53,14 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
     private static final String USERNAME = "tink";
 
     private String provider;
-    private boolean redirectToOxfordStaging;
+    private boolean redirectToOxfordPreprod;
 
     public RedirectAuthenticationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         this.provider = request.getProvider().getName();
-        this.redirectToOxfordStaging = Objects.equals("oxford-preprod", context.getClusterId());
+        this.redirectToOxfordPreprod = Objects.equals("oxford-preprod", context.getClusterId());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, credentials);
+                new RedirectOAuth2Authenticator(redirectToOxfordPreprod, callbackUri, credentials);
 
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
@@ -110,7 +110,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, credentials);
+                new RedirectOAuth2Authenticator(redirectToOxfordPreprod, callbackUri, credentials);
 
         OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
@@ -140,7 +140,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         String callbackUri = request.getCallbackUri();
 
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
-                new RedirectOAuth2Authenticator(redirectToOxfordStaging, callbackUri, credentials);
+                new RedirectOAuth2Authenticator(redirectToOxfordPreprod, callbackUri, credentials);
 
         OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
