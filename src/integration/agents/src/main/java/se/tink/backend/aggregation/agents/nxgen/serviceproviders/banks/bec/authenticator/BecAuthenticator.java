@@ -20,6 +20,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     private static final String USERNAME_STORAGE_KEY = "username";
     private static final String PASSWORD_STORAGE_KEY = "password";
     private static final String TOKEN_STORAGE_KEY = "token";
+    private static final String CONFIRM_NEM_ID_FIELD_NAME = "ConfirmNemID";
     private final BecApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -37,9 +38,13 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
                         "confirmNemId",
                         this::sendNemIdRequest,
                         Field.builder()
-                                .name("Confirm NemID")
-                                .description("A NemID login request will be sent")
+                                .name(CONFIRM_NEM_ID_FIELD_NAME)
+                                .description(
+                                        "Please check if you want to proceed with NemID authentication")
+                                .hint(
+                                        "Please check if you want to proceed with NemID authentication")
                                 .immutable(true)
+                                .checkbox(true)
                                 .build()),
                 new AutomaticAuthenticationStep(this::pollNemId, "pollNemId"),
                 new AutomaticAuthenticationStep(this::finalizeAuth, "finalizeAuth"));
@@ -59,6 +64,10 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
 
     private AuthenticationStepResponse sendNemIdRequest(
             final Map<String, String> callbackData, final Credentials credentials) {
+        Boolean proceedWithNemId = Boolean.valueOf(callbackData.get(CONFIRM_NEM_ID_FIELD_NAME));
+        if (!Boolean.TRUE.equals(proceedWithNemId)) {
+            throw new IllegalArgumentException("Authentication interrupted by the user");
+        }
         CodeAppTokenEncryptedPayload payload =
                 apiClient.scaPrepare2(
                         credentials.getField(Field.Key.USERNAME),
@@ -77,7 +86,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
         String password = sessionStorage.get(PASSWORD_STORAGE_KEY);
         String token = sessionStorage.get(TOKEN_STORAGE_KEY);
         apiClient.sca(username, password, token);
-        return AuthenticationStepResponse.executeNextStep();
+        return AuthenticationStepResponse.authenticationSucceeded();
     }
 
     @Override
