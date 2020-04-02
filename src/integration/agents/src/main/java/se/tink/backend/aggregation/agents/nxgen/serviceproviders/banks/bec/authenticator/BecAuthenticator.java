@@ -39,12 +39,11 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
                         this::sendNemIdRequest,
                         Field.builder()
                                 .name(CONFIRM_NEM_ID_FIELD_NAME)
-                                .description(
-                                        "Please check if you want to proceed with NemID authentication")
-                                .hint(
-                                        "Please check if you want to proceed with NemID authentication")
+                                .description("Please proceed to send NemID authentication request")
+                                .hint("Please proceed to send NemID authentication request")
                                 .immutable(true)
                                 .checkbox(true)
+                                .minLength(0)
                                 .build()),
                 new AutomaticAuthenticationStep(this::pollNemId, "pollNemId"),
                 new AutomaticAuthenticationStep(this::finalizeAuth, "finalizeAuth"));
@@ -64,10 +63,6 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
 
     private AuthenticationStepResponse sendNemIdRequest(
             final Map<String, String> callbackData, final Credentials credentials) {
-        Boolean proceedWithNemId = Boolean.valueOf(callbackData.get(CONFIRM_NEM_ID_FIELD_NAME));
-        if (!Boolean.TRUE.equals(proceedWithNemId)) {
-            throw new IllegalArgumentException("Authentication interrupted by the user");
-        }
         CodeAppTokenEncryptedPayload payload =
                 apiClient.scaPrepare2(
                         credentials.getField(Field.Key.USERNAME),
