@@ -216,7 +216,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     .addSensitiveValuesSetObservable(
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
-            context.setConfiguration(configuration);
 
             AgentFactory factory;
             if (wireMockConfiguration != null) {

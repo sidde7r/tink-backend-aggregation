@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.ProviderSessionCacheContext;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -90,11 +89,6 @@ public final class AgentComponentProvider
     @Override
     public SupplementalRequester getSupplementalRequester() {
         return agentContextProvider.getSupplementalRequester();
-    }
-
-    @Override
-    public AgentsServiceConfiguration getConfiguration() {
-        return agentContextProvider.getConfiguration();
     }
 
     @Override
