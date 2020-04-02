@@ -6,8 +6,23 @@ alias(
     visibility = ["//visibility:public"],
 )
 
+# Aims to bundle together all packages that are essential to agents. Packages that belong here:
+# Any target below src/integration/lib/... required to be used by most or every agent. Packages that
+# do not belong here: third-party dependencies (e.g. Selenium).
 java_library(
     name = "lib",
+    visibility = ["//visibility:public"],
+    exports = [
+        ":library",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
+    ],
+)
+
+java_library(
+    name = "library",
     srcs = glob(
         ["src/main/**/*.java"],
     ),
@@ -21,17 +36,20 @@ java_library(
     runtime_deps = ["//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/scaffold"],
     deps = [
         "annotations",
-        "//src/integration/account:enums",
-        "//src/integration/account:rpc",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/configuration",
         "//src/integration/amount",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:demo",
         "//src/integration/credentials:rpc",
         "//src/integration/credentials:service",
         "//src/integration/enums",
         "//src/integration/generic_application",
         "//src/integration/identity_data",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto",
@@ -41,10 +59,12 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/integrations/abnamro",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
@@ -170,13 +190,16 @@ junit_test(
         "//third_party:ch_qos_logback_logback_classic",
     ],
     deps = [
-        "//src/integration/account:enums",
-        "//src/integration/account:rpc",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
         "//src/integration/amount",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
@@ -184,6 +207,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/crypto/hash",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/encoding",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",

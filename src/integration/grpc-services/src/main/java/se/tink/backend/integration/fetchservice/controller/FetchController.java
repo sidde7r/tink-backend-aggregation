@@ -1,9 +1,9 @@
 package se.tink.backend.integration.fetchservice.controller;
 
 import com.google.inject.Inject;
-import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.AgentClassFactory;
 import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
 import se.tink.backend.aggregation.agents.grpc.FakeIntegrationArgumentsCreator;

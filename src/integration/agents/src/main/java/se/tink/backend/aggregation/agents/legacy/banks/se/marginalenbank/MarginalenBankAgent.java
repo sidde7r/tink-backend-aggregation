@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.se.marginalenbank;
 
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.banks.crosskey.CrossKeyAgent;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MarginalenBankAgent extends CrossKeyAgent {

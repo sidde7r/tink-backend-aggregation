@@ -68,7 +68,7 @@ java_library(
         "//src/integration:__subpackages__",
     ],
     deps = [
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/user:rpc",
         "//src/libraries/uuid",
         "//third_party:commons_codec_commons_codec",

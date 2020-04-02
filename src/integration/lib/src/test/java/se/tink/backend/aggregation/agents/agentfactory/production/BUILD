@@ -7,6 +7,8 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",
         "//third_party:com_google_inject_guice",
     ],
 )

@@ -7,7 +7,7 @@ java_library(
     deps = [
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/annotations",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/signableoperation:rpc",
         "//src/integration/transfer:rpc",
@@ -51,7 +51,7 @@ junit_test(
         "//third_party:ch_qos_logback_logback_classic",
     ],
     deps = [
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/user:rpc",
         "//src/libraries/api_annotations/testlib",

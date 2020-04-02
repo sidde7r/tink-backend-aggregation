@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.framework.AgentTestContext;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;

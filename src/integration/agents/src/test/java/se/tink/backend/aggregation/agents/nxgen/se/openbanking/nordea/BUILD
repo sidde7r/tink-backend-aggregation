@@ -19,7 +19,7 @@ junit_test(
     ],
     deps = [
         "//src/integration/amount",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",

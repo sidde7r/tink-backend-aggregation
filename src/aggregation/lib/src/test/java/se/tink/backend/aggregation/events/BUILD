@@ -5,7 +5,7 @@ junit_test(
     srcs = glob(["*.java"]),
     deps = [
         "//src/aggregation/lib",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/libraries/pair",
         "//src/libraries/uuid",
         "//third_party:com_google_protobuf_protobuf_java",

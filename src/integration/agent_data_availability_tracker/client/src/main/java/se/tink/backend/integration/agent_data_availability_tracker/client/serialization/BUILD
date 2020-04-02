@@ -7,7 +7,7 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/models",
         "//src/libraries/account_identifier",
     ],

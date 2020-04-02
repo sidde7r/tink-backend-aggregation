@@ -8,9 +8,9 @@ java_library(
         "//src/integration:__subpackages__",
     ],
     deps = [
-        "//src/integration/account:rpc",
+        "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
         "//src/integration/amount",
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:rpc",
         "//src/integration/enums",
         "//src/integration/models",

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi;
 
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -9,6 +8,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.authentication.BancoBpiAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.entity.BancoBpiEntityManager;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.account.BancoBpiTransactionFetcher;
@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.credit
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.creditcard.BancoBpiCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.investment.BancoBpiInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.bancobpi.product.loan.BancoBpiLoanAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;

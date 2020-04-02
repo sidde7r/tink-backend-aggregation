@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.BawagAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.authenticator.BawagAuthenticator;
@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.configurati
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.BawagPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.BawagTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.util.BawagUtils;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap3;
 
 import javax.annotation.Nullable;
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapConstants.Urls;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.IdentificationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.entities.RegistrationResultEntity;
@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.Regist
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.rpc.SamlResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.utils.EncapSoapUtils;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;

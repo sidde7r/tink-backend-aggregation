@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.framework.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.saastopankki.SpConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.saastopankki.SpTestConfig;

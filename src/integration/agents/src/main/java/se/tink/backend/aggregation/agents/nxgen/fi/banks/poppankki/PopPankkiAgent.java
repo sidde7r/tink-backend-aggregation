@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkV2Configuration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class PopPankkiAgent extends SamlinkAgent {

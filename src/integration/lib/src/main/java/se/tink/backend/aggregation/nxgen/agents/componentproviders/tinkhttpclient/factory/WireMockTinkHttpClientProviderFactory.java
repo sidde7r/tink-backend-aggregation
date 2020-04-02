@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclie
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.TinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.WireMockTinkHttpClientProvider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
