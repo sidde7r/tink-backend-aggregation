@@ -71,19 +71,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     protected final RandomValueGenerator randomValueGenerator;
     protected final LocalDateTimeSource localDateTimeSource;
 
-    /**
-     * @deprecated Use constructor taking JwtSigner directly instead. This is only here to maintain
-     *     backwards compatibility with agents that are not yet setting up all needed guice
-     *     bindings.
-     */
-    @Deprecated
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration configuration,
             UkOpenBankingAisConfig agentConfig,
             boolean disableSslVerification) {
         super(componentProvider);
-        super.setConfiguration(configuration);
         this.wellKnownURL = agentConfig.getWellKnownURL();
         this.disableSslVerification = disableSslVerification;
         this.agentConfig = agentConfig;
@@ -91,35 +83,23 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
 
         client.addFilter(new BankServiceInternalErrorFilter());
-
-        JwtSigner jwtSigner =
-                getClientConfiguration().getSignerOverride().orElseGet(this::getQsealSigner);
-        initializeAgent(jwtSigner);
     }
 
-    public UkOpenBankingBaseAgent(
-            AgentComponentProvider componentProvider,
-            AgentsServiceConfiguration configuration,
-            UkOpenBankingAisConfig agentConfig,
-            JwtSigner jwtSigner,
-            boolean disableSslVerification) {
-        super(componentProvider);
+    // Different part between UkOpenBankingBaseAgent and this class
+    public UkOpenBankingClientConfigurationAdapter getClientConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentConfiguration(getClientConfigurationFormat());
+    }
+
+    @Override
+    public final void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        this.wellKnownURL = agentConfig.getWellKnownURL();
-        this.disableSslVerification = disableSslVerification;
-        this.agentConfig = agentConfig;
-        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
-        this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
 
-        client.addFilter(new BankServiceInternalErrorFilter());
-        initializeAgent(jwtSigner);
-    }
-
-    private void initializeAgent(JwtSigner jwtSigner) {
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
                 getClientConfiguration();
 
         softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertion();
+
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
 
         if (this.disableSslVerification) {
@@ -135,25 +115,17 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 .orElse(this::useEidasProxy)
                 .applyConfiguration(client);
 
-        apiClient = createApiClient(client, jwtSigner, softwareStatement, providerConfiguration);
+        JwtSigner signer =
+                ukOpenBankingConfiguration.getSignerOverride().orElseGet(this::getQsealSigner);
+
+        apiClient = createApiClient(client, signer, softwareStatement, providerConfiguration);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
+
         this.creditCardRefreshController = constructCreditCardRefreshController();
+
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-    }
-
-    // Different part between UkOpenBankingBaseAgent and this class
-    public UkOpenBankingClientConfigurationAdapter getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(getClientConfigurationFormat());
-    }
-
-    /** @deprecated Configuration is read and set in constructor instead. */
-    @Override
-    @Deprecated
-    public final void setConfiguration(AgentsServiceConfiguration configuration) {
-        // NOOP
     }
 
     private void useEidasProxy(TinkHttpClient httpClient) {
