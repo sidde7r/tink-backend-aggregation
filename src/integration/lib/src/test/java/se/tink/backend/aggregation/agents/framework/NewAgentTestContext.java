@@ -56,7 +56,7 @@ public final class NewAgentTestContext extends AgentContext {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public static final String TEST_CLUSTERID = "oxford-staging";
+    public static final String TEST_CLUSTERID = "oxford-preprod";
     public static final String TEST_APPID = "5f98e87106384b2981c0354a33b51590";
 
     private final Map<String, Account> accountsByBankId = new HashMap<>();

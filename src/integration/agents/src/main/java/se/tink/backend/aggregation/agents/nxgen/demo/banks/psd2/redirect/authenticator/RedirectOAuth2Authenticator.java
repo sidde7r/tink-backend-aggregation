@@ -23,13 +23,13 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private static final long THIRTY_DAYS_IN_SECONDS = 2592000;
     private final String providerName;
-    private final boolean redirectToOxfordStaging;
+    private final boolean redirectToOxfordPreprod;
     private final String preferredCallbackUri;
     private final Credentials credentials;
 
     public RedirectOAuth2Authenticator(
-            boolean redirectToOxfordStaging, String preferredCallbackUri, Credentials credentials) {
-        this.redirectToOxfordStaging = redirectToOxfordStaging;
+            boolean redirectToOxfordPreprod, String preferredCallbackUri, Credentials credentials) {
+        this.redirectToOxfordPreprod = redirectToOxfordPreprod;
         this.preferredCallbackUri = preferredCallbackUri;
         this.credentials = credentials;
         this.providerName = credentials.getProviderName();
@@ -45,7 +45,7 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
             authorizationUrl = authorizationUrl.queryParam("redirectUrl", preferredCallbackUri);
         } else {
             authorizationUrl =
-                    authorizationUrl.queryParam("staging", String.valueOf(redirectToOxfordStaging));
+                    authorizationUrl.queryParam("preprod", String.valueOf(redirectToOxfordPreprod));
         }
         return authorizationUrl;
     }
