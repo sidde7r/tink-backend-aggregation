@@ -63,6 +63,6 @@ public class SdcAccountFetcher extends SdcAgreementFetcher
                         .setOnlyFavorites(false)
                         .setOnlyQueryable(true);
 
-        return bankClient.filterAccounts(request).getTinkAccounts(agentConfiguration);
+        return bankClient.filterAccounts(request).getTinkAccounts();
     }
 }
