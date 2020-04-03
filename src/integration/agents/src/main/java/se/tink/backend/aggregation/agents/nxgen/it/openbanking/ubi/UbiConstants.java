@@ -9,5 +9,6 @@ public final class UbiConstants {
 
     public static class FormValues {
         public static final String SCA_REDIRECT = "SCARedirect";
+        public static final String SCA_DECOUPLED = "SCADecoupled";
     }
 }

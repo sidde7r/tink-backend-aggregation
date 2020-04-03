@@ -14,4 +14,8 @@ public enum ConsentStatus {
     public boolean isAcceptedStatus() {
         return this == VALID;
     }
+
+    public boolean isFinalStatus() {
+        return this == VALID || this == REJECTED || this == EXPIRED;
+    }
 }

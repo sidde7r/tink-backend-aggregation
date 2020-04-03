@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cb
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -9,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class ConsentResponse {
 
     @JsonProperty("_links")
@@ -18,12 +20,10 @@ public class ConsentResponse {
 
     private String consentStatus;
 
-    public LinksEntity getLinks() {
-        return links;
-    }
+    private PsuCredentialsResponse psuCredentials;
 
-    public String getConsentId() {
-        return consentId;
+    public ConsentResponse(LinksEntity links, String consentId, String consentStatus) {
+        this(links, consentId, consentStatus, null);
     }
 
     public ConsentStatus getConsentStatus() {

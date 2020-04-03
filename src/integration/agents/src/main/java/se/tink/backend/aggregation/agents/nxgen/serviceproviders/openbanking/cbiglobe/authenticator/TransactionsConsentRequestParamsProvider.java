@@ -11,7 +11,7 @@ public class TransactionsConsentRequestParamsProvider
     private final ConsentManager consentManager;
     private final StrongAuthenticationState strongAuthenticationState;
 
-    TransactionsConsentRequestParamsProvider(
+    public TransactionsConsentRequestParamsProvider(
             CbiGlobeAuthenticator authenticator,
             ConsentManager consentManager,
             StrongAuthenticationState strongAuthenticationState) {

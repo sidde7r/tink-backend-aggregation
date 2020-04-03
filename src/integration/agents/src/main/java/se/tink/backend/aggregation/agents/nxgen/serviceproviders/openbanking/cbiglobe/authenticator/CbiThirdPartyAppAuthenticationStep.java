@@ -78,6 +78,10 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
 
     @Override
     public String getIdentifier() {
-        return this.getClass().getSimpleName() + "_" + consentType;
+        return getStepIdentifier(consentType);
+    }
+
+    public static String getStepIdentifier(ConsentType consentType) {
+        return CbiThirdPartyAppAuthenticationStep.class.getSimpleName() + "_" + consentType;
     }
 }

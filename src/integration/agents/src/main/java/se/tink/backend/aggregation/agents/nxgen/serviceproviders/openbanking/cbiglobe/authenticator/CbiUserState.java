@@ -57,7 +57,7 @@ public class CbiUserState {
         persistentStorage.put(CHOSEN_AUTHENTICATION_METHOD_ID, authenticationMethodId);
     }
 
-    public String getChosenAuthenticationMethodId() {
+    String getChosenAuthenticationMethodId() {
         return persistentStorage
                 .get(CHOSEN_AUTHENTICATION_METHOD_ID, String.class)
                 .orElseThrow(() -> new IllegalStateException("Cannot find authentication method"));
