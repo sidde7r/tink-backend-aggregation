@@ -136,10 +136,6 @@ public class FetchLoanDetailsResponse {
                         .map(SubAgreementsItem::getInterest)
                         .collect(Collectors.toList());
 
-        if (subLoanRatesMismatch(interests)) {
-            return Optional.empty();
-        }
-
         if (allRatesMatch(interests)) {
             return interests.stream().findFirst();
         }
@@ -149,9 +145,6 @@ public class FetchLoanDetailsResponse {
                     .filter(interest -> interest.getBaseRate() != null)
                     .findFirst();
         }
-        LOG.warn(
-                "Could not determine if the interest rate for sub-agreements mismatches or matches for loanid: "
-                        .concat(loanId));
         return Optional.empty();
     }
 
@@ -168,20 +161,6 @@ public class FetchLoanDetailsResponse {
 
     private boolean allRatesMatch(List<InterestEntity> interests) {
         return interests.stream().map(InterestEntity::getRate).distinct().count() == 1;
-    }
-
-    private boolean subLoanRatesMismatch(List<InterestEntity> interests) {
-        List<BigDecimal> baseRates =
-                interests.stream()
-                        .map(InterestEntity::getBaseRateOrRateIfBaseRateIsNull)
-                        .collect(Collectors.toList());
-        List<BigDecimal> rates =
-                interests.stream()
-                        .map(InterestEntity::getRateIfBaseRateIsNotNull)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .collect(Collectors.toList());
-        return baseRates.stream().distinct().count() > 1 && rates.stream().distinct().count() > 1;
     }
 
     @JsonIgnore
