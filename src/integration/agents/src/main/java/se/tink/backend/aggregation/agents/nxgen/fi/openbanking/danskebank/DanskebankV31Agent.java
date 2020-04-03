@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.danskebank;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankAisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.danskebank.DanskebankV31Constant.Url.V31;
@@ -27,6 +28,7 @@ public class DanskebankV31Agent extends UkOpenBankingBaseAgent {
                         .build();
     }
 
+    @Inject
     public DanskebankV31Agent(AgentComponentProvider componentProvider) {
         super(componentProvider, aisConfig, true);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
