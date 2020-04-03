@@ -106,6 +106,10 @@ public final class SbabConstants {
     public static class Errors {
         public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
         public static final String KYC_QUESTIONS_NOT_COMPLETED = "kyc_questions_not_completed";
+        public static final String SIGNATURE_FAILED = "SIGNATURE_FAILED";
+        public static final String AMOUNT_LIMIT_REACHED = "AMOUNT_LIMIT_REACHED";
+        public static final String AMOUNT_EXCEEDS_BALANCE_VALIDATION =
+                "AMOUNT_EXCEEDS_BALANCE_VALIDATION";
     }
 
     public static class ErrorMessage {
@@ -119,6 +123,11 @@ public final class SbabConstants {
                 "Supplied date is not valid, ensure it's not set to a non business day and try again.";
         public static final String KYC_MESSAGE =
                 "To continue using this app you must answer some questions from your bank. Please log in with your bank's app or website.";
+        public static final String SIGNATURE_FAILED = "Payment signing process failed.";
+        public static final String AMOUNT_LIMIT_REACHED =
+                "The entered amount exceeds the daily limit.";
+        public static final String AMOUNT_EXCEEDS_BALANCE =
+                "This amount would exceed the available balance and cause overdraft.";
     }
 
     public static class HttpClient {
@@ -131,6 +140,9 @@ public final class SbabConstants {
         public static final Pattern ALLOWED_CHARS_PATTERN =
                 Pattern.compile("^[a-zA-Z0-9 åäöÅÄÖ!\\-+%\"/?,.§]+$");
         public static final int MAX_DEST_MSG_LEN = 12;
+
+        // Amount related propertyPath
+        public static final String AMOUNT = "amount";
 
         // Invalid payment date
         public static final String TRANSACTION_DATE = "transactionDate";

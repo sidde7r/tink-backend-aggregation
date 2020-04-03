@@ -32,4 +32,20 @@ public class ErrorResponse {
     public boolean isInvalidDateError() {
         return getErrorsAndLogIfMultiple().stream().anyMatch(ErrorEntity::isInvalidDate);
     }
+
+    @JsonIgnore
+    public boolean isFailedSignature() {
+        return getErrorsAndLogIfMultiple().stream().anyMatch(ErrorEntity::isFailedSignature);
+    }
+
+    @JsonIgnore
+    public boolean isAmountLimitReached() {
+        return getErrorsAndLogIfMultiple().stream().anyMatch(ErrorEntity::isAmountLimitReached);
+    }
+
+    @JsonIgnore
+    public boolean isAmountExceedsCurrentBalance() {
+        return getErrorsAndLogIfMultiple().stream()
+                .anyMatch(ErrorEntity::isAmountExceedsCurrentBalance);
+    }
 }

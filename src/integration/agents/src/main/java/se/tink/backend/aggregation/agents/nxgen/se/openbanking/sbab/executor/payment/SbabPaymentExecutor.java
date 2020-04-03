@@ -7,9 +7,10 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.ReferenceValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabApiClient;
@@ -45,6 +46,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
     private final SbabApiClient apiClient;
     private final SupplementalRequester supplementalRequester;
+    private static final Logger log = LoggerFactory.getLogger(SbabPaymentExecutor.class);
 
     private static final GenericTypeMapper<PaymentType, TypePair>
             accountIdentifiersToPaymentTypeMapper =
@@ -133,7 +135,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         Payment payment = paymentRequest.getPayment();
 
         return apiClient
@@ -151,7 +153,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
      */
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentAuthorizationException, AuthenticationException {
+            throws PaymentException, AuthenticationException {
 
         PaymentStatus paymentStatus = fetch(paymentMultiStepRequest).getPayment().getStatus();
 
@@ -197,8 +199,17 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .map(PaymentListRequest::getPaymentRequestList)
                         .map(Collection::stream)
                         .orElseGet(Stream::empty)
-                        .map(this::fetch)
+                        .map(this::callFetch)
                         .collect(Collectors.toList()));
+    }
+
+    private PaymentResponse callFetch(PaymentRequest paymentRequest) {
+        try {
+            return fetch(paymentRequest);
+        } catch (PaymentException e) {
+            log.info(String.format("Could not fetch payment. %s", e.getMessage()));
+        }
+        return null;
     }
 
     private Signer getSigner() {

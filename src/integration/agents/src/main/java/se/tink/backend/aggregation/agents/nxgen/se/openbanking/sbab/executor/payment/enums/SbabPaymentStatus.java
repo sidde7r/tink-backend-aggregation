@@ -7,6 +7,8 @@ public enum SbabPaymentStatus {
     PROCESSING("processing", PaymentStatus.PENDING),
     NEED_SIGNATURE("need_signature", PaymentStatus.PENDING),
     SIGNATURE_FAILED("signature_failed", PaymentStatus.CANCELLED),
+    AMOUNT_LIMIT_REACHED("amount_limit_reached", PaymentStatus.CANCELLED),
+    AMOUNT_EXCEEDS_BALANCE_VALIDATION("amount_exceeds_balance_validation", PaymentStatus.CANCELLED),
     TRANSFER_REQUEST_FAILED("transfer_request_failed", PaymentStatus.REJECTED),
     TRANSFER_REQUEST_ERROR("transfer_request_error", PaymentStatus.REJECTED),
     CREATED("created", PaymentStatus.PAID),
