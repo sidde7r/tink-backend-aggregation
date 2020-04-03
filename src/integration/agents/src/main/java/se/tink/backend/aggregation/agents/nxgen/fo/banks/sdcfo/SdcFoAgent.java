@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fo.banks.sdcfo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -26,7 +24,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SdcFoAgent extends SdcAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
-    private static Logger LOG = LoggerFactory.getLogger(SdcFoAgent.class);
     private static final int MAX_CONSECUTIVE_EMPTY_PAGES = 8;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -72,8 +69,7 @@ public class SdcFoAgent extends SdcAgent
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new SdcAccountFetcher(
-                        this.bankClient, this.sdcSessionStorage, this.agentConfiguration),
+                new SdcAccountFetcher(this.bankClient, this.sdcSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController<>(

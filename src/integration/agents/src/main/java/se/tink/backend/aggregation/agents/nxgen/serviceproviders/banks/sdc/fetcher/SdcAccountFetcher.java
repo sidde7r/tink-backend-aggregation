@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcServiceConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SessionStorageAgreement;
@@ -15,14 +14,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class SdcAccountFetcher extends SdcAgreementFetcher
         implements AccountFetcher<TransactionalAccount> {
-    private final SdcConfiguration agentConfiguration;
 
-    public SdcAccountFetcher(
-            SdcApiClient bankClient,
-            SdcSessionStorage sessionStorage,
-            SdcConfiguration agentConfiguration) {
+    public SdcAccountFetcher(SdcApiClient bankClient, SdcSessionStorage sessionStorage) {
         super(bankClient, sessionStorage);
-        this.agentConfiguration = agentConfiguration;
     }
 
     @Override

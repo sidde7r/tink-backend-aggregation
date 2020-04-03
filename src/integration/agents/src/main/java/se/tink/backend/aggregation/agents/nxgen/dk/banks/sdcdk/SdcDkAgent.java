@@ -90,8 +90,7 @@ public class SdcDkAgent extends SdcAgent
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new SdcAccountFetcher(
-                        this.bankClient, this.sdcSessionStorage, this.agentConfiguration),
+                new SdcAccountFetcher(this.bankClient, this.sdcSessionStorage),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
