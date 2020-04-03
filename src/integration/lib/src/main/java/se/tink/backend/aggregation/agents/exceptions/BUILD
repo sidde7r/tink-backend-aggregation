@@ -1,0 +1,10 @@
+java_library(
+    name = "exceptions",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid/error",
+        "//src/libraries/i18n",
+    ],
+)

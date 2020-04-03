@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31;
 
+import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransactionPaginator;
@@ -65,11 +66,12 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
             LocalDateTimeSource localDateTimeSource,
             CreditCardAccountMapper creditCardAccountMapper,
             TransactionalAccountMapper transactionalAccountMapper) {
-        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
-        this.persistentStorage = persistentStorage;
-        this.localDateTimeSource = localDateTimeSource;
-        this.creditCardAccountMapper = creditCardAccountMapper;
-        this.transactionalAccountMapper = transactionalAccountMapper;
+
+        this.ukOpenBankingAisConfig = Preconditions.checkNotNull(ukOpenBankingAisConfig);
+        this.persistentStorage = Preconditions.checkNotNull(persistentStorage);
+        this.localDateTimeSource = Preconditions.checkNotNull(localDateTimeSource);
+        this.creditCardAccountMapper = Preconditions.checkNotNull(creditCardAccountMapper);
+        this.transactionalAccountMapper = Preconditions.checkNotNull(transactionalAccountMapper);
     }
 
     @Override

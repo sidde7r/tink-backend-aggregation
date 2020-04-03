@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.general.models;
 
+import com.google.common.base.Preconditions;
 import java.util.Optional;
-import org.assertj.core.util.Preconditions;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.account.AccountIdentifier;
 

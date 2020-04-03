@@ -14,6 +14,7 @@ public class AuthenticationRequestTest {
     public void shouldCreateObjectWithCredentials() {
         // given
         Credentials credentials = Mockito.mock(Credentials.class);
+
         AuthenticationRequest objectUnderTest = new AuthenticationRequest(credentials);
         // when
         Credentials result = objectUnderTest.getCredentials();

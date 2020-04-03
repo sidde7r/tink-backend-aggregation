@@ -1,0 +1,10 @@
+java_library(
+    name = "transfer",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/signableoperation:enums",
+        "//src/libraries/i18n",
+        "//third_party:com_google_guava_guava",
+    ],
+)

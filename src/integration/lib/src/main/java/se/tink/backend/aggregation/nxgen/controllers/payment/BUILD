@@ -1,0 +1,21 @@
+java_library(
+    name = "payment",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/constants",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/signing",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/payment:enums",
+        "//src/integration/payment:rpc",
+        "//src/integration/transfer:enums",
+        "//src/integration/transfer:rpc",
+        "//src/libraries/account_identifier",
+        "//src/libraries/date",
+        "//src/libraries/pair",
+        "@tink_backend//src/libraries/uuid",
+    ],
+)

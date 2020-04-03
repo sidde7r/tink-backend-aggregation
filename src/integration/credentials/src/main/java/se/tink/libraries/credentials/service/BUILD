@@ -1,0 +1,13 @@
+java_library(
+    name = "service",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/user:rpc",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
+        "//third_party:commons_codec_commons_codec",
+        "@tink_backend//src/libraries/strings",
+    ],
+)
