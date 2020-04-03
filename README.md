@@ -66,8 +66,6 @@ A specific target: `bazel build :common-utilities`.
 
 deb packages: `bazel build deb:all`.
 
-Integration Framework: `bazel build :integration_framework`
-
 ### Running tests
 
 Unit tests: `bazel test :all`
