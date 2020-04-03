@@ -6,11 +6,6 @@ alias(
 )
 
 alias(
-    name = "integration_framework",
-    actual = "//src/integration/lib:framework",
-)
-
-alias(
     name = "convert_s3_to_aap",
     actual = "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/converter",
 )
