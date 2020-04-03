@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
@@ -19,15 +20,18 @@ public class UnicreditPaymentController extends PaymentController {
     private static final long WAIT_FOR_MINUTES = 9L;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PersistentStorage persistentStorage;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public UnicreditPaymentController(
             UnicreditPaymentExecutor paymentExecutor,
             SupplementalInformationHelper supplementalInformationHelper,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            StrongAuthenticationState strongAuthenticationState) {
         super(paymentExecutor, paymentExecutor);
 
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.persistentStorage = persistentStorage;
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     private void openThirdPartyApp(URL authorizeUrl) {
@@ -39,17 +43,15 @@ public class UnicreditPaymentController extends PaymentController {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+        persistentStorage.put(
+                UnicreditConstants.StorageKeys.STATE, strongAuthenticationState.getState());
         PaymentResponse paymentResponse = super.create(paymentRequest);
 
         String id = paymentResponse.getPayment().getUniqueId();
         URL authorizeUrl = getAuthorizeUrlFromStorage(id);
         openThirdPartyApp(authorizeUrl);
-
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(
-                        persistentStorage.get(UnicreditConstants.StorageKeys.STATE)),
-                WAIT_FOR_MINUTES,
-                TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         return paymentResponse;
     }
@@ -67,9 +69,5 @@ public class UnicreditPaymentController extends PaymentController {
             throws PaymentException {
 
         return super.sign(paymentMultiStepRequest);
-    }
-
-    private String formatSupplementalKey(String key) {
-        return String.format("tpcb_%s", key);
     }
 }
