@@ -12,6 +12,7 @@ java_library(
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:rpc",
+        "//src/integration/credentials:service",
         "//src/integration/enums",
         "//src/integration/models",
         "//src/integration/signableoperation:rpc",
@@ -42,6 +43,7 @@ junit_test(
     deps = [
         ":aggregationcontroller_api",
         "//src/integration/credentials:rpc",
+        "//src/integration/credentials:service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",

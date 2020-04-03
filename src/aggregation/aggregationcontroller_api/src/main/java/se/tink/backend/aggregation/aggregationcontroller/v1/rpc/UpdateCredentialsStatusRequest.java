@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.Enums;
 import se.tink.libraries.credentials.rpc.Credentials;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -12,6 +13,7 @@ public class UpdateCredentialsStatusRequest {
     private boolean isManual;
     private boolean isMigrationUpdate;
     private String refreshId;
+    private CredentialsRequestType credentialsRequestType;
 
     public boolean isManual() {
         return isManual;
@@ -67,5 +69,19 @@ public class UpdateCredentialsStatusRequest {
 
     public void setRefreshId(String refreshId) {
         this.refreshId = refreshId;
+    }
+
+    public void setCredentialsRequestType(
+            se.tink.libraries.credentials.service.CredentialsRequestType
+                    serviceCredentialsRequestType) {
+        if (serviceCredentialsRequestType == null) {
+            return;
+        }
+        String name = serviceCredentialsRequestType.name();
+        credentialsRequestType = Enums.getIfPresent(CredentialsRequestType.class, name).orNull();
+    }
+
+    public CredentialsRequestType getCredentialsRequestType() {
+        return credentialsRequestType;
     }
 }

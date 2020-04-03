@@ -307,8 +307,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     public Optional<String> getRefreshId() {
-        CredentialsRequest credentialsRequest = getRequest();
-
         // Defensive. We *Should* only end up in the if iff we're refreshing credentials.
         if (request instanceof RefreshInformationRequest) {
             return Optional.ofNullable(((RefreshInformationRequest) request).getRefreshId());
@@ -478,6 +476,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
         updateCredentialsStatusRequest.setMigrationUpdate(isMigrationUpdate);
+        updateCredentialsStatusRequest.setCredentialsRequestType(request.getType());
 
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 

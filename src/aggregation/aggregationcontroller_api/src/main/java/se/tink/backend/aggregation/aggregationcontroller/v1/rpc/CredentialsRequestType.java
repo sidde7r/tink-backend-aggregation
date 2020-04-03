@@ -1,4 +1,4 @@
-package se.tink.libraries.credentials.service;
+package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 public enum CredentialsRequestType {
     REFRESH_INFORMATION,
