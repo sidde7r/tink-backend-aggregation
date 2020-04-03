@@ -124,7 +124,8 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                 new UnicreditPaymentController(
                         new UnicreditPaymentExecutor(apiClient),
                         supplementalInformationHelper,
-                        persistentStorage));
+                        persistentStorage,
+                        strongAuthenticationState));
     }
 
     @Override

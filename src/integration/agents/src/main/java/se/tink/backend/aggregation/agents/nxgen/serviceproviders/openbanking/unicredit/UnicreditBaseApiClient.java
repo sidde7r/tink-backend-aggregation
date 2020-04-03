@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -203,8 +202,6 @@ public abstract class UnicreditBaseApiClient {
     }
 
     public CreatePaymentResponse createSepaPayment(CreatePaymentRequest request) {
-        persistentStorage.put(
-                StorageKeys.STATE, new StrongAuthenticationState(null).getSupplementalKey());
 
         CreatePaymentResponse createPaymentResponse =
                 createRequest(
