@@ -37,9 +37,6 @@ junit_test(
         ["**/*.java"],
         exclude = ["HVBAgentTest.java"],
     ),
-    tags = [
-        "external",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
