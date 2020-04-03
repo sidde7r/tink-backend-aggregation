@@ -7,14 +7,15 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.detail.RawSegmentComposer;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.TanInformation;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HIPINS;
 
 public class TanByOperationLookupTest {
 
     @Test
     public void shouldReturnProperInformationAboutRegisteredOperations() {
         // given
-        TanByOperationLookup lookup = new TanByOperationLookup(getTanInformationSegment());
+        HIPINS hipins = getHIPINS();
+        TanByOperationLookup lookup = new TanByOperationLookup(hipins);
 
         for (Pair<SegmentType, Boolean> operationInfo : getExpectedOperations()) {
             SegmentType segmentType = operationInfo.getLeft();
@@ -30,7 +31,8 @@ public class TanByOperationLookupTest {
     @Test
     public void shouldAlwaysReturnTrueForOperationsThatAreNotSetUpInLookup() {
         // given
-        TanByOperationLookup lookup = new TanByOperationLookup(getTanInformationSegment());
+        HIPINS hipins = getHIPINS();
+        TanByOperationLookup lookup = new TanByOperationLookup(hipins);
         List<SegmentType> unregisteredOperations =
                 Arrays.asList(SegmentType.HKWOA, SegmentType.HKWSD);
 
@@ -43,8 +45,8 @@ public class TanByOperationLookupTest {
         }
     }
 
-    private TanInformation getTanInformationSegment() {
-        return new TanInformation(RawSegmentComposer.compose(getHIPINSArray()));
+    private HIPINS getHIPINS() {
+        return new HIPINS(RawSegmentComposer.compose(getHIPINSArray()));
     }
 
     private String[][] getHIPINSArray() {

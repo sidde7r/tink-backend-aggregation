@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.detail.RawSegmentComposer;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parser.RawSegment;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.TanMediaInformation.TanMedia;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HITAB.TanMedia;
 
 public class HITABTest {
     @Test
@@ -65,15 +65,14 @@ public class HITABTest {
         RawSegment segment = RawSegmentComposer.compose(arr);
 
         // when
-        TanMediaInformation tanMediaInformation = new TanMediaInformation(segment);
+        HITAB hitab = new HITAB(segment);
 
         // then
-        assertThat(tanMediaInformation.getTanUsageOption()).isEqualTo(0);
-        assertThat(tanMediaInformation.getSegmentName()).isEqualTo("HITAB");
-        assertThat(tanMediaInformation.getSegmentVersion()).isEqualTo(4);
-        assertThat(tanMediaInformation.getSegmentPosition()).isEqualTo(5);
-        assertThat(tanMediaInformation.getTanMediaList())
-                .containsOnlyElementsOf(getExpectedTanMediaList());
+        assertThat(hitab.getTanUsageOption()).isEqualTo(0);
+        assertThat(hitab.getSegmentName()).isEqualTo("HITAB");
+        assertThat(hitab.getSegmentVersion()).isEqualTo(4);
+        assertThat(hitab.getSegmentPosition()).isEqualTo(5);
+        assertThat(hitab.getTanMediaList()).containsOnlyElementsOf(getExpectedTanMediaList());
     }
 
     private List<TanMedia> getExpectedTanMediaList() {

@@ -47,12 +47,12 @@ public class FinTsRequestTest {
         FinTsRequest request = new FinTsRequest();
 
         request.addSegment(
-                HeaderV3.builder()
+                HNHBKv3.builder()
                         .dialogId(context.getDialogId())
                         .messageNumber(context.getMessageNumber())
                         .build());
         request.addSegment(
-                EncryptionHeaderV3.builder()
+                HNVSKv3.builder()
                         .securityProcedureVersion(context.getSecurityProcedureVersion())
                         .blz(BLZ)
                         .systemId(context.getSystemId())
@@ -60,9 +60,9 @@ public class FinTsRequestTest {
                         .creationTime(dateTime)
                         .build());
 
-        EncryptedEnvelopeV1 hnvsd = new EncryptedEnvelopeV1();
+        HNVSDv1 hnvsd = new HNVSDv1();
         hnvsd.addSegment(
-                SignatureHeaderV4.builder()
+                HNSHKv4.builder()
                         .securityProcedureVersion(context.getSecurityProcedureVersion())
                         .securityFunction(context.getChosenSecurityFunction())
                         .securityReference(context.getSecurityReference())
@@ -72,25 +72,22 @@ public class FinTsRequestTest {
                         .creationTime(dateTime)
                         .build());
         hnvsd.addSegment(
-                AuthorizeV2.builder()
+                HKIDNv2.builder()
                         .systemId(context.getSystemId())
                         .blz(BLZ)
                         .username(USERNAME)
                         .build());
         hnvsd.addSegment(
-                SystemInformationV3.builder()
-                        .productId(PRODUCT_ID)
-                        .productVersion(PRODUCT_VERSION)
-                        .build());
-        hnvsd.addSegment(new GetSynchronizationV3());
+                HKVVBv3.builder().productId(PRODUCT_ID).productVersion(PRODUCT_VERSION).build());
+        hnvsd.addSegment(new HKSYNv3());
         hnvsd.addSegment(
-                SignatureFooterV2.builder()
+                HNSHAv2.builder()
                         .securityReference(context.getSecurityReference())
                         .password(PIN)
                         .build());
         request.addSegment(hnvsd);
 
-        request.addSegment(FooterV1.builder().messageNumber(context.getMessageNumber()).build());
+        request.addSegment(HNHBSv1.builder().messageNumber(context.getMessageNumber()).build());
 
         // when
         String requestInFinTsFormat = request.toFinTsFormat();
@@ -105,25 +102,25 @@ public class FinTsRequestTest {
     public void shouldOrderSegmentsProperly() {
         // given
         FinTsRequest request = new FinTsRequest();
-        request.addSegment(new GetSepaDetailsV1());
-        request.addSegment(new GetSepaDetailsV1());
-        request.addSegment(new GetSepaDetailsV1());
+        request.addSegment(new HKSPAv1());
+        request.addSegment(new HKSPAv1());
+        request.addSegment(new HKSPAv1());
         request.addSegment(
-                EncryptionHeaderV3.builder()
+                HNVSKv3.builder()
                         .securityProcedureVersion(0)
                         .blz("")
                         .systemId("")
                         .username("")
                         .creationTime(dateTime)
                         .build());
-        request.addSegment(new GetSepaDetailsV1());
-        request.addSegment(new GetSepaDetailsV1());
-        EncryptedEnvelopeV1 hnvsd = new EncryptedEnvelopeV1();
-        hnvsd.addSegment(new GetSepaDetailsV1());
-        hnvsd.addSegment(new GetSepaDetailsV1());
+        request.addSegment(new HKSPAv1());
+        request.addSegment(new HKSPAv1());
+        HNVSDv1 hnvsd = new HNVSDv1();
+        hnvsd.addSegment(new HKSPAv1());
+        hnvsd.addSegment(new HKSPAv1());
         request.addSegment(hnvsd);
-        request.addSegment(new GetSepaDetailsV1());
-        request.addSegment(new GetSepaDetailsV1());
+        request.addSegment(new HKSPAv1());
+        request.addSegment(new HKSPAv1());
 
         // when
         String requestInFinTsFormat = request.toFinTsFormat();
@@ -138,7 +135,7 @@ public class FinTsRequestTest {
     public void shouldPutMessageLengthIntoHeaderSegmentWithJustHeader() {
         FinTsRequest request = new FinTsRequest();
         request.addSegment(
-                HeaderV3.builder()
+                HNHBKv3.builder()
                         .dialogId("DIALOGID_8991")
                         .finTsVersion("FINTS_124213")
                         .messageNumber(1024)
@@ -156,13 +153,13 @@ public class FinTsRequestTest {
     public void shouldPutMessageLengthIntoHeaderSegmentWithMultipleSegments() {
         FinTsRequest request = new FinTsRequest();
         request.addSegment(
-                HeaderV3.builder()
+                HNHBKv3.builder()
                         .dialogId("DIALOGID_4214")
                         .finTsVersion("FINTS_6456")
                         .messageNumber(6644)
                         .build());
         for (int i = 0; i < 10; i++) {
-            request.addSegment(new GetSepaDetailsV1());
+            request.addSegment(new HKSPAv1());
         }
 
         // when
