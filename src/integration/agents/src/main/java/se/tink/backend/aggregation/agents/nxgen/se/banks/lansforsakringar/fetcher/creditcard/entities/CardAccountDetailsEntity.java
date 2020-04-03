@@ -16,6 +16,10 @@ public class CardAccountDetailsEntity {
     private boolean transferTo;
     private String type;
 
+    public String getAccountName() {
+        return accountName;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this.getClass())

@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authen
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.executor.rpc.DirectTransferRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.creditcard.rpc.FetchCardTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.creditcard.rpc.FetchCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.creditcard.rpc.FetchCreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.einvoice.rpc.FetchEinvoiceRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.einvoice.rpc.FetchEinvoiceResponse;
@@ -95,6 +97,15 @@ public class LansforsakringarApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(FetchUpcomingRequest.of(accountNumber), MediaType.APPLICATION_JSON_TYPE)
                 .post(FetchUpcomingResponse.class);
+    }
+
+    public FetchCardTransactionsResponse getCardTransactions(String cardNumber, int page) {
+        return getBaseRequest(Urls.FETCH_CARD_TRANSACTIONS)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .body(
+                        FetchCardTransactionsRequest.of(page, cardNumber),
+                        MediaType.APPLICATION_JSON_TYPE)
+                .post(FetchCardTransactionsResponse.class);
     }
 
     public FetchCreditCardResponse fetchCreditCards() {
