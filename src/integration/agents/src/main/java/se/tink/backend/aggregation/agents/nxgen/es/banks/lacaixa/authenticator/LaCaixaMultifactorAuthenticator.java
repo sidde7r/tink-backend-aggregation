@@ -24,10 +24,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.LaCaixaPasswordHash;
 import se.tink.backend.aggregation.logmasker.LogMasker;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;

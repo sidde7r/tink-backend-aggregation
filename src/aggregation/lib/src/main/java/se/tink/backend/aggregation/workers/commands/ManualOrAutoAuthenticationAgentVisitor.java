@@ -4,7 +4,7 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agent.AgentVisitor;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ManualOrAutoAuthenticationAgentVisitor implements AgentVisitor {

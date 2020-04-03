@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.TransferExecutionException.*;
+import static se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException.*;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;

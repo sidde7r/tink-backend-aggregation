@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.Storag
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcDevice;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.EnrollDeviceRoundTwoResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 final class FinalStep implements AuthenticationStep {

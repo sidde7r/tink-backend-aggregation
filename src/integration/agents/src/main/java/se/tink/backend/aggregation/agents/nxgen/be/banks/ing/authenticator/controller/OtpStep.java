@@ -5,10 +5,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
 public final class OtpStep implements AuthenticationStep {

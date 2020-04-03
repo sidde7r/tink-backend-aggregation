@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AbancaAuthenticator implements Authenticator, AuthenticationControllerType {

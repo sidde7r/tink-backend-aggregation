@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 

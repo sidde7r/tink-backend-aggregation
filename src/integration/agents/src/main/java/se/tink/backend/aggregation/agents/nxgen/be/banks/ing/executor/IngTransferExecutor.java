@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.progressive;
 
 import com.google.common.collect.Lists;
 import java.util.LinkedList;

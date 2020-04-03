@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenti
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.EncapClient;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.utils.authentication.encap3.models.DeviceAuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {

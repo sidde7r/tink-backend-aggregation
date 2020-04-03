@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.utils.transfer;
 
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class TransferMessageException extends TransferExecutionException {

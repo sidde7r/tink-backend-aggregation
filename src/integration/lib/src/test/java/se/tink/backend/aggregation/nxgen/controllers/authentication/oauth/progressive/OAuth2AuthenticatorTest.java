@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication.oauth;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +11,14 @@ import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationServerClient;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2TokenStorage;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
 
 public class OAuth2AuthenticatorTest {
 

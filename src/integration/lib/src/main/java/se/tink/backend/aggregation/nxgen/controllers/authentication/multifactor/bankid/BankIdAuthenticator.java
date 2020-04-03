@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;

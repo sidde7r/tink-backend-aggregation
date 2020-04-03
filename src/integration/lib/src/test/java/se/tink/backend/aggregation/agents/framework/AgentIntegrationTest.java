@@ -30,7 +30,6 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
@@ -41,6 +40,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireM
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
+import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
@@ -49,9 +49,9 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveLoginExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AuthenticationControllerType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;

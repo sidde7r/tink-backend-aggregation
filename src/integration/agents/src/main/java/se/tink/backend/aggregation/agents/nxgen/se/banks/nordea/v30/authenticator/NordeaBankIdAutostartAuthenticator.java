@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticat
 
 import java.util.Optional;
 import org.apache.commons.codec.binary.Base64;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;

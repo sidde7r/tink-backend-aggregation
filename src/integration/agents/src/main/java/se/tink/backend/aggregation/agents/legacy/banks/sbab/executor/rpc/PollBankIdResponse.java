@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.sbab.executor.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.BankId;
 import se.tink.backend.aggregation.annotations.JsonObject;
 

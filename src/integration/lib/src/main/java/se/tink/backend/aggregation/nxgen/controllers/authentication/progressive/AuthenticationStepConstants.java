@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.progressive;
 
 /**
  * Define init and finalize steps here. To define intermediate steps, define it locally in the

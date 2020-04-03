@@ -19,7 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption.MessageContainer;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption.MobileBankingEncryptionHelper;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers.BankIdResourceHelper;
@@ -61,6 +60,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class DanskeBankApiClient {

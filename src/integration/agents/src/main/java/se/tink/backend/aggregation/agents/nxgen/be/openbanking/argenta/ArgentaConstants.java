@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class ArgentaConstants {

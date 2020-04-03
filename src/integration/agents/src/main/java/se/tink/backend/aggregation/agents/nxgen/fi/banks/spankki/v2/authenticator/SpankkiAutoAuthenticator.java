@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.SpankkiConst
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.encap.SpankkiEncapClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.encap.SpankkiEncapConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v2.authenticator.utils.SpankkiAuthUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.au
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 
 public class MultiSupplementalAutoAuthenticator implements AutoAuthenticator {
 

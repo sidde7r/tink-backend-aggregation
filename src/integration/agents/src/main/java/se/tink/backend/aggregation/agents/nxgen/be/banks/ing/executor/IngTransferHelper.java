@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.BaseMobileResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateInternalTransferResponse;

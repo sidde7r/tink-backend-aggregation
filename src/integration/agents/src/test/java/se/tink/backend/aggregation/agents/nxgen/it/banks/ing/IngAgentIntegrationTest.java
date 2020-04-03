@@ -18,8 +18,8 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAgentIntegrationTest extends AgentIntegrationTest {

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.standalone.mapper.auth.sa;
 
 import se.tink.backend.aggregation.agents.standalone.mapper.common.RequestCommonMapper;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
 import se.tink.sa.common.mapper.Mapper;
 import se.tink.sa.common.mapper.MappingContext;
 import se.tink.sa.model.auth.AuthenticationRequest;
@@ -57,7 +57,7 @@ public class AuthenticationRequestMapper
     //
     //    private Credentials mapCredentials(
     //            final
-    // se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest
+    // se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest
     //                    payload) {
     //        if (payload == null) {
     //            return Credentials.newBuilder().build();

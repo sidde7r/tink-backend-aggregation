@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.progressive;
 
 import com.google.common.base.Preconditions;
 import java.util.Optional;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 
 public final class SteppableAuthenticationResponse implements AuthenticationSteppable {
 

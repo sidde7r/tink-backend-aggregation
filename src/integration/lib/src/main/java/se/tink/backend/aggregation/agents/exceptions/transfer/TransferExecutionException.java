@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents;
+package se.tink.backend.aggregation.agents.exceptions.transfer;
 
 import com.google.common.base.Preconditions;
 import se.tink.libraries.i18n.LocalizableEnum;

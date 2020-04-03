@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.EndpointSpecification;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.OAuth2AuthorizationSpecification;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.oauth.progressive.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;

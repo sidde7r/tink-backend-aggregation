@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.SpankkiPersi
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.SpankkiSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.authenticator.rpc.TokenLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.rpc.SpankkiResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 
 public class SpankkiAutoAuthenticator implements AutoAuthenticator {
 

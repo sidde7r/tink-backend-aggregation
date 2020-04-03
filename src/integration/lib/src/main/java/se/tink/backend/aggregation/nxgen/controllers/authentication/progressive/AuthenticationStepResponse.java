@@ -1,6 +1,7 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.progressive;
 
 import java.util.Optional;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 
 public class AuthenticationStepResponse {
 

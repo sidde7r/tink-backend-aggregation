@@ -14,9 +14,9 @@ import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.rpc.CheckPinRespons
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.rpc.CheckTimeResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.rpc.RegisterDevice2Response;
 import se.tink.backend.aggregation.agents.nxgen.it.banks.isp.rpc.RegisterDevice3Response;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.OtpStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;

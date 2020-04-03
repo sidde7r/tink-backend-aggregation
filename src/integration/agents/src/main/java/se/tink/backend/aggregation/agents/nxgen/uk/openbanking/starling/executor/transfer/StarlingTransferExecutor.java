@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executo
 
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;

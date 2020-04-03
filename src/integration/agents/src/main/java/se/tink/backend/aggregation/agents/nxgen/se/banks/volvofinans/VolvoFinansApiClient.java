@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans;
 import java.time.LocalDate;
 import java.util.Locale;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardTransactionsResponse;

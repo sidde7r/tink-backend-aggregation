@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.step;
 
 import java.util.Objects;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 
 public abstract class AbstractAuthenticationStep implements AuthenticationStep {
 

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.authentication;
+package se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor;
 
 import com.google.common.base.Preconditions;
 import java.util.List;
@@ -6,10 +6,15 @@ import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 
 public final class ProgressiveLoginExecutor {

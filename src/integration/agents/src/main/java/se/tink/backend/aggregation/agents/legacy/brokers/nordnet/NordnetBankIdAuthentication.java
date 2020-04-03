@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
-import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.Patterns;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetConstants.QueryParamValues;

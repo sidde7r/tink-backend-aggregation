@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.rpc
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.rpc.NemIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.security.Decryptor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.security.Token;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;

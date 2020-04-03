@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import java.util.Arrays;
 import java.util.List;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 

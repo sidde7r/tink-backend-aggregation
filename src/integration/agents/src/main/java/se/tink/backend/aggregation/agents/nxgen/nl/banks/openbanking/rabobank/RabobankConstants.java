@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.http.HttpStatus;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 
 public class RabobankConstants {
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
