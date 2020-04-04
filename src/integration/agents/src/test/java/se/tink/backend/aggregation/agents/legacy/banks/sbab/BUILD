@@ -20,7 +20,7 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
-        "//src/libraries/account_identifier:account_identifier_test",
+        "//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",
         "//src/libraries/date",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_jsoup_jsoup",

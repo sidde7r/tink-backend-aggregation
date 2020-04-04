@@ -18,7 +18,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.account.identifiers.TestAccount;
+import se.tink.libraries.account.identifiers.account.TestAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.enums.FeatureFlags;

@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.account.identifiers.TestAccount;
+import se.tink.libraries.account.identifiers.account.TestAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.enums.FeatureFlags;
