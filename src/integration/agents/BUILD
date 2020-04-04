@@ -196,7 +196,6 @@ junit_test(
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/account_identifier",
-        "//src/libraries/account_identifier:account_identifier_test",
         "//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/date",
