@@ -15,7 +15,6 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pojava.datetime.DateTimeConfig;
@@ -113,34 +112,6 @@ public class DateUtilsTest {
     @Test
     public void testTurnPastSixDigitsDateIntoEightDigitsWithOneDayAhead() throws Exception {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 1);
-
-        String date8 = DF8.format(cal.getTime());
-        String date6 = DF6.format(cal.getTime());
-        String parsedDate8 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date8);
-        String parsedDate6 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date6);
-
-        assertEquals("19" + date6, parsedDate8);
-        assertEquals("19" + date6, parsedDate6);
-    }
-
-    // TODO: Find out why this test fails: https://tinkab.atlassian.net/browse/CATS-607
-    // The test is identical to testTurnPastSixDigitsDateIntoEightDigitsWithOneDayAhead except that
-    // the time is different.
-    @Ignore
-    @Test
-    public void testTurnPastSixDigitsDateIntoEightDigitsWithOneDayAheadFailing() throws Exception {
-        Date failingDate =
-                Date.from(
-                        LocalDate.of(2020, 4, 3)
-                                .atStartOfDay(ZoneId.of("Europe/Stockholm"))
-                                .withHour(0)
-                                .withMinute(44)
-                                .withSecond(7)
-                                .toInstant());
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(failingDate);
         cal.add(Calendar.DATE, 1);
 
         String date8 = DF8.format(cal.getTime());
