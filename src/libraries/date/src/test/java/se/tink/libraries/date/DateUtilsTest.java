@@ -15,6 +15,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pojava.datetime.DateTimeConfig;
@@ -109,6 +110,11 @@ public class DateUtilsTest {
         assertEquals("20" + date6, parsedDate6);
     }
 
+    // TODO: https://tinkab.atlassian.net/browse/CATS-607
+    // This test is flaky. It has been observed to sometimes fail, depending on what the current
+    // time is. Rewrite this test so that neither the test nor the method under test depends on the
+    // current time.
+    @Ignore
     @Test
     public void testTurnPastSixDigitsDateIntoEightDigitsWithOneDayAhead() throws Exception {
         Calendar cal = Calendar.getInstance();
