@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -32,8 +30,6 @@ public class DateUtilsTest {
     private DateTimeConfig pojaDefault = DateTimeConfig.getGlobalDefault();
     private TimeZone jvmDefault = TimeZone.getDefault();
 
-    private Date sampleDate;
-
     @Before
     public void setup() {
         TimeZone.setDefault(TimeZone.getTimeZone(TZ));
@@ -44,15 +40,6 @@ public class DateUtilsTest {
                         setInputTimeZone(TimeZone.getTimeZone(TZ));
                     }
                 });
-
-        sampleDate =
-                Date.from(
-                        LocalDate.of(2020, 4, 3)
-                                .atStartOfDay(ZoneId.of("Europe/Stockholm"))
-                                .withHour(9)
-                                .withMinute(35)
-                                .withSecond(17)
-                                .toInstant());
     }
 
     @After
@@ -98,7 +85,6 @@ public class DateUtilsTest {
     public void testTurnPastSixDigitsDateIntoEightDigitsWithThreeYearsAhead() throws Exception {
 
         Calendar cal = Calendar.getInstance();
-        cal.setTime(sampleDate);
         cal.add(Calendar.YEAR, 3);
 
         String date8 = DF8.format(cal.getTime());
@@ -113,7 +99,6 @@ public class DateUtilsTest {
     @Test
     public void testTurnPastSixDigitsDateIntoEightDigitsWithThreeYearsAgo() throws Exception {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(sampleDate);
         cal.add(Calendar.YEAR, -3);
 
         String date8 = DF8.format(cal.getTime());
@@ -128,7 +113,6 @@ public class DateUtilsTest {
     @Test
     public void testTurnPastSixDigitsDateIntoEightDigitsWithOneDayAhead() throws Exception {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(sampleDate);
         cal.add(Calendar.DATE, 1);
 
         String date8 = DF8.format(cal.getTime());
@@ -171,7 +155,6 @@ public class DateUtilsTest {
     @Test
     public void testTurnPastSixDigitsDateIntoEightDigitsWithOneDayAgo() throws Exception {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(sampleDate);
         cal.add(Calendar.DATE, -1);
 
         String date8 = DF8.format(cal.getTime());
