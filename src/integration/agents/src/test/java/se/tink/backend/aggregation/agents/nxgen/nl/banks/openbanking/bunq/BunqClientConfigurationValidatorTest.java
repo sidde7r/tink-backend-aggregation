@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidatorBuilderForTest;
+import se.tink.backend.aggregation.agents.tools.validator.builder.ClientConfigurationValidatorBuilderForTest;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 
 public class BunqClientConfigurationValidatorTest {

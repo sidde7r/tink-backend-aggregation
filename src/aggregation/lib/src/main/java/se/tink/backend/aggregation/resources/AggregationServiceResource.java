@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
-import se.tink.backend.aggregation.agents.tools.ClientConfigurationValidator;
+import se.tink.backend.aggregation.agents.tools.validator.ClientConfigurationValidator;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
