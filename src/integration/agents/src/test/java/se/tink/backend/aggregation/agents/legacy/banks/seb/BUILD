@@ -26,7 +26,6 @@ junit_test(
         "//src/integration/transfer:mocks",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
-        "//src/libraries/account_identifier:account_identifier_test",
         "//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",
         "//src/libraries/date",
         "//src/libraries/social_security_number/src/test/java/se/tink/libraries/social/security/ssn",
