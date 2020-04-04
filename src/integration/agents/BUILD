@@ -202,6 +202,8 @@ junit_test(
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//src/libraries/social_security_number:social_security_number_test",
+        "//src/libraries/social_security_number/src/test/java/se/tink/libraries/social/security/ssn",
+        "//src/libraries/social_security_number/src/test/java/se/tink/libraries/social/security/time",
         "//src/libraries/strings",
         "//src/libraries/uuid",
         "//third_party:com_github_rholder_guava_retrying",

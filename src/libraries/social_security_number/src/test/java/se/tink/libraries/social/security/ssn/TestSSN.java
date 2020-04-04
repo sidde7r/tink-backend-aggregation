@@ -1,4 +1,4 @@
-package se.tink.libraries.social.security;
+package se.tink.libraries.social.security.ssn;
 
 @SuppressWarnings("unused")
 public class TestSSN {

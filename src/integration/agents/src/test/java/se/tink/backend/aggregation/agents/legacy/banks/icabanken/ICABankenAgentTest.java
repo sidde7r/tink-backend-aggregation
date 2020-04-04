@@ -22,7 +22,7 @@ import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.enums.FeatureFlags;
-import se.tink.libraries.social.security.TestSSN;
+import se.tink.libraries.social.security.ssn.TestSSN;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.transfer.rpc.Transfer;

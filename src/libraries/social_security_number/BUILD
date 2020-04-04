@@ -20,6 +20,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/social_security_number",
+        "//src/libraries/social_security_number/src/test/java/se/tink/libraries/social/security/time",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_google_guava_guava",
