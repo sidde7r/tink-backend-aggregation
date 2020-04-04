@@ -597,7 +597,7 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/concurrency",
-        "//src/libraries/concurrency:concurrency_test",
+        "//src/libraries/concurrency/src/test/java/se/tink/libraries/concurrency/ticker",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/i18n",
         "//src/libraries/iban",
