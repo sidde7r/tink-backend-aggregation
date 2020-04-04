@@ -2498,6 +2498,13 @@ RULES_JVM_EXTERNAL_TAG = "3.2"
 
 RULES_JVM_EXTERNAL_SHA = "82262ff4223c5fda6fb7ff8bd63db8131b51b413d26eb49e3131037e79e324af"
 
+# Order matters: the first one listed is the default repo to fetch from
+RULES_JVM_EXTERNAL_MAVEN_REPOS = [
+    "https://repo1.maven.org/maven2",
+    "https://jcenter.bintray.com",
+    "https://maven.google.com",
+]
+
 http_archive(
     name = "rules_jvm_external",
     sha256 = RULES_JVM_EXTERNAL_SHA,
@@ -2692,9 +2699,7 @@ maven_install(
     fetch_sources = True,
     generate_compat_repositories = False,  # Tempting, but provided that we depend on tink-backend, let's be explicit in our naming of deps
     maven_install_json = "//third_party:aggregation_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
     version_conflict_policy = "default",  # Let's stick to Coursier's algorithm and strive for NO CONFLICTS as far as possible
 )
 
@@ -2729,9 +2734,7 @@ maven_install(
     ],
     fetch_sources = True,
     maven_install_json = "//third_party/system_tests:system_tests_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
 )
 
 load("@system_tests//:defs.bzl", system_tests_pin = "pinned_maven_install")
@@ -2752,9 +2755,7 @@ maven_install(
     ],
     fetch_sources = True,
     maven_install_json = "//third_party/fakebank_server:fakebank_server_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
 )
 
 load("@fakebank_server//:defs.bzl", fakebank_server_pin = "pinned_maven_install")
@@ -2772,9 +2773,7 @@ maven_install(
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:jetty_server9_install.json",
-    repositories = [
-        "https://repo1.maven.org/maven2",
-    ],
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
 )
 
 load("@jetty_server9//:defs.bzl", pin_jetty_server9 = "pinned_maven_install")
@@ -2787,9 +2786,7 @@ maven_install(
         "org.projectlombok:lombok:1.18.10",
     ],
     fetch_sources = False,
-    repositories = [
-        "https://repo1.maven.org/maven2",
-    ],
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
 )
 
 maven_install(
@@ -2815,9 +2812,7 @@ maven_install(
         "ch.qos.logback:logback-classic:1.2.3",
     ],
     fetch_sources = False,
-    repositories = [
-        "https://repo1.maven.org/maven2",
-    ],
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
 )
 
 maven_install(
@@ -2828,9 +2823,7 @@ maven_install(
         "junit:junit:4.12",
     ],
     fetch_sources = False,
-    repositories = [
-        "https://repo1.maven.org/maven2",
-    ],
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
 )
 
 maven_install(
@@ -2856,9 +2849,7 @@ maven_install(
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:selenium_install.json",
-    repositories = [
-        "https://repo1.maven.org/maven2",
-    ],
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
 )
 
 load("@selenium//:defs.bzl", pin_selenium = "pinned_maven_install")
@@ -2875,9 +2866,7 @@ maven_install(
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:com_salesforce_servicelibs_grpc_testing_contrib_install.json",
-    repositories = [
-        "https://repo.maven.apache.org/maven2/",
-    ],
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
 )
 
 load("@com_salesforce_servicelibs_grpc_testing_contrib//:defs.bzl", com_salesforce_servicelibs_grpc_testing_contrib_pin = "pinned_maven_install")
