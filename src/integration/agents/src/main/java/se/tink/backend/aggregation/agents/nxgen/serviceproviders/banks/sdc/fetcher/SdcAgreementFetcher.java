@@ -18,7 +18,7 @@ public abstract class SdcAgreementFetcher {
     protected final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
 
-    public SdcAgreementFetcher(SdcApiClient bankClient, SdcSessionStorage sessionStorage) {
+    SdcAgreementFetcher(SdcApiClient bankClient, SdcSessionStorage sessionStorage) {
         this.bankClient = bankClient;
         this.sessionStorage = sessionStorage;
     }
