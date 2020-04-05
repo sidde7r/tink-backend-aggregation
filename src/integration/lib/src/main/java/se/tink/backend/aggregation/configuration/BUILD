@@ -87,7 +87,6 @@ java_library(
         "//src/libraries/metrics:counters",
         "//src/libraries/metrics:gauges",
         "//src/libraries/metrics:histograms",
-        "//src/libraries/metrics:logbackappender",
         "//src/libraries/metrics:monitor",
         "//src/libraries/metrics:other",
         "//src/libraries/metrics:registry",
