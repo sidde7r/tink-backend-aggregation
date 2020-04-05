@@ -24,6 +24,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/context",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/libraries/account_identifier",
         "@aggregation//:com_google_guava_guava",

@@ -12,7 +12,7 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.ICABankenAgent;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.PersistentSession;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.SessionResponseBody;
-import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;

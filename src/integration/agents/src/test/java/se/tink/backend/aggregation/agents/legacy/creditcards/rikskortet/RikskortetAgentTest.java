@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.creditcards.rikskortet;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 import se.tink.libraries.social.security.ssn.TestSSN;
 
 public class RikskortetAgentTest extends AbstractAgentTest<RikskortetAgent> {

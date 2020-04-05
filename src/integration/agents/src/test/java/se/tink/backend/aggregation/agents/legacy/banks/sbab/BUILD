@@ -16,6 +16,8 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/context",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/legacy",
         "//src/integration/models",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",

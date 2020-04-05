@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.banks.seb.model.HoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.Session;
 import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
-import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;

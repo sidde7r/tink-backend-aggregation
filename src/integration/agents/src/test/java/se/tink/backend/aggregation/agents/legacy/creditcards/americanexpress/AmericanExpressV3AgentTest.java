@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.America
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.LoginRequest;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TimelineRequest;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsRequest;
-import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.framework.AgentTestContext;
+import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
+import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;

@@ -1,0 +1,32 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+java_library(
+    name = "context",
+    srcs = glob(["*.java"]),
+    data = [],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/identity_data",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
+        "//src/integration/models",
+        "//src/integration/signableoperation:rpc",
+        "//src/integration/transfer:rpc",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_code_findbugs_jsr305",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:org_apache_curator_curator_framework",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_slf4j_slf4j_api",
+        "@tink_backend//src/libraries/i18n",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
+    ],
+)
