@@ -13,42 +13,42 @@ public class SdcNoTransactionParser implements SdcTransactionParser {
     @Override
     public Transaction parseTransaction(SdcTransaction bankTransaction) {
         return Transaction.builder()
-            .setAmount(bankTransaction.getAmount().toTinkAmount())
-            .setDate(DateUtils.parseDate(bankTransaction.getPaymentDate()))
-            .setDescription(bankTransaction.getLabel())
-            .build();
+                .setAmount(bankTransaction.getAmount().toTinkAmount())
+                .setDate(DateUtils.parseDate(bankTransaction.getPaymentDate()))
+                .setDescription(bankTransaction.getLabel())
+                .build();
     }
 
     @Override
     public Transaction parseTransaction(SdcReservation bankReservation) {
         return Transaction.builder()
-            .setAmount(bankReservation.getAmount().toTinkAmount())
-            .setDate(DateUtils.parseDate(bankReservation.getCreateDate()))
-            .setDescription(bankReservation.getDescription())
-            .setPending(true)
-            .build();
+                .setAmount(bankReservation.getAmount().toTinkAmount())
+                .setDate(DateUtils.parseDate(bankReservation.getCreateDate()))
+                .setDescription(bankReservation.getDescription())
+                .setPending(true)
+                .build();
     }
 
     @Override
     public CreditCardTransaction parseCreditCardTransaction(
-        CreditCardAccount creditCardAccount, SdcTransaction bankTransaction) {
+            CreditCardAccount creditCardAccount, SdcTransaction bankTransaction) {
         return CreditCardTransaction.builder()
-            .setAmount(bankTransaction.getAmount().toTinkAmount())
-            .setDate(DateUtils.parseDate(bankTransaction.getPaymentDate()))
-            .setDescription(bankTransaction.getLabel())
-            .setCreditAccount(creditCardAccount)
-            .build();
+                .setAmount(bankTransaction.getAmount().toTinkAmount())
+                .setDate(DateUtils.parseDate(bankTransaction.getPaymentDate()))
+                .setDescription(bankTransaction.getLabel())
+                .setCreditAccount(creditCardAccount)
+                .build();
     }
 
     @Override
     public CreditCardTransaction parseCreditCardTransaction(
-        CreditCardAccount creditCardAccount, SdcReservation bankReservation) {
+            CreditCardAccount creditCardAccount, SdcReservation bankReservation) {
         return CreditCardTransaction.builder()
-            .setAmount(bankReservation.getAmount().toTinkAmount())
-            .setDate(DateUtils.parseDate(bankReservation.getCreateDate()))
-            .setDescription(bankReservation.getDescription())
-            .setCreditAccount(creditCardAccount)
-            .setPending(true)
-            .build();
+                .setAmount(bankReservation.getAmount().toTinkAmount())
+                .setDate(DateUtils.parseDate(bankReservation.getCreateDate()))
+                .setDescription(bankReservation.getDescription())
+                .setCreditAccount(creditCardAccount)
+                .setPending(true)
+                .build();
     }
 }
