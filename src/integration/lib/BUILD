@@ -21,6 +21,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/transfer",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/progressive",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/refreshexecutor",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/random",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
