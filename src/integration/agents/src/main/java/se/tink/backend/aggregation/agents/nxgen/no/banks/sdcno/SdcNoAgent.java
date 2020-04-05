@@ -4,6 +4,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.SdcNoBankIdSSAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
@@ -14,7 +15,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SdcNoAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
+public class SdcNoAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor,
+    RefreshSavingsAccountsExecutor {
     private final SdcNoConfiguration configuration;
     private final SdcNoApiClient bankClient;
 
@@ -56,5 +58,15 @@ public class SdcNoAgent extends NextGenerationAgent implements RefreshCheckingAc
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return transactionalAccountRefreshController.fetchCheckingTransactions();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return transactionalAccountRefreshController.fetchSavingsAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 }
