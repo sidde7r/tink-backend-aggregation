@@ -364,7 +364,12 @@ spec:
           httpGet:
             # This is named start as this is emulating a startupProbe which will not be ready until
             # we upgrade to k8s 1.17+
+            {{- if  (eq .Values.Environment "development") }}
+            # No need to start external dependencies when running in local minikube
+            path: /aggregation/ping
+            {{- else }}
             path: /aggregation/started
+            {{- end }}
             port: 8443
             scheme: HTTPS
           periodSeconds: 10
