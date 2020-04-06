@@ -111,7 +111,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         final Payment payment = paymentRequest.getPayment();
         final String paymentId = payment.getUniqueId();
         final PaymentType paymentType = payment.getType();
@@ -291,7 +291,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         return new BankIdSigningController(supplementalRequester, new SebBankIdSigner(this));
     }
 
-    public PaymentStatus fetchStatus(PaymentRequest paymentRequest) {
+    public PaymentStatus fetchStatus(PaymentRequest paymentRequest) throws PaymentException {
         final Payment payment = paymentRequest.getPayment();
         final PaymentType type =
                 Optional.ofNullable(paymentRequest.getPayment().getType())
@@ -299,11 +299,12 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         final String paymentProduct =
                 getPaymentProduct(type, payment.getCreditor().getAccountIdentifierType())
                         .getValue();
+        PaymentStatusResponse paymentStatusResponse =
+                apiClient.getPaymentStatus(payment.getUniqueId(), paymentProduct);
+
+        paymentStatusResponse.checkForErrors();
 
         return SebPaymentStatus.mapToTinkPaymentStatus(
-                SebPaymentStatus.fromString(
-                        apiClient
-                                .getPaymentStatus(payment.getUniqueId(), paymentProduct)
-                                .getTransactionStatus()));
+                SebPaymentStatus.fromString(paymentStatusResponse.getTransactionStatus()));
     }
 }
