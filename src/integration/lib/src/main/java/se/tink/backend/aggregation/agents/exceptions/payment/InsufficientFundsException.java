@@ -5,4 +5,8 @@ public class InsufficientFundsException extends DebtorValidationException {
     public InsufficientFundsException(String message, String path, Throwable cause) {
         super(message, path, cause);
     }
+
+    public InsufficientFundsException(String message) {
+        super(message);
+    }
 }

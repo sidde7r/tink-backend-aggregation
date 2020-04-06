@@ -4,4 +4,8 @@ public class DebtorValidationException extends PaymentValidationException {
     public DebtorValidationException(String message, String path, Throwable cause) {
         super(message, path, cause);
     }
+
+    public DebtorValidationException(String message) {
+        super(message);
+    }
 }
