@@ -11,9 +11,8 @@ public class ComdirectAuthenticator extends Xs2aDevelopersAuthenticator {
     public ComdirectAuthenticator(
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
-            Xs2aDevelopersConfiguration configuration,
-            String iban) {
-        super(apiClient, persistentStorage, configuration, iban);
+            Xs2aDevelopersConfiguration configuration) {
+        super(apiClient, persistentStorage, configuration);
     }
 
     @Override
