@@ -220,6 +220,7 @@ junit_test(
         "//src/integration/signableoperation:rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
+        "//src/libraries/cache",
         "//src/libraries/concurrency",
         "//src/libraries/concurrency/src/test/java/se/tink/libraries/concurrency/ticker",
         "//src/libraries/creditsafe_consumer_monitoring",

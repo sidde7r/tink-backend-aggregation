@@ -1,0 +1,31 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "worker",
+    srcs = glob(["*.java"]),
+    deps = [
+        "//src/aggregation/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
+        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/events",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/daos",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/debug",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/concurrency",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
+        "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client:agent-data-availability-tracker-client",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
+        "//src/libraries/cache",
+        "//third_party:com_google_inject_guice",
+        "//third_party:org_apache_curator_curator_framework",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
+    ],
+)
