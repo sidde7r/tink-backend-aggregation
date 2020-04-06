@@ -88,7 +88,7 @@ public class SdcNoTransactionFetcherTest {
 
         // then
         verify(bankClient).initWebPage();
-        verify(bankClient).accountFormPage(ACCOUNT_NUMBER_KEY, ACCOUNT_NUMBER);
+        verify(bankClient).postAccountNoToBank(ACCOUNT_NUMBER_KEY, ACCOUNT_NUMBER);
         verify(bankClient).fetchAgreement();
 
         // and

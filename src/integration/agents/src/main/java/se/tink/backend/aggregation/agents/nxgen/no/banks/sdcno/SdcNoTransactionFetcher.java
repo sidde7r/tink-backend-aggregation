@@ -41,7 +41,7 @@ class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount
         accountIdData.stream()
                 .filter(pair -> pair.first.equals(account.getAccountNumber()))
                 .findFirst()
-                .ifPresent(pair -> bankClient.accountFormPage(pair.second, pair.first));
+                .ifPresent(pair -> bankClient.postAccountNoToBank(pair.second, pair.first));
 
         SdcAgreement agreement = bankClient.fetchAgreement();
 

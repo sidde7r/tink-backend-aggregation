@@ -80,7 +80,7 @@ public class SdcNoApiClientTest {
     }
 
     @Test
-    public void accountFormPageShouldPostFormWithAccountNo() {
+    public void postAccountNoToBankShouldPostFormWithAccountNo() {
         // given
         String accountId = "sample-account-id";
         String accountNo = "sample-account-no";
@@ -102,7 +102,7 @@ public class SdcNoApiClientTest {
                         + "changeAgreementContext=true";
 
         // when
-        apiClient.accountFormPage(accountId, accountNo);
+        apiClient.postAccountNoToBank(accountId, accountNo);
 
         // then
         assertURL(BASE_PAGE_URL + SdcNoConstants.KONTOBEVEGELSER_PATH + accountId);

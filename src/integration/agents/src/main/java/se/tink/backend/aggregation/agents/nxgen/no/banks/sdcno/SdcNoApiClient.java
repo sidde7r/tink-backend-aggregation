@@ -28,7 +28,7 @@ class SdcNoApiClient {
                 .get(String.class);
     }
 
-    void accountFormPage(final String accountId, final String accountNo) {
+    void postAccountNoToBank(final String accountId, final String accountNo) {
         String formToPost =
                 "accountno="
                         + accountNo
