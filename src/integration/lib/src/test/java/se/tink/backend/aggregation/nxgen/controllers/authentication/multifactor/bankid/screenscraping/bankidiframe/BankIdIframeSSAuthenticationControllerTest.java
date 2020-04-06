@@ -3,8 +3,12 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +33,7 @@ public class BankIdIframeSSAuthenticationControllerTest {
     private WebElement buttonbankId;
     private WebElement selectAuthenticationButton;
     private WebElement passwordInputMock;
+    private WebElement authenticationInputMock;
     private WebElement iframeMock;
 
     private static final By FORM_XPATH = By.xpath("//form");
@@ -39,6 +44,8 @@ public class BankIdIframeSSAuthenticationControllerTest {
     private static final By BANK_ID_MOBIL_BUTTON =
             By.xpath(
                     "//ul/child::li/child::button[span[contains(text(),'mobil') and contains(text(),'BankID')]]");
+    private static final By AUTHENTICATION_INPUT_XPATH =
+            By.xpath("//form//input[@type='password'][@maxlength]");
 
     private static final By IFRAME_XPATH = By.tagName("iframe");
     private static String PASSWORD_INPUT = "PASSWORD-INPUT";
@@ -74,11 +81,17 @@ public class BankIdIframeSSAuthenticationControllerTest {
         given(webDriverHelper.checkIfElementEnabledIfNotWait(passwordInputMock)).willReturn(true);
         given(driver.findElements(PASSWORD_INPUT_XPATH))
                 .willReturn(Arrays.asList(passwordInputMock));
+
+        // authentication input
+        authenticationInputMock = mock(WebElement.class);
+        given(webDriverHelper.waitForElement(driver, AUTHENTICATION_INPUT_XPATH))
+                .willReturn(Optional.of(authenticationInputMock));
     }
 
     @Test
     public void authenticateShouldFinishWithoutError() throws AuthenticationException {
         // given
+        given(authenticationInputMock.isEnabled()).willReturn(true);
         // when
         controller.doLogin(PASSWORD_INPUT);
         // then
@@ -113,5 +126,45 @@ public class BankIdIframeSSAuthenticationControllerTest {
         assertThat(throwable)
                 .isInstanceOf(LoginException.class)
                 .hasMessage("Password can't be reached, probably user did not accept bank id");
+    }
+
+    @Test
+    public void doLoginShouldThrowLoginExceptionWhenNotAuthenticationInputFound() {
+        // given
+        given(webDriverHelper.waitForElement(driver, AUTHENTICATION_INPUT_XPATH))
+                .willReturn(Optional.empty());
+
+        // when
+        Throwable throwable =
+                Assertions.catchThrowable(() -> controller.doLogin("PASSWORD-EXAMPLE"));
+
+        // then
+        assertThat(throwable).isInstanceOf(LoginException.class);
+    }
+
+    @Test
+    public void doLoginShouldNotCallAuthenticationsListMethodIfDefaultBankIdMobilIsChosen()
+            throws AuthenticationException {
+        // given
+        given(authenticationInputMock.isEnabled()).willReturn(false);
+
+        // when
+        controller.doLogin("PASSWORD-EXAMPLE");
+
+        // then
+        verify(webDriverHelper, never()).getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
+    }
+
+    @Test
+    public void doLoginShouldCallCheckAuthenticationsListMeyhodIfDefaultBankIdMobilIsNotChosen()
+            throws AuthenticationException {
+        // given
+        given(authenticationInputMock.isEnabled()).willReturn(true);
+
+        // when
+        controller.doLogin("PASSWORD-EXAMPLE");
+
+        // then
+        verify(webDriverHelper, times(1)).getElement(driver, AUTHENTICATION_LIST_BUTTON_XPATH);
     }
 }
