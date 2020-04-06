@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
+import com.google.inject.Inject;
 import java.util.Locale;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -31,6 +32,7 @@ public final class AxaAgent extends SubsequentProgressiveGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AxaAuthenticator authenticator;
 
+    @Inject
     public AxaAgent(AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
         this.storage = new AxaStorage(sessionStorage, persistentStorage);
