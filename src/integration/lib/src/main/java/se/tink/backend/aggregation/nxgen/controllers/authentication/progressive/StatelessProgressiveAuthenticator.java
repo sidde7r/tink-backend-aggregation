@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 
 public abstract class StatelessProgressiveAuthenticator implements AuthenticationControllerType {
 
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(StatelessProgressiveAuthenticator.class);
     private AuthenticationStep currentStep;
 
     public SteppableAuthenticationResponse processAuthentication(
@@ -16,14 +19,19 @@ public abstract class StatelessProgressiveAuthenticator implements Authenticatio
         Optional<AuthenticationStep> stepToExecute = determineStepToExecute(request);
         while (stepToExecute.isPresent()) {
             currentStep = stepToExecute.get();
+            LOGGER.info(
+                    "Authentication flow state: Executing step with id "
+                            + currentStep.getIdentifier());
             AuthenticationStepResponse stepResponse = executeStep(request);
             if (stepResponse.isAuthenticationFinished()) {
                 break;
             } else if (stepResponse.getSupplementInformationRequester().isPresent()) {
+                LOGGER.info("Authentication flow state: Asking for supplement information");
                 return SteppableAuthenticationResponse.intermediateResponse(
                         currentStep.getIdentifier(),
                         stepResponse.getSupplementInformationRequester().get());
             }
+            LOGGER.info("Authentication flow state: Finalizing authentication");
             stepToExecute = determineStepToExecute(stepResponse);
         }
         return SteppableAuthenticationResponse.finalResponse();

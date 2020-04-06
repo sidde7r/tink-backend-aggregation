@@ -16,6 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
         "//src/libraries/i18n",
+        "//third_party:com_google_inject_guice",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_json_json",

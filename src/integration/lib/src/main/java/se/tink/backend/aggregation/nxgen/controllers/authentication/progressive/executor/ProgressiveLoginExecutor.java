@@ -4,11 +4,11 @@ import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class ProgressiveLoginExecutor {
 
@@ -29,21 +30,29 @@ public final class ProgressiveLoginExecutor {
         this.agent = agent;
     }
 
-    public void login(final Credentials credentials) throws Exception {
+    public void login(final CredentialsRequest credentialsRequest) throws Exception {
         SteppableAuthenticationResponse stepResponse =
-                agent.login(SteppableAuthenticationRequest.initialRequest(credentials));
+                agent.login(
+                        SteppableAuthenticationRequest.initialRequest(
+                                credentialsRequest.getCredentials()));
         while (stepResponse.getStepIdentifier().isPresent()) {
             stepResponse =
-                    agent.login(handleSupplementInformationRequest(stepResponse, credentials));
+                    agent.login(
+                            handleSupplementInformationRequest(stepResponse, credentialsRequest));
         }
     }
 
     private SteppableAuthenticationRequest handleSupplementInformationRequest(
-            final SteppableAuthenticationResponse stepResponse, final Credentials credentials)
+            final SteppableAuthenticationResponse stepResponse,
+            final CredentialsRequest credentialsRequest)
             throws Exception {
+        if (!credentialsRequest.isManual()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
         SupplementInformationRequester payload = stepResponse.getSupplementInformationRequester();
         checkIfPayloadNotEmpty(payload);
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest(credentials);
+        AuthenticationRequest authenticationRequest =
+                new AuthenticationRequest(credentialsRequest.getCredentials());
         handleThirdPartyAppPayload(payload);
         handleWaitRequest(payload)
                 .ifPresent(callbackData -> authenticationRequest.withCallbackData(callbackData));
