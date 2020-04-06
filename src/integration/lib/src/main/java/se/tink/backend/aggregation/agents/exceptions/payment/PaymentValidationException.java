@@ -17,6 +17,10 @@ public class PaymentValidationException extends PaymentException {
         this.path = path;
     }
 
+    public PaymentValidationException(String message) {
+        super(message);
+    }
+
     public String getPath() {
         return path;
     }

@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment;
 
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigner;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -13,9 +16,13 @@ public class SbabBankIdSigner implements BankIdSigner<PaymentRequest> {
     }
 
     @Override
-    public BankIdStatus collect(PaymentRequest toCollect) {
-
-        PaymentStatus paymentStatus = paymentExecutor.fetch(toCollect).getPayment().getStatus();
+    public BankIdStatus collect(PaymentRequest toCollect) throws AuthenticationException {
+        PaymentStatus paymentStatus;
+        try {
+            paymentStatus = paymentExecutor.fetch(toCollect).getPayment().getStatus();
+        } catch (PaymentException e) {
+            throw BankIdError.UNKNOWN.exception();
+        }
 
         switch (paymentStatus) {
             case CREATED:

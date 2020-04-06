@@ -4,6 +4,9 @@ import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.HeaderKeys;
@@ -99,7 +102,7 @@ public final class SbabApiClient {
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, String debtorAccountNumber)
-            throws DateValidationException {
+            throws PaymentException {
         try {
             return createRequest(
                             Urls.INITIATE_PAYMENT.parameter(
@@ -107,28 +110,24 @@ public final class SbabApiClient {
                     .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
                     .post(CreatePaymentResponse.class, createPaymentRequest);
         } catch (HttpResponseException e) {
-            HttpResponse response = e.getResponse();
-
-            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-
-                if (errorResponse.isInvalidDateError()) {
-                    throw new DateValidationException(
-                            ErrorMessage.INVALID_DATE, "", new IllegalArgumentException());
-                }
-            }
-
+            handleHttpResponseException(e);
             throw e;
         }
     }
 
-    public GetPaymentResponse getPayment(String transferId, String debtorId) {
-        return createRequest(
-                        Urls.GET_PAYMENT
-                                .parameter(IdTags.ACCOUNT_NUMBER, debtorId)
-                                .parameter(IdTags.PAYMENT_ID, transferId))
-                .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
-                .get(GetPaymentResponse.class);
+    public GetPaymentResponse getPayment(String transferId, String debtorId)
+            throws PaymentException {
+        try {
+            return createRequest(
+                            Urls.GET_PAYMENT
+                                    .parameter(IdTags.ACCOUNT_NUMBER, debtorId)
+                                    .parameter(IdTags.PAYMENT_ID, transferId))
+                    .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
+                    .get(GetPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
     }
 
     public BankIdResponse initBankId(String ssn) {
@@ -159,5 +158,35 @@ public final class SbabApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(DecoupledResponse.class, tokenRequest.toData());
+    }
+
+    private void handleHttpResponseException(HttpResponseException httpResponseException)
+            throws PaymentException {
+        HttpResponse response = httpResponseException.getResponse();
+        ErrorResponse errorResponse =
+                httpResponseException.getResponse().getBody(ErrorResponse.class);
+        switch (response.getStatus()) {
+            case HttpStatus.SC_BAD_REQUEST:
+                if (errorResponse.isInvalidDateError()) {
+                    throw new DateValidationException(
+                            ErrorMessage.INVALID_DATE, "", new IllegalArgumentException());
+                }
+                if (errorResponse.isAmountExceedsCurrentBalance()) {
+                    throw new PaymentValidationException(ErrorMessage.AMOUNT_EXCEEDS_BALANCE);
+                }
+                break;
+            case HttpStatus.SC_CONFLICT:
+                if (errorResponse.isAmountLimitReached()) {
+                    throw new PaymentValidationException(ErrorMessage.AMOUNT_LIMIT_REACHED);
+                }
+                break;
+            case HttpStatus.SC_FORBIDDEN:
+                if (errorResponse.isFailedSignature()) {
+                    throw new PaymentAuthorizationException(ErrorMessage.SIGNATURE_FAILED);
+                }
+                break;
+            default:
+                throw httpResponseException;
+        }
     }
 }
