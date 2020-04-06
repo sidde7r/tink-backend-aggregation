@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.agents.tools;
+package se.tink.backend.aggregation.agents.tools.validator.builder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.tools.validator.ClientConfigurationValidator;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 
 public class ClientConfigurationValidatorBuilderForTest {

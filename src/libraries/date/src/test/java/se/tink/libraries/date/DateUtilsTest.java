@@ -111,8 +111,9 @@ public class DateUtilsTest {
     }
 
     // TODO: https://tinkab.atlassian.net/browse/CATS-607
-    // This test is flaky. It has been observed to sometimes fail, depending on what the current
-    // time is. Rewrite this test so that neither the test nor the method under test depends on the
+    // This test is non-hermetic. It seems that it would always fail at night between 00:00-02:00,
+    // summer time. Most likely related to not taking timezones into account.
+    // Rewrite this test so that neither the test nor the method under test depends on the
     // current time.
     @Ignore
     @Test

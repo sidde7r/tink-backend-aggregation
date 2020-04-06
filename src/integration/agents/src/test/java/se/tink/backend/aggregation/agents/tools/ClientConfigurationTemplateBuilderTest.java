@@ -7,7 +7,7 @@ import java.io.IOException;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 
-public class ClientConfigurationTemplateBuilderTest {
+class ClientConfigurationTemplateBuilderTest {
     private final Provider provider;
     private final boolean includeDescriptions;
     private final boolean includeExamples;

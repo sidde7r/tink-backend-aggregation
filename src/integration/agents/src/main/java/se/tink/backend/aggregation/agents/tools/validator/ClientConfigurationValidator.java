@@ -1,8 +1,9 @@
-package se.tink.backend.aggregation.agents.tools;
+package se.tink.backend.aggregation.agents.tools.validator;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.tools.ClientConfigurationMetaInfoHandler;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 
 public class ClientConfigurationValidator {

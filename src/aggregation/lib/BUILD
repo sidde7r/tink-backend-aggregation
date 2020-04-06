@@ -436,6 +436,7 @@ java_library(
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/configuration",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/serialization",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/tools/validator",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:rpc",
         "//src/integration/credentials:service",

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.tools;
+package se.tink.backend.aggregation.agents.tools.validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
 import java.util.Set;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.tools.ClientConfigurationMetaInfoHandler;
 import se.tink.backend.aggregation.rpc.SecretsNamesValidationResponse;
 
 public class ClientConfigurationValidatorTest {
