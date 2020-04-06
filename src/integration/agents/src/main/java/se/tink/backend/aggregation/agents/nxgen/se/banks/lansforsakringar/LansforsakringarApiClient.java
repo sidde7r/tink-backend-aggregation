@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.authenticator.rpc.BankIdInitRequest;
@@ -15,11 +16,15 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.creditcard.rpc.FetchCreditCardResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.einvoice.rpc.FetchEinvoiceRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.einvoice.rpc.FetchEinvoiceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchISKResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchInstrumentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeInsuranceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPensionWithLifeinsuranceRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchPortfolioCashBalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.investment.rpc.FetchSecurityHoldingResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.rpc.FetchLoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.rpc.FetchLoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetcher.loan.rpc.FetchLoanOverviewResponse;
@@ -198,6 +203,44 @@ public class LansforsakringarApiClient {
                                 sessionStorage.get(StorageKeys.SSN)),
                         MediaType.APPLICATION_JSON_TYPE)
                 .post(FetchEinvoiceResponse.class);
+    }
+
+    public FetchISKResponse fetchISK() {
+        return getBaseRequest(Urls.FETCH_ISK)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchISKResponse.class);
+    }
+
+    public FetchPortfolioCashBalanceResponse fetchPortfolioCashBalance(String depotNumber) {
+        return getBaseRequest(
+                        Urls.FETCH_PORTFOLIO_CASH_BALANCE.queryParam(
+                                QueryKeys.DEPOT_NUMBER, depotNumber))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchPortfolioCashBalanceResponse.class);
+    }
+
+    public FetchSecurityHoldingResponse fetchFundSecurityHoldings(String depotNumber) {
+        return getBaseRequest(
+                        Urls.FETCH_INSTRUMENTS_FUND.queryParam(QueryKeys.DEPOT_NUMBER, depotNumber))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchSecurityHoldingResponse.class);
+    }
+
+    public FetchSecurityHoldingResponse fetchStockSecurityHoldings(String depotNumber) {
+        return getBaseRequest(
+                        Urls.FETCH_INSTRUMENTS_STOCK.queryParam(
+                                QueryKeys.DEPOT_NUMBER, depotNumber))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchSecurityHoldingResponse.class);
+    }
+
+    public FetchInstrumentDetailsResponse fetchInstrumentDetails(String depotNumber, String isin) {
+        return getBaseRequest(
+                        Urls.FETCH_INSTRUMENT_WITH_ISIN
+                                .queryParam(QueryKeys.DEPOT_NUMBER, depotNumber)
+                                .queryParam(QueryKeys.ISIN_CODE, isin))
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(FetchInstrumentDetailsResponse.class);
     }
 
     // TODO: consider accepting html response in case request fails but response status is 200
