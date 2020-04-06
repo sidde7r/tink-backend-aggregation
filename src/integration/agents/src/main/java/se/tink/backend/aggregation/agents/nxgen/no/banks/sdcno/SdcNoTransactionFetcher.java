@@ -21,6 +21,10 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.pair.Pair;
 
 class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
+
+    private static final int NUMBER_OF_DAYS_AGO = -7;
+    private static final int NUMBER_OF_MONTHS_AGO = -12;
+
     private final SdcNoApiClient bankClient;
     private final SdcTransactionParser transactionParser;
     private Supplier<Date> dateSupplier;
@@ -46,7 +50,7 @@ class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount
         SdcAgreement agreement = bankClient.fetchAgreement();
 
         Date toDate = dateSupplier.get();
-        Date fromDate = DateUtils.addMonths(toDate, -12);
+        Date fromDate = DateUtils.addMonths(toDate, NUMBER_OF_MONTHS_AGO);
 
         SearchTransactionsRequest searchTransactionsRequest =
                 new SearchTransactionsRequest()
@@ -69,11 +73,9 @@ class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount
         return date.format(DateTimeFormatter.ISO_DATE);
     }
 
-    private static final int ONE_WEEK_AGO_IN_DAYS = -7;
-
     private boolean shouldIncludeReservations(Date toDate) {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, ONE_WEEK_AGO_IN_DAYS);
+        c.add(Calendar.DATE, NUMBER_OF_DAYS_AGO);
         return toDate.after(c.getTime());
     }
 }
