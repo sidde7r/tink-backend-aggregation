@@ -59,7 +59,7 @@ public class SdcNoApiClientTest {
     }
 
     @Test
-    public void initWebPageShould() {
+    public void initWebPageShouldGetMyAccountPage() {
         // given
         String initWebPage = "sample init web page";
         given(requestBuilder.get(String.class)).willReturn(initWebPage);
@@ -80,7 +80,7 @@ public class SdcNoApiClientTest {
     }
 
     @Test
-    public void accountFormPage() {
+    public void accountFormPageShouldPostFormWithAccountNo() {
         // given
         String accountId = "sample-account-id";
         String accountNo = "sample-account-no";
@@ -117,7 +117,7 @@ public class SdcNoApiClientTest {
     }
 
     @Test
-    public void fetchAgreement() {
+    public void fetchAgreementShouldGetSdcAgreementInResponse() {
         // given
         SdcAgreement sdcAgreement = new SdcAgreement();
         given(requestBuilder.get(SdcAgreement.class)).willReturn(sdcAgreement);
@@ -139,7 +139,7 @@ public class SdcNoApiClientTest {
     }
 
     @Test
-    public void filterAccounts() {
+    public void filterAccountsShouldPostFilterCriteriaAndReceiveAccountsInResponse() {
         // given
         FilterAccountsRequest filterRequest = new FilterAccountsRequest();
         FilterAccountsResponse filterResponse = new FilterAccountsResponse();
@@ -164,7 +164,7 @@ public class SdcNoApiClientTest {
     }
 
     @Test
-    public void filterTransactionsFor() {
+    public void filterTransactionsForShouldPostFilterCriteriaAndReceiveTransactionsInResponse() {
         // given
         SearchTransactionsRequest transactionsRequest = new SearchTransactionsRequest();
         SearchTransactionsResponse transactionsResponse = new SearchTransactionsResponse();
