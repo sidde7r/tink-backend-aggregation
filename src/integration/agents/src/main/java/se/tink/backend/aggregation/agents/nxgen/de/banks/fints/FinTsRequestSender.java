@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @Slf4j
-class FinTsRequestSender {
+public class FinTsRequestSender {
 
     private static final Pattern REPLACE_PATTERN = Pattern.compile("\u0000");
     private final TinkHttpClient httpClient;

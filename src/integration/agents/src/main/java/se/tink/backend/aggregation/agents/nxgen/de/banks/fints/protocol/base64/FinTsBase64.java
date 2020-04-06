@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
 
 public class FinTsBase64 {
+
     private static final Pattern REPLACE_PATTERN = Pattern.compile("\\R");
 
     private FinTsBase64() {}

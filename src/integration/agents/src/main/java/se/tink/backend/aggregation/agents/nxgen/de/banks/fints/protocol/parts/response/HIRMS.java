@@ -46,4 +46,10 @@ public class HIRMS extends BaseResponsePart {
                 .filter(r -> code.equals(r.getResultCode()))
                 .collect(Collectors.toList());
     }
+
+    public List<Response> getResponsesWithMessage(String message) {
+        return responses.stream()
+                .filter(r -> message.equals(r.getText()))
+                .collect(Collectors.toList());
+    }
 }

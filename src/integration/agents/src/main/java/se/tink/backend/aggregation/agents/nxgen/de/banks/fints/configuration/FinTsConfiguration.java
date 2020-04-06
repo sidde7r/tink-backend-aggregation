@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class FinTsConfiguration {
     private final String blz;
-    private final Bank bankName;
+    private final Bank bank;
     private final String endpoint;
     private final String username;
     private final String password;

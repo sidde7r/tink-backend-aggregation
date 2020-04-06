@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parser.RawGroup;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parser.RawSegment;
 
+@Accessors(chain = true)
+@NoArgsConstructor
 @Getter
+@Setter
 public class HIPINS extends BaseResponsePart {
 
     private Integer maxNumberOfTasks;

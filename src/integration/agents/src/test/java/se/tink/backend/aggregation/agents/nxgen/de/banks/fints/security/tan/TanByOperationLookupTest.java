@@ -4,77 +4,85 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.detail.RawSegmentComposer;
+import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HIPINS;
 
+@RunWith(JUnitParamsRunner.class)
 public class TanByOperationLookupTest {
 
-    @Test
-    public void shouldReturnProperInformationAboutRegisteredOperations() {
-        // given
-        HIPINS hipins = getHIPINS();
-        TanByOperationLookup lookup = new TanByOperationLookup(hipins);
-
-        for (Pair<SegmentType, Boolean> operationInfo : getExpectedOperations()) {
-            SegmentType segmentType = operationInfo.getLeft();
-            Boolean requiresTAN = operationInfo.getRight();
-            // when
-            boolean result = lookup.doesOperationRequireTAN(segmentType);
-
-            // then
-            assertThat(result).isEqualTo(requiresTAN);
-        }
+    private Object[] expectedOperationsAndTanRequirement() {
+        return new Object[] {
+            new Object[] {SegmentType.HKCSE, true},
+            new Object[] {SegmentType.HKCSL, true},
+            new Object[] {SegmentType.HKPAE, true},
+            new Object[] {SegmentType.HKTAB, false},
+            new Object[] {SegmentType.HKEKA, false},
+            new Object[] {SegmentType.DKPAE, true}
+        };
     }
 
     @Test
-    public void shouldAlwaysReturnTrueForOperationsThatAreNotSetUpInLookup() {
+    @Parameters(method = "expectedOperationsAndTanRequirement")
+    public void shouldReturnProperInformationAboutRegisteredOperations(
+            SegmentType operation, boolean expectedTanRequirement) {
         // given
-        HIPINS hipins = getHIPINS();
-        TanByOperationLookup lookup = new TanByOperationLookup(hipins);
-        List<SegmentType> unregisteredOperations =
-                Arrays.asList(SegmentType.HKWOA, SegmentType.HKWSD);
+        TanByOperationLookup lookup = new TanByOperationLookup(getHIPINS());
 
-        for (SegmentType unregisteredOperation : unregisteredOperations) {
-            // when
-            boolean result = lookup.doesOperationRequireTAN(unregisteredOperation);
+        // when
+        boolean result = lookup.doesOperationRequireTAN(operation);
 
-            // then
-            assertThat(result).isTrue();
-        }
+        // then
+        assertThat(result).isEqualTo(expectedTanRequirement);
+    }
+
+    private Object[] operationsNotSetUpInLookup() {
+        return new Object[] {SegmentType.HKWOA, SegmentType.HKWSD, SegmentType.DKALE};
+    }
+
+    @Test
+    @Parameters(method = "operationsNotSetUpInLookup")
+    public void shouldAlwaysReturnTrueForOperationsThatAreNotSetUpInLookup(
+            SegmentType operationNotInLookup) {
+        // given
+        TanByOperationLookup lookup = new TanByOperationLookup(getHIPINS());
+
+        // when
+        boolean result = lookup.doesOperationRequireTAN(operationNotInLookup);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @Parameters(method = "operationsNotSetUpInLookup")
+    public void shouldReportOperationAsNotSupportedIfNotFoundInLookup(
+            SegmentType operationNotInLookup) {
+        // given
+        TanByOperationLookup lookup = new TanByOperationLookup(getHIPINS());
+
+        // when
+        boolean result = lookup.isOperationSupported(operationNotInLookup);
+
+        // then
+        assertThat(result).isFalse();
     }
 
     private HIPINS getHIPINS() {
-        return new HIPINS(RawSegmentComposer.compose(getHIPINSArray()));
+        return new HIPINS().setOperations(getOperationsList());
     }
 
-    private String[][] getHIPINSArray() {
-        return new String[][] {
-            new String[] {"HIPINS", "7", "1", "4"},
-            new String[] {"1"},
-            new String[] {"1"},
-            new String[] {"0"},
-            new String[] {
-                "5",
-                "50",
-                "6",
-                "Kunden-Nr aus dem TAN-Brief",
-                "Customer Field",
-                "HKCSE",
-                "J",
-                "HKCSL",
-                "J",
-                "HKPAE",
-                "J",
-                "HKTAB",
-                "N",
-                "HKEKA",
-                "N",
-                "DKPAE",
-                "J"
-            }
-        };
+    private List<Pair<String, Boolean>> getOperationsList() {
+        return Arrays.asList(
+                Pair.of("HKCSE", true),
+                Pair.of("HKCSL", true),
+                Pair.of("HKPAE", true),
+                Pair.of("HKTAB", false),
+                Pair.of("HKEKA", false),
+                Pair.of("DKPAE", true));
     }
 
     private List<Pair<SegmentType, Boolean>> getExpectedOperations() {

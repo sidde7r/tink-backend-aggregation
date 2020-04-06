@@ -6,8 +6,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class FinTsSessionHandler implements SessionHandler {
 
-    public FinTsSessionHandler() {}
-
     @Override
     public void logout() {}
 

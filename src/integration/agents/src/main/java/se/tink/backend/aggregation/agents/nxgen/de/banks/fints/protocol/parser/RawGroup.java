@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parser;
 
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import lombok.EqualsAndHashCode;
-import org.assertj.core.util.Strings;
 
 @EqualsAndHashCode
 public class RawGroup {

@@ -818,7 +818,9 @@ agentsServiceConfiguration:
         psuIpAddress: 127.0.0.1
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     fints:
-      regNumber: dummyId
+      tink:
+        productId: dummyProductId
+        productVersion: 0.1
     granitbank:
       tink:
         baseUrl: https://api.sandbox.granitbank.hu

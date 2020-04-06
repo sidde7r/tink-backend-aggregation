@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.util.List;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.exception.FinTsParseException;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.exception.FinTsParseException;
 
 public class FinTsParserTest {
 

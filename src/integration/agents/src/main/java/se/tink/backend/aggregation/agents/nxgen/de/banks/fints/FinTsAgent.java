@@ -1,17 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
+import com.google.inject.Inject;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.account.AccountClient;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.general.GeneralClient;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.transaction.TransactionClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.Bank;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsSecretsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.PayloadParser;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.fetcher.transactionalaccount.FinTsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.fetcher.transactionalaccount.FinTsTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.account.FinTsTransactionalAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.accounttype.FinTsAccountTypeMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.transaction.FinTsTransactionMapper;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.ChosenTanMediumProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.TanAnswerProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -24,9 +32,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class FinTsAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final GeneralClient generalClient;
+    private final TransactionClient transactionClient;
+    private final AccountClient accountClient;
     private final FinTsDialogContext dialogContext;
 
+    @Inject
     public FinTsAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
@@ -51,6 +64,16 @@ public final class FinTsAgent extends NextGenerationAgent
         FinTsRequestProcessor requestProcessor =
                 new FinTsRequestProcessor(this.dialogContext, requestSender, tanAnswerProvider);
 
+        this.generalClient =
+                new GeneralClient(
+                        requestProcessor,
+                        dialogContext,
+                        new ChosenTanMediumProvider(
+                                componentProvider.getSupplementalInformationHelper()),
+                        new FinTsAccountTypeMapper());
+        this.transactionClient = new TransactionClient(requestProcessor, dialogContext);
+        this.accountClient = new AccountClient(requestProcessor, dialogContext);
+
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
     }
@@ -62,7 +85,7 @@ public final class FinTsAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new FinTsAuthenticator());
+        return new PasswordAuthenticationController(new FinTsAuthenticator(generalClient));
     }
 
     @Override
@@ -89,8 +112,10 @@ public final class FinTsAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new FinTsAccountFetcher(),
-                new FinTsTransactionFetcher());
+                new FinTsAccountFetcher(
+                        dialogContext, accountClient, new FinTsTransactionalAccountMapper()),
+                new FinTsTransactionFetcher(
+                        dialogContext, transactionClient, new FinTsTransactionMapper()));
     }
 
     @Override

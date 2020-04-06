@@ -18,6 +18,7 @@ import lombok.NonNull;
 public class HNVSKv3 extends BaseRequestPart {
 
     private static final byte[] SEQUENCE_OF_ZEROES = "00000000".getBytes();
+
     @NonNull private Integer securityProcedureVersion;
     @NonNull private String systemId;
     @Builder.Default private LocalDateTime creationTime = LocalDateTime.now();
