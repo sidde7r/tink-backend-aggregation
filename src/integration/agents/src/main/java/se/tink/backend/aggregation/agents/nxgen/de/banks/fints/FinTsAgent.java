@@ -2,64 +2,67 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsInvestmentFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.Bank;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsSecretsConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.PayloadParser;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.fetcher.transactionalaccount.FinTsAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.fetcher.transactionalaccount.FinTsTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.TanAnswerProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class FinTsAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor,
-                RefreshInvestmentAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final InvestmentRefreshController investmentRefreshController;
-    private FinTsApiClient apiClient;
+    private final FinTsDialogContext dialogContext;
 
-    public FinTsAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-        String[] payload = request.getProvider().getPayload().split(" ");
-        String blz = payload[0];
-        String endpoint = payload[1];
+    public FinTsAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
+
+        CredentialsRequest request = componentProvider.getCredentialsRequest();
+        PayloadParser.Payload payload = PayloadParser.parse(request.getProvider().getPayload());
         FinTsConfiguration configuration =
-                new se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration(
-                        blz,
-                        endpoint,
+                new FinTsConfiguration(
+                        payload.getBlz(),
+                        Bank.of(payload.getBankName()),
+                        payload.getEndpoint(),
                         request.getCredentials().getField(Field.Key.USERNAME),
                         request.getCredentials().getField(Field.Key.PASSWORD));
+        FinTsSecretsConfiguration secretsConfiguration = getSecretsConfiguration();
+        this.dialogContext = new FinTsDialogContext(configuration, secretsConfiguration);
 
-        this.apiClient = new FinTsApiClient(this.client, configuration, persistentStorage);
+        TanAnswerProvider tanAnswerProvider =
+                new TanAnswerProvider(componentProvider.getSupplementalInformationHelper());
+        FinTsRequestSender requestSender =
+                new FinTsRequestSender(
+                        componentProvider.getTinkHttpClient(),
+                        dialogContext.getConfiguration().getEndpoint());
+        FinTsRequestProcessor requestProcessor =
+                new FinTsRequestProcessor(this.dialogContext, requestSender, tanAnswerProvider);
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+    }
 
-        this.investmentRefreshController =
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new FinTsInvestmentFetcher(apiClient));
+    private FinTsSecretsConfiguration getSecretsConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentConfiguration(FinTsSecretsConfiguration.class);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new FinTsAuthenticator(apiClient));
+        return new PasswordAuthenticationController(new FinTsAuthenticator());
     }
 
     @Override
@@ -83,28 +86,15 @@ public final class FinTsAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        FinTsTransactionFetcher transactionFetcher = new FinTsTransactionFetcher(apiClient);
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new FinTsAccountFetcher(apiClient),
-                new TransactionFetcherController<>(
-                        this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                new FinTsAccountFetcher(),
+                new FinTsTransactionFetcher());
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new FinTsSessionHandler(apiClient);
-    }
-
-    @Override
-    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
-        return investmentRefreshController.fetchInvestmentAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchInvestmentTransactions() {
-        return investmentRefreshController.fetchInvestmentTransactions();
+        return new FinTsSessionHandler();
     }
 }
