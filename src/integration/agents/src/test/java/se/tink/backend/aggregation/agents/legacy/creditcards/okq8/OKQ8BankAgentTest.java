@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.creditcards.okq8;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
-import se.tink.libraries.social.security.TestSSN;
+import se.tink.libraries.social.security.ssn.TestSSN;
 
 public class OKQ8BankAgentTest extends AbstractAgentTest<OKQ8BankAgent> {
     public OKQ8BankAgentTest() {

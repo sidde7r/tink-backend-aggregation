@@ -17,7 +17,9 @@ public class RedirectAuthenticationDemoAgentConstants {
 
     public static final String DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX =
             ".*-configurable-session-expiry";
-
+    public static final String OXFORD_PREPROD = "oxford-preprod";
+    public static final String OXFORD_PREPROD_CALLBACK =
+            "https://api.preprod.oxford.tink.com/api/v1/credentials/third-party/callback";
     public static final TransferExecutionException FAILED_CASE_EXCEPTION =
             TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(

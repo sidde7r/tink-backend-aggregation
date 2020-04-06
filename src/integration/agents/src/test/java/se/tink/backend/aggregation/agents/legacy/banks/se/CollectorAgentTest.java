@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.banks.se.collector.CollectorAgent;
 import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.social.security.TestSSN;
+import se.tink.libraries.social.security.ssn.TestSSN;
 
 public class CollectorAgentTest extends AbstractAgentTest<CollectorAgent> {
     private Credentials credentials = new Credentials();

@@ -8,7 +8,7 @@ import org.joda.time.DateTimeZone;
 import org.junit.Test;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.account.identifiers.TestAccount;
+import se.tink.libraries.account.identifiers.account.TestAccount;
 import se.tink.libraries.date.DateUtils;
 
 public class DanskeUtilsTest {

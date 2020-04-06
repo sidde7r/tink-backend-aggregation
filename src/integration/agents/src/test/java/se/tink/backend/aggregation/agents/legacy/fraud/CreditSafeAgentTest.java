@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.social.security.TestSSN;
+import se.tink.libraries.social.security.ssn.TestSSN;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;

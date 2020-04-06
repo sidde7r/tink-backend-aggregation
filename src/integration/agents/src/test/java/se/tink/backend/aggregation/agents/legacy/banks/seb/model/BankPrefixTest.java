@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.account.identifiers.TestAccount;
+import se.tink.libraries.account.identifiers.account.TestAccount;
 
 public class BankPrefixTest {
 
