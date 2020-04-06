@@ -161,4 +161,20 @@ public class RSA {
         return String.format(
                 "-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----\n", rawPublicKey);
     }
+
+    private static boolean verify(
+            String type, PublicKey publicKey, byte[] input, byte[] signature) {
+        try {
+            Signature sigVerify = Signature.getInstance(type);
+            sigVerify.initVerify(publicKey);
+            sigVerify.update(input);
+            return sigVerify.verify(signature);
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    public static boolean verifySignSha256(PublicKey publicKey, byte[] input, byte[] signature) {
+        return verify("SHA256withRSA", publicKey, input, signature);
+    }
 }
