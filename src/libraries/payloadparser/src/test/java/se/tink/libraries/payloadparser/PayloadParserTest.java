@@ -8,6 +8,7 @@ import org.junit.Test;
 public class PayloadParserTest {
 
     private static final String PAYLOAD = "value1 value2";
+    private static final String EXCEPTION_MSG = "No matching constructor found.";
 
     @Test
     public void parseWhenClassHasNoConstructorShouldThrowException() {
@@ -18,9 +19,7 @@ public class PayloadParserTest {
                 catchThrowable(() -> PayloadParser.parse(PAYLOAD, PayloadNoConstructor.class));
 
         // then
-        assertThat(t)
-                .isInstanceOf(PayloadParserException.class)
-                .hasMessage("No matching constructor found.");
+        assertThat(t).isInstanceOf(PayloadParserException.class).hasMessage(EXCEPTION_MSG);
     }
 
     @Test
@@ -31,9 +30,7 @@ public class PayloadParserTest {
         Throwable t = catchThrowable(() -> PayloadParser.parse(PAYLOAD, TooManyArgs.class));
 
         // then
-        assertThat(t)
-                .isInstanceOf(PayloadParserException.class)
-                .hasMessage("No matching constructor found.");
+        assertThat(t).isInstanceOf(PayloadParserException.class).hasMessage(EXCEPTION_MSG);
     }
 
     @Test
@@ -44,9 +41,7 @@ public class PayloadParserTest {
         Throwable t = catchThrowable(() -> PayloadParser.parse(PAYLOAD, TooFewArgs.class));
 
         // then
-        assertThat(t)
-                .isInstanceOf(PayloadParserException.class)
-                .hasMessage("No matching constructor found.");
+        assertThat(t).isInstanceOf(PayloadParserException.class).hasMessage(EXCEPTION_MSG);
     }
 
     @Test
@@ -57,9 +52,7 @@ public class PayloadParserTest {
         Throwable t = catchThrowable(() -> PayloadParser.parse(PAYLOAD, TypesNotMatch.class));
 
         // then
-        assertThat(t)
-                .isInstanceOf(PayloadParserException.class)
-                .hasMessage("No matching constructor found.");
+        assertThat(t).isInstanceOf(PayloadParserException.class).hasMessage(EXCEPTION_MSG);
     }
 
     @Test
