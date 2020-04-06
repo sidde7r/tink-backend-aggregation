@@ -35,11 +35,7 @@ junit_test(
     srcs = glob(
         ["agent/*.java"],
     ),
-    data = [
-        "//data:aggregation_test",
-        "//data:cryptography_test",
-        "//etc:development",
-    ],
+    data = ["//:agent_test_data"],
     tags = [
         "external",
         "manual",

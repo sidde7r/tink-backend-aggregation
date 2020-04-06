@@ -9,7 +9,7 @@ public class SessionStorageAgreements extends ArrayList<SessionStorageAgreement>
 
     public SessionStorageAgreement findAgreementForAccountBankId(String accountBankId) {
         return stream()
-                .filter((a) -> a.hasAccountBankId(accountBankId))
+                .filter(a -> a.hasAccountBankId(accountBankId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("No matching agreement"));
     }

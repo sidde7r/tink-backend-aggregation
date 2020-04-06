@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -175,7 +176,9 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
                         new ProgressiveLoginExecutor(
                                 this.supplementalInformationController,
                                 (ProgressiveAuthAgent) agent);
-                executor.login(credential);
+                executor.login(
+                        new ManualAuthenticateRequest(
+                                user, provider, credential, true, true, false));
             } else {
                 boolean loginSuccessful = agent.login();
                 Assert.assertTrue("Agent could not login successfully.", loginSuccessful);

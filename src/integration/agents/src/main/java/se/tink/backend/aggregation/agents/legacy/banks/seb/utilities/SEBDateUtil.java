@@ -15,6 +15,7 @@ public class SEBDateUtil {
     private static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
     private static final CountryDateHelper dateHelper =
             new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
+    private static final TimeZone TIME_ZONE_CET = TimeZone.getTimeZone("CET");
 
     public static String nextPossibleTransferDate(Date date, boolean withinSEB) {
         Preconditions.checkNotNull(date);
@@ -29,9 +30,10 @@ public class SEBDateUtil {
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(nextPossibleDate);
     }
 
-    private static Date nextPossibleExternalDate(Date now) {
+    private static Date nextPossibleExternalDate(Date date) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
+        calendar.setTimeZone(TIME_ZONE_CET);
+        calendar.setTime(date);
 
         moveToNextMidnightIfAfterMiddayBreak(calendar);
         moveToNextBusinessDayIfNotBusinessDay(calendar);
@@ -42,7 +44,7 @@ public class SEBDateUtil {
     /**
      * SEB's Web Internet Bank: "Till andra svenska banker är pengarna tillgängliga för mottagaren
      * samma dag om du skickar uppdraget senast 13.35." ~ EN: "To other Swedish banks, the money are
-     * available for the recipient same day if you send the transfer before 13.35."
+     * available for the recipient same day if you send the transfer before 13.35 CET."
      */
     private static void moveToNextMidnightIfAfterMiddayBreak(Calendar calendar) {
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);

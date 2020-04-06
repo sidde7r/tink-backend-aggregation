@@ -1,15 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
-junit_test(
+java_library(
     name = "handelsbanken",
     srcs = glob(["*.java"]),
     data = [
         "//data:aggregation_test",
         "//etc:development",
-    ],
-    tags = [
-        "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -30,8 +26,10 @@ junit_test(
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
+        "//third_party:junit_junit",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_mockito_mockito_core",
+        "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
     ],

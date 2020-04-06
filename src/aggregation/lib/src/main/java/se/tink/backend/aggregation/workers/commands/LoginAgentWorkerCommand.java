@@ -268,10 +268,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                             supplementalInformationController,
                             loginAgentEventProducer,
                             startTime)
-                    .executeLogin(
-                            agent,
-                            createLoginMetricAction(),
-                            context.getRequest().getCredentials());
+                    .executeLogin(agent, createLoginMetricAction(), context.getRequest());
         } finally {
             stopCommandContexts(loginTimerContext);
 

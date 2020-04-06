@@ -3,11 +3,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "hvb",
     srcs = glob(["HVBAgentTest.java"]),
-    data = [
-        "//data:aggregation_test",
-        "//data:cryptography_test",
-        "//etc:development",
-    ],
+    data = ["//:agent_test_data"],
     tags = [
         "external",
         "manual",
@@ -37,9 +33,6 @@ junit_test(
         ["**/*.java"],
         exclude = ["HVBAgentTest.java"],
     ),
-    tags = [
-        "external",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",

@@ -3,11 +3,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "fints",
     srcs = glob(["agent/*.java"]),
-    data = [
-        "//data:aggregation_test",
-        "//data:cryptography_test",
-        "//etc:development",
-    ],
+    data = ["//:agent_test_data"],
     tags = [
         "external",
         "manual",

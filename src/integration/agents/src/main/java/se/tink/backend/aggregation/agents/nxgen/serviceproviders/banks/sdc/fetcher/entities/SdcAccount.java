@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount.Builder;
 import se.tink.libraries.account.enums.AccountFlag;
 
+@JsonObject
 public class SdcAccount {
     @JsonIgnore
     private static final AggregationLogger LOGGER = new AggregationLogger(SdcAccount.class);
@@ -27,17 +29,18 @@ public class SdcAccount {
     private String productElementType;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(SdcConfiguration agentConfiguration) {
+    public TransactionalAccount toTinkAccount() {
 
-        AccountTypes type = convertAccountType();
+        AccountTypes accountTypes = convertAccountType();
 
         Builder<?, ?> builder =
-                TransactionalAccount.builder(type, id, amount.toTinkAmount())
+                TransactionalAccount.builder(accountTypes, id, amount.toTinkAmount())
                         .setAccountNumber(id)
                         .setName(name)
                         .setBankIdentifier(normalizedBankId());
 
-        if (type.equals(AccountTypes.CHECKING) || type.equals(AccountTypes.SAVINGS)) {
+        if (accountTypes.equals(AccountTypes.CHECKING)
+                || accountTypes.equals(AccountTypes.SAVINGS)) {
             builder.addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT);
         }
 
@@ -58,10 +61,10 @@ public class SdcAccount {
         if (isLoanAccount()) {
             return AccountTypes.LOAN;
         }
-        SdcConstants.AccountType type =
+        SdcConstants.AccountType accountType =
                 SdcConstants.AccountType.fromProductType(productElementType);
-        if (type != SdcConstants.AccountType.UNKNOWN) {
-            return type.getTinkAccountType();
+        if (accountType != SdcConstants.AccountType.UNKNOWN) {
+            return accountType.getTinkAccountType();
         }
         LOGGER.info("Found unknown productElementType: " + productElementType);
         return AccountTypes.OTHER;
@@ -82,7 +85,7 @@ public class SdcAccount {
     }
 
     @JsonIgnore
-    public boolean isTransactionalAccount(SdcConfiguration agentConfiguration) {
+    public boolean isTransactionalAccount() {
         AccountTypes tinkAccountType = convertAccountType();
         return TransactionalAccount.ALLOWED_ACCOUNT_TYPES.contains(tinkAccountType);
     }

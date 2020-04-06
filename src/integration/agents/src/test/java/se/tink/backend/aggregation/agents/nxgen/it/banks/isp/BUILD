@@ -6,10 +6,7 @@ junit_test(
         ["**/*.java"],
         exclude = ["agent/**/*.java"],
     ),
-    data = [
-        "//data:aggregation_test",
-        "//etc:development",
-    ],
+    data = ["//:agent_test_data"],
     tags = [
     ],
     visibility = ["//visibility:public"],

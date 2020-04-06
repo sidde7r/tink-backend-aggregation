@@ -273,7 +273,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             final ProgressiveLoginExecutor executor =
                     new ProgressiveLoginExecutor(
                             supplementalInformationController, (ProgressiveAuthAgent) agent);
-            executor.login(credentialsRequest.getCredentials());
+            executor.login(credentialsRequest);
             return;
         }
 

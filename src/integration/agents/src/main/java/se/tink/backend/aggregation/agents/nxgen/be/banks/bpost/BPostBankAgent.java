@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -27,6 +28,7 @@ public class BPostBankAgent extends SubsequentProgressiveGenerationAgent
     private BPostBankApiClient apiClient;
     private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
+    @Inject
     public BPostBankAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
         apiClient = new BPostBankApiClient(client);

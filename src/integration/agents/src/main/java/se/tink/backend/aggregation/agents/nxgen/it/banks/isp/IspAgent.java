@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.isp;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -10,6 +11,7 @@ public class IspAgent extends SubsequentProgressiveGenerationAgent implements Pr
 
     private final IspApiClient apiClient;
 
+    @Inject
     public IspAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
         applyFilters();
