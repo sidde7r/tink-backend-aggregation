@@ -14,7 +14,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.DanskeBankV2Agent;
-import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;

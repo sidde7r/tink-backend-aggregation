@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.demo;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 import se.tink.libraries.credentials.demo.DemoCredentials;
 
 public class DemoAgentTest extends AbstractAgentTest<DemoAgent> {

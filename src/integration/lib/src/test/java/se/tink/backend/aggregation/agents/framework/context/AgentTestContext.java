@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework;
+package se.tink.backend.aggregation.agents.framework.context;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

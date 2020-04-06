@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework;
+package se.tink.backend.aggregation.agents.framework.legacy;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
+import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;

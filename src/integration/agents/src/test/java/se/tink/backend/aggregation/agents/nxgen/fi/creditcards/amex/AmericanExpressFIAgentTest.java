@@ -11,7 +11,7 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.framework.AgentTestContext;
+import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.currency.CurrencyConstants;
 import se.tink.backend.aggregation.nxgen.agents.agenttest.NextGenerationAgentTest;
