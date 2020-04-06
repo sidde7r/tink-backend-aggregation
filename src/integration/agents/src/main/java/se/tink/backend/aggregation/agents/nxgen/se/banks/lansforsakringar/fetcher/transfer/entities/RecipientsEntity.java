@@ -22,7 +22,6 @@ public class RecipientsEntity implements GeneralAccountEntity {
         } else if (Accounts.PATTERN_PG_RECIPIENT.matcher(giroNumber).matches()) {
             return new PlusGiroIdentifier(giroNumber);
         } else {
-            // TODO: Can we do better in this case?
             return new SwedishIdentifier(giroNumber);
         }
     }

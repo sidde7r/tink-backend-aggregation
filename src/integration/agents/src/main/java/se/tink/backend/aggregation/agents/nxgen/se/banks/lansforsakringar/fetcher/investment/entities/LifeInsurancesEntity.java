@@ -30,7 +30,6 @@ public class LifeInsurancesEntity {
     private IdentityEntity owner;
     private List<FundSelectionsEntity> fundSelections;
     private LifeInsuranceStatusEntity lifeInsuranceStatus;
-    private AssetSummarysEntity assetSummarys;
 
     @JsonIgnore
     public Portfolio toTinkPortfolio() {

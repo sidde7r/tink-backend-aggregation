@@ -20,7 +20,6 @@ public class LifeInsuranceAgreementEntity {
     private String premiumModelTerm;
     private String startDate;
     private String concept;
-    private AgeEntity pensionAge;
     private ProductEntity product;
     private String status;
     private String paymentDate;
@@ -63,10 +62,6 @@ public class LifeInsuranceAgreementEntity {
 
     public String getConcept() {
         return concept;
-    }
-
-    public AgeEntity getPensionAge() {
-        return pensionAge;
     }
 
     public ProductEntity getProduct() {

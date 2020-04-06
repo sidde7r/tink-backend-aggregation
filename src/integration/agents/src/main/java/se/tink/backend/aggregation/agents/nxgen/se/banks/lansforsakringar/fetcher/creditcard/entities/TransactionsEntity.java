@@ -20,7 +20,6 @@ public class TransactionsEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
-        // TODO: Does definitive mean pending/booked here?
         return Transaction.builder()
                 .setDescription(text)
                 .setDate(Instant.ofEpochMilli(date).atZone(ZoneId.of("CET")).toLocalDate())

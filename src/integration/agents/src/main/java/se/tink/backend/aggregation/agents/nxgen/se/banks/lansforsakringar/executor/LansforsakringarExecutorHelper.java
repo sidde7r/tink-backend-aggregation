@@ -24,7 +24,6 @@ public class LansforsakringarExecutorHelper {
         this.catalog = catalog;
     }
 
-    // Todo: do I need to use AccountIdentifierFormatter for comparison?
     boolean isSourceAccountValid(Transfer transfer) {
         AccountIdentifier sourceAccount = transfer.getSource();
         return apiClient.fetchTransferSourceAccounts().getAccounts().stream()

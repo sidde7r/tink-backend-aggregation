@@ -1,6 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.manual;
 
 public class LansforsakringarTestData {
+
+    private LansforsakringarTestData() {}
 
     static final String TRANSACTIONS =
             "{\n"

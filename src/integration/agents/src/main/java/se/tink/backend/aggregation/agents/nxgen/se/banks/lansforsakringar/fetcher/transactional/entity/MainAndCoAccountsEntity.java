@@ -110,7 +110,6 @@ public class MainAndCoAccountsEntity implements GeneralAccountEntity {
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount() {
 
-        // TODO: check flags (add PSD2 if applicable
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(Accounts.ACCOUNT_TYPE_MAPPER, type)
                 .withBalance(BalanceModule.of(ExactCurrencyAmount.of(balance, Accounts.CURRENCY)))
