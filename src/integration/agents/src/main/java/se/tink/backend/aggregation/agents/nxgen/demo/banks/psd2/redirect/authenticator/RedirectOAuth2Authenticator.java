@@ -64,6 +64,8 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
                 throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
             case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_CANCEL_CASE:
                 throw ThirdPartyAppError.CANCELLED.exception();
+            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_TEMPORARY_ERROR_CASE:
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             default:
                 break;
         }

@@ -14,6 +14,8 @@ public class RedirectAuthenticationDemoAgentConstants {
             "uk-test-open-banking-redirect-failed";
     public static final String UK_DEMO_PROVIDER_CANCEL_CASE =
             "uk-test-open-banking-redirect-cancelled";
+    public static final String UK_DEMO_PROVIDER_TEMPORARY_ERROR_CASE =
+            "uk-test-open-banking-redirect-temporary-error";
 
     public static final String DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX =
             ".*-configurable-session-expiry";
