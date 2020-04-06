@@ -13,9 +13,6 @@ java_library(
 junit_test(
     name = "iban_test",
     srcs = glob(["src/test/**/*.java"]),
-    tags = [
-        "external",
-    ],
     deps = [
         "//src/libraries/iban",
         "//third_party:junit_junit",
