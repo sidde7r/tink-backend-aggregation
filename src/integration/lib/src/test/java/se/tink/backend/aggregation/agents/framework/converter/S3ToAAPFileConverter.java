@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
-import se.tink.backend.aggregation.agents.framework.wiremock.utils.S3LogFormatAdapter;
 
 public class S3ToAAPFileConverter {
 

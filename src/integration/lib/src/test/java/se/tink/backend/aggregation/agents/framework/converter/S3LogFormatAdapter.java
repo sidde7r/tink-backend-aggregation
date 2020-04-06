@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework.wiremock.utils;
+package se.tink.backend.aggregation.agents.framework.converter;
 
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
