@@ -4,6 +4,7 @@ import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
@@ -172,7 +173,7 @@ public final class SbabApiClient {
                             ErrorMessage.INVALID_DATE, "", new IllegalArgumentException());
                 }
                 if (errorResponse.isAmountExceedsCurrentBalance()) {
-                    throw new PaymentValidationException(ErrorMessage.AMOUNT_EXCEEDS_BALANCE);
+                    throw new InsufficientFundsException(ErrorMessage.AMOUNT_EXCEEDS_BALANCE);
                 }
                 break;
             case HttpStatus.SC_CONFLICT:

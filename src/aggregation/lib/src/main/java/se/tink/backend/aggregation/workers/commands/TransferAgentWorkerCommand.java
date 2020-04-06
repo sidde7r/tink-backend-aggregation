@@ -232,7 +232,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
             signableOperation.setStatus(SignableOperationStatuses.CANCELLED);
             signableOperation.setStatusMessage(
-                    catalog.getString("Could not execute payment due insufficient funds."));
+                    catalog.getString("Could not execute payment due to insufficient funds."));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;

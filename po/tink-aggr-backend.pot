@@ -1159,7 +1159,7 @@ msgstr ""
 msgid "Could not validate the date you entered for the payment."
 msgstr ""
 
-msgid "Could not execute payment due insufficient funds."
+msgid "Could not execute payment due to insufficient funds."
 msgstr ""
 
 msgid "Could not validate the account, you are trying to pay from."
