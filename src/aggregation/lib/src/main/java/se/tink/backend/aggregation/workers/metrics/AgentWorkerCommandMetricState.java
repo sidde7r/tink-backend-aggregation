@@ -7,8 +7,8 @@ import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
-import se.tink.backend.aggregation.workers.commands.MetricsCommand;
+import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
+import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.core.MetricId;
 

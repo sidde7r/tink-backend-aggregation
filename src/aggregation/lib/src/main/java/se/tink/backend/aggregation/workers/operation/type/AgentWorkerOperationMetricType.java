@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers;
+package se.tink.backend.aggregation.workers.operation.type;
 
 public enum AgentWorkerOperationMetricType {
     EXECUTE_COMMAND("execute"),
