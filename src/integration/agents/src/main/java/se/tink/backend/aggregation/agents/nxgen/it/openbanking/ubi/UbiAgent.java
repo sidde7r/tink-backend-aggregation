@@ -28,7 +28,8 @@ public class UbiAgent extends CbiGlobeAgent {
                             apiClient,
                             new StrongAuthenticationState(request.getAppUriId()),
                             userState,
-                            getClientConfiguration());
+                            getClientConfiguration(),
+                            supplementalRequester);
         }
 
         return authenticator;
