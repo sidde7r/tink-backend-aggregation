@@ -8,6 +8,7 @@ java_library(
         "//src/integration/grpc-services/proto:java_proto",
         "//src/integration/lib",  # TODO: remove this dependency
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
         "//src/libraries/metrics:core",
