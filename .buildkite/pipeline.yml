@@ -76,6 +76,8 @@ steps:
       docker-compose#v3.0.3:
         run: app
         config: docker/docker-compose-system-tests.bazel.yml
+    soft_fail:
+      - exit_status: 1
     branches: '!master'
     name: ':junit: System tests'
     timeout_in_minutes: 10
