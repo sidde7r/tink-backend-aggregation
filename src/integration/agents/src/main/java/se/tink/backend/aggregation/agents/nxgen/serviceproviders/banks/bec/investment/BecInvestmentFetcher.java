@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final AggregationLogger log = new AggregationLogger(BecInvestmentFetcher.class);
@@ -94,10 +93,8 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private void logUnknownInstrumentType(PortfolioEntity portfolioEntity) {
         log.infoExtraLong(
                 String.format(
-                        "Unknown paper type[%s]: %s, backend object: %s",
-                        portfolioEntity.getDataType(),
-                        portfolioEntity.getInstrumentsType(),
-                        SerializationUtils.serializeToString(portfolioEntity)),
+                        "Unknown paper type[%s]: %s",
+                        portfolioEntity.getDataType(), portfolioEntity.getInstrumentsType()),
                 BecConstants.Log.INVESTMENT_PAPER_TYPE);
     }
 
