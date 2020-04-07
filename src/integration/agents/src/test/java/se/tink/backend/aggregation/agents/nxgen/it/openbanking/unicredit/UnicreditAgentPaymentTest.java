@@ -41,7 +41,6 @@ public class UnicreditAgentPaymentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false)
-                        .isLoginRequiredForPis(false)
                         .setClusterId("oxford-preprod")
                         .setFinancialInstitutionId("unicredit-it")
                         .setAppId("tink");

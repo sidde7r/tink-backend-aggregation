@@ -96,7 +96,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private final boolean requestFlagManual;
     private final boolean doLogout;
     private final boolean expectLoggedIn;
-    private final boolean isLoginRequiredForPIS;
     private final Set<RefreshableItem> refreshableItems;
     private final AisValidator validator;
     private final NewAgentTestContext context;
@@ -121,7 +120,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.requestFlagManual = builder.isRequestFlagManual();
         this.doLogout = builder.isDoLogout();
         this.expectLoggedIn = builder.isExpectLoggedIn();
-        this.isLoginRequiredForPIS = builder.isLoginRequiredForPis();
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
@@ -723,7 +721,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         Agent agent = createAgent(credentialsRequest);
 
         try {
-            if (isLoginRequiredForPIS) {
+            if (isLoginRequiredForPIS()) {
                 login(agent, credentialsRequest);
             }
             if (agent instanceof PaymentControllerable) {
@@ -745,6 +743,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         context.printCollectedData();
+    }
+
+    private boolean isLoginRequiredForPIS() {
+        return !"it-unicredit-oauth2".equals(provider.getName());
     }
 
     private List<Payment> createItalianPayments(List<Account> accounts, String desinationAccount) {
@@ -923,7 +925,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         private boolean doLogout = false;
         private boolean expectLoggedIn = true;
-        private boolean isLoginRequiredForPis = true;
         private Set<RefreshableItem> refreshableItems = new HashSet<>();
 
         private AisValidator validator;
@@ -1043,10 +1044,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return expectLoggedIn;
         }
 
-        public boolean isLoginRequiredForPis() {
-            return isLoginRequiredForPis;
-        }
-
         public Set<RefreshableItem> getRefreshableItems() {
             return refreshableItems;
         }
@@ -1099,11 +1096,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder expectLoggedIn(boolean expectLoggedIn) {
             this.expectLoggedIn = expectLoggedIn;
-            return this;
-        }
-
-        public Builder isLoginRequiredForPis(boolean isLoginRequiredForPis) {
-            this.isLoginRequiredForPis = isLoginRequiredForPis;
             return this;
         }
 

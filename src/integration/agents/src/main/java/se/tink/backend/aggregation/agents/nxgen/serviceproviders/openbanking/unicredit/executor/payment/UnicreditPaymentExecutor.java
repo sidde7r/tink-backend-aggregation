@@ -49,6 +49,10 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
         AccountEntity debtor = new AccountEntity(payment.getDebtor().getAccountNumber());
         AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());
+        String unstructuredRemittance = "";
+        if (Optional.ofNullable(payment.getReference()).isPresent()) {
+            unstructuredRemittance = payment.getReference().getValue();
+        }
 
         CreatePaymentRequest request =
                 new CreatePaymentRequest.Builder()
@@ -56,6 +60,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                         .withDebtor(debtor)
                         .withAmount(amount)
                         .withCreditorName(payment.getCreditor().getName())
+                        .withUnstructuredRemittance(unstructuredRemittance)
                         .build();
 
         return apiClient
