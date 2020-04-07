@@ -6,7 +6,6 @@ java_library(
     data = [],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregation/api",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
