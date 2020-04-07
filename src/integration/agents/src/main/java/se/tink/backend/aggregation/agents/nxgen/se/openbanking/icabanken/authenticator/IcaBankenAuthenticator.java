@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenResponse;
@@ -14,22 +16,22 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class IcaBankenAuthenticator implements OAuth2Authenticator {
 
     private final IcaBankenApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private IcaBankenConfiguration icaBankenConfiguration;
     private Credentials credentials;
 
     public IcaBankenAuthenticator(
             IcaBankenApiClient apiClient,
-            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             IcaBankenConfiguration icaBankenConfiguration,
             Credentials credentials) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.icaBankenConfiguration = icaBankenConfiguration;
         this.credentials = credentials;
     }
@@ -38,22 +40,12 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
     public URL buildAuthorizeUrl(String state) {
         final Form params =
                 Form.builder()
-                        .put(
-                                IcaBankenConstants.QueryKeys.RESPONSE_TYPE,
-                                IcaBankenConstants.QueryValues.CODE)
-                        .put(
-                                IcaBankenConstants.QueryKeys.CLIENT_ID,
-                                icaBankenConfiguration.getClientId())
-                        .put(
-                                IcaBankenConstants.QueryKeys.SCOPE,
-                                IcaBankenConstants.QueryValues.SCOPE)
-                        .put(
-                                IcaBankenConstants.QueryKeys.REDIRECT_URI,
-                                icaBankenConfiguration.getRedirectUrl())
-                        .put(IcaBankenConstants.QueryKeys.STATE, state)
-                        .put(
-                                IcaBankenConstants.QueryKeys.SSN,
-                                credentials.getField(Field.Key.USERNAME))
+                        .put(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
+                        .put(QueryKeys.CLIENT_ID, icaBankenConfiguration.getClientId())
+                        .put(QueryKeys.SCOPE, QueryValues.SCOPE)
+                        .put(QueryKeys.REDIRECT_URI, icaBankenConfiguration.getRedirectUrl())
+                        .put(QueryKeys.SSN, credentials.getField(Field.Key.USERNAME))
+                        .put(QueryKeys.STATE, state)
                         .build();
 
         return new URL(IcaBankenConstants.ProductionUrls.AUTH_PATH + "?" + params.toString());
@@ -70,7 +62,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                         .build();
 
         TokenResponse response = apiClient.exchangeAuthorizationCode(request);
-        sessionStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.getAccessToken());
+        persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.getAccessToken());
         return response.toOauthToken();
     }
 
@@ -82,11 +74,10 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                 RefreshTokenRequest.builder()
                         .setClientId(icaBankenConfiguration.getClientId())
                         .setGrantType(IcaBankenConstants.QueryValues.REFRESH_TOKEN)
-                        .setScope(IcaBankenConstants.QueryValues.ACCOUNT)
                         .setRefreshToken(refreshToken)
                         .build();
         TokenResponse response = apiClient.exchangeRefreshToken(request);
-        sessionStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.getAccessToken());
+        persistentStorage.put(IcaBankenConstants.StorageKeys.TOKEN, response.getAccessToken());
         return response.toOauthToken();
     }
 

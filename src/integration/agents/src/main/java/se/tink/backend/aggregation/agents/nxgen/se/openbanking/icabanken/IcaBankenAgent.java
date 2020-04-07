@@ -8,12 +8,10 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.IcaBankenAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.IcaBankenSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.IcaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.Environment;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -31,7 +29,6 @@ public final class IcaBankenAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final IcaBankenApiClient apiClient;
-    private final String clientName;
     private IcaBankenConfiguration icaBankenConfiguration;
     private Credentials credentialsRequest;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -42,8 +39,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        apiClient = new IcaBankenApiClient(client, sessionStorage);
-        clientName = request.getProvider().getPayload();
+        apiClient = new IcaBankenApiClient(client, persistentStorage);
         credentialsRequest = request.getCredentials();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
@@ -51,37 +47,30 @@ public final class IcaBankenAgent extends NextGenerationAgent
                 getAgentConfigurationController()
                         .getAgentConfiguration(IcaBankenConfiguration.class);
 
-        apiClient.setConfiguration(icaBankenConfiguration);
-
-        if (icaBankenConfiguration.getEnvironment() == Environment.PRODUCTION) {
-            client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
-        }
+        apiClient.setConfiguration(
+                icaBankenConfiguration, agentsServiceConfiguration.getEidasProxy());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        if (icaBankenConfiguration.getEnvironment() == Environment.PRODUCTION) {
-            final OAuth2AuthenticationController controller =
-                    new OAuth2AuthenticationController(
-                            persistentStorage,
-                            supplementalInformationHelper,
-                            new IcaBankenAuthenticator(
-                                    apiClient,
-                                    sessionStorage,
-                                    icaBankenConfiguration,
-                                    credentialsRequest),
-                            credentials,
-                            strongAuthenticationState);
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new IcaBankenAuthenticator(
+                                apiClient,
+                                persistentStorage,
+                                icaBankenConfiguration,
+                                credentialsRequest),
+                        credentials,
+                        strongAuthenticationState);
 
-            return new AutoAuthenticationController(
-                    request,
-                    context,
-                    new ThirdPartyAppAuthenticationController<>(
-                            controller, supplementalInformationHelper),
-                    controller);
-        } else {
-            return new IcaBankenSandboxAuthenticator(apiClient, sessionStorage);
-        }
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override

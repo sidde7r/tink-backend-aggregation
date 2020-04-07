@@ -846,11 +846,9 @@ agentsServiceConfiguration:
         tppId: SE-FINA-44059
     icabanken:
       tink:
-        baseUrl: https://apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2
         certificateId: Tink
         clientId: nCOpWsg6kf5bfFpxk3k2iIZM7iIa
         clientSecret: 8IKSUB6kS24nTp6wGFM0h9gJicwa
-        environment: sandbox
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     icsConfiguration:
       abn:
