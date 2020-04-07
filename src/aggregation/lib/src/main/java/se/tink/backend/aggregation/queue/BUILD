@@ -1,0 +1,23 @@
+java_library(
+    name = "queue",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/user:rpc",
+        "//src/libraries/queue_sqs",
+        "//src/libraries/serialization",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_sun_jersey_jersey_server",
+        "//third_party:org_slf4j_slf4j_api",
+        "//third_party:org_xerial_snappy_snappy_java",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
+    ],
+)

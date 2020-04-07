@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.uuid.UUIDUtils;
 

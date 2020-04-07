@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers;
+package se.tink.backend.aggregation.workers.operation;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;

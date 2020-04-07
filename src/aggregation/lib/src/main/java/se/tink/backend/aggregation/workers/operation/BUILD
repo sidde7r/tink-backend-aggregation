@@ -1,0 +1,43 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+java_library(
+    name = "operation",
+    srcs = glob(["*.java"]),
+    data = [
+    ],
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+    ],
+    deps = [
+        "//src/aggregation/aggregationcontroller_api",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/metrics",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation/type",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials:rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/enums",
+        "//src/integration/identity_data",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/locks",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
+        "//src/integration/models",
+        "//src/integration/transfer:rpc",
+        "//src/libraries/account_identifier",
+        "//src/libraries/pair",
+        "//third_party:com_google_code_findbugs_jsr305",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:io_dropwizard_dropwizard_lifecycle",
+        "//third_party:javax_inject_javax_inject",
+        "//third_party:org_apache_curator_curator_framework",
+        "//third_party:org_apache_curator_curator_recipes",
+        "@tink_backend//src/libraries/i18n",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
+        "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/types/timers",
+    ],
+)

@@ -5,8 +5,8 @@ import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ProgressiveAuthenticatorLoginHandler implements LoginHandler {

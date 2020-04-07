@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["*.java"]),
     deps = [
         "//src/aggregation/lib",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/events",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/libraries/pair",
         "//src/libraries/uuid",

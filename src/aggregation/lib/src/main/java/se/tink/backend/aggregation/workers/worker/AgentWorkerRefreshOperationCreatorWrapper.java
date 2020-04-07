@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.workers;
+package se.tink.backend.aggregation.workers.worker;
 
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 
 public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable {

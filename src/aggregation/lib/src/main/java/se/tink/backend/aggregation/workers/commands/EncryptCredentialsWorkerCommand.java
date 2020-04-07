@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class EncryptCredentialsWorkerCommand extends AgentWorkerCommand {

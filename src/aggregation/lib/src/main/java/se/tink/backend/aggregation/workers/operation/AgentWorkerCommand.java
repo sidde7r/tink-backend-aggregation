@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers;
+package se.tink.backend.aggregation.workers.operation;
 
 import com.google.common.collect.Lists;
 import java.util.List;

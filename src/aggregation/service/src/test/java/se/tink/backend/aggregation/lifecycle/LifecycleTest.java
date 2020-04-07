@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.configuration.ConfigurationValidator;
 import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
-import se.tink.backend.aggregation.workers.AgentWorker;
+import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.draining.DrainModeTask;
