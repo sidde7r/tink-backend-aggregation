@@ -73,9 +73,8 @@ public class UbiUsernamePasswordAuthenticationStep implements AuthenticationStep
         Field field =
                 Field.builder()
                         .immutable(true)
-                        .description(
-                                "Please open the bank application and confirm the order. You will be asked for confirmation two times.")
-                        .value("waiting for confirmation")
+                        .description("Please open the bank application and confirm the order.")
+                        .value("You will be asked for confirmation two times.")
                         .name("name")
                         .build();
 

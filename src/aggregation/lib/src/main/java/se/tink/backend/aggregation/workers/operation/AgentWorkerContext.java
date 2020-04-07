@@ -476,7 +476,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
         updateCredentialsStatusRequest.setUserDeviceId(request.getUserDeviceId());
         updateCredentialsStatusRequest.setMigrationUpdate(isMigrationUpdate);
-        updateCredentialsStatusRequest.setCredentialsRequestType(request.getType());
+        updateCredentialsStatusRequest.setRequestType(request.getType());
+        log.info(
+                String.format(
+                        "refreshId: %s - Incoming RequestType is %s, outgoing %s",
+                        refreshId.orElse("null"),
+                        request.getType(),
+                        updateCredentialsStatusRequest.getRequestType()));
 
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
