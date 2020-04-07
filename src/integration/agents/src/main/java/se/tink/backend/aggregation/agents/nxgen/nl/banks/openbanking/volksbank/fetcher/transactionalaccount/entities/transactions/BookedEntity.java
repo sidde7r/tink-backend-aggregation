@@ -37,6 +37,14 @@ public class BookedEntity {
         return remittanceInformationUnstructured;
     }
 
+    public CreditorAccountEntity getCreditorAccount() {
+        return creditorAccount;
+    }
+
+    public DebtorAccountEntity getDebtorAccount() {
+        return debtorAccount;
+    }
+
     public String getEntryReference() {
         return entryReference;
     }
