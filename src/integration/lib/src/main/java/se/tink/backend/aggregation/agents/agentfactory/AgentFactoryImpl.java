@@ -12,18 +12,20 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class AgentFactory {
+public class AgentFactoryImpl implements AgentFactory {
     private final AgentsServiceConfiguration configuration;
     private final AgentModuleFactory moduleLoader;
 
     @Inject
-    public AgentFactory(AgentModuleFactory moduleLoader, AgentsServiceConfiguration configuration) {
+    public AgentFactoryImpl(
+            AgentModuleFactory moduleLoader, AgentsServiceConfiguration configuration) {
         this.moduleLoader = moduleLoader;
         this.configuration = configuration;
     }
@@ -37,13 +39,14 @@ public class AgentFactory {
      * @return An agent.
      * @throws ReflectiveOperationException If appropriate constructor or module can't be found.
      */
+    @Override
     public Agent create(CredentialsRequest request, AgentContext context)
             throws ReflectiveOperationException {
 
         Class<? extends Agent> agentClass =
                 getAgentClass(request.getCredentials(), request.getProvider());
 
-        if (hasInjectAnnotatedConstructor(agentClass)) {
+        if (AgentFactoryUtils.hasInjectAnnotatedConstructor(agentClass)) {
 
             return create(
                     agentClass, moduleLoader.getAgentModules(request, context, configuration));
@@ -132,17 +135,5 @@ public class AgentFactory {
         }
 
         return agentClass;
-    }
-
-    static boolean hasInjectAnnotatedConstructor(Class cls) {
-
-        Constructor[] constructors = cls.getDeclaredConstructors();
-        for (Constructor constructor : constructors) {
-            if (constructor.getAnnotation(Inject.class) != null) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

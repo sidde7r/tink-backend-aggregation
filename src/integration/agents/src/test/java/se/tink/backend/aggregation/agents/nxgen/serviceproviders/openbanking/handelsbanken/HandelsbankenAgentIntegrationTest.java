@@ -30,7 +30,8 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.AgentClassFactory;
-import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
+import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
@@ -185,7 +186,7 @@ public class HandelsbankenAgentIntegrationTest extends AbstractConfigurationBase
             context.setAgentConfigurationController(agentConfigurationController);
 
             AgentFactory factory =
-                    new AgentFactory(
+                    new AgentFactoryImpl(
                             new AgentPackageModuleFactory(new PackageModuleLoader()),
                             configuration);
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);

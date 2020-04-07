@@ -35,7 +35,8 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
+import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
@@ -221,14 +222,14 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             if (wireMockConfiguration != null) {
                 // Provide AgentFactory with mocked http client and supplemental information.
                 factory =
-                        new AgentFactory(
+                        new AgentFactoryImpl(
                                 new AgentWireMockModuleFactory(wireMockConfiguration),
                                 configuration);
 
             } else {
                 // Provide AgentFactory with 'production' components.
                 factory =
-                        new AgentFactory(
+                        new AgentFactoryImpl(
                                 new AgentPackageModuleFactory(new PackageModuleLoader()),
                                 configuration);
             }
