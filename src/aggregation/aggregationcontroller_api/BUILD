@@ -8,6 +8,7 @@ java_library(
         "//src/integration:__subpackages__",
     ],
     deps = [
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
         "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
@@ -42,6 +43,7 @@ junit_test(
     ],
     deps = [
         ":aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
         "//src/integration/credentials:rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",

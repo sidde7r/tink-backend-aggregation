@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
+import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 
 public class AgentDebugS3Storage implements AgentDebugStorageHandler {
 

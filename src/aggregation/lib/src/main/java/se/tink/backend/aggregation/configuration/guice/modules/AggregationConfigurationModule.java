@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentCo
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
-import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
+import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
