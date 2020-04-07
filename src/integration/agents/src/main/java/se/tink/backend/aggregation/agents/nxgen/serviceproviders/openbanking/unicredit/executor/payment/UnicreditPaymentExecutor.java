@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Reference;
 
 public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -49,11 +52,18 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
         AccountEntity debtor = new AccountEntity(payment.getDebtor().getAccountNumber());
         AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());
-        String unstructuredRemittance = "";
-        if (Optional.ofNullable(payment.getReference()).isPresent()) {
-            unstructuredRemittance = payment.getReference().getValue();
-        }
-
+        String unstructuredRemittance =
+                Optional.ofNullable(payment.getReference()).map(Reference::getValue).orElse("");
+        Date executionDate =
+                Optional.ofNullable(payment.getExecutionDate())
+                        .map(
+                                localDate ->
+                                        Date.from(
+                                                localDate
+                                                        .atStartOfDay()
+                                                        .atZone(ZoneId.of("CET"))
+                                                        .toInstant()))
+                        .orElse(new Date());
         CreatePaymentRequest request =
                 new CreatePaymentRequest.Builder()
                         .withCreditor(creditor)
@@ -61,6 +71,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                         .withAmount(amount)
                         .withCreditorName(payment.getCreditor().getName())
                         .withUnstructuredRemittance(unstructuredRemittance)
+                        .withRequestedExecutionDate(executionDate)
                         .build();
 
         return apiClient
