@@ -83,24 +83,12 @@ public class SantanderApiClient {
         String token = getTokenFromStorage();
         String requestData = new RequestAccountDataEntity().toJson();
 
-        AccountsResponse response =
-                getRequest(
-                                SantanderConstants.URL.BASEURL,
-                                SantanderConstants.URL.ACCOUNT,
-                                token,
-                                requestData)
-                        .post(AccountsResponse.class);
-
-        try {
-            longlogger.infoExtraLong(
-                    SerializationUtils.serializeToString(response),
-                    SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_LOGGING);
-        } catch (Exception e) {
-            longlogger.infoExtraLong(
-                    e.toString(), SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_PARSING_ERROR, e);
-        }
-
-        return response;
+        return getRequest(
+                        SantanderConstants.URL.BASEURL,
+                        SantanderConstants.URL.ACCOUNT,
+                        token,
+                        requestData)
+                .post(AccountsResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(
@@ -115,17 +103,12 @@ public class SantanderApiClient {
                 new TransactionQueryEntity(
                         fromDate, toDate, contractType, contractDetail, companyId);
 
-        TransactionsResponse response =
-                getRequest(
-                                SantanderConstants.URL.BASEURL,
-                                SantanderConstants.URL.TRANSACTIONS,
-                                token,
-                                SerializationUtils.serializeToString(queryEntity))
-                        .post(TransactionsResponse.class);
-        longlogger.infoExtraLong(
-                SerializationUtils.serializeToString(response),
-                SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_LOGGING);
-        return response;
+        return getRequest(
+                        SantanderConstants.URL.BASEURL,
+                        SantanderConstants.URL.TRANSACTIONS,
+                        token,
+                        SerializationUtils.serializeToString(queryEntity))
+                .post(TransactionsResponse.class);
     }
 
     public CardDetailsResponse fetchCardInfo(String pan, String localContractDetail) {
