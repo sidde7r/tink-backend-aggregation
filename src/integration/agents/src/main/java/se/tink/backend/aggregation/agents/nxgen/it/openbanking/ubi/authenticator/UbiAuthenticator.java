@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.authenticator;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.ubi.UbiConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.AccountsConsentRequestParamsProvider;
@@ -18,12 +19,17 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class UbiAuthenticator extends CbiGlobeAuthenticator {
 
+    private final SupplementalRequester supplementalRequester;
+
     public UbiAuthenticator(
             CbiGlobeApiClient apiClient,
             StrongAuthenticationState strongAuthenticationState,
             CbiUserState userState,
-            CbiGlobeConfiguration configuration) {
+            CbiGlobeConfiguration configuration,
+            SupplementalRequester supplementalRequester) {
         super(apiClient, strongAuthenticationState, userState, configuration);
+
+        this.supplementalRequester = supplementalRequester;
     }
 
     @Override
@@ -33,7 +39,7 @@ public class UbiAuthenticator extends CbiGlobeAuthenticator {
 
             manualAuthenticationSteps.add(
                     new UbiUsernamePasswordAuthenticationStep(
-                            consentManager, strongAuthenticationState));
+                            consentManager, strongAuthenticationState, supplementalRequester));
 
             manualAuthenticationSteps.add(
                     new CbiThirdPartyAppAuthenticationStep(
