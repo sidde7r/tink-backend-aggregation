@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -109,7 +108,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        Collection<? extends Transaction> transactions = Collections.emptyList();
+        Collection<? extends Transaction> transactions;
 
         SdcAccountKey creditCardAccountId = this.creditCardAccounts.get(account.getApiIdentifier());
         SearchTransactionsRequest searchTransactionsRequest =
@@ -128,8 +127,8 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher
                         account, this.transactionParser);
 
         // keep an eye on number of transactions returned for credit cards for Sdc clients
-        if (transactions != null && transactions.size() > 0) {
-            log.debug(String.format("Num credit cards transaction: %d", transactions.size()));
+        if (transactions != null && !transactions.isEmpty()) {
+            log.debug("Num credit cards transaction: {}", transactions.size());
         }
 
         return PaginatorResponseImpl.create(transactions);
