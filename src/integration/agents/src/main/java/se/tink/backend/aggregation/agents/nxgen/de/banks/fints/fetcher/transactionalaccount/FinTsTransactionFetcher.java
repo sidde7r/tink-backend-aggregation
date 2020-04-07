@@ -7,8 +7,6 @@ import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.transaction.TransactionClient;
@@ -31,15 +29,13 @@ public class FinTsTransactionFetcher implements TransactionFetcher<Transactional
     }
 
     @AllArgsConstructor
-    @EqualsAndHashCode
-    @Getter
     private static class Strategy {
-        private StrategyType type;
-        private int version;
+        private final StrategyType type;
+        private final int version;
     }
 
-    private final TransactionClient transactionClient;
     private final FinTsDialogContext dialogContext;
+    private final TransactionClient transactionClient;
     private final FinTsTransactionMapper mapper;
 
     public FinTsTransactionFetcher(
@@ -99,8 +95,7 @@ public class FinTsTransactionFetcher implements TransactionFetcher<Transactional
     private List<AggregationTransaction> executeStrategy(
             Strategy strategy, FinTsAccountInformation account) {
         TransactionRequestBuilder requestBuilder =
-                TransactionRequestBuilder.getRequestBuilder(
-                        strategy.getType(), strategy.getVersion());
+                TransactionRequestBuilder.getRequestBuilder(strategy.type, strategy.version);
 
         List<FinTsResponse> transactionResponses =
                 transactionClient.getTransactionResponses(requestBuilder, account);
@@ -121,7 +116,7 @@ public class FinTsTransactionFetcher implements TransactionFetcher<Transactional
                         .collect(Collectors.toList());
             default:
                 throw new UnsupportedOperationException(
-                        "We do not support this fetching strategy type: " + strategy.getType());
+                        "We do not support this fetching strategy type: " + strategy.type);
         }
     }
 }

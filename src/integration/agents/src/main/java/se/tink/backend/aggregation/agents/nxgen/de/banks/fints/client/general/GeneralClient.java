@@ -37,9 +37,9 @@ public class GeneralClient {
     private final FinTsAccountTypeMapper mapper;
 
     public GeneralClient(
-            final FinTsRequestProcessor requestProcessor,
-            final FinTsDialogContext dialogContext,
-            final ChosenTanMediumProvider chosenTanMediumProvider,
+            FinTsRequestProcessor requestProcessor,
+            FinTsDialogContext dialogContext,
+            ChosenTanMediumProvider chosenTanMediumProvider,
             FinTsAccountTypeMapper mapper) {
         this.requestProcessor = requestProcessor;
         this.dialogContext = dialogContext;
@@ -83,8 +83,7 @@ public class GeneralClient {
     }
 
     private void setUpAccountsList(FinTsResponse response) {
-        List<FinTsAccountInformation> accounts = dialogContext.getAccounts();
-        accounts.addAll(
+        List<FinTsAccountInformation> newAccounts =
                 response.findSegments(HIUPD.class).stream()
                         .map(
                                 hiupd ->
@@ -92,7 +91,8 @@ public class GeneralClient {
                                                 hiupd,
                                                 mapper.getAccountTypeFor(dialogContext, hiupd)
                                                         .orElse(null)))
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
+        dialogContext.getAccounts().addAll(newAccounts);
     }
 
     private void setUpTanByOperationLookup(FinTsResponse response) {
