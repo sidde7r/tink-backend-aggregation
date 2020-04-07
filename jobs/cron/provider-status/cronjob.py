@@ -143,24 +143,30 @@ def create_missing_components(names_of_missing_components, group_id):
         status = calculate_status(provider_value)
         request_body = build_missing_components_request(component_name, status, group_id, False)
         r = create_statuspage_request("POST", COMPONENTS_PATH, body=json.dumps(request_body))
-        if r.status_code != 201:
-            logger.error("Failed to create missing component for component name: [{}]".format(component_name))
+        if r.status_code == 422:
+            logger.warning("Failed to create missing component for component name: [{}]".format(component_name))
             failures += 1
             # With more than 5 failures for one run we're probably rate-limited, keep updating components on next run
             if failures > 5:
-                logger.warning("Rate limited by Statuspage, will continue creating components on next run.")
-                return False
+                return 422
+        elif r.status_code != 201:
+            logger.error("Failed to create missing component for component name: [{}], error code was {}".format(
+                component_name, r.status_code))
+            return 1
         request_body = build_missing_components_request(component_name + " " + BANK_UNAVAILABLE_IDENTIFIER,
                                                         status, group_id, True)
         r = create_statuspage_request("POST", COMPONENTS_PATH, body=json.dumps(request_body))
-        if r.status_code != 201:
-            logger.error("Failed to create missing component for component name: [{}]".format(component_name))
+        if r.status_code == 422:
+            logger.warning("Failed to create missing component for component name: [{}]".format(component_name))
             failures += 1
             # With more than 5 failures for one run we're probably rate-limited, keep updating components on next run
             if failures > 5:
-                return False
-
-    return True
+                return 422
+        elif r.status_code != 201:
+            logger.error("Failed to create missing component for component name: [{}], error code was {}".format(
+                component_name, r.status_code))
+            return 1
+    return 0
 
 
 def build_missing_components_request(name, status, group_id, hide):
@@ -319,9 +325,9 @@ def main():
         # OBS! Do not change order of the comparison since it gives what is available in the first set but not the last
         missing_components = set(provider_logins.keys()).difference(set(components.keys()))
         if missing_components != set():
-            if not create_missing_components(missing_components, group_id):
-                logger.warning("Rate limited by Statuspage, will continue creating components on next run.")
-                return 1
+            if create_missing_components(missing_components, group_id) == 422:
+                logger.info("Rate limited by Statuspage, waiting...")
+                time.sleep(5)
 
     logger.info("Cronjob ran successfully")
     return 0
