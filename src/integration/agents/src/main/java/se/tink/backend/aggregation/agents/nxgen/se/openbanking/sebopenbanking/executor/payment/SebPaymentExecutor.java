@@ -80,8 +80,6 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         .withExecutionDate(
                                 getExecutionDateOrCurrentDate(payment.getExecutionDate()))
                         .withAmount(amountEntity)
-                        .withCreditorAccountMessage(
-                                paymentRequest.getPayment().getReference().getValue())
                         .withCreditorName(payment.getCreditor().getName())
                         .build();
 
@@ -268,9 +266,7 @@ public class SebPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         if (message.length() > PaymentValue.MAX_DEST_MSG_LEN) {
             throw new ReferenceValidationException(
                     String.format(
-                            ErrorMessages.PAYMENT_REF_TOO_LONG, PaymentValue.MAX_DEST_MSG_LEN),
-                    "",
-                    new IllegalArgumentException());
+                            ErrorMessages.PAYMENT_REF_TOO_LONG, PaymentValue.MAX_DEST_MSG_LEN));
         }
 
         return message;
