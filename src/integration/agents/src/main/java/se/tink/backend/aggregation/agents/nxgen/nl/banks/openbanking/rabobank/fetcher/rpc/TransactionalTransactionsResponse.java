@@ -64,6 +64,9 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                 .setPayload(
                         TransactionPayloadTypes.DETAILS, transaction.getRaboTransactionTypeName())
                 .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL,
+                        getCounterPartyAccount(transaction))
+                .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
                         getCounterPartyName(transaction))
                 .setPayload(
@@ -73,14 +76,22 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                 .build();
     }
 
+    private static String getCounterPartyAccount(TransactionItem transaction) {
+        return Stream.of(
+                        transaction.getCreditorAccount().getIban(),
+                        transaction.getDebtorAccount().getIban())
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isEmpty())
+                .findFirst()
+                .orElse("");
+    }
+
     private static String getCounterPartyName(TransactionItem transaction) {
-        String counterPartyName =
-                Stream.of(transaction.getCreditorName(), transaction.getDebtorName())
-                        .filter(Objects::nonNull)
-                        .filter(s -> !s.isEmpty())
-                        .findFirst()
-                        .orElse("");
-        return counterPartyName;
+        return Stream.of(transaction.getCreditorName(), transaction.getDebtorName())
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isEmpty())
+                .findFirst()
+                .orElse("");
     }
 
     private static String createDescription(final TransactionItem transaction) {
