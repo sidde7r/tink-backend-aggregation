@@ -61,7 +61,7 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
                                         Date.from(
                                                 localDate
                                                         .atStartOfDay()
-                                                        .atZone(ZoneId.systemDefault())
+                                                        .atZone(ZoneId.of("CET"))
                                                         .toInstant()))
                         .orElse(new Date());
         CreatePaymentRequest request =

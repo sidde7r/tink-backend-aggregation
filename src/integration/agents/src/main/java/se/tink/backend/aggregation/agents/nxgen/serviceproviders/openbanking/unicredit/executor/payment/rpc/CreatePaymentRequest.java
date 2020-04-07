@@ -16,7 +16,7 @@ public class CreatePaymentRequest {
     private String creditorName;
     private String remittanceInformationUnstructured;
     // When the bank decide to follow the doc, remove the -"
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "CET")
     private Date requestedExecutionDate;
 
     private CreatePaymentRequest(Builder builder) {
