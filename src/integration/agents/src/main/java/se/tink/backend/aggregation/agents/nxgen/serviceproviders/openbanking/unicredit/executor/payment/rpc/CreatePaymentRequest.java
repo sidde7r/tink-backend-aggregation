@@ -13,12 +13,14 @@ public class CreatePaymentRequest {
     private AccountEntity creditorAccount;
     private AmountEntity instructedAmount;
     private String creditorName;
+    private String remittanceInformationUnstructured;
 
     private CreatePaymentRequest(Builder builder) {
         this.debtorAccount = builder.debtorAccount;
         this.creditorAccount = builder.creditorAccount;
         this.instructedAmount = builder.instructedAmount;
         this.creditorName = builder.creditorName;
+        this.remittanceInformationUnstructured = builder.remittanceInformationUnstructured;
     }
 
     public String toData() {
@@ -30,6 +32,7 @@ public class CreatePaymentRequest {
         private AccountEntity creditorAccount;
         private AmountEntity instructedAmount;
         private String creditorName;
+        private String remittanceInformationUnstructured;
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         private String requestedExecutionDate;
@@ -51,6 +54,11 @@ public class CreatePaymentRequest {
 
         public Builder withCreditorName(String creditorName) {
             this.creditorName = creditorName;
+            return this;
+        }
+
+        public Builder withUnstructuredRemittance(String remittanceInformationUnstructured) {
+            this.remittanceInformationUnstructured = remittanceInformationUnstructured;
             return this;
         }
 

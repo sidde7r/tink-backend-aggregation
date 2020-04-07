@@ -925,7 +925,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         private boolean doLogout = false;
         private boolean expectLoggedIn = true;
-
         private Set<RefreshableItem> refreshableItems = new HashSet<>();
 
         private AisValidator validator;
