@@ -13,7 +13,7 @@ public class UpdateCredentialsStatusRequest {
     private boolean isManual;
     private boolean isMigrationUpdate;
     private String refreshId;
-    private CredentialsRequestType credentialsRequestType;
+    private CredentialsRequestType requestType;
 
     public boolean isManual() {
         return isManual;
@@ -71,17 +71,17 @@ public class UpdateCredentialsStatusRequest {
         this.refreshId = refreshId;
     }
 
-    public void setCredentialsRequestType(
+    public void setRequestType(
             se.tink.libraries.credentials.service.CredentialsRequestType
                     serviceCredentialsRequestType) {
         if (serviceCredentialsRequestType == null) {
             return;
         }
         String name = serviceCredentialsRequestType.name();
-        credentialsRequestType = Enums.getIfPresent(CredentialsRequestType.class, name).orNull();
+        requestType = Enums.getIfPresent(CredentialsRequestType.class, name).orNull();
     }
 
-    public CredentialsRequestType getCredentialsRequestType() {
-        return credentialsRequestType;
+    public CredentialsRequestType getRequestType() {
+        return requestType;
     }
 }

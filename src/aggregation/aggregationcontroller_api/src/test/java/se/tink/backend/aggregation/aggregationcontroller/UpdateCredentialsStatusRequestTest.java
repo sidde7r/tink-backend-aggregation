@@ -20,15 +20,15 @@ public class UpdateCredentialsStatusRequestTest {
     @Test
     public void ensureAllRequestTypesCanTranslate() {
         for (CredentialsRequestType rt : aggregationServiceRequestTypes) {
-            updateRequest.setCredentialsRequestType(rt);
-            Assert.assertNotNull(updateRequest.getCredentialsRequestType());
+            updateRequest.setRequestType(rt);
+            Assert.assertNotNull(updateRequest.getRequestType());
         }
-        Assert.assertNotNull(updateRequest.getCredentialsRequestType());
+        Assert.assertNotNull(updateRequest.getRequestType());
     }
 
     @Test
     public void ensureNullDoesNotTranslate() {
-        updateRequest.setCredentialsRequestType(null);
-        Assert.assertNull(updateRequest.getCredentialsRequestType());
+        updateRequest.setRequestType(null);
+        Assert.assertNull(updateRequest.getRequestType());
     }
 }
