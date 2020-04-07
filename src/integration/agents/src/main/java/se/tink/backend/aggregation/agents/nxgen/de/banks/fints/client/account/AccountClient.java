@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.account;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsRequestProcessor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.exception.UnsuccessfulApiCallException;
@@ -13,15 +14,11 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HIUPD;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.SegmentType;
 
+@AllArgsConstructor
 public class AccountClient {
 
     private final FinTsRequestProcessor requestProcessor;
     private final FinTsDialogContext dialogContext;
-
-    public AccountClient(FinTsRequestProcessor requestProcessor, FinTsDialogContext dialogContext) {
-        this.requestProcessor = requestProcessor;
-        this.dialogContext = dialogContext;
-    }
 
     public FinTsResponse getSepaDetailsForAllAccounts() {
         FinTsRequest request = getSepaDetailsRequest();

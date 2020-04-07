@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
+@AllArgsConstructor
 public class FinTsTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
 
     public enum StrategyType {
@@ -37,15 +38,6 @@ public class FinTsTransactionFetcher implements TransactionFetcher<Transactional
     private final FinTsDialogContext dialogContext;
     private final TransactionClient transactionClient;
     private final FinTsTransactionMapper mapper;
-
-    public FinTsTransactionFetcher(
-            FinTsDialogContext dialogContext,
-            TransactionClient transactionClient,
-            FinTsTransactionMapper mapper) {
-        this.dialogContext = dialogContext;
-        this.transactionClient = transactionClient;
-        this.mapper = mapper;
-    }
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(

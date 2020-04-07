@@ -3,9 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.transacti
 import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.StatusCode.MORE_INFORMATION_AVAILABLE;
 import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.StatusMessage.NO_ACTIVE_PHONE_NUMBER_WARNING;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
@@ -15,47 +16,42 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.FinTsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HIRMS;
 
+@AllArgsConstructor
 public class TransactionClient {
 
     private final FinTsRequestProcessor requestProcessor;
     private final FinTsDialogContext dialogContext;
 
-    public TransactionClient(
-            FinTsRequestProcessor requestProcessor, FinTsDialogContext dialogContext) {
-        this.requestProcessor = requestProcessor;
-        this.dialogContext = dialogContext;
-    }
-
     public List<FinTsResponse> getTransactionResponses(
             TransactionRequestBuilder requestBuilder, FinTsAccountInformation account) {
-        List<FinTsResponse> responses = new ArrayList<>();
-        getTransactionsResponsesRecur(requestBuilder, account, null, responses);
-        return responses;
+        return getTransactionsResponsesRecurList(requestBuilder, account, null);
     }
 
-    private void getTransactionsResponsesRecur(
+    private LinkedList<FinTsResponse> getTransactionsResponsesRecurList(
             TransactionRequestBuilder requestBuilder,
             FinTsAccountInformation account,
-            String startingPoint,
-            List<FinTsResponse> mutableListOfResponses) {
+            String startingPoint) {
         FinTsRequest request = requestBuilder.build(dialogContext, account, startingPoint);
         FinTsResponse response = requestProcessor.process(request);
 
         if (response.hasStatusCodeOf(FinTsConstants.StatusCode.NO_ENTRY)
                 && !response.hasStatusMessageOf(NO_ACTIVE_PHONE_NUMBER_WARNING)) {
-            return;
+            return new LinkedList<>();
         }
 
         if (!response.isSuccess()) {
             throw new UnsuccessfulApiCallException("Fetching transaction failed");
         }
 
-        mutableListOfResponses.add(response);
         Optional<String> maybeStartingPoint = extractStartingPoint(response);
-        maybeStartingPoint.ifPresent(
-                s ->
-                        getTransactionsResponsesRecur(
-                                requestBuilder, account, s, mutableListOfResponses));
+        LinkedList<FinTsResponse> responseList = new LinkedList<>();
+        if (maybeStartingPoint.isPresent()) {
+            responseList =
+                    getTransactionsResponsesRecurList(
+                            requestBuilder, account, maybeStartingPoint.get());
+        }
+        responseList.addFirst(response);
+        return responseList;
     }
 
     private Optional<String> extractStartingPoint(FinTsResponse response) {

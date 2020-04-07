@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
@@ -22,20 +23,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @Slf4j
+@AllArgsConstructor
 public class FinTsAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final FinTsDialogContext dialogContext;
     private final AccountClient accountClient;
     private final FinTsTransactionalAccountMapper mapper;
-
-    public FinTsAccountFetcher(
-            FinTsDialogContext dialogContext,
-            AccountClient accountClient,
-            FinTsTransactionalAccountMapper mapper) {
-        this.dialogContext = dialogContext;
-        this.accountClient = accountClient;
-        this.mapper = mapper;
-    }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {

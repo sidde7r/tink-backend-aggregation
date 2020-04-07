@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SwiftDateParser {
+
     private static final int BOOKED_DATE_LENGTH = 4;
     private static final String INTEGER_DATE_COMPACT = "yyMMdd";
     private static final DateTimeFormatter FORMATTER_INTEGER_DATE_COMPACT =

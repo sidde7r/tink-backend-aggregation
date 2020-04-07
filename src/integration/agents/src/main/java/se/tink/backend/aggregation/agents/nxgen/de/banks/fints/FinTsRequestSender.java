@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import java.util.regex.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.base64.FinTsBase64;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
@@ -8,16 +9,12 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @Slf4j
+@AllArgsConstructor
 public class FinTsRequestSender {
 
     private static final Pattern REPLACE_PATTERN = Pattern.compile("\u0000");
     private final TinkHttpClient httpClient;
     private final String endpoint;
-
-    public FinTsRequestSender(TinkHttpClient httpClient, String endpoint) {
-        this.httpClient = httpClient;
-        this.endpoint = endpoint;
-    }
 
     public FinTsResponse sendRequest(FinTsRequest request) {
         log.info("Request: {}", request.toFinTsFormat());

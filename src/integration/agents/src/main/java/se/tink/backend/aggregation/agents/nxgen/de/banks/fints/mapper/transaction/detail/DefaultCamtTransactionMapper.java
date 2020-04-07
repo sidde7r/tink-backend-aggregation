@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class DefaultCamtTransactionMapper implements TransactionMapper {
+
     private static JAXBContext context;
 
     static {
