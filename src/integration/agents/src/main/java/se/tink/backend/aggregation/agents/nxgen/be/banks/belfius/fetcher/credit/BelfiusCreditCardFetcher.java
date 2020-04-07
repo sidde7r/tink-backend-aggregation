@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusProduct;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusTransaction;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BelfiusCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
@@ -49,16 +47,7 @@ public class BelfiusCreditCardFetcher
         // credit cards right now to begin with.
 
         try {
-            this.apiClient.fetchProducts().stream()
-                    .filter(entry -> entry.getValue().isCreditCard())
-                    .forEach(
-                            entry -> {
-                                BelfiusProduct product = entry.getValue();
-                                LOGGER.infoExtraLong(
-                                        "card: " + product,
-                                        BelfiusConstants.Fetcher.CreditCards.LOGTAG);
-                                // return product.toCreditCardAccount(entry.getKey());
-                            });
+            this.apiClient.fetchProducts();
         } catch (Exception e) {
             LOGGER.warnExtraLong(
                     "Unable to fetch credit cards", BelfiusConstants.Fetcher.CreditCards.LOGTAG, e);
@@ -87,10 +76,6 @@ public class BelfiusCreditCardFetcher
                                 .map(BelfiusTransaction::toTinkTransaction)
                                 .filter(Objects::nonNull)
                                 .collect(Collectors.toList());
-
-                LOGGER.infoExtraLong(
-                        "transactions: " + SerializationUtils.serializeToString(transactionsPage),
-                        BelfiusConstants.Fetcher.CreditCards.LOGTAG);
 
                 initialRequest = false;
 
