@@ -8,6 +8,9 @@ java_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/parsingoperations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/utils/parsingrules/predicates",
         "@aggregation//:com_google_guava_guava",
     ],
 )

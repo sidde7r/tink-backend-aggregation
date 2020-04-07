@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.*;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentAuthenticator;
@@ -60,10 +62,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                         persistentStorage,
                         supplementalInformationHelper,
                         new Xs2aDevelopersAuthenticator(
-                                apiClient,
-                                persistentStorage,
-                                getClientConfiguration(),
-                                credentials.getField(CredentialKeys.IBAN)),
+                                apiClient, persistentStorage, getClientConfiguration()),
                         credentials,
                         strongAuthenticationState);
 

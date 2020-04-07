@@ -28,7 +28,7 @@ public class IcaAgentPaymentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("se", "se-icabanken-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-icabanken-ob")
                         .loadCredentialsBefore(
                                 Boolean.parseBoolean(
                                         manager.get(LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))

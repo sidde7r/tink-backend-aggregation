@@ -27,7 +27,7 @@ public class IcaBankenTransactionFetcher implements TransactionDatePaginator<Tra
         } catch (HttpResponseException e) {
             String exceptionMessage = e.getResponse().getBody(String.class);
             if (exceptionMessage.contains(
-                    IcaBankenConstants.TransactionResponse.UNVALID_TIME_ERROR)) {
+                    IcaBankenConstants.TransactionResponse.TRANSACTION_NOT_FOUND)) {
                 return PaginatorResponseImpl.createEmpty(false);
             }
             throw e;

@@ -1,0 +1,83 @@
+{
+  "read_only_access": false,
+  "accounts": [
+    {
+      "has_additional_info": true,
+      "account_number": "4720 71 91894",
+      "cash_amount": 952873.45,
+      "owner_id": "***MASKED***",
+      "details_available": true,
+      "profit_loss": 0.0,
+      "wrapper": true,
+      "type": "CUSTODY",
+      "buying_power": 952873.45,
+      "has_reports": false,
+      "profit_loss_percentage": 0,
+      "profit_loss_applicable": true,
+      "has_fund_allocation_plan": true,
+      "currency": "SEK",
+      "id": "ISK:047207191894",
+      "holdings": [
+        {
+          "show_profit_loss": false,
+          "market_value": 952873.45,
+          "quantity": 952873.45,
+          "custody_key": "ISK:047207191894",
+          "name": "SEK",
+          "instrument": {
+            "switch_allowed": false,
+            "details_available": false,
+            "main_sector_code": "GICS0",
+            "instrument_type": "CASH",
+            "flag_code": "",
+            "issuer": "-",
+            "price_precision": 2,
+            "use_native_trading_flow": false,
+            "instrument_name": "SEK",
+            "sector_allocation": [
+              {
+                "code": "GICS0",
+                "value": 100.0
+              }
+            ],
+            "currency": "SEK",
+            "id": "IMC-SEK-SEK-SEK",
+            "sell_allowed": false,
+            "buy_allowed": false,
+            "region_allocation": [
+            ],
+            "isin": "SEK"
+          },
+          "currency": "SEK",
+          "id": "ISK:047207191894+IMC-SEK-SEK-SEK",
+          "fx_rate": 1.0,
+          "tags": [
+          ]
+        }
+      ],
+      "profit_loss_valid": true,
+      "market_value": 952873.45,
+      "todays_change_valid": true,
+      "owner_name": "",
+      "todays_change": 0.0,
+      "classification": "FREE",
+      "todays_change_percentage": 0.0,
+      "tags": [
+      ],
+      "custody_tags": [
+        "EXCHANGE_TRADING",
+        "FUND_TRADING"
+      ],
+      "market_value_in_local_currrency": 952873.45,
+      "todays_changes_applicable": true,
+      "name": "ISK"
+    }
+  ],
+  "totals": {
+    "todays_change_valid": true,
+    "todays_change": 0.0,
+    "todays_change_pct": 0.0
+  },
+  "legacy_errors": [
+  ]
+}

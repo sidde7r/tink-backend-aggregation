@@ -69,6 +69,8 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     private String messageType;
     private String payloadSerialized;
 
+    @JsonProperty private RemittanceInformation remittanceInformation;
+
     public Transfer() {
         id = UUID.randomUUID();
     }
@@ -352,6 +354,14 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         if (messageType != null) {
             this.messageType = messageType.name();
         }
+    }
+
+    public void setRemittanceInformation(RemittanceInformation remittanceInformation) {
+        this.remittanceInformation = remittanceInformation;
+    }
+
+    public Optional<RemittanceInformation> getRemittanceInformation() {
+        return Optional.ofNullable(this.remittanceInformation);
     }
 
     @JsonIgnore

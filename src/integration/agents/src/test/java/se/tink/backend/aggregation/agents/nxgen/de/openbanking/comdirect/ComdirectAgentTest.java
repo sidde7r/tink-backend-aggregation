@@ -2,16 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.comdirect;
 
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 
+@Ignore
 public class ComdirectAgentTest {
 
-    private final ArgumentManager<IbanArgumentEnum> manager =
-            new ArgumentManager<>(IbanArgumentEnum.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -21,11 +19,8 @@ public class ComdirectAgentTest {
 
     @Before
     public void setup() {
-        manager.before();
-
         builder =
                 new AgentIntegrationTest.Builder("de", "de-comdirect-ob")
-                        .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)

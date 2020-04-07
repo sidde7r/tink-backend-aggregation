@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
-import se.tink.backend.aggregation.agents.framework.wiremock.utils.S3LogFormatAdapter;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.identitydata.IdentityData;
@@ -32,11 +31,9 @@ public class AmexV62UkMockServerWithContractFileAgentTest {
         WireMockTestServer server = new WireMockTestServer();
         server.prepareMockServer(
                 new AapFileParser(
-                        new S3LogFormatAdapter()
-                                .toMockFileFormat(
-                                        new ResourceFileReader()
-                                                .read(
-                                                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.s3"))));
+                        new ResourceFileReader()
+                                .read(
+                                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap")));
 
         AgentContractEntitiesJsonFileParser contractParser =
                 new AgentContractEntitiesJsonFileParser();

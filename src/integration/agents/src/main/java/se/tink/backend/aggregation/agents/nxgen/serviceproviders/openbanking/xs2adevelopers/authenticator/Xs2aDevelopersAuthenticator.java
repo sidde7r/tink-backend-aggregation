@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
@@ -10,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.entities.AccessInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
@@ -25,17 +22,14 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
     private final Xs2aDevelopersApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final Xs2aDevelopersConfiguration configuration;
-    private final String iban;
 
     public Xs2aDevelopersAuthenticator(
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
-            Xs2aDevelopersConfiguration configuration,
-            String iban) {
+            Xs2aDevelopersConfiguration configuration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
-        this.iban = iban;
     }
 
     public Xs2aDevelopersConfiguration getConfiguration() {
@@ -53,8 +47,6 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        List<AccessInfoEntity> accessInfoEntityList =
-                Collections.singletonList(new AccessInfoEntity(FormValues.EUR, iban));
         AccessEntity accessEntity = new AccessEntity(FormValues.ALL_ACCOUNTS);
         PostConsentBody postConsentBody =
                 new PostConsentBody(

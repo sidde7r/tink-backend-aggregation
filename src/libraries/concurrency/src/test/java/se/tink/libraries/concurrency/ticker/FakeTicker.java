@@ -1,4 +1,4 @@
-package se.tink.libraries.concurrency;
+package se.tink.libraries.concurrency.ticker;
 
 import com.google.common.base.Ticker;
 import java.util.concurrent.atomic.AtomicLong;

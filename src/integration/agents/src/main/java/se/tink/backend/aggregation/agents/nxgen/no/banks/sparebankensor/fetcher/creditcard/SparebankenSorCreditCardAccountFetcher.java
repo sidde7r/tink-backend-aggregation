@@ -21,8 +21,7 @@ public class SparebankenSorCreditCardAccountFetcher implements AccountFetcher<Cr
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         try {
-            String response = apiClient.fetchCreditCards();
-            LOGGER.infoExtraLong(response, SparebankenSorConstants.LogTags.CREDIT_CARD_LOG_TAG);
+            apiClient.fetchCreditCards();
         } catch (Exception e) {
             LOGGER.infoExtraLong(
                     "Failed to retrieve credit cards",

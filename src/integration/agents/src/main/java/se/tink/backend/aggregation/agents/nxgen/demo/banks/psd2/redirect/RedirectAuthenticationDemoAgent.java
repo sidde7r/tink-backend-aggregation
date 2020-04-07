@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD_CALLBACK;
+
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -70,6 +72,10 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         // This is only for customers to test the callbackUri without
         // having to configure it etc.
         String callbackUri = request.getCallbackUri();
+        if (RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD.equals(
+                context.getClusterId())) {
+            callbackUri = OXFORD_PREPROD_CALLBACK;
+        }
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
                 new RedirectOAuth2Authenticator(redirectToOxfordPreprod, callbackUri, credentials);
 
@@ -107,6 +113,10 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
     @Override
     protected Optional<TransferController> constructTransferController() {
         String callbackUri = request.getCallbackUri();
+        if (RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD.equals(
+                context.getClusterId())) {
+            callbackUri = OXFORD_PREPROD_CALLBACK;
+        }
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
                 new RedirectOAuth2Authenticator(redirectToOxfordPreprod, callbackUri, credentials);
 
@@ -136,6 +146,10 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         String callbackUri = request.getCallbackUri();
+        if (RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD.equals(
+                context.getClusterId())) {
+            callbackUri = OXFORD_PREPROD_CALLBACK;
+        }
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
                 new RedirectOAuth2Authenticator(redirectToOxfordPreprod, callbackUri, credentials);
 

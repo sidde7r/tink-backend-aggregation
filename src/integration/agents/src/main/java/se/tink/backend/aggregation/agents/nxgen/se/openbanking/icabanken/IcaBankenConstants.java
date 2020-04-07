@@ -108,7 +108,6 @@ public final class IcaBankenConstants {
     }
 
     public static class TransactionResponse {
-        public static final String UNVALID_TIME_ERROR =
-                "Minimum Value Date or Value Date can not be older than 18 months";
+        public static final String TRANSACTION_NOT_FOUND = "Transaction not found";
     }
 }

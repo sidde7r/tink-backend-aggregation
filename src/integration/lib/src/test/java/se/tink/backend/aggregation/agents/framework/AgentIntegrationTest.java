@@ -87,7 +87,7 @@ import se.tink.libraries.user.rpc.UserProfile;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
+    private static final Logger log = LoggerFactory.getLogger(AgentIntegrationTest.class);
 
     private final Provider provider;
     private final User user;

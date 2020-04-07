@@ -1,4 +1,4 @@
-package se.tink.libraries.account.identifiers;
+package se.tink.libraries.account.identifiers.account;
 
 import se.tink.libraries.account.AccountIdentifier;
 

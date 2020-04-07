@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SparebankenVestLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger LOGGER =
@@ -55,13 +54,7 @@ public class SparebankenVestLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private void fetchAndLogCurrencyLoanDetails(LoanEntity loanEntity) {
         try {
-            LOGGER.infoExtraLong(
-                    "LOAN: " + SerializationUtils.serializeToString(loanEntity),
-                    SparebankenVestConstants.LogTags.LOANS);
-            String loanDetails =
-                    "(currency loan) " + apiClient.fetchCurrencyLoanDetails(loanEntity);
-            LOGGER.infoExtraLong(
-                    "LOAN DETAILS: " + loanDetails, SparebankenVestConstants.LogTags.LOANS);
+            apiClient.fetchCurrencyLoanDetails(loanEntity);
         } catch (Exception e) {
             LOGGER.infoExtraLong(
                     "DETAILS: Failed to fetch details: " + e.getMessage(),

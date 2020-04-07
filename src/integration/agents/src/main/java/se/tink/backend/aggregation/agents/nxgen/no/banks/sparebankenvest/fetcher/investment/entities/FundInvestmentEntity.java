@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class FundInvestmentEntity {
@@ -49,11 +48,6 @@ public class FundInvestmentEntity {
         if (isFund() || isPension()) {
             return Instrument.Type.FUND;
         }
-
-        // check if there are any other types than FUND and PENSION FUND
-        LOGGER.infoExtraLong(
-                "Unknown investment type: " + SerializationUtils.serializeToString(this),
-                SparebankenVestConstants.LogTags.INVESTMENTS);
 
         return Instrument.Type.OTHER;
     }

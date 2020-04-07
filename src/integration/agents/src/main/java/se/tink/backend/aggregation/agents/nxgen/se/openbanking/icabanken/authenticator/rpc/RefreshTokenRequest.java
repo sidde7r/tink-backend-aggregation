@@ -4,10 +4,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBank
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class RefreshTokenRequest extends AbstractForm {
-    private RefreshTokenRequest(
-            String client_id, String scope, String grant_type, String refresh_token) {
+    private RefreshTokenRequest(String client_id, String grant_type, String refresh_token) {
         put(IcaBankenConstants.QueryKeys.CLIENT_ID, client_id);
-        put(IcaBankenConstants.QueryKeys.SCOPE, scope);
         put(IcaBankenConstants.QueryKeys.GRANT_TYPE, grant_type);
         put(IcaBankenConstants.QueryKeys.REFRESH_TOKEN, refresh_token);
     }
@@ -20,7 +18,6 @@ public class RefreshTokenRequest extends AbstractForm {
         private String client_id;
         private String grant_type;
         private String refresh_token;
-        private String scope;
 
         public Builder setClientId(String clientId) {
             this.client_id = clientId;
@@ -37,14 +34,8 @@ public class RefreshTokenRequest extends AbstractForm {
             return this;
         }
 
-        public Builder setScope(String scope) {
-            this.scope = scope;
-            return this;
-        }
-
         public RefreshTokenRequest build() {
-            return new RefreshTokenRequest(
-                    this.client_id, this.scope, this.grant_type, this.refresh_token);
+            return new RefreshTokenRequest(this.client_id, this.grant_type, this.refresh_token);
         }
     }
 }

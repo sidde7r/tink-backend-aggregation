@@ -22,7 +22,7 @@ public class IcaBankenAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("se", "se-icabanken-oauth2")
+                new AgentIntegrationTest.Builder("se", "se-icabanken-ob")
                         .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .loadCredentialsBefore(false)
                         .expectLoggedIn(false)

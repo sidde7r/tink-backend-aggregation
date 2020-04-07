@@ -23,6 +23,9 @@ public class BankIdIframeSSAuthenticationController {
     private static final By BANK_ID_MOBIL_BUTTON =
             By.xpath(
                     "//ul/child::li/child::button[span[contains(text(),'mobil') and contains(text(),'BankID')]]");
+    private static final By AUTHENTICATION_INPUT_XPATH =
+            By.xpath("//form//input[@type='password'][@maxlength]");
+
     private static final int WAIT_RENDER_MILLIS = 1000;
 
     public BankIdIframeSSAuthenticationController(
@@ -35,11 +38,22 @@ public class BankIdIframeSSAuthenticationController {
     public void doLogin(String password) throws AuthenticationException {
         iframeInitializer.initializeBankIdAuthentication();
 
-        getListAuthenticationMethods(driver);
-
-        chooseBankIdMobil(driver);
+        if (isBankIdMobilNotSetByDefault()) {
+            getListAuthenticationMethods(driver);
+            chooseBankIdMobil(driver);
+        }
+        webDriverHelper.submitForm(driver, FORM_XPATH);
 
         waitForUserInteractionAndSendBankIdPassword(driver, password);
+    }
+
+    private boolean isBankIdMobilNotSetByDefault() throws LoginException {
+        WebElement passwordInputElement =
+                webDriverHelper
+                        .waitForElement(driver, AUTHENTICATION_INPUT_XPATH)
+                        .orElseThrow(() -> LoginError.NOT_SUPPORTED.exception());
+
+        return passwordInputElement.isEnabled();
     }
 
     private void waitForUserInteractionAndSendBankIdPassword(WebDriver driver, String password)
@@ -59,7 +73,6 @@ public class BankIdIframeSSAuthenticationController {
         WebElement bankIdMobilAuthenticationSelectionButton =
                 webDriverHelper.getElement(driver, BANK_ID_MOBIL_BUTTON);
         webDriverHelper.clickButton(bankIdMobilAuthenticationSelectionButton);
-        webDriverHelper.submitForm(driver, FORM_XPATH);
     }
 
     private WebElement waitForUserInteraction(WebDriver driver) throws LoginException {

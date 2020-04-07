@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils;
-import se.tink.backend.aggregation.agents.framework.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 
 public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
 
