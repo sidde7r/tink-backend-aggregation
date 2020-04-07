@@ -66,6 +66,6 @@ public abstract class SebConstants {
     }
 
     public static class PaymentValue {
-        public static final int MAX_DEST_MSG_LEN = 100;
+        public static final int MAX_DEST_MSG_LEN = 12;
     }
 }
