@@ -93,7 +93,8 @@ public final class SdcConstants {
     }
 
     public static class Transactions {
-        public static final int MAX_TRANSACTIONS_PER_RESPONSE = 200;
+        public static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+        public static final int MONTHS_TO_FETCH = 1;
     }
 
     public static class CredentialKeys {

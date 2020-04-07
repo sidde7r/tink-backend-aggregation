@@ -12,7 +12,6 @@ public class SdcTransactionalAccountTransactionFetcher
         implements TransactionDatePaginator<TransactionalAccount> {
 
     private final SdcApiClient apiClient;
-    private Date lastTransactionDateFetched = new Date();
 
     public SdcTransactionalAccountTransactionFetcher(SdcApiClient apiClient) {
         this.apiClient = apiClient;
@@ -21,7 +20,6 @@ public class SdcTransactionalAccountTransactionFetcher
     @Override
     public TransactionsResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-
-        return apiClient.getTransactionsFor(account, fromDate, toDate);
+        return apiClient.getTransactionsFor(account.getApiIdentifier(), fromDate, toDate);
     }
 }

@@ -1,5 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.PathParameters.ACCOUNT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryKeys.BOOKING_STATUS;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryKeys.DATE_FROM;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryKeys.DATE_TO;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryValues.BOOKED;
+import static se.tink.backend.aggregation.api.Psd2Headers.Keys.CONSENT_ID;
+import static se.tink.backend.aggregation.api.Psd2Headers.Keys.X_REQUEST_ID;
+import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
+
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -10,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.PathParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.StorageKeys;
@@ -24,13 +33,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class SdcApiClient {
 
@@ -124,81 +131,29 @@ public final class SdcApiClient {
 
     public AccountsResponse fetchAccounts() {
         return createRequestInSession(Urls.ACCOUNTS)
-                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(Psd2Headers.Keys.CONSENT_ID, Psd2Headers.getRequestId())
-                .header(
-                        HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
-                        getConfiguration().getOcpApimSubscriptionKey())
+                .header(X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(CONSENT_ID, Psd2Headers.getRequestId())
+                .header(OCP_APIM_SUBSCRIPTION_KEY, getConfiguration().getOcpApimSubscriptionKey())
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountsResponse.class);
     }
 
     public BalancesResponse fetchAccountBalances(String accountId) {
-        return createRequestInSession(Urls.BALANCES.parameter(PathParameters.ACCOUNT_ID, accountId))
-                .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(Psd2Headers.Keys.CONSENT_ID, Psd2Headers.getRequestId())
-                .header(
-                        HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
-                        getConfiguration().getOcpApimSubscriptionKey())
+        return createRequestInSession(Urls.BALANCES.parameter(ACCOUNT_ID, accountId))
+                .header(X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(CONSENT_ID, Psd2Headers.getRequestId())
+                .header(OCP_APIM_SUBSCRIPTION_KEY, getConfiguration().getOcpApimSubscriptionKey())
                 .get(BalancesResponse.class);
     }
 
-    public TransactionsResponse getTransactionsFor(
-            TransactionalAccount account, Date fromDate, Date toDate) {
-
-        /*
-           Currently, for a given date range, if there are more than 200 transactions, the bank
-           just returns the first 200 and ignores the rest and does not give any indicator to us
-           to make us realise the issue. Bank will make a fix for that in 2020.
-           For this reason we temporarily narrowed down the date range (from 3 months to 1 month
-           see SdcAgent class)
-
-           It is not a perfect solution as one might still have more than 200 transactions for a
-           given date period. For this reason there are two things that we can do if we ever get
-           200 transactions as a response of an API call:
-
-           1) Crash the agent so we will be sure that we will not show any corrupted data (data with
-           missing transactions) to the user
-
-           2) Divide the date range into two, recursively call getTransactionsFor for these two
-           smaller date ranges, merge the results and return
-
-           3) Find the oldest date (D) in the fetched transactions and recursively fetch the transactions
-           whose date period is between fromDate and D. Append it into the response
-
-           We need to decide one of these approaches and implement it here
-        */
-
-        TransactionsResponse response =
-                createRequestInSession(
-                                Urls.TRANSACTIONS.parameter(
-                                        PathParameters.ACCOUNT_ID, account.getApiIdentifier()))
-                        .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(Psd2Headers.Keys.CONSENT_ID, Psd2Headers.getRequestId())
-                        .header(Psd2Headers.Keys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                        .header(Psd2Headers.Keys.CONSENT_ID, Psd2Headers.getRequestId())
-                        .header(
-                                HeaderKeys.OCP_APIM_SUBSCRIPTION_KEY,
-                                getConfiguration().getOcpApimSubscriptionKey())
-                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
-                        .queryParam(
-                                QueryKeys.DATE_FROM,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                        .queryParam(
-                                QueryKeys.DATE_TO,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                        .get(TransactionsResponse.class);
-
-        // Implementation of approach (3) (this is a temporary fix, should be removed after the bank
-        // fixes the issue in their end)
-        Optional<Date> transactionsMissingUntil = response.getOverflowTransactionDate();
-
-        if (transactionsMissingUntil.isPresent()) {
-            TransactionsResponse responseForMissingPart =
-                    getTransactionsFor(account, fromDate, transactionsMissingUntil.get());
-            response.mergeTransactionResponse(responseForMissingPart);
-        }
-
-        return response;
+    public TransactionsResponse getTransactionsFor(String accountId, Date fromDate, Date toDate) {
+        return createRequestInSession(Urls.TRANSACTIONS.parameter(ACCOUNT_ID, accountId))
+                .header(X_REQUEST_ID, Psd2Headers.getRequestId())
+                .header(CONSENT_ID, Psd2Headers.getRequestId())
+                .header(OCP_APIM_SUBSCRIPTION_KEY, getConfiguration().getOcpApimSubscriptionKey())
+                .queryParam(BOOKING_STATUS, BOOKED)
+                .queryParam(DATE_FROM, FORMATTER_DAILY.format(fromDate))
+                .queryParam(DATE_TO, FORMATTER_DAILY.format(toDate))
+                .get(TransactionsResponse.class);
     }
 }
