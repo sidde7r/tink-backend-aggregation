@@ -58,6 +58,9 @@ public class TransactionsEntity {
                                         .setDescription(createDescription(movement))
                                         .setDate(createDate(movement))
                                         .setPayload(
+                                                TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL,
+                                                getCounterPartyAccount(movement))
+                                        .setPayload(
                                                 TransactionPayloadTypes
                                                         .TRANSFER_ACCOUNT_NAME_EXTERNAL,
                                                 getCounterPartyName(movement))
@@ -103,6 +106,16 @@ public class TransactionsEntity {
             return String.join(" ", words);
         }
         throw new IllegalStateException("Couldn't find description");
+    }
+
+    private static String getCounterPartyAccount(final BookedEntity movement) {
+        return Stream.of(
+                        movement.getCreditorAccount().getIban(),
+                        movement.getDebtorAccount().getIban())
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isEmpty())
+                .findFirst()
+                .orElse("");
     }
 
     private static String getCounterPartyName(final BookedEntity movement) {
