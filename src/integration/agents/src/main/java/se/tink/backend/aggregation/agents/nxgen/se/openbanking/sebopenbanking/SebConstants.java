@@ -42,6 +42,12 @@ public abstract class SebConstants {
                 "Cross border payment is still not supported";
         public static final String PAYMENT_REF_TOO_LONG =
                 "Supplied payment reference is too long, max is %s characters.";
+        public static final String DATE_TOO_CLOSE_ERROR_MESSAGE =
+                "The date when the money will reach the recipient is too close.";
+        public static final String NOT_BUSINESS_DAY_ERROR_MESSAGE =
+                "The date when the money must reach the recipient must be a banking day";
+        public static final String SIMILAR_PAYMENT_ERROR_MESSAGE =
+                "A similar payment is already in upcoming events.";
     }
 
     public static class IdTags {

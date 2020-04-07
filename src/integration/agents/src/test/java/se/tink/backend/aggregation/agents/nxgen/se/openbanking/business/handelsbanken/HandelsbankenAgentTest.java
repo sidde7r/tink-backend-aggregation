@@ -31,7 +31,7 @@ public class HandelsbankenAgentTest {
         usernameArgumentManager.before();
         businessIdArgumentEnumArgumentManagerIdArgument.before();
         builder =
-                new AgentIntegrationTest.Builder("se", "se-handelsbankencorporate-ob")
+                new AgentIntegrationTest.Builder("se", "se-handelsbanken-business-ob")
                         .addCredentialField(
                                 Field.Key.USERNAME,
                                 usernameArgumentManager.get(UsernameArgumentEnum.USERNAME))

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment;
 
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigner;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -15,9 +16,14 @@ public class SebBankIdSigner implements BankIdSigner<PaymentRequest> {
 
     @Override
     public BankIdStatus collect(PaymentRequest toCollect) {
-        PaymentStatus paymentResponse = paymentExecutor.fetchStatus(toCollect);
+        PaymentStatus paymentStatus = null;
+        try {
+            paymentStatus = paymentExecutor.fetchStatus(toCollect);
+        } catch (PaymentException e) {
+            paymentStatus = PaymentStatus.REJECTED;
+        }
 
-        switch (paymentResponse) {
+        switch (paymentStatus) {
             case CREATED:
             case PENDING:
                 return BankIdStatus.WAITING;

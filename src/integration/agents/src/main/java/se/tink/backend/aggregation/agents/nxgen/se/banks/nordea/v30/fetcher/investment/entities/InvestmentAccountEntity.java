@@ -116,4 +116,8 @@ public class InvestmentAccountEntity {
         final String type = id.substring(0, id.indexOf(":"));
         return NordeaSEConstants.PORTFOLIO_TYPE_MAPPER.translate(type).orElse(PortfolioType.OTHER);
     }
+
+    public List<HoldingEntity> getHoldings() {
+        return holdings;
+    }
 }
