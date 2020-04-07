@@ -17,11 +17,8 @@ public class FinTsRequestSender {
     private final String endpoint;
 
     public FinTsResponse sendRequest(FinTsRequest request) {
-        log.info("Request: {}", request.toFinTsFormat());
         String b64Response = send(FinTsBase64.encodeRequestToBase64(request));
-
         String plainResponse = FinTsBase64.decodeResponseFromBase64(b64Response);
-        log.info("Response: {}", REPLACE_PATTERN.matcher(plainResponse).replaceAll("0"));
         return new FinTsResponse(plainResponse);
     }
 

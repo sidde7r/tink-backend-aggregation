@@ -95,8 +95,8 @@ public class FinTsAccountFetcher implements AccountFetcher<TransactionalAccount>
                                 .findSegmentThrowable(HISAL.class));
             } else {
                 log.warn(
-                        "Could not find operation to retrieve balances for: "
-                                + accInfo.getBasicInfo().getAccountNumber());
+                        "Could not find operation to retrieve balances for one of the accounts. Account type: {}",
+                        accInfo.getAccountType());
             }
         }
     }

@@ -28,7 +28,7 @@ public class FinTsTransactionalAccountMapper {
         HISPA.Detail details = accountInformation.getSepaDetails();
 
         if (balance == null) {
-            log.warn("No balance provided for account: " + basicInfo.getAccountNumber());
+            log.warn("Could not properly map transactional account due to missing balance");
             return Optional.empty();
         }
 
