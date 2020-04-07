@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.Transactions.MAX_CONSECUTIVE_EMPTY_PAGES;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants.Transactions.MONTHS_TO_FETCH;
+
 import java.time.temporal.ChronoUnit;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -102,7 +105,10 @@ public final class SdcAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                transactionFetcher, 12, 1, ChronoUnit.MONTHS)));
+                                transactionFetcher,
+                                MAX_CONSECUTIVE_EMPTY_PAGES,
+                                MONTHS_TO_FETCH,
+                                ChronoUnit.MONTHS)));
     }
 
     @Override
