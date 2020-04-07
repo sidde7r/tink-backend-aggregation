@@ -4,9 +4,9 @@ import java.util.Optional;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
-import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 
 public class CreateAgentConfigurationControllerWorkerCommand extends AgentWorkerCommand {

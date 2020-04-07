@@ -1,0 +1,20 @@
+java_library(
+    name = "cli",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/controllers",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/repositories",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
+        "//src/libraries/discovery/src/main/java/se/tink/libraries/discovery",
+        "//src/libraries/repository",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:net_sourceforge_argparse4j_argparse4j",
+        "//third_party:org_slf4j_slf4j_api",
+        "//third_party:org_springframework_data_spring_data_jpa",
+    ],
+)

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers;
+package se.tink.backend.aggregation.workers.worker;
 
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.ratelimit.RateLimitedExecutorService;
 import se.tink.libraries.concurrency.InstrumentedRunnable;
 import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;

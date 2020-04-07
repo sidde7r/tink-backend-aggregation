@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers;
+package se.tink.backend.aggregation.workers.context;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerContext;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.identitydata.IdentityData;

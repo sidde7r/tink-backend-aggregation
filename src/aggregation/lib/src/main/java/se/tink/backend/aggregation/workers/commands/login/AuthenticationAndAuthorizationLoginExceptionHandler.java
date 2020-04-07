@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 
 public class AuthenticationAndAuthorizationLoginExceptionHandler
         extends AbstractLoginExceptionHandler {

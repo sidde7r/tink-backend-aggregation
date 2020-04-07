@@ -21,13 +21,13 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.DataVersionMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.DataVersionMigration.MigrationResult;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.MigrationFailedException;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.implementations.generic.GenericIdFromAccountNumberMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.nxmigrations.implementations.generic.GenericSanitizingMigration;
+import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 

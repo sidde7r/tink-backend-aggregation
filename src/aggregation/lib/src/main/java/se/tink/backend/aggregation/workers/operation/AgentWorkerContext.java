@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers;
+package se.tink.backend.aggregation.workers.operation;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -680,7 +680,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
      * @param proposal the proposed metrics' name.
      * @return cleaned metric's name
      */
-    static String cleanMetricName(String proposal) {
+    public static String cleanMetricName(String proposal) {
         return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 

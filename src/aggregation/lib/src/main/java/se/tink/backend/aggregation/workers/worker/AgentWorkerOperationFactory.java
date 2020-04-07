@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.workers;
+package se.tink.backend.aggregation.workers.worker;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
-import se.tink.backend.aggregation.workers.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
@@ -65,9 +64,13 @@ import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorker
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
+import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;

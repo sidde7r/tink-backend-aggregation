@@ -5,8 +5,6 @@ import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.icabanken.IcaBankenSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.ics.ICSSanitizingMigration;
@@ -19,6 +17,8 @@ import se.tink.backend.aggregation.workers.commands.migrations.implementations.c
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.serviceproviders.bankdata.BankdataAccountIdMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.serviceproviders.sebkort.SebKortSanitizeUniqueIdentifierMgration;
 import se.tink.backend.aggregation.workers.commands.migrations.implemntations.other.handelsbanken.HandelsbankenBankIdMigrationNoClearingNumber;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerCommand {

@@ -44,8 +44,6 @@ import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperP
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
-import se.tink.backend.aggregation.workers.AgentWorker;
-import se.tink.backend.aggregation.workers.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
@@ -53,6 +51,8 @@ import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryStub;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
+import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;

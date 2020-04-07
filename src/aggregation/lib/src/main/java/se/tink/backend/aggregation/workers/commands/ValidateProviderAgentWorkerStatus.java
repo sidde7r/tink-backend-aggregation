@@ -9,9 +9,9 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 
 /**
  * Prevents the command chain to advance if provider has one of the not allowed statuses

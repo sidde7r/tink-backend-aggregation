@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 
 public class BankServiceLoginExceptionHandler extends AbstractLoginExceptionHandler {
     Logger LOG = LoggerFactory.getLogger(BankServiceLoginExceptionHandler.class);
