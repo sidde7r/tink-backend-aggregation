@@ -13,7 +13,7 @@ steps:
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':codecov: Test Coverage'
-    branches: '!master'
+    branches: '!staging'
     command: .buildkite/run-code-coverage.sh
     timeout_in_minutes: 30
     agents:
