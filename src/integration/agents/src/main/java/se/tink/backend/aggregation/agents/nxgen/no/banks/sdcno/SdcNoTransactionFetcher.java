@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +21,6 @@ import se.tink.libraries.pair.Pair;
 
 class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
 
-    private static final int NUMBER_OF_DAYS_AGO = -7;
     private static final int NUMBER_OF_MONTHS_AGO = -12;
 
     private final SdcNoApiClient bankClient;
@@ -56,7 +54,7 @@ class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount
                 new SearchTransactionsRequest()
                         .setAccountId(account.getAccountNumber())
                         .setAgreementId(agreement.getEntityKey().getAgreementNumber())
-                        .setIncludeReservations(shouldIncludeReservations(toDate))
+                        .setIncludeReservations(true)
                         .setTransactionsFrom(formatDate(fromDate))
                         .setTransactionsTo(formatDate(toDate));
 
@@ -71,11 +69,5 @@ class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount
     private String formatDate(Date aDate) {
         LocalDate date = new java.sql.Date(aDate.getTime()).toLocalDate();
         return date.format(DateTimeFormatter.ISO_DATE);
-    }
-
-    private boolean shouldIncludeReservations(Date toDate) {
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, NUMBER_OF_DAYS_AGO);
-        return toDate.after(c.getTime());
     }
 }
