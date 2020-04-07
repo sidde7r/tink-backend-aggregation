@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -29,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class FinTsRequestProcessorTest {
-    @Rule public WireMockRule wireMock = new WireMockRule(443);
+    @Rule public WireMockRule wireMock = new WireMockRule(wireMockConfig().dynamicPort());
 
     private void initWireMockForScenarioWithTAN() {
         WireMock.stubFor(
@@ -70,9 +71,9 @@ public class FinTsRequestProcessorTest {
     public void shouldGetProperResponseForOperationRequiringTAN() {
         // given
         initWireMockForScenarioWithTAN();
+        String url = String.format("http://localhost:%d/foo/bar", wireMock.port());
         FinTsConfiguration configuration =
-                new FinTsConfiguration(
-                        "foo", Bank.POSTBANK, "http://localhost:443/foo/bar", "foo", "foo");
+                new FinTsConfiguration("foo", Bank.POSTBANK, url, "foo", "foo");
         FinTsDialogContext context =
                 new FinTsDialogContext(configuration, new FinTsSecretsConfiguration());
         FinTsRequestProcessor processor = createRequestProcessor(context, configuration);
@@ -92,9 +93,9 @@ public class FinTsRequestProcessorTest {
     public void shouldGetProperResponseForOperationNotRequiringTAN() {
         // given
         initWireMockForScenarioWithoutAnyTAN();
+        String url = String.format("http://localhost:%d/foo/bar", wireMock.port());
         FinTsConfiguration configuration =
-                new FinTsConfiguration(
-                        "foo", Bank.POSTBANK, "http://localhost:443/foo/bar", "foo", "foo");
+                new FinTsConfiguration("foo", Bank.POSTBANK, url, "foo", "foo");
         FinTsDialogContext context =
                 new FinTsDialogContext(configuration, new FinTsSecretsConfiguration());
         FinTsRequestProcessor processor = createRequestProcessor(context, configuration);
