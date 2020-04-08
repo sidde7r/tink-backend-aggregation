@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.ErrorEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ErrorResponse {
     private static Logger log = LoggerFactory.getLogger(ErrorResponse.class);
 
+    private String message;
     private List<ErrorEntity> errors;
 
     @JsonIgnore
@@ -47,5 +49,10 @@ public class ErrorResponse {
     public boolean isAmountExceedsCurrentBalance() {
         return getErrorsAndLogIfMultiple().stream()
                 .anyMatch(ErrorEntity::isAmountExceedsCurrentBalance);
+    }
+
+    @JsonIgnore
+    public boolean isForbiddenWithNoErrorCode() {
+        return Errors.FORBIDDEN.equalsIgnoreCase(message);
     }
 }
