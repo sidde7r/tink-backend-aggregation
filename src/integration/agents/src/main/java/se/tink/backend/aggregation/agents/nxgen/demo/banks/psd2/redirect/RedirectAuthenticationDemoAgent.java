@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD_CALLBACK;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE;
 
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
@@ -76,6 +77,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                 context.getClusterId())) {
             callbackUri = OXFORD_PREPROD_CALLBACK;
         }
+
         RedirectOAuth2Authenticator redirectOAuth2Authenticator =
                 new RedirectOAuth2Authenticator(redirectToOxfordPreprod, callbackUri, credentials);
 
@@ -179,6 +181,9 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public DemoInvestmentAccount getInvestmentAccounts() {
+        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+            return null;
+        }
         return new DemoInvestmentAccount() {
             @Override
             public String getAccountId() {
@@ -199,11 +204,17 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public DemoSavingsAccount getDemoSavingsAccounts() {
+        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+            return null;
+        }
         return DemoAccountDefinitionGenerator.getDemoSavingsAccounts(USERNAME, this.provider);
     }
 
     @Override
     public DemoLoanAccount getDemoLoanAccounts() {
+        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+            return null;
+        }
         return new DemoLoanAccount() {
             @Override
             public String getMortgageId() {
@@ -250,6 +261,9 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
     @Override
     public List<DemoTransactionAccount> getTransactionAccounts() {
         if (this.provider.matches(DemoConstants.MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+            if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+                return Collections.EMPTY_LIST;
+            }
             return Lists.newArrayList(
                     DemoAccountDefinitionGenerator.getDemoTransactionalAccountWithZeroBalance(
                             USERNAME, this.provider),
@@ -292,7 +306,6 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                                             StaticAccountUK.ACCOUNT_IDENTIFIERS));
                         }
                     });
-
         } else {
             return Lists.newArrayList(
                     DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
@@ -302,6 +315,9 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public List<DemoCreditCardAccount> getCreditCardAccounts() {
+        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+            return Collections.EMPTY_LIST;
+        }
         return Collections.singletonList(
                 new DemoCreditCardAccount() {
                     @Override
