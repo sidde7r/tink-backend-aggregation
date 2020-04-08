@@ -107,6 +107,7 @@ public class AmericanExpressV62ApiClient {
     }
 
     public LogonResponse logon(LogonRequest request) {
+        client.clearCookies();
         String rawResponse =
                 createRequest(AmericanExpressV62Constants.Urls.LOG_ON).post(String.class, request);
         return AmericanExpressV62Utils.fromJson(rawResponse, LogonResponse.class);
