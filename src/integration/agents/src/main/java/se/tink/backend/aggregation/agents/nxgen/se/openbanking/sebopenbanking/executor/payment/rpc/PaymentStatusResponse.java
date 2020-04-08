@@ -40,7 +40,13 @@ public class PaymentStatusResponse {
     }
 
     @JsonIgnore
-    public void checkForErrors() throws PaymentException {
+    public boolean isPaymentCancelled() {
+        return hasMethodSelectionEntity()
+                && SebPaymentStatus.RCVD.getText().equalsIgnoreCase(transactionStatus);
+    }
+
+    @JsonIgnore
+    public PaymentStatusResponse checkForErrors() throws PaymentException {
         if (SebPaymentStatus.RJCT.getText().equalsIgnoreCase(transactionStatus)) {
             if (isDueDateTooCloseError()) {
                 throw DateValidationException.paymentDateTooCloseException();
@@ -52,6 +58,7 @@ public class PaymentStatusResponse {
                 throw new PaymentRejectedException(getErrorMessage());
             }
         }
+        return this;
     }
 
     @JsonIgnore
