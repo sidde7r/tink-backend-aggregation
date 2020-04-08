@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authentic
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
 public class TokenResponse {
@@ -13,16 +14,16 @@ public class TokenResponse {
     private String tokenType;
 
     @JsonProperty("expires_in")
-    private Integer expiresIn;
-
-    @JsonProperty("user")
-    private String user;
+    private Long expiresIn;
 
     @JsonProperty("username")
+    private String user;
+
+    @JsonProperty("displayName")
     private String username;
 
-    @JsonProperty("authorized_apis")
-    private String authorizedApis;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 
     @JsonProperty(".issued")
     private String issued;
@@ -30,7 +31,7 @@ public class TokenResponse {
     @JsonProperty(".expires")
     private String expires;
 
-    public String getAccessToken() {
-        return accessToken;
+    public OAuth2Token toTinkToken() {
+        return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn);
     }
 }
