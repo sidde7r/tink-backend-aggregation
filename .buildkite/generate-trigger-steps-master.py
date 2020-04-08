@@ -18,6 +18,7 @@ RELEASE_TRAIN_CHARTS = [
     "tink-backend-aggregation-agents",
     # "tink-backend-integration",
     "tink-backend-aggregation-connectivity-cronjob",
+    "tink-backend-aggregation-statuspage-providers-cronjob",
 ]
 
 TRAIN_STEP = """
