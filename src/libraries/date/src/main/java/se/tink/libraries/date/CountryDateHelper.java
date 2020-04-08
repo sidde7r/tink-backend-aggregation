@@ -167,6 +167,12 @@ public class CountryDateHelper {
         return (dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY);
     }
 
+    public Date getTransferDate(Date currentDueDate, int cutOffHours, int cutOffMinutes) {
+        return currentDueDate == null
+                ? getBestPossibleTransferDate(cutOffHours, cutOffMinutes)
+                : currentDueDate;
+    }
+
     private ImmutableSet<String> getCountryHolidays(String countryCode) {
         ImmutableSet.Builder<String> holidayBuilder = ImmutableSet.builder();
         ImmutableSet.Builder<LocalDate> holidayLocalDateBuilder = ImmutableSet.builder();
@@ -211,5 +217,25 @@ public class CountryDateHelper {
         if (holiday.getPropertiesKey().equals("MIDSUMMER")) {
             holidayLocalDateBuilder.add(holiday.getDate().minusDays(1));
         }
+    }
+
+    private Date getBestPossibleTransferDate(int cutOffHours, int cutOffMinutes) {
+        Calendar calendar = Calendar.getInstance(timezone);
+        calendar = moveToNextDayIfAfterCutOffTime(calendar, cutOffHours, cutOffMinutes);
+        return getCurrentOrNextBusinessDay(calendar).getTime();
+    }
+
+    private Calendar moveToNextDayIfAfterCutOffTime(Calendar calendar, int hours, int minutes) {
+        Calendar businessDay = getCalendar(calendar.getTime());
+        if (isAfterCutOffTime(businessDay, hours, minutes)) {
+            businessDay.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return businessDay;
+    }
+
+    private boolean isAfterCutOffTime(Calendar calendar, int hour, int minute) {
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+        return currentHour > hour || (currentHour == hour && currentMinute > minute);
     }
 }
