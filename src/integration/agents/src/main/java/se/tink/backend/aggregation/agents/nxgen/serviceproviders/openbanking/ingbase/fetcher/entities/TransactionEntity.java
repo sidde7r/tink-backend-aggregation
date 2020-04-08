@@ -99,9 +99,9 @@ public class TransactionEntity {
     }
 
     private String getCounterPartyAccount() {
-        return Stream.of(creditorAccount.getIban(), debtorAccount.getIban())
+        return Stream.of(creditorAccount, debtorAccount)
                 .filter(Objects::nonNull)
-                .filter(s -> !s.isEmpty())
+                .map(TransactionAccountEntity::getIban)
                 .findFirst()
                 .orElse("");
     }
