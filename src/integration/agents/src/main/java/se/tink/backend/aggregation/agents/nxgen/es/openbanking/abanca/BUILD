@@ -21,6 +21,7 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_apache_commons_commons_lang",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
