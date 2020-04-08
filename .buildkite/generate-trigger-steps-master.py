@@ -38,6 +38,20 @@ TRAIN_STEP = """
         PULL_REQUESTS: "{pull_request_ids}"
 """
 
+SONAR_STEP = """
+- name: ":sonarqube: Sonarqube"
+  branches: "master"
+  command: .buildkite/run-sonar.sh
+  timeout_in_minutes: 30
+  agents:
+    queue: default
+  plugins:
+    docker-compose#v3.0.3:
+      run: "app"
+      config: "docker/docker-compose.bazel.yml"
+  retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
+"""
+
 version = os.environ['VERSION']
 
 for chart in RELEASE_TRAIN_CHARTS:
@@ -48,3 +62,5 @@ for chart in RELEASE_TRAIN_CHARTS:
         message=os.environ["BUILDKITE_MESSAGE"].splitlines()[0],
         pull_request_ids=pr_ids_from_commit_message(os.environ["BUILDKITE_MESSAGE"]),
     ))
+
+print(SONAR_STEP)
