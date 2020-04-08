@@ -48,6 +48,8 @@ public final class AgentWorkerOperationFactoryTest {
     private AgentWorkerOperationFactory factory;
     private ManualAuthenticateRequest authenticateRequest;
     private ClientInfo clientInfo;
+    private Provider provider;
+    private CredentialsRequestType credentialsRequestType = CredentialsRequestType.CREATE;
 
     @Before
     public void setup() {
@@ -57,15 +59,9 @@ public final class AgentWorkerOperationFactoryTest {
         Injector injector = Guice.createInjector(new TestModule(controllerWrapperProvider));
         factory = injector.getInstance(AgentWorkerOperationFactory.class);
 
-        Provider provider = mock(Provider.class);
+        provider = mock(Provider.class);
         when(provider.getName()).thenReturn(PROVIDER_NAME);
         when(provider.getMarket()).thenReturn(MARKET);
-
-        CredentialsRequestType credentialsRequestType = CredentialsRequestType.CREATE;
-
-        authenticateRequest = mock(ManualAuthenticateRequest.class);
-        when(authenticateRequest.getProvider()).thenReturn(provider);
-        when(authenticateRequest.getType()).thenReturn(credentialsRequestType);
 
         clientInfo = mock(ClientInfo.class);
         when(clientInfo.getClusterId()).thenReturn(CLUSTER_ID);
@@ -81,8 +77,14 @@ public final class AgentWorkerOperationFactoryTest {
 
     @Test
     public void createdAuthenticateOperationShouldContainClusterIdFromClientInfo() {
+        // given
+        authenticateRequest = mock(ManualAuthenticateRequest.class);
+        when(authenticateRequest.getProvider()).thenReturn(provider);
+        when(authenticateRequest.getType()).thenReturn(credentialsRequestType);
+
         // when
-        AgentWorkerOperation operation = factory.createOperationAuthenticate(authenticateRequest, clientInfo);
+        AgentWorkerOperation operation =
+                factory.createOperationAuthenticate(authenticateRequest, clientInfo);
 
         // then
         assertThat(operation.getContext().getClusterId()).isEqualTo(CLUSTER_ID);
