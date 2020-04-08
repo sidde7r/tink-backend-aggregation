@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.PsuIdArgumen
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -47,8 +48,8 @@ public class UnicreditAgentPaymentTest {
     }
 
     @Test
-    public void testPayments() throws Exception {
-        builder.build().testGenericPayment(createRealDomesticPayment());
+    public void testSuccessPayments() throws Exception {
+        builder.build().testTinkLinkPayment(createRealDomesticPayment(), PaymentStatus.SIGNED);
     }
 
     private List<Payment> createRealDomesticPayment() {

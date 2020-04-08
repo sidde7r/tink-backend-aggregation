@@ -523,6 +523,65 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
     }
 
+    protected void doTinkLinkPaymentBankTransfer(
+            Agent agent, List<Payment> paymentList, PaymentStatus expectedPaymentStatus)
+            throws Exception {
+
+        if (agent instanceof PaymentControllerable) {
+            PaymentController paymentController =
+                    ((PaymentControllerable) agent)
+                            .getPaymentController()
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    "Agent doesn't implement constructPaymentController method."));
+
+            ArrayList<PaymentRequest> paymentRequests = new ArrayList<>();
+
+            log.info("Executing bank transfer.");
+
+            PaymentResponse createPaymentResponse =
+                    paymentController.create(new PaymentRequest(paymentList.get(0)));
+
+            PaymentMultiStepResponse signPaymentMultiStepResponse =
+                    paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
+
+            Map<String, String> map;
+            List<Field> fields;
+            String nextStep = signPaymentMultiStepResponse.getStep();
+            Payment payment = signPaymentMultiStepResponse.getPayment();
+            Storage storage = signPaymentMultiStepResponse.getStorage();
+
+            while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+                fields = signPaymentMultiStepResponse.getFields();
+                map = Collections.emptyMap();
+
+                signPaymentMultiStepResponse =
+                        paymentController.sign(
+                                new PaymentMultiStepRequest(
+                                        payment,
+                                        storage,
+                                        nextStep,
+                                        fields,
+                                        new ArrayList<>(map.values())));
+                nextStep = signPaymentMultiStepResponse.getStep();
+                payment = signPaymentMultiStepResponse.getPayment();
+                storage = signPaymentMultiStepResponse.getStorage();
+            }
+
+            PaymentStatus statusResult = payment.getStatus();
+            Assert.assertTrue(statusResult.equals(expectedPaymentStatus));
+
+            log.info("Done with bank transfer.");
+
+        } else {
+            throw new AssertionError(
+                    String.format(
+                            "%s does not implement a transfer executor interface.",
+                            agent.getClass().getSimpleName()));
+        }
+    }
+
     private boolean isSupplementalStep(String step) {
         return false;
     }
@@ -726,6 +785,38 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
             if (agent instanceof PaymentControllerable) {
                 doGenericPaymentBankTransfer(agent, paymentList);
+            } else {
+                throw new NotImplementedException(
+                        String.format("%s", agent.getAgentClass().getSimpleName()));
+            }
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
+    public void testTinkLinkPayment(List<Payment> paymentList, PaymentStatus expectedPaymentStatus)
+            throws Exception {
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
+        Agent agent = createAgent(credentialsRequest);
+
+        try {
+            if (isLoginRequiredForPIS()) {
+                login(agent, credentialsRequest);
+            }
+            if (agent instanceof PaymentControllerable) {
+                doTinkLinkPaymentBankTransfer(agent, paymentList, expectedPaymentStatus);
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
