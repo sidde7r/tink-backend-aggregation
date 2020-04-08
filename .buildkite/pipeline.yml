@@ -74,6 +74,8 @@ steps:
 
   - name: ':male-detective: run detect-secrets on new commits'
     command: "/bin/sh /opt/detect-secrets"
+    if: |
+      build.branch != 'master' && build.branch != 'staging'
     soft_fail:
       - exit_status: 1
     plugins:
