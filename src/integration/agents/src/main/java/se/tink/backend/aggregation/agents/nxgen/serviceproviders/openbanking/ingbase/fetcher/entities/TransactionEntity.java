@@ -102,6 +102,7 @@ public class TransactionEntity {
         return Stream.of(creditorAccount, debtorAccount)
                 .filter(Objects::nonNull)
                 .map(TransactionAccountEntity::getIban)
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElse("");
     }
