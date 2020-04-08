@@ -30,6 +30,11 @@ public class TransactionEntity {
                 .setAmount(ExactCurrencyAmount.of(amount, currency))
                 .setDate(bookDate)
                 .setDescription(String.join(" ", descriptionLines))
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL,
+                        counterPartyAccountNumber)
+                .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL, counterPartyName)
                 .setPayload(TransactionPayloadTypes.MUTATION_CODE, mutationCode)
                 .build();
     }

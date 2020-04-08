@@ -88,12 +88,22 @@ public class TransactionEntity {
                 .setDate(date)
                 .setPayload(TransactionPayloadTypes.DETAILS, transactionType)
                 .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL, getCounterPartyAccount())
+                .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
                         getCounterPartyName())
                 .setPayload(
                         TransactionPayloadTypes.MESSAGE,
                         cleanUnstructuredInformation(remittanceInformationUnstructured))
                 .build();
+    }
+
+    private String getCounterPartyAccount() {
+        return Stream.of(creditorAccount.getIban(), debtorAccount.getIban())
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isEmpty())
+                .findFirst()
+                .orElse("");
     }
 
     private String getCounterPartyName() {
