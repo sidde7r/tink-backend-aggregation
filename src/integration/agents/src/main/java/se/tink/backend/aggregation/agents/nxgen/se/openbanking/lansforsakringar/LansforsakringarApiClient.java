@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.TokenForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.AuthorizePaymentResponse;
@@ -162,7 +163,20 @@ public final class LansforsakringarApiClient {
         return postToken(form, tokenUrl);
     }
 
-    public OAuth2Token postToken(TokenForm form, URL tokenUrl) {
+    public OAuth2Token refreshToken(final String refreshToken) {
+        final RefreshTokenForm form =
+                RefreshTokenForm.builder()
+                        .setClientId(getConfiguration().getClientId())
+                        .setGrantType(FormValues.REFRESH_TOKEN)
+                        .setClientSecret(getConfiguration().getClientSecret())
+                        .setRefreshToken(refreshToken)
+                        .build();
+
+        URL tokenUrl = new URL(Urls.TOKEN);
+        return postToken(form, tokenUrl);
+    }
+
+    public OAuth2Token postToken(Object form, URL tokenUrl) {
 
         return client.request(tokenUrl)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
