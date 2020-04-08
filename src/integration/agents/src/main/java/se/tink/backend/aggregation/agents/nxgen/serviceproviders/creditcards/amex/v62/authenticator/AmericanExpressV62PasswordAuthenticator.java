@@ -69,8 +69,12 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
                 throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
             case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_ACCOUNT_BLOCKED:
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
-            case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
             case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_CONTENT_ERROR:
+                // This error might be fixed by updating headers
+                LOGGER.error(
+                        String.format("%s: %s", reportingCode, response.getStatus().getMessage()));
+                throw new IllegalStateException("Login failure - check headers");
+            case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
                 throw BankServiceError.BANK_SIDE_FAILURE.exception(
                         "Error code: "
                                 + reportingCode
