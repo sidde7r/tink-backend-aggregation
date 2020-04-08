@@ -46,7 +46,7 @@ public final class AgentWorkerOperationFactoryTest {
     private static final String MARKET = "mymarket";
 
     private AgentWorkerOperationFactory factory;
-    private ManualAuthenticateRequest request;
+    private ManualAuthenticateRequest authenticateRequest;
     private ClientInfo clientInfo;
 
     @Before
@@ -63,9 +63,9 @@ public final class AgentWorkerOperationFactoryTest {
 
         CredentialsRequestType credentialsRequestType = CredentialsRequestType.CREATE;
 
-        request = mock(ManualAuthenticateRequest.class);
-        when(request.getProvider()).thenReturn(provider);
-        when(request.getType()).thenReturn(credentialsRequestType);
+        authenticateRequest = mock(ManualAuthenticateRequest.class);
+        when(authenticateRequest.getProvider()).thenReturn(provider);
+        when(authenticateRequest.getType()).thenReturn(credentialsRequestType);
 
         clientInfo = mock(ClientInfo.class);
         when(clientInfo.getClusterId()).thenReturn(CLUSTER_ID);
@@ -82,7 +82,7 @@ public final class AgentWorkerOperationFactoryTest {
     @Test
     public void createdAuthenticateOperationShouldContainClusterIdFromClientInfo() {
         // when
-        AgentWorkerOperation operation = factory.createOperationAuthenticate(request, clientInfo);
+        AgentWorkerOperation operation = factory.createOperationAuthenticate(authenticateRequest, clientInfo);
 
         // then
         assertThat(operation.getContext().getClusterId()).isEqualTo(CLUSTER_ID);
