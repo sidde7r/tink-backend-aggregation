@@ -19,14 +19,7 @@ public class SEBDateUtil {
 
     public static String nextPossibleTransferDate(Date date, boolean withinSEB) {
         Preconditions.checkNotNull(date);
-
-        Date nextPossibleDate;
-        if (withinSEB) {
-            nextPossibleDate = date;
-        } else {
-            nextPossibleDate = nextPossibleExternalDate(date);
-        }
-
+        Date nextPossibleDate = withinSEB ? date : nextPossibleExternalDate(date);
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(nextPossibleDate);
     }
 
