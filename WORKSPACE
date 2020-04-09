@@ -2642,6 +2642,7 @@ maven_install(
         "io.netty:netty-resolver:%s" % NETTY_VERSION,
         "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
         "io.netty:netty-transport:%s" % NETTY_VERSION,
+        "io.perfmark:perfmark-api:0.17.0",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "io.vavr:vavr-jackson:0.10.0",
         "io.vavr:vavr-match:0.10.0",
