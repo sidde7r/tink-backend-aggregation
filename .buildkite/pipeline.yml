@@ -74,8 +74,22 @@ steps:
       queue: default
     retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
+  - plugins:
+      docker-compose#v3.0.3:
+        run: app
+        config: docker/docker-compose-system-tests.bazel.yml
+    soft_fail:
+      - exit_status: 1
+    branches: '!master'
+    name: ':junit: System tests'
+    timeout_in_minutes: 10
+    agents:
+      queue: default
+
   - name: ':male-detective: run detect-secrets on new commits'
     command: "/bin/sh /opt/detect-secrets"
+    if: |
+      build.branch != 'master' && build.branch != 'staging'
     soft_fail:
       - exit_status: 1
     plugins:
