@@ -320,7 +320,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_perfmark_perfmark_api",
+    name = "io_perfmark_perfmark_api",  # Do not use, but do not remove
     artifact = "io.perfmark:perfmark-api:0.17.0",
     sha1 = "97e81005e3a7f537366ffdf20e11e050303b58c1",
 )

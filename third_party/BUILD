@@ -720,7 +720,7 @@ java_library(
         "@io_grpc_grpc_core//jar",
     ],
     runtime_deps = [
-        "@io_perfmark_perfmark_api//jar",
+        "@aggregation//:io_perfmark_perfmark_api",
     ],
 )
 
@@ -1690,9 +1690,9 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
         "@aggregation//:com_google_protobuf_protobuf_java",
         "@aggregation//:commons_io_commons_io",
+        "@aggregation//:io_perfmark_perfmark_api",
         "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
-        "@io_perfmark_perfmark_api//jar",
         "@lombok//:org_projectlombok_lombok",
         "@standalone_agent_deps//:ch_qos_logback_logback_classic",
         "@standalone_agent_deps//:ch_qos_logback_logback_core",
