@@ -414,6 +414,7 @@ java_library(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/signaturekeypair",

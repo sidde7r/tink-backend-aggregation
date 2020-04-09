@@ -31,8 +31,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/module",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/factory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",

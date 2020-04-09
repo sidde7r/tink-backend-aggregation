@@ -27,6 +27,7 @@ java_library(
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client/configuration",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/module:agent-data-availability-tracker-module",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/module",
