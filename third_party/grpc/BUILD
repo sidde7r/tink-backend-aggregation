@@ -11,9 +11,9 @@ java_library(
     runtime_deps = [
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_google_instrumentation_instrumentation_api",
+        "@aggregation//:io_perfmark_perfmark_api",
         "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
-        "@io_perfmark_perfmark_api//jar",
     ],
 )
 
@@ -26,8 +26,8 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_perfmark_perfmark_api",
         "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
-        "@io_perfmark_perfmark_api//jar",
     ],
 )

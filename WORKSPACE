@@ -320,15 +320,15 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_perfmark_perfmark_api",
+    name = "io_perfmark_perfmark_api",  # Do not use, but do not remove
     artifact = "io.perfmark:perfmark-api:0.17.0",
     sha1 = "97e81005e3a7f537366ffdf20e11e050303b58c1",
 )
 
 maven_jar(
     name = "com_google_errorprone_error_prone_annotations",  # Do not use, but do not remove
-    artifact = "com.google.errorprone:error_prone_annotations:2.1.3",
-    sha1 = "39b109f2cd352b2d71b52a3b5a1a9850e1dc304b",
+    artifact = "com.google.errorprone:error_prone_annotations:2.3.3",
+    sha1 = "42aa5155a54a87d70af32d4b0d06bf43779de0e2",
 )
 
 ## Maven jar imports
@@ -2590,7 +2590,7 @@ maven_install(
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
         "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.code.gson:gson:2.8.2",
-        "com.google.errorprone:error_prone_annotations:2.1.3",
+        "com.google.errorprone:error_prone_annotations:2.3.3",
         "com.google.guava:guava:25.1-jre",
         "com.google.http-client:google-http-client:1.17.0-rc",
         "com.google.inject.extensions:guice-assistedinject:4.2.2",
@@ -2642,6 +2642,7 @@ maven_install(
         "io.netty:netty-resolver:%s" % NETTY_VERSION,
         "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
         "io.netty:netty-transport:%s" % NETTY_VERSION,
+        "io.perfmark:perfmark-api:0.17.0",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "io.vavr:vavr-jackson:0.10.0",
         "io.vavr:vavr-match:0.10.0",
@@ -2831,7 +2832,7 @@ maven_install(
     artifacts = [
         "com.codeborne:phantomjsdriver:1.4.4",
         "com.google.code.findbugs:jsr305:3.0.2",
-        "com.google.errorprone:error_prone_annotations:2.1.3",
+        "com.google.errorprone:error_prone_annotations:2.3.3",
         "com.google.guava:guava:25.1-jre",
         "commons-io:commons-io:2.5",
         "net.bytebuddy:byte-buddy:1.10.1",
