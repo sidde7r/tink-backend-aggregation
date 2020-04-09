@@ -48,6 +48,7 @@ public abstract class SebConstants {
                 "The date when the money must reach the recipient must be a banking day";
         public static final String SIMILAR_PAYMENT_ERROR_MESSAGE =
                 "A similar payment is already in upcoming events.";
+        public static final String PAYMENT_SERVICE_UNAVAILABLE = "Service unavailable.";
     }
 
     public static class IdTags {
