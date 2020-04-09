@@ -60,6 +60,14 @@ filegroup(
 )
 
 filegroup(
+    name = "cryptography_all_files",
+    srcs = glob([
+        "test/cryptography/**/*",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
     name = "cryptography_test",
     srcs = [
         "test/cryptography/private_rsa_key.pem",
