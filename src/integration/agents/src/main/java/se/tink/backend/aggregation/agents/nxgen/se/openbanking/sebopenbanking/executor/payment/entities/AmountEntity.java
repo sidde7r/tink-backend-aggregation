@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.e
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.math.BigDecimal;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 
@@ -31,11 +33,17 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public static AmountEntity of(PaymentRequest paymentRequest) {
-        return new AmountEntity.Builder()
-                .withCurrency(paymentRequest.getPayment().getAmount().getCurrency())
-                .withAmount(paymentRequest.getPayment().getAmount().getValue().toString())
-                .build();
+    public static AmountEntity of(PaymentRequest paymentRequest) throws PaymentValidationException {
+        BigDecimal amount = paymentRequest.getPayment().getExactCurrencyAmount().getExactValue();
+        if (BigDecimal.ONE.compareTo(amount) > 0) {
+            throw PaymentValidationException.invalidMinimumAmount();
+        } else {
+            return new AmountEntity.Builder()
+                    .withCurrency(
+                            paymentRequest.getPayment().getExactCurrencyAmount().getCurrencyCode())
+                    .withAmount(amount.toString())
+                    .build();
+        }
     }
 
     public static class Builder {
