@@ -105,7 +105,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         setAppId(appId);
 
         if (request.getUser() != null) {
-            this.catalog = Catalog.getCatalog(request.getUser().getProfile().getLocale());
+            String locale = request.getUser().getProfile().getLocale();
+            this.catalog = Catalog.getCatalog(locale);
+            log.info("Catalog created on Locale: " + locale);
         }
 
         this.setMetricRegistry(metricRegistry);
