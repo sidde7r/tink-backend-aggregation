@@ -46,7 +46,6 @@ public final class AgentWorkerOperationFactoryTest {
     private static final String MARKET = "mymarket";
 
     private AgentWorkerOperationFactory factory;
-    private ManualAuthenticateRequest authenticateRequest;
     private ClientInfo clientInfo;
     private Provider provider;
     private CredentialsRequestType credentialsRequestType = CredentialsRequestType.CREATE;
@@ -78,7 +77,7 @@ public final class AgentWorkerOperationFactoryTest {
     @Test
     public void createdAuthenticateOperationShouldContainClusterIdFromClientInfo() {
         // given
-        authenticateRequest = mock(ManualAuthenticateRequest.class);
+        ManualAuthenticateRequest authenticateRequest = mock(ManualAuthenticateRequest.class);
         when(authenticateRequest.getProvider()).thenReturn(provider);
         when(authenticateRequest.getType()).thenReturn(credentialsRequestType);
 
