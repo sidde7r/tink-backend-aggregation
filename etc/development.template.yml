@@ -154,6 +154,10 @@ agentsServiceConfiguration:
         aspspCode: '06175'
         aspspProductCode: 'ALLPRODUCTCODE'
         eidasQwac: Tink
+    bancasella:
+      tink:
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        baseUrl: https://psdgw-sella.fabrick.com
     bancobpi-pt:
       tink:
         aspspCode: BBPI

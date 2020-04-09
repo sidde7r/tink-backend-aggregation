@@ -356,6 +356,24 @@
             "type": "BANK"
         },
         {
+            "financialInstitutionId": "Tink",
+            "accessType": "OPEN_BANKING",
+            "authenticationFlow": "REDIRECT",
+            "name": "it-bancasella-ob",
+            "displayName": "Banco Sella",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.it.openbanking.bancasella.BancaSellaAgent",
+            "passwordHelpText": "Please authenticate yourself.",
+            "transactional": true,
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
+        },
+        {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.serviceproviders.openbanking.paypal.PayPalAgent",
             "credentialsType": "PASSWORD",
