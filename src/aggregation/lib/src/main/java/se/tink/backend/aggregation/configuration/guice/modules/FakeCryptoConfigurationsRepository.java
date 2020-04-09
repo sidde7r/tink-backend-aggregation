@@ -1,22 +1,23 @@
 package se.tink.backend.aggregation.configuration.guice.modules;
 
+import com.google.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfigurationId;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 
 public class FakeCryptoConfigurationsRepository implements CryptoConfigurationsRepository {
 
-    private final AggregationServiceConfiguration configuration;
+    private final CryptoConfiguration cryptoConfiguration;
 
-    public FakeCryptoConfigurationsRepository(AggregationServiceConfiguration configuration) {
-        this.configuration = configuration;
+    @Inject
+    public FakeCryptoConfigurationsRepository(CryptoConfiguration cryptoConfiguration) {
+        this.cryptoConfiguration = cryptoConfiguration;
     }
 
     @Override
@@ -32,8 +33,7 @@ public class FakeCryptoConfigurationsRepository implements CryptoConfigurationsR
     @Override
     public List<CryptoConfiguration> findAll() {
         System.out.println("hoy DummyCryptoConfigurationsRepository.findAll");
-        return Collections.singletonList(
-                configuration.getDevelopmentConfiguration().getCryptoConfiguration());
+        return Collections.singletonList(cryptoConfiguration);
     }
 
     @Override
