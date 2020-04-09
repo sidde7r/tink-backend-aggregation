@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
+import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
@@ -186,8 +187,9 @@ public class AggregationDecoupledModule extends AbstractModule {
                 .to(InterProcessSemaphoreMutexFactoryStub.class);
         bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
 
-        bind(CryptoConfigurationsRepository.class)
-                .toInstance(new FakeCryptoConfigurationsRepository(configuration));
+        bind(CryptoConfigurationsRepository.class).to(FakeCryptoConfigurationsRepository.class);
+        bind(CryptoConfiguration.class)
+                .toInstance(configuration.getDevelopmentConfiguration().getCryptoConfiguration());
         bind(CryptoConfigurationDao.class).in(Scopes.SINGLETON);
         bind(ControllerWrapperProvider.class).in(Scopes.SINGLETON);
         bind(AggregatorInfoProvider.class).in(Scopes.SINGLETON);
