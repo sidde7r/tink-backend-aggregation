@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.exceptions.payment;
 
 public class PaymentValidationException extends PaymentException {
+    private static final String INVALID_MINIMUM_AMOUNT =
+            "The transfer amount, less than 1 SEK is not supported";
+
     private String path;
 
     public PaymentValidationException(String message, String path) {
@@ -30,5 +33,9 @@ public class PaymentValidationException extends PaymentException {
         return path != null
                 ? "Path that failed to validate : " + path + "\n" + super.toString()
                 : super.toString();
+    }
+
+    public static PaymentValidationException invalidMinimumAmount() {
+        return new PaymentValidationException(INVALID_MINIMUM_AMOUNT);
     }
 }
