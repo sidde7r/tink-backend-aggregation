@@ -54,6 +54,8 @@ public class PaymentStatusResponse {
                 throw DateValidationException.paymentDateNotBusinessDayException();
             } else if (isSimilarPaymentError()) {
                 throw PaymentRejectedException.similarPaymentException();
+            } else if (isServiceUnavailableError()) {
+                throw PaymentRejectedException.bankPaymentServiceUnavailable();
             } else {
                 throw new PaymentRejectedException(getErrorMessage());
             }
@@ -74,6 +76,11 @@ public class PaymentStatusResponse {
     @JsonIgnore
     private boolean isSimilarPaymentError() {
         return tppMessages.contains(ErrorMessages.SIMILAR_PAYMENT_ERROR_MESSAGE);
+    }
+
+    @JsonIgnore
+    private boolean isServiceUnavailableError() {
+        return tppMessages.contains(ErrorMessages.PAYMENT_SERVICE_UNAVAILABLE);
     }
 
     @JsonIgnore
