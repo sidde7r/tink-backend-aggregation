@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -27,7 +28,8 @@ public final class AbancaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AbancaConfiguration abancaConfiguration;
 
-    public AbancaAgent(AgentComponentProvider agentComponentProvider) {
+    @Inject
+    public AbancaAgent(final AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
 
         abancaConfiguration =
