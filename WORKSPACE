@@ -327,8 +327,8 @@ maven_jar(
 
 maven_jar(
     name = "com_google_errorprone_error_prone_annotations",  # Do not use, but do not remove
-    artifact = "com.google.errorprone:error_prone_annotations:2.1.3",
-    sha1 = "39b109f2cd352b2d71b52a3b5a1a9850e1dc304b",
+    artifact = "com.google.errorprone:error_prone_annotations:2.3.3",
+    sha1 = "42aa5155a54a87d70af32d4b0d06bf43779de0e2",
 )
 
 ## Maven jar imports
@@ -2590,7 +2590,7 @@ maven_install(
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
         "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.code.gson:gson:2.8.2",
-        "com.google.errorprone:error_prone_annotations:2.1.3",
+        "com.google.errorprone:error_prone_annotations:2.3.3",
         "com.google.guava:guava:25.1-jre",
         "com.google.http-client:google-http-client:1.17.0-rc",
         "com.google.inject.extensions:guice-assistedinject:4.2.2",
@@ -2831,7 +2831,7 @@ maven_install(
     artifacts = [
         "com.codeborne:phantomjsdriver:1.4.4",
         "com.google.code.findbugs:jsr305:3.0.2",
-        "com.google.errorprone:error_prone_annotations:2.1.3",
+        "com.google.errorprone:error_prone_annotations:2.3.3",
         "com.google.guava:guava:25.1-jre",
         "commons-io:commons-io:2.5",
         "net.bytebuddy:byte-buddy:1.10.1",
