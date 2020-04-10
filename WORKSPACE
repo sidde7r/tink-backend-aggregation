@@ -2741,6 +2741,7 @@ maven_install(
     name = "aggregation_temp",
     artifacts = [
         "com.github.tomakehurst:wiremock:2.1.12",
+        "com.oracle.substratevm:svm:19.0.0",
     ],
     excluded_artifacts = [
         # Exclude ALL transitive dependencies of the artifacts above for now
@@ -2751,6 +2752,12 @@ maven_install(
         "com.flipkart.zjsonpatch:zjsonpatch",
         "com.google.guava:guava",
         "com.jayway.jsonpath:json-path",
+        "com.oracle.substratevm:objectfile",
+        "com.oracle.substratevm:pointsto",
+        "com.oracle.substratevm:svm-hosted-native-darwin-amd64",
+        "com.oracle.substratevm:svm-hosted-native-linux-amd64",
+        "com.oracle.substratevm:svm-hosted-native-windows-amd64",
+        "commons-cli:commons-cli",
         "commons-codec:commons-codec",
         "commons-logging:commons-logging",
         "javax.servlet:javax.servlet-api",
@@ -2772,6 +2779,10 @@ maven_install(
         "org.eclipse.jetty:jetty-util",
         "org.eclipse.jetty:jetty-webapp",
         "org.eclipse.jetty:jetty-xml",
+        "org.graalvm.compiler:compiler",
+        "org.graalvm.sdk:graal-sdk",
+        "org.graalvm.truffle:truffle-api",
+        "org.graalvm.truffle:truffle-nfi",
         "org.hamcrest:hamcrest-core",
         "org.slf4j:slf4j-api",
         "org.xmlunit:xmlunit-core",
