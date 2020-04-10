@@ -2644,6 +2644,7 @@ maven_install(
         "io.netty:netty-transport:%s" % NETTY_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
+        "io.swagger:swagger-annotations:1.5.9",
         "io.vavr:vavr-jackson:0.10.0",
         "io.vavr:vavr-match:0.10.0",
         "io.vavr:vavr-test:0.10.0",
