@@ -645,8 +645,8 @@ maven_jar(
 
 maven_jar(
     name = "log4j_log4j",  # Do not use, but do not remove
-    artifact = "log4j:log4j:1.2.14",
-    sha1 = "03b254c872b95141751f414e353a25c2ac261b51",
+    artifact = "log4j:log4j:1.2.17",
+    sha1 = "5af35056b4d257e4b64b9e8069c0746e8b08629f",
 )
 
 maven_jar(
@@ -2664,7 +2664,7 @@ maven_install(
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
         "junit:junit:4.12",
-        "log4j:log4j:1.2.14",
+        "log4j:log4j:1.2.17",
         "mysql:mysql-connector-java:5.1.42",
         "net.bytebuddy:byte-buddy-agent:1.10.1",
         "net.bytebuddy:byte-buddy:1.10.1",
