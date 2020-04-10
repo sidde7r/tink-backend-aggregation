@@ -244,6 +244,32 @@
                 "sha256": "045a7f572b8432062ce735451930569824bc1bec53a6cb51c73cf8ee1985f5a8"
             },
             {
+                "coord": "com.beust:jcommander:1.72",
+                "file": "v1/https/repo1.maven.org/maven2/com/beust/jcommander/1.72/jcommander-1.72.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/com/beust/jcommander/1.72/jcommander-1.72.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/beust/jcommander/1.72/jcommander-1.72.jar",
+                    "https://jcenter.bintray.com/com/beust/jcommander/1.72/jcommander-1.72.jar",
+                    "https://maven.google.com/com/beust/jcommander/1.72/jcommander-1.72.jar"
+                ],
+                "sha256": "e0de160b129b2414087e01fe845609cd55caec6820cfd4d0c90fabcc7bdb8c1e"
+            },
+            {
+                "coord": "com.beust:jcommander:jar:sources:1.72",
+                "file": "v1/https/repo1.maven.org/maven2/com/beust/jcommander/1.72/jcommander-1.72-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/com/beust/jcommander/1.72/jcommander-1.72-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/beust/jcommander/1.72/jcommander-1.72-sources.jar",
+                    "https://jcenter.bintray.com/com/beust/jcommander/1.72/jcommander-1.72-sources.jar",
+                    "https://maven.google.com/com/beust/jcommander/1.72/jcommander-1.72-sources.jar"
+                ],
+                "sha256": "9b4fddc257d3572696333f48158802243141ce46579d92f0a4c0b2c14956b49d"
+            },
+            {
                 "coord": "com.codahale.metrics:metrics-annotation:3.0.2",
                 "file": "v1/https/repo1.maven.org/maven2/com/codahale/metrics/metrics-annotation/3.0.2/metrics-annotation-3.0.2.jar",
                 "directDependencies": [
@@ -1346,6 +1372,32 @@
                 "sha256": "8bfe63dd4ed5d41882884d9adda80f93bec36113d40501629dcf0d9a411a1b43"
             },
             {
+                "coord": "com.github.jai-imageio:jai-imageio-core:1.4.0",
+                "file": "v1/https/repo1.maven.org/maven2/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0.jar",
+                    "https://jcenter.bintray.com/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0.jar",
+                    "https://maven.google.com/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0.jar"
+                ],
+                "sha256": "8ad3c68e9efffb10ac87ff8bc589adf64b04a729c5194c079efd0643607fd72a"
+            },
+            {
+                "coord": "com.github.jai-imageio:jai-imageio-core:jar:sources:1.4.0",
+                "file": "v1/https/repo1.maven.org/maven2/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0-sources.jar",
+                    "https://jcenter.bintray.com/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0-sources.jar",
+                    "https://maven.google.com/com/github/jai-imageio/jai-imageio-core/1.4.0/jai-imageio-core-1.4.0-sources.jar"
+                ],
+                "sha256": "9983a2c2dac7eb7d8180f91d90a720cd66a83e7e502f5382e685c77f19cca276"
+            },
+            {
                 "coord": "com.github.javafaker:javafaker:1.0.2",
                 "file": "v1/https/repo1.maven.org/maven2/com/github/javafaker/javafaker/1.0.2/javafaker-1.0.2.jar",
                 "directDependencies": [
@@ -2002,6 +2054,48 @@
                     "https://maven.google.com/com/google/zxing/core/3.3.3/core-3.3.3-sources.jar"
                 ],
                 "sha256": "e646f122c7fe517f4ea2325f181985e20bff215bde566dd886035cb1b33679ac"
+            },
+            {
+                "coord": "com.google.zxing:javase:3.3.3",
+                "file": "v1/https/repo1.maven.org/maven2/com/google/zxing/javase/3.3.3/javase-3.3.3.jar",
+                "directDependencies": [
+                    "com.beust:jcommander:1.72",
+                    "com.github.jai-imageio:jai-imageio-core:1.4.0",
+                    "com.google.zxing:core:3.3.3"
+                ],
+                "dependencies": [
+                    "com.google.zxing:core:3.3.3",
+                    "com.beust:jcommander:1.72",
+                    "com.github.jai-imageio:jai-imageio-core:1.4.0"
+                ],
+                "url": "https://repo1.maven.org/maven2/com/google/zxing/javase/3.3.3/javase-3.3.3.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/google/zxing/javase/3.3.3/javase-3.3.3.jar",
+                    "https://jcenter.bintray.com/com/google/zxing/javase/3.3.3/javase-3.3.3.jar",
+                    "https://maven.google.com/com/google/zxing/javase/3.3.3/javase-3.3.3.jar"
+                ],
+                "sha256": "9603e36269a8769534ce915500c5b6c51b5285a163252acb41f767c96fb563d6"
+            },
+            {
+                "coord": "com.google.zxing:javase:jar:sources:3.3.3",
+                "file": "v1/https/repo1.maven.org/maven2/com/google/zxing/javase/3.3.3/javase-3.3.3-sources.jar",
+                "directDependencies": [
+                    "com.beust:jcommander:jar:sources:1.72",
+                    "com.github.jai-imageio:jai-imageio-core:jar:sources:1.4.0",
+                    "com.google.zxing:core:jar:sources:3.3.3"
+                ],
+                "dependencies": [
+                    "com.github.jai-imageio:jai-imageio-core:jar:sources:1.4.0",
+                    "com.google.zxing:core:jar:sources:3.3.3",
+                    "com.beust:jcommander:jar:sources:1.72"
+                ],
+                "url": "https://repo1.maven.org/maven2/com/google/zxing/javase/3.3.3/javase-3.3.3-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/google/zxing/javase/3.3.3/javase-3.3.3-sources.jar",
+                    "https://jcenter.bintray.com/com/google/zxing/javase/3.3.3/javase-3.3.3-sources.jar",
+                    "https://maven.google.com/com/google/zxing/javase/3.3.3/javase-3.3.3-sources.jar"
+                ],
+                "sha256": "49c48bb1db2c65acf2c5563af610e69a4cada1dbe623ca573047a4c8128da1c5"
             },
             {
                 "coord": "com.googlecode.gettext-commons:gettext-commons:0.9.8",
@@ -6473,6 +6567,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -1176609538
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 511522692
     }
 }
