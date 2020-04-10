@@ -1149,8 +1149,8 @@ maven_jar(
 
 maven_jar(
     name = "asm_asm",  # Do not use, but do not remove
-    artifact = "asm:asm:3.1",
-    sha1 = "c157def142714c544bdea2e6144645702adf7097",
+    artifact = "asm:asm:3.3.1",
+    sha1 = "bbcde0189656fa6cc671f27437432ac7e7f95673",
 )
 
 maven_jar(
@@ -2553,7 +2553,7 @@ maven_install(
     name = "aggregation",
     artifacts = [
         "aopalliance:aopalliance:1.0",
-        "asm:asm:3.1",
+        "asm:asm:3.3.1",
         "c3p0:c3p0:0.9.1.1",
         "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-classic:jar:0.1.5",
