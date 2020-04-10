@@ -368,7 +368,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_mozilla_rhino",
+    name = "org_mozilla_rhino",  # Do not use, but do not remove
     artifact = "org.mozilla:rhino:1.7R4",
     sha1 = "e982f2136574b9a423186fbaeaaa98dc3e5a5288",
 )

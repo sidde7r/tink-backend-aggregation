@@ -1173,7 +1173,7 @@ java_library(
     name = "org_mozilla_rhino",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_mozilla_rhino//jar",
+        "@aggregation//:org_mozilla_rhino",
     ],
 )
 
