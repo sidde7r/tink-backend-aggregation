@@ -1189,7 +1189,7 @@ java_library(
     name = "org_pojava_pojava",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_pojava_pojava//jar",
+        "@aggregation//:org_pojava_pojava",
     ],
 )
 
