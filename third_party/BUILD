@@ -182,6 +182,7 @@ java_library(
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:javax_servlet_javax_servlet_api",
+        "@aggregation//:junit_junit",
         "@aggregation//:net_minidev_asm",
         "@aggregation//:net_minidev_json_smart",
         "@aggregation//:org_apache_commons_commons_collections4",
@@ -197,7 +198,6 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@junit_junit//jar",
         "@net_sf_jopt_simple_jopt_simple//jar",
         "@org_eclipse_jetty_jetty_webapp//jar",
         "@org_eclipse_jetty_jetty_xml//jar",
@@ -821,7 +821,7 @@ java_library(
     name = "junit_junit",
     visibility = ["//visibility:public"],
     exports = [
-        "@junit_junit//jar",
+        "@aggregation//:junit_junit",
     ],
 )
 
@@ -1282,8 +1282,8 @@ java_library(
     name = "pl_pragmatists_junitparams",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:junit_junit",
         "@aggregation//:org_hamcrest_hamcrest_core",
-        "@junit_junit//jar",
         "@pl_pragmatists_JUnitParams//jar",
     ],
 )
@@ -1315,10 +1315,10 @@ java_library(
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:javax_servlet_javax_servlet_api",
+        "@aggregation//:junit_junit",
         "@aggregation//:org_javassist_javassist",
         "@aggregation//:org_slf4j_slf4j_api",
         "@dom4j_dom4j//jar",
-        "@junit_junit//jar",
     ],
 )
 
@@ -1354,11 +1354,11 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
+        "@aggregation//:junit_junit",
         "@aggregation//:net_minidev_json_smart",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
         "@com_google_crypto_tink//jar",
-        "@junit_junit//jar",
         "@net_jadler_jadler_all//jar",
         "@org_bitbucket_b_c_jose4j//jar",
     ],
@@ -1550,9 +1550,9 @@ java_library(
         "@io_grpc_grpc_testing//jar",
     ],
     runtime_deps = [
+        "@aggregation//:junit_junit",
         "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_stub//jar",
-        "@junit_junit//jar",
     ],
 )
 
@@ -1649,8 +1649,8 @@ java_library(
         "@aggregation//:net_minidev_json_smart",
     ],
     runtime_deps = [
+        "@aggregation//:junit_junit",
         "@aggregation//:net_minidev_asm",
-        "@junit_junit//jar",
     ],
 )
 
