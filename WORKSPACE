@@ -2016,7 +2016,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_objenesis_objenesis",
+    name = "org_objenesis_objenesis",  # Do not use, but do not remove
     artifact = "org.objenesis:objenesis:2.6",
     sha1 = "639033469776fd37c08358c6b92a4761feb2af4b",
 )

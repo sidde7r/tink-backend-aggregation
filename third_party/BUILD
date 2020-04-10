@@ -1181,7 +1181,7 @@ java_library(
     name = "org_objenesis_objenesis",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_objenesis_objenesis//jar",
+        "@aggregation//:org_objenesis_objenesis",
     ],
 )
 
@@ -1626,7 +1626,7 @@ java_library(
     runtime_deps = [
         "@aggregation//:net_bytebuddy_byte_buddy",
         "@aggregation//:net_bytebuddy_byte_buddy_agent",
-        "@org_objenesis_objenesis//jar",
+        "@aggregation//:org_objenesis_objenesis",
     ],
 )
 
