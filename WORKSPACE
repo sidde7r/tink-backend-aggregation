@@ -1050,7 +1050,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_json_json",
+    name = "org_json_json",  # Do not use, but do not remove
     artifact = "org.json:json:20080701",
     sha1 = "d652f102185530c93b66158b1859f35d45687258",
 )
