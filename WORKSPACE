@@ -2610,6 +2610,7 @@ maven_install(
         "com.sun.jersey:jersey-server:1.18.1",
         "com.sun.jersey:jersey-servlet:1.18.1",
         "com.yubico:yubico-validation-client2:2.0.1",
+        "commons-cli:commons-cli:1.4",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-httpclient:commons-httpclient:3.1",
