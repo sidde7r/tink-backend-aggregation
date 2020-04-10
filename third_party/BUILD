@@ -180,6 +180,7 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:commons_logging_commons_logging",
+        "@aggregation//:net_minidev_asm",
         "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
         "@aggregation//:org_apache_httpcomponents_httpclient",
@@ -196,7 +197,6 @@ java_library(
         "@com_jayway_jsonpath_json_path//jar",
         "@javax_servlet_javax_servlet_api//jar",
         "@junit_junit//jar",
-        "@net_minidev_asm//jar",
         "@net_minidev_json_smart//jar",
         "@net_sf_jopt_simple_jopt_simple//jar",
         "@org_eclipse_jetty_jetty_webapp//jar",
@@ -1649,8 +1649,8 @@ java_library(
         "@net_minidev_json_smart//jar",
     ],
     runtime_deps = [
+        "@aggregation//:net_minidev_asm",
         "@junit_junit//jar",
-        "@net_minidev_asm//jar",
     ],
 )
 

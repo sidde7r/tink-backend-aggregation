@@ -1940,7 +1940,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_minidev_asm",
+    name = "net_minidev_asm",  # Do not use, but do not remove
     artifact = "net.minidev:asm:1.0.2",
     sha1 = "49f3068a4591b4aa6af553905ff2145685a21c2c",
 )
