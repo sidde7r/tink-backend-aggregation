@@ -9,8 +9,6 @@ junit_test(
         "//src/aggregation/service",
     ],
     deps = [
-        "//src/aggregation/api",
-        "//src/aggregation/lib",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/daos",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
