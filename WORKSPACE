@@ -2658,6 +2658,7 @@ maven_install(
         "log4j:log4j:1.2.14",
         "net.bytebuddy:byte-buddy-agent:1.10.1",
         "net.bytebuddy:byte-buddy:1.10.1",
+        "net.minidev:asm:1.0.2",
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-collections4:4.0",
