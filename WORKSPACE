@@ -2221,7 +2221,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_protobuf_protobuf_java_util",
+    name = "com_google_protobuf_protobuf_java_util",  # Do not use, but do not remove
     artifact = "com.google.protobuf:protobuf-java-util:3.5.1",
     sha1 = "6e40a6a3f52455bd633aa2a0dba1a416e62b4575",
 )
