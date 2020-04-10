@@ -382,10 +382,10 @@
                 "dependencies": [
                     "com.codahale.metrics:metrics-core:3.0.2",
                     "commons-logging:commons-logging:1.2",
+                    "commons-codec:commons-codec:1.11",
                     "org.apache.httpcomponents:httpclient:4.3.4",
                     "org.apache.httpcomponents:httpcore:4.3.2",
-                    "org.slf4j:slf4j-api:1.7.22",
-                    "commons-codec:commons-codec:1.10"
+                    "org.slf4j:slf4j-api:1.7.22"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2.jar",
                 "mirror_urls": [
@@ -405,10 +405,10 @@
                 ],
                 "dependencies": [
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
-                    "commons-codec:commons-codec:jar:sources:1.10",
                     "commons-logging:commons-logging:jar:sources:1.2",
                     "org.slf4j:slf4j-api:jar:sources:1.7.22",
                     "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                    "commons-codec:commons-codec:jar:sources:1.11",
                     "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2-sources.jar",
@@ -1685,9 +1685,9 @@
                 "dependencies": [
                     "commons-logging:commons-logging:1.2",
                     "com.google.code.findbugs:jsr305:3.0.2",
+                    "commons-codec:commons-codec:1.11",
                     "org.apache.httpcomponents:httpclient:4.3.4",
-                    "org.apache.httpcomponents:httpcore:4.3.2",
-                    "commons-codec:commons-codec:1.10"
+                    "org.apache.httpcomponents:httpcore:4.3.2"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/google/http-client/google-http-client/1.17.0-rc/google-http-client-1.17.0-rc.jar",
                 "mirror_urls": [
@@ -1706,10 +1706,10 @@
                 ],
                 "dependencies": [
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
-                    "commons-codec:commons-codec:jar:sources:1.10",
                     "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
                     "commons-logging:commons-logging:jar:sources:1.2",
-                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4"
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                    "commons-codec:commons-codec:jar:sources:1.11"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/google/http-client/google-http-client/1.17.0-rc/google-http-client-1.17.0-rc-sources.jar",
                 "mirror_urls": [
@@ -2458,10 +2458,10 @@
                 ],
                 "dependencies": [
                     "commons-logging:commons-logging:1.2",
+                    "commons-codec:commons-codec:1.11",
                     "com.sun.jersey:jersey-core:1.18.1",
                     "org.apache.httpcomponents:httpclient:4.3.4",
                     "org.apache.httpcomponents:httpcore:4.3.2",
-                    "commons-codec:commons-codec:1.10",
                     "com.sun.jersey:jersey-client:1.18.1"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1.jar",
@@ -2481,9 +2481,9 @@
                 ],
                 "dependencies": [
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
-                    "commons-codec:commons-codec:jar:sources:1.10",
                     "commons-logging:commons-logging:jar:sources:1.2",
                     "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
+                    "commons-codec:commons-codec:jar:sources:1.11",
                     "com.sun.jersey:jersey-core:jar:sources:1.18.1",
                     "com.sun.jersey:jersey-client:jar:sources:1.18.1"
                 ],
@@ -2629,12 +2629,12 @@
                 "coord": "com.yubico:yubico-validation-client2:2.0.1",
                 "file": "v1/https/repo1.maven.org/maven2/com/yubico/yubico-validation-client2/2.0.1/yubico-validation-client2-2.0.1.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:1.10",
+                    "commons-codec:commons-codec:1.11",
                     "org.slf4j:slf4j-api:1.7.22"
                 ],
                 "dependencies": [
-                    "commons-codec:commons-codec:1.10",
-                    "org.slf4j:slf4j-api:1.7.22"
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "commons-codec:commons-codec:1.11"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/yubico/yubico-validation-client2/2.0.1/yubico-validation-client2-2.0.1.jar",
                 "mirror_urls": [
@@ -2648,12 +2648,12 @@
                 "coord": "com.yubico:yubico-validation-client2:jar:sources:2.0.1",
                 "file": "v1/https/repo1.maven.org/maven2/com/yubico/yubico-validation-client2/2.0.1/yubico-validation-client2-2.0.1-sources.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:jar:sources:1.10",
+                    "commons-codec:commons-codec:jar:sources:1.11",
                     "org.slf4j:slf4j-api:jar:sources:1.7.22"
                 ],
                 "dependencies": [
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
-                    "commons-codec:commons-codec:jar:sources:1.10"
+                    "commons-codec:commons-codec:jar:sources:1.11",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/yubico/yubico-validation-client2/2.0.1/yubico-validation-client2-2.0.1-sources.jar",
                 "mirror_urls": [
@@ -2690,30 +2690,30 @@
                 "sha256": "59fd9d6ca09ade4f27bddd274fb842ea48fd92118a755d0a64cf60413cd1c3fc"
             },
             {
-                "coord": "commons-codec:commons-codec:1.10",
-                "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
+                "coord": "commons-codec:commons-codec:1.11",
+                "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
+                "url": "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
                 "mirror_urls": [
-                    "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
-                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
-                    "https://maven.google.com/commons-codec/commons-codec/1.10/commons-codec-1.10.jar"
+                    "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
+                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
+                    "https://maven.google.com/commons-codec/commons-codec/1.11/commons-codec-1.11.jar"
                 ],
-                "sha256": "4241dfa94e711d435f29a4604a3e2de5c4aa3c165e23bd066be6fc1fc4309569"
+                "sha256": "e599d5318e97aa48f42136a2927e6dfa4e8881dff0e6c8e3109ddbbff51d7b7d"
             },
             {
-                "coord": "commons-codec:commons-codec:jar:sources:1.10",
-                "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar",
+                "coord": "commons-codec:commons-codec:jar:sources:1.11",
+                "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar",
+                "url": "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
                 "mirror_urls": [
-                    "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar",
-                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar",
-                    "https://maven.google.com/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar"
+                    "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
+                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
+                    "https://maven.google.com/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar"
                 ],
-                "sha256": "dfae68268ce86f1a18fc45b99317c13d6c9d252f001d37961e79a51076808986"
+                "sha256": "901cb5d1f7c2877017c95d3c5efd5a497738d0162ef72cdf58e9cb13f50b2e9c"
             },
             {
                 "coord": "commons-collections:commons-collections:3.2.2",
@@ -2745,12 +2745,12 @@
                 "coord": "commons-httpclient:commons-httpclient:3.1",
                 "file": "v1/https/repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:1.10",
+                    "commons-codec:commons-codec:1.11",
                     "commons-logging:commons-logging:1.2"
                 ],
                 "dependencies": [
-                    "commons-codec:commons-codec:1.10",
-                    "commons-logging:commons-logging:1.2"
+                    "commons-logging:commons-logging:1.2",
+                    "commons-codec:commons-codec:1.11"
                 ],
                 "url": "https://repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar",
                 "mirror_urls": [
@@ -2764,12 +2764,12 @@
                 "coord": "commons-httpclient:commons-httpclient:jar:sources:3.1",
                 "file": "v1/https/repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1-sources.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:jar:sources:1.10",
+                    "commons-codec:commons-codec:jar:sources:1.11",
                     "commons-logging:commons-logging:jar:sources:1.2"
                 ],
                 "dependencies": [
-                    "commons-logging:commons-logging:jar:sources:1.2",
-                    "commons-codec:commons-codec:jar:sources:1.10"
+                    "commons-codec:commons-codec:jar:sources:1.11",
+                    "commons-logging:commons-logging:jar:sources:1.2"
                 ],
                 "url": "https://repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1-sources.jar",
                 "mirror_urls": [
@@ -5389,14 +5389,14 @@
                 "coord": "org.apache.httpcomponents:httpclient:4.3.4",
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:1.10",
+                    "commons-codec:commons-codec:1.11",
                     "commons-logging:commons-logging:1.2",
                     "org.apache.httpcomponents:httpcore:4.3.2"
                 ],
                 "dependencies": [
-                    "commons-codec:commons-codec:1.10",
                     "org.apache.httpcomponents:httpcore:4.3.2",
-                    "commons-logging:commons-logging:1.2"
+                    "commons-logging:commons-logging:1.2",
+                    "commons-codec:commons-codec:1.11"
                 ],
                 "url": "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
                 "mirror_urls": [
@@ -5410,14 +5410,14 @@
                 "coord": "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:jar:sources:1.10",
+                    "commons-codec:commons-codec:jar:sources:1.11",
                     "commons-logging:commons-logging:jar:sources:1.2",
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2"
                 ],
                 "dependencies": [
+                    "commons-codec:commons-codec:jar:sources:1.11",
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
-                    "commons-logging:commons-logging:jar:sources:1.2",
-                    "commons-codec:commons-codec:jar:sources:1.10"
+                    "commons-logging:commons-logging:jar:sources:1.2"
                 ],
                 "url": "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
                 "mirror_urls": [
@@ -6823,6 +6823,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -1507564077
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -504554428
     }
 }
