@@ -882,7 +882,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_jsoup_jsoup",
+    name = "org_jsoup_jsoup",  # Do not use, but do not remove
     artifact = "org.jsoup:jsoup:1.7.2",
     sha1 = "d7e275ba05aa380ca254f72d0c0ffebaedc3adcf",
 )

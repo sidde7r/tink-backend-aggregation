@@ -1157,7 +1157,7 @@ java_library(
     name = "org_jsoup_jsoup",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_jsoup_jsoup//jar",
+        "@aggregation//:org_jsoup_jsoup",
     ],
 )
 
