@@ -199,9 +199,9 @@ java_library(
         "@aggregation//:org_eclipse_jetty_jetty_servlets",
         "@aggregation//:org_eclipse_jetty_jetty_util",
         "@aggregation//:org_slf4j_slf4j_api",
+        "@aggregation//:org_xmlunit_xmlunit_core",
         "@org_eclipse_jetty_jetty_webapp//jar",
         "@org_eclipse_jetty_jetty_xml//jar",
-        "@org_xmlunit_xmlunit_core//jar",
         "@org_xmlunit_xmlunit_legacy//jar",
     ],
 )

@@ -1920,7 +1920,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_xmlunit_xmlunit_core",
+    name = "org_xmlunit_xmlunit_core",  # Do not use, but do not remove
     artifact = "org.xmlunit:xmlunit-core:2.1.1",
     sha1 = "94840bd83168c7de36f3779e2514d0bf4ed8c9bc",
 )
