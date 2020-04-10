@@ -2701,6 +2701,7 @@ maven_install(
         "org.iban4j:iban4j:3.1.0",
         "org.javassist:javassist:3.26.0-GA",
         "org.jboss.logging:jboss-logging:3.1.3.GA",
+        "org.mozilla:rhino:1.7R4",
         "org.objenesis:objenesis:2.6",
         "org.ow2.asm:asm:5.0.4",
         "org.pojava:pojava:2.8.1",
