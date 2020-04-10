@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.TanB
 
 public class TestFixtures {
 
+    private TestFixtures() {}
+
     static FinTsDialogContext getDialogContext() {
         FinTsConfiguration configuration = getFinTsConfiguration();
         FinTsDialogContext context =

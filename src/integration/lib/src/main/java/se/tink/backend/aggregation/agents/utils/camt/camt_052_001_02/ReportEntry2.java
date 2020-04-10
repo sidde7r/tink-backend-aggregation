@@ -292,7 +292,7 @@ public class ReportEntry2 {
      */
     public List<CashBalanceAvailability2> getAvlbty() {
         if (avlbty == null) {
-            avlbty = new ArrayList<CashBalanceAvailability2>();
+            avlbty = new ArrayList<>();
         }
         return this.avlbty;
     }
@@ -386,7 +386,7 @@ public class ReportEntry2 {
      */
     public List<ChargesInformation6> getChrgs() {
         if (chrgs == null) {
-            chrgs = new ArrayList<ChargesInformation6>();
+            chrgs = new ArrayList<>();
         }
         return this.chrgs;
     }
@@ -426,7 +426,7 @@ public class ReportEntry2 {
      */
     public List<TransactionInterest2> getIntrst() {
         if (intrst == null) {
-            intrst = new ArrayList<TransactionInterest2>();
+            intrst = new ArrayList<>();
         }
         return this.intrst;
     }
@@ -448,7 +448,7 @@ public class ReportEntry2 {
      */
     public List<EntryDetails1> getNtryDtls() {
         if (ntryDtls == null) {
-            ntryDtls = new ArrayList<EntryDetails1>();
+            ntryDtls = new ArrayList<>();
         }
         return this.ntryDtls;
     }

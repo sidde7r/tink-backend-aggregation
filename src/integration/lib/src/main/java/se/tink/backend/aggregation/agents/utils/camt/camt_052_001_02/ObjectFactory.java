@@ -28,12 +28,6 @@ public class ObjectFactory {
     private static final QName _Document_QNAME =
             new QName("urn:iso:std:iso:20022:tech:xsd:camt.052.001.02", "Document");
 
-    /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes
-     * for package: camt_052_001_02
-     */
-    public ObjectFactory() {}
-
     /** Create an instance of {@link Document } */
     public Document createDocument() {
         return new Document();
@@ -596,6 +590,6 @@ public class ObjectFactory {
     /** Create an instance of {@link JAXBElement }{@code <}{@link Document }{@code >}} */
     @XmlElementDecl(namespace = "urn:iso:std:iso:20022:tech:xsd:camt.052.001.02", name = "Document")
     public JAXBElement<Document> createDocument(Document value) {
-        return new JAXBElement<Document>(_Document_QNAME, Document.class, null, value);
+        return new JAXBElement<>(_Document_QNAME, Document.class, null, value);
     }
 }

@@ -125,7 +125,7 @@ public class TotalTransactions2 {
      */
     public List<TotalsPerBankTransactionCode2> getTtlNtriesPerBkTxCd() {
         if (ttlNtriesPerBkTxCd == null) {
-            ttlNtriesPerBkTxCd = new ArrayList<TotalsPerBankTransactionCode2>();
+            ttlNtriesPerBkTxCd = new ArrayList<>();
         }
         return this.ttlNtriesPerBkTxCd;
     }

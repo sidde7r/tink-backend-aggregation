@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.accounttyp
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.transaction.FinTsTransactionMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.ChosenTanMediumProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.TanAnswerProvider;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -120,6 +119,6 @@ public final class FinTsAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new FinTsSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 }

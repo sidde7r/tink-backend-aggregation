@@ -157,7 +157,7 @@ public class RemittanceAmount1 {
      */
     public List<DocumentAdjustment1> getAdjstmntAmtAndRsn() {
         if (adjstmntAmtAndRsn == null) {
-            adjstmntAmtAndRsn = new ArrayList<DocumentAdjustment1>();
+            adjstmntAmtAndRsn = new ArrayList<>();
         }
         return this.adjstmntAmtAndRsn;
     }

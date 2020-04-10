@@ -124,7 +124,7 @@ public class ReturnReasonInformation10 {
      */
     public List<String> getAddtlInf() {
         if (addtlInf == null) {
-            addtlInf = new ArrayList<String>();
+            addtlInf = new ArrayList<>();
         }
         return this.addtlInf;
     }

@@ -81,7 +81,7 @@ public class PersonIdentification5 {
      */
     public List<GenericPersonIdentification1> getOthr() {
         if (othr == null) {
-            othr = new ArrayList<GenericPersonIdentification1>();
+            othr = new ArrayList<>();
         }
         return this.othr;
     }

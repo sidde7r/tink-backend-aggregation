@@ -267,7 +267,7 @@ public class TransactionAgents2 {
      */
     public List<ProprietaryAgent2> getPrtry() {
         if (prtry == null) {
-            prtry = new ArrayList<ProprietaryAgent2>();
+            prtry = new ArrayList<>();
         }
         return this.prtry;
     }

@@ -191,7 +191,7 @@ public class EntryTransaction2 {
      */
     public List<CashBalanceAvailability2> getAvlbty() {
         if (avlbty == null) {
-            avlbty = new ArrayList<CashBalanceAvailability2>();
+            avlbty = new ArrayList<>();
         }
         return this.avlbty;
     }
@@ -231,7 +231,7 @@ public class EntryTransaction2 {
      */
     public List<ChargesInformation6> getChrgs() {
         if (chrgs == null) {
-            chrgs = new ArrayList<ChargesInformation6>();
+            chrgs = new ArrayList<>();
         }
         return this.chrgs;
     }
@@ -253,7 +253,7 @@ public class EntryTransaction2 {
      */
     public List<TransactionInterest2> getIntrst() {
         if (intrst == null) {
-            intrst = new ArrayList<TransactionInterest2>();
+            intrst = new ArrayList<>();
         }
         return this.intrst;
     }
@@ -329,7 +329,7 @@ public class EntryTransaction2 {
      */
     public List<RemittanceLocation2> getRltdRmtInf() {
         if (rltdRmtInf == null) {
-            rltdRmtInf = new ArrayList<RemittanceLocation2>();
+            rltdRmtInf = new ArrayList<>();
         }
         return this.rltdRmtInf;
     }
@@ -406,7 +406,7 @@ public class EntryTransaction2 {
      */
     public List<TransactionQuantities1Choice> getRltdQties() {
         if (rltdQties == null) {
-            rltdQties = new ArrayList<TransactionQuantities1Choice>();
+            rltdQties = new ArrayList<>();
         }
         return this.rltdQties;
     }

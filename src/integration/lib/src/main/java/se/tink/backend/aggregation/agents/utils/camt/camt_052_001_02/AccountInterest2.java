@@ -88,7 +88,7 @@ public class AccountInterest2 {
      */
     public List<Rate3> getRate() {
         if (rate == null) {
-            rate = new ArrayList<Rate3>();
+            rate = new ArrayList<>();
         }
         return this.rate;
     }

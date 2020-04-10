@@ -230,7 +230,7 @@ public class TransactionDates2 {
      */
     public List<ProprietaryDate2> getPrtry() {
         if (prtry == null) {
-            prtry = new ArrayList<ProprietaryDate2>();
+            prtry = new ArrayList<>();
         }
         return this.prtry;
     }

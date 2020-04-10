@@ -81,7 +81,7 @@ public class OrganisationIdentification4 {
      */
     public List<GenericOrganisationIdentification1> getOthr() {
         if (othr == null) {
-            othr = new ArrayList<GenericOrganisationIdentification1>();
+            othr = new ArrayList<>();
         }
         return this.othr;
     }

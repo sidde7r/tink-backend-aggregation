@@ -20,6 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.Segm
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.TanByOperationLookup;
 
 public class TestFixtures {
+
+    private TestFixtures() {}
+
     static FinTsAccountInformation getAccountInformation() {
         HIUPD hiupd =
                 new HIUPD()

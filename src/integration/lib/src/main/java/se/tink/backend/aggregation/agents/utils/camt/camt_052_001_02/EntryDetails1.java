@@ -80,7 +80,7 @@ public class EntryDetails1 {
      */
     public List<EntryTransaction2> getTxDtls() {
         if (txDtls == null) {
-            txDtls = new ArrayList<EntryTransaction2>();
+            txDtls = new ArrayList<>();
         }
         return this.txDtls;
     }

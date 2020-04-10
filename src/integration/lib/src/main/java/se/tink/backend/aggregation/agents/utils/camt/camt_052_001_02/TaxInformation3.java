@@ -271,7 +271,7 @@ public class TaxInformation3 {
      */
     public List<TaxRecord1> getRcrd() {
         if (rcrd == null) {
-            rcrd = new ArrayList<TaxRecord1>();
+            rcrd = new ArrayList<>();
         }
         return this.rcrd;
     }

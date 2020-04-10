@@ -244,7 +244,7 @@ public class TransactionParty2 {
      */
     public List<ProprietaryParty2> getPrtry() {
         if (prtry == null) {
-            prtry = new ArrayList<ProprietaryParty2>();
+            prtry = new ArrayList<>();
         }
         return this.prtry;
     }

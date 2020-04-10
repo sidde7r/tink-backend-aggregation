@@ -292,7 +292,7 @@ public class AccountReport11 {
      */
     public List<AccountInterest2> getIntrst() {
         if (intrst == null) {
-            intrst = new ArrayList<AccountInterest2>();
+            intrst = new ArrayList<>();
         }
         return this.intrst;
     }
@@ -314,7 +314,7 @@ public class AccountReport11 {
      */
     public List<CashBalance3> getBal() {
         if (bal == null) {
-            bal = new ArrayList<CashBalance3>();
+            bal = new ArrayList<>();
         }
         return this.bal;
     }
@@ -354,7 +354,7 @@ public class AccountReport11 {
      */
     public List<ReportEntry2> getNtry() {
         if (ntry == null) {
-            ntry = new ArrayList<ReportEntry2>();
+            ntry = new ArrayList<>();
         }
         return this.ntry;
     }

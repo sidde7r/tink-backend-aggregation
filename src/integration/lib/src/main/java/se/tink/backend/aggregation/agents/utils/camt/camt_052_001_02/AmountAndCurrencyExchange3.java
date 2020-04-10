@@ -147,7 +147,7 @@ public class AmountAndCurrencyExchange3 {
      */
     public List<AmountAndCurrencyExchangeDetails4> getPrtryAmt() {
         if (prtryAmt == null) {
-            prtryAmt = new ArrayList<AmountAndCurrencyExchangeDetails4>();
+            prtryAmt = new ArrayList<>();
         }
         return this.prtryAmt;
     }

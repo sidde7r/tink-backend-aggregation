@@ -125,7 +125,7 @@ public class TaxAmount1 {
      */
     public List<TaxRecordDetails1> getDtls() {
         if (dtls == null) {
-            dtls = new ArrayList<TaxRecordDetails1>();
+            dtls = new ArrayList<>();
         }
         return this.dtls;
     }

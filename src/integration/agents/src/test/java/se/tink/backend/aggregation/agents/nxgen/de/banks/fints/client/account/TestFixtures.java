@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.TanB
 
 public class TestFixtures {
 
+    private TestFixtures() {}
+
     static String getBodyOfSuccessfulAccountsDetailsResponse() {
         return "SE5IQks6MTozKzAwMDAwMDAwMDUzOSszMDArMDAwMDA2R0lEVE1DT0lVTjBTUzJIUTlFOTJQMUY3"
                 + "KzIrMDAwMDA2R0lEVE1DT0lVTjBTUzJIUTlFOTJQMUY3OjInSE5WU0s6OTk4OjMrUElOOjIrOTk4"

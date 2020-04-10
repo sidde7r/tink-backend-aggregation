@@ -80,7 +80,7 @@ public class BankToCustomerAccountReportV02 {
      */
     public List<AccountReport11> getRpt() {
         if (rpt == null) {
-            rpt = new ArrayList<AccountReport11>();
+            rpt = new ArrayList<>();
         }
         return this.rpt;
     }

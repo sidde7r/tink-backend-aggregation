@@ -82,7 +82,7 @@ public class TransactionPrice2Choice {
      */
     public List<ProprietaryPrice2> getPrtry() {
         if (prtry == null) {
-            prtry = new ArrayList<ProprietaryPrice2>();
+            prtry = new ArrayList<>();
         }
         return this.prtry;
     }

@@ -201,7 +201,7 @@ public class TotalsPerBankTransactionCode2 {
      */
     public List<CashBalanceAvailability2> getAvlbty() {
         if (avlbty == null) {
-            avlbty = new ArrayList<CashBalanceAvailability2>();
+            avlbty = new ArrayList<>();
         }
         return this.avlbty;
     }
