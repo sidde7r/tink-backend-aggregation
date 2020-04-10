@@ -1520,7 +1520,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_commons_commons_csv",
+    name = "org_apache_commons_commons_csv",  # Do not use, but do not remove
     artifact = "org.apache.commons:commons-csv:1.0",
     sha1 = "8a0796ad6541a144eb1c00b93e06fbac03a9f313",
 )

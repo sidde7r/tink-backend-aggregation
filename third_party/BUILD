@@ -881,7 +881,7 @@ java_library(
     name = "org_apache_commons_commons_csv",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_commons_commons_csv//jar",
+        "@aggregation//:org_apache_commons_commons_csv",
     ],
 )
 
