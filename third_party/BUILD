@@ -789,7 +789,7 @@ java_library(
     name = "io_swagger_swagger_annotations",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_swagger_swagger_annotations//jar",
+        "@aggregation//:io_swagger_swagger_annotations",
     ],
 )
 

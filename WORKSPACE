@@ -1278,7 +1278,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_swagger_swagger_annotations",
+    name = "io_swagger_swagger_annotations",  # Do not use, but do not remove
     artifact = "io.swagger:swagger-annotations:1.5.9",
     sha1 = "0598403e3d21da08f8e46efb9f2b6d7b1bc0046d",
 )
