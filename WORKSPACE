@@ -1976,7 +1976,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hamcrest_hamcrest_core",
+    name = "org_hamcrest_hamcrest_core",  # Do not use, but do not remove
     artifact = "org.hamcrest:hamcrest-core:1.3",
     sha1 = "42a25dc3219429f0e5d060061f71acb49bf010a0",
 )

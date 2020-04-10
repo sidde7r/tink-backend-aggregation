@@ -1282,8 +1282,8 @@ java_library(
     name = "pl_pragmatists_junitparams",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:org_hamcrest_hamcrest_core",
         "@junit_junit//jar",
-        "@org_hamcrest_hamcrest_core//jar",
         "@pl_pragmatists_JUnitParams//jar",
     ],
 )
@@ -1292,7 +1292,7 @@ java_library(
     name = "org_hamcrest_hamcrest_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_hamcrest_hamcrest_core//jar",
+        "@aggregation//:org_hamcrest_hamcrest_core",
     ],
 )
 
