@@ -1914,7 +1914,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_xmlunit_xmlunit_legacy",
+    name = "org_xmlunit_xmlunit_legacy",  # Do not use, but do not remove
     artifact = "org.xmlunit:xmlunit-legacy:2.1.1",
     sha1 = "e4d45154e0cef8334ccb7f3e0b8ebaf2596eb477",
 )
