@@ -53,7 +53,8 @@ public interface BalanceRequestBuilder {
                 if (dialogContext.doesOperationRequireTAN(SegmentType.HKSAL)) {
                     additionalSegments.add(
                             HKTANv6.builder()
-                                    .tanProcess("4")
+                                    .tanProcessVariant(
+                                            HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                                     .segmentType(SegmentType.HKSAL)
                                     .tanMediumName(dialogContext.getChosenTanMedium())
                                     .build());
@@ -72,7 +73,8 @@ public interface BalanceRequestBuilder {
                 if (dialogContext.doesOperationRequireTAN(SegmentType.HKSAL)) {
                     additionalSegments.add(
                             HKTANv6.builder()
-                                    .tanProcess("4")
+                                    .tanProcessVariant(
+                                            HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                                     .segmentType(SegmentType.HKSAL)
                                     .tanMediumName(dialogContext.getChosenTanMedium())
                                     .build());
@@ -91,7 +93,8 @@ public interface BalanceRequestBuilder {
                 if (dialogContext.doesOperationRequireTAN(SegmentType.HKSAL)) {
                     additionalSegments.add(
                             HKTANv6.builder()
-                                    .tanProcess("4")
+                                    .tanProcessVariant(
+                                            HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                                     .segmentType(SegmentType.HKSAL)
                                     .tanMediumName(dialogContext.getChosenTanMedium())
                                     .build());

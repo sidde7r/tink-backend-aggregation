@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.general.detail;
+package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.dialog.detail;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.HKVVBv3;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.SegmentType;
 
-public class DefaultRequestBuilder implements GeneralRequestBuilder {
+public class DefaultRequestBuilder implements DialogRequestBuilder {
     @Override
     public FinTsRequest getInitRequest(FinTsDialogContext dialogContext) {
         List<BaseRequestPart> additionalSegments = new ArrayList<>();
@@ -31,7 +31,7 @@ public class DefaultRequestBuilder implements GeneralRequestBuilder {
                         .build());
         additionalSegments.add(
                 HKTANv6.builder()
-                        .tanProcess("4")
+                        .tanProcessVariant(HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                         .segmentType(SegmentType.HKIDN)
                         .tanMediumName(dialogContext.getChosenTanMedium())
                         .build());

@@ -53,7 +53,7 @@ public class AccountClient {
         if (requireTAN(SegmentType.HKSPA)) {
             additionalSegments.add(
                     HKTANv6.builder()
-                            .tanProcess("4")
+                            .tanProcessVariant(HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                             .segmentType(SegmentType.HKSPA)
                             .tanMediumName(dialogContext.getChosenTanMedium())
                             .build());

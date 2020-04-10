@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.account.AccountClient;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.general.GeneralClient;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.dialog.DialogClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.transaction.TransactionClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.Bank;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsConfiguration;
@@ -34,7 +34,7 @@ public final class FinTsAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final GeneralClient generalClient;
+    private final DialogClient dialogClient;
     private final TransactionClient transactionClient;
     private final AccountClient accountClient;
     private final FinTsDialogContext dialogContext;
@@ -64,8 +64,8 @@ public final class FinTsAgent extends NextGenerationAgent
         FinTsRequestProcessor requestProcessor =
                 new FinTsRequestProcessor(this.dialogContext, requestSender, tanAnswerProvider);
 
-        this.generalClient =
-                new GeneralClient(
+        this.dialogClient =
+                new DialogClient(
                         requestProcessor,
                         dialogContext,
                         new ChosenTanMediumProvider(
@@ -85,7 +85,7 @@ public final class FinTsAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new FinTsAuthenticator(generalClient));
+        return new PasswordAuthenticationController(new FinTsAuthenticator(dialogClient));
     }
 
     @Override

@@ -28,7 +28,7 @@ public class HNVSDv1Test {
         segment.addSegment(
                 HKTANv6.builder()
                         .segmentType(SegmentType.DKALE)
-                        .tanProcess("2")
+                        .tanProcessVariant(HKTANv6.TanProcessVariant.TAN)
                         .tanMediumName("TANMEDIUM_asdf:?fdsa':asdf")
                         .build());
         // when
@@ -64,7 +64,7 @@ public class HNVSDv1Test {
                 HKVVBv3.builder().productId("PRODUCTID_1248278").productVersion("0.1").build());
         segment.addSegment(
                 HKTANv6.builder()
-                        .tanProcess("4")
+                        .tanProcessVariant(HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                         .segmentType(SegmentType.HKIDN)
                         .tanMediumName("TANMEDIUMNAME_149828947")
                         .build());

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.general.detail;
+package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.dialog.detail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,11 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContex
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.BaseRequestPart;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.HKIDNv2;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.HKTANv6;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.HKVVBv3;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.SegmentType;
 
-public class IngDibaRequestBuilder extends DefaultRequestBuilder {
-
+public class DeutscheBankRequestBuilder extends DefaultRequestBuilder {
     @Override
     public FinTsRequest getInitRequest(FinTsDialogContext dialogContext) {
         List<BaseRequestPart> additionalSegments = new ArrayList<>();
@@ -23,6 +24,11 @@ public class IngDibaRequestBuilder extends DefaultRequestBuilder {
                 HKVVBv3.builder()
                         .productId(dialogContext.getSecretsConfiguration().getProductId())
                         .productVersion(dialogContext.getSecretsConfiguration().getProductVersion())
+                        .build());
+        additionalSegments.add(
+                HKTANv6.builder()
+                        .tanProcessVariant(HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
+                        .segmentType(SegmentType.HKIDN)
                         .build());
         return FinTsRequest.createEncryptedRequest(dialogContext, additionalSegments);
     }

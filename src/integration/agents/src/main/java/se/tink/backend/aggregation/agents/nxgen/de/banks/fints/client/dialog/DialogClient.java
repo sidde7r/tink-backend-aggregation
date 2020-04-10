@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.general;
+package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.dialog;
 
 import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.StatusCode.APPROVED_TAN_PROCEDURES;
 
@@ -10,8 +10,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsRequestProcessor;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.dialog.detail.DialogRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.exception.UnsuccessfulApiCallException;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.general.detail.GeneralRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.accounttype.FinTsAccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.BaseResponsePart;
@@ -29,14 +29,14 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.TanB
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.ChosenSecurityFunctionProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.ChosenTanMediumProvider;
 
-public class GeneralClient {
+public class DialogClient {
     private final FinTsRequestProcessor requestProcessor;
     private final FinTsDialogContext dialogContext;
     private final ChosenTanMediumProvider chosenTanMediumProvider;
-    private final GeneralRequestBuilder requestBuilder;
+    private final DialogRequestBuilder requestBuilder;
     private final FinTsAccountTypeMapper mapper;
 
-    public GeneralClient(
+    public DialogClient(
             FinTsRequestProcessor requestProcessor,
             FinTsDialogContext dialogContext,
             ChosenTanMediumProvider chosenTanMediumProvider,
@@ -44,7 +44,7 @@ public class GeneralClient {
         this.requestProcessor = requestProcessor;
         this.dialogContext = dialogContext;
         this.chosenTanMediumProvider = chosenTanMediumProvider;
-        this.requestBuilder = GeneralRequestBuilderProvider.getRequestBuilder(dialogContext);
+        this.requestBuilder = DialogRequestBuilderProvider.getRequestBuilder(dialogContext);
         this.mapper = mapper;
     }
 

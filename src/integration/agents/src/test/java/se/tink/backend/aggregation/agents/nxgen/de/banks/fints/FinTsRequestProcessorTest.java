@@ -141,7 +141,7 @@ public class FinTsRequestProcessorTest {
                 HKVVBv3.builder().productId("123456789").productVersion("0.1").build());
         additionalSegments.add(
                 HKTANv6.builder()
-                        .tanProcess("4")
+                        .tanProcessVariant(HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                         .segmentType(SegmentType.HKIDN)
                         .tanMediumName("Google Phone")
                         .build());

@@ -46,7 +46,8 @@ public interface TransactionRequestBuilder {
                 if (dialogContext.doesOperationRequireTAN(SegmentType.HKKAZ)) {
                     additionalSegments.add(
                             HKTANv6.builder()
-                                    .tanProcess("4")
+                                    .tanProcessVariant(
+                                            HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                                     .segmentType(SegmentType.HKKAZ)
                                     .tanMediumName(dialogContext.getChosenTanMedium())
                                     .build());
@@ -80,7 +81,8 @@ public interface TransactionRequestBuilder {
                 if (dialogContext.doesOperationRequireTAN(SegmentType.HKCAZ)) {
                     additionalSegments.add(
                             HKTANv6.builder()
-                                    .tanProcess("4")
+                                    .tanProcessVariant(
+                                            HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                                     .segmentType(SegmentType.HKCAZ)
                                     .tanMediumName(dialogContext.getChosenTanMedium())
                                     .build());

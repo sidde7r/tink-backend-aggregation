@@ -61,7 +61,7 @@ public class FinTsRequestProcessor {
         List<BaseRequestPart> additionalSegments =
                 Collections.singletonList(
                         HKTANv6.builder()
-                                .tanProcess("2")
+                                .tanProcessVariant(HKTANv6.TanProcessVariant.TAN)
                                 .taskReference(dialogContext.getTaskReference())
                                 .furtherTanFollows(false)
                                 .build());
