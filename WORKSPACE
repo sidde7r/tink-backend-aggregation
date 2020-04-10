@@ -2667,6 +2667,7 @@ maven_install(
         "net.sf.jopt-simple:jopt-simple:4.9",
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "net.sourceforge.cssparser:cssparser:0.9.16",
+        "net.spy:spymemcached:2.9.1",
         "org.apache.commons:commons-collections4:4.0",
         "org.apache.commons:commons-lang3:3.5",
         "org.apache.httpcomponents:httpclient:4.3.4",
