@@ -1570,8 +1570,8 @@ java_library(
         "@aggregation//:io_netty_netty_common",
         "@aggregation//:io_netty_netty_handler",
         "@aggregation//:io_netty_netty_transport",
+        "@aggregation//:org_mockito_mockito_core",
         "@com_jcract_jzlib//jar",
-        "@org_mockito_mockito_core//jar",
     ],
 )
 
@@ -1587,9 +1587,9 @@ java_library(
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_apache_logging_log4j_log4j_api",
         "@aggregation//:org_apache_logging_log4j_log4j_core",
+        "@aggregation//:org_mockito_mockito_core",
         "@aggregation//:org_slf4j_slf4j_api",
         "@com_oracle_substratevm_svm//jar",
-        "@org_mockito_mockito_core//jar",
     ],
 )
 
@@ -1605,7 +1605,7 @@ java_library(
         "@aggregation//:io_netty_netty_tcnative_boringssl_static",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
-        "@org_mockito_mockito_core//jar",
+        "@aggregation//:org_mockito_mockito_core",
     ],
 )
 
@@ -1621,7 +1621,7 @@ java_library(
     name = "org_mockito_mockito_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_mockito_mockito_core//jar",
+        "@aggregation//:org_mockito_mockito_core",
     ],
     runtime_deps = [
         "@aggregation//:net_bytebuddy_byte_buddy",
@@ -1638,7 +1638,7 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:io_netty_netty_common",
-        "@org_mockito_mockito_core//jar",
+        "@aggregation//:org_mockito_mockito_core",
     ],
 )
 

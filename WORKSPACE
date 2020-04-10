@@ -2325,7 +2325,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_mockito_mockito_core",
+    name = "org_mockito_mockito_core",  # Do not use, but do not remove
     artifact = "org.mockito:mockito-core:3.0.0",
     sha1 = "15fd0225cb1858f6922f44776b1577ac26739279",
 )
