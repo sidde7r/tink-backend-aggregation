@@ -2603,6 +2603,7 @@ maven_install(
         "com.google.inject.extensions:guice-multibindings:4.2.2",
         "com.google.inject:guice:4.2.2",
         "com.google.instrumentation:instrumentation-api:0.4.3",
+        "com.google.protobuf:protobuf-java-util:3.5.1",
         "com.google.protobuf:protobuf-java:3.5.1",
         "com.google.zxing:core:3.3.3",
         "com.google.zxing:javase:3.3.3",
