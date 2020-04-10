@@ -1467,7 +1467,7 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:com_google_zxing_core",
-        "@com_google_zxing_qrcode_javase//jar",
+        "@aggregation//:com_google_zxing_javase",
     ],
 )
 
