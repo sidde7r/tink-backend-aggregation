@@ -2466,7 +2466,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_servlet_javax_servlet_api",
+    name = "javax_servlet_javax_servlet_api",  # Do not use, but do not remove
     artifact = "javax.servlet:javax.servlet-api:4.0.1",
     sha1 = "a27082684a2ff0bf397666c3943496c44541d1ca",
 )
