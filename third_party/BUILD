@@ -1454,11 +1454,11 @@ java_library(
     name = "prometheus",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:io_prometheus_simpleclient",
         "@io_prometheus_simpleclient_common_skeleton_version//jar",
         "@io_prometheus_simpleclient_hotspot_skeleton_version//jar",
         "@io_prometheus_simpleclient_httpserver//jar",
         "@io_prometheus_simpleclient_pushgateway//jar",
-        "@io_prometheus_simpleclient_skeleton_version//jar",
     ],
 )
 
