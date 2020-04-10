@@ -2331,7 +2331,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_oracle_substratevm_svm",
+    name = "com_oracle_substratevm_svm",  # Do not use, but do not remove
     artifact = "com.oracle.substratevm:svm:19.0.0",
     sha1 = "e1cba96c39e75e62fd8cc50978ef7d6cfeaf39f9",
 )

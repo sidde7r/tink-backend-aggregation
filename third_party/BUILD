@@ -1589,7 +1589,7 @@ java_library(
         "@aggregation//:org_apache_logging_log4j_log4j_core",
         "@aggregation//:org_mockito_mockito_core",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@com_oracle_substratevm_svm//jar",
+        "@aggregation_temp//:com_oracle_substratevm_svm",
     ],
 )
 
