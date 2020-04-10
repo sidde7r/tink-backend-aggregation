@@ -2245,7 +2245,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_prometheus_simpleclient_hotspot_skeleton_version",
+    name = "io_prometheus_simpleclient_hotspot_skeleton_version",  # Do not use, but do not remove
     artifact = "io.prometheus:simpleclient_hotspot:0.5.0",
     sha1 = "0f341cb84d6713255b1ce46c7593eee50a35d414",
 )

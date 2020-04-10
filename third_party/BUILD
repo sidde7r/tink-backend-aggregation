@@ -1456,7 +1456,7 @@ java_library(
     exports = [
         "@aggregation//:io_prometheus_simpleclient",
         "@aggregation//:io_prometheus_simpleclient_common",
-        "@io_prometheus_simpleclient_hotspot_skeleton_version//jar",
+        "@aggregation//:io_prometheus_simpleclient_hotspot",
         "@io_prometheus_simpleclient_httpserver//jar",
         "@io_prometheus_simpleclient_pushgateway//jar",
     ],
