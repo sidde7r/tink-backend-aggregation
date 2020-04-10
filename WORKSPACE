@@ -2257,7 +2257,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_prometheus_simpleclient_pushgateway",
+    name = "io_prometheus_simpleclient_pushgateway",  # Do not use, but do not remove
     artifact = "io.prometheus:simpleclient_pushgateway:0.5.0",
     sha1 = "92e164e6094dea346fd8f1e1a0a96f6a91c149ff",
 )
