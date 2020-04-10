@@ -11,6 +11,8 @@ agentsServiceConfiguration:
   eidasProxy:
     host: https://eidas-proxy.staging.aggregation.tink.network
     localEidasDev: true
+    tlsCrtPath: data/eidas_dev_certificates/tls.crt
+    tlsKeyPath: data/eidas_dev_certificates/tls.key
   featureFlags:
     beProxy: false
     esProxy: false
