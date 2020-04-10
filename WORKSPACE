@@ -2522,12 +2522,18 @@ load("@maven//:defs.bzl", "pinned_maven_install")
 pinned_maven_install()
 
 # This aims become the singular place for specifying the full collection of direct and transitive
-# dependencies of the aggregation service monolith jar. All aggregation production code -- including
-# agent code -- shall ideally depend on artifacts provided by this maven_install and nothing else.
-# Artifacts only relevant for testing shall NOT be specified here, but shall instead ideally be put
-# in one or more separate maven_install(s).
+# dependencies of the aggregation service monolith jar. All aggregation code -- including agent code
+# -- shall ideally depend on artifacts provided by this maven_install and nothing else.
 #
-# At the time of writing, aggregation production code mostly depends on artifacts via the maven_jar
+# Rules of thumb:
+# 1. A Bazel target should not depend on artifacts from multiple maven_installs.
+# 2. If two applications have no dependencies on each other, give them separate maven_installs.
+# 3. Consequently, whitebox tests should depend on the same maven_install as the code under test.
+#
+# As long as these rules are followed, we will not be in danger of mixing different versions of
+# transitive dependencies in Bazel targets, and will be possible to upgrade dependencies flexibly.
+#
+# At the time of writing, aggregation production code still depends on artifacts via the maven_jar
 # rules in WORKSPACE. This is done either by referring to them directly using the "@artifact//jar"
 # syntax, or indirectly via the third_party java_library rules using the "//third_party:artifact"
 # syntax. Either way, any such dependency is to be replaced with a direct dependency on an artifact
