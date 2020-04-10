@@ -2251,7 +2251,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_prometheus_simpleclient_httpserver",
+    name = "io_prometheus_simpleclient_httpserver",  # Do not use, but do not remove
     artifact = "io.prometheus:simpleclient_httpserver:0.5.0",
     sha1 = "53fbb42b6501cee3c879ed2f8f86b64b105604aa",
 )

@@ -1457,7 +1457,7 @@ java_library(
         "@aggregation//:io_prometheus_simpleclient",
         "@aggregation//:io_prometheus_simpleclient_common",
         "@aggregation//:io_prometheus_simpleclient_hotspot",
-        "@io_prometheus_simpleclient_httpserver//jar",
+        "@aggregation//:io_prometheus_simpleclient_httpserver",
         "@io_prometheus_simpleclient_pushgateway//jar",
     ],
 )
