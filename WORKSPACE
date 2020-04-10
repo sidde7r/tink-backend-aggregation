@@ -1416,7 +1416,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+    name = "org_hibernate_javax_persistence_hibernate_jpa_2_0_api",  # Do not use, but do not remove
     artifact = "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
     sha1 = "6728add2c60f6621c3a77ba71fe6f6b798d14ee0",
 )

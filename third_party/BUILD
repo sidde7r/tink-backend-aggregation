@@ -1091,6 +1091,7 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:commons_collections_commons_collections",
+        "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:xml_apis_xml_apis",
         "@antlr_antlr//jar",
@@ -1099,7 +1100,6 @@ java_library(
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_commons_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
-        "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
     ],
 )
 
@@ -1108,13 +1108,13 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:asm_asm",
+        "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "@aggregation//:org_javassist_javassist",
         "@aggregation//:org_slf4j_slf4j_api",
         "@cglib_cglib//jar",
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
         "@org_hibernate_hibernate_entitymanager//jar",
-        "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
     ],
 )
 
@@ -1133,7 +1133,7 @@ java_library(
     name = "org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
+        "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
     ],
 )
 
