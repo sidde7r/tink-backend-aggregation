@@ -2663,6 +2663,7 @@ maven_install(
         "net.bytebuddy:byte-buddy:1.10.1",
         "net.minidev:asm:1.0.2",
         "net.minidev:json-smart:2.1.1",
+        "net.sf.jopt-simple:jopt-simple:4.9",
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "net.sourceforge.cssparser:cssparser:0.9.16",
         "org.apache.commons:commons-collections4:4.0",
