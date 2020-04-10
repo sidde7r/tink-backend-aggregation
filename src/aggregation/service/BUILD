@@ -15,7 +15,6 @@ java_library(
         "@aggregation_temp//:org_hibernate_hibernate_entitymanager",
     ],
     deps = [
-        "//src/aggregation/lib",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/cli",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",
