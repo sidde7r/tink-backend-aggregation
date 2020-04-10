@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.exceptions.errors.no.BankIdErrorNO;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public class BankIdAuthenticationControllerNOTest {
@@ -108,24 +107,24 @@ public class BankIdAuthenticationControllerNOTest {
     public void ensureBankIdStatus_cancelled_isMappedTo_correctBankIdException()
             throws AuthenticationException, AuthorizationException {
         ensureBankIdStatus_isMappedToCorrectException(
-                BankIdStatus.CANCELLED, BankIdErrorNO.CANCELLED);
+                BankIdStatus.CANCELLED, BankIdError.CANCELLED);
     }
 
     @Test
     public void ensureBankIdStatus_timeout_isMappedTo_correctBankIdException()
             throws AuthenticationException, AuthorizationException {
-        ensureBankIdStatus_isMappedToCorrectException(BankIdStatus.TIMEOUT, BankIdErrorNO.TIMEOUT);
+        ensureBankIdStatus_isMappedToCorrectException(BankIdStatus.TIMEOUT, BankIdError.TIMEOUT);
     }
 
     @Test
     public void ensureBankIdStatus_failedUnknown_isMappedTo_correctBankIdException()
             throws AuthenticationException, AuthorizationException {
         ensureBankIdStatus_isMappedToCorrectException(
-                BankIdStatus.FAILED_UNKNOWN, BankIdErrorNO.UNKNOWN);
+                BankIdStatus.FAILED_UNKNOWN, BankIdError.UNKNOWN);
     }
 
     private void ensureBankIdStatus_isMappedToCorrectException(
-            BankIdStatus status, BankIdErrorNO error)
+            BankIdStatus status, BankIdError error)
             throws AuthenticationException, AuthorizationException {
         try {
             credentials.setField(Field.Key.USERNAME, USERNAME);

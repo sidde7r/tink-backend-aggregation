@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.no.BankIdErrorNO;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
@@ -96,19 +96,19 @@ public class BankIdAuthenticationControllerNO
                     log.info("Waiting for BankID");
                     break;
                 case CANCELLED:
-                    throw BankIdErrorNO.CANCELLED.exception();
+                    throw BankIdError.CANCELLED.exception();
                 case TIMEOUT:
-                    throw BankIdErrorNO.TIMEOUT.exception();
+                    throw BankIdError.TIMEOUT.exception();
                 default:
                     log.warn(String.format("Unknown Norweigan BankIdStatus (%s)", status));
-                    throw BankIdErrorNO.UNKNOWN.exception();
+                    throw BankIdError.UNKNOWN.exception();
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
         log.info(String.format("Norweigan BankID timed out internally, last status: %s", status));
-        throw BankIdErrorNO.TIMEOUT.exception();
+        throw BankIdError.TIMEOUT.exception();
     }
 
     @Override
