@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@Ignore
 public final class AmexV62UkMockServerAgentTest {
 
     private final String USERNAME = "testUser";
