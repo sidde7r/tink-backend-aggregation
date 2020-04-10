@@ -900,7 +900,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_java_dev_jna_jna",
+    name = "net_java_dev_jna_jna",  # Do not use, but do not remove
     artifact = "net.java.dev.jna:jna:5.3.1",
     sha1 = "6eb9d07456c56b9c2560722e90382252f0f98405",
 )

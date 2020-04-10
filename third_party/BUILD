@@ -854,7 +854,7 @@ java_library(
     name = "net_java_dev_jna_jna",
     visibility = ["//visibility:public"],
     exports = [
-        "@net_java_dev_jna_jna//jar",
+        "@aggregation//:net_java_dev_jna_jna",
     ],
 )
 
@@ -1376,8 +1376,8 @@ java_library(
     name = "net_sourceforge_tess4j",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:net_java_dev_jna_jna",
         "@com_sun_media_jai_imageio//jar",
-        "@net_java_dev_jna_jna//jar",
         "@net_sourceforge_lept4j//jar",
         "@net_sourceforge_tess4j//jar",
     ],
