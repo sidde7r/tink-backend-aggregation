@@ -1958,7 +1958,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_jayway_jsonpath_json_path",
+    name = "com_jayway_jsonpath_json_path",  # Do not use, but do not remove
     artifact = "com.jayway.jsonpath:json-path:2.0.0",
     sha1 = "26b8555596b3fb9652c1ffe193fa9123945b32cc",
 )
