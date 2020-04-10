@@ -889,7 +889,7 @@ java_library(
     name = "org_apache_commons_commons_cli",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_cli_commons_cli//jar",
+        "@aggregation//:commons_cli_commons_cli",
     ],
 )
 

@@ -1872,7 +1872,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_cli_commons_cli",
+    name = "commons_cli_commons_cli",  # Do not use, but do not remove
     artifact = "commons-cli:commons-cli:1.4",
     sha1 = "c51c00206bb913cd8612b24abd9fa98ae89719b1",
 )
