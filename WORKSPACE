@@ -312,7 +312,7 @@ protobuf_deps()
 OPENCENSUS_VERSION = "0.21.0"
 
 maven_jar(
-    name = "io_opencensus_opencensus_api",
+    name = "io_opencensus_opencensus_api",  # Do not use, but do not remove
     artifact = "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
     sha1 = "73c07fe6458840443f670b21c7bf57657093b4e1",
 )

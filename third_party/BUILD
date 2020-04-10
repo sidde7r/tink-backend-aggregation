@@ -731,11 +731,11 @@ java_library(
     exports = [
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_opencensus_opencensus_api",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_protobuf_lite//jar",
         "@io_grpc_grpc_protobuf_nano//jar",
-        "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
     ],
 )
@@ -1426,6 +1426,7 @@ java_library(
         "@aggregation//:io_netty_netty_resolver",
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
+        "@aggregation//:io_opencensus_opencensus_api",
         "@com_google_api_grpc_proto_google_common_protos//jar",
         "@com_google_protobuf_protobuf_java_util//jar",
         "@io_grpc_grpc_api//jar",
@@ -1437,7 +1438,6 @@ java_library(
         "@io_grpc_grpc_protobuf_nano//jar",
         "@io_grpc_grpc_stub//jar",
         "@io_grpc_grpc_testing//jar",
-        "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
     ],
 )
