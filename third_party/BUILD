@@ -181,6 +181,7 @@ java_library(
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:net_minidev_asm",
+        "@aggregation//:net_minidev_json_smart",
         "@aggregation//:org_apache_commons_commons_collections4",
         "@aggregation//:org_apache_commons_commons_lang3",
         "@aggregation//:org_apache_httpcomponents_httpclient",
@@ -197,7 +198,6 @@ java_library(
         "@com_jayway_jsonpath_json_path//jar",
         "@javax_servlet_javax_servlet_api//jar",
         "@junit_junit//jar",
-        "@net_minidev_json_smart//jar",
         "@net_sf_jopt_simple_jopt_simple//jar",
         "@org_eclipse_jetty_jetty_webapp//jar",
         "@org_eclipse_jetty_jetty_xml//jar",
@@ -1354,12 +1354,12 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
+        "@aggregation//:net_minidev_json_smart",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
         "@com_google_crypto_tink//jar",
         "@junit_junit//jar",
         "@net_jadler_jadler_all//jar",
-        "@net_minidev_json_smart//jar",
         "@org_bitbucket_b_c_jose4j//jar",
     ],
 )
@@ -1646,7 +1646,7 @@ java_library(
     name = "net_minidev_json_smart",
     visibility = ["//visibility:public"],
     exports = [
-        "@net_minidev_json_smart//jar",
+        "@aggregation//:net_minidev_json_smart",
     ],
     runtime_deps = [
         "@aggregation//:net_minidev_asm",

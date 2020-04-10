@@ -1952,7 +1952,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_minidev_json_smart",
+    name = "net_minidev_json_smart",  # Do not use, but do not remove
     artifact = "net.minidev:json-smart:2.1.1",
     sha1 = "922d12fb1f394e2b6999ae0f7936ab13f4dffb81",
 )
