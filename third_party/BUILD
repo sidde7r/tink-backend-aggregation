@@ -1165,7 +1165,7 @@ java_library(
     name = "org_modelmapper_modelmapper",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_modelmapper_modelmapper//jar",
+        "@aggregation//:org_modelmapper_modelmapper",
     ],
 )
 
