@@ -873,7 +873,7 @@ java_library(
     name = "net_spy_spymemcached",
     visibility = ["//visibility:public"],
     exports = [
-        "@net_spy_spymemcached//jar",
+        "@aggregation//:net_spy_spymemcached",
     ],
 )
 

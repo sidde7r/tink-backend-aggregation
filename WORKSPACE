@@ -1728,7 +1728,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_spy_spymemcached",
+    name = "net_spy_spymemcached",  # Do not use, but do not remove
     artifact = "net.spy:spymemcached:2.9.1",
     sha1 = "a09d5c077370dca14c0c967c5fb1b1fc9d24a02d",
 )
