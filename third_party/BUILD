@@ -1466,7 +1466,7 @@ java_library(
     name = "zxing-qrcode",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_zxing_qrcode_core//jar",
+        "@aggregation//:com_google_zxing_core",
         "@com_google_zxing_qrcode_javase//jar",
     ],
 )

@@ -2227,7 +2227,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_zxing_qrcode_core",
+    name = "com_google_zxing_qrcode_core",  # Do not use, but do not remove
     artifact = "com.google.zxing:core:3.3.3",
     sha1 = "b640badcc97f18867c4dfd249ef8d20ec0204c07",
 )
