@@ -45,7 +45,7 @@ java_binary(
     runtime_deps = [
         "//src/aggregation/service",
         "//src/libraries/console_json_logger",
-        "//third_party:mysql_mysql_connector_java",
+        "@aggregation//:mysql_mysql_connector_java",
     ],
 )
 
@@ -64,7 +64,7 @@ java_binary(
     runtime_deps = [
         "//src/aggregation/service",
         "//src/libraries/console_json_logger",
-        "//third_party:mysql_mysql_connector_java",
+        "@aggregation//:mysql_mysql_connector_java",
     ],
 )
 

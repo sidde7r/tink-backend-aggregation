@@ -829,7 +829,7 @@ java_library(
     name = "mysql_mysql_connector_java",
     visibility = ["//visibility:public"],
     exports = [
-        "@mysql_mysql_connector_java//jar",
+        "@aggregation//:mysql_mysql_connector_java",
     ],
 )
 

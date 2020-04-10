@@ -1080,7 +1080,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "mysql_mysql_connector_java",
+    name = "mysql_mysql_connector_java",  # Do not use, but do not remove
     artifact = "mysql:mysql-connector-java:5.1.42",
     sha1 = "80a448a3ec2178b649bb2e3cb3610fab06e11669",
 )
