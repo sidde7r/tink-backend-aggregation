@@ -254,6 +254,10 @@ NETTY_VERSION = "4.1.42.Final"
 
 NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION = "2.0.26.Final"
 
+ECLIPSE_JETTY_VERSION = "9.0.7.v20131107"
+
+ALT_ECLIPSE_JETTY_VERSION = "9.2.13.v20150730"
+
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
     sha256 = "b3823d7bca0c3513d48ef43de63f6a48410040f5f7b16d5eceea0adb98d07f42",
@@ -371,13 +375,13 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_server",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-server:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "682ae23f9e4a5e397d96f215b62641755d2a59b7",
 )
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_proxy",
-    artifact = "org.eclipse.jetty:jetty-proxy:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-proxy:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "5d16b84cf4ff40ef743c72ec3ffb118553f709c1",
 )
 
@@ -539,7 +543,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_servlet",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-servlet:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-servlet:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "f7d8ce6ecb2318b906ba4df1b8625ab2b34e305b",
 )
 
@@ -1041,7 +1045,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_util",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-util:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "93a606c83b047e8855eb3af68c335e60fa757367",
 )
 
@@ -1185,7 +1189,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_servlets",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-servlets:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "bffeae9b9f75f53d3e5dc1bfd56725f67f2f67c0",
 )
 
@@ -1299,7 +1303,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_io",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-io:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "512e9d2e088ae7c70c4a68381423cb68b9ed42d6",
 )
 
@@ -1425,7 +1429,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_http",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-http:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "67060a59b426c76a2788ea5f4e19c1d3170ac562",
 )
 
@@ -1737,13 +1741,13 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_continuation",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-continuation:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-continuation:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "4a26ae30011d933ac2c5f8d840e3374bc0d136eb",
 )
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_security",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-security:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-security:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "023e7943c18e5c340455a40876ce5093c980c210",
 )
 
@@ -1923,13 +1927,13 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_xml",
-    artifact = "org.eclipse.jetty:jetty-xml:9.2.13.v20150730",
+    artifact = "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
     sha1 = "9e17bdfb8c25d0cd377960326b79379df3181776",
 )
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_webapp",
-    artifact = "org.eclipse.jetty:jetty-webapp:9.2.13.v20150730",
+    artifact = "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
     sha1 = "716b5cdea1e818cd0e36dfea791f620d49bd2d2a",
 )
 
@@ -2671,14 +2675,14 @@ maven_install(
         "org.bouncycastle:bcprov-jdk15on:1.59",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
-        "org.eclipse.jetty:jetty-continuation:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-security:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-servlet:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-continuation:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-http:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-io:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-security:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-server:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-servlet:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-servlets:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-util:%s" % ECLIPSE_JETTY_VERSION,
         "org.glassfish.web:javax.el:2.2.6",
         "org.hamcrest:hamcrest-core:1.3",
         "org.hibernate:hibernate-validator:5.1.1.Final",
