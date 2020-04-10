@@ -2697,6 +2697,7 @@ maven_install(
         "org.eclipse.jetty:jetty-util:%s" % ECLIPSE_JETTY_VERSION,
         "org.glassfish.web:javax.el:2.2.6",
         "org.hamcrest:hamcrest-core:1.3",
+        "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
         "org.hibernate:hibernate-validator:5.1.1.Final",
         "org.iban4j:iban4j:3.1.0",
         "org.javassist:javassist:3.26.0-GA",
