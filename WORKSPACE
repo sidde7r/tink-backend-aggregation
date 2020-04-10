@@ -2652,6 +2652,7 @@ maven_install(
         "io.netty:netty-resolver:%s" % NETTY_VERSION,
         "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
         "io.netty:netty-transport:%s" % NETTY_VERSION,
+        "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
         "io.prometheus:simpleclient:0.5.0",
         "io.prometheus:simpleclient_common:0.5.0",
