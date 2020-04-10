@@ -2263,7 +2263,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_prometheus_simpleclient_common_skeleton_version",
+    name = "io_prometheus_simpleclient_common_skeleton_version",  # Do not use, but do not remove
     artifact = "io.prometheus:simpleclient_common:0.5.0",
     sha1 = "bfd93082d7cf85c0543c2ccc286b96c817d1090c",
 )
