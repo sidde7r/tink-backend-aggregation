@@ -1964,7 +1964,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_flipkart_zjsonpatch_zjsonpatch",
+    name = "com_flipkart_zjsonpatch_zjsonpatch",  # Do not use, but do not remove
     artifact = "com.flipkart.zjsonpatch:zjsonpatch:0.2.1",
     sha1 = "f3f67d52dbf2ca6edc2ae0b3ae53488110e848c9",
 )
