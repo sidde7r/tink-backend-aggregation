@@ -1564,6 +1564,7 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_google_code_gson_gson",
+        "@aggregation//:com_jcraft_jzlib",
         "@aggregation//:io_netty_netty_buffer",
         "@aggregation//:io_netty_netty_codec",
         "@aggregation//:io_netty_netty_codec_http",
@@ -1571,7 +1572,6 @@ java_library(
         "@aggregation//:io_netty_netty_handler",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:org_mockito_mockito_core",
-        "@com_jcract_jzlib//jar",
     ],
 )
 
