@@ -2703,6 +2703,7 @@ maven_install(
         "org.jboss.logging:jboss-logging:3.1.3.GA",
         "org.objenesis:objenesis:2.6",
         "org.ow2.asm:asm:5.0.4",
+        "org.pojava:pojava:2.8.1",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.reflections:reflections:0.9.11",
         "org.slf4j:jcl-over-slf4j:1.7.6",
