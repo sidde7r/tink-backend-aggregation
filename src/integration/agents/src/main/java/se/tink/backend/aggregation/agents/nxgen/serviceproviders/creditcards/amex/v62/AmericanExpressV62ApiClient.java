@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
-import java.util.UUID;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
@@ -43,7 +41,6 @@ public class AmericanExpressV62ApiClient {
                 client.request(url)
                         .accept(MediaType.APPLICATION_JSON)
                         .type(MediaType.APPLICATION_JSON)
-                        .header(AmericanExpressV62Constants.ConstantValueHeaders.AUTHORITY)
                         .header(AmericanExpressV62Constants.ConstantValueHeaders.CHARSET)
                         .header(AmericanExpressV62Constants.ConstantValueHeaders.CLIENT_TYPE)
                         .header(AmericanExpressV62Constants.ConstantValueHeaders.DEVICE_MODEL)
@@ -69,10 +66,7 @@ public class AmericanExpressV62ApiClient {
                                 persistentStorage.getOrDefault(
                                         AmericanExpressV62Constants.Tags.PUBLIC_GUID,
                                         AmericanExpressV62Constants.HeadersValue.UNAVAILABLE))
-                        .header(
-                                AmericanExpressV62Constants.Headers.REQUEST_ID,
-                                UUID.randomUUID().toString().toUpperCase())
-                        .header(HttpHeaders.USER_AGENT, config.getUserAgent())
+                        .header(AmericanExpressV62Constants.Headers.REQUEST_SEQUENCE, 0)
                         .header(AmericanExpressV62Constants.Headers.APP_ID, config.getAppId())
                         .header(
                                 AmericanExpressV62Constants.Headers.APP_VERSION,

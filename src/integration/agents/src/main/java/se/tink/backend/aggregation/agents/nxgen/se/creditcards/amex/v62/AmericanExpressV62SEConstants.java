@@ -13,7 +13,7 @@ public final class AmericanExpressV62SEConstants {
         public static final String APP_ID = "se.co.americanexpress.amexservice";
         public static final String USER_AGENT = "Amex%20SE/9 CFNetwork/978.0.7 Darwin/18.7.0";
         public static final String LOCALE = "sv_SE";
-        public static final String APP_VERSION = "6.25.0";
-        public static final String GIT_SHA = "8111cdc85";
+        public static final String APP_VERSION = "6.29.0";
+        public static final String GIT_SHA = "ae88d0e66";
     }
 }

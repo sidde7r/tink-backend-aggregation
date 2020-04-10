@@ -15,14 +15,14 @@ public final class AmericanExpressV62Constants {
 
     public enum ConstantValueHeaders implements HeaderEnum {
         AUTHORITY("authority", "global.americanexpress.com"),
-        CHARSET("charset", "UTF-8"),
-        CLIENT_TYPE("x-axp-clienttype", "iPhone"),
-        APP_VERSION("x-axp-appversion", "6.24.0"),
-        DEVICE_MODEL("x-axp-devicemodel", "iPhone8,1"),
-        DEVICE_OS("x-axp-deviceos", "iOS"),
-        OS_VERSION("x-axp-osversion", "12.4.3"),
+        CHARSET("Charset", "UTF-8"),
+        CLIENT_TYPE("X-AXP-ClientType", "iPhone"),
+        APP_VERSION("X-AXP-AppVersion", "6.29.0"),
+        DEVICE_MODEL("X-AXP-DeviceModel", "iPhone8.1"),
+        DEVICE_OS("X-AXP-DeviceOS", "iOS"),
+        OS_VERSION("X-AXP-OSVersion", "13.3.1"),
         MANUFACTURER("x-axp-manufacturer", "Apple"),
-        TIMEZONE_OFFSET("x-axp-timezoneoffset", "3600000"),
+        TIMEZONE_OFFSET("X-AXP-TimeZoneOffset", "3600000"),
         TIMEZONE_NAME("x-axp-device-timezone-name", "Europe/Stockholm"),
         ACCEPT_ENCODING("accept-encoding", "br, gzip, deflate"),
         ACCEPT_LANGUAGE("accept-language", "en-us");
@@ -77,17 +77,17 @@ public final class AmericanExpressV62Constants {
     }
 
     public static final class Headers {
-        public static final String LOCALE = "x-axp-locale";
+        public static final String LOCALE = "X-AXP-Locale";
         public static final String SESSION = "x-axp-amexsession";
         public static final String CUPCAKE = "x-axp-blueboxvalues";
-        public static final String INSTALLATION_ID = "x-axp-appinstallationid";
-        public static final String APP_ID = "x-axp-appid";
-        public static final String APP_VERSION = "x-axp-appversion";
-        public static final String HARDWARE_ID = "x-axp-hardwareid";
+        public static final String INSTALLATION_ID = "X-AXP-AppInstallationId";
+        public static final String APP_ID = "X-AXP-AppId";
+        public static final String APP_VERSION = "X-AXP-AppVersion";
+        public static final String HARDWARE_ID = "X-AXP-HardwareID";
         public static final String PROCESS_ID = "x-axp-process-id";
         public static final String GATEKEEPER = "x-axp-gatekeeper";
         public static final String PUBLIC_GUID = "x-axp-public-guid";
-        public static final String REQUEST_ID = "x-axp-request-id";
+        public static final String REQUEST_SEQUENCE = "x-axp-request-sequence";
         public static final String GIT_SHA = "x-axp-git-sha";
         public static final String AUTHORIZATION = "authorization";
     }
@@ -99,7 +99,7 @@ public final class AmericanExpressV62Constants {
     public static final class RequestValue {
         public static final String TRUE = "true";
         public static final String TIME_ZONE = "GMT+1";
-        public static final String TIME_ZONE_OFFSET = "3600000";
+        public static final String TIME_ZONE_OFFSET = "7200000";
     }
 
     public static final class ReportingCode {
