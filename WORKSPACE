@@ -1123,8 +1123,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_codec_commons_codec",  # Do not use, but do not remove
-    artifact = "commons-codec:commons-codec:1.10",
-    sha1 = "4b95f4897fa13f2cd904aee711aeafc0c5295cd8",
+    artifact = "commons-codec:commons-codec:1.11",
+    sha1 = "3acb4705652e16236558f0f4f2192cc33c3bd189",
 )
 
 maven_jar(
@@ -2621,7 +2621,7 @@ maven_install(
         "com.sun.jersey:jersey-servlet:1.18.1",
         "com.yubico:yubico-validation-client2:2.0.1",
         "commons-cli:commons-cli:1.4",
-        "commons-codec:commons-codec:1.10",
+        "commons-codec:commons-codec:1.11",
         "commons-collections:commons-collections:3.2.2",
         "commons-httpclient:commons-httpclient:3.1",
         "commons-io:commons-io:2.5",
