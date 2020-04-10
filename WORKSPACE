@@ -1946,7 +1946,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_sf_jopt_simple_jopt_simple",
+    name = "net_sf_jopt_simple_jopt_simple",  # Do not use, but do not remove
     artifact = "net.sf.jopt-simple:jopt-simple:4.9",
     sha1 = "ee9e9eaa0a35360dcfeac129ff4923215fd65904",
 )
