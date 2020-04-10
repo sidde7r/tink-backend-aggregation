@@ -169,7 +169,7 @@ java_library(
     name = "com_github_tomakehurst_wiremock",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_github_tomakehurst_wiremock//jar",
+        "@aggregation_temp//:com_github_tomakehurst_wiremock",
     ],
     runtime_deps = [
         "@aggregation//:asm_asm",

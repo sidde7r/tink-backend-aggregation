@@ -1922,12 +1922,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_github_tomakehurst_wiremock",
-    artifact = "com.github.tomakehurst:wiremock:2.1.12",
-    sha1 = "898362f151219ce8eb659cb21115cca9b1c7ad48",
-)
-
-maven_jar(
     name = "org_eclipse_jetty_jetty_xml",
     artifact = "org.eclipse.jetty:jetty-xml:9.2.13.v20150730",
     sha1 = "9e17bdfb8c25d0cd377960326b79379df3181776",
@@ -2715,6 +2709,57 @@ maven_install(
 load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")
 
 aggregation_pin()
+
+# To be moved into the aggregation maven_install eventually
+maven_install(
+    name = "aggregation_temp",
+    artifacts = [
+        "com.github.tomakehurst:wiremock:2.1.12",
+    ],
+    excluded_artifacts = [
+        # Exclude ALL transitive dependencies of the artifacts above for now
+        "asm:asm",
+        "com.fasterxml.jackson.core:jackson-annotations",
+        "com.fasterxml.jackson.core:jackson-core",
+        "com.fasterxml.jackson.core:jackson-databind",
+        "com.flipkart.zjsonpatch:zjsonpatch",
+        "com.google.guava:guava",
+        "com.jayway.jsonpath:json-path",
+        "commons-codec:commons-codec",
+        "commons-logging:commons-logging",
+        "javax.servlet:javax.servlet-api",
+        "junit:junit",
+        "net.minidev:asm",
+        "net.minidev:json-smart",
+        "net.sf.jopt-simple:jopt-simple",
+        "org.apache.commons:commons-collections4",
+        "org.apache.commons:commons-lang3",
+        "org.apache.httpcomponents:httpclient",
+        "org.apache.httpcomponents:httpcore",
+        "org.eclipse.jetty:jetty-continuation",
+        "org.eclipse.jetty:jetty-http",
+        "org.eclipse.jetty:jetty-io",
+        "org.eclipse.jetty:jetty-security",
+        "org.eclipse.jetty:jetty-server",
+        "org.eclipse.jetty:jetty-servlet",
+        "org.eclipse.jetty:jetty-servlets",
+        "org.eclipse.jetty:jetty-util",
+        "org.eclipse.jetty:jetty-webapp",
+        "org.eclipse.jetty:jetty-xml",
+        "org.hamcrest:hamcrest-core",
+        "org.slf4j:slf4j-api",
+        "org.xmlunit:xmlunit-core",
+        "org.xmlunit:xmlunit-legacy",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:aggregation_temp_install.json",
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
+    version_conflict_policy = "default",
+)
+
+load("@aggregation_temp//:defs.bzl", aggregation_temp_pin = "pinned_maven_install")
+
+aggregation_temp_pin()
 
 SPRING_FRAMEWORK_VERSION = "5.1.5.RELEASE"
 
