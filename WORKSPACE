@@ -2585,6 +2585,7 @@ maven_install(
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
         "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
+        "com.flipkart.zjsonpatch:zjsonpatch:0.2.1",
         "com.github.javafaker:javafaker:1.0.2",
         "com.github.rholder:guava-retrying:2.0.0",
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
