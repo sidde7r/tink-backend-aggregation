@@ -37,6 +37,7 @@ import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsS
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public final class AgentWorkerOperationFactoryTest {
@@ -84,6 +85,20 @@ public final class AgentWorkerOperationFactoryTest {
         // when
         AgentWorkerOperation operation =
                 factory.createOperationAuthenticate(authenticateRequest, clientInfo);
+
+        // then
+        assertThat(operation.getContext().getClusterId()).isEqualTo(CLUSTER_ID);
+    }
+
+    @Test
+    public void createdRefreshOperationShouldContainClusterIdFromClientInfo() {
+        // given
+        RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
+        when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getType()).thenReturn(credentialsRequestType);
+
+        // when
+        AgentWorkerOperation operation = factory.createOperationRefresh(refreshRequest, clientInfo);
 
         // then
         assertThat(operation.getContext().getClusterId()).isEqualTo(CLUSTER_ID);
