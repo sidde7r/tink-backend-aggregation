@@ -2161,7 +2161,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_pdfbox_fontbox",
+    name = "org_apache_pdfbox_fontbox",  # Do not use, but do not remove
     artifact = "org.apache.pdfbox:fontbox:2.0.0",
     sha1 = "6f762d4e1c8ea99589d30597ef3731dfdcee43e2",
 )
