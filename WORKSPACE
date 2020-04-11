@@ -2743,6 +2743,7 @@ maven_install(
         "org.xmlunit:xmlunit-core:2.1.1",
         "org.xmlunit:xmlunit-legacy:2.1.1",
         "org.yaml:snakeyaml:1.23",
+        "pl.pragmatists:JUnitParams:1.0.5",
         "xerces:xercesImpl:2.11.0",
         "xml-apis:xml-apis:1.4.01",
     ],
