@@ -7,7 +7,7 @@ java_binary(
     main_class = "se.tink.backend.fakebank.FakeBankServer",
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "@org_slf4j_slf4j_simple//jar",
+        "@aggregation_temp//:org_slf4j_slf4j_simple",
     ],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",

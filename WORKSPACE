@@ -2464,7 +2464,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_slf4j_slf4j_simple",
+    name = "org_slf4j_slf4j_simple",  # Do not use, but do not remove
     artifact = "org.slf4j:slf4j-simple:1.7.27",
     sha1 = "59661ca47034c6a72e255e5803ae4019d2bd55c9",
 )
