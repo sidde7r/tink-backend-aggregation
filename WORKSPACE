@@ -2806,6 +2806,7 @@ maven_install(
         "org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.2",
         "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
         "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
+        "org.slf4j:slf4j-simple:1.7.27",
         "org.springframework.data:spring-data-commons:1.13.1.RELEASE",
         "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
         "org.springframework.security:spring-security-core:4.2.3.RELEASE",
