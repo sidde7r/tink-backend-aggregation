@@ -46,7 +46,10 @@ public class TransactionEntity {
 
         String description =
                 Stream.of(
-                                cleanUnstructuredInformation(remittanceInformationUnstructured),
+                                Objects.nonNull(remittanceInformationUnstructured)
+                                        ? cleanUnstructuredInformation(
+                                                remittanceInformationUnstructured)
+                                        : null,
                                 creditorName,
                                 debtorName)
                         .filter(Objects::nonNull)
