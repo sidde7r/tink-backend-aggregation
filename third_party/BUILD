@@ -60,13 +60,13 @@ java_library(
     name = "com_amazonaws_aws_java_sdk_s3",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_amazonaws_aws_java_sdk_s3//jar",
+        "@aggregation_temp//:com_amazonaws_aws_java_sdk_s3",
     ],
     runtime_deps = [
         "//third_party/aws_java_sdk_core",
-        "@com_amazonaws_aws_java_sdk_code_generator//jar",
-        "@com_amazonaws_aws_java_sdk_kms//jar",
-        "@com_amazonaws_jmespath_java//jar",
+        "@aggregation_temp//:com_amazonaws_aws_java_sdk_code_generator",
+        "@aggregation_temp//:com_amazonaws_aws_java_sdk_kms",
+        "@aggregation_temp//:com_amazonaws_jmespath_java",
     ],
 )
 
@@ -201,8 +201,8 @@ java_library(
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_xmlunit_xmlunit_core",
         "@aggregation//:org_xmlunit_xmlunit_legacy",
-        "@org_eclipse_jetty_jetty_webapp//jar",
-        "@org_eclipse_jetty_jetty_xml//jar",
+        "@aggregation_temp//:org_eclipse_jetty_jetty_webapp",
+        "@aggregation_temp//:org_eclipse_jetty_jetty_xml",
     ],
 )
 
@@ -436,7 +436,7 @@ java_library(
     name = "io_dropwizard_dropwizard_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_dropwizard_dropwizard_client//jar",
+        "@aggregation_temp//:io_dropwizard_dropwizard_client",
     ],
     runtime_deps = [
         "@aggregation//:com_codahale_metrics_metrics_core",
@@ -446,7 +446,7 @@ java_library(
         "@aggregation//:commons_codec_commons_codec",
         "@aggregation//:org_apache_httpcomponents_httpclient",
         "@aggregation//:org_apache_httpcomponents_httpcore",
-        "@io_dropwizard_dropwizard_core//jar",
+        "@aggregation_temp//:io_dropwizard_dropwizard_core",
     ],
 )
 
@@ -469,7 +469,7 @@ java_library(
     name = "io_dropwizard_dropwizard_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_dropwizard_dropwizard_core//jar",
+        "@aggregation_temp//:io_dropwizard_dropwizard_core",
     ],
     runtime_deps = [
         ":io_dropwizard_dropwizard_jersey",
@@ -529,7 +529,7 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
+        "@aggregation_temp//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
     ],
 )
 
@@ -652,7 +652,7 @@ java_library(
         "@aggregation//:org_slf4j_jul_to_slf4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:org_yaml_snakeyaml",
-        "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
+        "@aggregation_temp//:org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
     ],
 )
 
@@ -946,7 +946,7 @@ java_library(
     name = "org_apache_curator_curator_framework",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_curator_curator_framework//jar",
+        "@aggregation_temp//:org_apache_curator_curator_framework",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
@@ -963,7 +963,7 @@ java_library(
     name = "org_apache_curator_curator_recipes",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_curator_curator_recipes//jar",
+        "@aggregation_temp//:org_apache_curator_curator_recipes",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
@@ -972,8 +972,8 @@ java_library(
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation_temp//:org_apache_curator_curator_client",
+        "@aggregation_temp//:org_apache_curator_curator_framework",
         "@aggregation_temp//:org_apache_zookeeper_zookeeper",
-        "@org_apache_curator_curator_framework//jar",
     ],
 )
 
@@ -981,7 +981,7 @@ java_library(
     name = "org_apache_curator_curator_x_discovery",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_curator_curator_x_discovery//jar",
+        "@aggregation_temp//:org_apache_curator_curator_x_discovery",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
@@ -991,9 +991,9 @@ java_library(
         "@aggregation//:org_codehaus_jackson_jackson_mapper_asl",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation_temp//:org_apache_curator_curator_client",
+        "@aggregation_temp//:org_apache_curator_curator_framework",
+        "@aggregation_temp//:org_apache_curator_curator_recipes",
         "@aggregation_temp//:org_apache_zookeeper_zookeeper",
-        "@org_apache_curator_curator_framework//jar",
-        "@org_apache_curator_curator_recipes//jar",
     ],
 )
 
@@ -1018,9 +1018,9 @@ java_import(
     ],
     visibility = ["//visibility:public"],
     exports = [
-        "@com_amazonaws_aws_java_sdk_code_generator//jar",
-        "@com_amazonaws_aws_java_sdk_sqs//jar",
-        "@com_amazonaws_jmespath_java//jar",
+        "@aggregation_temp//:com_amazonaws_aws_java_sdk_code_generator",
+        "@aggregation_temp//:com_amazonaws_aws_java_sdk_sqs",
+        "@aggregation_temp//:com_amazonaws_jmespath_java",
         "@tink_httpclient_4_5_5",
         "@tink_httpcore_4_4_9",
     ],
@@ -1327,7 +1327,7 @@ java_library(
     name = "com_nimbusds_nimbus_jose_jwt",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_nimbusds_nimbus_jose_jwt//jar",
+        "@aggregation_temp//:com_nimbusds_nimbus_jose_jwt",
     ],
     runtime_deps = [
         "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
@@ -1337,7 +1337,7 @@ java_library(
         "@aggregation//:org_bitbucket_b_c_jose4j",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
-        "@com_google_crypto_tink//jar",
+        "@aggregation_temp//:com_google_crypto_tink_tink",
     ],
 )
 
@@ -1345,7 +1345,7 @@ java_library(
     name = "com_auth0_java_jwt",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_auth0_java_jwt//jar",
+        "@aggregation_temp//:com_auth0_java_jwt",
     ],
 )
 
@@ -1355,8 +1355,8 @@ java_library(
     exports = [
         "@aggregation//:com_github_jai_imageio_jai_imageio_core",
         "@aggregation//:net_java_dev_jna_jna",
-        "@net_sourceforge_lept4j//jar",
-        "@net_sourceforge_tess4j//jar",
+        "@aggregation_temp//:net_sourceforge_lept4j_lept4j",
+        "@aggregation_temp//:net_sourceforge_tess4j_tess4j",
     ],
 )
 

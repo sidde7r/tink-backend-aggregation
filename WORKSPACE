@@ -356,13 +356,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
+    name = "org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.2",
     sha1 = "4dc7fca46ac6badff4336c574b2c713ac3e40f73",
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_core",
+    name = "io_dropwizard_dropwizard_core",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-core:0.7.1",
     sha1 = "569cd6181d5fea4b033cf3a0eca632c8931a1a3a",
 )
@@ -822,7 +822,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_client",
+    name = "io_dropwizard_dropwizard_client",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-client:0.7.1",
     sha1 = "7cef9884395e90a4dc627e643f84b48a2ff6fb30",
 )
@@ -1242,7 +1242,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_curator_curator_recipes",
+    name = "org_apache_curator_curator_recipes",  # Do not use, but do not remove
     artifact = "org.apache.curator:curator-recipes:4.0.0",
     sha1 = "46ca001305a74a277d8a42f377bb7c901c0423bf",
 )
@@ -1366,31 +1366,31 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_amazonaws_jmespath_java",
+    name = "com_amazonaws_jmespath_java",  # Do not use, but do not remove
     artifact = "com.amazonaws:jmespath-java:1.11.381",
     sha1 = "c428e44fa35032bbc89c6aaab15f1f3857c2afbe",
 )
 
 maven_jar(
-    name = "com_amazonaws_aws_java_sdk_code_generator",
+    name = "com_amazonaws_aws_java_sdk_code_generator",  # Do not use, but do not remove
     artifact = "com.amazonaws:aws-java-sdk-code-generator:1.11.381",
     sha1 = "d8ed76e95c0313e3b9898c7cc5cc40b935d0c32b",
 )
 
 maven_jar(
-    name = "com_amazonaws_aws_java_sdk_sqs",
+    name = "com_amazonaws_aws_java_sdk_sqs",  # Do not use, but do not remove
     artifact = "com.amazonaws:aws-java-sdk-sqs:1.11.381",
     sha1 = "4ea1ad090c04fde806eb4fa24b10fa5748900ef1",
 )
 
 maven_jar(
-    name = "com_amazonaws_aws_java_sdk_s3",
+    name = "com_amazonaws_aws_java_sdk_s3",  # Do not use, but do not remove
     artifact = "com.amazonaws:aws-java-sdk-s3:1.11.381",
     sha1 = "a2600515a420a5fd08d5c1d19fdf4a8714c515e2",
 )
 
 maven_jar(
-    name = "com_amazonaws_aws_java_sdk_kms",
+    name = "com_amazonaws_aws_java_sdk_kms",  # Do not use, but do not remove
     artifact = "com.amazonaws:aws-java-sdk-kms:1.11.381",
     sha1 = "17a06d9854f804dfcf2ec799f906f555984084c9",
 )
@@ -1428,7 +1428,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_curator_curator_x_discovery",
+    name = "org_apache_curator_curator_x_discovery",  # Do not use, but do not remove
     artifact = "org.apache.curator:curator-x-discovery:4.0.0",
     sha1 = "dc70d7cbcfd1e9dbb21b5aa1af3661b57fb5f850",
 )
@@ -1776,7 +1776,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_curator_curator_framework",
+    name = "org_apache_curator_curator_framework",  # Do not use, but do not remove
     artifact = "org.apache.curator:curator-framework:4.0.1",
     sha1 = "3da85d2bda41cb43dc18c089820b67d12ba38826",
 )
@@ -1920,13 +1920,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_xml",
+    name = "org_eclipse_jetty_jetty_xml",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
     sha1 = "9e17bdfb8c25d0cd377960326b79379df3181776",
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_webapp",
+    name = "org_eclipse_jetty_jetty_webapp",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
     sha1 = "716b5cdea1e818cd0e36dfea791f620d49bd2d2a",
 )
@@ -2167,19 +2167,19 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_auth0_java_jwt",
+    name = "com_auth0_java_jwt",  # Do not use, but do not remove
     artifact = "com.auth0:java-jwt:3.3.0",
     sha1 = "0e180a4b31f14c2a1cf203f457fb2149d2f6c1d2",
 )
 
 maven_jar(
-    name = "net_sourceforge_lept4j",
+    name = "net_sourceforge_lept4j",  # Do not use, but do not remove
     artifact = "net.sourceforge.lept4j:lept4j:1.10.0",
     sha1 = "72153b28e8e1f0391afcc2380c41ac8e73bd599e",
 )
 
 maven_jar(
-    name = "net_sourceforge_tess4j",
+    name = "net_sourceforge_tess4j",  # Do not use, but do not remove
     artifact = "net.sourceforge.tess4j:tess4j:4.0.2",
     sha1 = "95516b133368840a0974ef5316fedd9c5e3aa635",
 )
@@ -2428,7 +2428,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_nimbusds_nimbus_jose_jwt",
+    name = "com_nimbusds_nimbus_jose_jwt",  # Do not use, but do not remove
     artifact = "com.nimbusds:nimbus-jose-jwt:7.7",
     sha1 = "18590fdb64ff9443d37a9fbb2a2b1b519c6f0579",
 )
@@ -2452,7 +2452,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_crypto_tink",
+    name = "com_google_crypto_tink",  # Do not use, but do not remove
     artifact = "com.google.crypto.tink:tink:1.2.2",
     sha1 = "db27fd32f842b436ad07aecbe2934524473dc0ac",
 )
