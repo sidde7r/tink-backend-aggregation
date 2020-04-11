@@ -2768,6 +2768,7 @@ maven_install(
     artifacts = [
         "com.github.tomakehurst:wiremock:2.1.12",
         "com.oracle.substratevm:svm:19.0.0",
+        "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
         "org.apache.curator:curator-client:4.0.0",
         "org.apache.zookeeper:zookeeper:3.5.3-beta",
     ],
@@ -2788,7 +2789,9 @@ maven_install(
         "commons-cli:commons-cli",
         "commons-codec:commons-codec",
         "commons-logging:commons-logging",
+        "io.grpc:grpc-context",
         "io.netty:netty",
+        "io.opencensus:opencensus-api",
         "javax.servlet:javax.servlet-api",
         "junit:junit",
         "log4j:log4j",
