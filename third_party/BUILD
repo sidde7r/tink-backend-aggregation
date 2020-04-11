@@ -1204,8 +1204,8 @@ java_library(
         "@org_springframework_spring_tx//jar",
     ],
     runtime_deps = [
+        "@aggregation//:org_aspectj_aspectjrt",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@org_aspectj_aspectjrt//jar",
     ],
 )
 

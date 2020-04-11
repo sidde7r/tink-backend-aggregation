@@ -524,7 +524,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_aspectj_aspectjrt",
+    name = "org_aspectj_aspectjrt",  # Do not use, but do not remove
     artifact = "org.aspectj:aspectjrt:1.8.2",
     sha1 = "7dede91c0c36b1265fc99c55283b90ed2be144c8",
 )
