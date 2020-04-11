@@ -2191,7 +2191,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_media_jai_imageio",
+    name = "com_sun_media_jai_imageio",  # Do not use, but do not remove
     artifact = "com.github.jai-imageio:jai-imageio-core:1.4.0",
     sha1 = "fb6d79b929556362a241b2f65a04e538062f0077",
 )
