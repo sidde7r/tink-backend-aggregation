@@ -1091,11 +1091,11 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:commons_collections_commons_collections",
+        "@aggregation//:dom4j_dom4j",
         "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:xml_apis_xml_apis",
         "@antlr_antlr//jar",
-        "@dom4j_dom4j//jar",
         "@javax_transaction_jta//jar",
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_commons_annotations//jar",
@@ -1314,11 +1314,11 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:dom4j_dom4j",
         "@aggregation//:javax_servlet_javax_servlet_api",
         "@aggregation//:junit_junit",
         "@aggregation//:org_javassist_javassist",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@dom4j_dom4j//jar",
     ],
 )
 

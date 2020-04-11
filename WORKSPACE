@@ -984,7 +984,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "dom4j_dom4j",
+    name = "dom4j_dom4j",  # Do not use, but do not remove
     artifact = "dom4j:dom4j:1.6.1",
     sha1 = "5d3ccc056b6f056dbf0dddfdf43894b9065a8f94",
 )
