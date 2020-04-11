@@ -2822,7 +2822,7 @@ maven_install(
     fetch_sources = True,
     maven_install_json = "//third_party:aggregation_temp_install.json",
     repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
-    version_conflict_policy = "default",
+    version_conflict_policy = "pinned",
 )
 
 load("@aggregation_temp//:defs.bzl", aggregation_temp_pin = "pinned_maven_install")
