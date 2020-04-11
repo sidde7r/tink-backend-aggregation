@@ -1376,8 +1376,8 @@ java_library(
     name = "net_sourceforge_tess4j",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_github_jai_imageio_jai_imageio_core",
         "@aggregation//:net_java_dev_jna_jna",
-        "@com_sun_media_jai_imageio//jar",
         "@net_sourceforge_lept4j//jar",
         "@net_sourceforge_tess4j//jar",
     ],
