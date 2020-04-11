@@ -1269,7 +1269,7 @@ java_library(
     exports = [
         "@aggregation//:junit_junit",
         "@aggregation//:org_hamcrest_hamcrest_core",
-        "@pl_pragmatists_JUnitParams//jar",
+        "@aggregation//:pl_pragmatists_JUnitParams",
     ],
 )
 

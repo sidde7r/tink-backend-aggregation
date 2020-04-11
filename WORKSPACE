@@ -1968,7 +1968,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "pl_pragmatists_JUnitParams",
+    name = "pl_pragmatists_JUnitParams",  # Do not use, but do not remove
     artifact = "pl.pragmatists:JUnitParams:1.0.5",
     sha1 = "11c4fb84973ba635673e5e026abf27078aab8bd9",
 )
