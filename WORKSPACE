@@ -458,13 +458,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_googlejavaformat",
+    name = "com_google_googlejavaformat",  # Do not use, but do not remove
     artifact = "com.google.googlejavaformat:google-java-format:1.7",
     sha1 = "97cb6afc835d65682edc248e19170a8e4ecfe4c4",
 )
 
 maven_jar(
-    name = "com_google_errorprone",
+    name = "com_google_errorprone",  # Do not use, but do not remove
     artifact = "com.google.errorprone:javac-shaded:9+181-r4173-1",
     sha1 = "a399ee380b6d6b6ea53af1cfbcb086b108d1efb7",
 )
