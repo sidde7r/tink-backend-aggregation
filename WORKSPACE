@@ -662,7 +662,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_transaction_jta",
+    name = "javax_transaction_jta",  # Do not use, but do not remove
     artifact = "javax.transaction:jta:1.1",
     sha1 = "2ca09f0b36ca7d71b762e14ea2ff09d5eac57558",
 )
