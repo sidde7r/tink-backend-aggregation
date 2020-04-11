@@ -1041,7 +1041,7 @@ java_library(
     name = "org_assertj_assertj_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_assertj_assertj_core//jar",
+        "@aggregation//:org_assertj_assertj_core",
     ],
 )
 

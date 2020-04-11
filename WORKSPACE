@@ -1908,7 +1908,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_assertj_assertj_core",
+    name = "org_assertj_assertj_core",  # Do not use, but do not remove
     artifact = "org.assertj:assertj-core:2.2.0",
     sha1 = "edd59795b236afc790dd161e7e3677757b06f2e7",
 )
