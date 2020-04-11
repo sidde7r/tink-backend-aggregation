@@ -4,8 +4,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:com_google_code_findbugs_jsr305",
-        "@io_grpc_grpc_api//jar",
-        "@io_grpc_grpc_core//jar",
+        "@aggregation_temp//:io_grpc_grpc_api",
+        "@aggregation_temp//:io_grpc_grpc_core",
         "@io_grpc_grpc_services//jar",
     ],
     runtime_deps = [
@@ -22,7 +22,7 @@ java_library(
     licenses = ["notice"],
     visibility = ["//visibility:public"],
     exports = [
-        "@io_grpc_grpc_api//jar",
+        "@aggregation_temp//:io_grpc_grpc_api",
     ],
     runtime_deps = [
         "@aggregation//:com_google_guava_guava",

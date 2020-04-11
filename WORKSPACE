@@ -2072,13 +2072,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf_lite",
+    name = "io_grpc_grpc_protobuf_lite",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
     sha1 = "a304b00fb35959c5036c033551732de6a4b7d881",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf_nano",
+    name = "io_grpc_grpc_protobuf_nano",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
     sha1 = "9fce4ff1563fd0176aaefb0a083b9d66a0346bd7",
 )
@@ -2090,13 +2090,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_core",
+    name = "io_grpc_grpc_core",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
     sha1 = "a264f24ffa3340752a678680fd41381836b1d03f",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_api",
+    name = "io_grpc_grpc_api",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
     sha1 = "f86f59df729cde94e5d85d1b3587d6b00c998d65",
 )

@@ -716,8 +716,8 @@ java_library(
     name = "io_grpc_grpc_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_grpc_grpc_api//jar",
-        "@io_grpc_grpc_core//jar",
+        "@aggregation_temp//:io_grpc_grpc_api",
+        "@aggregation_temp//:io_grpc_grpc_core",
     ],
     runtime_deps = [
         "@aggregation//:io_perfmark_perfmark_api",
@@ -732,11 +732,11 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_opencensus_opencensus_api",
+        "@aggregation_temp//:io_grpc_grpc_api",
+        "@aggregation_temp//:io_grpc_grpc_core",
+        "@aggregation_temp//:io_grpc_grpc_protobuf_lite",
+        "@aggregation_temp//:io_grpc_grpc_protobuf_nano",
         "@aggregation_temp//:io_opencensus_opencensus_contrib_grpc_metrics",
-        "@io_grpc_grpc_api//jar",
-        "@io_grpc_grpc_core//jar",
-        "@io_grpc_grpc_protobuf_lite//jar",
-        "@io_grpc_grpc_protobuf_nano//jar",
     ],
 )
 
@@ -1406,14 +1406,14 @@ java_library(
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:io_opencensus_opencensus_api",
+        "@aggregation_temp//:io_grpc_grpc_api",
+        "@aggregation_temp//:io_grpc_grpc_core",
+        "@aggregation_temp//:io_grpc_grpc_protobuf_lite",
+        "@aggregation_temp//:io_grpc_grpc_protobuf_nano",
         "@aggregation_temp//:io_opencensus_opencensus_contrib_grpc_metrics",
-        "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_auth//jar",
-        "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_netty//jar",
         "@io_grpc_grpc_protobuf//jar",
-        "@io_grpc_grpc_protobuf_lite//jar",
-        "@io_grpc_grpc_protobuf_nano//jar",
         "@io_grpc_grpc_stub//jar",
         "@io_grpc_grpc_testing//jar",
     ],
@@ -1497,7 +1497,7 @@ java_library(
     runtime_deps = [
         "@aggregation//:io_netty_netty_codec_http2",
         "@aggregation//:io_netty_netty_handler_proxy",
-        "@io_grpc_grpc_core//jar",
+        "@aggregation_temp//:io_grpc_grpc_core",
     ],
 )
 
@@ -1516,7 +1516,7 @@ java_library(
         "@io_grpc_grpc_stub//jar",
     ],
     runtime_deps = [
-        "@io_grpc_grpc_api//jar",
+        "@aggregation_temp//:io_grpc_grpc_api",
     ],
 )
 
@@ -1528,7 +1528,7 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:junit_junit",
-        "@io_grpc_grpc_core//jar",
+        "@aggregation_temp//:io_grpc_grpc_core",
         "@io_grpc_grpc_stub//jar",
     ],
 )
