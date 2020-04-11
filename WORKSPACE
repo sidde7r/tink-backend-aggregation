@@ -494,7 +494,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "software_amazon_ion_ion_java",
+    name = "software_amazon_ion_ion_java",  # Do not use, but do not remove
     artifact = "software.amazon.ion:ion-java:1.0.2",
     sha1 = "ee9dacea7726e495f8352b81c12c23834ffbc564",
 )

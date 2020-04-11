@@ -15,7 +15,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_dataformat_jackson_dataformat_cbor",
         "@aggregation//:commons_logging_commons_logging",
         "@aggregation//:joda_time_joda_time",
-        "@software_amazon_ion_ion_java//jar",
+        "@aggregation//:software_amazon_ion_ion_java",
         "@tink_httpclient_4_5_5",
         "@tink_httpcore_4_4_9",
     ],
