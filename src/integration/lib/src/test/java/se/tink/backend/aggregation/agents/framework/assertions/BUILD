@@ -9,10 +9,6 @@ java_library(
     data = [],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
-        "//src/integration/amount",
-        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
-        "//src/integration/models",
         "//src/libraries/metrics:registry",
         "//src/libraries/strings",
         "//third_party:com_google_code_findbugs_jsr305",
