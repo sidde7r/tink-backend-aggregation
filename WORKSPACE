@@ -1098,7 +1098,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "antlr_antlr",
+    name = "antlr_antlr",  # Do not use, but do not remove
     artifact = "antlr:antlr:2.7.6",
     sha1 = "cf4f67dae5df4f9932ae7810f4548ef3e14dd35e",
 )

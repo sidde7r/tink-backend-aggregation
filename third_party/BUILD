@@ -1090,12 +1090,12 @@ java_library(
     name = "org_hibernate_hibernate_annotations",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:antlr_antlr",
         "@aggregation//:commons_collections_commons_collections",
         "@aggregation//:dom4j_dom4j",
         "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:xml_apis_xml_apis",
-        "@antlr_antlr//jar",
         "@javax_transaction_jta//jar",
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_commons_annotations//jar",
