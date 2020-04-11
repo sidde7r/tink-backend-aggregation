@@ -988,12 +988,12 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_codehaus_jackson_jackson_mapper_asl",
         "@aggregation//:org_slf4j_slf4j_api",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_curator_curator_recipes//jar",
         "@org_apache_zookeeper_zookeeper//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
     ],
 )
 

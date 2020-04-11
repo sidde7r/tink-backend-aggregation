@@ -1758,7 +1758,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_jackson_jackson_mapper_asl",
+    name = "org_codehaus_jackson_jackson_mapper_asl",  # Do not use, but do not remove
     artifact = "org.codehaus.jackson:jackson-mapper-asl:1.8.9",
     sha1 = "e430ed24d67dfc126ee16bc23156a044950c3168",
 )
