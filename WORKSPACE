@@ -2944,6 +2944,7 @@ maven_install(
         "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.errorprone:error_prone_annotations:2.3.3",
         "com.google.guava:guava:25.1-jre",
+        "commons-codec:commons-codec:1.11",
         "commons-io:commons-io:2.5",
         "net.bytebuddy:byte-buddy:1.10.1",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",
