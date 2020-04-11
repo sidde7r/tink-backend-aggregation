@@ -1094,12 +1094,12 @@ java_library(
         "@aggregation//:commons_collections_commons_collections",
         "@aggregation//:dom4j_dom4j",
         "@aggregation//:javax_transaction_jta",
+        "@aggregation//:org_hibernate_hibernate_commons_annotations",
         "@aggregation//:org_hibernate_hibernate_core",
         "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:xml_apis_xml_apis",
         "@org_hibernate_hibernate_annotations//jar",
-        "@org_hibernate_hibernate_commons_annotations//jar",
     ],
 )
 
