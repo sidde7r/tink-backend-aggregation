@@ -2606,6 +2606,7 @@ maven_install(
         "com.google.protobuf:protobuf-java:3.5.1",
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.jayway.jsonpath:json-path:2.0.0",
+        "com.jcraft:jzlib:1.1.3",
         "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
