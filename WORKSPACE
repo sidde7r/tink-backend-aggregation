@@ -2556,6 +2556,7 @@ pinned_maven_install()
 maven_install(
     name = "aggregation",
     artifacts = [
+        "antlr:antlr:2.7.6",
         "aopalliance:aopalliance:1.0",
         "asm:asm:3.3.1",
         "c3p0:c3p0:0.9.1.1",
