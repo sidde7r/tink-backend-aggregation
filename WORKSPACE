@@ -686,7 +686,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_jdbc",
+    name = "org_springframework_spring_jdbc",  # Do not use, but do not remove
     artifact = "org.springframework:spring-jdbc:4.3.7.RELEASE",
     sha1 = "305c8db0f9552948aec093528cd01393cc98a646",
 )
@@ -784,7 +784,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_beans",
+    name = "org_springframework_spring_beans",  # Do not use, but do not remove
     artifact = "org.springframework:spring-beans:4.3.7.RELEASE",
     sha1 = "2de9f59f3202965438f3a02057d6ad8274636044",
 )
@@ -972,7 +972,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_context",
+    name = "org_springframework_spring_context",  # Do not use, but do not remove
     artifact = "org.springframework:spring-context:4.3.7.RELEASE",
     sha1 = "34b66b0b7910122ef95ba4fff6da9238ef80a5de",
 )
@@ -984,7 +984,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_aop",
+    name = "org_springframework_spring_aop",  # Do not use, but do not remove
     artifact = "org.springframework:spring-aop:4.3.7.RELEASE",
     sha1 = "3f243d685e4a8a78a0c291445c6d85560ec4d339",
 )
@@ -1224,13 +1224,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_core",
+    name = "org_springframework_spring_core",  # Do not use, but do not remove
     artifact = "org.springframework:spring-core:4.3.7.RELEASE",
     sha1 = "54fa2db94cc7222edc90ec71354e47cd1dc07f7b",
 )
 
 maven_jar(
-    name = "org_springframework_spring_tx",
+    name = "org_springframework_spring_tx",  # Do not use, but do not remove
     artifact = "org.springframework:spring-tx:4.3.7.RELEASE",
     sha1 = "b761cc783e49b5aa998ac63a721495a9f0f69f9c",
 )
@@ -1396,7 +1396,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_data_spring_data_jpa",
+    name = "org_springframework_data_spring_data_jpa",  # Do not use, but do not remove
     artifact = "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
     sha1 = "fa362aecd78883991f57a5d64e19f34b57a2c34d",
 )
@@ -1672,7 +1672,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_orm",
+    name = "org_springframework_spring_orm",  # Do not use, but do not remove
     artifact = "org.springframework:spring-orm:4.3.7.RELEASE",
     sha1 = "d9b193994609086ea1f067af07e0af5f53303d92",
 )
@@ -1716,7 +1716,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_data_spring_data_commons",
+    name = "org_springframework_data_spring_data_commons",  # Do not use, but do not remove
     artifact = "org.springframework.data:spring-data-commons:1.13.1.RELEASE",
     sha1 = "4e4257f2eb3f191613b4b000d43e8d0c3ff4457e",
 )

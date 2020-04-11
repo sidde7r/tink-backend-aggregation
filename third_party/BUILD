@@ -1183,9 +1183,9 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:org_slf4j_slf4j_api",
-        "@org_springframework_data_spring_data_commons//jar",
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_core//jar",
+        "@aggregation_temp//:org_springframework_data_spring_data_commons",
+        "@aggregation_temp//:org_springframework_spring_beans",
+        "@aggregation_temp//:org_springframework_spring_core",
     ],
 )
 
@@ -1193,15 +1193,15 @@ java_library(
     name = "org_springframework_data_spring_data_jpa",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_springframework_data_spring_data_commons//jar",
-        "@org_springframework_data_spring_data_jpa//jar",
-        "@org_springframework_spring_aop//jar",
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_context//jar",
-        "@org_springframework_spring_core//jar",
-        "@org_springframework_spring_jdbc//jar",
-        "@org_springframework_spring_orm//jar",
-        "@org_springframework_spring_tx//jar",
+        "@aggregation_temp//:org_springframework_data_spring_data_commons",
+        "@aggregation_temp//:org_springframework_data_spring_data_jpa",
+        "@aggregation_temp//:org_springframework_spring_aop",
+        "@aggregation_temp//:org_springframework_spring_beans",
+        "@aggregation_temp//:org_springframework_spring_context",
+        "@aggregation_temp//:org_springframework_spring_core",
+        "@aggregation_temp//:org_springframework_spring_jdbc",
+        "@aggregation_temp//:org_springframework_spring_orm",
+        "@aggregation_temp//:org_springframework_spring_tx",
     ],
     runtime_deps = [
         "@aggregation//:org_aspectj_aspectjrt",
@@ -1221,7 +1221,7 @@ java_library(
     name = "org_springframework_spring_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_springframework_spring_core//jar",
+        "@aggregation_temp//:org_springframework_spring_core",
     ],
     runtime_deps = [
         "@aggregation//:commons_logging_commons_logging",
@@ -1235,7 +1235,7 @@ java_library(
         "@org_springframework_spring_expression//jar",
     ],
     runtime_deps = [
-        "@org_springframework_spring_core//jar",
+        "@aggregation_temp//:org_springframework_spring_core",
     ],
 )
 
