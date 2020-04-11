@@ -7,7 +7,6 @@ java_library(
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/context",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
-        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
         "//src/integration/signableoperation:enums",
         "//src/integration/signableoperation:rpc",
