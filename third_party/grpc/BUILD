@@ -6,7 +6,7 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation_temp//:io_grpc_grpc_api",
         "@aggregation_temp//:io_grpc_grpc_core",
-        "@io_grpc_grpc_services//jar",
+        "@aggregation_temp//:io_grpc_grpc_services",
     ],
     runtime_deps = [
         "@aggregation//:com_google_guava_guava",

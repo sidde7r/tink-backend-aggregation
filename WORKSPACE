@@ -2114,7 +2114,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_services",
+    name = "io_grpc_grpc_services",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
     sha1 = "0f101c3ec1bbfe08f9221ca3cc7b316f09a3e130",
 )
