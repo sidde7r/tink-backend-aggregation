@@ -2776,6 +2776,8 @@ maven_install(
         "com.auth0:java-jwt:3.3.0",
         "com.github.tomakehurst:wiremock:2.1.12",
         "com.google.crypto.tink:tink:1.2.2",
+        "com.google.errorprone:javac-shaded:9+181-r4173-1",
+        "com.google.googlejavaformat:google-java-format:1.7",
         "com.nimbusds:nimbus-jose-jwt:7.7",
         "com.oracle.substratevm:svm:19.0.0",
         "io.dropwizard:dropwizard-client:0.7.1",
