@@ -2770,8 +2770,8 @@ maven_install(
         "com.oracle.substratevm:svm:19.0.0",
         "org.apache.zookeeper:zookeeper:3.5.3-beta",
     ],
+    # Exclude ALL transitive dependencies of the artifacts above for now
     excluded_artifacts = [
-        # Exclude ALL transitive dependencies of the artifacts above for now
         "asm:asm",
         "com.fasterxml.jackson.core:jackson-annotations",
         "com.fasterxml.jackson.core:jackson-core",
