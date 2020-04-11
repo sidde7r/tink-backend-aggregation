@@ -5,7 +5,6 @@ java_library(
     deps = [
         "//src/integration/models",
         "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
-        "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
@@ -18,7 +17,6 @@ java_library(
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
-        "@tink_backend//src/libraries/i18n",
         "@tink_backend//src/libraries/strings",
     ],
 )
