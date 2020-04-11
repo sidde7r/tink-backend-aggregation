@@ -2572,6 +2572,7 @@ maven_install(
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9",
