@@ -318,7 +318,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_opencensus_opencensus_contrib_grpc_metrics",
+    name = "io_opencensus_opencensus_contrib_grpc_metrics",  # Do not use, but do not remove
     artifact = "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
     sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
 )
