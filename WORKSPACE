@@ -2590,6 +2590,7 @@ maven_install(
         "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
         "com.flipkart.zjsonpatch:zjsonpatch:0.2.1",
+        "com.github.jai-imageio:jai-imageio-core:1.4.0",
         "com.github.javafaker:javafaker:1.0.2",
         "com.github.rholder:guava-retrying:2.0.0",
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
