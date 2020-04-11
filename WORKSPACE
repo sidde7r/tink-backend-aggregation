@@ -2768,6 +2768,7 @@ maven_install(
     artifacts = [
         "com.github.tomakehurst:wiremock:2.1.12",
         "com.oracle.substratevm:svm:19.0.0",
+        "org.apache.curator:curator-client:4.0.0",
         "org.apache.zookeeper:zookeeper:3.5.3-beta",
     ],
     # Exclude ALL transitive dependencies of the artifacts above for now
