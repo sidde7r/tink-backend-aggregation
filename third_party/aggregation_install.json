@@ -1548,6 +1548,140 @@
                 "sha256": "d60bb3bf4e03a5e405f9b16f4c2625de86089d6ce4f999bcc2548dcac090ae19"
             },
             {
+                "coord": "com.google.api.grpc:proto-google-common-protos:0.1.9",
+                "file": "v1/https/repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar",
+                "directDependencies": [
+                    "com.google.api:api-common:1.0.0-rc1",
+                    "com.google.protobuf:protobuf-java:3.5.1"
+                ],
+                "dependencies": [
+                    "joda-time:joda-time:2.9.9",
+                    "com.google.errorprone:error_prone_annotations:2.3.3",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.google.guava:guava:25.1-jre",
+                    "com.google.api:api-common:1.0.0-rc1",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.google.protobuf:protobuf-java:3.5.1",
+                    "com.google.auto.value:auto-value:1.1",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "org.checkerframework:checker-qual:2.0.0"
+                ],
+                "url": "https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar",
+                    "https://jcenter.bintray.com/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar",
+                    "https://maven.google.com/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar"
+                ],
+                "sha256": "bf76dcb173f6c6083ccf452f093b53500621e701645df47671c47043c7b5491f"
+            },
+            {
+                "coord": "com.google.api.grpc:proto-google-common-protos:jar:sources:0.1.9",
+                "file": "v1/https/repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar",
+                "directDependencies": [
+                    "com.google.api:api-common:jar:sources:1.0.0-rc1",
+                    "com.google.protobuf:protobuf-java:jar:sources:3.5.1"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.google.api:api-common:jar:sources:1.0.0-rc1",
+                    "com.google.protobuf:protobuf-java:jar:sources:3.5.1",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.auto.value:auto-value:jar:sources:1.1",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.3.3"
+                ],
+                "url": "https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar",
+                    "https://jcenter.bintray.com/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar",
+                    "https://maven.google.com/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar"
+                ],
+                "sha256": "a36c4a6e30fdd61df001dbadcdce8e588b97c0631b22125049ab2c072a7a62bb"
+            },
+            {
+                "coord": "com.google.api:api-common:1.0.0-rc1",
+                "file": "v1/https/repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar",
+                "directDependencies": [
+                    "com.google.auto.value:auto-value:1.1",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.google.guava:guava:25.1-jre",
+                    "joda-time:joda-time:2.9.9"
+                ],
+                "dependencies": [
+                    "joda-time:joda-time:2.9.9",
+                    "com.google.errorprone:error_prone_annotations:2.3.3",
+                    "com.google.code.findbugs:jsr305:3.0.2",
+                    "com.google.guava:guava:25.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
+                    "com.google.auto.value:auto-value:1.1",
+                    "com.google.j2objc:j2objc-annotations:1.1",
+                    "org.checkerframework:checker-qual:2.0.0"
+                ],
+                "url": "https://repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar",
+                    "https://jcenter.bintray.com/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar",
+                    "https://maven.google.com/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar"
+                ],
+                "sha256": "c6f74128724430eb84f5bd7fd2b6de0286e322cc1a22d1e1a04822adc1eb163e"
+            },
+            {
+                "coord": "com.google.api:api-common:jar:sources:1.0.0-rc1",
+                "file": "v1/https/repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar",
+                "directDependencies": [
+                    "com.google.auto.value:auto-value:jar:sources:1.1",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "joda-time:joda-time:jar:sources:2.9.9"
+                ],
+                "dependencies": [
+                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
+                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
+                    "com.google.guava:guava:jar:sources:25.1-jre",
+                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
+                    "com.google.auto.value:auto-value:jar:sources:1.1",
+                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
+                    "joda-time:joda-time:jar:sources:2.9.9",
+                    "com.google.errorprone:error_prone_annotations:jar:sources:2.3.3"
+                ],
+                "url": "https://repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar",
+                    "https://jcenter.bintray.com/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar",
+                    "https://maven.google.com/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar"
+                ],
+                "sha256": "213b338a84a5c8d4bf20e3ba2644e4628fe0622173ed5eff818adb2ee465c62c"
+            },
+            {
+                "coord": "com.google.auto.value:auto-value:1.1",
+                "file": "v1/https/repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar",
+                    "https://jcenter.bintray.com/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar",
+                    "https://maven.google.com/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar"
+                ],
+                "sha256": "d57f6ea96b69525ec755f805ebefac0d59303cce90d6fff0291c13a759a6c7f6"
+            },
+            {
+                "coord": "com.google.auto.value:auto-value:jar:sources:1.1",
+                "file": "v1/https/repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar",
+                    "https://jcenter.bintray.com/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar",
+                    "https://maven.google.com/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar"
+                ],
+                "sha256": "39170c0307c854b20f83883fbbeafbbb0e7a700ea686303d9877d02416abf1c4"
+            },
+            {
                 "coord": "com.google.code.findbugs:jsr305:3.0.2",
                 "file": "v1/https/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar",
                 "directDependencies": [],
@@ -6823,6 +6957,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -504554428
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -250833958
     }
 }

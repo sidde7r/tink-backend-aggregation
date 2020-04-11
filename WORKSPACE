@@ -2593,6 +2593,7 @@ maven_install(
         "com.github.javafaker:javafaker:1.0.2",
         "com.github.rholder:guava-retrying:2.0.0",
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
+        "com.google.api.grpc:proto-google-common-protos:0.1.9",
         "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.code.gson:gson:2.8.2",
         "com.google.errorprone:error_prone_annotations:2.3.3",
