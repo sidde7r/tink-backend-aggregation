@@ -2748,6 +2748,7 @@ maven_install(
         "org.xmlunit:xmlunit-legacy:2.1.1",
         "org.yaml:snakeyaml:1.23",
         "pl.pragmatists:JUnitParams:1.0.5",
+        "software.amazon.ion:ion-java:1.0.2",
         "xerces:xercesImpl:2.11.0",
         "xml-apis:xml-apis:1.4.01",
     ],
