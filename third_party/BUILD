@@ -1357,10 +1357,10 @@ java_library(
         "@aggregation//:junit_junit",
         "@aggregation//:net_jadler_jadler_all",
         "@aggregation//:net_minidev_json_smart",
+        "@aggregation//:org_bitbucket_b_c_jose4j",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
         "@com_google_crypto_tink//jar",
-        "@org_bitbucket_b_c_jose4j//jar",
     ],
 )
 

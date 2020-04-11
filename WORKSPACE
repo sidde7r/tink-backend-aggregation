@@ -2446,7 +2446,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_bitbucket_b_c_jose4j",
+    name = "org_bitbucket_b_c_jose4j",  # Do not use, but do not remove
     artifact = "org.bitbucket.b_c:jose4j:0.6.5",
     sha1 = "524470e6ad000e3938f4c0f5e08bd423e95bd43a",
 )
