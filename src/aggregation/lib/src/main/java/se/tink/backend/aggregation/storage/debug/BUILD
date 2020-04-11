@@ -8,7 +8,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/models/configuration",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//third_party:com_amazonaws_aws_java_sdk_s3",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//third_party:com_google_guava_guava",
