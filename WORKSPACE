@@ -596,7 +596,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_curator_curator_client",
+    name = "org_apache_curator_curator_client",  # Do not use, but do not remove
     artifact = "org.apache.curator:curator-client:4.0.0",
     sha1 = "9a9ced5171f3fa0cd18296d34165234a8d3b7a94",
 )

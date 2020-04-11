@@ -930,7 +930,7 @@ java_library(
     name = "org_apache_curator_curator_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_curator_curator_client//jar",
+        "@aggregation_temp//:org_apache_curator_curator_client",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
@@ -954,8 +954,8 @@ java_library(
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
+        "@aggregation_temp//:org_apache_curator_curator_client",
         "@aggregation_temp//:org_apache_zookeeper_zookeeper",
-        "@org_apache_curator_curator_client//jar",
     ],
 )
 
@@ -971,8 +971,8 @@ java_library(
         "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
+        "@aggregation_temp//:org_apache_curator_curator_client",
         "@aggregation_temp//:org_apache_zookeeper_zookeeper",
-        "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
     ],
 )
@@ -990,8 +990,8 @@ java_library(
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_codehaus_jackson_jackson_mapper_asl",
         "@aggregation//:org_slf4j_slf4j_api",
+        "@aggregation_temp//:org_apache_curator_curator_client",
         "@aggregation_temp//:org_apache_zookeeper_zookeeper",
-        "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_curator_curator_recipes//jar",
     ],
