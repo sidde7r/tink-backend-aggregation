@@ -2452,7 +2452,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_jadler_jadler_all",
+    name = "net_jadler_jadler_all",  # Do not use, but do not remove
     artifact = "net.jadler:jadler-all:1.3.0",
     sha1 = "99b6b1ec94fc9671bfe97c1d47a740600f095d33",
 )
