@@ -2701,6 +2701,7 @@ maven_install(
         "org.apache.logging.log4j:log4j-core:2.11.1",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.apache.pdfbox:fontbox:2.0.6",
+        "org.apache.pdfbox:pdfbox:2.0.6",
         "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
