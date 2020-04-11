@@ -1104,21 +1104,6 @@ java_library(
 )
 
 java_library(
-    name = "org_hibernate_hibernate_entitymanager",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aggregation//:asm_asm",
-        "@aggregation//:cglib_cglib",
-        "@aggregation//:org_hibernate_hibernate_annotations",
-        "@aggregation//:org_hibernate_hibernate_core",
-        "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
-        "@aggregation//:org_javassist_javassist",
-        "@aggregation//:org_slf4j_slf4j_api",
-        "@org_hibernate_hibernate_entitymanager//jar",
-    ],
-)
-
-java_library(
     name = "org_hibernate_hibernate_validator",
     visibility = ["//visibility:public"],
     exports = [
