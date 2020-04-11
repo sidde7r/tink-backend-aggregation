@@ -5234,6 +5234,211 @@
                 "sha256": "76bec2cf4a6fa5ccb55dbc37726462a68304e70ef48205f407d65888825a4a66"
             },
             {
+                "coord": "net.jadler:jadler-all:1.3.0",
+                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar",
+                "directDependencies": [
+                    "net.jadler:jadler-core:1.3.0",
+                    "net.jadler:jadler-jetty:1.3.0",
+                    "net.jadler:jadler-junit:1.3.0"
+                ],
+                "dependencies": [
+                    "commons-collections:commons-collections:3.2.2",
+                    "org.hamcrest:hamcrest-library:1.3",
+                    "net.jadler:jadler-junit:1.3.0",
+                    "commons-lang:commons-lang:2.6",
+                    "junit:junit:4.12",
+                    "org.hamcrest:hamcrest-core:1.3",
+                    "net.jadler:jadler-core:1.3.0",
+                    "commons-io:commons-io:2.5",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "net.jadler:jadler-jetty:1.3.0",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107"
+                ],
+                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar",
+                    "https://jcenter.bintray.com/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar",
+                    "https://maven.google.com/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar"
+                ],
+                "sha256": "9047050043368784ce57a1c3a6e19dc369ed364a41ddcb99b23be4a5af51970b"
+            },
+            {
+                "coord": "net.jadler:jadler-core:1.3.0",
+                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar",
+                "directDependencies": [
+                    "commons-collections:commons-collections:3.2.2",
+                    "org.hamcrest:hamcrest-library:1.3",
+                    "commons-lang:commons-lang:2.6",
+                    "org.hamcrest:hamcrest-core:1.3",
+                    "commons-io:commons-io:2.5",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "dependencies": [
+                    "commons-collections:commons-collections:3.2.2",
+                    "org.hamcrest:hamcrest-library:1.3",
+                    "commons-lang:commons-lang:2.6",
+                    "org.hamcrest:hamcrest-core:1.3",
+                    "commons-io:commons-io:2.5",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar",
+                    "https://jcenter.bintray.com/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar",
+                    "https://maven.google.com/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar"
+                ],
+                "sha256": "ecc8e48bbd0fc58e66ba8f60507c1c0ae0551d25f086b17bb05a9ea856afa3ff"
+            },
+            {
+                "coord": "net.jadler:jadler-core:jar:sources:1.3.0",
+                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar",
+                "directDependencies": [
+                    "commons-lang:commons-lang:jar:sources:2.6",
+                    "commons-collections:commons-collections:jar:sources:3.2.2",
+                    "commons-io:commons-io:jar:sources:2.5",
+                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
+                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "dependencies": [
+                    "commons-lang:commons-lang:jar:sources:2.6",
+                    "commons-collections:commons-collections:jar:sources:3.2.2",
+                    "commons-io:commons-io:jar:sources:2.5",
+                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
+                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                ],
+                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar",
+                    "https://jcenter.bintray.com/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar",
+                    "https://maven.google.com/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar"
+                ],
+                "sha256": "011357925b63942e453e2349197e27ba93d9baaa82aed98504c1054722361129"
+            },
+            {
+                "coord": "net.jadler:jadler-jetty:1.3.0",
+                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar",
+                "directDependencies": [
+                    "commons-lang:commons-lang:2.6",
+                    "net.jadler:jadler-core:1.3.0",
+                    "commons-io:commons-io:2.5",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107"
+                ],
+                "dependencies": [
+                    "commons-collections:commons-collections:3.2.2",
+                    "org.hamcrest:hamcrest-library:1.3",
+                    "commons-lang:commons-lang:2.6",
+                    "org.hamcrest:hamcrest-core:1.3",
+                    "net.jadler:jadler-core:1.3.0",
+                    "commons-io:commons-io:2.5",
+                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
+                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107"
+                ],
+                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar",
+                    "https://jcenter.bintray.com/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar",
+                    "https://maven.google.com/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar"
+                ],
+                "sha256": "f9b28b114aec20ec3e0e622fcae655873afece0721534793d61942ba32c75599"
+            },
+            {
+                "coord": "net.jadler:jadler-jetty:jar:sources:1.3.0",
+                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar",
+                "directDependencies": [
+                    "commons-lang:commons-lang:jar:sources:2.6",
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
+                    "commons-io:commons-io:jar:sources:2.5",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "net.jadler:jadler-core:jar:sources:1.3.0"
+                ],
+                "dependencies": [
+                    "commons-lang:commons-lang:jar:sources:2.6",
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "commons-collections:commons-collections:jar:sources:3.2.2",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
+                    "commons-io:commons-io:jar:sources:2.5",
+                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
+                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
+                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
+                    "net.jadler:jadler-core:jar:sources:1.3.0",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107"
+                ],
+                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar",
+                    "https://jcenter.bintray.com/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar",
+                    "https://maven.google.com/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar"
+                ],
+                "sha256": "05e6769033d83318ef5f81e90003bf3ba1b9b8ac009a5bce1073e9345505aed0"
+            },
+            {
+                "coord": "net.jadler:jadler-junit:1.3.0",
+                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar",
+                "directDependencies": [
+                    "commons-lang:commons-lang:2.6",
+                    "junit:junit:4.12",
+                    "net.jadler:jadler-core:1.3.0"
+                ],
+                "dependencies": [
+                    "commons-collections:commons-collections:3.2.2",
+                    "org.hamcrest:hamcrest-library:1.3",
+                    "commons-lang:commons-lang:2.6",
+                    "junit:junit:4.12",
+                    "org.hamcrest:hamcrest-core:1.3",
+                    "net.jadler:jadler-core:1.3.0",
+                    "commons-io:commons-io:2.5",
+                    "org.slf4j:slf4j-api:1.7.22"
+                ],
+                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar",
+                    "https://jcenter.bintray.com/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar",
+                    "https://maven.google.com/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar"
+                ],
+                "sha256": "204777d68cc09984671047321a063337d0632341ad922f6ee8184b24422ba101"
+            },
+            {
+                "coord": "net.jadler:jadler-junit:jar:sources:1.3.0",
+                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar",
+                "directDependencies": [
+                    "commons-lang:commons-lang:jar:sources:2.6",
+                    "junit:junit:jar:sources:4.12",
+                    "net.jadler:jadler-core:jar:sources:1.3.0"
+                ],
+                "dependencies": [
+                    "commons-lang:commons-lang:jar:sources:2.6",
+                    "commons-collections:commons-collections:jar:sources:3.2.2",
+                    "commons-io:commons-io:jar:sources:2.5",
+                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
+                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "net.jadler:jadler-core:jar:sources:1.3.0",
+                    "junit:junit:jar:sources:4.12"
+                ],
+                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar",
+                    "https://jcenter.bintray.com/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar",
+                    "https://maven.google.com/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar"
+                ],
+                "sha256": "86f60b8a198e14b39669497173503733be94262adc3c4261e6b8a7e200360ba8"
+            },
+            {
                 "coord": "net.java.dev.jna:jna:5.3.1",
                 "file": "v1/https/repo1.maven.org/maven2/net/java/dev/jna/jna/5.3.1/jna-5.3.1.jar",
                 "directDependencies": [],
@@ -6181,6 +6386,40 @@
                 "sha256": "e223d2d8fbafd66057a8848cc94222d63c3cedd652cc48eddc0ab5c39c0f84df"
             },
             {
+                "coord": "org.hamcrest:hamcrest-library:1.3",
+                "file": "v1/https/repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
+                "directDependencies": [
+                    "org.hamcrest:hamcrest-core:1.3"
+                ],
+                "dependencies": [
+                    "org.hamcrest:hamcrest-core:1.3"
+                ],
+                "url": "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
+                    "https://jcenter.bintray.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
+                    "https://maven.google.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar"
+                ],
+                "sha256": "711d64522f9ec410983bd310934296da134be4254a125080a0416ec178dfad1c"
+            },
+            {
+                "coord": "org.hamcrest:hamcrest-library:jar:sources:1.3",
+                "file": "v1/https/repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
+                "directDependencies": [
+                    "org.hamcrest:hamcrest-core:jar:sources:1.3"
+                ],
+                "dependencies": [
+                    "org.hamcrest:hamcrest-core:jar:sources:1.3"
+                ],
+                "url": "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
+                    "https://jcenter.bintray.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
+                    "https://maven.google.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar"
+                ],
+                "sha256": "1c0ff84455f539eb3c29a8c430de1f6f6f1ba4b9ab39ca19b195f33203cd539c"
+            },
+            {
                 "coord": "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
                 "file": "v1/https/repo1.maven.org/maven2/org/hibernate/javax/persistence/hibernate-jpa-2.0-api/1.0.0.Final/hibernate-jpa-2.0-api-1.0.0.Final.jar",
                 "directDependencies": [],
@@ -6950,6 +7189,32 @@
                 "dependencies": []
             },
             {
+                "coord": "net.jadler:jadler-all:jar:sources:1.3.0",
+                "file": null,
+                "directDependencies": [
+                    "net.jadler:jadler-core:jar:sources:1.3.0",
+                    "net.jadler:jadler-jetty:jar:sources:1.3.0",
+                    "net.jadler:jadler-junit:jar:sources:1.3.0"
+                ],
+                "dependencies": [
+                    "commons-lang:commons-lang:jar:sources:2.6",
+                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
+                    "commons-collections:commons-collections:jar:sources:3.2.2",
+                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
+                    "commons-io:commons-io:jar:sources:2.5",
+                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
+                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
+                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
+                    "net.jadler:jadler-core:jar:sources:1.3.0",
+                    "net.jadler:jadler-junit:jar:sources:1.3.0",
+                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
+                    "junit:junit:jar:sources:4.12",
+                    "net.jadler:jadler-jetty:jar:sources:1.3.0"
+                ]
+            },
+            {
                 "coord": "org.apache.mahout.commons:commons-cli:jar:sources:2.0-mahout",
                 "file": null,
                 "directDependencies": [],
@@ -6957,6 +7222,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -250833958
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1674146830
     }
 }

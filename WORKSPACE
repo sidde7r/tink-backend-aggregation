@@ -2680,6 +2680,7 @@ maven_install(
         "mysql:mysql-connector-java:5.1.42",
         "net.bytebuddy:byte-buddy-agent:1.10.1",
         "net.bytebuddy:byte-buddy:1.10.1",
+        "net.jadler:jadler-all:1.3.0",
         "net.java.dev.jna:jna:5.3.1",
         "net.minidev:asm:1.0.2",
         "net.minidev:json-smart:2.1.1",
