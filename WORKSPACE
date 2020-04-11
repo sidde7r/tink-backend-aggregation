@@ -2162,8 +2162,8 @@ maven_jar(
 
 maven_jar(
     name = "org_apache_pdfbox_fontbox",  # Do not use, but do not remove
-    artifact = "org.apache.pdfbox:fontbox:2.0.0",
-    sha1 = "6f762d4e1c8ea99589d30597ef3731dfdcee43e2",
+    artifact = "org.apache.pdfbox:fontbox:2.0.6",
+    sha1 = "33f44ea67f1b5ab314e2d5768365b1a3e794fb3b",
 )
 
 maven_jar(
@@ -2700,7 +2700,7 @@ maven_install(
         "org.apache.logging.log4j:log4j-api:2.11.1",
         "org.apache.logging.log4j:log4j-core:2.11.1",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
-        "org.apache.pdfbox:fontbox:2.0.0",
+        "org.apache.pdfbox:fontbox:2.0.6",
         "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
