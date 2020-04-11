@@ -1251,7 +1251,7 @@ java_library(
     name = "org_xerial_snappy_snappy_java",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_xerial_snappy_snappy_java//jar",
+        "@aggregation//:org_xerial_snappy_snappy_java",
     ],
 )
 

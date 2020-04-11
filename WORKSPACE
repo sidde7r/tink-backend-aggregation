@@ -876,7 +876,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_xerial_snappy_snappy_java",
+    name = "org_xerial_snappy_snappy_java",  # Do not use, but do not remove
     artifact = "org.xerial.snappy:snappy-java:1.0.5-M2",
     sha1 = "5b015647886ef85a6747091461099dfba944864f",
 )
