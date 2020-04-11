@@ -1218,7 +1218,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_security_core",
+    name = "org_springframework_security_core",  # Do not use, but do not remove
     artifact = "org.springframework.security:spring-security-core:4.2.3.RELEASE",
     sha1 = "5c0e47a47036c94d6fdd02696bf52be6d1adbd4d",
 )
@@ -1484,7 +1484,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_expression",
+    name = "org_springframework_spring_expression",  # Do not use, but do not remove
     artifact = "org.springframework:spring-expression:4.3.7.RELEASE",
     sha1 = "5257b6486e43d8c05674323fea5b415d4da72f38",
 )

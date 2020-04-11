@@ -1213,7 +1213,7 @@ java_library(
     name = "org_springframework_security",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_springframework_security_core//jar",
+        "@aggregation_temp//:org_springframework_security_spring_security_core",
     ],
 )
 
@@ -1232,7 +1232,7 @@ java_library(
     name = "org_springframework_spring_expression",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_springframework_spring_expression//jar",
+        "@aggregation_temp//:org_springframework_spring_expression",
     ],
     runtime_deps = [
         "@aggregation_temp//:org_springframework_spring_core",
