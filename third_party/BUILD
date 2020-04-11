@@ -1355,11 +1355,11 @@ java_library(
     runtime_deps = [
         "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
         "@aggregation//:junit_junit",
+        "@aggregation//:net_jadler_jadler_all",
         "@aggregation//:net_minidev_json_smart",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
         "@com_google_crypto_tink//jar",
-        "@net_jadler_jadler_all//jar",
         "@org_bitbucket_b_c_jose4j//jar",
     ],
 )
