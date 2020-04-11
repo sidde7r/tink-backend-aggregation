@@ -4,8 +4,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/exceptions/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/engine",
