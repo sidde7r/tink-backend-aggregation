@@ -1508,7 +1508,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "cglib_cglib",
+    name = "cglib_cglib",  # Do not use, but do not remove
     artifact = "cglib:cglib:2.2",
     sha1 = "97d03461dc1c04ffc636dcb2579aae7724a78ef2",
 )
