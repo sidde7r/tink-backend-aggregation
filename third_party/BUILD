@@ -1063,14 +1063,6 @@ java_library(
 )
 
 java_library(
-    name = "org_codehaus_jackson_jackson_core_asl",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_codehaus_jackson_jackson_core_asl//jar",
-    ],
-)
-
-java_library(
     name = "org_codehaus_plexus_plexus_utils",
     visibility = ["//visibility:public"],
     exports = [

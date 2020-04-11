@@ -548,12 +548,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_jackson_jackson_core_asl",
-    artifact = "org.codehaus.jackson:jackson-core-asl:1.8.9",
-    sha1 = "99be07ca979279674ae5b8a886669fb8da491d9d",
-)
-
-maven_jar(
     name = "org_pojava_pojava",  # Do not use, but do not remove
     artifact = "org.pojava:pojava:2.8.1",
     sha1 = "4b9b3afd3c58a6b3eb91c50a4cae1bf58e3e7c73",
