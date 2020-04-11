@@ -2155,7 +2155,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_pdfbox_pdfbox",
+    name = "org_apache_pdfbox_pdfbox",  # Do not use, but do not remove
     artifact = "org.apache.pdfbox:pdfbox:2.0.6",
     sha1 = "68616a583c5f9b9ba72140364d15a07cd937ce0e",
 )

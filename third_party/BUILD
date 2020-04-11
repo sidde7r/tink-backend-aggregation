@@ -1311,7 +1311,7 @@ java_library(
     name = "org_apache_pdfbox_pdfbox",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_pdfbox_pdfbox//jar",
+        "@aggregation//:org_apache_pdfbox_pdfbox",
     ],
 )
 
