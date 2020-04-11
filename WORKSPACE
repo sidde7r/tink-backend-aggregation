@@ -2705,6 +2705,7 @@ maven_install(
         "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
+        "org.codehaus.plexus:plexus-utils:3.0.17",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
         "org.eclipse.jetty:jetty-continuation:%s" % ECLIPSE_JETTY_VERSION,
