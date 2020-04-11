@@ -2672,6 +2672,7 @@ maven_install(
         "javax.validation:validation-api:1.1.0.Final",
         "javax.xml.bind:jaxb-api:2.2.7",
         "javax.xml.stream:stax-api:1.0-2",
+        "jline:jline:0.9.94",
         "joda-time:joda-time:2.9.9",
         "junit:junit:4.12",
         "log4j:log4j:1.2.17",
