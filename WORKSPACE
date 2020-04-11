@@ -500,7 +500,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_cbor",
+    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_cbor",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.9",
     sha1 = "3206f36ea2b0f9bd365a138338281243241dc9da",
 )
