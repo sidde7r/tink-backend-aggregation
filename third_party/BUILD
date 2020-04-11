@@ -1285,7 +1285,7 @@ java_library(
     name = "org_hamcrest_hamcrest_library",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_hamcrest_hamcrest_library//jar",
+        "@aggregation//:org_hamcrest_hamcrest_library",
     ],
 )
 

@@ -1980,7 +1980,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hamcrest_hamcrest_library",
+    name = "org_hamcrest_hamcrest_library",  # Do not use, but do not remove
     artifact = "org.hamcrest:hamcrest-library:1.3",
     sha1 = "4785a3c21320980282f9f33d0d1264a69040538f",
 )
