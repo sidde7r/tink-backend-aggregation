@@ -41,19 +41,16 @@ junit_test(
     data = [
         "//src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/resources",
     ],
+    runtime_deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
+    ],
     deps = [
         ":aggregationcontroller_api",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
         "//src/integration/credentials:rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
-        "//src/integration/models",
-        "//src/libraries/http_client",
-        "//src/libraries/jersey_utils",
-        "//src/libraries/net/src/main/java/se/tink/libraries/net/client",
-        "//src/libraries/net/src/main/java/se/tink/libraries/net/client/handler",
         "//third_party:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
