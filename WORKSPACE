@@ -1266,7 +1266,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_core",
+    name = "org_hibernate_hibernate_core",  # Do not use, but do not remove
     artifact = "org.hibernate:hibernate-core:3.5.4-Final",
     sha1 = "3f2e17bda96d7bffc6ec72c670ed442d5e9b0063",
 )
