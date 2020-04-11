@@ -935,9 +935,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@jline_jline//jar",
         "@org_apache_zookeeper_zookeeper//jar",
     ],
 )
@@ -951,9 +951,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@jline_jline//jar",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_zookeeper_zookeeper//jar",
     ],
@@ -968,9 +968,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@jline_jline//jar",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_zookeeper_zookeeper//jar",
@@ -986,9 +986,9 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@jline_jline//jar",
         "@org_apache_curator_curator_client//jar",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_curator_curator_recipes//jar",

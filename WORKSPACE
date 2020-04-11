@@ -644,7 +644,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "jline_jline",
+    name = "jline_jline",  # Do not use, but do not remove
     artifact = "jline:jline:0.9.94",
     sha1 = "99a18e9a44834afdebc467294e1138364c207402",
 )
