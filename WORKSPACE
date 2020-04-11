@@ -1176,7 +1176,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_plexus_plexus_utils",
+    name = "org_codehaus_plexus_plexus_utils",  # Do not use, but do not remove
     artifact = "org.codehaus.plexus:plexus-utils:3.0.17",
     sha1 = "7b86f7a4ceffc8eadbb1a84207134af776f7cb95",
 )

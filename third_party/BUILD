@@ -1074,7 +1074,7 @@ java_library(
     name = "org_codehaus_plexus_plexus_utils",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_codehaus_plexus_plexus_utils//jar",
+        "@aggregation//:org_codehaus_plexus_plexus_utils",
     ],
 )
 
