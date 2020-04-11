@@ -1266,7 +1266,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_zookeeper_zookeeper",
+    name = "org_apache_zookeeper_zookeeper",  # Do not use, but do not remove
     artifact = "org.apache.zookeeper:zookeeper:3.5.3-beta",
     sha1 = "63ffc92b50e1da1b43d7728daeed72035b53e567",
 )
