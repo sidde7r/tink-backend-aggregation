@@ -1526,7 +1526,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_commons_commons_math3",
+    name = "org_apache_commons_commons_math3",  # Do not use, but do not remove
     artifact = "org.apache.commons:commons-math3:3.2",
     sha1 = "ec2544ab27e110d2d431bdad7d538ed509b21e62",
 )

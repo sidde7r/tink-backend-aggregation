@@ -913,7 +913,7 @@ java_library(
     name = "org_apache_commons_commons_math3",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_commons_commons_math3//jar",
+        "@aggregation//:org_apache_commons_commons_math3",
     ],
 )
 
