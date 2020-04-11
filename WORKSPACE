@@ -1586,7 +1586,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_annotations",
+    name = "org_hibernate_hibernate_annotations",  # Do not use, but do not remove
     artifact = "org.hibernate:hibernate-annotations:3.5.4-Final",
     sha1 = "56e3be054a0d3a99c0fd99582127fb87a6911333",
 )
