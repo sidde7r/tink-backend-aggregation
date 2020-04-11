@@ -2698,6 +2698,7 @@ maven_install(
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.apache.pdfbox:fontbox:2.0.6",
         "org.apache.pdfbox:pdfbox:2.0.6",
+        "org.aspectj:aspectjrt:1.8.2",
         "org.assertj:assertj-core:2.2.0",
         "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
@@ -2768,13 +2769,13 @@ maven_install(
     artifacts = [
         "com.github.tomakehurst:wiremock:2.1.12",
         "com.oracle.substratevm:svm:19.0.0",
-        "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
-        "org.apache.curator:curator-client:4.0.0",
-        "org.apache.zookeeper:zookeeper:3.5.3-beta",
         "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
         "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
+        "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
+        "org.apache.curator:curator-client:4.0.0",
+        "org.apache.zookeeper:zookeeper:3.5.3-beta",
     ],
     # Exclude ALL transitive dependencies of the artifacts above for now
     excluded_artifacts = [
