@@ -2132,14 +2132,14 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_takari_junit_takari_cpsuite",
+    name = "io_takari_junit_takari_cpsuite",  # Do not use, but do not remove
     artifact = "io.takari.junit:takari-cpsuite:1.2.7",
     sha1 = "6d30ab231a73f865a3146ca4b9e3299d2f415426",
 )
 
 bind(
     name = "cpsuite",
-    actual = "@io_takari_junit_takari_cpsuite//jar",
+    actual = "@aggregation//:io_takari_junit_takari_cpsuite",
 )
 
 maven_jar(
