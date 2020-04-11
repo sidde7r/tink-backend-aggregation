@@ -1408,6 +1408,7 @@ java_library(
     name = "netty",
     visibility = ["//visibility:public"],
     exports = [
+        "@aggregation//:com_google_api_grpc_proto_google_common_protos",
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
@@ -1428,7 +1429,6 @@ java_library(
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:io_opencensus_opencensus_api",
-        "@com_google_api_grpc_proto_google_common_protos//jar",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_auth//jar",
         "@io_grpc_grpc_core//jar",
