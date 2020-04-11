@@ -7,6 +7,8 @@ java_library(
         "**/*.java",
     ]),
     visibility = ["//visibility:public"],
+    runtime_deps = [
+    ],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
