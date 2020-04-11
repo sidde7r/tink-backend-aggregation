@@ -2167,7 +2167,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_nimbusds_srp6a",
+    name = "com_nimbusds_srp6a",  # Do not use, but do not remove
     artifact = "com.nimbusds:srp6a:2.0.2",
     sha1 = "fc461127a39208502518ccbe51100c315e7625e8",
 )

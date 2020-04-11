@@ -1327,7 +1327,7 @@ java_library(
     name = "com_nimbusds_srp6a",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_nimbusds_srp6a//jar",
+        "@aggregation//:com_nimbusds_srp6a",
     ],
 )
 
