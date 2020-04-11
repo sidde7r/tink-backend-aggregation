@@ -8,7 +8,6 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:javax_validation_validation_api",
         "//third_party:org_hibernate_hibernate_annotations",
-        "//third_party:org_hibernate_hibernate_entitymanager",
         "//third_party:org_hibernate_hibernate_validator",
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_springframework_data_spring_data_commons",

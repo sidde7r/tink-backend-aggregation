@@ -1562,7 +1562,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_entitymanager",
+    name = "org_hibernate_hibernate_entitymanager",  # Do not use, but do not remove
     artifact = "org.hibernate:hibernate-entitymanager:3.5.4-Final",
     sha1 = "23874caf98a2afb66581fde5b94d814c399c0063",
 )
