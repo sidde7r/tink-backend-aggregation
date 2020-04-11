@@ -2663,6 +2663,7 @@ maven_install(
         "io.prometheus:simpleclient_pushgateway:0.5.0",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "io.swagger:swagger-annotations:1.5.9",
+        "io.takari.junit:takari-cpsuite:1.2.7",
         "io.vavr:vavr-jackson:0.10.0",
         "io.vavr:vavr-match:0.10.0",
         "io.vavr:vavr-test:0.10.0",
