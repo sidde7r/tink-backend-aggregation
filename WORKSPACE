@@ -2768,6 +2768,7 @@ maven_install(
     artifacts = [
         "com.github.tomakehurst:wiremock:2.1.12",
         "com.oracle.substratevm:svm:19.0.0",
+        "org.apache.zookeeper:zookeeper:3.5.3-beta",
     ],
     excluded_artifacts = [
         # Exclude ALL transitive dependencies of the artifacts above for now
@@ -2786,8 +2787,10 @@ maven_install(
         "commons-cli:commons-cli",
         "commons-codec:commons-codec",
         "commons-logging:commons-logging",
+        "io.netty:netty",
         "javax.servlet:javax.servlet-api",
         "junit:junit",
+        "log4j:log4j",
         "net.minidev:asm",
         "net.minidev:json-smart",
         "net.sf.jopt-simple:jopt-simple",
@@ -2811,6 +2814,7 @@ maven_install(
         "org.graalvm.truffle:truffle-nfi",
         "org.hamcrest:hamcrest-core",
         "org.slf4j:slf4j-api",
+        "org.slf4j:slf4j-log4j12",
         "org.xmlunit:xmlunit-core",
         "org.xmlunit:xmlunit-legacy",
     ],
