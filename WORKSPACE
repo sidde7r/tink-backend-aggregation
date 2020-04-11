@@ -1026,7 +1026,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_commons_annotations",
+    name = "org_hibernate_hibernate_commons_annotations",  # Do not use, but do not remove
     artifact = "org.hibernate:hibernate-commons-annotations:3.2.0.Final",
     sha1 = "ce990611448fc2865469e3b68d2fe76b050e3c4f",
 )
