@@ -2054,13 +2054,13 @@ maven_jar(
 # TODO: build grpc jars
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf",
+    name = "io_grpc_grpc_protobuf",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf:%s" % GRPC_JAVA_VERSION,
     sha1 = "885d3d9ee69fe247550fda01ef1b7c0acab370e5",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_auth",
+    name = "io_grpc_grpc_auth",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
     sha1 = "33c389f9c153140f69018020dec535bd730f42ac",
 )
@@ -2084,7 +2084,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_stub",
+    name = "io_grpc_grpc_stub",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
     sha1 = "e6f36c227bfa3b9a6721bed274dd0b5c854b4925",
 )
@@ -2102,13 +2102,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_netty",
+    name = "io_grpc_grpc_netty",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
     sha1 = "0c979f611ea3b3add6fa77d41318dd21d20d6aef",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_testing",
+    name = "io_grpc_grpc_testing",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
     sha1 = "71e31c2c69d5b91f87246b389bf1a230a9836901",
 )
@@ -2299,7 +2299,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_testing_proto",
+    name = "io_grpc_grpc_testing_proto",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-testing-proto:1.24.0",
     sha1 = "4bf1a3b690dc12ea0999643ae8e37c09e55a8c13",
 )

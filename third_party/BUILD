@@ -1407,15 +1407,15 @@ java_library(
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:io_opencensus_opencensus_api",
         "@aggregation_temp//:io_grpc_grpc_api",
+        "@aggregation_temp//:io_grpc_grpc_auth",
         "@aggregation_temp//:io_grpc_grpc_core",
+        "@aggregation_temp//:io_grpc_grpc_netty",
+        "@aggregation_temp//:io_grpc_grpc_protobuf",
         "@aggregation_temp//:io_grpc_grpc_protobuf_lite",
         "@aggregation_temp//:io_grpc_grpc_protobuf_nano",
+        "@aggregation_temp//:io_grpc_grpc_stub",
+        "@aggregation_temp//:io_grpc_grpc_testing",
         "@aggregation_temp//:io_opencensus_opencensus_contrib_grpc_metrics",
-        "@io_grpc_grpc_auth//jar",
-        "@io_grpc_grpc_netty//jar",
-        "@io_grpc_grpc_protobuf//jar",
-        "@io_grpc_grpc_stub//jar",
-        "@io_grpc_grpc_testing//jar",
     ],
 )
 
@@ -1480,11 +1480,11 @@ java_library(
     name = "io_grpc_grpc_testing_proto",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_grpc_grpc_testing_proto//jar",
+        "@aggregation_temp//:io_grpc_grpc_testing_proto",
     ],
     runtime_deps = [
-        "@io_grpc_grpc_protobuf//jar",
-        "@io_grpc_grpc_stub//jar",
+        "@aggregation_temp//:io_grpc_grpc_protobuf",
+        "@aggregation_temp//:io_grpc_grpc_stub",
     ],
 )
 
@@ -1492,7 +1492,7 @@ java_library(
     name = "io_grpc_grpc_netty",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_grpc_grpc_netty//jar",
+        "@aggregation_temp//:io_grpc_grpc_netty",
     ],
     runtime_deps = [
         "@aggregation//:io_netty_netty_codec_http2",
@@ -1513,7 +1513,7 @@ java_library(
     name = "io_grpc_grpc_stub",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_grpc_grpc_stub//jar",
+        "@aggregation_temp//:io_grpc_grpc_stub",
     ],
     runtime_deps = [
         "@aggregation_temp//:io_grpc_grpc_api",
@@ -1524,12 +1524,12 @@ java_library(
     name = "io_grpc_grpc_testing",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_grpc_grpc_testing//jar",
+        "@aggregation_temp//:io_grpc_grpc_testing",
     ],
     runtime_deps = [
         "@aggregation//:junit_junit",
         "@aggregation_temp//:io_grpc_grpc_core",
-        "@io_grpc_grpc_stub//jar",
+        "@aggregation_temp//:io_grpc_grpc_stub",
     ],
 )
 
