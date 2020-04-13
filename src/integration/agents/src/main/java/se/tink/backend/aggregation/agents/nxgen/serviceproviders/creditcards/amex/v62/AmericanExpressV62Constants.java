@@ -74,6 +74,7 @@ public final class AmericanExpressV62Constants {
         public static final String REMEMBER_ME_TOKEN = "rememberMeToken";
         public static final String PUBLIC_GUID = "publicGuid";
         public static final String AUTHORIZATION = "authorization";
+        public static final String INIT_VERSION = "initVersion";
     }
 
     public static final class Headers {
