@@ -106,11 +106,6 @@ public class CommerzbankConstants {
         public static final String KEY_PAIR = "keyPair";
     }
 
-    public static class SupplementalFieldName {
-        public static final String BASE64_IMAGE = "base64image";
-        public static final String PHOTO_TAN_CODE = "phototancode";
-    }
-
     public static class Tag {
         public static final LogTag CREDIT_CARD_FETCHING_ERROR =
                 LogTag.from("#commerzbank_credit_card_fetching_error");
@@ -121,6 +116,6 @@ public class CommerzbankConstants {
     }
 
     public static class TransactionDescriptions {
-        public static String ATM = "Kartenzahlung";
+        public static final String ATM = "Kartenzahlung";
     }
 }
