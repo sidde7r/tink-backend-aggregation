@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -56,11 +55,6 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
     @Override
     protected URL getScaRedirectUrlFromConsentResponse(ConsentResponse consentResponse) {
         return new URL(getConfiguration().getBaseUrl() + consentResponse.getScaRedirect());
-    }
-
-    @Override
-    protected String getTransactionsDateFrom() {
-        return QueryValues.TRANSACTION_FROM_DATE;
     }
 
     @Override
