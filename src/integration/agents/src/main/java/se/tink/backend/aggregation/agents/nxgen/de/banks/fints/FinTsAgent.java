@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
+import com.google.inject.Inject;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -27,6 +28,7 @@ public final class FinTsAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final FinTsDialogContext dialogContext;
 
+    @Inject
     public FinTsAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
