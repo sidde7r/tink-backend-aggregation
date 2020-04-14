@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.base.MoreObjects;
 import java.util.List;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class UpdateTransactionsRequest {
     private List<Transaction> transactions;
     private String user;
