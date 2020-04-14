@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.aggregationcontroller;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import javax.ws.rs.core.Response;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -22,6 +23,8 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class ControllerWrapper {
     private final AggregationControllerAggregationClient client;
     private final HostConfiguration configuration;
+    private static final ImmutableSet<String> REQUEST_TYPE_AGGREGATION_ID_DISALLOWED_CLUSTERS =
+            ImmutableSet.of("cornwall-production", "cornwall-testing");
 
     private ControllerWrapper(
             AggregationControllerAggregationClient client, HostConfiguration configuration) {
@@ -47,6 +50,14 @@ public class ControllerWrapper {
     }
 
     public Response updateTransactionsAsynchronously(UpdateTransactionsRequest request) {
+        // This is a temporary fix for cornwall-production not being backwards compatible
+        // in the updateTransactions endpoint. Remove the if-statement after
+        // https://github.com/tink-ab/tink-backend/pull/19513 has been deployed to all environments.
+        if (REQUEST_TYPE_AGGREGATION_ID_DISALLOWED_CLUSTERS.contains(
+                configuration.getClusterId())) {
+            request.setRequestType(null);
+            request.setAggregationId(null);
+        }
         return client.updateTransactionsAsynchronously(configuration, request);
     }
 
