@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import java.util.Collections;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Rule;
@@ -18,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsRequestProce
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsRequestSender;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.exception.UnsuccessfulApiCallException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.fetcher.transactionalaccount.FinTsTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.FinTsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HICAZ;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HIKAZ;
@@ -31,6 +32,9 @@ public class TransactionClientTest {
     private static final FinTsConfiguration configuration = TestFixtures.getFinTsConfiguration();
     private static final FinTsDialogContext dialogContext =
             TestFixtures.getDialogContext(configuration);
+    private static final TransactionRequestBuilder dummyRequestBuilder =
+            (dialogContext, account, startingPoint) ->
+                    FinTsRequest.createEncryptedRequest(dialogContext, Collections.emptyList());
 
     @Rule public WireMockRule wireMock = new WireMockRule(443);
 
@@ -40,13 +44,10 @@ public class TransactionClientTest {
         initWireMock(TestFixtures.getBodyOfFetchTransactionsResponseInMT940Format());
         TransactionClient client = new TransactionClient(createRequestProcessor(), dialogContext);
         FinTsAccountInformation accountInformation = TestFixtures.getAccountInformation();
-        TransactionRequestBuilder requestBuilder =
-                TransactionRequestBuilder.getRequestBuilder(
-                        FinTsTransactionFetcher.StrategyType.SWIFT, 5);
 
         // when
         List<FinTsResponse> responses =
-                client.getTransactionResponses(requestBuilder, accountInformation);
+                client.getTransactionResponses(dummyRequestBuilder, accountInformation);
 
         assertThat(responses).hasSize(1);
         boolean hasTransactionDetails = responses.get(0).findSegment(HIKAZ.class).isPresent();
@@ -59,13 +60,10 @@ public class TransactionClientTest {
         initWireMock(TestFixtures.getBodyOfFetchTransactionsResponseInXMLFormat());
         TransactionClient client = new TransactionClient(createRequestProcessor(), dialogContext);
         FinTsAccountInformation accountInformation = TestFixtures.getAccountInformation();
-        TransactionRequestBuilder requestBuilder =
-                TransactionRequestBuilder.getRequestBuilder(
-                        FinTsTransactionFetcher.StrategyType.CAMT, 1);
 
         // when
         List<FinTsResponse> responses =
-                client.getTransactionResponses(requestBuilder, accountInformation);
+                client.getTransactionResponses(dummyRequestBuilder, accountInformation);
 
         // then
         assertThat(responses).hasSize(1);
@@ -79,14 +77,13 @@ public class TransactionClientTest {
         initWireMock(TestFixtures.getBodyOfUnsuccessfulResponse());
         TransactionClient client = new TransactionClient(createRequestProcessor(), dialogContext);
         FinTsAccountInformation accountInformation = TestFixtures.getAccountInformation();
-        TransactionRequestBuilder requestBuilder =
-                TransactionRequestBuilder.getRequestBuilder(
-                        FinTsTransactionFetcher.StrategyType.SWIFT, 5);
 
         // when
         Throwable thrown =
                 catchThrowable(
-                        () -> client.getTransactionResponses(requestBuilder, accountInformation));
+                        () ->
+                                client.getTransactionResponses(
+                                        dummyRequestBuilder, accountInformation));
 
         // then
         Assertions.assertThat(thrown)
