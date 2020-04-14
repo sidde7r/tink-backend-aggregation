@@ -9,17 +9,17 @@ import org.junit.Test;
 
 public final class ClassPathTest {
 
-    private static final String GUAVA = "guava-\\d+\\.\\d+(-jre)?\\.jar";
-
     @Test
     public void noConflictingVersionsOfGuava() {
+        final String guava = "guava-\\d+\\.\\d+(-jre)?\\.jar";
+
         URL[] urls = ((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs();
         Set<String> guavaJars =
                 Stream.of(urls)
                         .map(URL::toString)
                         .map(s -> s.split("/"))
                         .map(tokens -> tokens[tokens.length - 1])
-                        .filter(s -> s.matches(GUAVA))
+                        .filter(s -> s.matches(guava))
                         .collect(Collectors.toSet());
 
         assert guavaJars.size() <= 1 : String.format("Conflicting dependencies: %s", guavaJars);
