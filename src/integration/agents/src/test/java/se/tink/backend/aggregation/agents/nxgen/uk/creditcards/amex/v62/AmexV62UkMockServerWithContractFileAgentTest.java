@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Field;
@@ -21,7 +20,6 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.identitydata.IdentityData;
 
-@Ignore
 public class AmexV62UkMockServerWithContractFileAgentTest {
 
     private final String USERNAME = "testUser";
