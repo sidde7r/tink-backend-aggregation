@@ -6,6 +6,7 @@ junit_test(
     data = [
         "//data:agent_unit_tests",
         "//data:aggregation_test",
+        "//data:provider_configurations",
         "//data/test/agents/es/bankinter",
         "//etc:development",
     ],

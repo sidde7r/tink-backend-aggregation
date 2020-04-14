@@ -61,7 +61,9 @@ public class BelfiusTest {
 
     private ProviderConfig readProvidersConfiguration(String market) {
         String providersFilePath =
-                "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
+                "external/tink_backend/src/provider_configuration/data/seeding/providers-"
+                        + escapeMarket(market).toLowerCase()
+                        + ".json";
         File providersFile = new File(providersFilePath);
         try {
             return mapper.readValue(providersFile, ProviderConfig.class);

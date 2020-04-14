@@ -36,7 +36,8 @@ public class FinTsProviderConfigTest {
     }
 
     private static List<Provider> readFinTsProviders() throws IOException {
-        String providersFilePath = "data/seeding/providers-de.json";
+        String providersFilePath =
+                "external/tink_backend/src/provider_configuration/data/seeding/providers-de.json";
         File providersFile = new File(providersFilePath);
         ObjectMapper mapper = new ObjectMapper();
         ProviderConfig providerConfig = mapper.readValue(providersFile, ProviderConfig.class);

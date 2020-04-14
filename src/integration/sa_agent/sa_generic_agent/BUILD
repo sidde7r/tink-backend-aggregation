@@ -40,6 +40,7 @@ junit_test(
     srcs = glob(["src/test/java/**/*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:provider_configurations",
         "//etc:development",
     ],
     resources = glob([

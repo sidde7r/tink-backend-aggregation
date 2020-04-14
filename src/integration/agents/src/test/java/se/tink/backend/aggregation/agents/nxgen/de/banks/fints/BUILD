@@ -24,6 +24,7 @@ junit_test(
     ),
     data = [
         "//data:aggregation_test",
+        "//data:provider_configurations",
     ],
     tags = [
     ],
