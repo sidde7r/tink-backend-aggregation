@@ -143,10 +143,9 @@ public final class TargobankAgentIntegrationTest extends AbstractConfigurationBa
             return factory.create(cls, credentialsRequest, this.context);
         } catch (FileNotFoundException e) {
             if (e.getMessage().equals("File etc/development.yml not found")) {
-                String message =
-                        "etc/development.yml missing. Please make a copy of etc/development.template.yml.";
+                String message = "etc/development.yml missing. Please make a copy of etc/test.yml.";
                 throw new IllegalStateException(
-                        "etc/development.yml missing. Please make a copy of etc/development.template.yml.");
+                        "etc/development.yml missing. Please make a copy of etc/test.yml.");
             } else {
                 throw new IllegalStateException(e);
             }

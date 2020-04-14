@@ -654,7 +654,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             } catch (FileNotFoundException e) {
                 if (e.getMessage().equals("File etc/development.yml not found")) {
                     final String message =
-                            "etc/development.yml missing. Please make a copy of etc/development.template.yml.";
+                            "etc/development.yml missing. Please make a copy of etc/test.yml.";
                     throw new IllegalStateException(message);
                 }
                 throw new IllegalStateException(e);
