@@ -38,11 +38,11 @@ public class SwiftStrategy extends FinTsTransactionFetchingStrategy {
         if (version != 5) {
             throw new IllegalArgumentException("Unsupported SwiftStrategy version: " + version);
         } else {
-            return SWIFT_5;
+            return SWIFT_V5;
         }
     }
 
-    private static TransactionRequestBuilder SWIFT_5 =
+    private static final TransactionRequestBuilder SWIFT_V5 =
             (dialogContext, account, startingPoint) -> {
                 List<BaseRequestPart> additionalSegments = new ArrayList<>();
                 additionalSegments.add(

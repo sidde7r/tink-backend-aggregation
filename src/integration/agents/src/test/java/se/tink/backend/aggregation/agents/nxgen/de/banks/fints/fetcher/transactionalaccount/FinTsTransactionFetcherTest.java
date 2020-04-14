@@ -86,8 +86,7 @@ public class FinTsTransactionFetcherTest {
                 .thenReturn(
                         Collections.singletonList(
                                 new FinTsResponse(
-                                        TestFixtures
-                                                .getBodyOfFetchTransactionsResponseInXMLFormat())));
+                                        TestFixtures.FETCH_TRANSACTIONS_RESPONSE_IN_XML)));
         return client;
     }
 

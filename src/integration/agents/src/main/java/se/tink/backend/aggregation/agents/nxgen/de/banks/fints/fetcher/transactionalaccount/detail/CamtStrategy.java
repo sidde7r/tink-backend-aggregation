@@ -36,11 +36,11 @@ public class CamtStrategy extends FinTsTransactionFetchingStrategy {
         if (version != 1) {
             throw new IllegalArgumentException("Unsupported CamtStrategy version: " + version);
         } else {
-            return CAMT_1;
+            return CAMT_V1;
         }
     }
 
-    private static TransactionRequestBuilder CAMT_1 =
+    private static final TransactionRequestBuilder CAMT_V1 =
             (dialogContext, account, startingPoint) -> {
                 HICAZS hicazs =
                         (HICAZS) dialogContext.getDetailsOfSupportedOperation(SegmentType.HKCAZ, 1);

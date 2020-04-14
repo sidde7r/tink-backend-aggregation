@@ -33,8 +33,9 @@ public class TransactionClientTest {
     private static final FinTsDialogContext dialogContext =
             TestFixtures.getDialogContext(configuration);
     private static final TransactionRequestBuilder dummyRequestBuilder =
-            (dialogContext, account, startingPoint) ->
-                    FinTsRequest.createEncryptedRequest(dialogContext, Collections.emptyList());
+            (lamdaDialogContext, account, startingPoint) ->
+                    FinTsRequest.createEncryptedRequest(
+                            lamdaDialogContext, Collections.emptyList());
 
     @Rule public WireMockRule wireMock = new WireMockRule(443);
 

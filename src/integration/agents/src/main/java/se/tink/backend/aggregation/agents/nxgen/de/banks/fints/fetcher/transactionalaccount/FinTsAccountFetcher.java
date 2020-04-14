@@ -12,6 +12,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.account.AccountClient;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.account.BalanceReqeustBuilderProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.account.BalanceRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.mapper.account.FinTsTransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.FinTsResponse;
@@ -85,7 +86,7 @@ public class FinTsAccountFetcher implements AccountFetcher<TransactionalAccount>
 
     private void fetchBalances(List<FinTsAccountInformation> accounts) {
         BalanceRequestBuilder requestBuilder =
-                BalanceRequestBuilder.getRequestBuilder(dialogContext);
+                BalanceReqeustBuilderProvider.getRequestBuilder(dialogContext);
 
         for (FinTsAccountInformation accInfo : accounts) {
             if (accInfo.getBasicInfo().isOperationSupported(SegmentType.HKSAL)) {

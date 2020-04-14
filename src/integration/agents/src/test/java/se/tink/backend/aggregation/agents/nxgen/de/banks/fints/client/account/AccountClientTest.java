@@ -75,7 +75,7 @@ public class AccountClientTest {
         // when
         FinTsResponse response =
                 client.getBalanceForAccount(
-                        BalanceRequestBuilder.getRequestBuilder(dialogContext), hiupd);
+                        BalanceReqeustBuilderProvider.getRequestBuilder(dialogContext), hiupd);
 
         // then
         assertThat(response.isSuccess()).isTrue();
@@ -96,7 +96,8 @@ public class AccountClientTest {
                 catchThrowable(
                         () ->
                                 client.getBalanceForAccount(
-                                        BalanceRequestBuilder.getRequestBuilder(dialogContext),
+                                        BalanceReqeustBuilderProvider.getRequestBuilder(
+                                                dialogContext),
                                         hiupd));
 
         // then
