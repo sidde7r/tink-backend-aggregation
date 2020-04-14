@@ -1089,11 +1089,6 @@ agentsServiceConfiguration:
         aspspProductCode: ""
         eidasQwac: ""
         clientSecret: "dummyClientSecret"
-    a445338564ea4940bfcc4128a1ddc2d8:
-      tink:
-        redirectUrl: "dummyRedirectUrl"
-        clientId: "dummyClientId"
-        clientSecret: "dummyClientSecret"
     a4667f95a9c4464eb505dd5e3543d41e:
       tink:
         # Empty value is fine
@@ -1382,14 +1377,6 @@ agentsServiceConfiguration:
         aspspProductCode: ""
         eidasQwac: ""
         clientSecret: "dummyClientSecret"
-    d585610c9aa64bdaadabc880bfe819fe:
-      tink:
-        redirectUrl: "dummyRedirectUrl"
-        baseAPIUrl: ""
-        baseAuthUrl: ""
-        clientSigningCertificateSerialNumber: ""
-        clientId: "dummyClientId"
-        clientSecret: "dummyClientSecret"
     d660f95b315a49d493952778ee23b509:
       tink:
         # Empty value is fine
@@ -1427,11 +1414,6 @@ agentsServiceConfiguration:
         baseAuthUrl: ""
         clientId: "dummyClientId"
         clientSigningCertificateSerialNumber: ""
-        clientSecret: "dummyClientSecret"
-    d8b65f2eedf349679d00252e1e4f6875:
-      tink:
-        redirectUrl: "dummyRedirectUrl"
-        clientId: "dummyClientId"
         clientSecret: "dummyClientSecret"
     d8f9f745c7834c0da1b2d00bb6b6fd1d:
       tink:
@@ -1539,11 +1521,6 @@ agentsServiceConfiguration:
         psuIpAddress: ""
         authorizeUrl: ""
         baseUrl: ""
-    e76a6fb9eaf844b0a317135794c64825:
-      tink:
-        redirectUrl: "dummyRedirectUrl"
-        clientId: "dummyClientId"
-        clientSecret: "dummyClientSecret"
     e84e124f9a2e43eca5c9863f376cefa7:
       tink:
         redirectUrl: "dummyRedirectUrl"
@@ -1559,10 +1536,6 @@ agentsServiceConfiguration:
         baseAPIUrl: ""
         clientId: "dummyClientId"
         clientSigningCertificate: "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"
-    ea3b5ac45e274e62b3fd1181aa3aca9c:
-      tink:
-        redirectUrl: "dummyRedirectUrl"
-        clientId: "dummyClientId"
     ea3b5ac45e274e62b3fd1181aa3aca9c:
       tink:
         redirectUrl: "dummyRedirectUrl"
@@ -1601,12 +1574,7 @@ agentsServiceConfiguration:
       tink:
         redirectUrl: "dummyRedirectUrl"
         clientId: "dummyClientId"
-        apiKey: ""
-    eb6ce2eebe194df7911d2dda92337451:
-      tink:
-        redirectUrl: "dummyRedirectUrl"
-        clientId: "dummyClientId"
-        apiKey: ""
+        apiKey: "dummyApiKey"
     eba43066fc944c6889f2487a571545a1:
       tink:
         redirectUrl: "dummyRedirectUrl"
@@ -3457,11 +3425,6 @@ agentsServiceConfiguration:
         clientId: "dummyClientId"
         clientSecret: "dummyClientSecret"
     e1a9656ea21e4da08a836c93455c5f13:
-      tink:
-        redirectUrl: ""
-        clientId: "dummyClientId"
-        clientSecret: "dummyClientSecret"
-    e6c0865084fa5dd1af4be542be1aa362:
       tink:
         redirectUrl: ""
         clientId: "dummyClientId"
