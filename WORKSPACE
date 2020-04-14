@@ -254,6 +254,10 @@ NETTY_VERSION = "4.1.42.Final"
 
 NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION = "2.0.26.Final"
 
+ECLIPSE_JETTY_VERSION = "9.0.7.v20131107"
+
+ALT_ECLIPSE_JETTY_VERSION = "9.2.13.v20150730"
+
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
     sha256 = "b3823d7bca0c3513d48ef43de63f6a48410040f5f7b16d5eceea0adb98d07f42",
@@ -371,13 +375,13 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_server",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-server:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "682ae23f9e4a5e397d96f215b62641755d2a59b7",
 )
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_proxy",
-    artifact = "org.eclipse.jetty:jetty-proxy:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-proxy:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "5d16b84cf4ff40ef743c72ec3ffb118553f709c1",
 )
 
@@ -539,7 +543,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_servlet",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-servlet:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-servlet:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "f7d8ce6ecb2318b906ba4df1b8625ab2b34e305b",
 )
 
@@ -896,7 +900,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_java_dev_jna_jna",
+    name = "net_java_dev_jna_jna",  # Do not use, but do not remove
     artifact = "net.java.dev.jna:jna:5.3.1",
     sha1 = "6eb9d07456c56b9c2560722e90382252f0f98405",
 )
@@ -1041,7 +1045,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_util",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-util:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "93a606c83b047e8855eb3af68c335e60fa757367",
 )
 
@@ -1076,7 +1080,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "mysql_mysql_connector_java",
+    name = "mysql_mysql_connector_java",  # Do not use, but do not remove
     artifact = "mysql:mysql-connector-java:5.1.42",
     sha1 = "80a448a3ec2178b649bb2e3cb3610fab06e11669",
 )
@@ -1149,8 +1153,8 @@ maven_jar(
 
 maven_jar(
     name = "asm_asm",  # Do not use, but do not remove
-    artifact = "asm:asm:3.1",
-    sha1 = "c157def142714c544bdea2e6144645702adf7097",
+    artifact = "asm:asm:3.3.1",
+    sha1 = "bbcde0189656fa6cc671f27437432ac7e7f95673",
 )
 
 maven_jar(
@@ -1185,7 +1189,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_servlets",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-servlets:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "bffeae9b9f75f53d3e5dc1bfd56725f67f2f67c0",
 )
 
@@ -1274,7 +1278,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_swagger_swagger_annotations",
+    name = "io_swagger_swagger_annotations",  # Do not use, but do not remove
     artifact = "io.swagger:swagger-annotations:1.5.9",
     sha1 = "0598403e3d21da08f8e46efb9f2b6d7b1bc0046d",
 )
@@ -1299,7 +1303,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_io",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-io:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "512e9d2e088ae7c70c4a68381423cb68b9ed42d6",
 )
 
@@ -1425,7 +1429,7 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_http",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-http:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "67060a59b426c76a2788ea5f4e19c1d3170ac562",
 )
 
@@ -1516,7 +1520,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_commons_commons_csv",
+    name = "org_apache_commons_commons_csv",  # Do not use, but do not remove
     artifact = "org.apache.commons:commons-csv:1.0",
     sha1 = "8a0796ad6541a144eb1c00b93e06fbac03a9f313",
 )
@@ -1668,7 +1672,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "junit_junit",
+    name = "junit_junit",  # Do not use, but do not remove
     artifact = "junit:junit:4.12",
     sha1 = "2973d150c0dc1fefe998f834810d68f278ea58ec",
 )
@@ -1724,7 +1728,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_spy_spymemcached",
+    name = "net_spy_spymemcached",  # Do not use, but do not remove
     artifact = "net.spy:spymemcached:2.9.1",
     sha1 = "a09d5c077370dca14c0c967c5fb1b1fc9d24a02d",
 )
@@ -1737,13 +1741,13 @@ maven_jar(
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_continuation",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-continuation:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-continuation:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "4a26ae30011d933ac2c5f8d840e3374bc0d136eb",
 )
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_security",  # Do not use, but do not remove
-    artifact = "org.eclipse.jetty:jetty-security:9.0.7.v20131107",
+    artifact = "org.eclipse.jetty:jetty-security:%s" % ECLIPSE_JETTY_VERSION,
     sha1 = "023e7943c18e5c340455a40876ce5093c980c210",
 )
 
@@ -1868,7 +1872,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "commons_cli_commons_cli",
+    name = "commons_cli_commons_cli",  # Do not use, but do not remove
     artifact = "commons-cli:commons-cli:1.4",
     sha1 = "c51c00206bb913cd8612b24abd9fa98ae89719b1",
 )
@@ -1910,61 +1914,55 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_xmlunit_xmlunit_legacy",
+    name = "org_xmlunit_xmlunit_legacy",  # Do not use, but do not remove
     artifact = "org.xmlunit:xmlunit-legacy:2.1.1",
     sha1 = "e4d45154e0cef8334ccb7f3e0b8ebaf2596eb477",
 )
 
 maven_jar(
-    name = "org_xmlunit_xmlunit_core",
+    name = "org_xmlunit_xmlunit_core",  # Do not use, but do not remove
     artifact = "org.xmlunit:xmlunit-core:2.1.1",
     sha1 = "94840bd83168c7de36f3779e2514d0bf4ed8c9bc",
 )
 
 maven_jar(
-    name = "com_github_tomakehurst_wiremock",
-    artifact = "com.github.tomakehurst:wiremock:2.1.12",
-    sha1 = "898362f151219ce8eb659cb21115cca9b1c7ad48",
-)
-
-maven_jar(
     name = "org_eclipse_jetty_jetty_xml",
-    artifact = "org.eclipse.jetty:jetty-xml:9.2.13.v20150730",
+    artifact = "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
     sha1 = "9e17bdfb8c25d0cd377960326b79379df3181776",
 )
 
 maven_jar(
     name = "org_eclipse_jetty_jetty_webapp",
-    artifact = "org.eclipse.jetty:jetty-webapp:9.2.13.v20150730",
+    artifact = "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
     sha1 = "716b5cdea1e818cd0e36dfea791f620d49bd2d2a",
 )
 
 maven_jar(
-    name = "net_minidev_asm",
+    name = "net_minidev_asm",  # Do not use, but do not remove
     artifact = "net.minidev:asm:1.0.2",
     sha1 = "49f3068a4591b4aa6af553905ff2145685a21c2c",
 )
 
 maven_jar(
-    name = "net_sf_jopt_simple_jopt_simple",
+    name = "net_sf_jopt_simple_jopt_simple",  # Do not use, but do not remove
     artifact = "net.sf.jopt-simple:jopt-simple:4.9",
     sha1 = "ee9e9eaa0a35360dcfeac129ff4923215fd65904",
 )
 
 maven_jar(
-    name = "net_minidev_json_smart",
+    name = "net_minidev_json_smart",  # Do not use, but do not remove
     artifact = "net.minidev:json-smart:2.1.1",
     sha1 = "922d12fb1f394e2b6999ae0f7936ab13f4dffb81",
 )
 
 maven_jar(
-    name = "com_jayway_jsonpath_json_path",
+    name = "com_jayway_jsonpath_json_path",  # Do not use, but do not remove
     artifact = "com.jayway.jsonpath:json-path:2.0.0",
     sha1 = "26b8555596b3fb9652c1ffe193fa9123945b32cc",
 )
 
 maven_jar(
-    name = "com_flipkart_zjsonpatch_zjsonpatch",
+    name = "com_flipkart_zjsonpatch_zjsonpatch",  # Do not use, but do not remove
     artifact = "com.flipkart.zjsonpatch:zjsonpatch:0.2.1",
     sha1 = "f3f67d52dbf2ca6edc2ae0b3ae53488110e848c9",
 )
@@ -1976,7 +1974,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hamcrest_hamcrest_core",
+    name = "org_hamcrest_hamcrest_core",  # Do not use, but do not remove
     artifact = "org.hamcrest:hamcrest-core:1.3",
     sha1 = "42a25dc3219429f0e5d060061f71acb49bf010a0",
 )
@@ -2466,7 +2464,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_servlet_javax_servlet_api",
+    name = "javax_servlet_javax_servlet_api",  # Do not use, but do not remove
     artifact = "javax.servlet:javax.servlet-api:4.0.1",
     sha1 = "a27082684a2ff0bf397666c3943496c44541d1ca",
 )
@@ -2559,7 +2557,7 @@ maven_install(
     name = "aggregation",
     artifacts = [
         "aopalliance:aopalliance:1.0",
-        "asm:asm:3.1",
+        "asm:asm:3.3.1",
         "c3p0:c3p0:0.9.1.1",
         "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
         "ch.qos.logback.contrib:logback-json-classic:jar:0.1.5",
@@ -2591,6 +2589,7 @@ maven_install(
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
         "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
+        "com.flipkart.zjsonpatch:zjsonpatch:0.2.1",
         "com.github.javafaker:javafaker:1.0.2",
         "com.github.rholder:guava-retrying:2.0.0",
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
@@ -2606,6 +2605,7 @@ maven_install(
         "com.google.instrumentation:instrumentation-api:0.4.3",
         "com.google.protobuf:protobuf-java:3.5.1",
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
+        "com.jayway.jsonpath:json-path:2.0.0",
         "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
@@ -2616,6 +2616,7 @@ maven_install(
         "com.sun.jersey:jersey-server:1.18.1",
         "com.sun.jersey:jersey-servlet:1.18.1",
         "com.yubico:yubico-validation-client2:2.0.1",
+        "commons-cli:commons-cli:1.4",
         "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-httpclient:commons-httpclient:3.1",
@@ -2650,22 +2651,32 @@ maven_install(
         "io.netty:netty-transport:%s" % NETTY_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
+        "io.swagger:swagger-annotations:1.5.9",
         "io.vavr:vavr-jackson:0.10.0",
         "io.vavr:vavr-match:0.10.0",
         "io.vavr:vavr-test:0.10.0",
         "io.vavr:vavr:0.10.0",
         "javax.el:javax.el-api:2.2.5",
         "javax.inject:javax.inject:1",
+        "javax.servlet:javax.servlet-api:4.0.1",
         "javax.validation:validation-api:1.1.0.Final",
         "javax.xml.bind:jaxb-api:2.2.7",
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
+        "junit:junit:4.12",
         "log4j:log4j:1.2.14",
+        "mysql:mysql-connector-java:5.1.42",
         "net.bytebuddy:byte-buddy-agent:1.10.1",
         "net.bytebuddy:byte-buddy:1.10.1",
+        "net.java.dev.jna:jna:5.3.1",
+        "net.minidev:asm:1.0.2",
+        "net.minidev:json-smart:2.1.1",
+        "net.sf.jopt-simple:jopt-simple:4.9",
         "net.sourceforge.argparse4j:argparse4j:0.4.3",
         "net.sourceforge.cssparser:cssparser:0.9.16",
+        "net.spy:spymemcached:2.9.1",
         "org.apache.commons:commons-collections4:4.0",
+        "org.apache.commons:commons-csv:1.0",
         "org.apache.commons:commons-lang3:3.5",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
@@ -2676,15 +2687,16 @@ maven_install(
         "org.bouncycastle:bcprov-jdk15on:1.59",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
-        "org.eclipse.jetty:jetty-continuation:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-http:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-security:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-servlet:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
-        "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
+        "org.eclipse.jetty:jetty-continuation:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-http:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-io:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-security:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-server:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-servlet:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-servlets:%s" % ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-util:%s" % ECLIPSE_JETTY_VERSION,
         "org.glassfish.web:javax.el:2.2.6",
+        "org.hamcrest:hamcrest-core:1.3",
         "org.hibernate:hibernate-validator:5.1.1.Final",
         "org.iban4j:iban4j:3.1.0",
         "org.javassist:javassist:3.26.0-GA",
@@ -2696,6 +2708,8 @@ maven_install(
         "org.slf4j:jul-to-slf4j:1.7.6",
         "org.slf4j:slf4j-api:1.7.22",
         "org.w3c.css:sac:1.3",
+        "org.xmlunit:xmlunit-core:2.1.1",
+        "org.xmlunit:xmlunit-legacy:2.1.1",
         "org.yaml:snakeyaml:1.23",
         "xerces:xercesImpl:2.11.0",
         "xml-apis:xml-apis:1.4.01",
@@ -2713,6 +2727,57 @@ maven_install(
 load("@aggregation//:defs.bzl", aggregation_pin = "pinned_maven_install")
 
 aggregation_pin()
+
+# To be moved into the aggregation maven_install eventually
+maven_install(
+    name = "aggregation_temp",
+    artifacts = [
+        "com.github.tomakehurst:wiremock:2.1.12",
+    ],
+    excluded_artifacts = [
+        # Exclude ALL transitive dependencies of the artifacts above for now
+        "asm:asm",
+        "com.fasterxml.jackson.core:jackson-annotations",
+        "com.fasterxml.jackson.core:jackson-core",
+        "com.fasterxml.jackson.core:jackson-databind",
+        "com.flipkart.zjsonpatch:zjsonpatch",
+        "com.google.guava:guava",
+        "com.jayway.jsonpath:json-path",
+        "commons-codec:commons-codec",
+        "commons-logging:commons-logging",
+        "javax.servlet:javax.servlet-api",
+        "junit:junit",
+        "net.minidev:asm",
+        "net.minidev:json-smart",
+        "net.sf.jopt-simple:jopt-simple",
+        "org.apache.commons:commons-collections4",
+        "org.apache.commons:commons-lang3",
+        "org.apache.httpcomponents:httpclient",
+        "org.apache.httpcomponents:httpcore",
+        "org.eclipse.jetty:jetty-continuation",
+        "org.eclipse.jetty:jetty-http",
+        "org.eclipse.jetty:jetty-io",
+        "org.eclipse.jetty:jetty-security",
+        "org.eclipse.jetty:jetty-server",
+        "org.eclipse.jetty:jetty-servlet",
+        "org.eclipse.jetty:jetty-servlets",
+        "org.eclipse.jetty:jetty-util",
+        "org.eclipse.jetty:jetty-webapp",
+        "org.eclipse.jetty:jetty-xml",
+        "org.hamcrest:hamcrest-core",
+        "org.slf4j:slf4j-api",
+        "org.xmlunit:xmlunit-core",
+        "org.xmlunit:xmlunit-legacy",
+    ],
+    fetch_sources = True,
+    maven_install_json = "//third_party:aggregation_temp_install.json",
+    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
+    version_conflict_policy = "default",
+)
+
+load("@aggregation_temp//:defs.bzl", aggregation_temp_pin = "pinned_maven_install")
+
+aggregation_temp_pin()
 
 SPRING_FRAMEWORK_VERSION = "5.1.5.RELEASE"
 
