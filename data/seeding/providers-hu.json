@@ -104,7 +104,7 @@
             "credentialsType": "PASSWORD",
             "displayName": "Unicredit Hungary",
             "fields": [],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionId": "unicredit-hu",
             "multiFactor": false,
             "name": "hu-unicredit-oauth2",
             "passwordHelpText": null,
