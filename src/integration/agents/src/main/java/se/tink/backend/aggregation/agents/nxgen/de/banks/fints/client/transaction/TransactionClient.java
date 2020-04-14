@@ -44,13 +44,13 @@ public class TransactionClient {
         }
 
         Optional<String> maybeStartingPoint = extractStartingPoint(response);
-        LinkedList<FinTsResponse> responses = new LinkedList<>();
-
-        if (maybeStartingPoint.isPresent()) {
-            responses =
-                    getTransactionsResponsesRecurList(
-                            requestBuilder, account, maybeStartingPoint.get());
-        }
+        LinkedList<FinTsResponse> responses =
+                maybeStartingPoint
+                        .map(
+                                point ->
+                                        getTransactionsResponsesRecurList(
+                                                requestBuilder, account, point))
+                        .orElse(new LinkedList<>());
         responses.addFirst(response);
         return responses;
     }
