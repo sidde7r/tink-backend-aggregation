@@ -662,7 +662,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_transaction_jta",  # Do not use, but do not remove
+    name = "javax_transaction_jta",
     artifact = "javax.transaction:jta:1.1",
     sha1 = "2ca09f0b36ca7d71b762e14ea2ff09d5eac57558",
 )
@@ -984,7 +984,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "dom4j_dom4j",  # Do not use, but do not remove
+    name = "dom4j_dom4j",
     artifact = "dom4j:dom4j:1.6.1",
     sha1 = "5d3ccc056b6f056dbf0dddfdf43894b9065a8f94",
 )
@@ -1026,7 +1026,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_commons_annotations",  # Do not use, but do not remove
+    name = "org_hibernate_hibernate_commons_annotations",
     artifact = "org.hibernate:hibernate-commons-annotations:3.2.0.Final",
     sha1 = "ce990611448fc2865469e3b68d2fe76b050e3c4f",
 )
@@ -1098,7 +1098,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "antlr_antlr",  # Do not use, but do not remove
+    name = "antlr_antlr",
     artifact = "antlr:antlr:2.7.6",
     sha1 = "cf4f67dae5df4f9932ae7810f4548ef3e14dd35e",
 )
@@ -1123,8 +1123,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_codec_commons_codec",  # Do not use, but do not remove
-    artifact = "commons-codec:commons-codec:1.11",
-    sha1 = "3acb4705652e16236558f0f4f2192cc33c3bd189",
+    artifact = "commons-codec:commons-codec:1.10",
+    sha1 = "4b95f4897fa13f2cd904aee711aeafc0c5295cd8",
 )
 
 maven_jar(
@@ -1266,7 +1266,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_core",  # Do not use, but do not remove
+    name = "org_hibernate_hibernate_core",
     artifact = "org.hibernate:hibernate-core:3.5.4-Final",
     sha1 = "3f2e17bda96d7bffc6ec72c670ed442d5e9b0063",
 )
@@ -1508,7 +1508,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "cglib_cglib",  # Do not use, but do not remove
+    name = "cglib_cglib",
     artifact = "cglib:cglib:2.2",
     sha1 = "97d03461dc1c04ffc636dcb2579aae7724a78ef2",
 )
@@ -1562,7 +1562,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_entitymanager",  # Do not use, but do not remove
+    name = "org_hibernate_hibernate_entitymanager",
     artifact = "org.hibernate:hibernate-entitymanager:3.5.4-Final",
     sha1 = "23874caf98a2afb66581fde5b94d814c399c0063",
 )
@@ -1586,7 +1586,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_hibernate_annotations",  # Do not use, but do not remove
+    name = "org_hibernate_hibernate_annotations",
     artifact = "org.hibernate:hibernate-annotations:3.5.4-Final",
     sha1 = "56e3be054a0d3a99c0fd99582127fb87a6911333",
 )
@@ -2161,13 +2161,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_pdfbox_fontbox",  # Do not use, but do not remove
+    name = "org_apache_pdfbox_fontbox",
     artifact = "org.apache.pdfbox:fontbox:2.0.0",
     sha1 = "6f762d4e1c8ea99589d30597ef3731dfdcee43e2",
 )
 
 maven_jar(
-    name = "com_nimbusds_srp6a",  # Do not use, but do not remove
+    name = "com_nimbusds_srp6a",
     artifact = "com.nimbusds:srp6a:2.0.2",
     sha1 = "fc461127a39208502518ccbe51100c315e7625e8",
 )
@@ -2191,7 +2191,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_sun_media_jai_imageio",  # Do not use, but do not remove
+    name = "com_sun_media_jai_imageio",
     artifact = "com.github.jai-imageio:jai-imageio-core:1.4.0",
     sha1 = "fb6d79b929556362a241b2f65a04e538062f0077",
 )
@@ -2446,13 +2446,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_bitbucket_b_c_jose4j",  # Do not use, but do not remove
+    name = "org_bitbucket_b_c_jose4j",
     artifact = "org.bitbucket.b_c:jose4j:0.6.5",
     sha1 = "524470e6ad000e3938f4c0f5e08bd423e95bd43a",
 )
 
 maven_jar(
-    name = "net_jadler_jadler_all",  # Do not use, but do not remove
+    name = "net_jadler_jadler_all",
     artifact = "net.jadler:jadler-all:1.3.0",
     sha1 = "99b6b1ec94fc9671bfe97c1d47a740600f095d33",
 )
@@ -2556,7 +2556,6 @@ pinned_maven_install()
 maven_install(
     name = "aggregation",
     artifacts = [
-        "antlr:antlr:2.7.6",
         "aopalliance:aopalliance:1.0",
         "asm:asm:3.3.1",
         "c3p0:c3p0:0.9.1.1",
@@ -2591,11 +2590,9 @@ maven_install(
         "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
         "com.flipkart.zjsonpatch:zjsonpatch:0.2.1",
-        "com.github.jai-imageio:jai-imageio-core:1.4.0",
         "com.github.javafaker:javafaker:1.0.2",
         "com.github.rholder:guava-retrying:2.0.0",
         "com.github.stephenc.jcip:jcip-annotations:1.0-1",
-        "com.google.api.grpc:proto-google-common-protos:0.1.9",
         "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.code.gson:gson:2.8.2",
         "com.google.errorprone:error_prone_annotations:2.3.3",
@@ -2617,7 +2614,6 @@ maven_install(
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
         "com.netflix.governator:governator:1.17.2",
-        "com.nimbusds:srp6a:2.0.2",
         "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
         "com.sun.jersey:jersey-client:1.18.1",
         "com.sun.jersey:jersey-core:1.18.1",
@@ -2625,14 +2621,13 @@ maven_install(
         "com.sun.jersey:jersey-servlet:1.18.1",
         "com.yubico:yubico-validation-client2:2.0.1",
         "commons-cli:commons-cli:1.4",
-        "commons-codec:commons-codec:1.11",
+        "commons-codec:commons-codec:1.10",
         "commons-collections:commons-collections:3.2.2",
         "commons-httpclient:commons-httpclient:3.1",
         "commons-io:commons-io:2.5",
         "commons-lang:commons-lang:2.6",
         "commons-logging:commons-logging:1.2",
         "de.jollyday:jollyday:0.4.7",
-        "dom4j:dom4j:1.6.1",
         "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
         "io.dropwizard:dropwizard-configuration:0.7.1",
         "io.dropwizard:dropwizard-jackson:0.7.1",
@@ -2674,7 +2669,6 @@ maven_install(
         "javax.el:javax.el-api:2.2.5",
         "javax.inject:javax.inject:1",
         "javax.servlet:javax.servlet-api:4.0.1",
-        "javax.transaction:jta:1.1",
         "javax.validation:validation-api:1.1.0.Final",
         "javax.xml.bind:jaxb-api:2.2.7",
         "javax.xml.stream:stax-api:1.0-2",
@@ -2684,7 +2678,6 @@ maven_install(
         "mysql:mysql-connector-java:5.1.42",
         "net.bytebuddy:byte-buddy-agent:1.10.1",
         "net.bytebuddy:byte-buddy:1.10.1",
-        "net.jadler:jadler-all:1.3.0",
         "net.java.dev.jna:jna:5.3.1",
         "net.minidev:asm:1.0.2",
         "net.minidev:json-smart:2.1.1",
@@ -2700,8 +2693,6 @@ maven_install(
         "org.apache.logging.log4j:log4j-api:2.11.1",
         "org.apache.logging.log4j:log4j-core:2.11.1",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
-        "org.apache.pdfbox:fontbox:2.0.0",
-        "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
         "org.codehaus.woodstox:stax2-api:4.1",
@@ -2717,9 +2708,6 @@ maven_install(
         "org.glassfish.web:javax.el:2.2.6",
         "org.hamcrest:hamcrest-core:1.3",
         "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
-        "org.hibernate:hibernate-annotations:3.5.4-Final",
-        "org.hibernate:hibernate-commons-annotations:3.2.0.Final",
-        "org.hibernate:hibernate-core:3.5.4-Final",
         "org.hibernate:hibernate-validator:5.1.1.Final",
         "org.iban4j:iban4j:3.1.0",
         "org.javassist:javassist:3.26.0-GA",
@@ -2946,7 +2934,6 @@ maven_install(
         "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.errorprone:error_prone_annotations:2.3.3",
         "com.google.guava:guava:25.1-jre",
-        "commons-codec:commons-codec:1.11",
         "commons-io:commons-io:2.5",
         "net.bytebuddy:byte-buddy:1.10.1",
         "org.seleniumhq.selenium:selenium-android-driver:2.39.0",

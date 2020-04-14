@@ -111,6 +111,7 @@ java_library(
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
         "//third_party:org_bouncycastle_bcprov_jdk15on",
+        "//third_party:org_hibernate_hibernate_entitymanager",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_json_json",
         "//third_party:org_jsoup_jsoup",
