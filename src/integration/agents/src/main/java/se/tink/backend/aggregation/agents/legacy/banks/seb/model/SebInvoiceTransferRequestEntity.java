@@ -4,14 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.date.CountryDateHelper;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -20,8 +16,6 @@ public class SebInvoiceTransferRequestEntity extends SebTransferRequestEntity {
     private static final String SE_BG_ID = "BG";
     private static final String SE_PG_ID = "PG";
     private static final int MSG_LINE_SIZE = 25;
-    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
-    private static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
 
     private SebInvoiceTransferRequestEntity(Transfer transfer, String customerNumber) {
         super(transfer, customerNumber);
@@ -34,14 +28,7 @@ public class SebInvoiceTransferRequestEntity extends SebTransferRequestEntity {
     }
 
     public void setDate(Date dueDate) {
-        if (dueDate == null) {
-            CountryDateHelper dateHelper =
-                    new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
-
-            dueDate = dateHelper.getNextBusinessDay();
-        }
-
-        this.transferDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate);
+        this.transferDate = SEBDateUtil.getTransferDateForBgPg(dueDate);
     }
 
     /**

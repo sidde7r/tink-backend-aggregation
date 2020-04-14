@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
-import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
@@ -19,8 +18,7 @@ public class SebBankTransferRequestEntity extends SebTransferRequestEntity {
     private SebBankTransferRequestEntity(
             Transfer transfer, String customerNumber, boolean withinSEB) {
         super(transfer, customerNumber);
-        Date dueDate = transfer.getDueDate() == null ? new Date() : transfer.getDueDate();
-        transferDate = SEBDateUtil.nextPossibleTransferDate(dueDate, withinSEB);
+        transferDate = SEBDateUtil.nextPossibleTransferDate(transfer.getDueDate(), withinSEB);
     }
 
     /**
