@@ -18,8 +18,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "eab9d48aca91445e9fbf2523564f4577",
+            "financialInstitutionName": "AIB",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-aib-oauth2",
@@ -98,8 +98,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "d660f95b315a49d493952778ee23b509",
+            "financialInstitutionName": "Bank of Scotland",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-bankofscotland-oauth2",
@@ -128,8 +128,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "0ee1cda5943e4662bb9775c34de291d6",
+            "financialInstitutionName": "Barclays",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-barclays-oauth2",
@@ -158,8 +158,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "a79ad0e69fbd4b7cb508ce465b1676f1",
+            "financialInstitutionName": "Danske Bank",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-danskebank-oauth2",
@@ -185,8 +185,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "a6000872703d411ca8edd9f3ac6ce931",
+            "financialInstitutionName": "First Direct",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-firstdirect-oauth2",
@@ -215,8 +215,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "793c6ee3633a4d5d8e0f5bad26f3bb50",
+            "financialInstitutionName": "First Trust",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-firsttrust-oauth2",
@@ -245,8 +245,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "f6201a95cedb4baba006c8b67fe39ed2",
+            "financialInstitutionName": "Halifax",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-halifax-oauth2",
@@ -272,8 +272,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "6cd6d369ba8e4d72b1a7d26dabe509a3",
+            "financialInstitutionName": "HSBC",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-hsbc-oauth2",
@@ -302,8 +302,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "16343e744a874337b11efdd7cbd25a53",
+            "financialInstitutionName": "Lloyds",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-lloyds-oauth2",
@@ -329,8 +329,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "47d97a96282842daa8c66ad79028f4af",
+            "financialInstitutionName": "M&S Bank",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-markandspencer-oauth2",
@@ -379,8 +379,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "cbdc2976566048f0902600354890d585",
+            "financialInstitutionName": "Monzo",
             "groupDisplayName": "Monzo",
             "multiFactor": false,
             "name": "uk-monzo-oauth2",
@@ -432,8 +432,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "75567817eaba4709b392ae7a4255790a",
+            "financialInstitutionName": "Nationwide Bank",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-nationwide-oauth2",
@@ -462,8 +462,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "2ad9cb1542c54c098653a73d7b75c11c",
+            "financialInstitutionName": "NatWest",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-natwest-oauth2",
@@ -492,8 +492,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "ed47ff3492924bf5855df4d780cdffdc",
+            "financialInstitutionName": "Royal Bank of Scotland",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-rbs-oauth2",
@@ -549,8 +549,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "f3b43a6564bb4c6baf25482f4723dbdb",
+            "financialInstitutionName": "Santander",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-santander-oauth2",
@@ -576,8 +576,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "b615ccc66e4b4ed1876e80ad397acf56",
+            "financialInstitutionName": "Starling",
             "multiFactor": false,
             "name": "uk-starling-oauth2",
             "passwordHelpText": "",
@@ -600,8 +600,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "2a96c078aa5e4722b076a096688f435d",
+            "financialInstitutionName": "Tesco Bank",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-tesco-oauth2",
@@ -876,8 +876,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "a4667f95a9c4464eb505dd5e3543d41e",
+            "financialInstitutionName": "TSB Bank",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-tsb-oauth2",
@@ -906,8 +906,8 @@
                     "value": "Connecting your bank"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "0c7ba941addb428c83d6ea554ecace56",
+            "financialInstitutionName": "Ulster Bank",
             "groupDisplayName": "",
             "multiFactor": false,
             "name": "uk-ulster-oauth2",
