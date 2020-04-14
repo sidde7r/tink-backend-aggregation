@@ -14,7 +14,7 @@ public class SEBDateUtil {
     private static final CountryDateHelper dateHelper =
             new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
 
-    public static String nextPossibleTransferDate(Date date, boolean withinSEB) {
+    public static String getTransferDate(Date date, boolean withinSEB) {
         Date nextPossibleDate =
                 withinSEB
                         ? dateHelper.getTransferDate(date, 19, 00)

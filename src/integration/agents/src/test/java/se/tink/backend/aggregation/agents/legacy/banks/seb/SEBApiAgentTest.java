@@ -278,7 +278,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
 
     private static Date createUpComingValidDueDate() throws ParseException {
         String validDateString =
-                SEBDateUtil.nextPossibleTransferDate(new DateTime().plusDays(1).toDate(), false);
+                SEBDateUtil.getTransferDate(new DateTime().plusDays(1).toDate(), false);
         return ThreadSafeDateFormat.FORMATTER_DAILY.parse(validDateString);
     }
 
