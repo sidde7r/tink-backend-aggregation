@@ -872,7 +872,9 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionId": "bf1f1d0ad7a04c64a32b998c4d2cd2bb",
+            "financialInstitutionName": "Danske Bank"
         },
         {
             "accessType": "OTHER",
@@ -974,8 +976,8 @@
                     "patternError": "Please enter a valid national ID number."
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "3d97e205528e405aa73af5234e39b1d3",
+            "financialInstitutionName": "DNB",
             "multiFactor": false,
             "name": "no-dnb-ob",
             "passwordHelpText": "Please authenticate to use this bank.",
@@ -2950,8 +2952,8 @@
             "credentialsType": "PASSWORD",
             "displayName": "Nordea",
             "fields": [],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "d8b65f2eedf349679d00252e1e4f6875",
+            "financialInstitutionName": "Nordea",
             "multiFactor": false,
             "name": "no-nordea-ob",
             "passwordHelpText": "Please authenticate to use this bank.",
@@ -2986,7 +2988,7 @@
             "credentialsType": "PASSWORD",
             "displayName": "Norwegian",
             "fields": [],
-            "financialInstitutionId": "dummyId",
+            "financialInstitutionId": "cbb4cdfdc6804b3a92577be88b6bd7f3",
             "financialInstitutionName": "Norwegian Bank",
             "multiFactor": false,
             "name": "no-norwegian-ob",
