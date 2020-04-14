@@ -16,7 +16,8 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionName": "ABN AMRO"
         },
         {
             "accessType": "OPEN_BANKING",
@@ -33,7 +34,8 @@
             "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionName": "ABN AMRO"
         },
         {
             "accessType": "OPEN_BANKING",
@@ -68,7 +70,8 @@
             "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionName": "ASN Bank"
         },
         {
             "accessType": "OTHER",
@@ -158,7 +161,7 @@
             "credentialsType": "PASSWORD",
             "displayName": "Handelsbanken",
             "fields": [],
-            "financialInstitutionId": "dummyId",
+            "financialInstitutionId": "handelsbanken",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "nl-handelsbanken-oauth2",
@@ -185,7 +188,8 @@
             "status": "ENABLED",
             "transactional": "true",
             "tutorialUrl": null,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionName": "ICS"
         },
         {
             "accessType": "OPEN_BANKING",
@@ -193,7 +197,7 @@
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "ING",
             "fields": [],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionId": "a87e0b36cb9542e49ede8d768299f0dc",
             "financialInstitutionName": "ING",
             "multiFactor": true,
             "name": "nl-ing-ob",
@@ -383,7 +387,7 @@
             "credentialsType": "PASSWORD",
             "displayName": "Triodos",
             "fields": [],
-            "financialInstitutionId": "dummyId",
+            "financialInstitutionId": "triodos",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "nl-triodos-ob",
