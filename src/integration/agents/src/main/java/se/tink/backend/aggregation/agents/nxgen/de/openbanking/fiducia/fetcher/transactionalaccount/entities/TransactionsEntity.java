@@ -23,7 +23,7 @@ public class TransactionsEntity {
 
     private List<TransactionEntity> booked;
 
-    public Collection<? extends Transaction> toTinkTransactions() {
+    public Collection<Transaction> toTinkTransactions() {
         return Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
                 .map(TransactionEntity::toBookedTransaction)
                 .collect(Collectors.toList());

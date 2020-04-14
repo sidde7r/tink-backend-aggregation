@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LinksEntity {
     private LinkDetailsEntity scaRedirect;
     private LinkDetailsEntity scaOAuth;
-    private LinkDetailsEntity self;
 
     public LinkDetailsEntity getAuthorizeUrl() {
         return Optional.ofNullable(scaRedirect).orElse(scaOAuth);

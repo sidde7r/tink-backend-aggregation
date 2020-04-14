@@ -10,14 +10,14 @@ public final class FiduciaConstants {
 
     public static final String SIGNATURE_HEADER =
             "keyId=\"%s\",algorithm=\"SHA256withRSA\",headers=\"%s\",signature=\"%s\"";
-    public static final List<String> HEADERS_TO_SIGN =
+    static final List<String> HEADERS_TO_SIGN =
             Arrays.asList(
-                    "date",
-                    "digest",
-                    "x-request-id",
-                    "psu-id",
+                    HeaderKeys.DATE,
+                    HeaderKeys.DIGEST,
+                    HeaderKeys.X_REQUEST_ID,
+                    HeaderKeys.PSU_ID,
                     "psu-corporate-id",
-                    "tpp-redirect-uri");
+                    HeaderKeys.TPP_REDIRECT_URI);
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder()

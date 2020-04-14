@@ -1,18 +1,16 @@
-package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.entity.UnicreditConsentLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.entity.UnicreditConsentLinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class UnicreditConsentResponse implements ConsentResponse {
 
-    private String consentStatus;
     private String consentId;
 
     @JsonProperty("_links")
