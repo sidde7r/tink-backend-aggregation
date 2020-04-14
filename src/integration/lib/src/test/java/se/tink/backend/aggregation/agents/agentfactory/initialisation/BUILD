@@ -9,6 +9,7 @@ junit_test(
         "//data:agents",
         "//data:aggregation_test",
         "//data:cryptography_all_files",
+		"//data:provider_configurations",
         "//data:cryptography_test",
         "//data:eidas_dev",
         "//etc:development",

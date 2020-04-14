@@ -123,7 +123,14 @@ public class AgentInitialisationTest {
                     "banks.danskebank.v2.DanskeBankV2Agent",
                     "abnamro.AbnAmroAgent",
                     "nxgen.se.openbanking.alandsbanken.AlandsbankenAgent",
-                    "nxgen.serviceproviders.banks.n26.N26Agent");
+                    "nxgen.serviceproviders.banks.n26.N26Agent",
+                    "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent",
+                    "nxgen.dk.openbanking.sebkort.eurocard.EurocardDKAgent",
+                    "nxgen.se.banks.nordea.partner.NordeaPartnerSeAgent",
+                    "nxgen.dk.banks.nordeapartner.NordeaPartnerDkAgent",
+                    "nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent",
+                    "nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent",
+                    "nxgen.de.openbanking.postbank.PostbankAgent");
 
     private static AggregationServiceConfiguration readConfiguration(String filePath)
             throws IOException, ConfigurationException {
@@ -274,7 +281,8 @@ public class AgentInitialisationTest {
         try {
             configuration = readConfiguration("etc/test.yml");
             providerConfigurationsForEnabledProviders =
-                    getProviderConfigurationsForEnabledProviders("data/seeding/");
+                    getProviderConfigurationsForEnabledProviders(
+                            "external/tink_backend/src/provider_configuration/data/seeding/");
 
             providerConfigurationsForEnabledProviders.sort(
                     (p1, p2) -> p1.getName().compareTo(p2.getName()));

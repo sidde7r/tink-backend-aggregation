@@ -1,3 +1,9 @@
+alias(
+    name = "provider_configurations",
+    actual = "@tink_backend//src/provider_configuration/data/seeding",
+    visibility = ["//visibility:public"],
+)
+
 filegroup(
     name = "data",
     srcs = glob(
@@ -54,7 +60,6 @@ filegroup(
         "aggregation/**",
         "demo/**",
         "eidas_dev_certificates/**",
-        "seeding/providers-*.json",
     ]),
     visibility = ["//visibility:public"],
 )
