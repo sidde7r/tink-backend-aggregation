@@ -16,6 +16,8 @@ public class UpdateTransactionsRequest {
     private int credentialsDataVersion;
     private boolean userTriggered;
     private String topic;
+    private CredentialsRequestType requestType;
+    private String aggregationId;
 
     public String getCredentials() {
         return credentials;
@@ -73,5 +75,21 @@ public class UpdateTransactionsRequest {
                 .add("userTriggered", userTriggered)
                 .add("transactions", transactions)
                 .toString();
+    }
+
+    public CredentialsRequestType getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(CredentialsRequestType requestType) {
+        this.requestType = requestType;
+    }
+
+    public String getAggregationId() {
+        return aggregationId;
+    }
+
+    public void setAggregationId(String aggregationId) {
+        this.aggregationId = aggregationId;
     }
 }
