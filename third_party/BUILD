@@ -731,11 +731,11 @@ java_library(
     exports = [
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:io_opencensus_opencensus_api",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_core//jar",
         "@io_grpc_grpc_protobuf_lite//jar",
         "@io_grpc_grpc_protobuf_nano//jar",
-        "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
     ],
 )
@@ -1091,6 +1091,7 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:commons_collections_commons_collections",
+        "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:xml_apis_xml_apis",
         "@antlr_antlr//jar",
@@ -1099,7 +1100,6 @@ java_library(
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_commons_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
-        "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
     ],
 )
 
@@ -1108,13 +1108,13 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@aggregation//:asm_asm",
+        "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "@aggregation//:org_javassist_javassist",
         "@aggregation//:org_slf4j_slf4j_api",
         "@cglib_cglib//jar",
         "@org_hibernate_hibernate_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
         "@org_hibernate_hibernate_entitymanager//jar",
-        "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
     ],
 )
 
@@ -1133,7 +1133,7 @@ java_library(
     name = "org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
+        "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
     ],
 )
 
@@ -1149,7 +1149,7 @@ java_library(
     name = "org_json_json",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_json_json//jar",
+        "@aggregation//:org_json_json",
     ],
 )
 
@@ -1157,7 +1157,7 @@ java_library(
     name = "org_jsoup_jsoup",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_jsoup_jsoup//jar",
+        "@aggregation//:org_jsoup_jsoup",
     ],
 )
 
@@ -1165,7 +1165,7 @@ java_library(
     name = "org_modelmapper_modelmapper",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_modelmapper_modelmapper//jar",
+        "@aggregation//:org_modelmapper_modelmapper",
     ],
 )
 
@@ -1173,7 +1173,7 @@ java_library(
     name = "org_mozilla_rhino",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_mozilla_rhino//jar",
+        "@aggregation//:org_mozilla_rhino",
     ],
 )
 
@@ -1181,7 +1181,7 @@ java_library(
     name = "org_objenesis_objenesis",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_objenesis_objenesis//jar",
+        "@aggregation//:org_objenesis_objenesis",
     ],
 )
 
@@ -1189,7 +1189,7 @@ java_library(
     name = "org_pojava_pojava",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_pojava_pojava//jar",
+        "@aggregation//:org_pojava_pojava",
     ],
 )
 
@@ -1413,6 +1413,7 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_google_instrumentation_instrumentation_api",
         "@aggregation//:com_google_protobuf_protobuf_java",
+        "@aggregation//:com_google_protobuf_protobuf_java_util",
         "@aggregation//:io_grpc_grpc_context",
         "@aggregation//:io_netty_netty_buffer",
         "@aggregation//:io_netty_netty_codec",
@@ -1426,8 +1427,8 @@ java_library(
         "@aggregation//:io_netty_netty_resolver",
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
+        "@aggregation//:io_opencensus_opencensus_api",
         "@com_google_api_grpc_proto_google_common_protos//jar",
-        "@com_google_protobuf_protobuf_java_util//jar",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_auth//jar",
         "@io_grpc_grpc_core//jar",
@@ -1437,7 +1438,6 @@ java_library(
         "@io_grpc_grpc_protobuf_nano//jar",
         "@io_grpc_grpc_stub//jar",
         "@io_grpc_grpc_testing//jar",
-        "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_contrib_grpc_metrics//jar",
     ],
 )
@@ -1454,11 +1454,11 @@ java_library(
     name = "prometheus",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_prometheus_simpleclient_common_skeleton_version//jar",
-        "@io_prometheus_simpleclient_hotspot_skeleton_version//jar",
-        "@io_prometheus_simpleclient_httpserver//jar",
-        "@io_prometheus_simpleclient_pushgateway//jar",
-        "@io_prometheus_simpleclient_skeleton_version//jar",
+        "@aggregation//:io_prometheus_simpleclient",
+        "@aggregation//:io_prometheus_simpleclient_common",
+        "@aggregation//:io_prometheus_simpleclient_hotspot",
+        "@aggregation//:io_prometheus_simpleclient_httpserver",
+        "@aggregation//:io_prometheus_simpleclient_pushgateway",
     ],
 )
 
@@ -1466,8 +1466,8 @@ java_library(
     name = "zxing-qrcode",
     visibility = ["//visibility:public"],
     exports = [
-        "@com_google_zxing_qrcode_core//jar",
-        "@com_google_zxing_qrcode_javase//jar",
+        "@aggregation//:com_google_zxing_core",
+        "@aggregation//:com_google_zxing_javase",
     ],
 )
 
@@ -1564,14 +1564,14 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:com_google_code_gson_gson",
+        "@aggregation//:com_jcraft_jzlib",
         "@aggregation//:io_netty_netty_buffer",
         "@aggregation//:io_netty_netty_codec",
         "@aggregation//:io_netty_netty_codec_http",
         "@aggregation//:io_netty_netty_common",
         "@aggregation//:io_netty_netty_handler",
         "@aggregation//:io_netty_netty_transport",
-        "@com_jcract_jzlib//jar",
-        "@org_mockito_mockito_core//jar",
+        "@aggregation//:org_mockito_mockito_core",
     ],
 )
 
@@ -1587,9 +1587,9 @@ java_library(
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_apache_logging_log4j_log4j_api",
         "@aggregation//:org_apache_logging_log4j_log4j_core",
+        "@aggregation//:org_mockito_mockito_core",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@com_oracle_substratevm_svm//jar",
-        "@org_mockito_mockito_core//jar",
+        "@aggregation_temp//:com_oracle_substratevm_svm",
     ],
 )
 
@@ -1605,7 +1605,7 @@ java_library(
         "@aggregation//:io_netty_netty_tcnative_boringssl_static",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
-        "@org_mockito_mockito_core//jar",
+        "@aggregation//:org_mockito_mockito_core",
     ],
 )
 
@@ -1621,12 +1621,12 @@ java_library(
     name = "org_mockito_mockito_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_mockito_mockito_core//jar",
+        "@aggregation//:org_mockito_mockito_core",
     ],
     runtime_deps = [
         "@aggregation//:net_bytebuddy_byte_buddy",
         "@aggregation//:net_bytebuddy_byte_buddy_agent",
-        "@org_objenesis_objenesis//jar",
+        "@aggregation//:org_objenesis_objenesis",
     ],
 )
 
@@ -1638,7 +1638,7 @@ java_library(
     ],
     runtime_deps = [
         "@aggregation//:io_netty_netty_common",
-        "@org_mockito_mockito_core//jar",
+        "@aggregation//:org_mockito_mockito_core",
     ],
 )
 

@@ -312,7 +312,7 @@ protobuf_deps()
 OPENCENSUS_VERSION = "0.21.0"
 
 maven_jar(
-    name = "io_opencensus_opencensus_api",
+    name = "io_opencensus_opencensus_api",  # Do not use, but do not remove
     artifact = "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
     sha1 = "73c07fe6458840443f670b21c7bf57657093b4e1",
 )
@@ -368,7 +368,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_mozilla_rhino",
+    name = "org_mozilla_rhino",  # Do not use, but do not remove
     artifact = "org.mozilla:rhino:1.7R4",
     sha1 = "e982f2136574b9a423186fbaeaaa98dc3e5a5288",
 )
@@ -554,7 +554,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_pojava_pojava",
+    name = "org_pojava_pojava",  # Do not use, but do not remove
     artifact = "org.pojava:pojava:2.8.1",
     sha1 = "4b9b3afd3c58a6b3eb91c50a4cae1bf58e3e7c73",
 )
@@ -645,8 +645,8 @@ maven_jar(
 
 maven_jar(
     name = "log4j_log4j",  # Do not use, but do not remove
-    artifact = "log4j:log4j:1.2.14",
-    sha1 = "03b254c872b95141751f414e353a25c2ac261b51",
+    artifact = "log4j:log4j:1.2.17",
+    sha1 = "5af35056b4d257e4b64b9e8069c0746e8b08629f",
 )
 
 maven_jar(
@@ -882,7 +882,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_jsoup_jsoup",
+    name = "org_jsoup_jsoup",  # Do not use, but do not remove
     artifact = "org.jsoup:jsoup:1.7.2",
     sha1 = "d7e275ba05aa380ca254f72d0c0ffebaedc3adcf",
 )
@@ -1050,7 +1050,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_json_json",
+    name = "org_json_json",  # Do not use, but do not remove
     artifact = "org.json:json:20080701",
     sha1 = "d652f102185530c93b66158b1859f35d45687258",
 )
@@ -1212,7 +1212,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_modelmapper_modelmapper",
+    name = "org_modelmapper_modelmapper",  # Do not use, but do not remove
     artifact = "org.modelmapper:modelmapper:1.1.0",
     sha1 = "98b2cbf292dad9e284124e5d4c1f97771d9333a3",
 )
@@ -1416,7 +1416,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+    name = "org_hibernate_javax_persistence_hibernate_jpa_2_0_api",  # Do not use, but do not remove
     artifact = "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
     sha1 = "6728add2c60f6621c3a77ba71fe6f6b798d14ee0",
 )
@@ -2016,7 +2016,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_objenesis_objenesis",
+    name = "org_objenesis_objenesis",  # Do not use, but do not remove
     artifact = "org.objenesis:objenesis:2.6",
     sha1 = "639033469776fd37c08358c6b92a4761feb2af4b",
 )
@@ -2221,49 +2221,49 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_protobuf_protobuf_java_util",
+    name = "com_google_protobuf_protobuf_java_util",  # Do not use, but do not remove
     artifact = "com.google.protobuf:protobuf-java-util:3.5.1",
     sha1 = "6e40a6a3f52455bd633aa2a0dba1a416e62b4575",
 )
 
 maven_jar(
-    name = "com_google_zxing_qrcode_core",
+    name = "com_google_zxing_qrcode_core",  # Do not use, but do not remove
     artifact = "com.google.zxing:core:3.3.3",
     sha1 = "b640badcc97f18867c4dfd249ef8d20ec0204c07",
 )
 
 maven_jar(
-    name = "com_google_zxing_qrcode_javase",
+    name = "com_google_zxing_qrcode_javase",  # Do not use, but do not remove
     artifact = "com.google.zxing:javase:3.3.3",
     sha1 = "44d02048349c96eacb394af7978b3e6f1777bb02",
 )
 
 maven_jar(
-    name = "io_prometheus_simpleclient_skeleton_version",
+    name = "io_prometheus_simpleclient_skeleton_version",  # Do not use, but do not remove
     artifact = "io.prometheus:simpleclient:0.5.0",
     sha1 = "fbbfe2300098798e3d23f93b7b14befeceacf512",
 )
 
 maven_jar(
-    name = "io_prometheus_simpleclient_hotspot_skeleton_version",
+    name = "io_prometheus_simpleclient_hotspot_skeleton_version",  # Do not use, but do not remove
     artifact = "io.prometheus:simpleclient_hotspot:0.5.0",
     sha1 = "0f341cb84d6713255b1ce46c7593eee50a35d414",
 )
 
 maven_jar(
-    name = "io_prometheus_simpleclient_httpserver",
+    name = "io_prometheus_simpleclient_httpserver",  # Do not use, but do not remove
     artifact = "io.prometheus:simpleclient_httpserver:0.5.0",
     sha1 = "53fbb42b6501cee3c879ed2f8f86b64b105604aa",
 )
 
 maven_jar(
-    name = "io_prometheus_simpleclient_pushgateway",
+    name = "io_prometheus_simpleclient_pushgateway",  # Do not use, but do not remove
     artifact = "io.prometheus:simpleclient_pushgateway:0.5.0",
     sha1 = "92e164e6094dea346fd8f1e1a0a96f6a91c149ff",
 )
 
 maven_jar(
-    name = "io_prometheus_simpleclient_common_skeleton_version",
+    name = "io_prometheus_simpleclient_common_skeleton_version",  # Do not use, but do not remove
     artifact = "io.prometheus:simpleclient_common:0.5.0",
     sha1 = "bfd93082d7cf85c0543c2ccc286b96c817d1090c",
 )
@@ -2311,7 +2311,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_jcract_jzlib",
+    name = "com_jcract_jzlib",  # Do not use, but do not remove
     artifact = "com.jcraft:jzlib:1.1.3",
     sha1 = "c01428efa717624f7aabf4df319939dda9646b2d",
 )
@@ -2325,13 +2325,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_mockito_mockito_core",
+    name = "org_mockito_mockito_core",  # Do not use, but do not remove
     artifact = "org.mockito:mockito-core:3.0.0",
     sha1 = "15fd0225cb1858f6922f44776b1577ac26739279",
 )
 
 maven_jar(
-    name = "com_oracle_substratevm_svm",
+    name = "com_oracle_substratevm_svm",  # Do not use, but do not remove
     artifact = "com.oracle.substratevm:svm:19.0.0",
     sha1 = "e1cba96c39e75e62fd8cc50978ef7d6cfeaf39f9",
 )
@@ -2603,9 +2603,13 @@ maven_install(
         "com.google.inject.extensions:guice-multibindings:4.2.2",
         "com.google.inject:guice:4.2.2",
         "com.google.instrumentation:instrumentation-api:0.4.3",
+        "com.google.protobuf:protobuf-java-util:3.5.1",
         "com.google.protobuf:protobuf-java:3.5.1",
+        "com.google.zxing:core:3.3.3",
+        "com.google.zxing:javase:3.3.3",
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.jayway.jsonpath:json-path:2.0.0",
+        "com.jcraft:jzlib:1.1.3",
         "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
@@ -2649,7 +2653,13 @@ maven_install(
         "io.netty:netty-resolver:%s" % NETTY_VERSION,
         "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
         "io.netty:netty-transport:%s" % NETTY_VERSION,
+        "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
+        "io.prometheus:simpleclient:0.5.0",
+        "io.prometheus:simpleclient_common:0.5.0",
+        "io.prometheus:simpleclient_hotspot:0.5.0",
+        "io.prometheus:simpleclient_httpserver:0.5.0",
+        "io.prometheus:simpleclient_pushgateway:0.5.0",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "io.swagger:swagger-annotations:1.5.9",
         "io.vavr:vavr-jackson:0.10.0",
@@ -2664,7 +2674,7 @@ maven_install(
         "javax.xml.stream:stax-api:1.0-2",
         "joda-time:joda-time:2.9.9",
         "junit:junit:4.12",
-        "log4j:log4j:1.2.14",
+        "log4j:log4j:1.2.17",
         "mysql:mysql-connector-java:5.1.42",
         "net.bytebuddy:byte-buddy-agent:1.10.1",
         "net.bytebuddy:byte-buddy:1.10.1",
@@ -2697,11 +2707,19 @@ maven_install(
         "org.eclipse.jetty:jetty-util:%s" % ECLIPSE_JETTY_VERSION,
         "org.glassfish.web:javax.el:2.2.6",
         "org.hamcrest:hamcrest-core:1.3",
+        "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
         "org.hibernate:hibernate-validator:5.1.1.Final",
         "org.iban4j:iban4j:3.1.0",
         "org.javassist:javassist:3.26.0-GA",
         "org.jboss.logging:jboss-logging:3.1.3.GA",
+        "org.json:json:20080701",
+        "org.jsoup:jsoup:1.7.2",
+        "org.mockito:mockito-core:3.0.0",
+        "org.modelmapper:modelmapper:1.1.0",
+        "org.mozilla:rhino:1.7R4",
+        "org.objenesis:objenesis:2.6",
         "org.ow2.asm:asm:5.0.4",
+        "org.pojava:pojava:2.8.1",
         "org.reactivestreams:reactive-streams:1.0.3",
         "org.reflections:reflections:0.9.11",
         "org.slf4j:jcl-over-slf4j:1.7.6",
@@ -2733,6 +2751,7 @@ maven_install(
     name = "aggregation_temp",
     artifacts = [
         "com.github.tomakehurst:wiremock:2.1.12",
+        "com.oracle.substratevm:svm:19.0.0",
     ],
     excluded_artifacts = [
         # Exclude ALL transitive dependencies of the artifacts above for now
@@ -2743,6 +2762,12 @@ maven_install(
         "com.flipkart.zjsonpatch:zjsonpatch",
         "com.google.guava:guava",
         "com.jayway.jsonpath:json-path",
+        "com.oracle.substratevm:objectfile",
+        "com.oracle.substratevm:pointsto",
+        "com.oracle.substratevm:svm-hosted-native-darwin-amd64",
+        "com.oracle.substratevm:svm-hosted-native-linux-amd64",
+        "com.oracle.substratevm:svm-hosted-native-windows-amd64",
+        "commons-cli:commons-cli",
         "commons-codec:commons-codec",
         "commons-logging:commons-logging",
         "javax.servlet:javax.servlet-api",
@@ -2764,6 +2789,10 @@ maven_install(
         "org.eclipse.jetty:jetty-util",
         "org.eclipse.jetty:jetty-webapp",
         "org.eclipse.jetty:jetty-xml",
+        "org.graalvm.compiler:compiler",
+        "org.graalvm.sdk:graal-sdk",
+        "org.graalvm.truffle:truffle-api",
+        "org.graalvm.truffle:truffle-nfi",
         "org.hamcrest:hamcrest-core",
         "org.slf4j:slf4j-api",
         "org.xmlunit:xmlunit-core",
