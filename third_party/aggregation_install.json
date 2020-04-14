@@ -3,32 +3,6 @@
         "conflict_resolution": {},
         "dependencies": [
             {
-                "coord": "antlr:antlr:2.7.6",
-                "file": "v1/https/repo1.maven.org/maven2/antlr/antlr/2.7.6/antlr-2.7.6.jar",
-                "directDependencies": [],
-                "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/antlr/antlr/2.7.6/antlr-2.7.6.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/antlr/antlr/2.7.6/antlr-2.7.6.jar",
-                    "https://jcenter.bintray.com/antlr/antlr/2.7.6/antlr-2.7.6.jar",
-                    "https://maven.google.com/antlr/antlr/2.7.6/antlr-2.7.6.jar"
-                ],
-                "sha256": "df74f330d36526ff9e717731fd855152fcff51618f0b5785d0049022f89d568b"
-            },
-            {
-                "coord": "antlr:antlr:jar:sources:2.7.6",
-                "file": "v1/https/repo1.maven.org/maven2/antlr/antlr/2.7.6/antlr-2.7.6-sources.jar",
-                "directDependencies": [],
-                "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/antlr/antlr/2.7.6/antlr-2.7.6-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/antlr/antlr/2.7.6/antlr-2.7.6-sources.jar",
-                    "https://jcenter.bintray.com/antlr/antlr/2.7.6/antlr-2.7.6-sources.jar",
-                    "https://maven.google.com/antlr/antlr/2.7.6/antlr-2.7.6-sources.jar"
-                ],
-                "sha256": "1dab4632bef2585ece00c9973bd74266ffd2d75270cced73e6e0b9dad93abf38"
-            },
-            {
                 "coord": "aopalliance:aopalliance:1.0",
                 "file": "v1/https/repo1.maven.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar",
                 "directDependencies": [],
@@ -408,10 +382,10 @@
                 "dependencies": [
                     "com.codahale.metrics:metrics-core:3.0.2",
                     "commons-logging:commons-logging:1.2",
-                    "commons-codec:commons-codec:1.11",
                     "org.apache.httpcomponents:httpclient:4.3.4",
                     "org.apache.httpcomponents:httpcore:4.3.2",
-                    "org.slf4j:slf4j-api:1.7.22"
+                    "org.slf4j:slf4j-api:1.7.22",
+                    "commons-codec:commons-codec:1.10"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2.jar",
                 "mirror_urls": [
@@ -431,10 +405,10 @@
                 ],
                 "dependencies": [
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                    "commons-codec:commons-codec:jar:sources:1.10",
                     "commons-logging:commons-logging:jar:sources:1.2",
                     "org.slf4j:slf4j-api:jar:sources:1.7.22",
                     "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
-                    "commons-codec:commons-codec:jar:sources:1.11",
                     "com.codahale.metrics:metrics-core:jar:sources:3.0.2"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/codahale/metrics/metrics-httpclient/3.0.2/metrics-httpclient-3.0.2-sources.jar",
@@ -1574,140 +1548,6 @@
                 "sha256": "d60bb3bf4e03a5e405f9b16f4c2625de86089d6ce4f999bcc2548dcac090ae19"
             },
             {
-                "coord": "com.google.api.grpc:proto-google-common-protos:0.1.9",
-                "file": "v1/https/repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar",
-                "directDependencies": [
-                    "com.google.api:api-common:1.0.0-rc1",
-                    "com.google.protobuf:protobuf-java:3.5.1"
-                ],
-                "dependencies": [
-                    "joda-time:joda-time:2.9.9",
-                    "com.google.errorprone:error_prone_annotations:2.3.3",
-                    "com.google.code.findbugs:jsr305:3.0.2",
-                    "com.google.guava:guava:25.1-jre",
-                    "com.google.api:api-common:1.0.0-rc1",
-                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
-                    "com.google.protobuf:protobuf-java:3.5.1",
-                    "com.google.auto.value:auto-value:1.1",
-                    "com.google.j2objc:j2objc-annotations:1.1",
-                    "org.checkerframework:checker-qual:2.0.0"
-                ],
-                "url": "https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar",
-                    "https://jcenter.bintray.com/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar",
-                    "https://maven.google.com/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9.jar"
-                ],
-                "sha256": "bf76dcb173f6c6083ccf452f093b53500621e701645df47671c47043c7b5491f"
-            },
-            {
-                "coord": "com.google.api.grpc:proto-google-common-protos:jar:sources:0.1.9",
-                "file": "v1/https/repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar",
-                "directDependencies": [
-                    "com.google.api:api-common:jar:sources:1.0.0-rc1",
-                    "com.google.protobuf:protobuf-java:jar:sources:3.5.1"
-                ],
-                "dependencies": [
-                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
-                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
-                    "com.google.api:api-common:jar:sources:1.0.0-rc1",
-                    "com.google.protobuf:protobuf-java:jar:sources:3.5.1",
-                    "com.google.guava:guava:jar:sources:25.1-jre",
-                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
-                    "com.google.auto.value:auto-value:jar:sources:1.1",
-                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
-                    "joda-time:joda-time:jar:sources:2.9.9",
-                    "com.google.errorprone:error_prone_annotations:jar:sources:2.3.3"
-                ],
-                "url": "https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar",
-                    "https://jcenter.bintray.com/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar",
-                    "https://maven.google.com/com/google/api/grpc/proto-google-common-protos/0.1.9/proto-google-common-protos-0.1.9-sources.jar"
-                ],
-                "sha256": "a36c4a6e30fdd61df001dbadcdce8e588b97c0631b22125049ab2c072a7a62bb"
-            },
-            {
-                "coord": "com.google.api:api-common:1.0.0-rc1",
-                "file": "v1/https/repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar",
-                "directDependencies": [
-                    "com.google.auto.value:auto-value:1.1",
-                    "com.google.code.findbugs:jsr305:3.0.2",
-                    "com.google.guava:guava:25.1-jre",
-                    "joda-time:joda-time:2.9.9"
-                ],
-                "dependencies": [
-                    "joda-time:joda-time:2.9.9",
-                    "com.google.errorprone:error_prone_annotations:2.3.3",
-                    "com.google.code.findbugs:jsr305:3.0.2",
-                    "com.google.guava:guava:25.1-jre",
-                    "org.codehaus.mojo:animal-sniffer-annotations:1.14",
-                    "com.google.auto.value:auto-value:1.1",
-                    "com.google.j2objc:j2objc-annotations:1.1",
-                    "org.checkerframework:checker-qual:2.0.0"
-                ],
-                "url": "https://repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar",
-                    "https://jcenter.bintray.com/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar",
-                    "https://maven.google.com/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1.jar"
-                ],
-                "sha256": "c6f74128724430eb84f5bd7fd2b6de0286e322cc1a22d1e1a04822adc1eb163e"
-            },
-            {
-                "coord": "com.google.api:api-common:jar:sources:1.0.0-rc1",
-                "file": "v1/https/repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar",
-                "directDependencies": [
-                    "com.google.auto.value:auto-value:jar:sources:1.1",
-                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
-                    "com.google.guava:guava:jar:sources:25.1-jre",
-                    "joda-time:joda-time:jar:sources:2.9.9"
-                ],
-                "dependencies": [
-                    "org.checkerframework:checker-qual:jar:sources:2.0.0",
-                    "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
-                    "com.google.guava:guava:jar:sources:25.1-jre",
-                    "org.codehaus.mojo:animal-sniffer-annotations:jar:sources:1.14",
-                    "com.google.auto.value:auto-value:jar:sources:1.1",
-                    "com.google.j2objc:j2objc-annotations:jar:sources:1.1",
-                    "joda-time:joda-time:jar:sources:2.9.9",
-                    "com.google.errorprone:error_prone_annotations:jar:sources:2.3.3"
-                ],
-                "url": "https://repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar",
-                    "https://jcenter.bintray.com/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar",
-                    "https://maven.google.com/com/google/api/api-common/1.0.0-rc1/api-common-1.0.0-rc1-sources.jar"
-                ],
-                "sha256": "213b338a84a5c8d4bf20e3ba2644e4628fe0622173ed5eff818adb2ee465c62c"
-            },
-            {
-                "coord": "com.google.auto.value:auto-value:1.1",
-                "file": "v1/https/repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar",
-                "directDependencies": [],
-                "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar",
-                    "https://jcenter.bintray.com/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar",
-                    "https://maven.google.com/com/google/auto/value/auto-value/1.1/auto-value-1.1.jar"
-                ],
-                "sha256": "d57f6ea96b69525ec755f805ebefac0d59303cce90d6fff0291c13a759a6c7f6"
-            },
-            {
-                "coord": "com.google.auto.value:auto-value:jar:sources:1.1",
-                "file": "v1/https/repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar",
-                "directDependencies": [],
-                "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar",
-                    "https://jcenter.bintray.com/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar",
-                    "https://maven.google.com/com/google/auto/value/auto-value/1.1/auto-value-1.1-sources.jar"
-                ],
-                "sha256": "39170c0307c854b20f83883fbbeafbbb0e7a700ea686303d9877d02416abf1c4"
-            },
-            {
                 "coord": "com.google.code.findbugs:jsr305:3.0.2",
                 "file": "v1/https/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar",
                 "directDependencies": [],
@@ -1845,9 +1685,9 @@
                 "dependencies": [
                     "commons-logging:commons-logging:1.2",
                     "com.google.code.findbugs:jsr305:3.0.2",
-                    "commons-codec:commons-codec:1.11",
                     "org.apache.httpcomponents:httpclient:4.3.4",
-                    "org.apache.httpcomponents:httpcore:4.3.2"
+                    "org.apache.httpcomponents:httpcore:4.3.2",
+                    "commons-codec:commons-codec:1.10"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/google/http-client/google-http-client/1.17.0-rc/google-http-client-1.17.0-rc.jar",
                 "mirror_urls": [
@@ -1866,10 +1706,10 @@
                 ],
                 "dependencies": [
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                    "commons-codec:commons-codec:jar:sources:1.10",
                     "com.google.code.findbugs:jsr305:jar:sources:3.0.2",
                     "commons-logging:commons-logging:jar:sources:1.2",
-                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
-                    "commons-codec:commons-codec:jar:sources:1.11"
+                    "org.apache.httpcomponents:httpclient:jar:sources:4.3.4"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/google/http-client/google-http-client/1.17.0-rc/google-http-client-1.17.0-rc-sources.jar",
                 "mirror_urls": [
@@ -2610,32 +2450,6 @@
                 "sha256": "9fd88c6d8283eca292a25b51d4087604aa17d77dc2ab3064cae3b5bab60b4e55"
             },
             {
-                "coord": "com.nimbusds:srp6a:2.0.2",
-                "file": "v1/https/repo1.maven.org/maven2/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2.jar",
-                "directDependencies": [],
-                "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2.jar",
-                    "https://jcenter.bintray.com/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2.jar",
-                    "https://maven.google.com/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2.jar"
-                ],
-                "sha256": "601395e01b61dd51d51400445834af0cfa8ea59b2203deb59a8ee9f1f2c2bd71"
-            },
-            {
-                "coord": "com.nimbusds:srp6a:jar:sources:2.0.2",
-                "file": "v1/https/repo1.maven.org/maven2/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2-sources.jar",
-                "directDependencies": [],
-                "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2-sources.jar",
-                    "https://jcenter.bintray.com/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2-sources.jar",
-                    "https://maven.google.com/com/nimbusds/srp6a/2.0.2/srp6a-2.0.2-sources.jar"
-                ],
-                "sha256": "3203cd3e3a465ed1443a481dc9a4bf8c9b260f22f20f9bf96506af682420ae33"
-            },
-            {
                 "coord": "com.sun.jersey.contribs:jersey-apache-client4:1.18.1",
                 "file": "v1/https/repo1.maven.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1.jar",
                 "directDependencies": [
@@ -2644,10 +2458,10 @@
                 ],
                 "dependencies": [
                     "commons-logging:commons-logging:1.2",
-                    "commons-codec:commons-codec:1.11",
                     "com.sun.jersey:jersey-core:1.18.1",
                     "org.apache.httpcomponents:httpclient:4.3.4",
                     "org.apache.httpcomponents:httpcore:4.3.2",
+                    "commons-codec:commons-codec:1.10",
                     "com.sun.jersey:jersey-client:1.18.1"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/sun/jersey/contribs/jersey-apache-client4/1.18.1/jersey-apache-client4-1.18.1.jar",
@@ -2667,9 +2481,9 @@
                 ],
                 "dependencies": [
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
+                    "commons-codec:commons-codec:jar:sources:1.10",
                     "commons-logging:commons-logging:jar:sources:1.2",
                     "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
-                    "commons-codec:commons-codec:jar:sources:1.11",
                     "com.sun.jersey:jersey-core:jar:sources:1.18.1",
                     "com.sun.jersey:jersey-client:jar:sources:1.18.1"
                 ],
@@ -2815,12 +2629,12 @@
                 "coord": "com.yubico:yubico-validation-client2:2.0.1",
                 "file": "v1/https/repo1.maven.org/maven2/com/yubico/yubico-validation-client2/2.0.1/yubico-validation-client2-2.0.1.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:1.11",
+                    "commons-codec:commons-codec:1.10",
                     "org.slf4j:slf4j-api:1.7.22"
                 ],
                 "dependencies": [
-                    "org.slf4j:slf4j-api:1.7.22",
-                    "commons-codec:commons-codec:1.11"
+                    "commons-codec:commons-codec:1.10",
+                    "org.slf4j:slf4j-api:1.7.22"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/yubico/yubico-validation-client2/2.0.1/yubico-validation-client2-2.0.1.jar",
                 "mirror_urls": [
@@ -2834,12 +2648,12 @@
                 "coord": "com.yubico:yubico-validation-client2:jar:sources:2.0.1",
                 "file": "v1/https/repo1.maven.org/maven2/com/yubico/yubico-validation-client2/2.0.1/yubico-validation-client2-2.0.1-sources.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:jar:sources:1.11",
+                    "commons-codec:commons-codec:jar:sources:1.10",
                     "org.slf4j:slf4j-api:jar:sources:1.7.22"
                 ],
                 "dependencies": [
-                    "commons-codec:commons-codec:jar:sources:1.11",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
+                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
+                    "commons-codec:commons-codec:jar:sources:1.10"
                 ],
                 "url": "https://repo1.maven.org/maven2/com/yubico/yubico-validation-client2/2.0.1/yubico-validation-client2-2.0.1-sources.jar",
                 "mirror_urls": [
@@ -2876,30 +2690,30 @@
                 "sha256": "59fd9d6ca09ade4f27bddd274fb842ea48fd92118a755d0a64cf60413cd1c3fc"
             },
             {
-                "coord": "commons-codec:commons-codec:1.11",
-                "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
+                "coord": "commons-codec:commons-codec:1.10",
+                "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
+                "url": "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
                 "mirror_urls": [
-                    "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
-                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
-                    "https://maven.google.com/commons-codec/commons-codec/1.11/commons-codec-1.11.jar"
+                    "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
+                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.10/commons-codec-1.10.jar",
+                    "https://maven.google.com/commons-codec/commons-codec/1.10/commons-codec-1.10.jar"
                 ],
-                "sha256": "e599d5318e97aa48f42136a2927e6dfa4e8881dff0e6c8e3109ddbbff51d7b7d"
+                "sha256": "4241dfa94e711d435f29a4604a3e2de5c4aa3c165e23bd066be6fc1fc4309569"
             },
             {
-                "coord": "commons-codec:commons-codec:jar:sources:1.11",
-                "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
+                "coord": "commons-codec:commons-codec:jar:sources:1.10",
+                "file": "v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar",
                 "directDependencies": [],
                 "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
+                "url": "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar",
                 "mirror_urls": [
-                    "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
-                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar",
-                    "https://maven.google.com/commons-codec/commons-codec/1.11/commons-codec-1.11-sources.jar"
+                    "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar",
+                    "https://jcenter.bintray.com/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar",
+                    "https://maven.google.com/commons-codec/commons-codec/1.10/commons-codec-1.10-sources.jar"
                 ],
-                "sha256": "901cb5d1f7c2877017c95d3c5efd5a497738d0162ef72cdf58e9cb13f50b2e9c"
+                "sha256": "dfae68268ce86f1a18fc45b99317c13d6c9d252f001d37961e79a51076808986"
             },
             {
                 "coord": "commons-collections:commons-collections:3.2.2",
@@ -2931,12 +2745,12 @@
                 "coord": "commons-httpclient:commons-httpclient:3.1",
                 "file": "v1/https/repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:1.11",
+                    "commons-codec:commons-codec:1.10",
                     "commons-logging:commons-logging:1.2"
                 ],
                 "dependencies": [
-                    "commons-logging:commons-logging:1.2",
-                    "commons-codec:commons-codec:1.11"
+                    "commons-codec:commons-codec:1.10",
+                    "commons-logging:commons-logging:1.2"
                 ],
                 "url": "https://repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar",
                 "mirror_urls": [
@@ -2950,12 +2764,12 @@
                 "coord": "commons-httpclient:commons-httpclient:jar:sources:3.1",
                 "file": "v1/https/repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1-sources.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:jar:sources:1.11",
+                    "commons-codec:commons-codec:jar:sources:1.10",
                     "commons-logging:commons-logging:jar:sources:1.2"
                 ],
                 "dependencies": [
-                    "commons-codec:commons-codec:jar:sources:1.11",
-                    "commons-logging:commons-logging:jar:sources:1.2"
+                    "commons-logging:commons-logging:jar:sources:1.2",
+                    "commons-codec:commons-codec:jar:sources:1.10"
                 ],
                 "url": "https://repo1.maven.org/maven2/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1-sources.jar",
                 "mirror_urls": [
@@ -3106,40 +2920,6 @@
                     "https://maven.google.com/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8-sources.jar"
                 ],
                 "sha256": "6dae38d3515601fb5e59d7b96273dd7f30a694aba5ad0ad1a8dc340ea80f0f27"
-            },
-            {
-                "coord": "dom4j:dom4j:1.6.1",
-                "file": "v1/https/repo1.maven.org/maven2/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar",
-                "directDependencies": [
-                    "xml-apis:xml-apis:1.4.01"
-                ],
-                "dependencies": [
-                    "xml-apis:xml-apis:1.4.01"
-                ],
-                "url": "https://repo1.maven.org/maven2/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar",
-                    "https://jcenter.bintray.com/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar",
-                    "https://maven.google.com/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar"
-                ],
-                "sha256": "593552ffea3c5823c6602478b5002a7c525fd904a3c44f1abe4065c22edfac73"
-            },
-            {
-                "coord": "dom4j:dom4j:jar:sources:1.6.1",
-                "file": "v1/https/repo1.maven.org/maven2/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar",
-                "directDependencies": [
-                    "xml-apis:xml-apis:jar:sources:1.4.01"
-                ],
-                "dependencies": [
-                    "xml-apis:xml-apis:jar:sources:1.4.01"
-                ],
-                "url": "https://repo1.maven.org/maven2/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar",
-                    "https://jcenter.bintray.com/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar",
-                    "https://maven.google.com/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar"
-                ],
-                "sha256": "4d37275f80991a37be460e73b01890172f82fd561253ba2130b62a7a5d07222d"
             },
             {
                 "coord": "eu.geekplace.javapinning:java-pinning-jar:1.0.1",
@@ -5078,32 +4858,6 @@
                 "sha256": "a2826761ae88535afb0a3a049eacc846494e22627a1dcf14de37b956ca8748d6"
             },
             {
-                "coord": "javax.transaction:jta:1.1",
-                "file": "v1/https/repo1.maven.org/maven2/javax/transaction/jta/1.1/jta-1.1.jar",
-                "directDependencies": [],
-                "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/javax/transaction/jta/1.1/jta-1.1.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/javax/transaction/jta/1.1/jta-1.1.jar",
-                    "https://jcenter.bintray.com/javax/transaction/jta/1.1/jta-1.1.jar",
-                    "https://maven.google.com/javax/transaction/jta/1.1/jta-1.1.jar"
-                ],
-                "sha256": "b8ec163b4a47bad16f9a0b7d03c3210c6b0a29216d768031073ac20817c0ba50"
-            },
-            {
-                "coord": "javax.transaction:jta:jar:sources:1.1",
-                "file": "v1/https/repo1.maven.org/maven2/javax/transaction/jta/1.1/jta-1.1-sources.jar",
-                "directDependencies": [],
-                "dependencies": [],
-                "url": "https://repo1.maven.org/maven2/javax/transaction/jta/1.1/jta-1.1-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/javax/transaction/jta/1.1/jta-1.1-sources.jar",
-                    "https://jcenter.bintray.com/javax/transaction/jta/1.1/jta-1.1-sources.jar",
-                    "https://maven.google.com/javax/transaction/jta/1.1/jta-1.1-sources.jar"
-                ],
-                "sha256": "2284e633f47cb8dcee40f52fcb8814334b3a163495c1f141e3fba00ad242f3fa"
-            },
-            {
                 "coord": "javax.validation:validation-api:1.1.0.Final",
                 "file": "v1/https/repo1.maven.org/maven2/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar",
                 "directDependencies": [],
@@ -5344,211 +5098,6 @@
                     "https://maven.google.com/net/bytebuddy/byte-buddy/1.10.1/byte-buddy-1.10.1-sources.jar"
                 ],
                 "sha256": "76bec2cf4a6fa5ccb55dbc37726462a68304e70ef48205f407d65888825a4a66"
-            },
-            {
-                "coord": "net.jadler:jadler-all:1.3.0",
-                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar",
-                "directDependencies": [
-                    "net.jadler:jadler-core:1.3.0",
-                    "net.jadler:jadler-jetty:1.3.0",
-                    "net.jadler:jadler-junit:1.3.0"
-                ],
-                "dependencies": [
-                    "commons-collections:commons-collections:3.2.2",
-                    "org.hamcrest:hamcrest-library:1.3",
-                    "net.jadler:jadler-junit:1.3.0",
-                    "commons-lang:commons-lang:2.6",
-                    "junit:junit:4.12",
-                    "org.hamcrest:hamcrest-core:1.3",
-                    "net.jadler:jadler-core:1.3.0",
-                    "commons-io:commons-io:2.5",
-                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
-                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
-                    "org.slf4j:slf4j-api:1.7.22",
-                    "net.jadler:jadler-jetty:1.3.0",
-                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
-                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
-                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107"
-                ],
-                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar",
-                    "https://jcenter.bintray.com/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar",
-                    "https://maven.google.com/net/jadler/jadler-all/1.3.0/jadler-all-1.3.0.jar"
-                ],
-                "sha256": "9047050043368784ce57a1c3a6e19dc369ed364a41ddcb99b23be4a5af51970b"
-            },
-            {
-                "coord": "net.jadler:jadler-core:1.3.0",
-                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar",
-                "directDependencies": [
-                    "commons-collections:commons-collections:3.2.2",
-                    "org.hamcrest:hamcrest-library:1.3",
-                    "commons-lang:commons-lang:2.6",
-                    "org.hamcrest:hamcrest-core:1.3",
-                    "commons-io:commons-io:2.5",
-                    "org.slf4j:slf4j-api:1.7.22"
-                ],
-                "dependencies": [
-                    "commons-collections:commons-collections:3.2.2",
-                    "org.hamcrest:hamcrest-library:1.3",
-                    "commons-lang:commons-lang:2.6",
-                    "org.hamcrest:hamcrest-core:1.3",
-                    "commons-io:commons-io:2.5",
-                    "org.slf4j:slf4j-api:1.7.22"
-                ],
-                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar",
-                    "https://jcenter.bintray.com/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar",
-                    "https://maven.google.com/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0.jar"
-                ],
-                "sha256": "ecc8e48bbd0fc58e66ba8f60507c1c0ae0551d25f086b17bb05a9ea856afa3ff"
-            },
-            {
-                "coord": "net.jadler:jadler-core:jar:sources:1.3.0",
-                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar",
-                "directDependencies": [
-                    "commons-lang:commons-lang:jar:sources:2.6",
-                    "commons-collections:commons-collections:jar:sources:3.2.2",
-                    "commons-io:commons-io:jar:sources:2.5",
-                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
-                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
-                ],
-                "dependencies": [
-                    "commons-lang:commons-lang:jar:sources:2.6",
-                    "commons-collections:commons-collections:jar:sources:3.2.2",
-                    "commons-io:commons-io:jar:sources:2.5",
-                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
-                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
-                ],
-                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar",
-                    "https://jcenter.bintray.com/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar",
-                    "https://maven.google.com/net/jadler/jadler-core/1.3.0/jadler-core-1.3.0-sources.jar"
-                ],
-                "sha256": "011357925b63942e453e2349197e27ba93d9baaa82aed98504c1054722361129"
-            },
-            {
-                "coord": "net.jadler:jadler-jetty:1.3.0",
-                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar",
-                "directDependencies": [
-                    "commons-lang:commons-lang:2.6",
-                    "net.jadler:jadler-core:1.3.0",
-                    "commons-io:commons-io:2.5",
-                    "org.slf4j:slf4j-api:1.7.22",
-                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
-                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107"
-                ],
-                "dependencies": [
-                    "commons-collections:commons-collections:3.2.2",
-                    "org.hamcrest:hamcrest-library:1.3",
-                    "commons-lang:commons-lang:2.6",
-                    "org.hamcrest:hamcrest-core:1.3",
-                    "net.jadler:jadler-core:1.3.0",
-                    "commons-io:commons-io:2.5",
-                    "org.eclipse.jetty:jetty-util:9.0.7.v20131107",
-                    "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
-                    "org.slf4j:slf4j-api:1.7.22",
-                    "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
-                    "org.eclipse.jetty:jetty-server:9.0.7.v20131107",
-                    "org.eclipse.jetty:jetty-http:9.0.7.v20131107"
-                ],
-                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar",
-                    "https://jcenter.bintray.com/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar",
-                    "https://maven.google.com/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0.jar"
-                ],
-                "sha256": "f9b28b114aec20ec3e0e622fcae655873afece0721534793d61942ba32c75599"
-            },
-            {
-                "coord": "net.jadler:jadler-jetty:jar:sources:1.3.0",
-                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar",
-                "directDependencies": [
-                    "commons-lang:commons-lang:jar:sources:2.6",
-                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
-                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
-                    "commons-io:commons-io:jar:sources:2.5",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
-                    "net.jadler:jadler-core:jar:sources:1.3.0"
-                ],
-                "dependencies": [
-                    "commons-lang:commons-lang:jar:sources:2.6",
-                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
-                    "commons-collections:commons-collections:jar:sources:3.2.2",
-                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
-                    "commons-io:commons-io:jar:sources:2.5",
-                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
-                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
-                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
-                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
-                    "net.jadler:jadler-core:jar:sources:1.3.0",
-                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107"
-                ],
-                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar",
-                    "https://jcenter.bintray.com/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar",
-                    "https://maven.google.com/net/jadler/jadler-jetty/1.3.0/jadler-jetty-1.3.0-sources.jar"
-                ],
-                "sha256": "05e6769033d83318ef5f81e90003bf3ba1b9b8ac009a5bce1073e9345505aed0"
-            },
-            {
-                "coord": "net.jadler:jadler-junit:1.3.0",
-                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar",
-                "directDependencies": [
-                    "commons-lang:commons-lang:2.6",
-                    "junit:junit:4.12",
-                    "net.jadler:jadler-core:1.3.0"
-                ],
-                "dependencies": [
-                    "commons-collections:commons-collections:3.2.2",
-                    "org.hamcrest:hamcrest-library:1.3",
-                    "commons-lang:commons-lang:2.6",
-                    "junit:junit:4.12",
-                    "org.hamcrest:hamcrest-core:1.3",
-                    "net.jadler:jadler-core:1.3.0",
-                    "commons-io:commons-io:2.5",
-                    "org.slf4j:slf4j-api:1.7.22"
-                ],
-                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar",
-                    "https://jcenter.bintray.com/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar",
-                    "https://maven.google.com/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0.jar"
-                ],
-                "sha256": "204777d68cc09984671047321a063337d0632341ad922f6ee8184b24422ba101"
-            },
-            {
-                "coord": "net.jadler:jadler-junit:jar:sources:1.3.0",
-                "file": "v1/https/repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar",
-                "directDependencies": [
-                    "commons-lang:commons-lang:jar:sources:2.6",
-                    "junit:junit:jar:sources:4.12",
-                    "net.jadler:jadler-core:jar:sources:1.3.0"
-                ],
-                "dependencies": [
-                    "commons-lang:commons-lang:jar:sources:2.6",
-                    "commons-collections:commons-collections:jar:sources:3.2.2",
-                    "commons-io:commons-io:jar:sources:2.5",
-                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
-                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
-                    "net.jadler:jadler-core:jar:sources:1.3.0",
-                    "junit:junit:jar:sources:4.12"
-                ],
-                "url": "https://repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar",
-                    "https://jcenter.bintray.com/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar",
-                    "https://maven.google.com/net/jadler/jadler-junit/1.3.0/jadler-junit-1.3.0-sources.jar"
-                ],
-                "sha256": "86f60b8a198e14b39669497173503733be94262adc3c4261e6b8a7e200360ba8"
             },
             {
                 "coord": "net.java.dev.jna:jna:5.3.1",
@@ -5840,14 +5389,14 @@
                 "coord": "org.apache.httpcomponents:httpclient:4.3.4",
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:1.11",
+                    "commons-codec:commons-codec:1.10",
                     "commons-logging:commons-logging:1.2",
                     "org.apache.httpcomponents:httpcore:4.3.2"
                 ],
                 "dependencies": [
+                    "commons-codec:commons-codec:1.10",
                     "org.apache.httpcomponents:httpcore:4.3.2",
-                    "commons-logging:commons-logging:1.2",
-                    "commons-codec:commons-codec:1.11"
+                    "commons-logging:commons-logging:1.2"
                 ],
                 "url": "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
                 "mirror_urls": [
@@ -5861,14 +5410,14 @@
                 "coord": "org.apache.httpcomponents:httpclient:jar:sources:4.3.4",
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
                 "directDependencies": [
-                    "commons-codec:commons-codec:jar:sources:1.11",
+                    "commons-codec:commons-codec:jar:sources:1.10",
                     "commons-logging:commons-logging:jar:sources:1.2",
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2"
                 ],
                 "dependencies": [
-                    "commons-codec:commons-codec:jar:sources:1.11",
                     "org.apache.httpcomponents:httpcore:jar:sources:4.3.2",
-                    "commons-logging:commons-logging:jar:sources:1.2"
+                    "commons-logging:commons-logging:jar:sources:1.2",
+                    "commons-codec:commons-codec:jar:sources:1.10"
                 ],
                 "url": "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4-sources.jar",
                 "mirror_urls": [
@@ -5976,74 +5525,6 @@
                     "https://maven.google.com/org/apache/mahout/commons/commons-cli/2.0-mahout/commons-cli-2.0-mahout.jar"
                 ],
                 "sha256": "0dbc0532a36415455b6e867f402ed2673ff9c229a292507d5a4d1e4921290367"
-            },
-            {
-                "coord": "org.apache.pdfbox:fontbox:2.0.0",
-                "file": "v1/https/repo1.maven.org/maven2/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0.jar",
-                "directDependencies": [
-                    "commons-logging:commons-logging:1.2"
-                ],
-                "dependencies": [
-                    "commons-logging:commons-logging:1.2"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0.jar",
-                    "https://jcenter.bintray.com/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0.jar",
-                    "https://maven.google.com/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0.jar"
-                ],
-                "sha256": "e7969d265425fc6791becae096a92ae3a76953e4aec192bb4e616e6ffdf35381"
-            },
-            {
-                "coord": "org.apache.pdfbox:fontbox:jar:sources:2.0.0",
-                "file": "v1/https/repo1.maven.org/maven2/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0-sources.jar",
-                "directDependencies": [
-                    "commons-logging:commons-logging:jar:sources:1.2"
-                ],
-                "dependencies": [
-                    "commons-logging:commons-logging:jar:sources:1.2"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0-sources.jar",
-                    "https://jcenter.bintray.com/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0-sources.jar",
-                    "https://maven.google.com/org/apache/pdfbox/fontbox/2.0.0/fontbox-2.0.0-sources.jar"
-                ],
-                "sha256": "f2b98c61519b8e3ac8943509dd4823598ff4c7f09739551bfd16c38cdf2ecc8b"
-            },
-            {
-                "coord": "org.bitbucket.b_c:jose4j:0.6.5",
-                "file": "v1/https/repo1.maven.org/maven2/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5.jar",
-                "directDependencies": [
-                    "org.slf4j:slf4j-api:1.7.22"
-                ],
-                "dependencies": [
-                    "org.slf4j:slf4j-api:1.7.22"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5.jar",
-                    "https://jcenter.bintray.com/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5.jar",
-                    "https://maven.google.com/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5.jar"
-                ],
-                "sha256": "0c2d2616b42dba712ff7a05a95ed9d44cf9b71f5632eeca05dbcfce3ba3375b2"
-            },
-            {
-                "coord": "org.bitbucket.b_c:jose4j:jar:sources:0.6.5",
-                "file": "v1/https/repo1.maven.org/maven2/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5-sources.jar",
-                "directDependencies": [
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
-                ],
-                "dependencies": [
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5-sources.jar",
-                    "https://jcenter.bintray.com/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5-sources.jar",
-                    "https://maven.google.com/org/bitbucket/b_c/jose4j/0.6.5/jose4j-0.6.5-sources.jar"
-                ],
-                "sha256": "87fd0a20aa975f21ca8bd286ecd9a32d09236aee2debe70896f8f7cf3aaf8851"
             },
             {
                 "coord": "org.bouncycastle:bcpkix-jdk15on:1.59",
@@ -6566,40 +6047,6 @@
                 "sha256": "e223d2d8fbafd66057a8848cc94222d63c3cedd652cc48eddc0ab5c39c0f84df"
             },
             {
-                "coord": "org.hamcrest:hamcrest-library:1.3",
-                "file": "v1/https/repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
-                "directDependencies": [
-                    "org.hamcrest:hamcrest-core:1.3"
-                ],
-                "dependencies": [
-                    "org.hamcrest:hamcrest-core:1.3"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
-                    "https://jcenter.bintray.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar",
-                    "https://maven.google.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar"
-                ],
-                "sha256": "711d64522f9ec410983bd310934296da134be4254a125080a0416ec178dfad1c"
-            },
-            {
-                "coord": "org.hamcrest:hamcrest-library:jar:sources:1.3",
-                "file": "v1/https/repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
-                "directDependencies": [
-                    "org.hamcrest:hamcrest-core:jar:sources:1.3"
-                ],
-                "dependencies": [
-                    "org.hamcrest:hamcrest-core:jar:sources:1.3"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
-                    "https://jcenter.bintray.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar",
-                    "https://maven.google.com/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3-sources.jar"
-                ],
-                "sha256": "1c0ff84455f539eb3c29a8c430de1f6f6f1ba4b9ab39ca19b195f33203cd539c"
-            },
-            {
                 "coord": "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
                 "file": "v1/https/repo1.maven.org/maven2/org/hibernate/javax/persistence/hibernate-jpa-2.0-api/1.0.0.Final/hibernate-jpa-2.0-api-1.0.0.Final.jar",
                 "directDependencies": [],
@@ -6624,148 +6071,6 @@
                     "https://maven.google.com/org/hibernate/javax/persistence/hibernate-jpa-2.0-api/1.0.0.Final/hibernate-jpa-2.0-api-1.0.0.Final-sources.jar"
                 ],
                 "sha256": "5398a76e6f6296be39d7e329e4e44b32e3d9cb2af47bda04ab63e9d55bacbcd0"
-            },
-            {
-                "coord": "org.hibernate:hibernate-annotations:3.5.4-Final",
-                "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final.jar",
-                "directDependencies": [
-                    "org.hibernate:hibernate-commons-annotations:3.2.0.Final",
-                    "org.hibernate:hibernate-core:3.5.4-Final",
-                    "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
-                    "org.slf4j:slf4j-api:1.7.22"
-                ],
-                "dependencies": [
-                    "commons-collections:commons-collections:3.2.2",
-                    "org.hibernate:hibernate-commons-annotations:3.2.0.Final",
-                    "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
-                    "dom4j:dom4j:1.6.1",
-                    "org.slf4j:slf4j-api:1.7.22",
-                    "antlr:antlr:2.7.6",
-                    "org.hibernate:hibernate-core:3.5.4-Final",
-                    "javax.transaction:jta:1.1",
-                    "xml-apis:xml-apis:1.4.01"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final.jar",
-                    "https://jcenter.bintray.com/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final.jar",
-                    "https://maven.google.com/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final.jar"
-                ],
-                "sha256": "8b5ac03941166fbf17929631164c642bd10a32f4b3ae1ab2ccf15867bf7f630d"
-            },
-            {
-                "coord": "org.hibernate:hibernate-annotations:jar:sources:3.5.4-Final",
-                "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final-sources.jar",
-                "directDependencies": [
-                    "org.hibernate:hibernate-commons-annotations:jar:sources:3.2.0.Final",
-                    "org.hibernate:hibernate-core:jar:sources:3.5.4-Final",
-                    "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:jar:sources:1.0.0.Final",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
-                ],
-                "dependencies": [
-                    "dom4j:dom4j:jar:sources:1.6.1",
-                    "javax.transaction:jta:jar:sources:1.1",
-                    "org.hibernate:hibernate-commons-annotations:jar:sources:3.2.0.Final",
-                    "commons-collections:commons-collections:jar:sources:3.2.2",
-                    "antlr:antlr:jar:sources:2.7.6",
-                    "org.hibernate:hibernate-core:jar:sources:3.5.4-Final",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
-                    "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:jar:sources:1.0.0.Final",
-                    "xml-apis:xml-apis:jar:sources:1.4.01"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final-sources.jar",
-                    "https://jcenter.bintray.com/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final-sources.jar",
-                    "https://maven.google.com/org/hibernate/hibernate-annotations/3.5.4-Final/hibernate-annotations-3.5.4-Final-sources.jar"
-                ],
-                "sha256": "3cdfa78337e97993edc17215671fed3e0c7372ee087c012c9caad2aa278c2983"
-            },
-            {
-                "coord": "org.hibernate:hibernate-commons-annotations:3.2.0.Final",
-                "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final.jar",
-                "directDependencies": [
-                    "org.slf4j:slf4j-api:1.7.22"
-                ],
-                "dependencies": [
-                    "org.slf4j:slf4j-api:1.7.22"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final.jar",
-                    "https://jcenter.bintray.com/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final.jar",
-                    "https://maven.google.com/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final.jar"
-                ],
-                "sha256": "b9abf4d76da72dc06a24399ebd9e55a7ab2e58d53ca766e7fd562c32fde45464"
-            },
-            {
-                "coord": "org.hibernate:hibernate-commons-annotations:jar:sources:3.2.0.Final",
-                "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final-sources.jar",
-                "directDependencies": [
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
-                ],
-                "dependencies": [
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final-sources.jar",
-                    "https://jcenter.bintray.com/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final-sources.jar",
-                    "https://maven.google.com/org/hibernate/hibernate-commons-annotations/3.2.0.Final/hibernate-commons-annotations-3.2.0.Final-sources.jar"
-                ],
-                "sha256": "5bb861b95d39fb3d0cdd93ede1cbd79c4fc84688be326ea0506c9a473f9080f4"
-            },
-            {
-                "coord": "org.hibernate:hibernate-core:3.5.4-Final",
-                "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final.jar",
-                "directDependencies": [
-                    "commons-collections:commons-collections:3.2.2",
-                    "dom4j:dom4j:1.6.1",
-                    "org.slf4j:slf4j-api:1.7.22",
-                    "antlr:antlr:2.7.6",
-                    "javax.transaction:jta:1.1"
-                ],
-                "dependencies": [
-                    "commons-collections:commons-collections:3.2.2",
-                    "dom4j:dom4j:1.6.1",
-                    "org.slf4j:slf4j-api:1.7.22",
-                    "antlr:antlr:2.7.6",
-                    "javax.transaction:jta:1.1",
-                    "xml-apis:xml-apis:1.4.01"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final.jar",
-                    "https://jcenter.bintray.com/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final.jar",
-                    "https://maven.google.com/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final.jar"
-                ],
-                "sha256": "88d7d57259071ccc8b4ec21cd4373826612ba5858c1e6891837ab815ec800b54"
-            },
-            {
-                "coord": "org.hibernate:hibernate-core:jar:sources:3.5.4-Final",
-                "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final-sources.jar",
-                "directDependencies": [
-                    "dom4j:dom4j:jar:sources:1.6.1",
-                    "javax.transaction:jta:jar:sources:1.1",
-                    "commons-collections:commons-collections:jar:sources:3.2.2",
-                    "antlr:antlr:jar:sources:2.7.6",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22"
-                ],
-                "dependencies": [
-                    "dom4j:dom4j:jar:sources:1.6.1",
-                    "javax.transaction:jta:jar:sources:1.1",
-                    "commons-collections:commons-collections:jar:sources:3.2.2",
-                    "antlr:antlr:jar:sources:2.7.6",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
-                    "xml-apis:xml-apis:jar:sources:1.4.01"
-                ],
-                "url": "https://repo1.maven.org/maven2/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final-sources.jar",
-                "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final-sources.jar",
-                    "https://jcenter.bintray.com/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final-sources.jar",
-                    "https://maven.google.com/org/hibernate/hibernate-core/3.5.4-Final/hibernate-core-3.5.4-Final-sources.jar"
-                ],
-                "sha256": "c8f762b533098f1c508f896da06afd9347274ddcfaf7e4e322e99afb0fef448d"
             },
             {
                 "coord": "org.hibernate:hibernate-validator:5.1.1.Final",
@@ -7511,32 +6816,6 @@
                 "dependencies": []
             },
             {
-                "coord": "net.jadler:jadler-all:jar:sources:1.3.0",
-                "file": null,
-                "directDependencies": [
-                    "net.jadler:jadler-core:jar:sources:1.3.0",
-                    "net.jadler:jadler-jetty:jar:sources:1.3.0",
-                    "net.jadler:jadler-junit:jar:sources:1.3.0"
-                ],
-                "dependencies": [
-                    "commons-lang:commons-lang:jar:sources:2.6",
-                    "org.eclipse.jetty:jetty-server:jar:sources:9.0.7.v20131107",
-                    "commons-collections:commons-collections:jar:sources:3.2.2",
-                    "org.eclipse.jetty.orbit:javax.servlet:jar:sources:3.0.0.v201112011016",
-                    "commons-io:commons-io:jar:sources:2.5",
-                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
-                    "org.eclipse.jetty:jetty-io:jar:sources:9.0.7.v20131107",
-                    "org.hamcrest:hamcrest-library:jar:sources:1.3",
-                    "org.slf4j:slf4j-api:jar:sources:1.7.22",
-                    "org.eclipse.jetty:jetty-http:jar:sources:9.0.7.v20131107",
-                    "net.jadler:jadler-core:jar:sources:1.3.0",
-                    "net.jadler:jadler-junit:jar:sources:1.3.0",
-                    "org.eclipse.jetty:jetty-util:jar:sources:9.0.7.v20131107",
-                    "junit:junit:jar:sources:4.12",
-                    "net.jadler:jadler-jetty:jar:sources:1.3.0"
-                ]
-            },
-            {
                 "coord": "org.apache.mahout.commons:commons-cli:jar:sources:2.0-mahout",
                 "file": null,
                 "directDependencies": [],
@@ -7544,6 +6823,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -1517730950
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -1507564077
     }
 }

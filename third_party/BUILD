@@ -1090,16 +1090,31 @@ java_library(
     name = "org_hibernate_hibernate_annotations",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation//:antlr_antlr",
         "@aggregation//:commons_collections_commons_collections",
-        "@aggregation//:dom4j_dom4j",
-        "@aggregation//:javax_transaction_jta",
-        "@aggregation//:org_hibernate_hibernate_annotations",
-        "@aggregation//:org_hibernate_hibernate_commons_annotations",
-        "@aggregation//:org_hibernate_hibernate_core",
         "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "@aggregation//:org_slf4j_slf4j_api",
         "@aggregation//:xml_apis_xml_apis",
+        "@antlr_antlr//jar",
+        "@dom4j_dom4j//jar",
+        "@javax_transaction_jta//jar",
+        "@org_hibernate_hibernate_annotations//jar",
+        "@org_hibernate_hibernate_commons_annotations//jar",
+        "@org_hibernate_hibernate_core//jar",
+    ],
+)
+
+java_library(
+    name = "org_hibernate_hibernate_entitymanager",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@aggregation//:asm_asm",
+        "@aggregation//:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+        "@aggregation//:org_javassist_javassist",
+        "@aggregation//:org_slf4j_slf4j_api",
+        "@cglib_cglib//jar",
+        "@org_hibernate_hibernate_annotations//jar",
+        "@org_hibernate_hibernate_core//jar",
+        "@org_hibernate_hibernate_entitymanager//jar",
     ],
 )
 
@@ -1299,11 +1314,11 @@ java_library(
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
-        "@aggregation//:dom4j_dom4j",
         "@aggregation//:javax_servlet_javax_servlet_api",
         "@aggregation//:junit_junit",
         "@aggregation//:org_javassist_javassist",
         "@aggregation//:org_slf4j_slf4j_api",
+        "@dom4j_dom4j//jar",
     ],
 )
 
@@ -1319,7 +1334,7 @@ java_library(
     name = "org_apache_pdfbox_fontbox",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation//:org_apache_pdfbox_fontbox",
+        "@org_apache_pdfbox_fontbox//jar",
     ],
 )
 
@@ -1327,7 +1342,7 @@ java_library(
     name = "com_nimbusds_srp6a",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation//:com_nimbusds_srp6a",
+        "@com_nimbusds_srp6a//jar",
     ],
 )
 
@@ -1340,12 +1355,12 @@ java_library(
     runtime_deps = [
         "@aggregation//:com_github_stephenc_jcip_jcip_annotations",
         "@aggregation//:junit_junit",
-        "@aggregation//:net_jadler_jadler_all",
         "@aggregation//:net_minidev_json_smart",
-        "@aggregation//:org_bitbucket_b_c_jose4j",
         "@aggregation//:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:org_bouncycastle_bcprov_jdk15on",
         "@com_google_crypto_tink//jar",
+        "@net_jadler_jadler_all//jar",
+        "@org_bitbucket_b_c_jose4j//jar",
     ],
 )
 
@@ -1361,8 +1376,8 @@ java_library(
     name = "net_sourceforge_tess4j",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation//:com_github_jai_imageio_jai_imageio_core",
         "@aggregation//:net_java_dev_jna_jna",
+        "@com_sun_media_jai_imageio//jar",
         "@net_sourceforge_lept4j//jar",
         "@net_sourceforge_tess4j//jar",
     ],
@@ -1393,7 +1408,6 @@ java_library(
     name = "netty",
     visibility = ["//visibility:public"],
     exports = [
-        "@aggregation//:com_google_api_grpc_proto_google_common_protos",
         "@aggregation//:com_google_code_findbugs_jsr305",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
@@ -1414,6 +1428,7 @@ java_library(
         "@aggregation//:io_netty_netty_resolver_dns",
         "@aggregation//:io_netty_netty_transport",
         "@aggregation//:io_opencensus_opencensus_api",
+        "@com_google_api_grpc_proto_google_common_protos//jar",
         "@io_grpc_grpc_api//jar",
         "@io_grpc_grpc_auth//jar",
         "@io_grpc_grpc_core//jar",
