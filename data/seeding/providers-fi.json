@@ -47,7 +47,7 @@
                     "name": "iban"
                 }
             ],
-            "financialInstitutionId": "dummyId",
+            "financialInstitutionId": "aktia",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fi-aktia-oauth2",
@@ -185,7 +185,9 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionId": "6f5f37026d75467f8c7dbe7ce88c4441",
+            "financialInstitutionName": "Danske Bank"
         },
         {
             "accessType": "OPEN_BANKING",
@@ -273,7 +275,7 @@
             "credentialsType": "PASSWORD",
             "displayName": "Handelsbanken",
             "fields": [],
-            "financialInstitutionId": "dummyId",
+            "financialInstitutionId": "handelsbanken",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "fi-handelsbanken-oauth2",
@@ -291,8 +293,8 @@
             "credentialsType": "PASSWORD",
             "displayName": "Nordea",
             "fields": [],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "a445338564ea4940bfcc4128a1ddc2d8",
+            "financialInstitutionName": "Nordea",
             "multiFactor": false,
             "name": "fi-nordea-oauth2",
             "passwordHelpText": "Please authenticate to use this bank.",
@@ -490,8 +492,8 @@
             "credentialsType": "PASSWORD",
             "displayName": "Samlink",
             "fields": [],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "f7dfba4f1a3b4735a64d2de4d6350721",
+            "financialInstitutionName": "Samlink",
             "multiFactor": false,
             "name": "fi-samlink-oauth2",
             "passwordHelpText": "Please authenticate to use this bank.",
@@ -537,15 +539,16 @@
                     "sensitive": true
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "d585610c9aa64bdaadabc880bfe819fe",
+            "financialInstitutionName": "S-Pankki",
             "multiFactor": false,
             "name": "fi-spankki-codecard",
             "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
             "popular": true,
             "status": "ENABLED",
             "transactional": "true",
-            "type": "BANK"
+            "type": "BANK",
+            "accessType": "OTHER"
         },
         {
             "accessType": "OPEN_BANKING",
