@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount;
 
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.Predicates;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
@@ -42,11 +44,20 @@ public class NordeaTransactionFetcher
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
             TransactionalAccount account) {
-        return apiClient.fetchPayments().getPayments().stream()
-                .filter(Predicates.or(PaymentEntity::isConfirmed, PaymentEntity::isInProgress))
-                .filter(paymentEntity -> paymentEntity.getFrom().equals(account.getAccountNumber()))
-                .map(PaymentEntity::toUpcomingTransaction)
-                .collect(Collectors.toList());
+        try {
+            return apiClient.fetchPayments().getPayments().stream()
+                    .filter(Predicates.or(PaymentEntity::isConfirmed, PaymentEntity::isInProgress))
+                    .filter(
+                            paymentEntity ->
+                                    paymentEntity.getFrom().equals(account.getAccountNumber()))
+                    .map(PaymentEntity::toUpcomingTransaction)
+                    .collect(Collectors.toList());
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_SERVER_ERROR) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw e;
+        }
     }
 
     private PaginatorResponse fetchTransactions(
