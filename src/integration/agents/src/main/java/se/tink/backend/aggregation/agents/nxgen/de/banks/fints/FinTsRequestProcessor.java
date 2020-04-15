@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConst
 
 import java.util.Collections;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.BaseRequestPart;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.HKTANv6;
@@ -12,19 +13,12 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.response.HNHBK;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.security.tan.clientchoice.TanAnswerProvider;
 
+@AllArgsConstructor
 public class FinTsRequestProcessor {
+
     private FinTsDialogContext dialogContext;
     private final FinTsRequestSender requestSender;
     private final TanAnswerProvider tanAnswerProvider;
-
-    public FinTsRequestProcessor(
-            FinTsDialogContext dialogContext,
-            FinTsRequestSender requestSender,
-            TanAnswerProvider tanAnswerProvider) {
-        this.dialogContext = dialogContext;
-        this.requestSender = requestSender;
-        this.tanAnswerProvider = tanAnswerProvider;
-    }
 
     public FinTsResponse process(FinTsRequest request) {
         FinTsResponse response = sendRequest(request);
@@ -67,7 +61,7 @@ public class FinTsRequestProcessor {
         List<BaseRequestPart> additionalSegments =
                 Collections.singletonList(
                         HKTANv6.builder()
-                                .tanProcess("2")
+                                .tanProcessVariant(HKTANv6.TanProcessVariant.TAN)
                                 .taskReference(dialogContext.getTaskReference())
                                 .furtherTanFollows(false)
                                 .build());

@@ -24,6 +24,7 @@ public abstract class AccountIdentifier {
 
     public enum Type {
         BE("be"),
+        DE("de"),
         DK("dk"),
         SE("se"),
         SE_SHB_INTERNAL("se-internal"),
@@ -268,6 +269,8 @@ public abstract class AccountIdentifier {
                 return new BbanIdentifier(id);
             case PT_BPI:
                 return new PortugalBancoBpiIdentifier(id);
+            case DE:
+                return new GermanIdentifier(id);
         }
         return null;
     }

@@ -27,7 +27,7 @@ public class SEBDateUtilTest {
 
                 Date now = cal.getTime();
 
-                String transferDate = SEBDateUtil.nextPossibleTransferDate(now, true);
+                String transferDate = SEBDateUtil.getTransferDate(now, true);
 
                 final DateTimeFormatter pattern = DateTimeFormat.forPattern("YYYY-MM-dd");
                 Assert.assertEquals(pattern.print(now.getTime()), transferDate);
@@ -62,7 +62,7 @@ public class SEBDateUtilTest {
         cal.add(Calendar.DAY_OF_YEAR, 2);
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
 
-        Assert.assertEquals("2016-02-15", SEBDateUtil.nextPossibleTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class SEBDateUtilTest {
         cal.add(Calendar.DAY_OF_YEAR, 2);
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
 
-        Assert.assertEquals("2016-02-15", SEBDateUtil.nextPossibleTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class SEBDateUtilTest {
         cal.add(Calendar.DAY_OF_YEAR, 1);
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
 
-        Assert.assertEquals("2016-02-15", SEBDateUtil.nextPossibleTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class SEBDateUtilTest {
         cal.add(Calendar.DAY_OF_YEAR, 1);
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
 
-        Assert.assertEquals("2016-02-15", SEBDateUtil.nextPossibleTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class SEBDateUtilTest {
 
         Date now = cal.getTime();
 
-        Assert.assertEquals("2016-02-15", SEBDateUtil.nextPossibleTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class SEBDateUtilTest {
 
         Date now = cal.getTime();
 
-        Assert.assertEquals("2016-02-16", SEBDateUtil.nextPossibleTransferDate(now, false));
+        Assert.assertEquals("2016-02-16", SEBDateUtil.getTransferDate(now, false));
     }
 
     @Test
@@ -149,7 +149,7 @@ public class SEBDateUtilTest {
 
         Date now = cal.getTime();
 
-        Assert.assertEquals("2016-03-11", SEBDateUtil.nextPossibleTransferDate(now, false));
+        Assert.assertEquals("2016-03-11", SEBDateUtil.getTransferDate(now, false));
     }
 
     @Test
@@ -162,6 +162,6 @@ public class SEBDateUtilTest {
 
         Date now = cal.getTime();
 
-        Assert.assertEquals("2016-03-14", SEBDateUtil.nextPossibleTransferDate(now, false));
+        Assert.assertEquals("2016-03-14", SEBDateUtil.getTransferDate(now, false));
     }
 }

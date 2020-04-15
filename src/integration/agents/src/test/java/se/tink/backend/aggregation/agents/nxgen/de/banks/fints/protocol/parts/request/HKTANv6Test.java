@@ -12,7 +12,7 @@ public class HKTANv6Test {
         // given
         BaseRequestPart segment =
                 HKTANv6.builder()
-                        .tanProcess("4")
+                        .tanProcessVariant(HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                         .segmentType(SegmentType.HKKAZ)
                         .taskHashValue("TASKHASHVALUE_123421513")
                         .taskReference("TASKREFERENCE_124372588")
@@ -34,7 +34,7 @@ public class HKTANv6Test {
         // given
         BaseRequestPart segment =
                 HKTANv6.builder()
-                        .tanProcess("4")
+                        .tanProcessVariant(HKTANv6.TanProcessVariant.TAN_INITIALIZE_SINGLE)
                         .segmentType(SegmentType.HKTAB)
                         .tanMediumName("DUMMY")
                         .build();

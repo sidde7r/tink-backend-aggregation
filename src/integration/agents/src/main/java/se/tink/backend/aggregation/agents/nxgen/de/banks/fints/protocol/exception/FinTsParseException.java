@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.exception;
+package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.exception;
 
 public class FinTsParseException extends RuntimeException {
     public FinTsParseException(String s) {

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.base64.FinTsBase64;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request.FinTsRequest;
@@ -7,15 +8,11 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.re
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 @Slf4j
-class FinTsRequestSender {
+@AllArgsConstructor
+public class FinTsRequestSender {
 
     private final TinkHttpClient httpClient;
     private final String endpoint;
-
-    public FinTsRequestSender(TinkHttpClient httpClient, String endpoint) {
-        this.httpClient = httpClient;
-        this.endpoint = endpoint;
-    }
 
     public FinTsResponse sendRequest(FinTsRequest request) {
         String b64Response = send(FinTsBase64.encodeRequestToBase64(request));

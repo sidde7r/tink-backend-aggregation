@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parts.request;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Constants {
 
     public static final String SECURITY_PROCEDURE = "PIN";

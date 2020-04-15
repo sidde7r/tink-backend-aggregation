@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parser.RawGroup;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parser.RawSegment;
 
@@ -11,7 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.parser.R
  * https://www.hbci-zka.de/dokumente/spezifikation_deutsch/fintsv3/FinTS_3.0_Messages_Geschaeftsvorfaelle_2015-08-07_final_version.pdf
  * Page 93
  */
+@Accessors(chain = true)
+@NoArgsConstructor
 @Getter
+@Setter
 public class HICAZS extends BaseResponsePart {
 
     private Integer maxNumberOfTasks;

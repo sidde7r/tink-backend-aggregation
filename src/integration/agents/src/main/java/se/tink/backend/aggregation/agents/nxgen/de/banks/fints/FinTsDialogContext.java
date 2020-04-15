@@ -48,9 +48,6 @@ public class FinTsDialogContext {
 
     @Getter private List<FinTsAccountInformation> accounts = new ArrayList<>();
 
-    // TODO: Think if we really need to pass these through Context.
-    // There might be a better way of building a request with tan answer than going through here.
-    // Reasoning: This stuff is only useful just after we get it, and never used again
     @Getter @Setter private String taskReference;
     @Getter @Setter private String tanAnswer;
 
@@ -75,6 +72,10 @@ public class FinTsDialogContext {
 
     public boolean isDialogIdUninitialized() {
         return UNINITIALIZED_ID.equals(dialogId);
+    }
+
+    public void resetDialogId() {
+        dialogId = UNINITIALIZED_ID;
     }
 
     public int getSecurityProcedureVersion() {

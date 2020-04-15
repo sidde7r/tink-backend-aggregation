@@ -53,6 +53,8 @@ public class HISAL extends BaseResponsePart {
                 countryCode = rawSegment.getGroup(1).getString(4);
                 blz = rawSegment.getGroup(1).getString(5);
                 break;
+            default:
+                break;
         }
     }
 

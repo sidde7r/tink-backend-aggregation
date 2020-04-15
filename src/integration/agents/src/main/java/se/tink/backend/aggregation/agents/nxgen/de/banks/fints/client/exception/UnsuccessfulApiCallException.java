@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.exception;
+package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.exception;
 
 public class UnsuccessfulApiCallException extends RuntimeException {
 

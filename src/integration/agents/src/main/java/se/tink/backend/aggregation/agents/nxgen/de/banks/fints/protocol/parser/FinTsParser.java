@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.exception.FinTsParseException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.protocol.exception.FinTsParseException;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FinTsParser {
 
     private static final Pattern ELEMENT_REGEX = Pattern.compile("(.*?(?=(?<!\\?)[:+']))");

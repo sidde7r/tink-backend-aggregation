@@ -34,7 +34,7 @@ public class HIUPD extends BaseResponsePart {
     @Getter
     @AllArgsConstructor
     @EqualsAndHashCode
-    static class AllowedBusinessOperation {
+    public static class AllowedBusinessOperation {
         private String operationName;
         private Integer minNumberSignatures;
     }
@@ -85,11 +85,16 @@ public class HIUPD extends BaseResponsePart {
         for (int i = 10; i < 10 + MAX_NUM_OF_ALLOWED_BUSINESS_OPERATIONS_IN_SEGMENT; i++) {
             group = rawSegment.getGroup(i);
             if (group.isEmpty()) break;
-            allowedBusinessOperations.add(
-                    new AllowedBusinessOperation(group.getString(0), group.getInteger(1)));
+            addAllowedBusinessOperation(group.getString(0), group.getInteger(1));
         }
 
         accountAdditionalInfo = rawSegment.getGroup(ACC_ADDITIONAL_INFO_POSITION).getString(0);
+    }
+
+    public void addAllowedBusinessOperation(
+            String allowedOperationName, Integer minNumberSignatures) {
+        allowedBusinessOperations.add(
+                new AllowedBusinessOperation(allowedOperationName, minNumberSignatures));
     }
 
     @Override

@@ -99,7 +99,16 @@ public class FinTsResponse {
                 .anyMatch(hirmx -> !hirmx.getResponsesWithCode(statusCode).isEmpty());
     }
 
+    public boolean hasStatusMessageOf(String message) {
+        return Stream.concat(findSegments(HIRMS.class).stream(), findSegments(HIRMG.class).stream())
+                .anyMatch(hirmx -> !hirmx.getResponsesWithMessage(message).isEmpty());
+    }
+
     public boolean hasAnyOfStatusCodes(String... statusCodes) {
         return Arrays.stream(statusCodes).anyMatch(this::hasStatusCodeOf);
+    }
+
+    public boolean hasAnyStatusMessageOf(String... messages) {
+        return Arrays.stream(messages).anyMatch(this::hasStatusMessageOf);
     }
 }
