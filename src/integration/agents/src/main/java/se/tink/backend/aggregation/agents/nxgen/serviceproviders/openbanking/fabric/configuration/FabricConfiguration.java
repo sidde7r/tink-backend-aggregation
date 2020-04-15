@@ -3,14 +3,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
 public class FabricConfiguration implements ClientConfiguration {
 
-    private String redirectUrl;
-    private String baseUrl;
+    @AgentConfigParam private String redirectUrl;
+    @Secret private String baseUrl;
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
