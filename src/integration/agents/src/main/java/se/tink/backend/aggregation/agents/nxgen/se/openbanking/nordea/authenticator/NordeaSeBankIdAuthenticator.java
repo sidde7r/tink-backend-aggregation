@@ -232,7 +232,9 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
             if (ErrorMessage.CANCEL_ERROR.equalsIgnoreCase(errorCode)
                     || ErrorMessage.CANCELLED_ERROR.equalsIgnoreCase(errorCode)) {
                 return BankIdStatus.CANCELLED;
-            } else if (ErrorMessage.TIME_OUT_ERROR.equalsIgnoreCase(errorCode)) {
+            } else if (ErrorMessage.TIME_OUT_ERROR.equalsIgnoreCase(errorCode)
+                    || ErrorMessage.NON_CUSTOMER_OR_CUSTOMER_TIME_OUT_ERROR.equalsIgnoreCase(
+                            errorCode)) {
                 return BankIdStatus.TIMEOUT;
             } else if (ErrorMessage.BANK_ID_IN_PROGRESS.equalsIgnoreCase(errorCode)) {
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
