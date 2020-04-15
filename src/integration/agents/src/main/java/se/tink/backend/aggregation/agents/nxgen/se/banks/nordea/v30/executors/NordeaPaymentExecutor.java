@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiC
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
@@ -111,7 +112,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
         paymentRequest.setBankName(destinationAccount);
         paymentRequest.setTo(destinationAccount);
         paymentRequest.setMessage(transfer.getDestinationMessage());
-        paymentRequest.setDue(transfer.getDueDate());
+        paymentRequest.setDue(NordeaDateUtil.getTransferDateForBgPg(transfer.getDueDate()));
         paymentRequest.setType(executorHelper.getPaymentType(transfer.getDestination()));
         paymentRequest.setToAccountNumberType(
                 executorHelper.getPaymentAccountType(transfer.getDestination()));

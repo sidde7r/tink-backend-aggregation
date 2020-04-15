@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
@@ -184,7 +185,8 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         transferRequest.setBankName(destinationAccount);
         transferRequest.setTo(destinationAccount);
         transferRequest.setMessage(transfer, transferMessageFormatter);
-        transferRequest.setDue(transfer.getDueDate());
+        transferRequest.setDue(
+                NordeaDateUtil.getTransferDateForExternalTransfer(transfer.getDueDate()));
         transferRequest.setType(NordeaSEConstants.PaymentTypes.LBAN);
         transferRequest.setToAccountNumberType(getToAccountType(transfer));
 

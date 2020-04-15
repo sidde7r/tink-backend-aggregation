@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tran
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
@@ -55,13 +54,6 @@ public class PaymentRequest {
     public PaymentRequest() {
         this.speed = NordeaSEConstants.Transfer.SPEED;
         this.currency = NordeaSEConstants.CURRENCY;
-    }
-
-    @JsonIgnore
-    private static String findOrCreateDueDateFor(Date dueDate) {
-        return Optional.ofNullable(dueDate)
-                .map(ThreadSafeDateFormat.FORMATTER_DAILY::format)
-                .orElse(ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()));
     }
 
     @JsonIgnore
@@ -120,7 +112,7 @@ public class PaymentRequest {
 
     @JsonIgnore
     public void setDue(Date due) {
-        this.due = Optional.ofNullable(due).orElse(new Date());
+        this.due = due;
     }
 
     @JsonIgnore
