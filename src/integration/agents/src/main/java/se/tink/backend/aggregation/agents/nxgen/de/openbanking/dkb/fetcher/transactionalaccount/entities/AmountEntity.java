@@ -1,16 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
-    private Double amount;
+
+    private BigDecimal amount;
     private String currency;
 
     @JsonIgnore
-    public Amount toAmount() {
-        return new Amount(currency, amount);
+    public ExactCurrencyAmount toAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }

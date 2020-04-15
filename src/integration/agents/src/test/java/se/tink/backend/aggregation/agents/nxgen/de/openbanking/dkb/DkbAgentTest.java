@@ -1,35 +1,44 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
+import static se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum.PASSWORD;
+import static se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum.USERNAME;
+
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.CredentialKeys;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
-@Ignore
 public class DkbAgentTest {
 
-    private final String TEST_USERNAME = "curakec";
-    private final String TEST_PASSWORD = "Curakec_1";
-    private final String TEST_IBAN = "FR7612345987650123456789014";
+    private final ArgumentManager<UsernamePasswordArgumentEnum> helper =
+            new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
+    private final AgentIntegrationTest.Builder builder =
+            new AgentIntegrationTest.Builder("DE", "de-dkb-ob")
+                    .expectLoggedIn(false)
+                    .loadCredentialsBefore(false)
+                    .saveCredentialsAfter(false)
+                    .setAppId("tink")
+                    .setClusterId("oxford-preprod")
+                    .setFinancialInstitutionId("de-dkb-ob");
 
-    private AgentIntegrationTest.Builder builder;
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
-    public void setup() {
-        builder =
-                new AgentIntegrationTest.Builder("DE", "de-dkb-ob")
-                        .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
-                        .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
-                        .addCredentialField(CredentialKeys.IBAN, TEST_IBAN)
-                        .expectLoggedIn(false)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+    public void before() {
+        helper.before();
     }
 
     @Test
     public void testRefresh() throws Exception {
-        builder.build().testRefresh();
+        builder.addCredentialField(Field.Key.USERNAME, helper.get(USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, helper.get(PASSWORD))
+                .build()
+                .testRefresh();
     }
 }

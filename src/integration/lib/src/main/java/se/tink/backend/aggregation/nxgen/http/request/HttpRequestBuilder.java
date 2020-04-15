@@ -214,9 +214,9 @@ public interface HttpRequestBuilder {
 
     /**
      * Builds Http request with given http methods
+     *
      * @param method http method
      * @return {@link HttpRequest} for further use with http client
      */
     HttpRequest build(HttpMethod method);
-
 }

@@ -288,6 +288,5 @@ public interface HttpMethodInvocable {
      * @throws HttpClientException if the client handler fails to process the request or response.
      */
     <T> T method(HttpMethod method, Class<T> c, Object body)
-        throws HttpResponseException, HttpClientException;
-
+            throws HttpResponseException, HttpClientException;
 }

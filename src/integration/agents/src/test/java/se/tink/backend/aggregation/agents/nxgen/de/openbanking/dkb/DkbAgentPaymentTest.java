@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Field;
@@ -19,7 +18,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
-@Ignore
 public class DkbAgentPaymentTest {
     private final String TEST_USERNAME = "curakec";
     private final String TEST_PASSWORD = "Curakec_1";
