@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.banks.sbab.executor.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Date;
+import se.tink.backend.aggregation.agents.banks.sbab.util.SBABDateUtil;
 import se.tink.backend.aggregation.agents.banks.sbab.util.SBABDestinationAccountIdentifierFormatter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
@@ -25,12 +24,16 @@ public class TransferRequest {
     private SignProcessResponse signatureProcessResponse;
 
     @JsonIgnore
-    private TransferRequest(Transfer transfer, TransferMessageFormatter.Messages messages) {
+    private TransferRequest(
+            Transfer transfer,
+            TransferMessageFormatter.Messages messages,
+            boolean isInternalTransfer) {
         this.fromAccountNumber = transfer.getSource().getIdentifier();
         this.toAccountNumber =
                 transfer.getDestination().getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
         this.amount = transfer.getAmount().getValue();
-        this.transactionDate = formatDueDateIfPresent(transfer.getDueDate());
+        this.transactionDate =
+                SBABDateUtil.getTransferDate(transfer.getDueDate(), isInternalTransfer);
         this.recurringTransfer = false;
         this.noteToSender = messages.getSourceMessage();
         this.noteToRecipient = messages.getDestinationMessage();
@@ -39,18 +42,10 @@ public class TransferRequest {
 
     @JsonIgnore
     public static TransferRequest create(
-            Transfer transfer, TransferMessageFormatter.Messages messages) {
-        return new TransferRequest(transfer, messages);
-    }
-
-    @JsonIgnore
-    private String formatDueDateIfPresent(Date dueDate) {
-
-        if (dueDate == null) {
-            return null;
-        }
-
-        return ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate);
+            Transfer transfer,
+            TransferMessageFormatter.Messages messages,
+            boolean isInternalTransfer) {
+        return new TransferRequest(transfer, messages, isInternalTransfer);
     }
 
     public TransferRequest setSignatureProcessResponse(
