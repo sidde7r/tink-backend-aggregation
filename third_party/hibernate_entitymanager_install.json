@@ -1,0 +1,129 @@
+{
+    "dependency_tree": {
+        "conflict_resolution": {},
+        "dependencies": [
+            {
+                "coord": "cglib:cglib:2.2",
+                "file": "v1/https/repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "exclusions": [
+                    "org.hibernate:hibernate-commons-annotations",
+                    "antlr:antlr",
+                    "org.hibernate.javax.persistence:hibernate-jpa-2.0-api",
+                    "xml-apis:xml-apis",
+                    "org.hibernate:hibernate-core",
+                    "org.hibernate:hibernate-annotations",
+                    "org.hibernate:hibernate-entitymanager",
+                    "org.slf4j:slf4j-api",
+                    "javax.transaction:jta",
+                    "commons-collections:commons-collections",
+                    "dom4j:dom4j",
+                    "asm:asm",
+                    "javassist:javassist"
+                ],
+                "url": "https://repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2.jar",
+                    "https://jcenter.bintray.com/cglib/cglib/2.2/cglib-2.2.jar",
+                    "https://maven.google.com/cglib/cglib/2.2/cglib-2.2.jar"
+                ],
+                "sha256": "602c787ef273aad0cc94832c3d074bef359cf3ea0d54736774ac4a56d5f465d6"
+            },
+            {
+                "coord": "cglib:cglib:jar:sources:2.2",
+                "file": "v1/https/repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "exclusions": [
+                    "org.hibernate:hibernate-commons-annotations",
+                    "antlr:antlr",
+                    "org.hibernate.javax.persistence:hibernate-jpa-2.0-api",
+                    "xml-apis:xml-apis",
+                    "org.hibernate:hibernate-core",
+                    "org.hibernate:hibernate-annotations",
+                    "org.hibernate:hibernate-entitymanager",
+                    "org.slf4j:slf4j-api",
+                    "javax.transaction:jta",
+                    "commons-collections:commons-collections",
+                    "dom4j:dom4j",
+                    "asm:asm",
+                    "javassist:javassist"
+                ],
+                "url": "https://repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/cglib/cglib/2.2/cglib-2.2-sources.jar",
+                    "https://jcenter.bintray.com/cglib/cglib/2.2/cglib-2.2-sources.jar",
+                    "https://maven.google.com/cglib/cglib/2.2/cglib-2.2-sources.jar"
+                ],
+                "sha256": "c7bc88da5362ef44f3f13bf206f3f3fd618b48603d28deece51ff4c1ba42a2f7"
+            },
+            {
+                "coord": "org.hibernate:hibernate-entitymanager:3.5.4-Final",
+                "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final.jar",
+                "directDependencies": [
+                    "cglib:cglib:2.2"
+                ],
+                "dependencies": [
+                    "cglib:cglib:2.2"
+                ],
+                "exclusions": [
+                    "org.hibernate:hibernate-commons-annotations",
+                    "antlr:antlr",
+                    "org.hibernate.javax.persistence:hibernate-jpa-2.0-api",
+                    "xml-apis:xml-apis",
+                    "org.hibernate:hibernate-core",
+                    "org.hibernate:hibernate-annotations",
+                    "org.hibernate:hibernate-entitymanager",
+                    "org.slf4j:slf4j-api",
+                    "javax.transaction:jta",
+                    "commons-collections:commons-collections",
+                    "dom4j:dom4j",
+                    "asm:asm",
+                    "javassist:javassist"
+                ],
+                "url": "https://repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final.jar",
+                    "https://jcenter.bintray.com/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final.jar",
+                    "https://maven.google.com/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final.jar"
+                ],
+                "sha256": "3ee868796fe833406f991b100f35c6e2c20e2bd166f7b93de56d8d6a077dc39d"
+            },
+            {
+                "coord": "org.hibernate:hibernate-entitymanager:jar:sources:3.5.4-Final",
+                "file": "v1/https/repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final-sources.jar",
+                "directDependencies": [
+                    "cglib:cglib:jar:sources:2.2"
+                ],
+                "dependencies": [
+                    "cglib:cglib:jar:sources:2.2"
+                ],
+                "exclusions": [
+                    "org.hibernate:hibernate-commons-annotations",
+                    "antlr:antlr",
+                    "org.hibernate.javax.persistence:hibernate-jpa-2.0-api",
+                    "xml-apis:xml-apis",
+                    "org.hibernate:hibernate-core",
+                    "org.hibernate:hibernate-annotations",
+                    "org.hibernate:hibernate-entitymanager",
+                    "org.slf4j:slf4j-api",
+                    "javax.transaction:jta",
+                    "commons-collections:commons-collections",
+                    "dom4j:dom4j",
+                    "asm:asm",
+                    "javassist:javassist"
+                ],
+                "url": "https://repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final-sources.jar",
+                    "https://jcenter.bintray.com/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final-sources.jar",
+                    "https://maven.google.com/org/hibernate/hibernate-entitymanager/3.5.4-Final/hibernate-entitymanager-3.5.4-Final-sources.jar"
+                ],
+                "sha256": "d55eec335f2b15c69a63559ce038d7790ee665a3311008815a5c1be5ae1ee931"
+            }
+        ],
+        "version": "0.1.0",
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1956821811
+    }
+}
