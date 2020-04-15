@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
@@ -66,7 +68,6 @@ public class AmericanExpressV62ApiClient {
                                 persistentStorage.getOrDefault(
                                         AmericanExpressV62Constants.Tags.PUBLIC_GUID,
                                         AmericanExpressV62Constants.HeadersValue.UNAVAILABLE))
-                        .header(AmericanExpressV62Constants.Headers.REQUEST_SEQUENCE, 0)
                         .header(AmericanExpressV62Constants.Headers.APP_ID, config.getAppId())
                         .header(
                                 AmericanExpressV62Constants.Headers.APP_VERSION,
@@ -96,13 +97,17 @@ public class AmericanExpressV62ApiClient {
                         sessionStorage.get(AmericanExpressV62Constants.Tags.AUTHORIZATION));
     }
 
-    public void initialization(InitializationRequest request) {
-        createRequest(AmericanExpressV62Constants.Urls.INITIALIZATION).post(request);
+    public InitializationResponse initialization(InitializationRequest request) {
+        return createRequest(Urls.INITIALIZATION)
+                .header(AmericanExpressV62Constants.Headers.REQUEST_SEQUENCE, 0)
+                .post(InitializationResponse.class, request);
     }
 
     public LogonResponse logon(LogonRequest request) {
         String rawResponse =
-                createRequest(AmericanExpressV62Constants.Urls.LOG_ON).post(String.class, request);
+                createRequest(AmericanExpressV62Constants.Urls.LOG_ON)
+                        .header(AmericanExpressV62Constants.Headers.REQUEST_SEQUENCE, 1)
+                        .post(String.class, request);
         return AmericanExpressV62Utils.fromJson(rawResponse, LogonResponse.class);
     }
 
