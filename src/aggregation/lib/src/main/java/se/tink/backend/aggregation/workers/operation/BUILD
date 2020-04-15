@@ -7,6 +7,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
+        "//po:i18n",
     ],
     deps = [
         "//src/aggregation/aggregationcontroller_api",
@@ -27,6 +28,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
+        "//src/libraries/i18n",
         "//src/libraries/pair",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
@@ -35,7 +37,6 @@ java_library(
         "//third_party:javax_inject_javax_inject",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
-        "@tink_backend//src/libraries/i18n",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/types/timers",

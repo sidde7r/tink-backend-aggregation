@@ -3,6 +3,9 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "operation",
     srcs = glob(["*.java"]),
+    runtime_deps = [
+        "//po:i18n",
+    ],
     deps = [
         "//src/aggregation/aggregationcontroller_api",
         "//src/aggregation/api",
@@ -11,9 +14,9 @@ junit_test(
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
+        "//src/libraries/i18n",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_mockito_mockito_core",
-        "@tink_backend//src/libraries/i18n",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
     ],
 )
