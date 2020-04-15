@@ -5,6 +5,7 @@ java_binary(
     srcs = glob(["src/main/java/**/*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:provider_configurations",
     ],
     jvm_flags = ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=6666"],
     main_class = "se.tink.sa.agent.pt.ob.sibs.SibsStandaloneAgent",
@@ -27,6 +28,7 @@ junit_test(
     srcs = glob(["src/test/java/**/*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:provider_configurations",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -45,6 +47,7 @@ junit_test(
     srcs = glob(["src/test_integration/java/**/*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:provider_configurations",
     ],
     resources = glob([
         "src/test_integration/resources/**/*",

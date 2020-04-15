@@ -36,8 +36,8 @@ public class IngAgentIntegrationTest extends AgentIntegrationTest {
                 prepareTestModuleDependenciesWithMocks();
         CredentialsRequest givenCredentialsRequest =
                 givenCredentialsRequest(
-                        "it",
-                        "it-ing-other",
+                        "be",
+                        "be-ing-cardreader",
                         ImmutableMap.of(
                                 USERNAME.getFieldKey(),
                                 "123456",

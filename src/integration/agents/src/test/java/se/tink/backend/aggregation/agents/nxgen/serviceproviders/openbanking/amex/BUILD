@@ -29,6 +29,7 @@ junit_test(
     ),
     data = [
         "//data:aggregation_test",
+        "//data:provider_configurations",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [

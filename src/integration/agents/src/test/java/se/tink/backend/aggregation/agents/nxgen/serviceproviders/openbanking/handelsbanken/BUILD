@@ -5,6 +5,7 @@ java_library(
     srcs = glob(["*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:provider_configurations",
         "//etc:development",
     ],
     visibility = ["//visibility:public"],

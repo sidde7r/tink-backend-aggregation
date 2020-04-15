@@ -139,6 +139,7 @@ junit_test(
         "//data:agents",
         "//data:aggregation_test",
         "//data:cryptography_test",
+        "//data:provider_configurations",
         "//data:security",
         "//data:tesseract_training_set",
         "//etc:development",

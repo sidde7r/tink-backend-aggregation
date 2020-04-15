@@ -5,6 +5,7 @@ junit_test(
     srcs = glob(["*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:provider_configurations",
     ],
     resources = [
         "//src/integration/agents/src/main/resources:config-templates",

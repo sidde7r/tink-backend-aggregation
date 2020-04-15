@@ -35,7 +35,9 @@ public class ClientConfigurationValidatorBuilderForTest {
 
         private static ProviderConfig readProvidersConfiguration(String market) {
             String providersFilePath =
-                    "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
+                    "external/tink_backend/src/provider_configuration/data/seeding/providers-"
+                            + escapeMarket(market).toLowerCase()
+                            + ".json";
             File providersFile = new File(providersFilePath);
             final ObjectMapper mapper = new ObjectMapper();
             try {

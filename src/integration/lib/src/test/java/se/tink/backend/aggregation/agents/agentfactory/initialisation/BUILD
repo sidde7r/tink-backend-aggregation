@@ -11,6 +11,7 @@ junit_test(
         "//data:cryptography_all_files",
         "//data:cryptography_test",
         "//data:eidas_dev",
+        "//data:provider_configurations",
         "//etc:development",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",

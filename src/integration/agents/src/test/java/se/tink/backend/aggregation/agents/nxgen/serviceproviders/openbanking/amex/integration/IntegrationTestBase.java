@@ -182,7 +182,9 @@ public abstract class IntegrationTestBase {
     }
 
     private static ProviderConfig readProvidersConfiguration() {
-        final File providersFile = new File("data/seeding/providers-uk.json");
+        final File providersFile =
+                new File(
+                        "external/tink_backend/src/provider_configuration/data/seeding/providers-uk.json");
         final ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(providersFile, ProviderConfig.class);

@@ -6,6 +6,7 @@ junit_test(
     data = [
         "//data:agents",
         "//data:aggregation_test",
+        "//data:provider_configurations",
         "//etc:development",
     ],
     tags = [
