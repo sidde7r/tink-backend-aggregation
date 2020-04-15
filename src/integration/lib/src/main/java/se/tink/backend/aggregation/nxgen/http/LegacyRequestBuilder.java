@@ -96,7 +96,8 @@ public class LegacyRequestBuilder extends LegacyFilterable<RequestBuilder>
     }
 
     // UniformInterface
-    private HttpRequest build(HttpMethod method) {
+    public HttpRequest build(HttpMethod method) {
+        addCookiesToHeader();
         return new HttpRequestImpl(method, url, headers, body);
     }
 
@@ -368,7 +369,6 @@ public class LegacyRequestBuilder extends LegacyFilterable<RequestBuilder>
         // Add the final filter so that we actually send the request
         addFilter(finalFilter);
 
-        addCookiesToHeader();
         addAggregatorToHeader();
         HttpResponse httpResponse = getFilterHead().handle(httpRequest);
 
@@ -385,7 +385,6 @@ public class LegacyRequestBuilder extends LegacyFilterable<RequestBuilder>
     // close the connection.
     private void voidHandle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-        addCookiesToHeader();
         addAggregatorToHeader();
         HttpResponse httpResponse = handle(HttpResponse.class, httpRequest);
 
