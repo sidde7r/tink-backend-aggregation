@@ -75,7 +75,7 @@ public class SBABTransferExecutor {
     private void makeInternalTransfer(Transfer transfer) {
         TransferMessageFormatter.Messages messages = messageFormatter.getMessages(transfer, true);
 
-        TransferRequest transferRequest = TransferRequest.create(transfer, messages);
+        TransferRequest transferRequest = TransferRequest.create(transfer, messages, true);
         transferClient.validateTransfer(transferRequest);
 
         confirmTransfer(transferRequest);
@@ -90,7 +90,7 @@ public class SBABTransferExecutor {
             transferClient.validateRecipient(ValidateRecipientRequest.create(transfer));
         }
 
-        TransferRequest transferRequest = TransferRequest.create(transfer, messages);
+        TransferRequest transferRequest = TransferRequest.create(transfer, messages, false);
         transferClient.validateTransfer(transferRequest);
 
         SignProcessResponse signProcessResponse =
