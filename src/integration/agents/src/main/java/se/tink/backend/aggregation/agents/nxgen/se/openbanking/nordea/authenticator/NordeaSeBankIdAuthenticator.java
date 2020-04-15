@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentic
 
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +39,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     private final String language;
     private final List<String> scopes;
     private OAuth2Token oAuth2Token;
+    private String startTime;
 
     public NordeaSeBankIdAuthenticator(
             NordeaSeApiClient apiClient, String language, List<String> scopes) {
@@ -55,7 +58,9 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
         }
 
         try {
-            return apiClient.authorize(authorizeRequest);
+            AuthorizeResponse authorizeResponse = apiClient.authorize(authorizeRequest);
+            startTime = authorizeResponse.getGroupHeader().getCreationDateTime();
+            return authorizeResponse;
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
 
@@ -84,7 +89,8 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
     }
 
     @Override
-    public BankIdStatus collect(AuthorizeResponse reference) throws BankIdException {
+    public BankIdStatus collect(AuthorizeResponse reference)
+            throws BankIdException, LoginException {
         try {
             HttpResponse response =
                     apiClient.getCode(
@@ -97,8 +103,38 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Authoriz
             }
         } catch (HttpResponseException e) {
             ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
+            if ((errorResponse.getError().getFailures().stream()
+                            .findFirst()
+                            .get()
+                            .getDescription()
+                            .equalsIgnoreCase(ErrorMessage.TIME_OUT_ERROR_NON_CUSTOMER))
+                    || errorResponse.getError().getFailures().stream()
+                                    .findFirst()
+                                    .get()
+                                    .getCode()
+                                    .equalsIgnoreCase(
+                                            ErrorMessage.NON_CUSTOMER_OR_CUSTOMER_TIME_OUT_ERROR)
+                            && !checkBankIdTimeOutFromBankSide(
+                                    startTime,
+                                    errorResponse.getGroupHeader().getCreationDateTime())) {
+
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
             return getBankIdErrorStatus(errorResponse);
         }
+    }
+
+    private boolean checkBankIdTimeOutFromBankSide(String startTime, String endTime) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss");
+        try {
+            long diff = format.parse(endTime).getTime() - format.parse(startTime).getTime();
+            if (diff >= NordeaSeConstants.TimeLimit.NON_CUSTOMER_BANKID) {
+                return true;
+            }
+        } catch (ParseException e) {
+            throw new IllegalStateException("Could not parse date");
+        }
+        return false;
     }
 
     private BankIdStatus handleBankIdDone(HttpResponse response, AuthorizeResponse reference) {
