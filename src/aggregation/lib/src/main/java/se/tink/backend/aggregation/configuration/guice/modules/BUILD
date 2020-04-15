@@ -60,6 +60,8 @@ java_library(
         "//third_party:net_spy_spymemcached",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_springframework_data_spring_data_commons",
+        "@io_grpc_grpc_api//jar",
+        "@io_grpc_grpc_java//api",
         "@tink_backend//src/libraries/endpoint_configuration/src/main/java/se/tink/libraries/endpoints/dropwizard",
         "@tink_backend//src/libraries/endpoint_configuration/src/main/java/se/tink/libraries/endpoints/model",
         "@tink_backend//src/libraries/event_producer_service_client",

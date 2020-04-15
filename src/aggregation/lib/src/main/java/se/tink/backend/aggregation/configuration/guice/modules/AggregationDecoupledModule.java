@@ -1,15 +1,18 @@
 package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
+import com.google.inject.multibindings.OptionalBinder;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.dropwizard.setup.Environment;
+import io.grpc.ManagedChannelBuilder;
 import java.util.Collections;
 import java.util.Map;
 import org.apache.curator.framework.CuratorFramework;
@@ -67,6 +70,7 @@ import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.discovery.FakeCuratorFramework;
 import se.tink.libraries.endpoints.model.EndpointConfiguration;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
+import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientChannelBuilder;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientProvider;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceEndpointConfiguration;
 import se.tink.libraries.http.client.RequestTracingFilter;
@@ -244,7 +248,11 @@ public class AggregationDecoupledModule extends AbstractModule {
                                 configuration
                                         .getEndpoints()
                                         .getEventProducerServiceConfiguration()));
-
+        OptionalBinder.newOptionalBinder(
+                binder(),
+                Key.get(
+                        ManagedChannelBuilder.class,
+                        EventProducerServiceClientChannelBuilder.class));
         bind(EventProducerServiceClient.class).toProvider(EventProducerServiceClientProvider.class);
     }
 
