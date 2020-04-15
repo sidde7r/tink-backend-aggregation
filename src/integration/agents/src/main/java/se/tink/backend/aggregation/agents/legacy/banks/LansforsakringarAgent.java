@@ -59,6 +59,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.LFUtils;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.LansforsakringarDateUtil;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.Session;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.errors.HttpStatusCodeErrorException;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.AccountEntity;
@@ -870,7 +871,7 @@ public class LansforsakringarAgent extends AbstractAgent
         paymentRequest.setElectronicInvoiceId("");
         paymentRequest.setFromAccount(source.getIdentifier(DEFAULT_FORMATTER));
         paymentRequest.setPaymentDate(
-                transfer.getDueDate() != null ? transfer.getDueDate().getTime() : 0);
+                LansforsakringarDateUtil.getNextPossiblePaymentDateForBgPg(transfer.getDueDate()));
 
         if (Objects.equal(recipientNameResponse.getOcrType(), "OCR_REQUIRED")) {
             paymentRequest.setReferenceType("OCR");
