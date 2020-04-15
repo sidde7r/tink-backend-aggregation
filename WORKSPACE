@@ -548,12 +548,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_jackson_jackson_core_asl",
-    artifact = "org.codehaus.jackson:jackson-core-asl:1.8.9",
-    sha1 = "99be07ca979279674ae5b8a886669fb8da491d9d",
-)
-
-maven_jar(
     name = "org_pojava_pojava",  # Do not use, but do not remove
     artifact = "org.pojava:pojava:2.8.1",
     sha1 = "4b9b3afd3c58a6b3eb91c50a4cae1bf58e3e7c73",
@@ -602,7 +596,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_curator_curator_client",
+    name = "org_apache_curator_curator_client",  # Do not use, but do not remove
     artifact = "org.apache.curator:curator-client:4.0.0",
     sha1 = "9a9ced5171f3fa0cd18296d34165234a8d3b7a94",
 )
@@ -650,7 +644,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "jline_jline",
+    name = "jline_jline",  # Do not use, but do not remove
     artifact = "jline:jline:0.9.94",
     sha1 = "99a18e9a44834afdebc467294e1138364c207402",
 )
@@ -876,7 +870,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_xerial_snappy_snappy_java",
+    name = "org_xerial_snappy_snappy_java",  # Do not use, but do not remove
     artifact = "org.xerial.snappy:snappy-java:1.0.5-M2",
     sha1 = "5b015647886ef85a6747091461099dfba944864f",
 )
@@ -1176,7 +1170,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_plexus_plexus_utils",
+    name = "org_codehaus_plexus_plexus_utils",  # Do not use, but do not remove
     artifact = "org.codehaus.plexus:plexus-utils:3.0.17",
     sha1 = "7b86f7a4ceffc8eadbb1a84207134af776f7cb95",
 )
@@ -1272,7 +1266,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_zookeeper_zookeeper",
+    name = "org_apache_zookeeper_zookeeper",  # Do not use, but do not remove
     artifact = "org.apache.zookeeper:zookeeper:3.5.3-beta",
     sha1 = "63ffc92b50e1da1b43d7728daeed72035b53e567",
 )
@@ -1764,7 +1758,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_jackson_jackson_mapper_asl",
+    name = "org_codehaus_jackson_jackson_mapper_asl",  # Do not use, but do not remove
     artifact = "org.codehaus.jackson:jackson-mapper-asl:1.8.9",
     sha1 = "e430ed24d67dfc126ee16bc23156a044950c3168",
 )
@@ -1908,7 +1902,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_assertj_assertj_core",
+    name = "org_assertj_assertj_core",  # Do not use, but do not remove
     artifact = "org.assertj:assertj-core:2.2.0",
     sha1 = "edd59795b236afc790dd161e7e3677757b06f2e7",
 )
@@ -1968,7 +1962,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "pl_pragmatists_JUnitParams",
+    name = "pl_pragmatists_JUnitParams",  # Do not use, but do not remove
     artifact = "pl.pragmatists:JUnitParams:1.0.5",
     sha1 = "11c4fb84973ba635673e5e026abf27078aab8bd9",
 )
@@ -1980,7 +1974,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_hamcrest_hamcrest_library",
+    name = "org_hamcrest_hamcrest_library",  # Do not use, but do not remove
     artifact = "org.hamcrest:hamcrest-library:1.3",
     sha1 = "4785a3c21320980282f9f33d0d1264a69040538f",
 )
@@ -2155,15 +2149,15 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_pdfbox_pdfbox",
+    name = "org_apache_pdfbox_pdfbox",  # Do not use, but do not remove
     artifact = "org.apache.pdfbox:pdfbox:2.0.6",
     sha1 = "68616a583c5f9b9ba72140364d15a07cd937ce0e",
 )
 
 maven_jar(
     name = "org_apache_pdfbox_fontbox",  # Do not use, but do not remove
-    artifact = "org.apache.pdfbox:fontbox:2.0.0",
-    sha1 = "6f762d4e1c8ea99589d30597ef3731dfdcee43e2",
+    artifact = "org.apache.pdfbox:fontbox:2.0.6",
+    sha1 = "33f44ea67f1b5ab314e2d5768365b1a3e794fb3b",
 )
 
 maven_jar(
@@ -2658,6 +2652,7 @@ maven_install(
         "io.netty:netty-resolver:%s" % NETTY_VERSION,
         "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
         "io.netty:netty-transport:%s" % NETTY_VERSION,
+        "io.netty:netty:3.10.5.Final",
         "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
         "io.prometheus:simpleclient:0.5.0",
@@ -2678,6 +2673,7 @@ maven_install(
         "javax.validation:validation-api:1.1.0.Final",
         "javax.xml.bind:jaxb-api:2.2.7",
         "javax.xml.stream:stax-api:1.0-2",
+        "jline:jline:0.9.94",
         "joda-time:joda-time:2.9.9",
         "junit:junit:4.12",
         "log4j:log4j:1.2.17",
@@ -2700,10 +2696,14 @@ maven_install(
         "org.apache.logging.log4j:log4j-api:2.11.1",
         "org.apache.logging.log4j:log4j-core:2.11.1",
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
-        "org.apache.pdfbox:fontbox:2.0.0",
+        "org.apache.pdfbox:fontbox:2.0.6",
+        "org.apache.pdfbox:pdfbox:2.0.6",
+        "org.assertj:assertj-core:2.2.0",
         "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",
+        "org.codehaus.jackson:jackson-mapper-asl:1.8.9",
+        "org.codehaus.plexus:plexus-utils:3.0.17",
         "org.codehaus.woodstox:stax2-api:4.1",
         "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016",
         "org.eclipse.jetty:jetty-continuation:%s" % ECLIPSE_JETTY_VERSION,
@@ -2716,6 +2716,7 @@ maven_install(
         "org.eclipse.jetty:jetty-util:%s" % ECLIPSE_JETTY_VERSION,
         "org.glassfish.web:javax.el:2.2.6",
         "org.hamcrest:hamcrest-core:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
         "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final",
         "org.hibernate:hibernate-annotations:3.5.4-Final",
         "org.hibernate:hibernate-commons-annotations:3.2.0.Final",
@@ -2737,10 +2738,13 @@ maven_install(
         "org.slf4j:jcl-over-slf4j:1.7.6",
         "org.slf4j:jul-to-slf4j:1.7.6",
         "org.slf4j:slf4j-api:1.7.22",
+        "org.slf4j:slf4j-log4j12:1.7.5",
         "org.w3c.css:sac:1.3",
+        "org.xerial.snappy:snappy-java:1.0.5-M2",
         "org.xmlunit:xmlunit-core:2.1.1",
         "org.xmlunit:xmlunit-legacy:2.1.1",
         "org.yaml:snakeyaml:1.23",
+        "pl.pragmatists:JUnitParams:1.0.5",
         "xerces:xercesImpl:2.11.0",
         "xml-apis:xml-apis:1.4.01",
     ],
@@ -2764,9 +2768,11 @@ maven_install(
     artifacts = [
         "com.github.tomakehurst:wiremock:2.1.12",
         "com.oracle.substratevm:svm:19.0.0",
+        "org.apache.curator:curator-client:4.0.0",
+        "org.apache.zookeeper:zookeeper:3.5.3-beta",
     ],
+    # Exclude ALL transitive dependencies of the artifacts above for now
     excluded_artifacts = [
-        # Exclude ALL transitive dependencies of the artifacts above for now
         "asm:asm",
         "com.fasterxml.jackson.core:jackson-annotations",
         "com.fasterxml.jackson.core:jackson-core",
@@ -2782,8 +2788,10 @@ maven_install(
         "commons-cli:commons-cli",
         "commons-codec:commons-codec",
         "commons-logging:commons-logging",
+        "io.netty:netty",
         "javax.servlet:javax.servlet-api",
         "junit:junit",
+        "log4j:log4j",
         "net.minidev:asm",
         "net.minidev:json-smart",
         "net.sf.jopt-simple:jopt-simple",
@@ -2807,13 +2815,14 @@ maven_install(
         "org.graalvm.truffle:truffle-nfi",
         "org.hamcrest:hamcrest-core",
         "org.slf4j:slf4j-api",
+        "org.slf4j:slf4j-log4j12",
         "org.xmlunit:xmlunit-core",
         "org.xmlunit:xmlunit-legacy",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:aggregation_temp_install.json",
     repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
-    version_conflict_policy = "default",
+    version_conflict_policy = "pinned",
 )
 
 load("@aggregation_temp//:defs.bzl", aggregation_temp_pin = "pinned_maven_install")

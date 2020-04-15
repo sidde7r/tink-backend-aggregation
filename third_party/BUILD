@@ -921,7 +921,7 @@ java_library(
     name = "org_apache_zookeeper_zookeeper",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_zookeeper_zookeeper//jar",
+        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
     ],
     runtime_deps = [],
 )
@@ -930,15 +930,15 @@ java_library(
     name = "org_apache_curator_curator_client",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_curator_curator_client//jar",
+        "@aggregation_temp//:org_apache_curator_curator_client",
     ],
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@jline_jline//jar",
-        "@org_apache_zookeeper_zookeeper//jar",
+        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
     ],
 )
 
@@ -951,11 +951,11 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@jline_jline//jar",
-        "@org_apache_curator_curator_client//jar",
-        "@org_apache_zookeeper_zookeeper//jar",
+        "@aggregation_temp//:org_apache_curator_curator_client",
+        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
     ],
 )
 
@@ -968,12 +968,12 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@jline_jline//jar",
-        "@org_apache_curator_curator_client//jar",
+        "@aggregation_temp//:org_apache_curator_curator_client",
+        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
         "@org_apache_curator_curator_framework//jar",
-        "@org_apache_zookeeper_zookeeper//jar",
     ],
 )
 
@@ -986,14 +986,14 @@ java_library(
     runtime_deps = [
         ":io_netty_netty_all",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:jline_jline",
         "@aggregation//:log4j_log4j",
+        "@aggregation//:org_codehaus_jackson_jackson_mapper_asl",
         "@aggregation//:org_slf4j_slf4j_api",
-        "@jline_jline//jar",
-        "@org_apache_curator_curator_client//jar",
+        "@aggregation_temp//:org_apache_curator_curator_client",
+        "@aggregation_temp//:org_apache_zookeeper_zookeeper",
         "@org_apache_curator_curator_framework//jar",
         "@org_apache_curator_curator_recipes//jar",
-        "@org_apache_zookeeper_zookeeper//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
     ],
 )
 
@@ -1041,7 +1041,7 @@ java_library(
     name = "org_assertj_assertj_core",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_assertj_assertj_core//jar",
+        "@aggregation//:org_assertj_assertj_core",
     ],
 )
 
@@ -1063,18 +1063,10 @@ java_library(
 )
 
 java_library(
-    name = "org_codehaus_jackson_jackson_core_asl",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_codehaus_jackson_jackson_core_asl//jar",
-    ],
-)
-
-java_library(
     name = "org_codehaus_plexus_plexus_utils",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_codehaus_plexus_plexus_utils//jar",
+        "@aggregation//:org_codehaus_plexus_plexus_utils",
     ],
 )
 
@@ -1251,7 +1243,7 @@ java_library(
     name = "org_xerial_snappy_snappy_java",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_xerial_snappy_snappy_java//jar",
+        "@aggregation//:org_xerial_snappy_snappy_java",
     ],
 )
 
@@ -1269,7 +1261,7 @@ java_library(
     exports = [
         "@aggregation//:junit_junit",
         "@aggregation//:org_hamcrest_hamcrest_core",
-        "@pl_pragmatists_JUnitParams//jar",
+        "@aggregation//:pl_pragmatists_JUnitParams",
     ],
 )
 
@@ -1285,7 +1277,7 @@ java_library(
     name = "org_hamcrest_hamcrest_library",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_hamcrest_hamcrest_library//jar",
+        "@aggregation//:org_hamcrest_hamcrest_library",
     ],
 )
 
@@ -1311,7 +1303,7 @@ java_library(
     name = "org_apache_pdfbox_pdfbox",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_pdfbox_pdfbox//jar",
+        "@aggregation//:org_apache_pdfbox_pdfbox",
     ],
 )
 
