@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.transaction;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
@@ -11,6 +12,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import java.util.Collections;
 import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsAccountInformation;
@@ -29,15 +31,22 @@ import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class TransactionClientTest {
-    private static final FinTsConfiguration configuration = TestFixtures.getFinTsConfiguration();
-    private static final FinTsDialogContext dialogContext =
-            TestFixtures.getDialogContext(configuration);
+
     private static final TransactionRequestBuilder dummyRequestBuilder =
             (lamdaDialogContext, account, startingPoint) ->
                     FinTsRequest.createEncryptedRequest(
                             lamdaDialogContext, Collections.emptyList());
 
-    @Rule public WireMockRule wireMock = new WireMockRule(443);
+    @Rule public WireMockRule wireMock = new WireMockRule(wireMockConfig().dynamicPort());
+
+    private FinTsConfiguration configuration;
+    private FinTsDialogContext dialogContext;
+
+    @Before
+    public void setup() {
+        configuration = TestFixtures.getFinTsConfiguration(wireMock.port());
+        dialogContext = TestFixtures.getDialogContext(configuration);
+    }
 
     @Test
     public void shouldGetTransactionDetailsWithMT940Format() {
