@@ -11,9 +11,9 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
-import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 
 public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerCommand {
     private static final Logger log =
@@ -79,6 +79,7 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
                 new UpdateCredentialsStatusRequest();
         updateCredentialsStatusRequest.setCredentials(
                 CoreCredentialsMapper.fromAggregationCredentials(credentialsCopy));
+        updateCredentialsStatusRequest.setRequestType(context.getRequest().getType());
         refreshId.ifPresent(updateCredentialsStatusRequest::setRefreshId);
 
         controllerWrapper.updateCredentials(updateCredentialsStatusRequest);

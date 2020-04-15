@@ -439,11 +439,17 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         }
     }
 
-    private String waitForPassword() throws SupplementalInfoException {
-        return supplementalInformationHelper
-                .askSupplementalInformation(
-                        supplementalInformationFormer.getField(Field.Key.PASSWORD))
-                .get(Field.Key.PASSWORD.getFieldKey());
+    private String waitForPassword() throws SupplementalInfoException, SessionException {
+        try {
+            return supplementalInformationHelper
+                    .askSupplementalInformation(
+                            supplementalInformationFormer.getField(Field.Key.PASSWORD))
+                    .get(Field.Key.PASSWORD.getFieldKey());
+        } catch (IllegalStateException ex) {
+            // there was timeout on waiting for supplement information
+            // should be handled as session expired
+            throw SessionError.SESSION_EXPIRED.exception(ex);
+        }
     }
 
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {

@@ -1,10 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.entity.AccountEntity;
@@ -22,11 +27,13 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Reference;
 
 public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
-
+    private static final Logger logger = LoggerFactory.getLogger(UnicreditPaymentExecutor.class);
     private final UnicreditBaseApiClient apiClient;
 
     public UnicreditPaymentExecutor(UnicreditBaseApiClient apiClient) {
@@ -49,13 +56,26 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
 
         AccountEntity debtor = new AccountEntity(payment.getDebtor().getAccountNumber());
         AccountEntity creditor = new AccountEntity(payment.getCreditor().getAccountNumber());
-
+        String unstructuredRemittance =
+                Optional.ofNullable(payment.getReference()).map(Reference::getValue).orElse("");
+        Date executionDate =
+                Optional.ofNullable(payment.getExecutionDate())
+                        .map(
+                                localDate ->
+                                        Date.from(
+                                                localDate
+                                                        .atStartOfDay()
+                                                        .atZone(ZoneId.of("CET"))
+                                                        .toInstant()))
+                        .orElse(new Date());
         CreatePaymentRequest request =
                 new CreatePaymentRequest.Builder()
                         .withCreditor(creditor)
                         .withDebtor(debtor)
                         .withAmount(amount)
                         .withCreditorName(payment.getCreditor().getName())
+                        .withUnstructuredRemittance(unstructuredRemittance)
+                        .withRequestedExecutionDate(executionDate)
                         .build();
 
         return apiClient
@@ -67,11 +87,33 @@ public class UnicreditPaymentExecutor implements PaymentExecutor, FetchablePayme
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
-
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentAuthorizationException {
         Payment payment = paymentMultiStepRequest.getPayment();
-        return new PaymentMultiStepResponse(
-                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+
+        PaymentMultiStepResponse paymentMultiStepResponse = null;
+        PaymentResponse paymentResponse =
+                fetchPaymentWithId(
+                        paymentMultiStepRequest.getPayment().getUniqueId(),
+                        paymentMultiStepRequest.getPayment().getType());
+        PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
+        logger.info("Payment id={} sign status={}", payment.getId(), paymentStatus);
+
+        if (PaymentStatus.SIGNED.equals(paymentStatus)) {
+            paymentMultiStepResponse =
+                    new PaymentMultiStepResponse(
+                            paymentResponse,
+                            AuthenticationStepConstants.STEP_FINALIZE,
+                            new ArrayList<>());
+        } else {
+            throw new PaymentAuthorizationException();
+        }
+
+        return paymentMultiStepResponse;
+    }
+
+    private PaymentResponse fetchPaymentWithId(String paymentId, PaymentType type) {
+        return apiClient.fetchPayment(paymentId).toTinkPayment(paymentId, type);
     }
 
     @Override

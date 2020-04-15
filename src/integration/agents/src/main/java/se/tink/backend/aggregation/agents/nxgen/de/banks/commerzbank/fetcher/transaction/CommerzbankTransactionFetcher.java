@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.tr
 
 import com.google.common.base.Strings;
 import java.util.Date;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants.Tag;
@@ -12,16 +13,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
+@AllArgsConstructor
 public class CommerzbankTransactionFetcher
         implements TransactionDatePaginator<TransactionalAccount> {
 
-    private final CommerzbankApiClient apiClient;
     private static final AggregationLogger LOGGER =
             new AggregationLogger(CommerzbankTransactionFetcher.class);
 
-    public CommerzbankTransactionFetcher(CommerzbankApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
+    private final CommerzbankApiClient apiClient;
 
     @Override
     public PaginatorResponse getTransactionsFor(

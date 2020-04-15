@@ -1,8 +1,5 @@
 build_flags:
   --test_output=streamed
-  --incompatible_depset_is_not_iterable=false
-  --incompatible_new_actions_api=false
-  --incompatible_depset_union=false
   --build_manual_tests
 
 directories:

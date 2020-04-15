@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
-import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
+import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
 import se.tink.backend.aggregation.resources.FakeCreditSafeService;
@@ -38,14 +38,13 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
+import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ClientConfigurationProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
-import se.tink.backend.aggregation.workers.AgentWorker;
-import se.tink.backend.aggregation.workers.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
@@ -53,6 +52,8 @@ import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryStub;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
+import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
@@ -186,8 +187,9 @@ public class AggregationDecoupledModule extends AbstractModule {
                 .to(InterProcessSemaphoreMutexFactoryStub.class);
         bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
 
-        bind(CryptoConfigurationsRepository.class)
-                .toInstance(new FakeCryptoConfigurationsRepository(configuration));
+        bind(CryptoConfigurationsRepository.class).to(FakeCryptoConfigurationsRepository.class);
+        bind(CryptoConfiguration.class)
+                .toInstance(configuration.getDevelopmentConfiguration().getCryptoConfiguration());
         bind(CryptoConfigurationDao.class).in(Scopes.SINGLETON);
         bind(ControllerWrapperProvider.class).in(Scopes.SINGLETON);
         bind(AggregatorInfoProvider.class).in(Scopes.SINGLETON);

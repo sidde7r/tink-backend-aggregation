@@ -3,29 +3,40 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.configura
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.AbancaConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
 public class AbancaConfiguration implements ClientConfiguration {
 
-    @SensitiveSecret private String authKey;
+    @Secret private String clientId;
     @SensitiveSecret private String apiKey;
-
-    public String getAuthKey() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(authKey),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Auth Key"));
-
-        return authKey;
-    }
+    @AgentConfigParam private String redirectUrl;
 
     public String getApiKey() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(apiKey),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Auth Key"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "API Key"));
 
         return apiKey;
+    }
+
+    public String getClientId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
+
+        return clientId;
+    }
+
+    public String getRedirectUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
+
+        return redirectUrl;
     }
 }

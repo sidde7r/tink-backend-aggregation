@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
 
 import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.SebConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.rpc.CreatePaymentResponse;
@@ -158,13 +159,15 @@ public class SebApiClient extends SebBaseApiClient {
                 .get(FetchPaymentResponse.class);
     }
 
-    public PaymentStatusResponse getPaymentStatus(String paymentId, String paymentProduct) {
+    public PaymentStatusResponse getPaymentStatus(String paymentId, String paymentProduct)
+            throws PaymentException {
         return createRequestInSession(
                         new URL(SebCommonConstants.Urls.BASE_URL)
                                 .concat(SebConstants.Urls.GET_PAYMENT_STATUS)
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
-                .get(PaymentStatusResponse.class);
+                .get(PaymentStatusResponse.class)
+                .checkForErrors();
     }
 
     public PaymentStatusResponse signPayment(

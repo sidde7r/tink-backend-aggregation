@@ -20,9 +20,9 @@ public enum SebPaymentStatus {
 
     static {
         sebPaymentStatusToTinkPaymentStatusMapper.put(RCVD, PaymentStatus.PENDING);
-        sebPaymentStatusToTinkPaymentStatusMapper.put(ACTC, PaymentStatus.PAID);
         sebPaymentStatusToTinkPaymentStatusMapper.put(RJCT, PaymentStatus.REJECTED);
         sebPaymentStatusToTinkPaymentStatusMapper.put(ACSC, PaymentStatus.PAID);
+        sebPaymentStatusToTinkPaymentStatusMapper.put(ACTC, PaymentStatus.PAID);
     }
 
     SebPaymentStatus(String status) {

@@ -82,9 +82,9 @@ public class RestIoLoggingFilter extends Filter {
 
     private static String censorHeaderValue(String key, String value) {
         if (HttpLoggingConstants.NON_SENSITIVE_HEADER_FIELDS.contains(key.toLowerCase())) {
-            return "*** MASKED ***";
+            return value;
         }
-        return value;
+        return "*** MASKED ***";
     }
 
     private static StringBuilder prefixId(StringBuilder b, long id) {

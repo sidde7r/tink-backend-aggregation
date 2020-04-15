@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.workers.commands;
 import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
-import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class RefreshCommandChainEventTriggerCommand extends AgentWorkerCommand {

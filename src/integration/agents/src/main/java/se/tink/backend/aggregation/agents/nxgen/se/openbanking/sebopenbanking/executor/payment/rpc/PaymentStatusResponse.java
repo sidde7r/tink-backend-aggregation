@@ -40,7 +40,13 @@ public class PaymentStatusResponse {
     }
 
     @JsonIgnore
-    public void checkForErrors() throws PaymentException {
+    public boolean isPaymentCancelled() {
+        return hasMethodSelectionEntity()
+                && SebPaymentStatus.RCVD.getText().equalsIgnoreCase(transactionStatus);
+    }
+
+    @JsonIgnore
+    public PaymentStatusResponse checkForErrors() throws PaymentException {
         if (SebPaymentStatus.RJCT.getText().equalsIgnoreCase(transactionStatus)) {
             if (isDueDateTooCloseError()) {
                 throw DateValidationException.paymentDateTooCloseException();
@@ -48,10 +54,13 @@ public class PaymentStatusResponse {
                 throw DateValidationException.paymentDateNotBusinessDayException();
             } else if (isSimilarPaymentError()) {
                 throw PaymentRejectedException.similarPaymentException();
+            } else if (isServiceUnavailableError()) {
+                throw PaymentRejectedException.bankPaymentServiceUnavailable();
             } else {
                 throw new PaymentRejectedException(getErrorMessage());
             }
         }
+        return this;
     }
 
     @JsonIgnore
@@ -67,6 +76,11 @@ public class PaymentStatusResponse {
     @JsonIgnore
     private boolean isSimilarPaymentError() {
         return tppMessages.contains(ErrorMessages.SIMILAR_PAYMENT_ERROR_MESSAGE);
+    }
+
+    @JsonIgnore
+    private boolean isServiceUnavailableError() {
+        return tppMessages.contains(ErrorMessages.PAYMENT_SERVICE_UNAVAILABLE);
     }
 
     @JsonIgnore

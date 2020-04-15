@@ -12,8 +12,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
@@ -50,9 +52,25 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
 
         prepareStorageBeforeAuth(username);
         sendInitializationRequests();
-        LogonRequest request = new LogonRequest(username, password);
+        processLogon(prepareLogon(username, password));
+    }
+
+    private LogonRequest prepareLogon(String username, String password) {
+        String rememberMeToken = persistentStorage.get(Tags.REMEMBER_ME_TOKEN);
+        String maskedUserId = persistentStorage.get(Tags.MASKED_USER_ID);
+        if (rememberMeToken != null && maskedUserId != null) {
+            return new LogonRequest(maskedUserId, password, rememberMeToken);
+        }
+
+        return new LogonRequest(username, password);
+    }
+
+    private void processLogon(LogonRequest request)
+            throws AuthenticationException, AuthorizationException {
         LogonResponse response = apiClient.logon(request);
         if (!response.isSuccess()) {
+            sessionStorage.clear();
+            persistentStorage.clear();
             handleErrorResponse(response);
         }
         prepareStorageAfterAuth(response);
@@ -69,8 +87,12 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
                 throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
             case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_ACCOUNT_BLOCKED:
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
-            case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
             case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_CONTENT_ERROR:
+                // This error might be fixed by updating headers
+                LOGGER.error(
+                        String.format("%s: %s", reportingCode, response.getStatus().getMessage()));
+                throw new IllegalStateException("Login failure - check headers");
+            case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:
                 throw BankServiceError.BANK_SIDE_FAILURE.exception(
                         "Error code: "
                                 + reportingCode
@@ -91,16 +113,25 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
     }
 
     private void sendInitializationRequests() {
-        apiClient.initialization(InitializationRequest.createAccountServicingRequest());
-        apiClient.initialization(InitializationRequest.createContentRequest());
+        String initVersion = persistentStorage.getOrDefault(Tags.INIT_VERSION, "-1");
+        InitializationResponse response =
+                apiClient.initialization(
+                        InitializationRequest.createAccountServicingRequest(initVersion));
+        if (response.getInitialization().getStatus().equals(0)) {
+            persistentStorage.put(Tags.INIT_VERSION, response.getInitialization().getVersion());
+        }
     }
 
     private void prepareStorageBeforeAuth(String username) {
-        persistentStorage.putIfAbsent(
-                AmericanExpressV62Constants.Tags.HARDWARE_ID, StringUtils.hashAsUUID(username));
-        persistentStorage.putIfAbsent(
-                AmericanExpressV62Constants.Tags.INSTALLATION_ID, generateUUID());
-        sessionStorage.putIfAbsent(AmericanExpressV62Constants.Tags.PROCESS_ID, generateUUID());
+        persistentStorage.computeIfAbsent(
+                AmericanExpressV62Constants.Tags.HARDWARE_ID,
+                k -> persistentStorage.put(k, StringUtils.hashAsUUID(username)));
+        persistentStorage.computeIfAbsent(
+                AmericanExpressV62Constants.Tags.INSTALLATION_ID,
+                k -> persistentStorage.put(k, generateUUID()));
+        sessionStorage.computeIfAbsent(
+                AmericanExpressV62Constants.Tags.PROCESS_ID,
+                k -> persistentStorage.put(k, generateUUID()));
     }
 
     private void prepareStorageAfterAuth(LogonResponse response) {

@@ -24,7 +24,7 @@ public class TransactionsEntity {
         return Transaction.builder()
                 .setDescription(text)
                 .setDate(Instant.ofEpochMilli(date).atZone(ZoneId.of("CET")).toLocalDate())
-                .setAmount(ExactCurrencyAmount.of(amountHolderCurrency, Accounts.CURRENCY))
+                .setAmount(ExactCurrencyAmount.of(amountHolderCurrency.negate(), Accounts.CURRENCY))
                 .build();
     }
 }

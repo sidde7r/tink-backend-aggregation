@@ -22,7 +22,7 @@ public class SebCorporateAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("se", "se-sebcorporate-ob")
+                new AgentIntegrationTest.Builder("se", "se-seb-business-ob")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .setFinancialInstitutionId("sebcorporate")

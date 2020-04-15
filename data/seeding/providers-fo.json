@@ -20,8 +20,8 @@
                     "sensitive": true
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "bb1f3af4840d4920bab0fe9a39e0e263",
+            "financialInstitutionName": "BankNordik",
             "multiFactor": false,
             "name": "fo-banknordik-password",
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",

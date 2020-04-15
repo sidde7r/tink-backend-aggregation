@@ -13,7 +13,11 @@ public class LogonRequest {
     private LoginCredentials loginCredentials;
 
     public LogonRequest(String username, String password) {
-        this.loginCredentials = new LoginCredentials();
-        this.loginCredentials.setUsernameAndPassword(username, password);
+        this.loginCredentials = LoginCredentials.createLoginCredentials(username, password);
+    }
+
+    public LogonRequest(String username, String password, String rememberMeToken) {
+        this.loginCredentials =
+                LoginCredentials.createLoginCredentials(username, password, rememberMeToken);
     }
 }

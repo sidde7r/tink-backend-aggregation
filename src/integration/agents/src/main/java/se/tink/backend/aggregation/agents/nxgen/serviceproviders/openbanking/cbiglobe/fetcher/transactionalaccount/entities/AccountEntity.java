@@ -21,13 +21,10 @@ public class AccountEntity {
     @JsonProperty("_links")
     private LinksEntity links;
 
-    private String currency;
-    private String href;
     private String bban;
     private String iban;
     private String resourceId;
     private String name;
-    private String product;
 
     public AccountEntity(String iban) {
         this.iban = iban;

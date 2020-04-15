@@ -46,7 +46,10 @@ public class TransactionEntity {
 
         String description =
                 Stream.of(
-                                cleanUnstructuredInformation(remittanceInformationUnstructured),
+                                Objects.nonNull(remittanceInformationUnstructured)
+                                        ? cleanUnstructuredInformation(
+                                                remittanceInformationUnstructured)
+                                        : null,
                                 creditorName,
                                 debtorName)
                         .filter(Objects::nonNull)
@@ -88,12 +91,23 @@ public class TransactionEntity {
                 .setDate(date)
                 .setPayload(TransactionPayloadTypes.DETAILS, transactionType)
                 .setPayload(
+                        TransactionPayloadTypes.TRANSFER_ACCOUNT_EXTERNAL, getCounterPartyAccount())
+                .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
                         getCounterPartyName())
                 .setPayload(
                         TransactionPayloadTypes.MESSAGE,
                         cleanUnstructuredInformation(remittanceInformationUnstructured))
                 .build();
+    }
+
+    private String getCounterPartyAccount() {
+        return Stream.of(creditorAccount, debtorAccount)
+                .filter(Objects::nonNull)
+                .map(TransactionAccountEntity::getIban)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse("");
     }
 
     private String getCounterPartyName() {

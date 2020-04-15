@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
@@ -15,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -51,24 +53,26 @@ public class TransactionEntity {
 
     public Transaction constructCreditCardTransaction() {
 
-        Amount transactionAmount = new Amount(amount.getCurrency(), amount.getAmount());
+        ExactCurrencyAmount transactionAmount =
+                ExactCurrencyAmount.of(amount.getAmount(), amount.getCurrency());
 
         transactionAmount =
-                getCreditDebitIndicator().equals(TransactionTypeEntity.CREDIT)
+                getCreditDebitIndicator().equals(TransactionTypeEntity.DEBIT)
                         ? transactionAmount.negate()
                         : transactionAmount;
 
         return CreditCardTransaction.builder()
                 .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
                 .setDate(getBookedDate())
-                .setDescription(creditorAccount.getName())
+                .setDescription(getDescription())
                 .setAmount(transactionAmount)
                 .build();
     }
 
     public Transaction constructTransactionalAccountTransaction() {
 
-        Amount transactionAmount = new Amount(amount.getCurrency(), amount.getAmount());
+        ExactCurrencyAmount transactionAmount =
+                ExactCurrencyAmount.of(amount.getAmount(), amount.getCurrency());
 
         transactionAmount =
                 getCreditDebitIndicator().equalsIgnoreCase(CrosskeyBaseConstants.Transactions.DEBIT)
@@ -99,5 +103,11 @@ public class TransactionEntity {
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @JsonIgnore
+    private String getDescription() {
+        return Optional.ofNullable(transactionInformation)
+                .orElse(StringUtils.capitalize(proprietaryBankTransactionCode.getCode()));
     }
 }

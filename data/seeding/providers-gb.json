@@ -8,7 +8,7 @@
             "credentialsType": "PASSWORD",
             "displayName": "Handelsbanken",
             "fields": [],
-            "financialInstitutionId": "dummyId",
+            "financialInstitutionId": "handelsbanken",
             "financialInstitutionName": "dummyName",
             "multiFactor": false,
             "name": "gb-handelsbanken-oauth2",

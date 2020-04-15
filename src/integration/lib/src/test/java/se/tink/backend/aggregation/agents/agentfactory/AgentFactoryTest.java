@@ -14,7 +14,7 @@ public final class AgentFactoryTest {
         Class classWithInjectAnnotation = ClassWithInjectAnnotation.class;
 
         // When
-        boolean result = AgentFactory.hasInjectAnnotatedConstructor(classWithInjectAnnotation);
+        boolean result = AgentFactoryUtils.hasInjectAnnotatedConstructor(classWithInjectAnnotation);
 
         // Then
         Assert.assertTrue(result);
@@ -27,7 +27,8 @@ public final class AgentFactoryTest {
         Class classWithNoInjectAnnotation = ClassWithNoInjectAnnotation.class;
 
         // When
-        boolean result = AgentFactory.hasInjectAnnotatedConstructor(classWithNoInjectAnnotation);
+        boolean result =
+                AgentFactoryUtils.hasInjectAnnotatedConstructor(classWithNoInjectAnnotation);
 
         // Then
         Assert.assertFalse(result);

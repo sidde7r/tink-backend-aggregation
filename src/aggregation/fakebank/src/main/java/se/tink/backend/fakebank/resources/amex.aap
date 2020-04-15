@@ -5,21 +5,20 @@ REQUEST 1
 POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/initialization
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: UNAVAILABLE
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 
 {"serviceName":"AccountServicing","version":"-1"}
@@ -41,21 +40,20 @@ REQUEST 2
 POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/initialization
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: UNAVAILABLE
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 
 {"serviceName":"Content","version":"-1"}
@@ -77,21 +75,20 @@ REQUEST 3
 POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/loginsummary
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: UNAVAILABLE
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 
 {"cardArtRequest":[{"minimumWidth":"1260","tag":"big-image"}],"loginCredentials":{"userIdLogin":{"rememberMeFlag":true,"userId":"testUser","password":"testPassword","rememberMeToken":null}}}
@@ -113,28 +110,27 @@ REQUEST 4
 POST https://global.americanexpress.com/mobileone/msl/services/timeline/v1/timelineDetail
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: dummyPublicGuid
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
 x-axp-gatekeeper: dummyGateKeeperCookie
 authorization: Bearer dummyJWTToken
 
-{"timeZone":"GMT+1","timeZoneOffset":"3600000","sortedIndex":0,"pendingChargeEnabled":true,"cmlEnabled":true,"goodsSvcOfferEnabled":false,"payWithPointsEnabled":false,"payYourWayEnabled":false,"pushEnabled":false}
+{"timeZone":"GMT+1","timeZoneOffset":"7200000","sortedIndex":0,"pendingChargeEnabled":true,"cmlEnabled":true,"goodsSvcOfferEnabled":false,"payWithPointsEnabled":false,"payYourWayEnabled":false,"pushEnabled":false}
 
 RESPONSE 4
 200
@@ -153,21 +149,20 @@ REQUEST 5
 POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: dummyPublicGuid
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
@@ -193,21 +188,20 @@ REQUEST 6
 POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: dummyPublicGuid
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
@@ -233,21 +227,20 @@ REQUEST 7
 POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: dummyPublicGuid
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
@@ -273,21 +266,20 @@ REQUEST 8
 POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: dummyPublicGuid
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
@@ -313,21 +305,20 @@ REQUEST 9
 POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: dummyPublicGuid
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
@@ -353,21 +344,20 @@ REQUEST 10
 POST https://global.americanexpress.com/mobileone/msl/services/transactions/v1/getDetails
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: dummyPublicGuid
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue
@@ -393,21 +383,20 @@ REQUEST 11
 POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/extendSession
 Accept: application/json
 Content-Type: application/json
-charset: UTF-8
-x-axp-clienttype: iPhone
-x-axp-devicemodel: iPhone8,1
-x-axp-deviceos: iOS
-x-axp-osversion: 12.4.3
+Charset: UTF-8
+X-AXP-ClientType: iPhone
+X-AXP-DeviceModel: iPhone8.1
+X-AXP-DeviceOS: iOS
+X-AXP-OSVersion: 13.3.1
 x-axp-manufacturer: Apple
 x-axp-device-timezone-name: Europe/Stockholm
-x-axp-timezoneoffset: 3600000
+X-AXP-TimeZoneOffset: 3600000
 accept-encoding: br, gzip, deflate
 accept-language: en-us
 x-axp-public-guid: dummyPublicGuid
-User-Agent: Amex%20UK/9 CFNetwork/978.0.7 Darwin/18.7.0
-x-axp-appid: uk.co.americanexpress.amexservice
-x-axp-appversion: 6.25.0
-x-axp-locale: en_GB
+X-AXP-AppId: uk.co.americanexpress.amexservice
+X-AXP-AppVersion: 6.25.0
+X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 x-axp-amexsession: AmexSession type="AmexSession",value="dummyAmexSession"
 x-axp-blueboxvalues: dummyCupcakeValue

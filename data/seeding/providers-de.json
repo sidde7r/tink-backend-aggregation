@@ -1532,7 +1532,8 @@
             "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": null,
-            "type": "BANK"
+            "type": "BANK",
+            "financialInstitutionName": "Comdirect"
         },
         {
             "accessType": "OTHER",
@@ -1674,8 +1675,8 @@
                     "name": "iban"
                 }
             ],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "fadaee91c1f3453eb844c0b9e7a77c81",
+            "financialInstitutionName": "Commerzbank",
             "multiFactor": false,
             "name": "de-commerzbank-ob",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
@@ -12650,7 +12651,7 @@
             "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Ing",
             "fields": [],
-            "financialInstitutionId": "dummyFinancialInstitutionId",
+            "financialInstitutionId": "eba43066fc944c6889f2487a571545a1",
             "financialInstitutionName": "Ing",
             "multiFactor": false,
             "name": "de-ing-ob",
@@ -50755,8 +50756,8 @@
             "credentialsType": "PASSWORD",
             "displayName": "Targobank Germany",
             "fields": [],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "dc5eceed69b748439a49ec1e4feb1c1c",
+            "financialInstitutionName": "Targobank Germany",
             "multiFactor": false,
             "name": "de-targobank-ob",
             "passwordHelpText": null,
@@ -50979,8 +50980,8 @@
             "credentialsType": "PASSWORD",
             "displayName": "Unicredit Germany",
             "fields": [],
-            "financialInstitutionId": "dummyId",
-            "financialInstitutionName": "dummyName",
+            "financialInstitutionId": "9695c4f3f68940d89ad68f6b17f78fbd",
+            "financialInstitutionName": "HypoVereinsbank",
             "multiFactor": false,
             "name": "de-unicredit-ob",
             "passwordHelpText": null,

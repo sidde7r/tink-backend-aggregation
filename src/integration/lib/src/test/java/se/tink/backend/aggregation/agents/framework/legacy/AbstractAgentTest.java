@@ -22,7 +22,8 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.agentfactory.AgentFactory;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
+import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
@@ -66,7 +67,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
         // Provide AgentFactory with 'production' components.
         factory =
-                new AgentFactory(
+                new AgentFactoryImpl(
                         new AgentPackageModuleFactory(new PackageModuleLoader()), configuration);
     }
 

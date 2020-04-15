@@ -185,6 +185,9 @@ public final class SbabApiClient {
                 if (errorResponse.isFailedSignature()) {
                     throw new PaymentAuthorizationException(ErrorMessage.SIGNATURE_FAILED);
                 }
+                if (errorResponse.isForbiddenWithNoErrorCode()) {
+                    throw new PaymentException(ErrorMessage.FORBIDDEN);
+                }
                 break;
             default:
                 throw httpResponseException;

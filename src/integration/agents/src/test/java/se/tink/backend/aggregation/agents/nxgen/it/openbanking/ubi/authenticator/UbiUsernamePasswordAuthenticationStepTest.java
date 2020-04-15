@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -31,7 +32,11 @@ public class UbiUsernamePasswordAuthenticationStepTest {
     public void init() {
         consentManager = Mockito.mock(ConsentManager.class);
         strongAuthenticationState = Mockito.mock(StrongAuthenticationState.class);
-        step = new UbiUsernamePasswordAuthenticationStep(consentManager, strongAuthenticationState);
+        step =
+                new UbiUsernamePasswordAuthenticationStep(
+                        consentManager,
+                        strongAuthenticationState,
+                        Mockito.mock(SupplementalRequester.class));
     }
 
     @Test

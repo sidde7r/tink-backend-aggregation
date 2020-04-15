@@ -110,6 +110,7 @@ public final class SbabConstants {
         public static final String AMOUNT_LIMIT_REACHED = "AMOUNT_LIMIT_REACHED";
         public static final String AMOUNT_EXCEEDS_BALANCE_VALIDATION =
                 "AMOUNT_EXCEEDS_BALANCE_VALIDATION";
+        public static final String FORBIDDEN = "forbidden";
     }
 
     public static class ErrorMessage {
@@ -128,6 +129,7 @@ public final class SbabConstants {
                 "The entered amount exceeds the daily limit.";
         public static final String AMOUNT_EXCEEDS_BALANCE =
                 "This amount would exceed the available balance and cause overdraft.";
+        public static final String FORBIDDEN = "You are not authorised to make this payment";
     }
 
     public static class HttpClient {

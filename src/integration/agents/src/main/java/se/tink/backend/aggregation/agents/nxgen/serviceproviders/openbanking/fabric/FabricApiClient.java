@@ -1,0 +1,126 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric;
+
+import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
+import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.configuration.FabricConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.TransactionResponse;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
+
+public class FabricApiClient {
+
+    private final TinkHttpClient client;
+    private final PersistentStorage persistentStorage;
+    private FabricConfiguration configuration;
+
+    public FabricApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+        this.client = client;
+        this.persistentStorage = persistentStorage;
+    }
+
+    private FabricConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    protected void setConfiguration(FabricConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    private RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createRequestInSession(URL url) {
+        final String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+
+        return createRequest(url)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.CONSENT_ID, consentId);
+    }
+
+    public CreateConsentResponse getConsent(String state) {
+        final String baseUrl = getConfiguration().getBaseUrl();
+        final URL redirectUri =
+                new URL(getConfiguration().getRedirectUrl()).queryParam(QueryKeys.STATE, state);
+
+        return client.request(new URL(baseUrl + Urls.CONSENT))
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUri.toString())
+                .header(HeaderKeys.TPP_REDIRECT_PREFERED, HeaderValues.TPP_REDIRECT_PREFERED)
+                .post(CreateConsentResponse.class, new CreateConsentRequest());
+    }
+
+    public CreateConsentResponse getConsent() {
+        final String baseUrl = getConfiguration().getBaseUrl();
+
+        return client.request(new URL(baseUrl + Urls.CONSENT))
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .post(CreateConsentResponse.class, new CreateConsentRequest());
+    }
+
+    public AccountResponse fetchAccounts() {
+        final String baseUrl = getConfiguration().getBaseUrl();
+
+        return createRequestInSession(new URL(baseUrl + Urls.GET_ACCOUNTS))
+                .get(AccountResponse.class);
+    }
+
+    public BalanceResponse getBalances(String url) {
+        String baseUrl = getConfiguration().getBaseUrl();
+
+        return createRequestInSession(new URL(baseUrl + Urls.API_PSD2_URL + url))
+                .get(BalanceResponse.class);
+    }
+
+    public AccountDetailsResponse getAccountDetails(String url) {
+        final String baseUrl = getConfiguration().getBaseUrl();
+
+        return createRequestInSession(new URL(baseUrl + Urls.API_PSD2_URL + url))
+                .get(AccountDetailsResponse.class);
+    }
+
+    public TransactionResponse fetchTransactions(String resourceId, Date fromDate, Date toDate) {
+        String baseUrl = getConfiguration().getBaseUrl();
+
+        return createRequestInSession(
+                        new URL(baseUrl + Urls.GET_TRANSACTIONS)
+                                .parameter(IdTags.ACCOUNT_ID, resourceId))
+                .queryParam(
+                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .get(TransactionResponse.class);
+    }
+
+    public ConsentStatusResponse getConsentStatus(String consentId) {
+        final String baseUrl = getConfiguration().getBaseUrl();
+
+        return client.request(
+                        new URL(baseUrl + Urls.GET_CONSENT_STATUS)
+                                .parameter(IdTags.CONSENT_ID, consentId))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(ConsentStatusResponse.class);
+    }
+}

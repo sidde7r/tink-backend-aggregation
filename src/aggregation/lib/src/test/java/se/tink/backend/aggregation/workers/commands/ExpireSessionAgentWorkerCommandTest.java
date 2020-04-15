@@ -13,7 +13,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExpireSessionAgentWorkerCommandTest {

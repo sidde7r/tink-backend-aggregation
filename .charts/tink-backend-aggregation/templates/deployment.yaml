@@ -375,7 +375,7 @@ spec:
           periodSeconds: 10
           failureThreshold: 3
           successThreshold: 3
-          timeoutSeconds: 1
+          timeoutSeconds: 10
           {{- if  (eq .Values.Environment "development") }}
           initialDelaySeconds: 120
           {{- else }}

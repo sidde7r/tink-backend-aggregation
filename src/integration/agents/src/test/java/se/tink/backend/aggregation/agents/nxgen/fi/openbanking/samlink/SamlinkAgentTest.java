@@ -16,7 +16,10 @@ public class SamlinkAgentTest {
                 new AgentIntegrationTest.Builder("fi", "fi-samlink-oauth2")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .expectLoggedIn(false)
+                        .setClusterId("oxford-preprod")
+                        .setAppId("tink")
+                        .setFinancialInstitutionId("samlink");
     }
 
     @Test

@@ -146,7 +146,7 @@ public class SebCorporateApiClient extends SebBaseApiClient {
                 .header(
                         SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
                         SebCommonConstants.getPsuIpAddress())
-                .header(HeaderKeys.PSU_CORPORATE_ID, credentials.getField("CORPORATE_ID"))
+                .header(HeaderKeys.PSU_CORPORATE_ID, credentials.getField("psu-corporate-id"))
                 .addBearerToken(getTokenFromStorage());
     }
 }

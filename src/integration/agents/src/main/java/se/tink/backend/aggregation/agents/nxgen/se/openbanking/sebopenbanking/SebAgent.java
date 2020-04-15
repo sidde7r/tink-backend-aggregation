@@ -26,6 +26,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -40,10 +42,15 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
     public SebAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        connfigureHttpClient(client);
         this.apiClient = new SebApiClient(client, persistentStorage);
         this.instanceStorage = new SebStorage();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();
+    }
+
+    private void connfigureHttpClient(TinkHttpClient client) {
+        client.addFilter(new AccessExceededFilter());
     }
 
     @Override

@@ -15,7 +15,6 @@ public class TransactionEntity {
     private Date bookingDate;
     private String remittanceInformationUnstructured;
     private AmountEntity transactionAmount;
-    private String transactionId;
     private Date valueDate;
     private String debtorName;
     private String creditorName;

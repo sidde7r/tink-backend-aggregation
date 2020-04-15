@@ -47,7 +47,9 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
-        return null;
+        final OAuth2Token accessToken = apiClient.refreshToken(refreshToken);
+        sessionStorage.put(LansforsakringarConstants.StorageKeys.ACCESS_TOKEN, accessToken);
+        return accessToken;
     }
 
     @Override

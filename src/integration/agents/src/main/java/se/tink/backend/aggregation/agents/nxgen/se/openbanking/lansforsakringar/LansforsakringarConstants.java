@@ -118,10 +118,12 @@ public abstract class LansforsakringarConstants {
         public static final String SEPA = "SEPA";
         public static final String CODE = "code";
         public static final String REDIRECT_URI = "redirect_uri";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class FormValues {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
+        public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CITY = "Berlin";
         public static final String COUNTRY = "Tyskland";
         public static final String STREET = "Strasse";

@@ -19,14 +19,7 @@ public class SebBankTransferRequestEntity extends SebTransferRequestEntity {
     private SebBankTransferRequestEntity(
             Transfer transfer, String customerNumber, boolean withinSEB) {
         super(transfer, customerNumber);
-        final Date dueDate;
-
-        if (!Optional.ofNullable(transfer.getDueDate()).isPresent()) {
-            dueDate = new Date();
-        } else {
-            dueDate = transfer.getDueDate();
-        }
-
+        Date dueDate = transfer.getDueDate() == null ? new Date() : transfer.getDueDate();
         transferDate = SEBDateUtil.nextPossibleTransferDate(dueDate, withinSEB);
     }
 

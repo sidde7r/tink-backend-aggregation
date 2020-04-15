@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.rpc;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.transaction.TransactionAccountInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.transaction.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.transaction.Transactions;
@@ -32,24 +30,5 @@ public class TransactionsResponse implements PaginatorResponse {
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.empty();
-    }
-
-    public void mergeTransactionResponse(TransactionsResponse response) {
-        transactions.getBooked().addAll(response.transactions.getBooked());
-        transactions.getPending().addAll(response.transactions.getPending());
-    }
-
-    public Optional<Date> getOverflowTransactionDate() {
-
-        int totalTransactionsReturned =
-                transactions.getBooked().size() + transactions.getPending().size();
-
-        return totalTransactionsReturned >= SdcConstants.Transactions.MAX_TRANSACTIONS_PER_RESPONSE
-                ? Stream.concat(
-                                transactions.getBooked().stream(),
-                                transactions.getPending().stream())
-                        .map(TransactionEntity::getValueDate)
-                        .min(Date::compareTo)
-                : Optional.empty();
     }
 }

@@ -13,11 +13,7 @@ public class InitializationRequest {
         this.version = version;
     }
 
-    public static InitializationRequest createAccountServicingRequest() {
-        return new InitializationRequest("AccountServicing", "-1");
-    }
-
-    public static InitializationRequest createContentRequest() {
-        return new InitializationRequest("Content", "-1");
+    public static InitializationRequest createAccountServicingRequest(String initVersion) {
+        return new InitializationRequest("AccountServicing", initVersion);
     }
 }
