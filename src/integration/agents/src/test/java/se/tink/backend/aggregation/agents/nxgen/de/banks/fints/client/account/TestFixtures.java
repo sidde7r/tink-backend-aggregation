@@ -51,9 +51,9 @@ public class TestFixtures {
                 + "wOjpXaXJkIG5pY2h0IHVudGVyc3T8dHp0LicnSE5IQlM6NDoxKzUn";
     }
 
-    static FinTsConfiguration getFinTsConfiguration() {
-        return new FinTsConfiguration(
-                "foo", Bank.POSTBANK, "http://localhost:443/foo/bar", "foo", "foo");
+    static FinTsConfiguration getFinTsConfiguration(final int port) {
+        final String socket = String.format("http://localhost:%d/foo/bar", port);
+        return new FinTsConfiguration("foo", Bank.POSTBANK, socket, "foo", "foo");
     }
 
     static FinTsDialogContext getDialogContext(FinTsConfiguration configuration) {
