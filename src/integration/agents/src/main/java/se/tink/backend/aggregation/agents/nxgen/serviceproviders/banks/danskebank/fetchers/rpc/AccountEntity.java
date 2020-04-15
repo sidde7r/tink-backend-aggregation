@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -10,6 +12,8 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity {
+
+    private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
 
     private String showCategory;
     private int sortValue;
@@ -151,6 +155,11 @@ public class AccountEntity {
     }
 
     public CheckingAccount toCheckingAccount() {
+        log.info(
+                "Account: apiIdentifier = {}, accountNumber = {}, accountProduct = {}",
+                accountNoInt,
+                accountNoExt,
+                accountProduct);
 
         return CheckingAccount.builder(accountNoInt, new Amount(currency, balance))
                 .setAvailableCredit(calculateAvailableCredit())
