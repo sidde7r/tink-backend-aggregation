@@ -524,8 +524,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
     }
 
-    protected void doTinkLinkPaymentBankTransfer(
-            Agent agent, List<Payment> paymentList, PaymentStatus expectedPaymentStatus)
+    protected void doTinkLinkPaymentBankTransfer(Agent agent, List<Payment> paymentList)
             throws Exception {
 
         if (agent instanceof PaymentControllerable) {
@@ -571,7 +570,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
 
             PaymentStatus statusResult = payment.getStatus();
-            Assert.assertTrue(statusResult.equals(expectedPaymentStatus));
+            Assert.assertTrue(statusResult.equals(PaymentStatus.SIGNED));
 
             log.info("Done with bank transfer.");
 
@@ -805,8 +804,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
-    public void testTinkLinkPayment(List<Payment> paymentList, PaymentStatus expectedPaymentStatus)
-            throws Exception {
+    public void testTinkLinkPayment(List<Payment> paymentList) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
@@ -817,7 +815,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 login(agent, credentialsRequest);
             }
             if (agent instanceof PaymentControllerable) {
-                doTinkLinkPaymentBankTransfer(agent, paymentList, expectedPaymentStatus);
+                doTinkLinkPaymentBankTransfer(agent, paymentList);
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));
