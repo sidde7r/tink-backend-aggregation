@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
@@ -53,6 +54,7 @@ public class AmericanExpressV62ApiClient {
                         .header(AmericanExpressV62Constants.ConstantValueHeaders.TIMEZONE_OFFSET)
                         .header(AmericanExpressV62Constants.ConstantValueHeaders.ACCEPT_ENCODING)
                         .header(AmericanExpressV62Constants.ConstantValueHeaders.ACCEPT_LANGUAGE)
+                        .header(HttpHeaders.USER_AGENT, config.getUserAgent())
                         .header(
                                 AmericanExpressV62Constants.Headers.INSTALLATION_ID,
                                 persistentStorage.get(
