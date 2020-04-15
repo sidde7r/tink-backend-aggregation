@@ -318,7 +318,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_opencensus_opencensus_contrib_grpc_metrics",
+    name = "io_opencensus_opencensus_contrib_grpc_metrics",  # Do not use, but do not remove
     artifact = "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
     sha1 = "f07d3a325f1fe69ee40d6b409086964edfef4e69",
 )
@@ -356,13 +356,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
+    name = "org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.2",
     sha1 = "4dc7fca46ac6badff4336c574b2c713ac3e40f73",
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_core",
+    name = "io_dropwizard_dropwizard_core",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-core:0.7.1",
     sha1 = "569cd6181d5fea4b033cf3a0eca632c8931a1a3a",
 )
@@ -458,13 +458,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_googlejavaformat",
+    name = "com_google_googlejavaformat",  # Do not use, but do not remove
     artifact = "com.google.googlejavaformat:google-java-format:1.7",
     sha1 = "97cb6afc835d65682edc248e19170a8e4ecfe4c4",
 )
 
 maven_jar(
-    name = "com_google_errorprone",
+    name = "com_google_errorprone",  # Do not use, but do not remove
     artifact = "com.google.errorprone:javac-shaded:9+181-r4173-1",
     sha1 = "a399ee380b6d6b6ea53af1cfbcb086b108d1efb7",
 )
@@ -494,13 +494,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "software_amazon_ion_ion_java",
+    name = "software_amazon_ion_ion_java",  # Do not use, but do not remove
     artifact = "software.amazon.ion:ion-java:1.0.2",
     sha1 = "ee9dacea7726e495f8352b81c12c23834ffbc564",
 )
 
 maven_jar(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_cbor",
+    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_cbor",  # Do not use, but do not remove
     artifact = "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.9",
     sha1 = "3206f36ea2b0f9bd365a138338281243241dc9da",
 )
@@ -524,7 +524,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_aspectj_aspectjrt",
+    name = "org_aspectj_aspectjrt",  # Do not use, but do not remove
     artifact = "org.aspectj:aspectjrt:1.8.2",
     sha1 = "7dede91c0c36b1265fc99c55283b90ed2be144c8",
 )
@@ -686,7 +686,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_jdbc",
+    name = "org_springframework_spring_jdbc",  # Do not use, but do not remove
     artifact = "org.springframework:spring-jdbc:4.3.7.RELEASE",
     sha1 = "305c8db0f9552948aec093528cd01393cc98a646",
 )
@@ -784,7 +784,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_beans",
+    name = "org_springframework_spring_beans",  # Do not use, but do not remove
     artifact = "org.springframework:spring-beans:4.3.7.RELEASE",
     sha1 = "2de9f59f3202965438f3a02057d6ad8274636044",
 )
@@ -822,7 +822,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_client",
+    name = "io_dropwizard_dropwizard_client",  # Do not use, but do not remove
     artifact = "io.dropwizard:dropwizard-client:0.7.1",
     sha1 = "7cef9884395e90a4dc627e643f84b48a2ff6fb30",
 )
@@ -972,7 +972,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_context",
+    name = "org_springframework_spring_context",  # Do not use, but do not remove
     artifact = "org.springframework:spring-context:4.3.7.RELEASE",
     sha1 = "34b66b0b7910122ef95ba4fff6da9238ef80a5de",
 )
@@ -984,7 +984,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_aop",
+    name = "org_springframework_spring_aop",  # Do not use, but do not remove
     artifact = "org.springframework:spring-aop:4.3.7.RELEASE",
     sha1 = "3f243d685e4a8a78a0c291445c6d85560ec4d339",
 )
@@ -1218,19 +1218,19 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_security_core",
+    name = "org_springframework_security_core",  # Do not use, but do not remove
     artifact = "org.springframework.security:spring-security-core:4.2.3.RELEASE",
     sha1 = "5c0e47a47036c94d6fdd02696bf52be6d1adbd4d",
 )
 
 maven_jar(
-    name = "org_springframework_spring_core",
+    name = "org_springframework_spring_core",  # Do not use, but do not remove
     artifact = "org.springframework:spring-core:4.3.7.RELEASE",
     sha1 = "54fa2db94cc7222edc90ec71354e47cd1dc07f7b",
 )
 
 maven_jar(
-    name = "org_springframework_spring_tx",
+    name = "org_springframework_spring_tx",  # Do not use, but do not remove
     artifact = "org.springframework:spring-tx:4.3.7.RELEASE",
     sha1 = "b761cc783e49b5aa998ac63a721495a9f0f69f9c",
 )
@@ -1242,7 +1242,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_curator_curator_recipes",
+    name = "org_apache_curator_curator_recipes",  # Do not use, but do not remove
     artifact = "org.apache.curator:curator-recipes:4.0.0",
     sha1 = "46ca001305a74a277d8a42f377bb7c901c0423bf",
 )
@@ -1366,37 +1366,37 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_amazonaws_jmespath_java",
+    name = "com_amazonaws_jmespath_java",  # Do not use, but do not remove
     artifact = "com.amazonaws:jmespath-java:1.11.381",
     sha1 = "c428e44fa35032bbc89c6aaab15f1f3857c2afbe",
 )
 
 maven_jar(
-    name = "com_amazonaws_aws_java_sdk_code_generator",
+    name = "com_amazonaws_aws_java_sdk_code_generator",  # Do not use, but do not remove
     artifact = "com.amazonaws:aws-java-sdk-code-generator:1.11.381",
     sha1 = "d8ed76e95c0313e3b9898c7cc5cc40b935d0c32b",
 )
 
 maven_jar(
-    name = "com_amazonaws_aws_java_sdk_sqs",
+    name = "com_amazonaws_aws_java_sdk_sqs",  # Do not use, but do not remove
     artifact = "com.amazonaws:aws-java-sdk-sqs:1.11.381",
     sha1 = "4ea1ad090c04fde806eb4fa24b10fa5748900ef1",
 )
 
 maven_jar(
-    name = "com_amazonaws_aws_java_sdk_s3",
+    name = "com_amazonaws_aws_java_sdk_s3",  # Do not use, but do not remove
     artifact = "com.amazonaws:aws-java-sdk-s3:1.11.381",
     sha1 = "a2600515a420a5fd08d5c1d19fdf4a8714c515e2",
 )
 
 maven_jar(
-    name = "com_amazonaws_aws_java_sdk_kms",
+    name = "com_amazonaws_aws_java_sdk_kms",  # Do not use, but do not remove
     artifact = "com.amazonaws:aws-java-sdk-kms:1.11.381",
     sha1 = "17a06d9854f804dfcf2ec799f906f555984084c9",
 )
 
 maven_jar(
-    name = "org_springframework_data_spring_data_jpa",
+    name = "org_springframework_data_spring_data_jpa",  # Do not use, but do not remove
     artifact = "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
     sha1 = "fa362aecd78883991f57a5d64e19f34b57a2c34d",
 )
@@ -1428,7 +1428,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_curator_curator_x_discovery",
+    name = "org_apache_curator_curator_x_discovery",  # Do not use, but do not remove
     artifact = "org.apache.curator:curator-x-discovery:4.0.0",
     sha1 = "dc70d7cbcfd1e9dbb21b5aa1af3661b57fb5f850",
 )
@@ -1484,7 +1484,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_expression",
+    name = "org_springframework_spring_expression",  # Do not use, but do not remove
     artifact = "org.springframework:spring-expression:4.3.7.RELEASE",
     sha1 = "5257b6486e43d8c05674323fea5b415d4da72f38",
 )
@@ -1526,7 +1526,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_commons_commons_math3",
+    name = "org_apache_commons_commons_math3",  # Do not use, but do not remove
     artifact = "org.apache.commons:commons-math3:3.2",
     sha1 = "ec2544ab27e110d2d431bdad7d538ed509b21e62",
 )
@@ -1672,7 +1672,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_spring_orm",
+    name = "org_springframework_spring_orm",  # Do not use, but do not remove
     artifact = "org.springframework:spring-orm:4.3.7.RELEASE",
     sha1 = "d9b193994609086ea1f067af07e0af5f53303d92",
 )
@@ -1716,7 +1716,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_springframework_data_spring_data_commons",
+    name = "org_springframework_data_spring_data_commons",  # Do not use, but do not remove
     artifact = "org.springframework.data:spring-data-commons:1.13.1.RELEASE",
     sha1 = "4e4257f2eb3f191613b4b000d43e8d0c3ff4457e",
 )
@@ -1776,7 +1776,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_curator_curator_framework",
+    name = "org_apache_curator_curator_framework",  # Do not use, but do not remove
     artifact = "org.apache.curator:curator-framework:4.0.1",
     sha1 = "3da85d2bda41cb43dc18c089820b67d12ba38826",
 )
@@ -1920,13 +1920,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_xml",
+    name = "org_eclipse_jetty_jetty_xml",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
     sha1 = "9e17bdfb8c25d0cd377960326b79379df3181776",
 )
 
 maven_jar(
-    name = "org_eclipse_jetty_jetty_webapp",
+    name = "org_eclipse_jetty_jetty_webapp",  # Do not use, but do not remove
     artifact = "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
     sha1 = "716b5cdea1e818cd0e36dfea791f620d49bd2d2a",
 )
@@ -2054,13 +2054,13 @@ maven_jar(
 # TODO: build grpc jars
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf",
+    name = "io_grpc_grpc_protobuf",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf:%s" % GRPC_JAVA_VERSION,
     sha1 = "885d3d9ee69fe247550fda01ef1b7c0acab370e5",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_auth",
+    name = "io_grpc_grpc_auth",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
     sha1 = "33c389f9c153140f69018020dec535bd730f42ac",
 )
@@ -2072,49 +2072,49 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf_lite",
+    name = "io_grpc_grpc_protobuf_lite",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
     sha1 = "a304b00fb35959c5036c033551732de6a4b7d881",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf_nano",
+    name = "io_grpc_grpc_protobuf_nano",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
     sha1 = "9fce4ff1563fd0176aaefb0a083b9d66a0346bd7",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_stub",
+    name = "io_grpc_grpc_stub",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
     sha1 = "e6f36c227bfa3b9a6721bed274dd0b5c854b4925",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_core",
+    name = "io_grpc_grpc_core",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
     sha1 = "a264f24ffa3340752a678680fd41381836b1d03f",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_api",
+    name = "io_grpc_grpc_api",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
     sha1 = "f86f59df729cde94e5d85d1b3587d6b00c998d65",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_netty",
+    name = "io_grpc_grpc_netty",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
     sha1 = "0c979f611ea3b3add6fa77d41318dd21d20d6aef",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_testing",
+    name = "io_grpc_grpc_testing",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
     sha1 = "71e31c2c69d5b91f87246b389bf1a230a9836901",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_services",
+    name = "io_grpc_grpc_services",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
     sha1 = "0f101c3ec1bbfe08f9221ca3cc7b316f09a3e130",
 )
@@ -2132,14 +2132,14 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_takari_junit_takari_cpsuite",
+    name = "io_takari_junit_takari_cpsuite",  # Do not use, but do not remove
     artifact = "io.takari.junit:takari-cpsuite:1.2.7",
     sha1 = "6d30ab231a73f865a3146ca4b9e3299d2f415426",
 )
 
 bind(
     name = "cpsuite",
-    actual = "@io_takari_junit_takari_cpsuite//jar",
+    actual = "@aggregation//:io_takari_junit_takari_cpsuite",
 )
 
 maven_jar(
@@ -2167,19 +2167,19 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_auth0_java_jwt",
+    name = "com_auth0_java_jwt",  # Do not use, but do not remove
     artifact = "com.auth0:java-jwt:3.3.0",
     sha1 = "0e180a4b31f14c2a1cf203f457fb2149d2f6c1d2",
 )
 
 maven_jar(
-    name = "net_sourceforge_lept4j",
+    name = "net_sourceforge_lept4j",  # Do not use, but do not remove
     artifact = "net.sourceforge.lept4j:lept4j:1.10.0",
     sha1 = "72153b28e8e1f0391afcc2380c41ac8e73bd599e",
 )
 
 maven_jar(
-    name = "net_sourceforge_tess4j",
+    name = "net_sourceforge_tess4j",  # Do not use, but do not remove
     artifact = "net.sourceforge.tess4j:tess4j:4.0.2",
     sha1 = "95516b133368840a0974ef5316fedd9c5e3aa635",
 )
@@ -2299,7 +2299,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_testing_proto",
+    name = "io_grpc_grpc_testing_proto",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-testing-proto:1.24.0",
     sha1 = "4bf1a3b690dc12ea0999643ae8e37c09e55a8c13",
 )
@@ -2428,7 +2428,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_nimbusds_nimbus_jose_jwt",
+    name = "com_nimbusds_nimbus_jose_jwt",  # Do not use, but do not remove
     artifact = "com.nimbusds:nimbus-jose-jwt:7.7",
     sha1 = "18590fdb64ff9443d37a9fbb2a2b1b519c6f0579",
 )
@@ -2452,7 +2452,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_crypto_tink",
+    name = "com_google_crypto_tink",  # Do not use, but do not remove
     artifact = "com.google.crypto.tink:tink:1.2.2",
     sha1 = "db27fd32f842b436ad07aecbe2934524473dc0ac",
 )
@@ -2464,7 +2464,7 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_slf4j_slf4j_simple",
+    name = "org_slf4j_slf4j_simple",  # Do not use, but do not remove
     artifact = "org.slf4j:slf4j-simple:1.7.27",
     sha1 = "59661ca47034c6a72e255e5803ae4019d2bd55c9",
 )
@@ -2572,6 +2572,7 @@ maven_install(
         "com.fasterxml.jackson.core:jackson-annotations:2.9.9",
         "com.fasterxml.jackson.core:jackson-core:2.9.9",
         "com.fasterxml.jackson.core:jackson-databind:2.9.9",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.9",
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9",
@@ -2662,6 +2663,7 @@ maven_install(
         "io.prometheus:simpleclient_pushgateway:0.5.0",
         "io.reactivex.rxjava3:rxjava:3.0.0-RC4",
         "io.swagger:swagger-annotations:1.5.9",
+        "io.takari.junit:takari-cpsuite:1.2.7",
         "io.vavr:vavr-jackson:0.10.0",
         "io.vavr:vavr-match:0.10.0",
         "io.vavr:vavr-test:0.10.0",
@@ -2691,6 +2693,7 @@ maven_install(
         "org.apache.commons:commons-collections4:4.0",
         "org.apache.commons:commons-csv:1.0",
         "org.apache.commons:commons-lang3:3.5",
+        "org.apache.commons:commons-math3:3.2",
         "org.apache.httpcomponents:httpclient:4.3.4",
         "org.apache.httpcomponents:httpcore:4.3.2",
         "org.apache.logging.log4j:log4j-api:2.11.1",
@@ -2698,6 +2701,7 @@ maven_install(
         "org.apache.mahout.commons:commons-cli:2.0-mahout",
         "org.apache.pdfbox:fontbox:2.0.6",
         "org.apache.pdfbox:pdfbox:2.0.6",
+        "org.aspectj:aspectjrt:1.8.2",
         "org.assertj:assertj-core:2.2.0",
         "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
@@ -2745,6 +2749,7 @@ maven_install(
         "org.xmlunit:xmlunit-legacy:2.1.1",
         "org.yaml:snakeyaml:1.23",
         "pl.pragmatists:JUnitParams:1.0.5",
+        "software.amazon.ion:ion-java:1.0.2",
         "xerces:xercesImpl:2.11.0",
         "xml-apis:xml-apis:1.4.01",
     ],
@@ -2766,39 +2771,188 @@ aggregation_pin()
 maven_install(
     name = "aggregation_temp",
     artifacts = [
+        "com.amazonaws:aws-java-sdk-code-generator:1.11.381",
+        "com.amazonaws:aws-java-sdk-kms:1.11.381",
+        "com.amazonaws:aws-java-sdk-s3:1.11.381",
+        "com.amazonaws:aws-java-sdk-sqs:1.11.381",
+        "com.amazonaws:jmespath-java:1.11.381",
+        "com.auth0:java-jwt:3.3.0",
         "com.github.tomakehurst:wiremock:2.1.12",
+        "com.google.crypto.tink:tink:1.2.2",
+        "com.google.errorprone:javac-shaded:9+181-r4173-1",
+        "com.google.googlejavaformat:google-java-format:1.7",
+        "com.nimbusds:nimbus-jose-jwt:7.7",
         "com.oracle.substratevm:svm:19.0.0",
+        "io.dropwizard:dropwizard-client:0.7.1",
+        "io.dropwizard:dropwizard-core:0.7.1",
+        "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-auth:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
+        "io.grpc:grpc-protobuf:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-stub:%s" % GRPC_JAVA_VERSION,
+        "io.grpc:grpc-testing-proto:1.24.0",
+        "io.grpc:grpc-testing:%s" % GRPC_JAVA_VERSION,
+        "io.opencensus:opencensus-contrib-grpc-metrics:%s" % OPENCENSUS_VERSION,
+        "net.sourceforge.lept4j:lept4j:1.10.0",
+        "net.sourceforge.tess4j:tess4j:4.0.2",
         "org.apache.curator:curator-client:4.0.0",
+        "org.apache.curator:curator-framework:4.0.1",
+        "org.apache.curator:curator-recipes:4.0.0",
+        "org.apache.curator:curator-x-discovery:4.0.0",
         "org.apache.zookeeper:zookeeper:3.5.3-beta",
+        "org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.2",
+        "org.eclipse.jetty:jetty-webapp:%s" % ALT_ECLIPSE_JETTY_VERSION,
+        "org.eclipse.jetty:jetty-xml:%s" % ALT_ECLIPSE_JETTY_VERSION,
+        "org.slf4j:slf4j-simple:1.7.27",
+        "org.springframework.data:spring-data-commons:1.13.1.RELEASE",
+        "org.springframework.data:spring-data-jpa:1.11.1.RELEASE",
+        "org.springframework.security:spring-security-core:4.2.3.RELEASE",
+        "org.springframework:spring-aop:4.3.7.RELEASE",
+        "org.springframework:spring-beans:4.3.7.RELEASE",
+        "org.springframework:spring-context:4.3.7.RELEASE",
+        "org.springframework:spring-core:4.3.7.RELEASE",
+        "org.springframework:spring-expression:4.3.7.RELEASE",
+        "org.springframework:spring-jdbc:4.3.7.RELEASE",
+        "org.springframework:spring-orm:4.3.7.RELEASE",
+        "org.springframework:spring-tx:4.3.7.RELEASE",
     ],
     # Exclude ALL transitive dependencies of the artifacts above for now
     excluded_artifacts = [
+        "aopalliance:aopalliance",
         "asm:asm",
+        "ch.qos.logback:logback-classic",
+        "ch.qos.logback:logback-core",
+        "com.amazonaws:aws-java-sdk-core",
+        "com.codahale.metrics:metrics-annotation",
+        "com.codahale.metrics:metrics-core",
+        "com.codahale.metrics:metrics-healthchecks",
+        "com.codahale.metrics:metrics-httpclient",
+        "com.codahale.metrics:metrics-jersey",
+        "com.codahale.metrics:metrics-jetty9",
+        "com.codahale.metrics:metrics-json",
+        "com.codahale.metrics:metrics-jvm",
+        "com.codahale.metrics:metrics-logback",
+        "com.codahale.metrics:metrics-servlets",
         "com.fasterxml.jackson.core:jackson-annotations",
         "com.fasterxml.jackson.core:jackson-core",
         "com.fasterxml.jackson.core:jackson-databind",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
+        "com.fasterxml.jackson.datatype:jackson-datatype-guava",
+        "com.fasterxml.jackson.datatype:jackson-datatype-joda",
+        "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base",
+        "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider",
+        "com.fasterxml.jackson.module:jackson-module-afterburner",
+        "com.fasterxml.jackson.module:jackson-module-jaxb-annotations",
+        "com.fasterxml:classmate",
         "com.flipkart.zjsonpatch:zjsonpatch",
+        "com.github.jai-imageio:jai-imageio-core",
+        "com.github.stephenc.jcip:jcip-annotations",
+        "com.google.android:annotations",
+        "com.google.api-client:google-api-client",
+        "com.google.api.grpc:proto-google-common-protos",
+        "com.google.apis:google-api-services-cloudkms",
+        "com.google.auth:google-auth-library-credentials",
+        "com.google.auto.service:auto-service",
+        "com.google.auto:auto-common",
+        "com.google.code.findbugs:jsr305",
+        "com.google.code.gson:gson",
+        "com.google.errorprone:error_prone_annotations",
         "com.google.guava:guava",
+        "com.google.guava:guava-jdk5",
+        "com.google.http-client:google-http-client",
+        "com.google.http-client:google-http-client-jackson2",
+        "com.google.oauth-client:google-oauth-client",
+        "com.google.protobuf.nano:protobuf-javanano",
+        "com.google.protobuf:protobuf-java",
+        "com.google.protobuf:protobuf-java-util",
+        "com.google.protobuf:protobuf-javalite",
         "com.jayway.jsonpath:json-path",
+        "com.lowagie:itext",
         "com.oracle.substratevm:objectfile",
         "com.oracle.substratevm:pointsto",
         "com.oracle.substratevm:svm-hosted-native-darwin-amd64",
         "com.oracle.substratevm:svm-hosted-native-linux-amd64",
         "com.oracle.substratevm:svm-hosted-native-windows-amd64",
+        "com.sun.jersey.contribs:jersey-apache-client4",
+        "com.sun.jersey:jersey-client",
+        "com.sun.jersey:jersey-core",
+        "com.sun.jersey:jersey-server",
+        "com.sun.jersey:jersey-servlet",
+        "commons-beanutils:commons-beanutils",
         "commons-cli:commons-cli",
         "commons-codec:commons-codec",
+        "commons-collections:commons-collections",
+        "commons-io:commons-io",
+        "commons-lang:commons-lang",
         "commons-logging:commons-logging",
+        "io.dropwizard:dropwizard-configuration",
+        "io.dropwizard:dropwizard-jackson",
+        "io.dropwizard:dropwizard-jersey",
+        "io.dropwizard:dropwizard-jetty",
+        "io.dropwizard:dropwizard-lifecycle",
+        "io.dropwizard:dropwizard-logging",
+        "io.dropwizard:dropwizard-metrics",
+        "io.dropwizard:dropwizard-servlets",
+        "io.dropwizard:dropwizard-util",
+        "io.dropwizard:dropwizard-validation",
+        "io.grpc:grpc-context",
         "io.netty:netty",
+        "io.netty:netty-buffer",
+        "io.netty:netty-codec",
+        "io.netty:netty-codec-http",
+        "io.netty:netty-codec-http2",
+        "io.netty:netty-codec-socks",
+        "io.netty:netty-common",
+        "io.netty:netty-handler",
+        "io.netty:netty-handler-proxy",
+        "io.netty:netty-resolver",
+        "io.netty:netty-transport",
+        "io.opencensus:opencensus-api",
+        "io.perfmark:perfmark-api",
         "javax.servlet:javax.servlet-api",
+        "javax.validation:validation-api",
+        "joda-time:joda-time",
         "junit:junit",
         "log4j:log4j",
+        "net.java.dev.jna:jna",
         "net.minidev:asm",
         "net.minidev:json-smart",
         "net.sf.jopt-simple:jopt-simple",
+        "net.sourceforge.argparse4j:argparse4j",
         "org.apache.commons:commons-collections4",
         "org.apache.commons:commons-lang3",
         "org.apache.httpcomponents:httpclient",
         "org.apache.httpcomponents:httpcore",
+        "org.apache.pdfbox:fontbox",
+        "org.apache.pdfbox:jbig2-imageio",
+        "org.apache.pdfbox:pdfbox",
+        "org.apache.pdfbox:pdfbox-debugger",
+        "org.apache.pdfbox:pdfbox-tools",
+        "org.apache.xmlgraphics:xmlgraphics-commons",
+        "org.aspectj:aspectjrt",
+        "org.codehaus.jackson:jackson-core-asl",
+        "org.codehaus.jackson:jackson-mapper-asl",
+        "org.codehaus.mojo:animal-sniffer-annotations",
+        "org.eclipse.core:commands",
+        "org.eclipse.core:org.eclipse.core.commands",
+        "org.eclipse.core:org.eclipse.core.contenttype",
+        "org.eclipse.core:org.eclipse.core.expressions",
+        "org.eclipse.core:org.eclipse.core.filesystem",
+        "org.eclipse.core:org.eclipse.core.jobs",
+        "org.eclipse.core:org.eclipse.core.resources",
+        "org.eclipse.core:org.eclipse.core.runtime",
+        "org.eclipse.equinox:common",
+        "org.eclipse.equinox:org.eclipse.equinox.app",
+        "org.eclipse.equinox:org.eclipse.equinox.common",
+        "org.eclipse.equinox:org.eclipse.equinox.preferences",
+        "org.eclipse.equinox:org.eclipse.equinox.registry",
+        "org.eclipse.jdt:org.eclipse.jdt.core",
+        "org.eclipse.jetty.orbit:javax.servlet",
         "org.eclipse.jetty:jetty-continuation",
         "org.eclipse.jetty:jetty-http",
         "org.eclipse.jetty:jetty-io",
@@ -2808,16 +2962,33 @@ maven_install(
         "org.eclipse.jetty:jetty-servlets",
         "org.eclipse.jetty:jetty-util",
         "org.eclipse.jetty:jetty-webapp",
+        "org.eclipse.jetty:jetty-webapp",
         "org.eclipse.jetty:jetty-xml",
+        "org.eclipse.jetty:jetty-xml",
+        "org.eclipse.osgi:org.eclipse.osgi",
+        "org.eclipse.text:org.eclipse.text",
+        "org.eclipse:text",
+        "org.freemarker:freemarker",
+        "org.ghost4j:ghost4j",
+        "org.glassfish.web:javax.el",
         "org.graalvm.compiler:compiler",
         "org.graalvm.sdk:graal-sdk",
         "org.graalvm.truffle:truffle-api",
         "org.graalvm.truffle:truffle-nfi",
         "org.hamcrest:hamcrest-core",
+        "org.hibernate:hibernate-validator",
+        "org.jboss.logging:jboss-logging",
+        "org.jboss:jboss-vfs",
+        "org.json:json",
+        "org.slf4j:jcl-over-slf4j",
+        "org.slf4j:jul-to-slf4j",
+        "org.slf4j:log4j-over-slf4j",
         "org.slf4j:slf4j-api",
         "org.slf4j:slf4j-log4j12",
+        "org.springframework:spring-expression",
         "org.xmlunit:xmlunit-core",
         "org.xmlunit:xmlunit-legacy",
+        "software.amazon.ion:ion-java",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:aggregation_temp_install.json",

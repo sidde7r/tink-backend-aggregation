@@ -25,6 +25,6 @@ junit_test(
         "//src/libraries/account_identifier",
         "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
-        "@commons_lang_commons_lang//jar",
+        "@aggregation//:commons_lang_commons_lang",
     ],
 )

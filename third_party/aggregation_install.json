@@ -820,6 +820,40 @@
                 "sha256": "d78ee97c1041f83c3a1706e0f01abfa91c890fcf2c622c1ef602187c76768985"
             },
             {
+                "coord": "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.9",
+                "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:2.9.9"
+                ],
+                "url": "https://repo1.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9.jar",
+                    "https://jcenter.bintray.com/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9.jar",
+                    "https://maven.google.com/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9.jar"
+                ],
+                "sha256": "f595596e7e00c83752d8d586b08d036185e2363fa3d71ae0e155b3bf6a6c75ac"
+            },
+            {
+                "coord": "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:jar:sources:2.9.9",
+                "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9-sources.jar",
+                "directDependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9"
+                ],
+                "dependencies": [
+                    "com.fasterxml.jackson.core:jackson-core:jar:sources:2.9.9"
+                ],
+                "url": "https://repo1.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9-sources.jar",
+                    "https://jcenter.bintray.com/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9-sources.jar",
+                    "https://maven.google.com/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.9.9/jackson-dataformat-cbor-2.9.9-sources.jar"
+                ],
+                "sha256": "b4c6bbec4fc38dccc55136de3ae36cbc4a6a7b1c220a382d67751be10ba39864"
+            },
+            {
                 "coord": "com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.9",
                 "file": "v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-smile/2.9.9/jackson-dataformat-smile-2.9.9.jar",
                 "directDependencies": [
@@ -4886,6 +4920,42 @@
                 "sha256": "6751653d70bd2bd738839d0f5f4dac1c149f117c6a5ee0c7f5cfdcf17a96a692"
             },
             {
+                "coord": "io.takari.junit:takari-cpsuite:1.2.7",
+                "file": "v1/https/repo1.maven.org/maven2/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7.jar",
+                "directDependencies": [
+                    "junit:junit:4.12"
+                ],
+                "dependencies": [
+                    "org.hamcrest:hamcrest-core:1.3",
+                    "junit:junit:4.12"
+                ],
+                "url": "https://repo1.maven.org/maven2/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7.jar",
+                    "https://jcenter.bintray.com/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7.jar",
+                    "https://maven.google.com/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7.jar"
+                ],
+                "sha256": "666990dc909e6c777ad77df39907cb43a286c0842144a1268ccf17fe03b827a2"
+            },
+            {
+                "coord": "io.takari.junit:takari-cpsuite:jar:sources:1.2.7",
+                "file": "v1/https/repo1.maven.org/maven2/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7-sources.jar",
+                "directDependencies": [
+                    "junit:junit:jar:sources:4.12"
+                ],
+                "dependencies": [
+                    "org.hamcrest:hamcrest-core:jar:sources:1.3",
+                    "junit:junit:jar:sources:4.12"
+                ],
+                "url": "https://repo1.maven.org/maven2/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7-sources.jar",
+                    "https://jcenter.bintray.com/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7-sources.jar",
+                    "https://maven.google.com/io/takari/junit/takari-cpsuite/1.2.7/takari-cpsuite-1.2.7-sources.jar"
+                ],
+                "sha256": "cb7b2d9e42fb7a0ef63ecf5ee4ba6680072df9a1b306e6ca378efa62f668b9f2"
+            },
+            {
                 "coord": "io.vavr:vavr-jackson:0.10.0",
                 "file": "v1/https/repo1.maven.org/maven2/io/vavr/vavr-jackson/0.10.0/vavr-jackson-0.10.0.jar",
                 "directDependencies": [
@@ -5899,6 +5969,32 @@
                 "sha256": "1f7adeee4d483a6ca8d479d522cb2b07e39d976b758f3c2b6e1a0fed20dcbd2d"
             },
             {
+                "coord": "org.apache.commons:commons-math3:3.2",
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/commons/commons-math3/3.2/commons-math3-3.2.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/org/apache/commons/commons-math3/3.2/commons-math3-3.2.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/org/apache/commons/commons-math3/3.2/commons-math3-3.2.jar",
+                    "https://jcenter.bintray.com/org/apache/commons/commons-math3/3.2/commons-math3-3.2.jar",
+                    "https://maven.google.com/org/apache/commons/commons-math3/3.2/commons-math3-3.2.jar"
+                ],
+                "sha256": "6268a9a0ea3e769fc493a21446664c0ef668e48c93d126791f6f3f757978fee2"
+            },
+            {
+                "coord": "org.apache.commons:commons-math3:jar:sources:3.2",
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/commons/commons-math3/3.2/commons-math3-3.2-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/org/apache/commons/commons-math3/3.2/commons-math3-3.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/org/apache/commons/commons-math3/3.2/commons-math3-3.2-sources.jar",
+                    "https://jcenter.bintray.com/org/apache/commons/commons-math3/3.2/commons-math3-3.2-sources.jar",
+                    "https://maven.google.com/org/apache/commons/commons-math3/3.2/commons-math3-3.2-sources.jar"
+                ],
+                "sha256": "b62d60712ea06fb6259506269b3a0ed73a7da5ee11f891c0eb0399eb9bc71e3f"
+            },
+            {
                 "coord": "org.apache.httpcomponents:httpclient:4.3.4",
                 "file": "v1/https/repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.3.4/httpclient-4.3.4.jar",
                 "directDependencies": [
@@ -6110,6 +6206,32 @@
                     "https://maven.google.com/org/apache/pdfbox/pdfbox/2.0.6/pdfbox-2.0.6-sources.jar"
                 ],
                 "sha256": "7283bb9f88c02ee29de0dad57f02fdd41faa3f24cfd473a20c576ad5820519cc"
+            },
+            {
+                "coord": "org.aspectj:aspectjrt:1.8.2",
+                "file": "v1/https/repo1.maven.org/maven2/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2.jar",
+                    "https://jcenter.bintray.com/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2.jar",
+                    "https://maven.google.com/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2.jar"
+                ],
+                "sha256": "c7964f00c3d3889c5223e8fcb7476610c59453c86bccc68ef493a56d171bf655"
+            },
+            {
+                "coord": "org.aspectj:aspectjrt:jar:sources:1.8.2",
+                "file": "v1/https/repo1.maven.org/maven2/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2-sources.jar",
+                    "https://jcenter.bintray.com/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2-sources.jar",
+                    "https://maven.google.com/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2-sources.jar"
+                ],
+                "sha256": "813e34691c7d38f5d8c555a7b04e2ff7917fbc99f4621984ea1e7a0e8a7c1eec"
             },
             {
                 "coord": "org.assertj:assertj-core:2.2.0",
@@ -7757,6 +7879,32 @@
                 "sha256": "8c862e55d7537a8a8db52586a4dacdb1e867a872651cdbc91efcdf723beb7593"
             },
             {
+                "coord": "software.amazon.ion:ion-java:1.0.2",
+                "file": "v1/https/repo1.maven.org/maven2/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2.jar",
+                    "https://jcenter.bintray.com/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2.jar",
+                    "https://maven.google.com/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2.jar"
+                ],
+                "sha256": "0d127b205a1fce0abc2a3757a041748651bc66c15cf4c059bac5833b27d471a5"
+            },
+            {
+                "coord": "software.amazon.ion:ion-java:jar:sources:1.0.2",
+                "file": "v1/https/repo1.maven.org/maven2/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2-sources.jar",
+                    "https://jcenter.bintray.com/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2-sources.jar",
+                    "https://maven.google.com/software/amazon/ion/ion-java/1.0.2/ion-java-1.0.2-sources.jar"
+                ],
+                "sha256": "d827fc9775443697bbcdfeb8ea2d3d75bf5ad7f2ca540dabda1a5f83cd0a39de"
+            },
+            {
                 "coord": "xerces:xercesImpl:2.11.0",
                 "file": "v1/https/repo1.maven.org/maven2/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar",
                 "directDependencies": [
@@ -7856,6 +8004,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 1959412679
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 851038214
     }
 }

@@ -3,8 +3,8 @@ java_binary(
     main_class = "com.google.googlejavaformat.java.Main",
     runtime_deps = [
         "@aggregation//:com_google_guava_guava",
-        "@com_google_errorprone//jar",
-        "@com_google_googlejavaformat//jar",
+        "@aggregation_temp//:com_google_errorprone_javac_shaded",
+        "@aggregation_temp//:com_google_googlejavaformat_google_java_format",
     ],
 )
 
