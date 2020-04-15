@@ -9,8 +9,6 @@ public abstract class UkOpenBankingConstants {
         throw new AssertionError();
     }
 
-    public static final String INTEGRATION_NAME = "ukOpenBankingJson";
-
     public static class HttpHeaders {
         public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
         public static final String X_JWS_SIGNATURE = "x-jws-signature";
