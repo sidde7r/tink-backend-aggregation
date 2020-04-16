@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.client.account;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsDialogContext;
@@ -26,11 +28,17 @@ import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class AccountClientTest {
-    private static final FinTsConfiguration configuration = TestFixtures.getFinTsConfiguration();
-    private static final FinTsDialogContext dialogContext =
-            TestFixtures.getDialogContext(configuration);
 
-    @Rule public WireMockRule wireMock = new WireMockRule(443);
+    @Rule public WireMockRule wireMock = new WireMockRule(wireMockConfig().dynamicPort());
+
+    private FinTsConfiguration configuration;
+    private FinTsDialogContext dialogContext;
+
+    @Before
+    public void setup() {
+        configuration = TestFixtures.getFinTsConfiguration(wireMock.port());
+        dialogContext = TestFixtures.getDialogContext(configuration);
+    }
 
     @Test
     public void shouldGetAccountsDetails() {
