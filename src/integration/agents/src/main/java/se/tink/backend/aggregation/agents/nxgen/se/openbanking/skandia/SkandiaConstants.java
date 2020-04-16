@@ -89,11 +89,6 @@ public final class SkandiaConstants {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String X_CLIENT_CERTIFICATE = "X-Client-Certificate";
         public static final String CLIENT_ID = "Client-Id";
-        public static final String X_TINK_DEBUG = "X-Tink-Debug";
-    }
-
-    public static class HeaderValues {
-        public static final String X_TINK_DEBUG = "trust_all,force";
     }
 
     public static class IdTags {
