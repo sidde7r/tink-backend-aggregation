@@ -103,20 +103,20 @@ public class CatalogTest {
     }
 
     @Test
-    public void testCotalagGetString() {
-        String sww_en = "Something went wrong.";
-        String sww_sv = "Något gick fel.";
-        String sww_it = "Qualcosa è andato storto.";
+    public void testCatalogGetString() {
+        String swwEn = "Something went wrong.";
+        String swwSv = "Något gick fel.";
+        String swwIt = "Qualcosa è andato storto.";
         Catalog catalog = new Catalog(new Locale("sv", "SE"));
-        String catalogTranslation = catalog.getString(sww_en);
-        Assert.assertEquals(sww_sv, catalogTranslation);
-        catalogTranslation = catalog.getString(new LocalizableKey(sww_en));
-        Assert.assertEquals(sww_sv, catalogTranslation);
+        String catalogTranslation = catalog.getString(swwEn);
+        Assert.assertEquals(swwSv, catalogTranslation);
+        catalogTranslation = catalog.getString(new LocalizableKey(swwEn));
+        Assert.assertEquals(swwSv, catalogTranslation);
         catalogTranslation = catalog.getString("Youtube went wrong.");
         Assert.assertEquals("Youtube went wrong.", catalogTranslation);
         catalog = new Catalog(new Locale("it", "IT"));
-        catalogTranslation = catalog.getString(sww_en);
-        Assert.assertEquals(sww_it, catalogTranslation);
+        catalogTranslation = catalog.getString(swwEn);
+        Assert.assertEquals(swwIt, catalogTranslation);
         String nullString = null;
         try {
             catalog.getString(nullString);
@@ -128,19 +128,19 @@ public class CatalogTest {
     }
 
     @Test
-    public void testTranslationReferToAggregationPoFiles() {
+    public void testCatalogReferToAggregationTranslation() {
         // This is to verify tink-backend-aggragation is using his own po files instead of the ones
         // from backend
-        String translation_only_occurred_in_aggregation = "Invalid source account";
+        String translationOnlyOccurredInAggregation = "Invalid source account";
         Catalog catalog = new Catalog(new Locale("sv", "SE"));
         Assert.assertEquals(
                 "Från-kontot är inte giltigt",
-                catalog.getString(translation_only_occurred_in_aggregation));
-        String less_than_one_sek_en = "The transfer amount, less than 1 SEK is not supported.";
-        String less_than_one_sek_sv = "Överföringsbelopp på mindre än 1 kr stöds inte.";
-        Assert.assertEquals(less_than_one_sek_sv, catalog.getString(less_than_one_sek_en));
+                catalog.getString(translationOnlyOccurredInAggregation));
+        String lessThanOneSekEn = "The transfer amount, less than 1 SEK is not supported.";
+        String lessThanOneSekSv = "Överföringsbelopp på mindre än 1 kr stöds inte.";
+        Assert.assertEquals(lessThanOneSekSv, catalog.getString(lessThanOneSekEn));
         Assert.assertEquals(
-                less_than_one_sek_sv, catalog.getString(new LocalizableKey(less_than_one_sek_en)));
+                lessThanOneSekSv, catalog.getString(new LocalizableKey(lessThanOneSekEn)));
     }
 
     @Test

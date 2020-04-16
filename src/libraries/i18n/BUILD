@@ -2,7 +2,7 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "i18n",
-    srcs = glob(["src/main/java/**/*.java"]),
+    srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//po:i18n",
@@ -15,7 +15,7 @@ java_library(
 
 junit_test(
     name = "i18n_test",
-    srcs = glob(["src/test/java/**/*.java"]),
+    srcs = glob(["src/test/**/*.java"]),
     runtime_deps = [
         "//third_party:asm_asm",
     ],

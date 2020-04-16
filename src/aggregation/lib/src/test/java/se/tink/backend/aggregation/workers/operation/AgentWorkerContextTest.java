@@ -90,12 +90,12 @@ public class AgentWorkerContextTest {
     }
 
     @Test
-    public void testCotalagGetString() {
-        String less_than_one_sek_en = "The transfer amount, less than 1 SEK is not supported.";
-        String less_than_one_sek_sv = "Överföringsbelopp på mindre än 1 kr stöds inte.";
+    public void testCatalogGetString() {
+        String lessThanOneSekEn = "The transfer amount, less than 1 SEK is not supported.";
+        String lessThanOneSekSv = "Överföringsbelopp på mindre än 1 kr stöds inte.";
         Catalog catalog = new Catalog(new Locale("sv", "SE"));
-        Assert.assertEquals(less_than_one_sek_sv, catalog.getString(less_than_one_sek_en));
+        Assert.assertEquals(lessThanOneSekSv, catalog.getString(lessThanOneSekEn));
         Assert.assertEquals(
-                less_than_one_sek_sv, catalog.getString(new LocalizableKey(less_than_one_sek_en)));
+                lessThanOneSekSv, catalog.getString(new LocalizableKey(lessThanOneSekEn)));
     }
 }
