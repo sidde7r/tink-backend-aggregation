@@ -21,6 +21,12 @@ import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
+import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
+import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.WireMockConfigurationProvider;
+import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.FakeAggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
@@ -262,6 +268,13 @@ public class AggregationDecoupledModule extends AbstractModule {
                         ManagedChannelBuilder.class,
                         EventProducerServiceClientChannelBuilder.class));
         bind(EventProducerServiceClient.class).toProvider(EventProducerServiceClientProvider.class);
+
+        // AgentFactoryWireMockModule
+        bind(WireMockConfiguration.class)
+                .toProvider(WireMockConfigurationProvider.class)
+                .in(Scopes.SINGLETON);
+        bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
+        bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
     }
 
     @Provides
