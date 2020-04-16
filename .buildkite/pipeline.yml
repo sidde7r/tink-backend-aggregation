@@ -4,6 +4,8 @@ steps:
     branches: '!master'
     command: .buildkite/run-unit-tests.sh
     timeout_in_minutes: 30
+    env:
+      COMPOSE_HTTP_TIMEOUT: 120
     agents:
       queue: default
     plugins:
