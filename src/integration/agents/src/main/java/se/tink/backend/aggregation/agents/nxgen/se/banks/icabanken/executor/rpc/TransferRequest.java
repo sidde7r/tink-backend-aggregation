@@ -63,7 +63,7 @@ public class TransferRequest {
         this.type = destinationAccount.getType();
         this.isStandingTransaction = false;
         this.eventId = null;
-        this.dueDate = IcaBankenExecutorUtils.findOrCreateDueDateFor(transfer);
+        this.dueDate = IcaBankenExecutorUtils.getDueDate(transfer);
         this.type = IcaBankenConstants.Transfers.PAYMENT;
         this.referenceType = IcaBankenExecutorUtils.getReferenceTypeFor(transfer);
         this.recipientId = destinationAccount.getRecipientId();

@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBankenFormatUtils;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.utils.transfer.IntraBankTransferChecker;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -109,24 +109,23 @@ public class IcaBankenExecutorUtils {
                 && transfer.getHash().equalsIgnoreCase(upcomingTransaction.getHash(false));
     }
 
-    public static String findOrCreateDueDateFor(Transfer transfer) {
+    public static String getDueDate(Transfer transfer) {
         CountryDateHelper dateHelper =
                 new CountryDateHelper(
                         IcaBankenConstants.Date.DEFAULT_LOCALE,
                         TimeZone.getTimeZone(IcaBankenConstants.Date.DEFAULT_ZONE_ID));
-
         if (transfer.getType().equals(TransferType.PAYMENT)) {
-            return (transfer.getDueDate() != null)
-                    ? ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                            dateHelper
-                                    .getCurrentOrNextBusinessDay(
-                                            dateHelper.getCalendar(transfer.getDueDate()))
-                                    .getTime())
-                    : ThreadSafeDateFormat.FORMATTER_DAILY.format(dateHelper.getNextBusinessDay());
+            return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                    dateHelper.getTransferDate(transfer.getDueDate(), 9, 30));
         } else {
-            return (transfer.getDueDate() != null)
-                    ? ThreadSafeDateFormat.FORMATTER_DAILY.format(transfer.getDueDate())
-                    : ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date());
+            if (IntraBankTransferChecker.isSwedishMarketIntraBankTransfer(
+                    transfer.getSource(), transfer.getDestination())) {
+                return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                        dateHelper.getProvidedOrTodayDate(transfer.getDueDate()));
+            } else {
+                return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                        dateHelper.getTransferDate(transfer.getDueDate(), 13, 00));
+            }
         }
     }
 
