@@ -51,7 +51,9 @@ public final class FinTsAgent extends NextGenerationAgent
                         payload.getEndpoint(),
                         request.getCredentials().getField(Field.Key.USERNAME),
                         request.getCredentials().getField(Field.Key.PASSWORD));
-        FinTsSecretsConfiguration secretsConfiguration = getSecretsConfiguration();
+        FinTsSecretsConfiguration secretsConfiguration =
+                new FinTsSecretsConfiguration(
+                        FinTsConstants.PRODUCT_ID, FinTsConstants.PRODUCT_VERSION);
         this.dialogContext = new FinTsDialogContext(configuration, secretsConfiguration);
 
         TanAnswerProvider tanAnswerProvider =
@@ -75,11 +77,6 @@ public final class FinTsAgent extends NextGenerationAgent
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-    }
-
-    private FinTsSecretsConfiguration getSecretsConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(FinTsSecretsConfiguration.class);
     }
 
     @Override
