@@ -13,10 +13,10 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 
 public class DkbSupplementalDataProvider {
 
-    private static final String GENERATED_TAN_KEY = "generatedTAN";
+    static final String GENERATED_TAN_KEY = "generatedTAN";
     private static final String GENERATED_TAN_LABEL = "Enter Generated TAN";
 
-    private static final String SELECT_AUTH_METHOD_KEY = "selectAuthMethod";
+    static final String SELECT_AUTH_METHOD_KEY = "selectAuthMethod";
     private static final String SELECT_AUTH_METHOD_LABEL = "Authentication method index";
     private static final String SELECT_AUTH_METHOD_INFO =
             "Please insert authentication method index from 1 to %d \n";

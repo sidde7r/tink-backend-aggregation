@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator;
 
-import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.collect.Sets.union;
 import static java.lang.Long.MAX_VALUE;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,13 +19,13 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 @Data
 @JsonObject
 public class AuthResult {
-    private static final Set<String> RETURN_CODES_POSITIVE = of("CORRECT");
-    private static final Set<String> RETURN_CODES_NEGATIVE = of("FAILED");
+    private static final Set<String> RETURN_CODES_POSITIVE = ImmutableSet.of("CORRECT");
+    private static final Set<String> RETURN_CODES_NEGATIVE = ImmutableSet.of("FAILED");
 
     private static final Set<String> RETURN_CODES_FINAL =
             union(RETURN_CODES_NEGATIVE, RETURN_CODES_POSITIVE);
 
-    private static final Set<String> METHODS_EXCLUDED_FROM_SELECTION = of("CHIPTAN");
+    private static final Set<String> METHODS_EXCLUDED_FROM_SELECTION = ImmutableSet.of("CHIPTAN");
     private static final Predicate<AuthMethod> IS_SELECTABLE =
             authMethod -> !METHODS_EXCLUDED_FROM_SELECTION.contains(authMethod.authType);
 

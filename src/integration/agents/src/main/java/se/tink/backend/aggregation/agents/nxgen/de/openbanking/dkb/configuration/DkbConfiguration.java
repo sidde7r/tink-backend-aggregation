@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Urls.BASE_URL;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import lombok.Setter;
@@ -12,8 +14,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @Setter
 @JsonObject
 public class DkbConfiguration implements ClientConfiguration {
-
-    private static final String BASE_URL = "https://api.dkb.de";
 
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;

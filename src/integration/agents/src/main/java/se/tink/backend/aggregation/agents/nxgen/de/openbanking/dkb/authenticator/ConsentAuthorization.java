@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -13,7 +13,7 @@ public class ConsentAuthorization {
 
     private String scaStatus;
     private String authorisationId;
-    private List<ScaMethod> scaMethods = new LinkedList<>();
+    private List<ScaMethod> scaMethods = new ArrayList<>();
 
     boolean isScaMethodSelectionRequired() {
         return !getScaMethods().isEmpty();
