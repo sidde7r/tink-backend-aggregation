@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import javax.inject.Inject;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.FakeBankAapFile;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
@@ -13,13 +14,17 @@ public class InstantiateAgentWorkerCommandFakeBankState
 
     private final AgentFactory agentFactory;
     private final InetSocketAddress fakeBankSocket;
+    private final String fakeBankAapFile;
     private WireMockTestServer server;
 
     @Inject
     public InstantiateAgentWorkerCommandFakeBankState(
-            AgentFactory agentFactory, @FakeBankSocket InetSocketAddress fakeBankSocket) {
+            AgentFactory agentFactory,
+            @FakeBankSocket InetSocketAddress fakeBankSocket,
+            @FakeBankAapFile String fakeBankAapFile) {
         this.agentFactory = agentFactory;
         this.fakeBankSocket = fakeBankSocket;
+        this.fakeBankAapFile = fakeBankAapFile;
     }
 
     public AgentFactory getAgentFactory() {
@@ -31,10 +36,7 @@ public class InstantiateAgentWorkerCommandFakeBankState
 
         server = new WireMockTestServer(10001, fakeBankSocket.getPort());
 
-        final String file =
-                "src/aggregation/fakebank/src/main/java/se/tink/backend/fakebank/resources/amex.aap";
-
-        server.prepareMockServer(new AapFileParser(new ResourceFileReader().read(file)));
+        server.prepareMockServer(new AapFileParser(new ResourceFileReader().read(fakeBankAapFile)));
     }
 
     @Override

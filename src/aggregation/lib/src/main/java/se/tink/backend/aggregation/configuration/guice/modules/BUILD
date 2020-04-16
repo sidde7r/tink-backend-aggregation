@@ -1,6 +1,9 @@
 java_library(
     name = "modules",
     srcs = glob(["**/*.java"]),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/aggregationcontroller_api",

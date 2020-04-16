@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
 import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.FakeBankAapFile;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.WireMockConfigurationProvider;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
@@ -283,6 +284,12 @@ public class AggregationDecoupledModule extends AbstractModule {
                 .toInstance(new InetSocketAddress("localhost", 10000));
         bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
         bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
+
+        // To be generalized to a map and moved to yml configuration probably
+        bind(String.class)
+                .annotatedWith(FakeBankAapFile.class)
+                .toInstance(
+                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap");
     }
 
     @Provides
