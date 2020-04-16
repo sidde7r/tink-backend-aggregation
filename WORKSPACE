@@ -251,6 +251,8 @@ GRPC_JAVA_VERSION = "1.27.0"
 
 GRPC_JAVA_NANO_VERSION = "1.21.1"
 
+# Keep in mind the netty version compatibility table linked below when updating this
+# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
 NETTY_VERSION = "4.1.42.Final"
 
 NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION = "2.0.26.Final"
