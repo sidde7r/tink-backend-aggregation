@@ -2143,12 +2143,6 @@ bind(
 )
 
 maven_jar(
-    name = "org_reflections_reflections",  # Do not use, but do not remove
-    artifact = "org.reflections:reflections:0.9.11",
-    sha1 = "4c686033d918ec1727e329b7222fcb020152e32b",
-)
-
-maven_jar(
     name = "org_apache_pdfbox_pdfbox",  # Do not use, but do not remove
     artifact = "org.apache.pdfbox:pdfbox:2.0.6",
     sha1 = "68616a583c5f9b9ba72140364d15a07cd937ce0e",
@@ -2638,6 +2632,7 @@ maven_install(
         "io.dropwizard:dropwizard-servlets:0.7.1",
         "io.dropwizard:dropwizard-util:0.7.1",
         "io.dropwizard:dropwizard-validation:0.7.1",
+        "io.github.classgraph:classgraph:4.8.69",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:%s" % NETTY_VERSION,
         "io.netty:netty-codec-dns:%s" % NETTY_VERSION,
