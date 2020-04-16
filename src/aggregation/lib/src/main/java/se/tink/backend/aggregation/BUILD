@@ -5,7 +5,6 @@ java_library(
         "//data:cryptography_test",
         "//data:provision_clients",
         "//data:tesseract_training_set",
-        "//src/aggregation/fakebank/src/main/java/se/tink/backend/fakebank/resources",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
         "//tools:phantomjs_linux",
