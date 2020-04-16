@@ -61,6 +61,7 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandFakeBankState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
@@ -143,7 +144,9 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AgentWorkerOperation.AgentWorkerOperationState.class).in(Scopes.SINGLETON);
         bind(DebugAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(CircuitBreakerAgentWorkerCommandState.class).in(Scopes.SINGLETON);
-        bind(InstantiateAgentWorkerCommandState.class).in(Scopes.SINGLETON);
+        bind(InstantiateAgentWorkerCommandState.class)
+                .to(InstantiateAgentWorkerCommandFakeBankState.class)
+                .in(Scopes.SINGLETON);
         bind(LoginAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(ReportProviderMetricsAgentWorkerCommandState.class).in(Scopes.SINGLETON);
 

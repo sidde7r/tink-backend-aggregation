@@ -1,17 +1,14 @@
 package se.tink.backend.aggregation.workers.commands.state;
 
-import javax.inject.Inject;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 
-public class InstantiateAgentWorkerCommandState {
-    private final AgentFactory agentFactory;
+public interface InstantiateAgentWorkerCommandState {
 
-    @Inject
-    public InstantiateAgentWorkerCommandState(AgentFactory agentFactory) {
-        this.agentFactory = agentFactory;
-    }
+    AgentFactory getAgentFactory();
 
-    public AgentFactory getAgentFactory() {
-        return agentFactory;
-    }
+    /** Invoked right after the agent is instantiated. */
+    void doRightAfterInstantiation();
+
+    /** Invoked when the resources allocated during instantiation need to be cleared. */
+    void doAtInstantiationPostProcess();
 }

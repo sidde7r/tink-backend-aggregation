@@ -20,11 +20,13 @@ public class InstantiateAgentWorkerCommand extends AgentWorkerCommand {
     public AgentWorkerCommandResult execute() throws Exception {
         context.setAgent(state.getAgentFactory().create(context.getRequest(), context));
 
+        state.doRightAfterInstantiation();
+
         return AgentWorkerCommandResult.CONTINUE;
     }
 
     @Override
     public void postProcess() throws Exception {
-        // Deliberately left empty.
+        state.doAtInstantiationPostProcess();
     }
 }

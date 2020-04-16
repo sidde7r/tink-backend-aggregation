@@ -51,6 +51,10 @@ public class WireMockTestServer {
         buildMockServer(data);
     }
 
+    public void shutdown() {
+        wireMockServer.shutdown();
+    }
+
     public void resetRequests() {
         wireMockServer.resetRequests();
     }
