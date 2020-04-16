@@ -42,7 +42,6 @@ public final class SbabConstants {
         public static final String REFRESH_TOKEN = "REFRESH";
         public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
         public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
-        public static final String PAGINATION_INDICATOR_REFRESHED_TOKEN = "isRefreshed";
     }
 
     public static class QueryKeys {
@@ -100,7 +99,7 @@ public final class SbabConstants {
     public static class TransactionFetching {
         // 4 is default in the TransactionDatePaginationController
         public static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
-        public static final int AMOUNT_TO_FETCH = 6;
+        public static final int DAYS_TO_FETCH = 90;
     }
 
     public static class Errors {

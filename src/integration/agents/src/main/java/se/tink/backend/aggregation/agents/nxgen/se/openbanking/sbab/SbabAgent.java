@@ -82,7 +82,7 @@ public final class SbabAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        SbabAuthenticator sbabAuthenticator = new SbabAuthenticator(apiClient, persistentStorage);
+        SbabAuthenticator sbabAuthenticator = new SbabAuthenticator(apiClient);
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalRequester, sbabAuthenticator, persistentStorage, credentials);
@@ -130,8 +130,8 @@ public final class SbabAgent extends NextGenerationAgent
                         new TransactionDatePaginationController<>(
                                 transactionFetcher,
                                 TransactionFetching.MAX_CONSECUTIVE_EMPTY_PAGES,
-                                TransactionFetching.AMOUNT_TO_FETCH,
-                                ChronoUnit.MONTHS)));
+                                TransactionFetching.DAYS_TO_FETCH,
+                                ChronoUnit.DAYS)));
     }
 
     @Override

@@ -97,7 +97,6 @@ public final class SbabApiClient {
                         .accept(MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.AUTHORIZATION, getToken().getAccessToken())
                         .get(FetchTransactionsResponse.class);
-        response.setPersistentStorage(persistentStorage);
         return response;
     }
 
