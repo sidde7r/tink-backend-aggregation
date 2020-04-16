@@ -1,101 +1,138 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator;
 
-import java.util.Collections;
-import java.util.List;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.MAX_CONSENT_VALIDITY_DAYS;
+
+import java.time.LocalDate;
 import java.util.Optional;
-import javax.xml.bind.DatatypeConverter;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbApiClient;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.entities.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.entities.AccessItemEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.rpc.GetConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.rpc.GetConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.rpc.GetTokenForm;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DkbAuthenticator implements PasswordAuthenticator {
-    private final DkbApiClient apiClient;
-    private final PersistentStorage persistentStorage;
-    private final DkbConfiguration configuration;
-    private final String iban;
+
+    private final DkbAuthApiClient authApiClient;
+    private final DkbSupplementalDataProvider supplementalDataProvider;
+    private final DkbStorage storage;
 
     public DkbAuthenticator(
-            DkbApiClient apiClient,
-            PersistentStorage persistentStorage,
-            DkbConfiguration configuration,
-            String iban) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
-        this.iban = iban;
-    }
-
-    private DkbConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+            DkbAuthApiClient authApiClient,
+            DkbSupplementalDataProvider supplementalDataProvider,
+            DkbStorage storage) {
+        this.authApiClient = authApiClient;
+        this.supplementalDataProvider = supplementalDataProvider;
+        this.storage = storage;
     }
 
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        final GetTokenForm getTokenForm = createGetTokenForm(username, password);
-        final String clientId = configuration.getClientId();
-        final String clientSecret = configuration.getClientSecret();
-
-        final OAuth2Token token =
-                apiClient.authenticate(clientId, clientSecret, getTokenForm).toTinkToken();
-
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
-
-        final GetConsentRequest getConsentRequest = createGetConsentRequest();
-        final GetConsentResponse getConsentResponse = apiClient.getConsent(getConsentRequest);
-
-        persistentStorage.put(StorageKeys.CONSENT_ID, getConsentResponse.getConsentId());
+        getWso2Token();
+        authenticateUser(username, password);
+        getConsent();
     }
 
-    private GetConsentRequest createGetConsentRequest() {
-        final List<AccessItemEntity> accessItemEntityList =
-                Collections.singletonList(
-                        new AccessItemEntity(
-                                iban,
-                                FormValues.BBAN,
-                                FormValues.PAN,
-                                FormValues.MASKED_PAN,
-                                FormValues.MSISDN,
-                                FormValues.EUR));
-        final AccessEntity accessEntity =
-                new AccessEntity(
-                        accessItemEntityList,
-                        accessItemEntityList,
-                        accessItemEntityList,
-                        FormValues.ALL_ACCOUNTS,
-                        FormValues.ALL_ACCOUNTS);
-
-        return new GetConsentRequest(
-                accessEntity,
-                FormValues.FALSE,
-                FormValues.FREQUENCY_PER_DAY,
-                FormValues.FALSE,
-                FormValues.VALID_UNTIL);
+    private void getWso2Token() throws LoginException {
+        Wso2Token token = authApiClient.getWso2Token();
+        storage.setWso2OAuthToken(token.toOAuth2Token());
     }
 
-    private GetTokenForm createGetTokenForm(String username, String password) {
-        return GetTokenForm.builder()
-                // had to change this from password to client_credentials so it could work
-                .setGrantType(FormValues.CLIENT_CREDENTIALS)
-                .setUsername(username)
-                .setPassword(password)
-                .build();
+    private void authenticateUser(String username, String password) throws AuthenticationException {
+        AuthResult result = authenticate1stFactor(username, password);
+        result = authenticate2ndFactor(result);
+        processAuthenticationResult(result);
     }
 
-    private String toBase64String(byte[] bytes) {
-        return DatatypeConverter.printBase64Binary(bytes);
+    private void processAuthenticationResult(AuthResult result) throws LoginException {
+        if (!result.isAuthenticated()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+        storage.setAccessToken(result.toOAuth2Token());
+    }
+
+    private AuthResult authenticate1stFactor(String username, String password)
+            throws LoginException {
+        return authApiClient.authenticate1stFactor(username, password);
+    }
+
+    private AuthResult authenticate2ndFactor(AuthResult previousResult)
+            throws AuthenticationException {
+        if (previousResult.isAuthenticationFinished()) {
+            return previousResult;
+        }
+        AuthResult result = select2ndFactorMethodIfNeeded(previousResult);
+        return provide2ndFactorCode(result);
+    }
+
+    private AuthResult select2ndFactorMethodIfNeeded(AuthResult previousResult)
+            throws AuthenticationException {
+        if (!previousResult.isAuthMethodSelectionRequired()) {
+            return previousResult;
+        }
+
+        String methodId =
+                supplementalDataProvider.selectAuthMethod(
+                        previousResult.getSelectableAuthMethods());
+        return authApiClient.select2ndFactorAuthMethod(methodId);
+    }
+
+    private AuthResult provide2ndFactorCode(AuthResult previousResult)
+            throws AuthenticationException {
+        if (previousResult.isAuthenticationFinished()) {
+            return previousResult;
+        }
+        String code = supplementalDataProvider.getTanCode();
+        return authApiClient.submit2ndFactorTanCode(code);
+    }
+
+    private void getConsent() throws AuthenticationException {
+        Consent consent = getExistingConsent().orElseGet(this::createNewConsent);
+        if (consent.isNotAuthorized()) {
+            authorizeConsent(consent.getConsentId());
+        }
+        storage.setConsentId(consent.getConsentId());
+    }
+
+    private Optional<Consent> getExistingConsent() {
+        return storage.getConsentId().map(authApiClient::getConsent).filter(Consent::isValid);
+    }
+
+    private Consent createNewConsent() {
+        return authApiClient.createConsent(getMaxConsentValidityDate());
+    }
+
+    private LocalDate getMaxConsentValidityDate() {
+        return LocalDate.now().plusDays(MAX_CONSENT_VALIDITY_DAYS);
+    }
+
+    private void authorizeConsent(String consentId) throws AuthenticationException {
+        ConsentAuthorization consentAuth = startConsentAuthorization(consentId);
+        selectConsentAuthorizationMethodIfNeeded(
+                consentId, consentAuth.getAuthorisationId(), consentAuth);
+        provide2ndFactorConsentAuthorization(consentId, consentAuth.getAuthorisationId());
+    }
+
+    private ConsentAuthorization startConsentAuthorization(String consentId) throws LoginException {
+        return authApiClient.startConsentAuthorization(consentId);
+    }
+
+    private ConsentAuthorization selectConsentAuthorizationMethodIfNeeded(
+            String consentId, String authorizationId, ConsentAuthorization previousResult)
+            throws AuthenticationException {
+        if (!previousResult.isScaMethodSelectionRequired()) {
+            return previousResult;
+        }
+
+        String methodId = supplementalDataProvider.selectAuthMethod(previousResult.getScaMethods());
+        return authApiClient.selectConsentAuthorizationMethod(consentId, authorizationId, methodId);
+    }
+
+    private void provide2ndFactorConsentAuthorization(String consentId, String authorizationId)
+            throws SupplementalInfoException, LoginException {
+        String code = supplementalDataProvider.getTanCode();
+        authApiClient.consentAuthorization2ndFactor(consentId, authorizationId, code);
     }
 }

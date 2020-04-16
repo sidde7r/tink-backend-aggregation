@@ -85,7 +85,8 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
     }
 
     // UniformInterface
-    private HttpRequest build(HttpMethod method) {
+    public HttpRequest build(HttpMethod method) {
+        addCookiesToHeader();
         return new HttpRequestImpl(method, url, headers, body);
     }
 
@@ -356,8 +357,6 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
     private <T> T handle(Class<T> c, HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
-        addCookiesToHeader();
-
         if (shouldAddAggregatorHeader) {
             addAggregatorToHeader();
         }
@@ -378,7 +377,6 @@ public class NextGenRequestBuilder extends NextGenFilterable<RequestBuilder>
     // close the connection.
     private void voidHandle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
-        addCookiesToHeader();
 
         if (shouldAddAggregatorHeader) {
             addAggregatorToHeader();

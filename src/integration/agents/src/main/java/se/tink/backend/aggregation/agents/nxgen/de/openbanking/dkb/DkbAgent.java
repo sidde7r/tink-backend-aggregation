@@ -6,11 +6,11 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.DkbAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.DkbTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.DkbPaymentExecutor;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -20,41 +20,49 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class DkbAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
-    private final DkbApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final ModuleDependenciesRegistry dependencyRegistry;
 
     public DkbAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new DkbApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
-
+        dependencyRegistry = initializeAgentDependencies(new DkbModuleDependenciesRegistration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        apiClient.setConfiguration(getClientConfiguration());
     }
 
-    protected DkbConfiguration getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfigurationFromK8s(
-                        DkbConstants.INTEGRATION_NAME, clientName, DkbConfiguration.class);
+    private DkbConfiguration getClientConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(DkbConfiguration.class);
+    }
+
+    private ModuleDependenciesRegistry initializeAgentDependencies(
+            DkbModuleDependenciesRegistration moduleDependenciesRegistration) {
+        moduleDependenciesRegistration.registerExternalDependencies(
+                client,
+                sessionStorage,
+                persistentStorage,
+                getClientConfiguration(),
+                supplementalInformationHelper);
+        moduleDependenciesRegistration.registerInternalModuleDependencies();
+        return moduleDependenciesRegistration.createModuleDependenciesRegistry();
+    }
+
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new DkbAuthenticator(
-                        apiClient,
-                        persistentStorage,
-                        getClientConfiguration(),
-                        credentials.getField(CredentialKeys.IBAN)));
+                dependencyRegistry.getBean(DkbAuthenticator.class));
     }
 
     @Override
@@ -79,7 +87,7 @@ public final class DkbAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final DkbTransactionalAccountFetcher accountFetcher =
-                new DkbTransactionalAccountFetcher(apiClient);
+                new DkbTransactionalAccountFetcher(getApiClient());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -97,6 +105,10 @@ public final class DkbAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new DkbPaymentExecutor(apiClient)));
+        return Optional.of(new PaymentController(new DkbPaymentExecutor(getApiClient())));
+    }
+
+    private DkbApiClient getApiClient() {
+        return dependencyRegistry.getBean(DkbApiClient.class);
     }
 }

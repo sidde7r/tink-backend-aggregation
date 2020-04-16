@@ -1,55 +1,37 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.rpc.GetConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.rpc.GetConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.rpc.GetTokenForm;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.rpc.GetTokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class DkbApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
-    private DkbConfiguration configuration;
+    private final DkbStorage storage;
 
-    public DkbApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public DkbApiClient(TinkHttpClient client, DkbStorage storage) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
-    }
-
-    private DkbConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    protected void setConfiguration(DkbConfiguration configuration) {
-        this.configuration = configuration;
+        this.storage = storage;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -59,48 +41,37 @@ public final class DkbApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        final OAuth2Token authToken = getTokenFromStorage();
-
-        return createRequest(url).addBearerToken(authToken);
+        return createRequest(url)
+                .addBearerToken(storage.getWso2OAuthToken())
+                .header("PSD2-AUTHORIZATION", storage.getAccessToken().toAuthorizeHeader());
     }
 
     private RequestBuilder createFetchingRequest(URL url) {
         return createRequestInSession(url)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage());
+                .header(HeaderKeys.CONSENT_ID, getConsent());
     }
 
-    private String getConsentFromStorage() {
-        return persistentStorage.get(StorageKeys.CONSENT_ID);
-    }
-
-    private OAuth2Token getTokenFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
-    }
-
-    public GetTokenResponse authenticate(
-            String clientId, String clientSecret, GetTokenForm getTokenForm) {
-        return createRequest(Urls.TOKEN)
-                .addBasicAuth(clientId, clientSecret)
-                .body(getTokenForm, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(GetTokenResponse.class);
-    }
-
-    public GetConsentResponse getConsent(GetConsentRequest getConsentRequest) {
-        return createRequestInSession(Urls.CONSENT)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .post(GetConsentResponse.class, getConsentRequest);
+    private String getConsent() {
+        return storage.getConsentId()
+                .orElseThrow(() -> new NoSuchElementException("Can't obtain consent id"));
     }
 
     public GetAccountsResponse getAccounts() {
         return createFetchingRequest(Urls.GET_ACCOUNTS).get(GetAccountsResponse.class);
     }
 
+    public GetBalancesResponse getBalances(String accountId) {
+        return createFetchingRequest(Urls.GET_BALANCES.parameter(IdTags.ACCOUNT_ID, accountId))
+                .get(GetBalancesResponse.class);
+    }
+
     public GetTransactionsResponse getTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
+
+        if (fromDate.before(Date.from(ZonedDateTime.now().minusMonths(5).toInstant()))) {
+            return new GetTransactionsResponse();
+        }
         return createFetchingRequest(
                         Urls.GET_TRANSACTIONS.parameter(
                                 IdTags.ACCOUNT_ID, account.getApiIdentifier()))
@@ -117,7 +88,6 @@ public final class DkbApiClient {
         return createRequestInSession(
                         Urls.CREATE_PAYMENT.parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
@@ -128,13 +98,6 @@ public final class DkbApiClient {
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
                 .get(FetchPaymentResponse.class);
-    }
-
-    private String getPsuIpAddress() {
-        // This is supposed to be the IP address of the PSU, but we can't supply it on sandbox so we
-        // use dummy value
-        return "82.117.210.2"; //
     }
 }

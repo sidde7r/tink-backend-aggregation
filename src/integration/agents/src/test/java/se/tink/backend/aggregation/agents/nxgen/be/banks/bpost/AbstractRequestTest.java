@@ -1,11 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.bpost;
 
-import java.util.Map;
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static se.tink.backend.aggregation.nxgen.http.request.HttpMethod.GET;
+
+import javax.ws.rs.core.MultivaluedMap;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.common.RequestException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bpost.entity.BPostBankAuthContext;
+import se.tink.backend.aggregation.nxgen.http.NextGenRequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -16,19 +22,18 @@ public class AbstractRequestTest {
     public void shouldSetRequiredHeaders() throws RequestException {
         // given
         final String csrfToken = "csrfToken";
-        BPostBankAuthContext authContext = Mockito.mock(BPostBankAuthContext.class);
-        RequestBuilderArgumentCapture requestBuilder = new RequestBuilderArgumentCapture();
+        BPostBankAuthContext authContext = mock(BPostBankAuthContext.class);
+        RequestBuilder requestBuilder = new NextGenRequestBuilder(emptyList(), null, null);
         Mockito.when(authContext.getCsrfToken()).thenReturn(csrfToken);
         AbstractRequest<Void> objectUnderTest = createDummyObjectUnderTest(authContext);
         // when
-        Map<String, Object> result =
-                ((RequestBuilderArgumentCapture) objectUnderTest.withHeaders(requestBuilder))
-                        .getHeaders();
+        MultivaluedMap<String, Object> result =
+                objectUnderTest.withHeaders(requestBuilder).build(GET).getHeaders();
         // then
-        Assert.assertEquals("1", result.get("X-Device-Type"));
-        Assert.assertEquals("nl-be", result.get("Accept-Language"));
-        Assert.assertEquals("nl-BE", result.get("lang"));
-        Assert.assertEquals(csrfToken, result.get("X-BBXSRF"));
+        assertThat(result.get("X-Device-Type")).containsOnly("1");
+        assertThat(result.get("Accept-Language")).containsOnly("nl-be");
+        assertThat(result.get("lang")).containsOnly("nl-BE");
+        assertThat(result.get("X-BBXSRF")).containsOnly(csrfToken);
     }
 
     @Test
@@ -36,8 +41,8 @@ public class AbstractRequestTest {
         // given
         final String path = "/bpb";
         final String url = "https://app.bpostbank.be" + path;
-        TinkHttpClient httpClient = Mockito.mock(TinkHttpClient.class);
-        RequestBuilder requestBuilder = Mockito.mock(RequestBuilder.class);
+        TinkHttpClient httpClient = mock(TinkHttpClient.class);
+        RequestBuilder requestBuilder = mock(RequestBuilder.class);
         Mockito.when(httpClient.request(url)).thenReturn(requestBuilder);
         Mockito.when(httpClient.request(new URL(url))).thenReturn(requestBuilder);
         AbstractRequest<Void> objectUnderTest = createDummyObjectUnderTest(path);

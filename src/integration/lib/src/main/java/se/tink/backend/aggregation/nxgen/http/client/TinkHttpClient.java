@@ -14,16 +14,15 @@ import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfigura
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.Filterable;
-import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilderProvidable;
 import se.tink.backend.aggregation.nxgen.http.handler.HttpResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.serializecontainer.SerializeContainer;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public interface TinkHttpClient extends Filterable<TinkHttpClient> {
+public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuilderProvidable {
 
     void setMessageSignInterceptor(MessageSignInterceptor messageSignInterceptor);
 
@@ -130,10 +129,6 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient> {
     // --- Serialization ---
 
     // +++ Requests +++
-    RequestBuilder request(String url);
-
-    RequestBuilder request(URL url);
-
     <T> T request(Class<T> c, HttpRequest request)
             throws HttpClientException, HttpResponseException;
 
