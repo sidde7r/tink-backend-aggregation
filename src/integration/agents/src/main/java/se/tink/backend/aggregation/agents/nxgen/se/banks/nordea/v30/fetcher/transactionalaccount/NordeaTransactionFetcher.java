@@ -26,6 +26,7 @@ public class NordeaTransactionFetcher
     private static final long TRANSACTION_FETCHER_BACKOFF = 2500;
     private static final int MAX_RETRY_ATTEMPTS = 2;
     private static final int GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS = 500;
+    private static final int TRANSACTION_LIMIT = 5000;
 
     private final NordeaSEApiClient apiClient;
 
@@ -67,6 +68,13 @@ public class NordeaTransactionFetcher
             int attempt) {
 
         validateIsBankSideErrorOrElseThrow(e);
+
+        // This is an ugly fix since we suspect that the limit for transactions are 5000.
+        if (startIndex >= TRANSACTION_LIMIT) {
+            // We suspect that error code 504 is thrown when we have reached the limit of 5000
+            // fetched transactions.
+            return PaginatorResponseImpl.createEmpty(false);
+        }
 
         if (attempt <= MAX_RETRY_ATTEMPTS) {
             backoffAWhile();
