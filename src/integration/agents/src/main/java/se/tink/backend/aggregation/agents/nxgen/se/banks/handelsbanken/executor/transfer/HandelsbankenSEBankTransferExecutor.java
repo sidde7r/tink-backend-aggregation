@@ -78,14 +78,16 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
 
                             Optional<URL> transferUrl =
                                     getTransferUrl(destination, transferContext);
-
+                            boolean isInternalTransfer =
+                                    isTransferBetweenSameUserAccounts(
+                                            transfer, transferContext, destination);
                             TransferSignRequest request =
                                     TransferSignRequest.create(
                                             transfer,
                                             sourceAccount,
                                             destination,
-                                            generateTransferMessages(
-                                                    transfer, transferContext, destination));
+                                            generateTransferMessages(transfer, isInternalTransfer),
+                                            isInternalTransfer);
 
                             signTransfer(transferUrl, request);
                         });
@@ -161,12 +163,8 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
     }
 
     private TransferMessageFormatter.Messages generateTransferMessages(
-            Transfer transfer,
-            HandelsbankenSETransferContext transferContext,
-            AmountableDestination destinationAccount) {
-        return transferMessageFormatter.getMessages(
-                transfer,
-                isTransferBetweenSameUserAccounts(transfer, transferContext, destinationAccount));
+            Transfer transfer, boolean isInternalTransfer) {
+        return transferMessageFormatter.getMessages(transfer, isInternalTransfer);
     }
 
     private boolean isTransferBetweenSameUserAccounts(

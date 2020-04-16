@@ -1,13 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.rpc.BaseSignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.TransferAmount;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.utilities.HandelsbankenDateUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -30,9 +26,10 @@ public class TransferSignRequest implements BaseSignRequest {
             Transfer transfer,
             AmountableSource source,
             AmountableDestination destination,
-            TransferMessageFormatter.Messages messages) {
+            TransferMessageFormatter.Messages messages,
+            boolean isInternalTransfer) {
         TransferSignRequest request = new TransferSignRequest();
-        request.transferDate = getDueDate(transfer);
+        request.transferDate = getDueDate(transfer, isInternalTransfer);
         request.amount = toAmount(transfer);
         request.message = messages.getDestinationMessage();
         request.annotation = messages.getSourceMessage();
@@ -58,22 +55,18 @@ public class TransferSignRequest implements BaseSignRequest {
         boolean isKnownDestination();
     }
 
-    private static String getDueDate(Transfer transfer) {
-        final Date dueDate;
-        if (Objects.isNull(transfer.getDueDate())) {
-            dueDate = new Date();
-        } else {
-            dueDate = transfer.getDueDate();
-        }
-        return formatDueDate(dueDate);
-    }
+    private static String getDueDate(Transfer transfer, boolean isInternalTransfer) {
+        String formattedDate;
 
-    /**
-     * This method returns the current date in correct time zone, as a string formatted as
-     * yyyy-MM-dd
-     */
-    private static String formatDueDate(Date date) {
-        LocalDateTime localDate = date.toInstant().atZone(ZoneId.of("CET")).toLocalDateTime();
-        return localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if (isInternalTransfer) {
+            formattedDate =
+                    HandelsbankenDateUtils.getTransferDateForInternalTransfer(
+                            transfer.getDueDate());
+        } else {
+            formattedDate =
+                    HandelsbankenDateUtils.getTransferDateForExternalTransfer(
+                            transfer.getDueDate());
+        }
+        return formattedDate;
     }
 }
