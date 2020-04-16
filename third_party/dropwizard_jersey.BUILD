@@ -1,0 +1,30 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
+java_library(
+    name = "dropwizard-jersey",
+    srcs = glob(["dropwizard-jersey/src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "@aggregation//:com_codahale_metrics_metrics_annotation",
+        "@aggregation//:com_codahale_metrics_metrics_core",
+        "@aggregation//:com_codahale_metrics_metrics_jersey",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
+        "@aggregation//:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
+        "@aggregation//:com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
+        "@aggregation//:com_google_code_findbugs_jsr305",
+        "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_sun_jersey_jersey_core",
+        "@aggregation//:com_sun_jersey_jersey_server",
+        "@aggregation//:com_sun_jersey_jersey_servlet",
+        "@aggregation//:io_dropwizard_dropwizard_jackson",
+        "@aggregation//:io_dropwizard_dropwizard_logging",
+        "@aggregation//:io_dropwizard_dropwizard_validation",
+        "@aggregation//:javax_validation_validation_api",
+        "@aggregation//:joda_time_joda_time",
+        "@aggregation//:org_eclipse_jetty_orbit_javax_servlet",
+        "@aggregation//:org_slf4j_slf4j_api",
+    ],
+)
