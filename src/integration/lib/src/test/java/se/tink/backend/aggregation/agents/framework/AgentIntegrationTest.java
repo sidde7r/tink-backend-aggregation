@@ -836,7 +836,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     private boolean isLoginRequiredForPIS() {
-        return !"it-unicredit-oauth2".equals(provider.getName());
+        switch (provider.getName()) {
+            case "it-unicredit-oauth2":
+            case "it-isp-oauth2":
+                return false;
+            default:
+                return true;
+        }
     }
 
     private List<Payment> createItalianPayments(List<Account> accounts, String desinationAccount) {

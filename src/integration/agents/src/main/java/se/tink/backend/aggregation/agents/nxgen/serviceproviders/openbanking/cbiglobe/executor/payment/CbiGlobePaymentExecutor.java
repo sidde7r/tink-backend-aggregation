@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.InstructedAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
@@ -52,6 +53,8 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        fetchToken();
+
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
@@ -70,6 +73,23 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 StorageKeys.LINK,
                 payment.getLinks().getUpdatePsuAuthenticationRedirect().getHref());
         return payment.toTinkPaymentResponse(getPaymentType(paymentRequest));
+    }
+
+    private boolean fetchToken() {
+        try {
+            if (!apiClient.isTokenValid()) {
+                apiClient.getAndSaveToken();
+            }
+        } catch (IllegalStateException e) {
+            String message = e.getMessage();
+            if (message.contains(MessageCodes.NO_ACCESS_TOKEN_IN_STORAGE.name())) {
+                apiClient.getAndSaveToken();
+            } else {
+                throw e;
+            }
+        }
+
+        return true;
     }
 
     @Override

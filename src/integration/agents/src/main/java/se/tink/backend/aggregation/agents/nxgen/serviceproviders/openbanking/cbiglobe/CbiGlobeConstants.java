@@ -60,9 +60,9 @@ public final class CbiGlobeConstants {
         public static final String CONSENTS_STATUS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
         private static final String PAYMENT =
-                "/sbx/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers";
         private static final String FETCH_PAYMENT =
-                "/sbx/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}";
         public static final String CARD_ACCOUNTS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts";
         public static final String CARD_BALANCES =
@@ -111,11 +111,13 @@ public final class CbiGlobeConstants {
         public static final String PSU_ID_TYPE = "psu-id-type";
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
         public static final String OPERATION_NAME = "operation-name";
+        public static final String CODE = "code";
     }
 
     public static class HeaderValues {
         public static final String DEFAULT_PSU_IP_ADDRESS = "0.0.0.0";
         public static final String UPDATE_PSU_DATA = "updatePsuData";
+        public static final String CODE = "code";
     }
 
     public static class FormValues {

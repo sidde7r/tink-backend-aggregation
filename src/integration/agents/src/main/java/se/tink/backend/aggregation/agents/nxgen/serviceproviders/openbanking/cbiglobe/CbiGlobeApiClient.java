@@ -104,6 +104,10 @@ public class CbiGlobeApiClient {
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
     }
 
+    private RequestBuilder createSepaPayment(URL url) {
+        return createRequestInSession(url);
+    }
+
     protected RequestBuilder createAccountsRequestWithConsent() {
         return createRequestInSession(getAccountsUrl())
                 .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
@@ -131,6 +135,13 @@ public class CbiGlobeApiClient {
                 .queryParam(QueryKeys.SCOPE, QueryValues.PRODUCTION)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(GetTokenResponse.class);
+    }
+
+    public void getAndSaveToken() {
+        GetTokenResponse getTokenResponse =
+                getToken(configuration.getClientId(), configuration.getClientSecret());
+        OAuth2Token token = getTokenResponse.toTinkToken();
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
     }
 
     public ConsentResponse createConsent(
@@ -240,13 +251,15 @@ public class CbiGlobeApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-        URL redirectUrl =
-                new URL(configuration.getRedirectUrl())
-                        .queryParam(QueryKeys.STATE, QueryValues.STATE);
-        return createRequestWithConsentSandbox(Urls.PAYMENT)
+
+        return createSepaPayment(Urls.PAYMENT)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                .header(
+                        HeaderKeys.TPP_REDIRECT_URI,
+                        new URL(getConfiguration().getRedirectUrl())
+                                .queryParam(QueryKeys.STATE, persistentStorage.get(QueryKeys.STATE))
+                                .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
