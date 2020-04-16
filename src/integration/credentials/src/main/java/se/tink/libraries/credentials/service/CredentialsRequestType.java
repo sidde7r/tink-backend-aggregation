@@ -8,5 +8,6 @@ public enum CredentialsRequestType {
     CREATE,
     UPDATE,
     REENCRYPT,
-    MIGRATE
+    MIGRATE,
+    MANUAL_AUTHENTICATION
 }
