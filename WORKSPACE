@@ -2632,6 +2632,7 @@ maven_install(
         "io.dropwizard:dropwizard-servlets:0.7.1",
         "io.dropwizard:dropwizard-util:0.7.1",
         "io.dropwizard:dropwizard-validation:0.7.1",
+        "io.github.classgraph:classgraph:4.8.69",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:%s" % NETTY_VERSION,
         "io.netty:netty-codec-dns:%s" % NETTY_VERSION,
