@@ -1,8 +1,13 @@
 package se.tink.libraries.date;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -10,7 +15,7 @@ import java.util.TimeZone;
 import java.util.function.Consumer;
 import org.junit.Test;
 
-public abstract class CountryDateHelperTest {
+public class CountryDateHelperTest {
     private final CountryDateHelper belgianHelper = new CountryDateHelper(new Locale("nl", "BE"));
     private final CountryDateHelper swedishHelper = new CountryDateHelper();
     private final CountryDateHelper unitedKingdomHelper =
@@ -194,5 +199,51 @@ public abstract class CountryDateHelperTest {
                         DateUtils.addDays(unitedKingdomHelper.getToday(), -1));
         yesterday.set(Calendar.HOUR_OF_DAY, 23);
         assertTrue(unitedKingdomHelper.isBeforeToday(yesterday.getTime()));
+    }
+
+    @Test
+    public void testGetTransferNotNullAndDateNotProvided() throws ParseException {
+        Date transferDate =
+                ThreadSafeDateFormat.FORMATTER_DAILY.parse(
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                                swedishHelper.getTransferDate(null, 23, 59)));
+        assertNotNull(transferDate);
+    }
+
+    @Test
+    public void testGetTransferDateBeforeCuttOffTimeAndDateNotProvided() throws ParseException {
+        Date transferDate = swedishHelper.getTransferDate(null, 23, 59);
+        assertTrue(swedishHelper.isBusinessDay(transferDate));
+    }
+
+    @Test
+    public void testGetTransferDateAfterCuttOffTimeAndDateNotProvided() {
+        Date transferDate = swedishHelper.getTransferDate(null, 00, 00);
+        assertTrue(swedishHelper.isBusinessDay(transferDate));
+    }
+
+    @Test
+    public void testGetTransferDateBeforeCuttOffTimeAndDateProvided() {
+        Date anyDate =
+                Date.from(
+                        LocalDate.of(2020, 06, 11)
+                                .atStartOfDay()
+                                .atZone(ZoneId.of("CET"))
+                                .toInstant());
+        Date transferDate = swedishHelper.getTransferDate(anyDate, 23, 59);
+        assertEquals(transferDate, anyDate);
+    }
+
+    @Test
+    public void testGetTransferDateAfterCuttOffTimeAndDateProvided() {
+        Date anyDate =
+                Date.from(
+                        LocalDate.of(2020, 06, 11)
+                                .atStartOfDay()
+                                .atZone(ZoneId.of("CET"))
+                                .toInstant());
+
+        Date transferDate = swedishHelper.getTransferDate(anyDate, 00, 00);
+        assertEquals(transferDate, anyDate);
     }
 }
