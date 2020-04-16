@@ -5,6 +5,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -99,6 +100,47 @@ public class CatalogTest {
 
         Assert.assertNotEquals(key, clonedKeyWithParameters);
         Assert.assertEquals(expectedMessage, catalog.getString(clonedKeyWithParameters));
+    }
+
+    @Test
+    public void testCatalogGetString() {
+        String swwEn = "Something went wrong.";
+        String swwSv = "Något gick fel.";
+        String swwIt = "Qualcosa è andato storto.";
+        Catalog catalog = new Catalog(new Locale("sv", "SE"));
+        String catalogTranslation = catalog.getString(swwEn);
+        Assert.assertEquals(swwSv, catalogTranslation);
+        catalogTranslation = catalog.getString(new LocalizableKey(swwEn));
+        Assert.assertEquals(swwSv, catalogTranslation);
+        catalogTranslation = catalog.getString("Youtube went wrong.");
+        Assert.assertEquals("Youtube went wrong.", catalogTranslation);
+        catalog = new Catalog(new Locale("it", "IT"));
+        catalogTranslation = catalog.getString(swwEn);
+        Assert.assertEquals(swwIt, catalogTranslation);
+        String nullString = null;
+        try {
+            catalog.getString(nullString);
+        } catch (NullPointerException e) {
+            Assert.assertEquals(e.getClass(), NullPointerException.class);
+            return;
+        }
+        Assert.fail("NPE not caught");
+    }
+
+    @Test
+    public void testCatalogReferToAggregationTranslation() {
+        // This is to verify tink-backend-aggragation is using his own po files instead of the ones
+        // from backend
+        String translationOnlyOccurredInAggregation = "Invalid source account";
+        Catalog catalog = new Catalog(new Locale("sv", "SE"));
+        Assert.assertEquals(
+                "Från-kontot är inte giltigt",
+                catalog.getString(translationOnlyOccurredInAggregation));
+        String lessThanOneSekEn = "The transfer amount, less than 1 SEK is not supported.";
+        String lessThanOneSekSv = "Överföringsbelopp på mindre än 1 kr stöds inte.";
+        Assert.assertEquals(lessThanOneSekSv, catalog.getString(lessThanOneSekEn));
+        Assert.assertEquals(
+                lessThanOneSekSv, catalog.getString(new LocalizableKey(lessThanOneSekEn)));
     }
 
     @Test

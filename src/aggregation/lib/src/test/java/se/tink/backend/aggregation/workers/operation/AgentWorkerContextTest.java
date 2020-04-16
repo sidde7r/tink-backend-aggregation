@@ -90,27 +90,12 @@ public class AgentWorkerContextTest {
     }
 
     @Test
-    public void testCotalagGetString() {
-        String sww_en = "Something went wrong.";
-        String sww_sv = "Något gick fel.";
-        String sww_it = "Qualcosa è andato storto.";
+    public void testCatalogGetString() {
+        String lessThanOneSekEn = "The transfer amount, less than 1 SEK is not supported.";
+        String lessThanOneSekSv = "Överföringsbelopp på mindre än 1 kr stöds inte.";
         Catalog catalog = new Catalog(new Locale("sv", "SE"));
-        String catalogTranslation = catalog.getString(sww_en);
-        Assert.assertEquals(sww_sv, catalogTranslation);
-        catalogTranslation = catalog.getString(new LocalizableKey(sww_en));
-        Assert.assertEquals(sww_sv, catalogTranslation);
-        catalogTranslation = catalog.getString("Youtube went wrong.");
-        Assert.assertEquals("Youtube went wrong.", catalogTranslation);
-        catalog = new Catalog(new Locale("it", "IT"));
-        catalogTranslation = catalog.getString(sww_en);
-        Assert.assertEquals(sww_it, catalogTranslation);
-        String nullString = null;
-        try {
-            catalog.getString(nullString);
-        } catch (NullPointerException e) {
-            Assert.assertEquals(e.getClass(), NullPointerException.class);
-            return;
-        }
-        Assert.fail("NPE not caught");
+        Assert.assertEquals(lessThanOneSekSv, catalog.getString(lessThanOneSekEn));
+        Assert.assertEquals(
+                lessThanOneSekSv, catalog.getString(new LocalizableKey(lessThanOneSekEn)));
     }
 }

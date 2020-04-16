@@ -2,6 +2,9 @@ java_library(
     name = "seb",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//po:i18n",
+    ],
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/amount",
