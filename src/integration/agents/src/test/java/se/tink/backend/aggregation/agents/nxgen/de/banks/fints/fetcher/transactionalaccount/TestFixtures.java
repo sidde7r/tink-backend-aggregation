@@ -24,7 +24,7 @@ public class TestFixtures {
     static FinTsDialogContext getDialogContext() {
         FinTsConfiguration configuration = getFinTsConfiguration();
         FinTsDialogContext context =
-                new FinTsDialogContext(configuration, new FinTsSecretsConfiguration());
+                new FinTsDialogContext(configuration, new FinTsSecretsConfiguration(null, null));
         HICAZS hicazs =
                 new HICAZS()
                         .setSupportedCamtFormats(

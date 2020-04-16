@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FinTsConstants {
 
+    static final String PRODUCT_ID = "DCF3902F7888F5A831EA0F1D6";
+    static final String PRODUCT_VERSION = "0.1";
     public static final String CURRENCY = "EUR";
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

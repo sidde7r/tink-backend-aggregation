@@ -75,7 +75,7 @@ public class FinTsRequestProcessorTest {
         FinTsConfiguration configuration =
                 new FinTsConfiguration("foo", Bank.POSTBANK, url, "foo", "foo");
         FinTsDialogContext context =
-                new FinTsDialogContext(configuration, new FinTsSecretsConfiguration());
+                new FinTsDialogContext(configuration, new FinTsSecretsConfiguration(null, null));
         FinTsRequestProcessor processor = createRequestProcessor(context, configuration);
 
         // when
@@ -97,7 +97,7 @@ public class FinTsRequestProcessorTest {
         FinTsConfiguration configuration =
                 new FinTsConfiguration("foo", Bank.POSTBANK, url, "foo", "foo");
         FinTsDialogContext context =
-                new FinTsDialogContext(configuration, new FinTsSecretsConfiguration());
+                new FinTsDialogContext(configuration, new FinTsSecretsConfiguration(null, null));
         FinTsRequestProcessor processor = createRequestProcessor(context, configuration);
 
         // when

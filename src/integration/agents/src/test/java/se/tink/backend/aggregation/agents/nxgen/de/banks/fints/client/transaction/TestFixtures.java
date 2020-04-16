@@ -159,7 +159,7 @@ public class TestFixtures {
 
     static FinTsDialogContext getDialogContext(FinTsConfiguration configuration) {
         FinTsDialogContext context =
-                new FinTsDialogContext(configuration, new FinTsSecretsConfiguration());
+                new FinTsDialogContext(configuration, new FinTsSecretsConfiguration(null, null));
         BaseResponsePart hksal = mock(BaseResponsePart.class);
         when(hksal.getSegmentVersion()).thenReturn(5);
         context.addOperationSupportedByBank(SegmentType.HKSAL, hksal);
