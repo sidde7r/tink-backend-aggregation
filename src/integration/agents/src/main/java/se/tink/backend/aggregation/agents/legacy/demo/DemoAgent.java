@@ -9,8 +9,10 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.File;
 import java.io.IOException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -254,7 +256,6 @@ public class DemoAgent extends AbstractAgent
 
     @Override
     public void execute(Transfer transfer) throws Exception, TransferExecutionException {
-
         if (!Objects.equal(demoCredentials.getUsername(), "201212121212")) {
             String response = requestChallengeResponse(request.getCredentials(), "code1");
             if (Strings.isNullOrEmpty(response) || !response.equals("code1")) {
@@ -308,6 +309,14 @@ public class DemoAgent extends AbstractAgent
     }
 
     private Transaction transferToTransaction(Transfer transfer) throws JsonProcessingException {
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (transfer.getDueDate() == null) {
+            transfer.setDueDate(Date.from(Clock.systemDefaultZone().instant()));
+        }
+
         Transaction t = new Transaction();
         t.setDescription(transfer.getSourceMessage());
         t.setDate(se.tink.libraries.date.DateUtils.flattenTime(transfer.getDueDate()));

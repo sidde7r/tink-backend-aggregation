@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc;
 
+import java.time.Clock;
 import java.util.Date;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,14 @@ public class TransferRequest extends BelfiusRequest {
      * @return a formatted date string
      */
     public static String getDateString(Date date) {
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (date == null) {
+            date = Date.from(Clock.systemDefaultZone().instant());
+        }
+
         String day = (date.getDate() > 9) ? "" + date.getDate() : "0" + date.getDate();
         String month =
                 ((date.getMonth() + 1) > 9)
