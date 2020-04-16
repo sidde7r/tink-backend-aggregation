@@ -9,5 +9,6 @@ java_library(
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//third_party:com_google_inject_guice",
+        "//third_party:javax_inject_javax_inject",
     ],
 )
