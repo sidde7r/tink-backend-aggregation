@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -59,8 +58,8 @@ public class InternalBankTransferRequest {
     }
 
     @JsonIgnore
-    public void setDue(Transfer transfer) {
-        this.due = NordeaDateUtil.getTransferDateForInternalTransfer(transfer.getDueDate());
+    public void setDue(String dueDate) {
+        this.due = dueDate;
     }
 
     /**
