@@ -448,11 +448,6 @@ public class IcaBankenExecutorHelper {
             if (response.getStatus() == HttpStatus.SC_CONFLICT) {
                 TransferResponse transferResponse = response.getBody(TransferResponse.class);
 
-                if (transferResponse.getBody().getProposedNewDate() != null) {
-                    transferRequest.setDueDate(transferResponse.getBody().getProposedNewDate());
-                    transferResponse = apiClient.putAssignmentInOutbox(transferRequest);
-                }
-
                 if (transferResponse.getResponseStatus().getCode()
                         != IcaBankenConstants.StatusCodes.OK_RESPONSE) {
                     throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
