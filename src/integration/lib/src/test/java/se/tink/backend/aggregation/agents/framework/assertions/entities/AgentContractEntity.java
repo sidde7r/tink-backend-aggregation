@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.framework.assertions.entities;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class AgentContractEntity {
 
@@ -19,7 +20,7 @@ public class AgentContractEntity {
         return transactions;
     }
 
-    public Map<String, Object> getIdentityData() {
-        return identityData;
+    public Optional<Map<String, Object>> getIdentityData() {
+        return Optional.ofNullable(identityData);
     }
 }

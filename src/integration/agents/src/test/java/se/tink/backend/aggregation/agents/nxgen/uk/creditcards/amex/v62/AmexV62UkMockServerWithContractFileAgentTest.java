@@ -43,7 +43,8 @@ public class AmexV62UkMockServerWithContractFileAgentTest {
 
         List<Map<String, Object>> expectedAccounts = expected.getAccounts();
         List<Map<String, Object>> expectedTransactions = expected.getTransactions();
-        Map<String, Object> expectedIdentityData = expected.getIdentityData();
+        Map<String, Object> expectedIdentityData =
+                expected.getIdentityData().orElseGet(Collections::emptyMap);
 
         final WireMockConfiguration configuration =
                 WireMockConfiguration.builder("localhost:" + server.getHttpsPort()).build();
@@ -63,7 +64,11 @@ public class AmexV62UkMockServerWithContractFileAgentTest {
 
         List<Transaction> givenTransactions = context.getTransactions();
         List<Account> givenAccounts = context.getUpdatedAccounts();
-        IdentityData givenIdentityData = context.getIdentityData();
+        IdentityData givenIdentityData =
+                context.getIdentityData()
+                        .orElseThrow(
+                                () -> new AssertionError("Expected identity data. Was Empty."));
+        ;
 
         // Then
         Assert.assertTrue(

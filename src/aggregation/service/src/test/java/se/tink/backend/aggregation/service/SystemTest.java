@@ -102,7 +102,8 @@ public class SystemTest {
 
         List<Map<String, Object>> expectedTransactions = expected.getTransactions();
         List<Map<String, Object>> expectedAccounts = expected.getAccounts();
-        Map<String, Object> expectedIdentityData = expected.getIdentityData();
+        Map<String, Object> expectedIdentityData =
+                expected.getIdentityData().orElseGet(Collections::emptyMap);
 
         String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(

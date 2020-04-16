@@ -47,7 +47,8 @@ public class LaCaixaMockServerAgentTest {
 
         List<Map<String, Object>> expectedAccounts = expected.getAccounts();
         List<Map<String, Object>> expectedTransactions = expected.getTransactions();
-        Map<String, Object> expectedIdentityData = expected.getIdentityData();
+        Map<String, Object> expectedIdentityData =
+                expected.getIdentityData().orElseGet(Collections::emptyMap);
 
         // When
         NewAgentTestContext context =
@@ -65,7 +66,9 @@ public class LaCaixaMockServerAgentTest {
 
         List<Transaction> givenTransactions = context.getTransactions();
         List<Account> givenAccounts = context.getUpdatedAccounts();
-        IdentityData givenIdentityData = context.getIdentityData();
+        IdentityData givenIdentityData =
+                context.getIdentityData()
+                        .orElseThrow(() -> new AssertionError("Expected identity data. Was null."));
 
         // Then
         Assert.assertTrue(
