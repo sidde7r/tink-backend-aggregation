@@ -130,8 +130,16 @@ public final class SbabApiClient {
         }
     }
 
-    public BankIdResponse initBankId(String ssn) {
+    public BankIdResponse authorizeBankId(String ssn) {
         return client.request(Urls.AUTHORIZATION)
+                .header(HeaderKeys.PSU_IP_ADDRESS, "")
+                .queryParam(QueryKeys.USER_ID, ssn)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(BankIdResponse.class);
+    }
+
+    public BankIdResponse authenticateBankId(String ssn) {
+        return client.request(Urls.AUTHENTICATION)
                 .header(HeaderKeys.PSU_IP_ADDRESS, "")
                 .queryParam(QueryKeys.USER_ID, ssn)
                 .accept(MediaType.APPLICATION_JSON_TYPE)

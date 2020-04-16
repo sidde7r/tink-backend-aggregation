@@ -39,7 +39,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         try {
-            BankIdResponse response = apiClient.initBankId(ssn);
+            BankIdResponse response = apiClient.authenticateBankId(ssn);
             autoStartToken = response.getAutostartToken();
             return response;
         } catch (HttpResponseException e) {
