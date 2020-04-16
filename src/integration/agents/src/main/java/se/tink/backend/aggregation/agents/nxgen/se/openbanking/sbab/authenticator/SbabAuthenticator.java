@@ -23,12 +23,14 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
 
     private final SbabApiClient apiClient;
+    private final boolean requestRefreshableToken;
     private String autoStartToken;
     private OAuth2Token token;
     private static final Logger logger = LoggerFactory.getLogger(SbabAuthenticator.class);
 
-    public SbabAuthenticator(SbabApiClient apiClient) {
+    public SbabAuthenticator(SbabApiClient apiClient, boolean requestRefreshableToken) {
         this.apiClient = apiClient;
+        this.requestRefreshableToken = requestRefreshableToken;
     }
 
     @Override
@@ -39,7 +41,10 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         try {
-            BankIdResponse response = apiClient.authenticateBankId(ssn);
+            BankIdResponse response =
+                    requestRefreshableToken
+                            ? apiClient.authorizeBankId(ssn)
+                            : apiClient.authenticateBankId(ssn);
             autoStartToken = response.getAutostartToken();
             return response;
         } catch (HttpResponseException e) {
@@ -78,7 +83,10 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
 
     @Override
     public Optional<OAuth2Token> getAccessToken() {
-        return Optional.ofNullable(token);
+        if (token.canRefresh()) {
+            return Optional.ofNullable(token);
+        }
+        return Optional.empty();
     }
 
     @Override

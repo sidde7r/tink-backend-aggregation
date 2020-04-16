@@ -26,15 +26,18 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public final class SbabAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -82,7 +85,8 @@ public final class SbabAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        SbabAuthenticator sbabAuthenticator = new SbabAuthenticator(apiClient);
+        SbabAuthenticator sbabAuthenticator =
+                new SbabAuthenticator(apiClient, shouldRequestRefreshableToken());
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalRequester, sbabAuthenticator, persistentStorage, credentials);
@@ -139,5 +143,16 @@ public final class SbabAgent extends NextGenerationAgent
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         return InferredTransferDestinations.forPaymentAccounts(accounts, AccountIdentifier.Type.SE);
+    }
+
+    private boolean shouldRequestRefreshableToken() {
+        // Requesting a refreshable token involves a BankID signature, instead of just an
+        // authorization.
+        final Optional<OAuth2Token> storedToken =
+                persistentStorage.get(
+                        OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class);
+        return !storedToken.isPresent()
+                || !storedToken.get().canRefresh()
+                || request.getType() == CredentialsRequestType.MANUAL_AUTHENTICATION;
     }
 }
