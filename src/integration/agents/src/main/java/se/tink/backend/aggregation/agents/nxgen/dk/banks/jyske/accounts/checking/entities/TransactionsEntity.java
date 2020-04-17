@@ -119,7 +119,7 @@ public class TransactionsEntity {
     public Transaction toTinkTransaction() {
         try {
             return Transaction.builder()
-                    .setDescription(getText())
+                    .setDescription(text)
                     .setDate(ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.parse(transactionDate))
                     .setAmount(ExactCurrencyAmount.of(mainAmount, "DKK"))
                     .build();
@@ -131,7 +131,7 @@ public class TransactionsEntity {
     public UpcomingTransaction toTinkUpcomingTransaction() {
         try {
             return UpcomingTransaction.builder()
-                    .setDescription(getText())
+                    .setDescription(text)
                     .setDate(ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.parse(transactionDate))
                     .setAmount(ExactCurrencyAmount.of(mainAmount, "DKK"))
                     .build();
