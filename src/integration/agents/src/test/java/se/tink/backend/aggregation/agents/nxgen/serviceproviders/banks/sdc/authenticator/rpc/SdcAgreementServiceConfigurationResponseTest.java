@@ -1,20 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc;
 
-import static org.junit.Assert.assertTrue;
-
+import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcPhoneNumbersEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SdcAgreementServiceConfigurationResponseTest {
 
     @Test
-    public void testFindPhoneNumber() throws Exception {
-
+    public void testFindPhoneNumber() {
+        // given
         SdcAgreementServiceConfigurationResponse response =
                 SerializationUtils.deserializeFromString(
                         TEST_DATA, SdcAgreementServiceConfigurationResponse.class);
 
-        assertTrue(response.findFirstPhoneNumber().get().hasPhoneNumber());
+        // when
+        Optional<SdcPhoneNumbersEntity> result = response.findFirstPhoneNumber();
+
+        // then
+        Assertions.assertThat(result.isPresent()).isTrue();
+        Assertions.assertThat(result.get().hasPhoneNumber()).isTrue();
     }
 
     private static final String TEST_DATA =

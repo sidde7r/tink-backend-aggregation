@@ -13,7 +13,7 @@ import se.tink.libraries.amount.Amount;
 
 public class SearchTransactionsResponseTest {
     @Test
-    public void getTinkTransactions() throws Exception {
+    public void getTinkTransactions() {
         SearchTransactionsResponse response = SearchTransactionsResponseTestData.getTestData();
 
         SdcSeTransactionParser transactionParser = new SdcSeTransactionParser();
@@ -28,7 +28,7 @@ public class SearchTransactionsResponseTest {
     }
 
     @Test
-    public void getTinkCreditCardTransactions() throws Exception {
+    public void getTinkCreditCardTransactions() {
         SearchTransactionsResponse response =
                 SearchCreditCardTransactionsResponseTestData.getTestData();
 
@@ -55,7 +55,7 @@ public class SearchTransactionsResponseTest {
     }
 
     @Test
-    public void getTinkTransactionsWithReservations() throws Exception {
+    public void getTinkTransactionsWithReservations() {
         SearchTransactionsResponse response =
                 SearchTransactionsResponseTestData.getTestDataWithReservations();
 
@@ -72,12 +72,12 @@ public class SearchTransactionsResponseTest {
     }
 
     @Test
-    public void getTinkTransactionsEmptyResponse() throws Exception {
+    public void getTinkTransactionsEmptyResponse() {
         SearchTransactionsResponse response = SearchTransactionsResponseTestData.getTestEmptyData();
 
         SdcSeTransactionParser transactionParser = new SdcSeTransactionParser();
         Collection<Transaction> transactions = response.getTinkTransactions(transactionParser);
 
-        assertThat(transactions).isNotEmpty();
+        assertThat(transactions).isEmpty();
     }
 }

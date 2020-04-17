@@ -2,12 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.Collection;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FilterAccountsResponseTest {
 
@@ -31,12 +29,7 @@ public class FilterAccountsResponseTest {
     }
 
     private static FilterAccountsResponse getTestData() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(TEST_DATA, FilterAccountsResponse.class);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        return SerializationUtils.deserializeFromString(TEST_DATA, FilterAccountsResponse.class);
     }
 
     private static final String TEST_DATA =

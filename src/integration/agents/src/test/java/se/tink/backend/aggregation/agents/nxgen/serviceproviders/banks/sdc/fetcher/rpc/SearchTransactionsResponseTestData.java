@@ -1,22 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SearchTransactionsResponseTestData {
 
-    public static SearchTransactionsResponse getTestData() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(TEST_DATA, SearchTransactionsResponse.class);
+    static SearchTransactionsResponse getTestData() {
+        return SerializationUtils.deserializeFromString(
+                TEST_DATA, SearchTransactionsResponse.class);
     }
 
-    public static SearchTransactionsResponse getTestDataWithReservations() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(TEST_DATA_WITH_RESERVATIONS, SearchTransactionsResponse.class);
+    static SearchTransactionsResponse getTestDataWithReservations() {
+        return SerializationUtils.deserializeFromString(
+                TEST_DATA_WITH_RESERVATIONS, SearchTransactionsResponse.class);
     }
 
-    public static SearchTransactionsResponse getTestEmptyData() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(EMPTY_TEST_DATA, SearchTransactionsResponse.class);
+    static SearchTransactionsResponse getTestEmptyData() {
+        return SerializationUtils.deserializeFromString(
+                EMPTY_TEST_DATA, SearchTransactionsResponse.class);
     }
 
     private static final String EMPTY_TEST_DATA =
