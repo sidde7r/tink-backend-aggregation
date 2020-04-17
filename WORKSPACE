@@ -1110,7 +1110,7 @@ maven_install(
     artifacts = [
         "org.projectlombok:lombok:1.18.10",
     ],
-    fetch_sources = False,
+    fetch_sources = True,
     repositories = MAVEN_REPOS,
 )
 
@@ -1136,7 +1136,7 @@ maven_install(
         "ch.qos.logback:logback-core:1.2.3",
         "ch.qos.logback:logback-classic:1.2.3",
     ],
-    fetch_sources = False,
+    fetch_sources = True,
     repositories = MAVEN_REPOS,
 )
 
@@ -1147,7 +1147,7 @@ maven_install(
         "org.mockito:mockito-core:2.10.0",
         "junit:junit:4.12",
     ],
-    fetch_sources = False,
+    fetch_sources = True,
     repositories = MAVEN_REPOS,
 )
 
