@@ -308,6 +308,11 @@ bind(
     actual = "@com_google_protobuf//:protoc",
 )
 
+bind(
+    name = "cpsuite",
+    actual = "@aggregation//:io_takari_junit_takari_cpsuite",
+)
+
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
@@ -451,11 +456,6 @@ maven_jar(
     name = "com_google_instrumentation_instrumentation_api",  # Do not use, but do not remove
     artifact = "com.google.instrumentation:instrumentation-api:0.4.3",
     sha1 = "41614af3429573dc02645d541638929d877945a2",
-)
-
-bind(
-    name = "cpsuite",
-    actual = "@aggregation//:io_takari_junit_takari_cpsuite",
 )
 
 maven_jar(
