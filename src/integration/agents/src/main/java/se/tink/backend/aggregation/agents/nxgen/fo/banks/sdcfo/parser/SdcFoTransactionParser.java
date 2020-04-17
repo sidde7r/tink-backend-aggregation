@@ -14,7 +14,7 @@ public class SdcFoTransactionParser implements SdcTransactionParser {
     @Override
     public Transaction parseTransaction(SdcTransaction bankTransaction) {
         return Transaction.builder()
-                .setAmount(bankTransaction.getAmount().toTinkAmount())
+                .setAmount(bankTransaction.getAmount().toExactCurrencyAmount())
                 .setDate(DateUtils.parseDate(bankTransaction.getPaymentDate()))
                 .setDescription(bankTransaction.getLabel())
                 .build();
@@ -23,7 +23,7 @@ public class SdcFoTransactionParser implements SdcTransactionParser {
     @Override
     public Transaction parseTransaction(SdcReservation bankReservation) {
         return Transaction.builder()
-                .setAmount(bankReservation.getAmount().toTinkAmount())
+                .setAmount(bankReservation.getAmount().toExactCurrencyAmount())
                 .setDate(DateUtils.parseDate(bankReservation.getCreateDate()))
                 .setDescription(bankReservation.getDescription())
                 .setPending(true)
@@ -34,7 +34,7 @@ public class SdcFoTransactionParser implements SdcTransactionParser {
     public CreditCardTransaction parseCreditCardTransaction(
             CreditCardAccount creditCardAccount, SdcTransaction bankTransaction) {
         return CreditCardTransaction.builder()
-                .setAmount(bankTransaction.getAmount().toTinkAmount())
+                .setAmount(bankTransaction.getAmount().toExactCurrencyAmount())
                 .setDate(DateUtils.parseDate(bankTransaction.getPaymentDate()))
                 .setDescription(bankTransaction.getLabel())
                 .setCreditAccount(creditCardAccount)
@@ -45,7 +45,7 @@ public class SdcFoTransactionParser implements SdcTransactionParser {
     public CreditCardTransaction parseCreditCardTransaction(
             CreditCardAccount creditCardAccount, SdcReservation bankReservation) {
         return CreditCardTransaction.builder()
-                .setAmount(bankReservation.getAmount().toTinkAmount())
+                .setAmount(bankReservation.getAmount().toExactCurrencyAmount())
                 .setDate(DateUtils.parseDate(bankReservation.getCreateDate()))
                 .setDescription(bankReservation.getDescription())
                 .setCreditAccount(creditCardAccount)
