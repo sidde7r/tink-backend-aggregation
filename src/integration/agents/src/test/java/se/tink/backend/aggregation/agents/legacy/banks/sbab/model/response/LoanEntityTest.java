@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Optional;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.LoanEntity;
@@ -18,8 +20,8 @@ public class LoanEntityTest {
         LoanEntity loanEntity = new LoanEntity();
         LoanTermsEntity loanTerms = new LoanTermsEntity();
         loanEntity.setLoanTerms(loanTerms);
-        loanEntity.setAmount(200000.0);
-        loanEntity.setLoanNumber(12345);
+        loanEntity.setAmount(BigDecimal.valueOf(200000.0));
+        loanEntity.setLoanNumber(BigInteger.valueOf(12345));
 
         Optional<Loan> loan = loanEntity.toTinkLoan();
         assertTrue(loan.isPresent());
@@ -36,8 +38,8 @@ public class LoanEntityTest {
     public void mortgageAmount_IsSetCorrectly() {
         LoanEntity loanEntity = new LoanEntity();
         loanEntity.setLoanTerms(new LoanTermsEntity());
-        loanEntity.setAmount(877500.0);
-        loanEntity.setLoanNumber(12345);
+        loanEntity.setAmount(BigDecimal.valueOf(877500.0));
+        loanEntity.setLoanNumber(BigInteger.valueOf(12345));
 
         assertEquals(-877500, loanEntity.toTinkAccount().get().getBalance(), 0);
         assertEquals(-877500, loanEntity.toTinkLoan().get().getBalance(), 0);
@@ -48,8 +50,8 @@ public class LoanEntityTest {
         LoanEntity loanEntity = new LoanEntity();
         LoanTermsEntity loanTerms = new LoanTermsEntity();
         loanEntity.setLoanTerms(loanTerms);
-        loanEntity.setAmount(877500.0);
-        loanEntity.setLoanNumber(12345);
+        loanEntity.setAmount(BigDecimal.valueOf(877500.0));
+        loanEntity.setLoanNumber(BigInteger.valueOf(12345));
 
         loanTerms.setInterestRateBoundPeriod("MONTHS_3");
         assertEquals(3, loanEntity.toTinkLoan().get().getNumMonthsBound(), 0);
@@ -66,8 +68,8 @@ public class LoanEntityTest {
         LoanEntity loanEntity = new LoanEntity();
         LoanTermsEntity loanTerms = new LoanTermsEntity();
         loanEntity.setLoanTerms(loanTerms);
-        loanEntity.setAmount(877500.0);
-        loanEntity.setLoanNumber(12345);
+        loanEntity.setAmount(BigDecimal.valueOf(877500.0));
+        loanEntity.setLoanNumber(BigInteger.valueOf(12345));
 
         loanTerms.setAmortizationValue(500.0);
         assertEquals(loanEntity.toTinkLoan().get().getMonthlyAmortization(), 500.0, 0);
@@ -79,8 +81,8 @@ public class LoanEntityTest {
     @Test
     public void nullLoanTerms_ReturnsLoanOptionalAbsent() {
         LoanEntity loanEntity = new LoanEntity();
-        loanEntity.setAmount(877500.0);
-        loanEntity.setLoanNumber(12345);
+        loanEntity.setAmount(BigDecimal.valueOf(877500.0));
+        loanEntity.setLoanNumber(BigInteger.valueOf(12345));
 
         assertFalse(loanEntity.toTinkLoan().isPresent());
     }
@@ -88,7 +90,7 @@ public class LoanEntityTest {
     @Test
     public void noLoanNumber_ReturnsLoanOptionalAbsent() {
         LoanEntity loanEntity = new LoanEntity();
-        loanEntity.setAmount(877500.0);
+        loanEntity.setAmount(BigDecimal.valueOf(877500.0));
         loanEntity.setLoanTerms(new LoanTermsEntity());
 
         assertFalse(loanEntity.toTinkLoan().isPresent());
