@@ -42,11 +42,10 @@ public class SdcAccountTest {
         assertThat(creditCardAccount.getApiIdentifier()).isEqualTo("sampleid");
 
         assertThat(creditCardAccount.getExactBalance())
-            .isEqualTo(ExactCurrencyAmount.of(BigDecimal.valueOf(234, 10), "sample currency"));
-
+                .isEqualTo(ExactCurrencyAmount.of(BigDecimal.valueOf(234, 10), "sample currency"));
 
         assertThat(creditCardAccount.getExactAvailableCredit())
-            .isEqualTo(ExactCurrencyAmount.of(BigDecimal.valueOf(456, 10), "sample currency 2"));
+                .isEqualTo(
+                        ExactCurrencyAmount.of(BigDecimal.valueOf(456, 10), "sample currency 2"));
     }
-
 }

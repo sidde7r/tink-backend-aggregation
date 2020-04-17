@@ -5,7 +5,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class SearchCreditCardTransactionsResponseTestData {
 
     static SearchTransactionsResponse getTestData() {
-        return SerializationUtils.deserializeFromString(TEST_DATA, SearchTransactionsResponse.class);
+        return SerializationUtils.deserializeFromString(
+                TEST_DATA, SearchTransactionsResponse.class);
     }
 
     private static final String TEST_DATA =

@@ -182,7 +182,7 @@ public class AccountDetailsEntity {
         return savings ? TransactionalAccountType.SAVINGS : TransactionalAccountType.CHECKING;
     }
 
-    public String getTinkAccountName() {
+    private String getTinkAccountName() {
         return alias != null ? alias : name;
     }
 }

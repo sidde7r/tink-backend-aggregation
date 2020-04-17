@@ -40,16 +40,16 @@ public class DnbInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
         String verifierService = this.apiClient.oauthVerifierService(this.oauth_token);
 
-        String oauth_verifier = "";
+        String oauthVerifier = "";
         if (verifierService != null
                 && verifierService.length() != 0
                 && verifierService.length() < 30) {
-            oauth_verifier = verifierService;
+            oauthVerifier = verifierService;
         }
 
         String accessToken =
                 this.apiClient.oauthGetAccessToken(
-                        this.oauth_token, oauth_verifier, this.oauth_secret);
+                        this.oauth_token, oauthVerifier, this.oauth_secret);
         this.extractOAuthTokensFromResponse(accessToken);
         // OAuth authentication End
 
@@ -75,19 +75,18 @@ public class DnbInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
             List<MyFundEntity> myFunds = fundResponse.getMyFunds();
             if (myFunds != null) {
                 myFunds.forEach(
-                        myFundEntity -> {
-                            this.apiClient
-                                    .getIsinFromFundDetailPdf(
-                                            this.apiClient
-                                                    .fetchFundDetails(
-                                                            this.oauth_token,
-                                                            this.oauth_secret,
-                                                            myFundEntity.getProductSystem(),
-                                                            myFundEntity.getProductId())
-                                                    .getProductDetails()
-                                                    .getProductSheetURI())
-                                    .ifPresent(myFundEntity::setIsin);
-                        });
+                        myFundEntity ->
+                                this.apiClient
+                                        .getIsinFromFundDetailPdf(
+                                                this.apiClient
+                                                        .fetchFundDetails(
+                                                                this.oauth_token,
+                                                                this.oauth_secret,
+                                                                myFundEntity.getProductSystem(),
+                                                                myFundEntity.getProductId())
+                                                        .getProductDetails()
+                                                        .getProductSheetURI())
+                                        .ifPresent(myFundEntity::setIsin));
 
                 accounts.addAll(fundResponse.getInvestmentAccounts());
             }

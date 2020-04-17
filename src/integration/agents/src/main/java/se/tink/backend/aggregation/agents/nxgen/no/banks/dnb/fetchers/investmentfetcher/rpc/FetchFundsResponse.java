@@ -17,7 +17,7 @@ public class FetchFundsResponse {
     private double fundPercentageIncrease;
     private double fundAmountIncrease;
 
-    public List<FundAccountEntity> getFundAccounts() {
+    private List<FundAccountEntity> getFundAccounts() {
         return fundAccounts != null ? fundAccounts : Collections.emptyList();
     }
 

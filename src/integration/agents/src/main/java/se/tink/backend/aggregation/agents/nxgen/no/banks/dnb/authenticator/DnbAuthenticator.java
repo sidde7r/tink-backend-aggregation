@@ -23,7 +23,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 public class DnbAuthenticator implements BankIdAuthenticatorNO {
     private final DnbApiClient apiClient;
     private URI bankIdReferer;
-    private final Pattern BANKID_ERROR_PATTERN = Pattern.compile("feilkode c.{3}");
+    private static final Pattern BANKID_ERROR_PATTERN = Pattern.compile("feilkode c.{3}");
 
     public DnbAuthenticator(DnbApiClient apiClient) {
         this.apiClient = apiClient;

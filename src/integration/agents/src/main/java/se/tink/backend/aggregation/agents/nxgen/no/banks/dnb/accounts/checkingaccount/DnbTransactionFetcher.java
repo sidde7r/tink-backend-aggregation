@@ -61,9 +61,7 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
                     transactionEntityList
                             .subList(
                                     transactionsToFetch - DEFAULT_COUNT_INCREMENT,
-                                    transactionsToFetch > transactionEntityList.size()
-                                            ? transactionEntityList.size()
-                                            : transactionsToFetch)
+                                    Math.min(transactionsToFetch, transactionEntityList.size()))
                             .stream()
                             .map(TransactionEntity::toTinkTransaction)
                             .collect(Collectors.toList());

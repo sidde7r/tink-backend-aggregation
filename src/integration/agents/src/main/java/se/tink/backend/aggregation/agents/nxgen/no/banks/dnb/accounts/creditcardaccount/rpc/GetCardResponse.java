@@ -5,7 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -150,8 +150,8 @@ public class GetCardResponse {
         return CreditCardAccount.builder(
                         StringUtils.hashAsStringSHA1(cardNumber),
                         getCardBalance(),
-                        Amount.inNOK(availableAmount))
-                .setAccountNumber(cardNumber.replaceAll(" ", ""))
+                        ExactCurrencyAmount.of(availableAmount, "NOK"))
+                .setAccountNumber(cardNumber.replace(" ", ""))
                 .setName(productName)
                 .setBankIdentifier(cardId)
                 .putInTemporaryStorage(
@@ -160,11 +160,11 @@ public class GetCardResponse {
     }
 
     @JsonIgnore
-    private Amount getCardBalance() {
+    private ExactCurrencyAmount getCardBalance() {
         if (mainCard) {
-            return Amount.inNOK(-balanceAmount);
+            return ExactCurrencyAmount.of(-balanceAmount, "NOK");
         } else {
-            return Amount.inNOK(0.0);
+            return ExactCurrencyAmount.of(0.0, "NOK");
         }
     }
 
