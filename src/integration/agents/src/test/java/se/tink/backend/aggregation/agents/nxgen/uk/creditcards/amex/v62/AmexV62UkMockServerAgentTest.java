@@ -160,6 +160,7 @@ public final class AmexV62UkMockServerAgentTest {
                         .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
+                        .expectLoggedIn(false)
                         .setWireMockConfiguration(configuration)
                         .build()
                         .testRefresh();

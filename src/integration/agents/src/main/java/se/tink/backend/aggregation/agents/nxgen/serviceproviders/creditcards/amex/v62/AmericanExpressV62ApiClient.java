@@ -11,8 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionsRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.session.rpc.ExtendResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.session.rpc.LogoffResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Utils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -122,15 +120,5 @@ public class AmericanExpressV62ApiClient {
 
         return createRequestInSession(AmericanExpressV62Constants.Urls.TRANSACTION)
                 .post(TransactionResponse.class, request);
-    }
-
-    public ExtendResponse requestExtendSession() {
-        return createRequestInSession(AmericanExpressV62Constants.Urls.EXTEND_SESSION)
-                .post(ExtendResponse.class);
-    }
-
-    public LogoffResponse requestLogoff() {
-        return createRequestInSession(AmericanExpressV62Constants.Urls.LOG_OUT)
-                .post(LogoffResponse.class);
     }
 }
