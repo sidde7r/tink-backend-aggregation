@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class SdcAmount {
@@ -56,6 +58,20 @@ public class SdcAmount {
     @JsonIgnore
     public Amount toTinkAmount() {
         return new Amount(currency, BigDecimal.valueOf(value, scale).doubleValue());
+    }
+
+    @JsonIgnore
+    public ExactCurrencyAmount toExactCurrencyAmount() {
+        return ExactCurrencyAmount.of(BigDecimal.valueOf(value, scale), currency);
+    }
+
+    @JsonIgnore
+    public ExactCurrencyAmount toExactCurrencyAmount(String defaultCurrency) {
+        if (Strings.isNullOrEmpty(currency)) {
+            return ExactCurrencyAmount.of(BigDecimal.valueOf(value, scale), defaultCurrency);
+        } else {
+            return toExactCurrencyAmount();
+        }
     }
 
     @JsonIgnore
