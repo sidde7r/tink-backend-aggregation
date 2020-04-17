@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import lombok.Setter;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ErrorMessages;
+import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -20,6 +21,8 @@ public class DkbConfiguration implements ClientConfiguration {
 
     @Secret private String consumerId;
     @SensitiveSecret private String consumerSecret;
+
+    @AgentConfigParam private String redirectUrl;
 
     public String getBaseUrl() {
         return BASE_URL;
@@ -39,6 +42,10 @@ public class DkbConfiguration implements ClientConfiguration {
 
     public String getConsumerSecret() {
         return getConfiguration(consumerSecret, "Consumer Secret");
+    }
+
+    public String getRedirectUrl() {
+        return getConfiguration(redirectUrl, "Redirect url");
     }
 
     private String getConfiguration(String value, String name) {
