@@ -122,8 +122,8 @@ public final class NewAgentTestContext extends AgentContext {
                 .collect(Collectors.toList());
     }
 
-    public IdentityData getIdentityData() {
-        return identityData;
+    public Optional<IdentityData> getIdentityData() {
+        return Optional.ofNullable(identityData);
     }
 
     public Map<String, List<Transaction>> getTransactionsByAccountBankId() {

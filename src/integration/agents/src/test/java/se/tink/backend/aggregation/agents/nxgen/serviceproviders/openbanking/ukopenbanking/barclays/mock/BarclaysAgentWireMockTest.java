@@ -4,23 +4,21 @@ import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
-import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -31,59 +29,37 @@ public class BarclaysAgentWireMockTest {
     private final String SOURCE_IDENTIFIER = "2314701111111";
     private final String DESTINATION_IDENTIFIER = "04000469430924";
 
+    private final String CONFIGURATION_PATH =
+            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml";
+
     @Test
     public void test() throws Exception {
 
-        // Given
-        WireMockTestServer server = new WireMockTestServer();
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_mock_log.aap";
+        final String contractFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/agent-contract.json";
 
-        server.prepareMockServer(
-                new AapFileParser(
-                        new ResourceFileReader()
-                                .read(
-                                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_mock_log.aap")));
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
-        final WireMockConfiguration configuration =
-                WireMockConfiguration.builder("localhost:" + server.getHttpsPort())
-                        .setConfigurationPath(
-                                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml")
-                        .setCallbackData(
-                                ImmutableMap.<String, String>builder()
-                                        .put("code", "DUMMY_AUTH_CODE")
-                                        .build())
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.builder(
+                                MarketCode.UK, "uk-barclays-oauth2", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .build();
 
-        AgentContractEntitiesJsonFileParser contractParser =
-                new AgentContractEntitiesJsonFileParser();
-        AgentContractEntity expected =
-                contractParser.parseContractOnBasisOfFile(
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/agent-contract.json");
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(contractFilePath);
 
-        List<Map<String, Object>> expectedAccounts = expected.getAccounts();
-        List<Map<String, Object>> expectedTransactions = expected.getTransactions();
+        // when
+        agentWireMockRefreshTest.executeRefresh();
 
-        // When
-        NewAgentTestContext context =
-                new AgentIntegrationTest.Builder("uk", "uk-barclays-oauth2")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false)
-                        .setAppId("tink")
-                        .setFinancialInstitutionId("barclays")
-                        .setWireMockConfiguration(configuration)
-                        .build()
-                        .testRefresh();
-
-        List<Transaction> givenTransactions = context.getTransactions();
-        List<Account> givenAccounts = context.getUpdatedAccounts();
-
-        // Then
-        Assert.assertTrue(
-                AgentContractEntitiesAsserts.areListsMatchingVerbose(
-                        expectedAccounts, givenAccounts));
-        Assert.assertTrue(
-                AgentContractEntitiesAsserts.areListsMatchingVerbose(
-                        expectedTransactions, givenTransactions));
+        // then
+        agentWireMockRefreshTest.assertExpectedData(expected);
     }
 
     @Test
@@ -99,8 +75,7 @@ public class BarclaysAgentWireMockTest {
 
         final WireMockConfiguration configuration =
                 WireMockConfiguration.builder("localhost:" + server.getHttpsPort())
-                        .setConfigurationPath(
-                                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml")
+                        .setConfigurationPath(CONFIGURATION_PATH)
                         .setCallbackData(
                                 ImmutableMap.<String, String>builder()
                                         .put("code", "DUMMY_AUTH_CODE")
@@ -113,7 +88,6 @@ public class BarclaysAgentWireMockTest {
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false)
                         .setAppId("tink")
-                        .setFinancialInstitutionId("barclays")
                         .setWireMockConfiguration(configuration);
 
         builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
