@@ -872,7 +872,6 @@ public class LansforsakringarAgent extends AbstractAgent
         paymentRequest.setFromAccount(source.getIdentifier(DEFAULT_FORMATTER));
         paymentRequest.setPaymentDate(
                 LansforsakringarDateUtil.getNextPossiblePaymentDateForBgPg(transfer.getDueDate()));
-
         if (Objects.equal(recipientNameResponse.getOcrType(), "OCR_REQUIRED")) {
             paymentRequest.setReferenceType("OCR");
         } else {

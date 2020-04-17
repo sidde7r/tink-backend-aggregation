@@ -51,13 +51,11 @@ public class LansforsakringarAgentTest {
         transfer.setSource(
                 AccountIdentifier.create(
                         AccountIdentifier.Type.SE,
-                        accountManager.get(
-                                ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
+                        accountManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
         transfer.setDestination(
                 AccountIdentifier.create(
                         AccountIdentifier.Type.SE_BG,
-                        accountManager.get(
-                                ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
+                        accountManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
         transfer.setAmount(Amount.inSEK(2d));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(null);
