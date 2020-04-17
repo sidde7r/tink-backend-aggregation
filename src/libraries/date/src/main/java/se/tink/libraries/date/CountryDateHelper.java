@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import de.jollyday.Holiday;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
+import java.time.Clock;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -20,9 +21,12 @@ public class CountryDateHelper {
     private TimeZone timezone = TimeZone.getTimeZone("CET");
     private ImmutableSet<String> holidays;
 
+    private Clock clock;
+
     /** Default for Sweden */
     @Deprecated
     public CountryDateHelper() {
+        this.clock = Clock.system(timezone.toZoneId());
         this.holidays = getCountryHolidays(locale.getCountry());
     }
 
@@ -34,14 +38,20 @@ public class CountryDateHelper {
             this.timezone = TimeZone.getTimeZone("GMT");
         }
 
+        this.clock = Clock.system(timezone.toZoneId());
+
         this.holidays = getCountryHolidays(locale.getCountry());
     }
 
     public CountryDateHelper(Locale locale, TimeZone timezone) {
         this.locale = locale;
         this.timezone = timezone;
-
+        this.clock = Clock.system(timezone.toZoneId());
         this.holidays = getCountryHolidays(locale.getCountry());
+    }
+
+    public void setClock(Clock clock) {
+        this.clock = clock;
     }
 
     public Date addDays(Date date, int days) {
@@ -83,8 +93,12 @@ public class CountryDateHelper {
         return businessDay;
     }
 
+    private Date getNow() {
+        return Date.from(clock.instant());
+    }
+
     public Date getNextBusinessDay() {
-        Date date = inclusiveEndTime(new Date());
+        Date date = inclusiveEndTime(getNow());
 
         return getNextBusinessDay(date);
     }
@@ -98,12 +112,12 @@ public class CountryDateHelper {
 
     /** Returns today's date with flattened time (12.00). */
     public Date getToday() {
-        return flattenTime(new Date());
+        return flattenTime(getNow());
     }
 
     /** Returns today's date with start time (0.00). */
     public Date getTodayWithStartTime() {
-        return inclusiveStartTime(new Date());
+        return inclusiveStartTime(getNow());
     }
 
     public void setInclusiveEndTime(Calendar calendar) {
@@ -147,7 +161,9 @@ public class CountryDateHelper {
 
     /** Creates a calendar with the default Swedish timezone and locale. */
     public Calendar getCalendar() {
-        return Calendar.getInstance(timezone, locale);
+        Calendar calendar = Calendar.getInstance(timezone, locale);
+        calendar.setTime(getNow());
+        return calendar;
     }
 
     /** Returns whether a localDate is a business day or not. */
@@ -177,7 +193,9 @@ public class CountryDateHelper {
         ImmutableSet.Builder<String> holidayBuilder = ImmutableSet.builder();
         ImmutableSet.Builder<LocalDate> holidayLocalDateBuilder = ImmutableSet.builder();
 
-        int year = LocalDate.now().getYear() - 20;
+        LocalDate localDate = LocalDate.fromDateFields(getNow());
+
+        int year = localDate.getYear() - 20;
 
         HolidayCalendar calendar = HolidayCalendar.SWEDEN;
         if (countryCode.equals("BE")) {
@@ -220,12 +238,13 @@ public class CountryDateHelper {
     }
 
     private Date getBestPossibleTransferDate(int cutOffHours, int cutOffMinutes) {
-        Calendar calendar = Calendar.getInstance(timezone);
+        Calendar calendar = getCalendar();
         calendar = moveToNextDayIfAfterCutOffTime(calendar, cutOffHours, cutOffMinutes);
         return getCurrentOrNextBusinessDay(calendar).getTime();
     }
 
-    private Calendar moveToNextDayIfAfterCutOffTime(Calendar calendar, int hours, int minutes) {
+    private Calendar moveToNextDayIfAfterCutOffTime(
+            final Calendar calendar, int hours, int minutes) {
         Calendar businessDay = getCalendar(calendar.getTime());
         if (isAfterCutOffTime(businessDay, hours, minutes)) {
             businessDay.add(Calendar.DAY_OF_MONTH, 1);

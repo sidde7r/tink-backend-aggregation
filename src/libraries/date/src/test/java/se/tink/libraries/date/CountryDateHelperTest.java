@@ -2,10 +2,11 @@ package se.tink.libraries.date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.function.Consumer;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class CountryDateHelperTest {
@@ -34,6 +36,11 @@ public class CountryDateHelperTest {
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 1);
         consumer.accept(c);
+    }
+
+    private Clock fixedClock(String moment) {
+        Instant instant = Instant.parse(moment);
+        return Clock.fixed(instant, ZoneId.of("CET"));
     }
 
     @Test
@@ -202,24 +209,59 @@ public class CountryDateHelperTest {
     }
 
     @Test
-    public void testGetTransferNotNullAndDateNotProvided() throws ParseException {
-        Date transferDate =
-                ThreadSafeDateFormat.FORMATTER_DAILY.parse(
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                swedishHelper.getTransferDate(null, 23, 59)));
-        assertNotNull(transferDate);
-    }
-
-    @Test
-    public void testGetTransferDateBeforeCuttOffTimeAndDateNotProvided() throws ParseException {
+    public void testGetTransferDateBeforeCuttOffTimeAndDateNotProvided_beforeCutOffTime()
+            throws ParseException {
+        // 19/march is a Thursday and it's 00:00, way before cutoff
+        swedishHelper.setClock(fixedClock("2020-03-19T00:00:00.00Z"));
         Date transferDate = swedishHelper.getTransferDate(null, 23, 59);
+        String parsedDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(transferDate);
+        Assert.assertNotNull(transferDate);
         assertTrue(swedishHelper.isBusinessDay(transferDate));
+        Assert.assertEquals("2020-03-19", parsedDate);
     }
 
     @Test
-    public void testGetTransferDateAfterCuttOffTimeAndDateNotProvided() {
+    public void testGetTransferDateAfterCuttOffTimeAndDateNotProvided_afterCutOffTime() {
+        // 19/march is a Thursday and it's 03:30, after cutoff
+        swedishHelper.setClock(fixedClock("2020-03-19T03:30:00.00Z"));
         Date transferDate = swedishHelper.getTransferDate(null, 00, 00);
+        String parsedDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(transferDate);
+        Assert.assertNotNull(transferDate);
         assertTrue(swedishHelper.isBusinessDay(transferDate));
+        Assert.assertEquals("2020-03-20", parsedDate);
+    }
+
+    @Test
+    public void testGetTransferDateAfterCuttOffTimeAndDateNotProvided_atCutOffTime() {
+        // 19/march is a Thursday and it's 23:59, at cutoff
+        swedishHelper.setClock(fixedClock("2020-03-19T23:59:59.00Z"));
+        Date transferDate = swedishHelper.getTransferDate(null, 23, 59);
+        String parsedDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(transferDate);
+        Assert.assertNotNull(transferDate);
+        assertTrue(swedishHelper.isBusinessDay(transferDate));
+        Assert.assertEquals("2020-03-20", parsedDate);
+    }
+
+    @Test
+    public void testGetTransferDateAfterCuttOffTimeAndDateNotProvided_onFriday_afterCutOffTime() {
+        // 20/march is a Friday and it's 03:30, after cutoff
+        swedishHelper.setClock(fixedClock("2020-03-20T03:30:00.00Z"));
+        Date transferDate = swedishHelper.getTransferDate(null, 00, 00);
+        String parsedDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(transferDate);
+        Assert.assertNotNull(transferDate);
+        assertTrue(swedishHelper.isBusinessDay(transferDate));
+        Assert.assertEquals("2020-03-23", parsedDate);
+    }
+
+    @Test
+    public void testGetTransferDateAfterCuttOffTimeAndDateNotProvided_onNonBusinessDay() {
+        // 21/march is a Saturday cutoff time does not matter
+        swedishHelper.setClock(fixedClock("2020-03-21T23:59:00.00Z"));
+        Date transferDate = swedishHelper.getTransferDate(null, 00, 00);
+        String parsedDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(transferDate);
+        Assert.assertNotNull(transferDate);
+        assertTrue(swedishHelper.isBusinessDay(transferDate));
+        Assert.assertEquals("2020-03-23", parsedDate);
     }
 
     @Test
