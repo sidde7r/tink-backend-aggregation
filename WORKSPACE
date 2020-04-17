@@ -2,6 +2,7 @@
 # git client which supports fancy key formats and key passphrases.
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 
 http_archive(
     name = "bazel_skylib",
@@ -326,148 +327,172 @@ MAVEN_REPOS = [
     "https://maven.google.com",
 ]
 
-maven_jar(
+jvm_maven_import_external(
     name = "com_google_j2objc_j2objc_annotations",
     artifact = "com.google.j2objc:j2objc-annotations:1.1",
-    sha1 = "ed28ded51a8b1c6b112568def5f4b455e6809019",
+    artifact_sha256 = "2994a7eb78f2710bd3d3bfb639b2c94e219cedac0d4d084d516e78c16dddecf6",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "javax_annotation_javax_annotation_api",  # Do not use, but do not remove
     artifact = "javax.annotation:javax.annotation-api:1.3.2",
-    sha1 = "934c04d3cfef185a8008e7bf34331b79730a9d43",
+    artifact_sha256 = "e04ba5195bcd555dc95650f7cc614d151e4bcd52d29a10b8aa2197f3ab89ab9b",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "com_googlecode_libphonenumber_libphonenumber",
     artifact = "com.googlecode.libphonenumber:libphonenumber:5.7",
-    sha1 = "20140c130456845cc73f3b2a4bf50c7fe3a37b77",
+    artifact_sha256 = "a59f64309aa84a9ba4894b7772804c20415ffc4dfbe0a39f5b28ffa99c655b22",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "org_slf4j_slf4j_api",  # Do not use, but do not remove
     artifact = "org.slf4j:slf4j-api:1.7.22",
-    sha1 = "a1c83373863cec7ae8d89dc1c5722d8cb6ec0309",
+    artifact_sha256 = "3a4cd4969015f3beb4b5b4d81dbafc01765fb60b8a439955ca64d8476fef553e",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "org_slf4j_jul_to_slf4j",  # Do not use, but do not remove
     artifact = "org.slf4j:jul-to-slf4j:1.7.6",
-    sha1 = "322e2af1694ccc75d33f4d11216c852121d8fefd",
+    artifact_sha256 = "b71451847d2643a1bfe83df69fbf696860fe2689b95c9bd96188fb7808444f64",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "commons_codec_commons_codec",  # Do not use, but do not remove
     artifact = "commons-codec:commons-codec:1.11",
-    sha1 = "3acb4705652e16236558f0f4f2192cc33c3bd189",
+    artifact_sha256 = "e599d5318e97aa48f42136a2927e6dfa4e8881dff0e6c8e3109ddbbff51d7b7d",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "org_jboss_logging_jboss_logging",  # Do not use, but do not remove
     artifact = "org.jboss.logging:jboss-logging:3.1.3.GA",
-    sha1 = "64499e907f19e5e1b3fdc02f81440c1832fe3545",
+    artifact_sha256 = "6813931fe607469989f76a73a22515d2489dcd8b6be9fc147093a9cec995f822",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "org_slf4j_jcl_over_slf4j",  # Do not use, but do not remove
     artifact = "org.slf4j:jcl-over-slf4j:1.7.6",
-    sha1 = "ab1648fe1dd6f1e5c2ec6d12f394672bb8c1036a",
+    artifact_sha256 = "d52f5e9a861f4e124ec43d711b566b4c2afe6e0709b490497fb9ca33e1ca0ba5",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "commons_lang_commons_lang",  # Do not use, but do not remove
     artifact = "commons-lang:commons-lang:2.6",
-    sha1 = "0ce1edb914c94ebc388f086c6827e8bdeec71ac2",
+    artifact_sha256 = "50f11b09f877c294d56f24463f47d28f929cf5044f648661c0f0cfbae9a2f49c",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "com_yubico_yubico_validation_client2",  # Do not use, but do not remove
     artifact = "com.yubico:yubico-validation-client2:2.0.1",
-    sha1 = "dea29261814ff36357d4bdbf8f57832e275bc2e8",
+    artifact_sha256 = "b420337688e004a989a5c4c76cdce5f4a3cb38ad1d33648584aaa2a18a81b973",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "org_javassist_javassist",  # Do not use, but do not remove
     artifact = "org.javassist:javassist:3.26.0-GA",
-    sha1 = "bb2890849968d8d8311ffba8c37b0ce16ce284dc",
+    artifact_sha256 = "ca5625874ff0a34f2422173a511b33c225218c146a3c961b18940efff430462d",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "org_hibernate_hibernate_validator",  # Do not use, but do not remove
     artifact = "org.hibernate:hibernate-validator:5.1.1.Final",
-    sha1 = "2bd44618dc13c2be39231776a0edf0e1f867dedc",
+    artifact_sha256 = "5a0cfd8f7536f5c3d95de73d023501859c4e035597aa8d80461ecd42168124f5",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "commons_logging_commons_logging",  # Do not use, but do not remove
     artifact = "commons-logging:commons-logging:1.2",
-    sha1 = "4bfc12adfe4842bf07b657f0369c4cb522955686",
+    artifact_sha256 = "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "com_google_guava_guava",  # Do not use, but do not remove
     artifact = "com.google.guava:guava:25.1-jre",
-    sha1 = "6c57e4b22b44e89e548b5c9f70f0c45fe10fb0b4",
+    artifact_sha256 = "6db0c3a244c397429c2e362ea2837c3622d5b68bb95105d37c21c36e5bc70abf",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "com_lambdaworks_scrypt",  # Do not use, but do not remove
     artifact = "com.lambdaworks:scrypt:1.3.2",
-    sha1 = "b144d80b2b915a900730dd156ae749a88c0e2555",
+    artifact_sha256 = "56c73991d535bce0521c8e5ba4204a21cdccf38081f17f19781f83165829b3ac",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "io_grpc_grpc_protobuf_lite",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
-    sha1 = "a304b00fb35959c5036c033551732de6a4b7d881",
+    artifact_sha256 = "aa9711aaba44b236f91e6a842bd8561af82c79e4984231d731d79ec4045e832a",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "io_grpc_grpc_protobuf_nano",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf-nano:%s" % GRPC_JAVA_NANO_VERSION,
-    sha1 = "9fce4ff1563fd0176aaefb0a083b9d66a0346bd7",
+    artifact_sha256 = "382ced635da516db0c26db23daeb50c4db5fa37acd0b6469ed4755a641baa022",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "io_grpc_grpc_core",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
-    sha1 = "a264f24ffa3340752a678680fd41381836b1d03f",
+    artifact_sha256 = "97714a12c1cfb5c547d8df7b0cc83a2fc36afff80ebcfb9d9b41a53c3f26789d",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "io_grpc_grpc_api",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
-    sha1 = "f86f59df729cde94e5d85d1b3587d6b00c998d65",
+    artifact_sha256 = "793373a191aaf8a0b1b30ce009a9c481afa0e11d27d47363e7f6d47ad34568fa",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "io_grpc_grpc_netty",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
-    sha1 = "0c979f611ea3b3add6fa77d41318dd21d20d6aef",
+    artifact_sha256 = "b0788eea0e6805a8021a2adfe51b0c4f3da4cdacb20aed0d16056c7221923c6e",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "io_grpc_grpc_services",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
-    sha1 = "0f101c3ec1bbfe08f9221ca3cc7b316f09a3e130",
+    artifact_sha256 = "25ae47698cf0951ff6a86cd33b9ae0c53be48bb1220d7f3eefac513050f002d4",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "com_google_instrumentation_instrumentation_api",  # Do not use, but do not remove
     artifact = "com.google.instrumentation:instrumentation-api:0.4.3",
-    sha1 = "41614af3429573dc02645d541638929d877945a2",
+    artifact_sha256 = "9502d5622fea56e5b3fbe4a5263ad3bfd93487869813304c36831e1cb1d88bd5",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "com_google_api_grpc_proto_google_common_protos",
     artifact = "com.google.api.grpc:proto-google-common-protos:0.1.9",
-    sha1 = "3760f6a6e13c8ab070aa629876cdd183614ee877",
+    artifact_sha256 = "bf76dcb173f6c6083ccf452f093b53500621e701645df47671c47043c7b5491f",
+    server_urls = MAVEN_REPOS,
 )
 
-maven_jar(
+jvm_maven_import_external(
     name = "com_google_protobuf_protobuf_java",  # Do not use, but do not remove
     artifact = "com.google.protobuf:protobuf-java:3.5.1",
-    sha1 = "8c3492f7662fa1cbf8ca76a0f5eb1146f7725acd",
+    artifact_sha256 = "b5e2d91812d183c9f053ffeebcbcda034d4de6679521940a19064714966c2cd4",
+    server_urls = MAVEN_REPOS,
 )
 
 # Used by java_grpc_library
