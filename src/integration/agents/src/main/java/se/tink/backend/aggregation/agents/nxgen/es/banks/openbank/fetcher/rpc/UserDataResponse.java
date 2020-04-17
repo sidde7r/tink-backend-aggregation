@@ -30,7 +30,7 @@ public class UserDataResponse {
         return valuesList;
     }
 
-    public List<IbanEntity> getIbans() {
+    public List<CodIban> getIbans() {
         return ibanList.ibans;
     }
 
@@ -42,6 +42,24 @@ public class UserDataResponse {
     }
 
     public List<AccountEntity> getAccounts() {
+        // This mapping is done since IBAN is not included in the accountList, instead it is
+        // included as a seperate list at the same "level" as the accountlist.
+        accountsList.accounts.asJava().stream()
+                .forEach(
+                        t ->
+                                t.setIbanEntity(
+                                        ibanList.ibans.asJava().stream()
+                                                .filter(
+                                                        a ->
+                                                                a.getCodIban()
+                                                                        .getIban()
+                                                                        .contains(
+                                                                                t.getAccountInfoOldFormat()
+                                                                                        .getContractNumber()))
+                                                .findFirst()
+                                                .get()
+                                                .getCodIban()));
+
         return accountsList.accounts;
     }
 
@@ -52,7 +70,7 @@ public class UserDataResponse {
 
     private static class IbanList {
         @JsonProperty("datosIban")
-        private List<IbanEntity> ibans;
+        private List<CodIban> ibans;
     }
 
     private static class CardsList {
@@ -63,5 +81,14 @@ public class UserDataResponse {
     private static class AccountsList {
         @JsonProperty("cuentas")
         private List<AccountEntity> accounts;
+    }
+
+    private static class CodIban {
+        @JsonProperty("codIban")
+        private IbanEntity codIban;
+
+        public IbanEntity getCodIban() {
+            return codIban;
+        }
     }
 }

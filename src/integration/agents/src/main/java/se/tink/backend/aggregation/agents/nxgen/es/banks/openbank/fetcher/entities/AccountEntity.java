@@ -3,12 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entit
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.ACCOUNT_TYPE_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
 public class AccountEntity {
@@ -21,7 +23,6 @@ public class AccountEntity {
     @JsonProperty("cviejo")
     private AccountInfoEntity accountInfoOldFormat;
 
-    @JsonProperty("codiban")
     private IbanEntity ibanEntity;
 
     @JsonProperty("nombretitular")
@@ -89,7 +90,11 @@ public class AccountEntity {
     }
 
     private String getIban() {
-        return ibanEntity.getIban();
+        return ibanEntity
+                .getCountry()
+                .concat(ibanEntity.getCheckDigits())
+                .concat(ibanEntity.getIban())
+                .trim();
     }
 
     private String getAccountName() {
@@ -110,6 +115,7 @@ public class AccountEntity {
 
         return TransactionalAccount.builder(getTinkAccountType(), accountNumber.toLowerCase())
                 .setAccountNumber(accountNumber)
+                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
                 .setName(getAccountName())
                 .setExactBalance(balance.toTinkAmount())
                 .setBankIdentifier(accountNumber)
@@ -202,5 +208,10 @@ public class AccountEntity {
 
     public boolean isIsRoboAccount() {
         return isRoboAccount;
+    }
+
+    @JsonIgnore
+    public void setIbanEntity(IbanEntity ibanEntity) {
+        this.ibanEntity = ibanEntity;
     }
 }
