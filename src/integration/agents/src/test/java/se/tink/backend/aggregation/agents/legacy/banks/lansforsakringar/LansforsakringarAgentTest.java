@@ -31,7 +31,7 @@ public class LansforsakringarAgentTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("se", "lansforsakringar-bankid")
                 .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                 .loadCredentialsBefore(false)
