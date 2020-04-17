@@ -1,6 +1,6 @@
 # Use the new Skylark version of git_repository. This uses the system's native
 # git client which supports fancy key formats and key passphrases.
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
 http_archive(
@@ -49,8 +49,9 @@ rules_java_toolchains()
 # These are repositories under Tink control. They are trusted, and imported
 # as a part of tink-backend's repository (not checksumed).
 
-git_repository(
+new_git_repository(
     name = "dropwizard_jersey",
+    build_file = "//third_party:dropwizard_jersey.BUILD",
     commit = "0c2f90f4358e262d0fe0af3f6d31eb0fa3cabc40",
     remote = "git@github.com:tink-ab/dropwizard.git",
     shallow_since = "1490898663 +0200",
