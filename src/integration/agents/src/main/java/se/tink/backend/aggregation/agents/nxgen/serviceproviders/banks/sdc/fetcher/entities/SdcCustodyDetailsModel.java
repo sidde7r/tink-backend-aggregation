@@ -42,7 +42,7 @@ public class SdcCustodyDetailsModel {
     private Amount getCashBalance() {
         double depositAmount = 0.0;
         if (depositValue != null) {
-            depositAmount = depositValue.toTinkAmount().getValue();
+            depositAmount = depositValue.toExactCurrencyAmount().getDoubleValue();
         }
 
         return availableBalance.toTinkAmount().subtract(depositAmount);
@@ -54,7 +54,9 @@ public class SdcCustodyDetailsModel {
         portfolio.setType(parsePortfolioType());
         portfolio.setRawType(this.type);
         portfolio.setTotalValue(
-                this.depositValue == null ? null : this.depositValue.toTinkAmount().getValue());
+                this.depositValue == null
+                        ? null
+                        : this.depositValue.toExactCurrencyAmount().getDoubleValue());
         portfolio.setUniqueIdentifier(this.id);
         portfolio.setInstruments(custodyContent.toInstruments());
         return portfolio;

@@ -73,15 +73,4 @@ public class SdcAmount {
             return toExactCurrencyAmount();
         }
     }
-
-    @JsonIgnore
-    public Amount toTinkAmount(String currency) {
-        Amount amount = toTinkAmount();
-
-        if (amount.isEmpty()) {
-            amount = new Amount(currency, BigDecimal.valueOf(value, scale).doubleValue());
-        }
-
-        return amount;
-    }
 }

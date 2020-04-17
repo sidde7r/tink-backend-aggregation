@@ -74,15 +74,15 @@ public class SdcCreditCardEntity {
     public CreditCardAccount toTinkCard(SdcAccount creditCardAccount) {
         return CreditCardAccount.builder(
                         constructUniqueIdentifier(),
-                        creditCardAccount.getAmount().toTinkAmount(),
-                        creditCardAccount.getAvailableAmount().toTinkAmount())
+                        creditCardAccount.getAmount().toExactCurrencyAmount(),
+                        creditCardAccount.getAvailableAmount().toExactCurrencyAmount())
                 .setBankIdentifier(constructUniqueIdentifier())
-                .setAccountNumber(creditcardNumber.replaceAll(" ", ""))
+                .setAccountNumber(creditcardNumber.replace(" ", ""))
                 .setName(creditCardAccount.getName())
                 .build();
     }
 
-    String constructUniqueIdentifier() {
+    private String constructUniqueIdentifier() {
         String normalizedAccountNumber =
                 attachedAccount.getEntityKey().getAccountId().replace(".", "");
         if (StringUtils.trimToNull(normalizedAccountNumber) == null) {

@@ -29,7 +29,7 @@ public class SdcDepositContent {
         Instrument instrument = new Instrument();
 
         instrument.setName(label);
-        instrument.setMarketValue(marketValue.toTinkAmount().getValue());
+        instrument.setMarketValue(marketValue.toExactCurrencyAmount().getDoubleValue());
         instrument.setCurrency(marketValue.getCurrency());
 
         return instrument;
