@@ -2815,6 +2815,8 @@ maven_install(
         "org.springframework:spring-jdbc:4.3.7.RELEASE",
         "org.springframework:spring-orm:4.3.7.RELEASE",
         "org.springframework:spring-tx:4.3.7.RELEASE",
+        "cglib:cglib:2.2",
+        "org.hibernate:hibernate-entitymanager:3.5.4-Final",
     ],
     # Exclude ALL transitive dependencies of the artifacts above for now
     excluded_artifacts = [
@@ -2985,6 +2987,18 @@ maven_install(
         "org.xmlunit:xmlunit-core",
         "org.xmlunit:xmlunit-legacy",
         "software.amazon.ion:ion-java",
+        "commons-collections:commons-collections",
+        "dom4j:dom4j",
+        "javassist:javassist",
+        "javax.transaction:jta",
+        "org.slf4j:slf4j-api",
+        "org.hibernate.javax.persistence:hibernate-jpa-2.0-api",
+        "org.hibernate:hibernate-annotations",
+        "org.hibernate:hibernate-commons-annotations",
+        "org.hibernate:hibernate-core",
+        "antlr:antlr",
+        "asm:asm",
+        "xml-apis:xml-apis",
     ],
     fetch_sources = True,
     maven_install_json = "//third_party:aggregation_temp_install.json",
@@ -2995,39 +3009,6 @@ maven_install(
 load("@aggregation_temp//:defs.bzl", aggregation_temp_pin = "pinned_maven_install")
 
 aggregation_temp_pin()
-
-# To be moved into the aggregation maven_install eventually
-maven_install(
-    name = "hibernate_entitymanager",
-    artifacts = [
-        "cglib:cglib:2.2",
-        "org.hibernate:hibernate-entitymanager:3.5.4-Final",
-    ],
-    excluded_artifacts = [
-        # Exclude ALL transitive dependencies of the artifacts above for now
-        "antlr:antlr",
-        "asm:asm",
-        "commons-collections:commons-collections",
-        "dom4j:dom4j",
-        "javassist:javassist",
-        "javax.transaction:jta",
-        "org.hibernate.javax.persistence:hibernate-jpa-2.0-api",
-        "org.hibernate:hibernate-annotations",
-        "org.hibernate:hibernate-commons-annotations",
-        "org.hibernate:hibernate-core",
-        "org.hibernate:hibernate-entitymanager",
-        "org.slf4j:slf4j-api",
-        "xml-apis:xml-apis",
-    ],
-    fetch_sources = True,
-    maven_install_json = "//third_party:hibernate_entitymanager_install.json",
-    repositories = RULES_JVM_EXTERNAL_MAVEN_REPOS,
-    version_conflict_policy = "default",
-)
-
-load("@hibernate_entitymanager//:defs.bzl", hibernate_entitymanager_pin = "pinned_maven_install")
-
-hibernate_entitymanager_pin()
 
 SPRING_FRAMEWORK_VERSION = "5.1.5.RELEASE"
 

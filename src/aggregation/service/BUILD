@@ -12,7 +12,7 @@ java_library(
     visibility = ["//visibility:public"],
     runtime_deps = [
         # AggregatorConfigurationsRepository needs to find HibernateEntityManagerFactory
-        "@hibernate_entitymanager//:org_hibernate_hibernate_entitymanager",
+        "@aggregation_temp//:org_hibernate_hibernate_entitymanager",
     ],
     deps = [
         "//src/aggregation/lib",
