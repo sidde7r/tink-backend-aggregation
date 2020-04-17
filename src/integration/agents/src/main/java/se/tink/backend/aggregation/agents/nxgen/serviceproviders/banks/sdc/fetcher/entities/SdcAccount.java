@@ -49,7 +49,8 @@ public class SdcAccount {
 
     @JsonIgnore
     public CreditCardAccount toTinkCreditCardAccount(SdcConfiguration agentConfiguration) {
-        return CreditCardAccount.builder(id, amount.toTinkAmount(), availableAmount.toTinkAmount())
+        return CreditCardAccount.builder(
+                        id, amount.toExactCurrencyAmount(), availableAmount.toExactCurrencyAmount())
                 .setAccountNumber(localizedAccountId)
                 .setName(name)
                 .setBankIdentifier(normalizedBankId())
@@ -150,7 +151,7 @@ public class SdcAccount {
         return productElementType;
     }
 
-    public boolean isAccount(SdcCreditCardAccountEntity creditCardAccount) {
+    boolean isAccount(SdcCreditCardAccountEntity creditCardAccount) {
         return getEntityKey().hasSameId(creditCardAccount.getEntityKey());
     }
 }
