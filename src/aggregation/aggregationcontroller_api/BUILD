@@ -61,6 +61,7 @@ junit_test(
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:com_sun_jersey_jersey_server",
         "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_assertj_assertj_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_fasterxml_jackson_core_jackson_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
