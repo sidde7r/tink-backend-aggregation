@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -87,18 +88,20 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     @JsonIgnore
     private String getHash(boolean ignoreSource) {
-        AccountIdentifier source = getSource();
-        AccountIdentifier destination = getDestination();
+        AccountIdentifier sourceAccount = getSource();
+        AccountIdentifier destinationAccount = getDestination();
 
         return String.valueOf(
                 java.util.Objects.hash(
                         type,
                         getAmountForHash(amount),
-                        destination != null ? destination.toURIWithoutName() : null,
+                        destinationAccount != null ? destinationAccount.toURIWithoutName() : null,
                         destinationMessage,
                         // if ignoreSource is true, set source to null, otherwise use it if it
                         // exists
-                        (ignoreSource || source == null) ? null : source.toURIWithoutName(),
+                        (ignoreSource || sourceAccount == null)
+                                ? null
+                                : sourceAccount.toURIWithoutName(),
                         sourceMessage,
                         dueDate == null
                                 ? null
@@ -130,14 +133,10 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         }
 
         log.error(
-                "[userId:"
-                        + UUIDUtils.toTinkUUID(userId)
-                        + " credentialsId:"
-                        + UUIDUtils.toTinkUUID(credentialsId)
-                        + " transferId:"
-                        + UUIDUtils.toTinkUUID(id)
-                        + "] "
-                        + " Transfer amount is null");
+                "[userId:{} credentialsId:{} transferId:{}] Transfer amount is null",
+                UUIDUtils.toTinkUUID(userId),
+                UUIDUtils.toTinkUUID(credentialsId),
+                UUIDUtils.toTinkUUID(id));
         return new Amount(currency, null);
     }
 
@@ -246,16 +245,16 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
 
     @Override
     public String toString() {
-        AccountIdentifier destination = getDestination();
-        AccountIdentifier source = getSource();
+        AccountIdentifier destinationAccount = getDestination();
+        AccountIdentifier sourceAccount = getSource();
         String dateForHash =
                 dueDate != null ? ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate) : null;
 
         return MoreObjects.toStringHelper(this.getClass())
                 .add("amount", amount)
-                .add("sourceAccount", source)
+                .add("sourceAccount", sourceAccount)
                 .add("sourceMessage", sourceMessage)
-                .add("destinationAccount", destination)
+                .add("destinationAccount", destinationAccount)
                 .add("destinationMessage", destinationMessage)
                 .add("dueDate", dueDate)
                 .add("type", type)
@@ -323,8 +322,8 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
             } else {
                 return OBJECT_MAPPER.readValue(payloadSerialized, PAYLOAD_TYPE_REFERENCE);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.error("Could not de-serialize payload.", e);
             return null;
         }
     }
@@ -336,8 +335,8 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
             } else {
                 this.payloadSerialized = OBJECT_MAPPER.writeValueAsString(payload);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            log.error("Could not serialize payload.", e);
         }
     }
 
