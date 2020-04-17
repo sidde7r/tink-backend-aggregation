@@ -244,7 +244,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             // Reset barrier.
             lock.removeBarrier();
             lock.setBarrier();
-
+            log.info(
+                    String.format(
+                            "Supplemental information request of key %s is been waited for %s %s",
+                            key, waitFor, unit));
             if (lock.waitOnBarrier(waitFor, unit)) {
                 String supplementalInformation =
                         supplementalInformationController.getSupplementalInformation(key);

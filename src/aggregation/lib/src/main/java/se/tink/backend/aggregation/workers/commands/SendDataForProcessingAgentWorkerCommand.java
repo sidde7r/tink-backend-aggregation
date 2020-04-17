@@ -46,7 +46,7 @@ public class SendDataForProcessingAgentWorkerCommand extends AgentWorkerCommand
         Credentials credentials = context.getRequest().getCredentials();
 
         if (credentials.getStatus() != CredentialsStatus.UPDATING) {
-            log.warn("Status does not warrant processing: {}", credentials.getStatus());
+            log.warn("Credentials status does not warrant processing: {}", credentials.getStatus());
             return;
         }
 
