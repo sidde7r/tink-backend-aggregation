@@ -6,10 +6,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
@@ -107,18 +111,26 @@ public class AccountEntity {
                 getDescription(), contractNumber.substring(contractNumber.length() - 4));
     }
 
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         // Openbank account number is the last 10 digits of the IBAN
         final AccountInfoEntity accountInfoOldFormat = getAccountInfoOldFormat();
         final String accountNumber =
                 accountInfoOldFormat.getProductCode() + accountInfoOldFormat.getContractNumber();
 
-        return TransactionalAccount.builder(getTinkAccountType(), accountNumber.toLowerCase())
-                .setAccountNumber(accountNumber)
-                .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
-                .setName(getAccountName())
-                .setExactBalance(balance.toTinkAmount())
-                .setBankIdentifier(accountNumber)
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.from(getTinkAccountType()).get())
+                .withInferredAccountFlags()
+                .withBalance(BalanceModule.of(balance.toTinkAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountNumber.toLowerCase())
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(getAccountName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.IBAN, getIban()))
+                                .build())
+                .addHolderName(holderName)
                 .putInTemporaryStorage(
                         OpenbankConstants.Storage.PRODUCT_CODE_OLD,
                         accountInfoOldFormat.getProductCode())

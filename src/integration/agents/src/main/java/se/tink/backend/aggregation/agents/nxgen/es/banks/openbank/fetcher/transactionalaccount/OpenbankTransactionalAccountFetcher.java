@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
@@ -33,6 +34,8 @@ public class OpenbankTransactionalAccountFetcher
                 .fetchAccounts()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .asJava();
     }
 
