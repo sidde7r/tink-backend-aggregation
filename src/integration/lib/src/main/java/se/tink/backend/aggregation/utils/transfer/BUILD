@@ -7,6 +7,7 @@ java_library(
         "//src/integration/signableoperation:enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
+        "//src/libraries/account_identifier",
         "//src/libraries/i18n",
         "//third_party:com_google_guava_guava",
         "//third_party:org_apache_commons_commons_lang3",
