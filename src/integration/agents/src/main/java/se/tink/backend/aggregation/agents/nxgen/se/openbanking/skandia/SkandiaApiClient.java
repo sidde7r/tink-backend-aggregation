@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryValues;
@@ -63,8 +62,6 @@ public final class SkandiaApiClient {
 
         return createRequest(url)
                 .addBearerToken(authToken)
-                // this should be removed once the certificate of Skandia is added to trust store
-                .header(HeaderKeys.X_TINK_DEBUG, HeaderValues.X_TINK_DEBUG)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .header(HeaderKeys.CLIENT_ID, clientId)
                 .header(
