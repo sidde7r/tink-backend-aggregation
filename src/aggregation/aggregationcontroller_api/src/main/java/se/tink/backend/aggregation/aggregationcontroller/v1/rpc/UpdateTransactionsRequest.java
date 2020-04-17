@@ -85,6 +85,14 @@ public class UpdateTransactionsRequest {
         this.requestType = requestType;
     }
 
+    public void setRequestTypeFromService(
+            se.tink.libraries.credentials.service.CredentialsRequestType
+                    serviceCredentialsRequestType) {
+        this.requestType =
+                CredentialsRequestType.translateFromServiceRequestType(
+                        serviceCredentialsRequestType);
+    }
+
     public String getAggregationId() {
         return aggregationId;
     }

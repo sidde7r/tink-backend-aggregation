@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.google.common.base.Enums;
 import se.tink.libraries.credentials.rpc.Credentials;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -74,11 +73,9 @@ public class UpdateCredentialsStatusRequest {
     public void setRequestType(
             se.tink.libraries.credentials.service.CredentialsRequestType
                     serviceCredentialsRequestType) {
-        if (serviceCredentialsRequestType == null) {
-            return;
-        }
-        String name = serviceCredentialsRequestType.name();
-        requestType = Enums.getIfPresent(CredentialsRequestType.class, name).orNull();
+        requestType =
+                CredentialsRequestType.translateFromServiceRequestType(
+                        serviceCredentialsRequestType);
     }
 
     public CredentialsRequestType getRequestType() {
