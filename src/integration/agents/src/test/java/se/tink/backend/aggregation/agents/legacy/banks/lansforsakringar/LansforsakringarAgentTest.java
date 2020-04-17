@@ -14,14 +14,14 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class LansforsakringarAgentTest {
-    private final ArgumentManager<SsnArgumentEnum> manager =
+    private final ArgumentManager<SsnArgumentEnum> ssnManager =
             new ArgumentManager<>(SsnArgumentEnum.values());
     private final ArgumentManager<ArgumentManager.ToAccountFromAccountArgumentEnum> accountManager =
             new ArgumentManager<>(ArgumentManager.ToAccountFromAccountArgumentEnum.values());
 
     @Before
     public void setUp() throws Exception {
-        manager.before();
+        ssnManager.before();
         accountManager.before();
     }
 
@@ -33,7 +33,7 @@ public class LansforsakringarAgentTest {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("se", "lansforsakringar-bankid")
-                .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
@@ -61,7 +61,7 @@ public class LansforsakringarAgentTest {
         transfer.setDestinationMessage("Destination message");
 
         new AgentIntegrationTest.Builder("se", "lansforsakringar-bankid")
-                .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .build()
