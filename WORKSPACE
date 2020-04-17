@@ -314,6 +314,13 @@ protobuf_deps()
 
 OPENCENSUS_VERSION = "0.21.0"
 
+# Order matters: the first one listed is the default repo to fetch from
+MAVEN_REPOS = [
+    "https://repo1.maven.org/maven2",
+    "https://jcenter.bintray.com",
+    "https://maven.google.com",
+]
+
 maven_jar(
     name = "com_google_j2objc_j2objc_annotations",
     artifact = "com.google.j2objc:j2objc-annotations:1.1",
@@ -481,13 +488,6 @@ grpc_java_repositories()
 RULES_JVM_EXTERNAL_TAG = "3.2"
 
 RULES_JVM_EXTERNAL_SHA = "82262ff4223c5fda6fb7ff8bd63db8131b51b413d26eb49e3131037e79e324af"
-
-# Order matters: the first one listed is the default repo to fetch from
-MAVEN_REPOS = [
-    "https://repo1.maven.org/maven2",
-    "https://jcenter.bintray.com",
-    "https://maven.google.com",
-]
 
 http_archive(
     name = "rules_jvm_external",
