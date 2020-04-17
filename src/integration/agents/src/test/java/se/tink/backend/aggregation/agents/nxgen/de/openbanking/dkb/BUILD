@@ -34,7 +34,6 @@ junit_test(
         ],
     ),
     tags = [
-        "external",
     ],
     visibility = ["//visibility:public"],
     deps = [
