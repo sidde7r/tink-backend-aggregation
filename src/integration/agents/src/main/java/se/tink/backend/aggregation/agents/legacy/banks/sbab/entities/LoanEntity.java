@@ -154,9 +154,8 @@ public class LoanEntity {
     private Loan.Type getLoanType() {
         if (isMortgage()) {
             return Loan.Type.MORTGAGE;
-        } else {
-            return Loan.Type.OTHER;
         }
+        return Loan.Type.OTHER;
     }
 
     public Optional<Account> toTinkAccount() {
