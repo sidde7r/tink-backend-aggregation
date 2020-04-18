@@ -57,15 +57,18 @@ public class AgentWorkerContextTest {
     }
 
     @Test
-    public void testAggregationControllerRefreshId() {
+    public void whenUpdatingCredentialsExcludingSensitiveRefreshIdIsPassedOnToControllerWrapper() {
+        // given
         RefreshInformationRequest request = new RefreshInformationRequest();
         request.setRefreshId("TEST");
         request.setProvider(new Provider());
         AgentWorkerContext context = buildAgentWorkerContext(request);
-
         Credentials credentials = new Credentials();
+
+        // when
         context.updateCredentialsExcludingSensitiveInformation(credentials, false, false);
 
+        // then
         verify(controllerWrapper, times(1))
                 .updateCredentials(
                         argThat(
