@@ -128,13 +128,20 @@ public class CatalogTest {
     }
 
     @Test
-    public void testCatalogGetString2() {
+    public void withLessThanOneSekGetStringReturnsTranslation() {
+        // given
         String lessThanOneSekEn = "The transfer amount, less than 1 SEK is not supported.";
         String lessThanOneSekSv = "Överföringsbelopp på mindre än 1 kr stöds inte.";
+        LocalizableKey lessThanOneSekEnKey = new LocalizableKey(lessThanOneSekEn);
         Catalog catalog = new Catalog(new Locale("sv", "SE"));
-        Assert.assertEquals(lessThanOneSekSv, catalog.getString(lessThanOneSekEn));
-        Assert.assertEquals(
-                lessThanOneSekSv, catalog.getString(new LocalizableKey(lessThanOneSekEn)));
+
+        // when
+        String translatedLessThanOneSek = catalog.getString(lessThanOneSekEn);
+        String translatedLessThanOneSekKey = catalog.getString(lessThanOneSekEnKey);
+
+        // then
+        Assert.assertEquals(lessThanOneSekSv, translatedLessThanOneSek);
+        Assert.assertEquals(lessThanOneSekSv, translatedLessThanOneSekKey);
     }
 
     @Test
