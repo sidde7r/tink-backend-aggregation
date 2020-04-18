@@ -60,7 +60,8 @@ public class AgentWorkerContextTest {
     public void whenUpdatingCredentialsExcludingSensitiveRefreshIdIsPassedOnToControllerWrapper() {
         // given
         RefreshInformationRequest request = new RefreshInformationRequest();
-        request.setRefreshId("TEST");
+        String testRefreshId = "testRefreshId";
+        request.setRefreshId(testRefreshId);
         request.setProvider(new Provider());
         AgentWorkerContext context = buildAgentWorkerContext(request);
         Credentials credentials = new Credentials();
@@ -73,7 +74,7 @@ public class AgentWorkerContextTest {
                 .updateCredentials(
                         argThat(
                                 (UpdateCredentialsStatusRequest controllerRequest) ->
-                                        controllerRequest.getRefreshId().equals("TEST")));
+                                        controllerRequest.getRefreshId().equals(testRefreshId)));
     }
 
     @Test
