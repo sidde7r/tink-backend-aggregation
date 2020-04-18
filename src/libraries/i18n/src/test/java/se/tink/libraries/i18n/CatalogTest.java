@@ -128,6 +128,16 @@ public class CatalogTest {
     }
 
     @Test
+    public void testCatalogGetString2() {
+        String lessThanOneSekEn = "The transfer amount, less than 1 SEK is not supported.";
+        String lessThanOneSekSv = "Överföringsbelopp på mindre än 1 kr stöds inte.";
+        Catalog catalog = new Catalog(new Locale("sv", "SE"));
+        Assert.assertEquals(lessThanOneSekSv, catalog.getString(lessThanOneSekEn));
+        Assert.assertEquals(
+                lessThanOneSekSv, catalog.getString(new LocalizableKey(lessThanOneSekEn)));
+    }
+
+    @Test
     public void testCatalogReferToAggregationTranslation() {
         // This is to verify tink-backend-aggragation is using his own po files instead of the ones
         // from backend
