@@ -78,14 +78,18 @@ public class AgentWorkerContextTest {
     }
 
     @Test
-    public void testRefreshWhenNotRefreshInformation() {
+    public void
+            whenUpdatingCredentialsExcludingSensitiveWithNullRefreshIdNullRefreshIdIsPassedOnToControllerWrapper() {
+        // given
         CredentialsRequest request = new TransferRequest();
         request.setProvider(new Provider());
         AgentWorkerContext context = buildAgentWorkerContext(request);
-
         Credentials credentials = new Credentials();
+
+        // when
         context.updateCredentialsExcludingSensitiveInformation(credentials, false, false);
 
+        // then
         verify(controllerWrapper, times(1))
                 .updateCredentials(
                         argThat(
