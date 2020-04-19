@@ -35,7 +35,7 @@ public final class KnabConstants {
 
     public static class Urls {
 
-        public static final String BASE_AUTH_URL = "https://login.knab.io";
+        public static final String BASE_AUTH_URL = "https://login.knab.nl";
         public static final String BASE_API_URL = "https://api.knab.nl:443";
 
         public static final URL AUTHORIZE = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZE);
