@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.base.Predicate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +34,7 @@ import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsA
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
+import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.cache.CacheClient;
@@ -118,6 +121,9 @@ public final class AgentWorkerOperationFactoryTest {
             bind(CacheClient.class).toInstance(mock(CacheClient.class));
             bind(MetricRegistry.class).toInstance(mock(MetricRegistry.class));
             bind(AgentDebugStorageHandler.class).toInstance(mock(AgentDebugStorageHandler.class));
+            bind(new TypeLiteral<Predicate<Provider>>() {})
+                    .annotatedWith(ShouldAddExtraCommands.class)
+                    .toInstance(p -> false);
             bind(AgentWorkerOperationState.class).toInstance(mock(AgentWorkerOperationState.class));
             bind(DebugAgentWorkerCommandState.class)
                     .toInstance(mock(DebugAgentWorkerCommandState.class));
