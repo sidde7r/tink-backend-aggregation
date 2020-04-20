@@ -21,7 +21,7 @@ public class SebAgentTest {
         manager.before();
 
         testBuilder =
-                new AgentIntegrationTest.Builder("se", "se-sebbusiness-bankid")
+                new AgentIntegrationTest.Builder("se", "seb-business-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
