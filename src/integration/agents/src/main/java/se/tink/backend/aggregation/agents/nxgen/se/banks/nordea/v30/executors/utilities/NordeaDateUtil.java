@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import se.tink.libraries.date.CountryDateHelper;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class NordeaDateUtil {
 
@@ -14,12 +13,11 @@ public class NordeaDateUtil {
     private static final CountryDateHelper dateHelper =
             new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
 
-    public static String getTransferDateForInternalTransfer(Date date) {
-        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                dateHelper.getTransferDate(date, 24, 00));
+    public static Date getTransferDateForIntraBankTransfer(Date date) {
+        return dateHelper.getTransferDate(date, 23, 59);
     }
 
-    public static Date getTransferDateForExternalTransfer(Date date) {
+    public static Date getTransferDateForInterBankTransfer(Date date) {
         return dateHelper.getTransferDate(date, 12, 45);
     }
 

@@ -51,7 +51,6 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
             throws AuthenticationException, AuthorizationException {
 
         prepareStorageBeforeAuth(username);
-        sendInitializationRequests();
         processLogon(prepareLogon(username, password));
     }
 
@@ -112,6 +111,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
         }
     }
 
+    // TODO: remove for good if there will be no issues with amex
     private void sendInitializationRequests() {
         String initVersion = persistentStorage.getOrDefault(Tags.INIT_VERSION, "-1");
         InitializationResponse response =
