@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.date.CountryDateHelper;
 
 public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -73,9 +75,10 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .withChargeBearer(
                                 SibsConstants.FormValues.PAYMENT_INITIATION_DEFAULT_CHARGE_BEARER);
 
-        LocalDate paymentExecutionDate = paymentRequest.getPayment().getExecutionDate();
+        LocalDate paymentExecutionDate =
+                getExecutionDate(paymentRequest.getPayment().getExecutionDate());
 
-        if (paymentExecutionDate != null && LocalDate.now().isBefore(paymentExecutionDate)) {
+        if (LocalDate.now().isBefore(paymentExecutionDate)) {
             builder.withRequestedExecutionDate(paymentExecutionDate);
         }
 
@@ -131,5 +134,18 @@ public class SibsPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         }
 
         return new PaymentListResponse(response);
+    }
+
+    private LocalDate getExecutionDate(LocalDate executionDate) {
+        if (executionDate == null) {
+            CountryDateHelper countryDateHelper =
+                    new CountryDateHelper(
+                            new Locale(
+                                    CountryDateHelper.LANGUAGE_CODE_PORTUGAL,
+                                    CountryDateHelper.COUNTRY_CODE_PORTUGAL));
+            return countryDateHelper.getNowAsLocalDate();
+        } else {
+            return executionDate;
+        }
     }
 }

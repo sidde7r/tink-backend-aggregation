@@ -31,6 +31,7 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/integration/signableoperation:enums",
         "//src/libraries/account_identifier",
+        "//src/libraries/date",
         "//src/libraries/serialization",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_sun_jersey_jersey_core",
