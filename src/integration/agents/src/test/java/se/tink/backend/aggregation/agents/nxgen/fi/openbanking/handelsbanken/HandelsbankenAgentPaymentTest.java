@@ -11,7 +11,7 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenAgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -23,8 +23,8 @@ public class HandelsbankenAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {
-        HandelsbankenAgentIntegrationTest.Builder builder =
-                new HandelsbankenAgentIntegrationTest.Builder("fi", "fi-handelsbanken-oauth2")
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("fi", "fi-handelsbanken-oauth2")
                         .addCredentialField(
                                 "accessToken",
                                 "QVQ6MTRlOWU2ZTQtOTUxMi00YTJhLWI2NWYtZWEwYmIxNDFhZWIz")
