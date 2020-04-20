@@ -4,7 +4,7 @@ import java.text.ParseException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
@@ -72,10 +72,6 @@ public class TransactionsEntity {
         return text;
     }
 
-    public Double getMainAmount() {
-        return mainAmount;
-    }
-
     public String getValeurDate() {
         return valeurDate;
     }
@@ -123,9 +119,9 @@ public class TransactionsEntity {
     public Transaction toTinkTransaction() {
         try {
             return Transaction.builder()
-                    .setDescription(getText())
+                    .setDescription(text)
                     .setDate(ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.parse(transactionDate))
-                    .setAmount(Amount.inDKK(getMainAmount()))
+                    .setAmount(ExactCurrencyAmount.of(mainAmount, "DKK"))
                     .build();
         } catch (ParseException e) {
             throw new IllegalStateException(e.getMessage(), e);
@@ -135,9 +131,9 @@ public class TransactionsEntity {
     public UpcomingTransaction toTinkUpcomingTransaction() {
         try {
             return UpcomingTransaction.builder()
-                    .setDescription(getText())
+                    .setDescription(text)
                     .setDate(ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.parse(transactionDate))
-                    .setAmount(Amount.inDKK(getMainAmount()))
+                    .setAmount(ExactCurrencyAmount.of(mainAmount, "DKK"))
                     .build();
         } catch (ParseException e) {
             throw new IllegalStateException(e.getMessage(), e);

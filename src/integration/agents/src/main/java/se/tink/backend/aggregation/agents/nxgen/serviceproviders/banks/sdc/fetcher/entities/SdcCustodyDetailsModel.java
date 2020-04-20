@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
@@ -8,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcCo
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.CustodyContentResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class SdcCustodyDetailsModel {
@@ -20,10 +21,6 @@ public class SdcCustodyDetailsModel {
     private SdcAmount availableBalance;
     private SdcAmount depositValue;
     private SdcCustodyDetailsAccount yieldAccount;
-
-    //    Other possible fields of interest:
-    //    private SdcCustodyProperties properties;
-    //    private SdcChange intradayChange;
 
     public InvestmentAccount toInvestmentAccount(SdcApiClient bankClient) {
         return InvestmentAccount.builder(this.id)
@@ -39,13 +36,13 @@ public class SdcCustodyDetailsModel {
     }
 
     @JsonIgnore
-    private Amount getCashBalance() {
-        double depositAmount = 0.0;
+    private ExactCurrencyAmount getCashBalance() {
+        ExactCurrencyAmount depositAmount = ExactCurrencyAmount.of(BigDecimal.valueOf(0, 0), "");
         if (depositValue != null) {
-            depositAmount = depositValue.toTinkAmount().getValue();
+            depositAmount = depositValue.toExactCurrencyAmount();
         }
 
-        return availableBalance.toTinkAmount().subtract(depositAmount);
+        return availableBalance.toExactCurrencyAmount().subtract(depositAmount);
     }
 
     public Portfolio toPortfolio(CustodyContentResponse custodyContent) {
@@ -54,7 +51,9 @@ public class SdcCustodyDetailsModel {
         portfolio.setType(parsePortfolioType());
         portfolio.setRawType(this.type);
         portfolio.setTotalValue(
-                this.depositValue == null ? null : this.depositValue.toTinkAmount().getValue());
+                this.depositValue == null
+                        ? null
+                        : this.depositValue.toExactCurrencyAmount().getDoubleValue());
         portfolio.setUniqueIdentifier(this.id);
         portfolio.setInstruments(custodyContent.toInstruments());
         return portfolio;

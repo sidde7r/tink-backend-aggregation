@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class SdcSecurityModel {
@@ -37,7 +37,9 @@ public class SdcSecurityModel {
         Optional<SdcAmount> value = getValue();
         instrument.setCurrency(value.map(SdcAmount::getCurrency).orElse(null));
         instrument.setMarketValue(
-                value.map(SdcAmount::toTinkAmount).map(Amount::getValue).orElse(0d));
+                value.map(SdcAmount::toExactCurrencyAmount)
+                        .map(ExactCurrencyAmount::getDoubleValue)
+                        .orElse(0d));
         instrument.setName(name);
         instrument.setRawType(securityType);
         instrument.setType(parseInstrumentType());

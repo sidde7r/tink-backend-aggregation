@@ -1,27 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
-import static java.util.Optional.empty;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities.SdcLoanAccount;
 
 public class ListLoanAccountsResponseTest {
 
     @Test
-    public void getTinkAccountsLoan() throws Exception {
+    public void getTinkAccountsLoan() {
+        // given
         ListLoanAccountsResponse response = ListLoanAccountsResponseTestData.getTestData();
-        assertTrue(response.size() == 3);
 
-        assertNotNull(response);
-
+        // when && then
         for (SdcLoanAccount loanAccount : response) {
-            assertNotNull(loanAccount.getLabel());
-            assertTrue(0 > loanAccount.getAmount().toTinkAmount().getValue());
-            assertThat(loanAccount.findAccountId(), not(empty()));
+            assertThat(loanAccount.getAmount().toExactCurrencyAmount().getExactValue())
+                    .isLessThan(BigDecimal.ZERO);
+            assertThat(loanAccount.getLabel()).isNotNull();
+            assertThat(loanAccount.findAccountId()).isNotNull();
+            assertThat(loanAccount.findAccountId().get()).isNotEmpty();
         }
     }
 }

@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ListLoanAccountsResponseTestData {
 
-    public static ListLoanAccountsResponse getTestData() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(TEST_DATA, ListLoanAccountsResponse.class);
+    static ListLoanAccountsResponse getTestData() {
+        ListLoanAccountsResponse response =
+                SerializationUtils.deserializeFromString(TEST_DATA, ListLoanAccountsResponse.class);
+        Assertions.assertThat(response.size()).isEqualTo(3);
+        return response;
     }
 
     private static final String TEST_DATA =

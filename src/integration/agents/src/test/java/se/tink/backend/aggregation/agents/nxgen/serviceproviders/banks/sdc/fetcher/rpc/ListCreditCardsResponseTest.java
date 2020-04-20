@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetch
 
 public class ListCreditCardsResponseTest {
     @Test
-    public void listCreditCardResponse() throws Exception {
+    public void listCreditCardResponse() {
 
         ListCreditCardsResponse response =
                 ListCreditCardsResponseTestData.getTestDataOneCreditCard();
@@ -21,7 +21,7 @@ public class ListCreditCardsResponseTest {
     }
 
     @Test
-    public void getCreditCardsForTwoCardsPerAccountPickFirst() throws Exception {
+    public void getCreditCardsForTwoCardsPerAccountPickFirst() {
         ListCreditCardsResponse response =
                 ListCreditCardsResponseTestData.getTestDataTwoCreditCardsForOneAccountPickFirst();
         assertNotNull(response);
@@ -32,7 +32,7 @@ public class ListCreditCardsResponseTest {
     }
 
     @Test
-    public void getCreditCardsForTwoCardsPerAccountPickSecond() throws Exception {
+    public void getCreditCardsForTwoCardsPerAccountPickSecond() {
         ListCreditCardsResponse response =
                 ListCreditCardsResponseTestData.getTestDataTwoCreditCardsForOneAccountPickSecond();
         assertNotNull(response);
@@ -43,7 +43,7 @@ public class ListCreditCardsResponseTest {
     }
 
     @Test
-    public void getCreditCardsForTwoCardsPerAccountFirstEndDateNull() throws Exception {
+    public void getCreditCardsForTwoCardsPerAccountFirstEndDateNull() {
         ListCreditCardsResponse response =
                 ListCreditCardsResponseTestData
                         .getTestDataTwoCreditCardsForOneAccountFirstEndDateNull();
@@ -55,7 +55,7 @@ public class ListCreditCardsResponseTest {
     }
 
     @Test
-    public void getCreditCardsForTwoCardsPerAccountSecondEndDateNull() throws Exception {
+    public void getCreditCardsForTwoCardsPerAccountSecondEndDateNull() {
         ListCreditCardsResponse response =
                 ListCreditCardsResponseTestData
                         .getTestDataTwoCreditCardsForOneAccountSecondEndDateNull();
@@ -67,7 +67,7 @@ public class ListCreditCardsResponseTest {
     }
 
     @Test
-    public void getCreditCardsForTwoCardsAndTwoAccounts() throws Exception {
+    public void getCreditCardsForTwoCardsAndTwoAccounts() {
         ListCreditCardsResponse response =
                 ListCreditCardsResponseTestData.getTestDataTwoCreditCardsAndTwoAccounts();
         assertNotNull(response);

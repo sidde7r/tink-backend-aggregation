@@ -20,7 +20,7 @@ public class DnbOAuthEncoder {
         ENCODING_RULES = Collections.unmodifiableMap(rules);
     }
 
-    public DnbOAuthEncoder() {}
+    private DnbOAuthEncoder() {}
 
     private static String applyRule(String target, String key, String value) {
         return target.replaceAll(Pattern.quote(key), value);

@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SearchCreditCardTransactionsResponseTestData {
 
-    public static SearchTransactionsResponse getTestData() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(TEST_DATA, SearchTransactionsResponse.class);
+    static SearchTransactionsResponse getTestData() {
+        return SerializationUtils.deserializeFromString(
+                TEST_DATA, SearchTransactionsResponse.class);
     }
 
     private static final String TEST_DATA =

@@ -1,50 +1,40 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ListCreditCardsResponseTestData {
 
-    public static ListCreditCardsResponse getTestDataOneCreditCard() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(TEST_DATA_ONE_CREDIT_CARD, ListCreditCardsResponse.class);
+    static ListCreditCardsResponse getTestDataOneCreditCard() {
+        return SerializationUtils.deserializeFromString(
+                TEST_DATA_ONE_CREDIT_CARD, ListCreditCardsResponse.class);
     }
 
-    public static ListCreditCardsResponse getTestDataTwoCreditCardsForOneAccountPickFirst()
-            throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(
+    static ListCreditCardsResponse getTestDataTwoCreditCardsForOneAccountPickFirst() {
+        return SerializationUtils.deserializeFromString(
                 TEST_DATA_TWO_CREDIT_CARDS_FOR_ONE_ACCOUNT_PICK_FIRST,
                 ListCreditCardsResponse.class);
     }
 
-    public static ListCreditCardsResponse getTestDataTwoCreditCardsForOneAccountPickSecond()
-            throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(
+    static ListCreditCardsResponse getTestDataTwoCreditCardsForOneAccountPickSecond() {
+        return SerializationUtils.deserializeFromString(
                 TEST_DATA_TWO_CREDIT_CARDS_FOR_ONE_ACCOUNT_PICK_SECOND,
                 ListCreditCardsResponse.class);
     }
 
-    public static ListCreditCardsResponse getTestDataTwoCreditCardsForOneAccountFirstEndDateNull()
-            throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(
+    static ListCreditCardsResponse getTestDataTwoCreditCardsForOneAccountFirstEndDateNull() {
+        return SerializationUtils.deserializeFromString(
                 TEST_DATA_TWO_CREDIT_CARDS_FOR_ONE_ACCOUNT_ADDED_CARD_NULL_ENDDATE,
                 ListCreditCardsResponse.class);
     }
 
-    public static ListCreditCardsResponse getTestDataTwoCreditCardsForOneAccountSecondEndDateNull()
-            throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(
+    static ListCreditCardsResponse getTestDataTwoCreditCardsForOneAccountSecondEndDateNull() {
+        return SerializationUtils.deserializeFromString(
                 TEST_DATA_TWO_CREDIT_CARDS_FOR_ONE_ACCOUNT_NEW_CARD_NULL_ENDDATE,
                 ListCreditCardsResponse.class);
     }
 
-    public static ListCreditCardsResponse getTestDataTwoCreditCardsAndTwoAccounts()
-            throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(
+    static ListCreditCardsResponse getTestDataTwoCreditCardsAndTwoAccounts() {
+        return SerializationUtils.deserializeFromString(
                 TEST_DATA_TWO_CREDIT_CARDS_FOR_ONE_ACCOUNT_EACH, ListCreditCardsResponse.class);
     }
 

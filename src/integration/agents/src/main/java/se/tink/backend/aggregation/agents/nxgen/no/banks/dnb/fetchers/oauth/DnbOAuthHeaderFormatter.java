@@ -1,19 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.oauth;
 
-import java.io.UnsupportedEncodingException;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
 
 public class DnbOAuthHeaderFormatter {
     private StringBuilder content;
 
-    public DnbOAuthHeaderFormatter() throws UnsupportedEncodingException {
+    public DnbOAuthHeaderFormatter() {
         content = new StringBuilder();
         content.append(DnbConstants.OAuth.OAUTH_HEADER_PREFIX);
     }
 
-    public void putPair(String key, String value) throws UnsupportedEncodingException {
-        content.append(key + "=\"");
-        content.append(value + "\", ");
+    public void putPair(String key, String value) {
+        content.append(key).append("=\"");
+        content.append(value).append("\", ");
     }
 
     @Override

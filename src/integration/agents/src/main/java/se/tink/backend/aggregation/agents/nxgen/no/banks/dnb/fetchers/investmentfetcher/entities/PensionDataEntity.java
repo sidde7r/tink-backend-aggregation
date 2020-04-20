@@ -5,7 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PensionDataEntity {
@@ -85,7 +85,7 @@ public class PensionDataEntity {
         return InvestmentAccount.builder(accountNumbers.get(0))
                 .setAccountNumber(accountNumbers.get(0))
                 .setName("Pension")
-                .setCashBalance(Amount.inNOK(0))
+                .setCashBalance(ExactCurrencyAmount.of(0.0, "NOK"))
                 .setPortfolios(Collections.singletonList(toTinkPortfolio()))
                 .build();
     }
