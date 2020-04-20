@@ -83,7 +83,7 @@ public class CustodyAccountResponse extends BaseResponse {
     private PortfolioModule toPortfolioModule(HandelsbankenSEApiClient client) {
 
         return PortfolioModule.builder()
-                .withType(PortfolioType.ISK) // TODO
+                .withType(toType())
                 .withUniqueIdentifier(getAccountNumberBasedOnInvestmentType())
                 .withCashValue(mainDepositAccountBalance.getAmount())
                 .withTotalProfit(
@@ -107,13 +107,20 @@ public class CustodyAccountResponse extends BaseResponse {
                 .collect(Collectors.toList());
     }
 
-    private Portfolio.Type toType() {
+    private PortfolioType toType() {
         Portfolio.Type portfolioType = HandelsbankenSEConstants.PortfolioType.asType(this.type);
 
         if (portfolioType == Portfolio.Type.OTHER) {
             LOGGER.warn("Unknown portfolio type: {}", this.type);
         }
 
-        return portfolioType;
+        switch (portfolioType) {
+            case DEPOT:
+                return PortfolioType.DEPOT;
+            case ISK:
+                return PortfolioType.ISK;
+            default:
+                return PortfolioType.OTHER;
+        }
     }
 }
