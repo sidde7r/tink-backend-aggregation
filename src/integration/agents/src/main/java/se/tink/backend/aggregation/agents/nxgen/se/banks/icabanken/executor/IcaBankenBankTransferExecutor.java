@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc.BankTransferRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc.TransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.OwnRecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
@@ -45,8 +45,8 @@ public class IcaBankenBankTransferExecutor implements BankTransferExecutor {
 
         RecipientEntity destinationAccount = getRecipient(transfer, transferSourceAccounts);
 
-        BankTransferRequest transferRequest =
-                BankTransferRequest.create(
+        TransferRequest transferRequest =
+                TransferRequest.create(
                         transfer, sourceAccount, destinationAccount, transferMessageFormatter);
         executeBankTransfer(transferRequest, transfer, sourceAccount);
         return Optional.empty();
@@ -78,7 +78,7 @@ public class IcaBankenBankTransferExecutor implements BankTransferExecutor {
      * transfers requires signing with bankID in order to be executed.
      */
     private void executeBankTransfer(
-            BankTransferRequest transferRequest, Transfer transfer, AccountEntity sourceAccount) {
+            TransferRequest transferRequest, Transfer transfer, AccountEntity sourceAccount) {
         executorHelper.putTransferInOutbox(transferRequest);
 
         if (executorHelper.hasUnsignedTransfers()) {

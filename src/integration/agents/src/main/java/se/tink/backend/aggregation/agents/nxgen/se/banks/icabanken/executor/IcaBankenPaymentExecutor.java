@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc.PaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc.TransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
@@ -32,10 +32,10 @@ public class IcaBankenPaymentExecutor implements PaymentExecutor {
         RecipientEntity destinationAccount =
                 executorHelper.findDestinationAccount(transfer.getDestination());
 
-        PaymentRequest paymentRequest =
-                PaymentRequest.create(transfer, sourceAccount, destinationAccount);
+        TransferRequest transferRequest =
+                TransferRequest.create(transfer, sourceAccount, destinationAccount);
 
-        executorHelper.putTransferInOutbox(paymentRequest);
+        executorHelper.putTransferInOutbox(transferRequest);
 
         executorHelper.signTransfer(transfer, sourceAccount);
     }
