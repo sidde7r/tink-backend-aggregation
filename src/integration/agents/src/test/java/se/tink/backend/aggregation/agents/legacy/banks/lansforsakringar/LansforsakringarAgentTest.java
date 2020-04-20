@@ -7,15 +7,29 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.ToAccountFromAccountArgumentEnum;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class LansforsakringarAgentTest {
-    private final ArgumentManager<SsnArgumentEnum> manager =
+    private final ArgumentManager<SsnArgumentEnum> ssnManager =
             new ArgumentManager<>(SsnArgumentEnum.values());
+    private final ArgumentManager<ToAccountFromAccountArgumentEnum> accountManager =
+            new ArgumentManager<>(ToAccountFromAccountArgumentEnum.values());
+
+    private AgentIntegrationTest.Builder builder =
+            new AgentIntegrationTest.Builder("se", "lansforsakringar-bankid")
+                    .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
+                    .loadCredentialsBefore(false)
+                    .saveCredentialsAfter(false);
 
     @Before
     public void setUp() throws Exception {
-        manager.before();
+        ssnManager.before();
+        accountManager.before();
     }
 
     @AfterClass
@@ -24,14 +38,29 @@ public class LansforsakringarAgentTest {
     }
 
     @Test
-    public void test() throws Exception {
-        new AgentIntegrationTest.Builder("se", "lansforsakringar-bankid")
-                .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
-                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+    public void testRefresh() throws Exception {
+        builder.addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()
                 .testRefresh();
+    }
+
+    @Test
+    public void testPayment() throws Exception {
+        Transfer transfer = new Transfer();
+        transfer.setSource(
+                AccountIdentifier.create(
+                        AccountIdentifier.Type.SE,
+                        accountManager.get(ToAccountFromAccountArgumentEnum.FROM_ACCOUNT)));
+        transfer.setDestination(
+                AccountIdentifier.create(
+                        AccountIdentifier.Type.SE_BG,
+                        accountManager.get(ToAccountFromAccountArgumentEnum.TO_ACCOUNT)));
+        transfer.setAmount(Amount.inSEK(2d));
+        transfer.setType(TransferType.PAYMENT);
+        transfer.setDueDate(null);
+        transfer.setDestinationMessage("Destination message");
+
+        builder.build().testBankTransfer(transfer);
     }
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,16 +32,16 @@ public class LoanEntity {
     private List<LoanApplicantEntity> applicants;
 
     @JsonProperty("laneStatus")
-    private int status;
+    private long status;
 
     @JsonProperty("laneTyp")
-    private int type;
+    private long type;
 
     @JsonProperty("lanekapital")
-    private double amount;
+    private BigDecimal amount;
 
     @JsonProperty("lanenummer")
-    private int loanNumber;
+    private BigInteger loanNumber;
 
     @JsonProperty("laneobjekt")
     private LoanSecurityEntity security;
@@ -53,11 +55,11 @@ public class LoanEntity {
     @JsonProperty("utbetalningsdag")
     private long initialPaymentDate;
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -85,15 +87,15 @@ public class LoanEntity {
         this.applicants = applicants;
     }
 
-    public int getStatus() {
+    public long getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(long status) {
         this.status = status;
     }
 
-    public int getType() {
+    public long getType() {
         return type;
     }
 
@@ -101,11 +103,11 @@ public class LoanEntity {
         this.type = type;
     }
 
-    public int getLoanNumber() {
+    public BigInteger getLoanNumber() {
         return loanNumber;
     }
 
-    public void setLoanNumber(int loanNumber) {
+    public void setLoanNumber(BigInteger loanNumber) {
         this.loanNumber = loanNumber;
     }
 
@@ -152,24 +154,23 @@ public class LoanEntity {
     private Loan.Type getLoanType() {
         if (isMortgage()) {
             return Loan.Type.MORTGAGE;
-        } else {
-            return Loan.Type.OTHER;
         }
+        return Loan.Type.OTHER;
     }
 
     public Optional<Account> toTinkAccount() {
         Account account = new Account();
 
-        if (Objects.equal(getLoanNumber(), 0)) {
+        if (Objects.equal(getLoanNumber().intValue(), 0)) {
             log.error("No loan number, can't create account");
             return Optional.empty();
         }
 
-        String loanNumber = Integer.toString(getLoanNumber());
+        String loanNumber = getLoanNumber().toString();
         account.setBankId(loanNumber);
         account.setAccountNumber(loanNumber);
         account.setName(loanNumber);
-        account.setBalance(-getAmount());
+        account.setBalance(getAmount().negate().doubleValue());
         account.setType(AccountTypes.LOAN);
 
         return Optional.of(account);
@@ -185,18 +186,18 @@ public class LoanEntity {
                 return Optional.empty();
             }
 
-            if (Objects.equal(getLoanNumber(), 0)) {
+            if (Objects.equal(getLoanNumber().intValue(), 0)) {
                 log.error("No loan number, can't create loan");
                 return Optional.empty();
             }
 
             loan.setType(getLoanType());
             loan.setInterest(loanTerms.getNormalizedInterestRate());
-            loan.setName(Integer.toString(getLoanNumber()));
+            loan.setName(getLoanNumber().toString());
             // If we would change this, also change the logic for when we fetch amortization
             // documentation
-            loan.setLoanNumber(Integer.toString(getLoanNumber()));
-            loan.setBalance(-getAmount());
+            loan.setLoanNumber(getLoanNumber().toString());
+            loan.setBalance(getAmount().negate().doubleValue());
 
             if (!Objects.equal(loanTerms.getAmortizationValue(), 0)) {
                 loan.setMonthlyAmortization(loanTerms.getAmortizationValue());

@@ -6,7 +6,6 @@ java_library(
         "//src/aggregation/api",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/annotations",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
         "//third_party:com_google_guava_guava",
