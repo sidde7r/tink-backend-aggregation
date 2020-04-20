@@ -184,7 +184,7 @@ public class CountryDateHelper {
     }
 
     public Date getProvidedOrTodayDate(Date currentDueDate) {
-        return currentDueDate == null ? new Date() : currentDueDate;
+        return currentDueDate == null ? getNow() : currentDueDate;
     }
 
     public Date getTransferDate(Date currentDueDate, int cutOffHours, int cutOffMinutes) {
