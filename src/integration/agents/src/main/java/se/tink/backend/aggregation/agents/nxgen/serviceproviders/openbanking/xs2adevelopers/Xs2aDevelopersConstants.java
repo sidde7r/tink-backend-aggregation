@@ -28,8 +28,9 @@ public final class Xs2aDevelopersConstants {
                             AccountTypes.SAVINGS,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "SAV",
-                            "Tagesgeldkonto")
-                    .put(AccountTypes.CREDIT_CARD, "Prepaid-Kreditkarte")
+                            "Tagesgeldkonto",
+                            "SVGS",
+                            "ONDP")
                     .build();
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
