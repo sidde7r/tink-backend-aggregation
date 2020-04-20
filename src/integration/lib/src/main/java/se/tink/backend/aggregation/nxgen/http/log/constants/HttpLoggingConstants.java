@@ -35,6 +35,7 @@ public final class HttpLoggingConstants {
                     "last-modified",
                     "pragma",
                     "proxy-connection",
+                    "psu-corporate-id",
                     "psu-id-type",
                     "psu-ip-address",
                     "psu-user-agent",
