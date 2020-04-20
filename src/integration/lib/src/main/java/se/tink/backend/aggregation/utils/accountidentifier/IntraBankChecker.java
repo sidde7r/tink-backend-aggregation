@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils.transfer;
+package se.tink.backend.aggregation.utils.accountidentifier;
 
 import java.util.Optional;
 import se.tink.libraries.account.AccountIdentifier;
@@ -8,16 +8,16 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.account.identifiers.se.ClearingNumber.Details;
 
-public class IntraBankTransferChecker {
+public class IntraBankChecker {
 
     /**
-     * Check if the transfer is made between the accounts in same bank (works for Swedish Market)
+     * Check if the account identifiers belong to the same bank (works for Swedish Market)
      *
      * @param sourceAccount
      * @param destinationAccount
      * @return
      */
-    public static boolean isSwedishMarketIntraBankTransfer(
+    public static boolean isSwedishMarketIntraBank(
             AccountIdentifier sourceAccount, AccountIdentifier destinationAccount) {
         boolean isIntraBank = false;
         if (AccountIdentifier.Type.SE.equals(destinationAccount.getType())) {
@@ -42,30 +42,30 @@ public class IntraBankTransferChecker {
     }
 
     /**
-     * Check if the transfer is made between the accounts in same bank
+     * Check if the account identifiers belong to the same bank
      *
      * @param sourceAccount
      * @param destinationAccount
      * @return
      */
-    public static boolean isIntraBankTransfer(
+    public static boolean isAccountIdentifierIntraBank(
             AccountIdentifier sourceAccount, AccountIdentifier destinationAccount) {
-        if (isSwedishMarketIntraBankTransfer(sourceAccount, destinationAccount)) {
+        if (isSwedishMarketIntraBank(sourceAccount, destinationAccount)) {
             return true;
-        } else if (isIbanIntraBankTransfer(sourceAccount, destinationAccount)) {
+        } else if (isIbanIntraBank(sourceAccount, destinationAccount)) {
             return true;
         }
         return false;
     }
 
     /**
-     * Check if the transfer is made between the accounts in same bank
+     * Check if the account identifiers belong to the same bank
      *
      * @param sourceAccount
      * @param destinationAccount
      * @return
      */
-    public static boolean isIbanIntraBankTransfer(
+    public static boolean isIbanIntraBank(
             AccountIdentifier sourceAccount, AccountIdentifier destinationAccount) {
         if (!Type.IBAN.equals(destinationAccount.getType())
                 && !Type.IBAN.equals(sourceAccount.getType())) {

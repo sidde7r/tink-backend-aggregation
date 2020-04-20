@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils.transfer;
+package se.tink.backend.aggregation.utils.accountidentifier;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -11,76 +11,69 @@ import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
-public class InterBankTransferCheckerTest {
+public class InterBankCheckerTest {
 
     @Test
     public void ensureForSebBank() {
         AccountIdentifier sourceAccount = new SwedishIdentifier("52871111111");
         AccountIdentifier destinationAccount = new SwedishIdentifier("52031111111");
-        assertTrue(
-                IntraBankTransferChecker.isSwedishMarketIntraBankTransfer(
-                        sourceAccount, destinationAccount));
+        assertTrue(IntraBankChecker.isSwedishMarketIntraBank(sourceAccount, destinationAccount));
     }
 
     @Test
     public void ensureForNordeaPersonKontoBank() {
         AccountIdentifier sourceAccount = new SwedishIdentifier("30001111111");
         AccountIdentifier destinationAccount = new SwedishIdentifier("33001111111");
-        assertTrue(
-                IntraBankTransferChecker.isSwedishMarketIntraBankTransfer(
-                        sourceAccount, destinationAccount));
+        assertTrue(IntraBankChecker.isSwedishMarketIntraBank(sourceAccount, destinationAccount));
     }
 
     @Test
     public void ensureForInterBank() {
         AccountIdentifier sourceAccount = new SwedishIdentifier("52871111111");
         AccountIdentifier destinationAccount = new SwedishIdentifier("33001111111");
-        assertFalse(
-                IntraBankTransferChecker.isSwedishMarketIntraBankTransfer(
-                        sourceAccount, destinationAccount));
+        assertFalse(IntraBankChecker.isSwedishMarketIntraBank(sourceAccount, destinationAccount));
     }
 
     @Test
     public void ensureForBg() {
         AccountIdentifier sourceAccount = new SwedishIdentifier("52871111111");
         AccountIdentifier destinationAccount = new BankGiroIdentifier("3611803");
-        assertFalse(
-                IntraBankTransferChecker.isSwedishMarketIntraBankTransfer(
-                        sourceAccount, destinationAccount));
+        assertFalse(IntraBankChecker.isSwedishMarketIntraBank(sourceAccount, destinationAccount));
     }
 
     @Test
-    public void testIntraBankTransferForIbanWithSameBankCode() {
+    public void testIntraBankForIbanWithSameBankCode() {
         Iban sourceIban =
                 new Iban.Builder().countryCode(CountryCode.FR).bankCode("30006").buildRandom();
         Iban destIban =
                 new Iban.Builder().countryCode(CountryCode.FR).bankCode("30006").buildRandom();
         AccountIdentifier sourceAccount = new IbanIdentifier(sourceIban.toString());
         AccountIdentifier destAccount = new IbanIdentifier(destIban.toString());
-        assertTrue(IntraBankTransferChecker.isIbanIntraBankTransfer(sourceAccount, destAccount));
+        assertTrue(IntraBankChecker.isIbanIntraBank(sourceAccount, destAccount));
     }
 
     @Test
-    public void testIntraBankTransferForIbanWithDifferentBankCode() {
+    public void testIntraBankForIbanWithDifferentBankCode() {
         Iban sourceIban =
                 new Iban.Builder().countryCode(CountryCode.FR).bankCode("30006").buildRandom();
         Iban destIban =
                 new Iban.Builder().countryCode(CountryCode.FR).bankCode("30007").buildRandom();
         AccountIdentifier sourceAccount = new IbanIdentifier(sourceIban.toString());
         AccountIdentifier destAccount = new IbanIdentifier(destIban.toString());
-        assertFalse(IntraBankTransferChecker.isIbanIntraBankTransfer(sourceAccount, destAccount));
+        assertFalse(IntraBankChecker.isIbanIntraBank(sourceAccount, destAccount));
     }
 
     @Test
-    public void testIntraBankTransfer() {
+    public void testIntraBank() {
         AccountIdentifier sourceAccount = new SwedishIdentifier("52871111111");
         AccountIdentifier destinationAccount = new SwedishIdentifier("33001111111");
         assertFalse(
-                IntraBankTransferChecker.isIntraBankTransfer(sourceAccount, destinationAccount));
+                IntraBankChecker.isAccountIdentifierIntraBank(sourceAccount, destinationAccount));
         sourceAccount = new SwedishIdentifier("30001111111");
         destinationAccount = new SwedishIdentifier("33001111111");
 
-        assertTrue(IntraBankTransferChecker.isIntraBankTransfer(sourceAccount, destinationAccount));
+        assertTrue(
+                IntraBankChecker.isAccountIdentifierIntraBank(sourceAccount, destinationAccount));
         Iban sourceIban =
                 new Iban.Builder().countryCode(CountryCode.SE).bankCode("500").buildRandom();
         Iban destIban =
@@ -88,15 +81,13 @@ public class InterBankTransferCheckerTest {
         sourceAccount = new IbanIdentifier(sourceIban.toString());
         destinationAccount = new IbanIdentifier(destIban.toString());
         assertTrue(
-                IntraBankTransferChecker.isIbanIntraBankTransfer(
-                        sourceAccount, destinationAccount));
+                IntraBankChecker.isAccountIdentifierIntraBank(sourceAccount, destinationAccount));
 
         sourceIban = new Iban.Builder().countryCode(CountryCode.SE).bankCode("500").buildRandom();
         destIban = new Iban.Builder().countryCode(CountryCode.SE).bankCode("501").buildRandom();
         sourceAccount = new IbanIdentifier(sourceIban.toString());
         destinationAccount = new IbanIdentifier(destIban.toString());
         assertFalse(
-                IntraBankTransferChecker.isIbanIntraBankTransfer(
-                        sourceAccount, destinationAccount));
+                IntraBankChecker.isAccountIdentifierIntraBank(sourceAccount, destinationAccount));
     }
 }
