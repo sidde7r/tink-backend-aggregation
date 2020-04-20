@@ -2,23 +2,23 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Objects;
 import com.google.common.base.Strings;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
+import se.tink.backend.aggregation.utils.transfer.IntraBankTransferChecker;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SebBankTransferRequestEntity extends SebTransferRequestEntity {
-    private SebBankTransferRequestEntity(
-            Transfer transfer, String customerNumber, boolean withinSEB) {
+
+    private SebBankTransferRequestEntity(Transfer transfer, String customerNumber) {
         super(transfer, customerNumber);
-        transferDate = SEBDateUtil.getTransferDate(transfer.getDueDate(), withinSEB);
+        transferDate =
+                SEBDateUtil.getTransferDate(
+                        transfer.getDueDate(),
+                        IntraBankTransferChecker.isSwedishMarketIntraBankTransfer(
+                                transfer.getSource(), transfer.getDestination()));
     }
 
     /**
@@ -33,7 +33,7 @@ public class SebBankTransferRequestEntity extends SebTransferRequestEntity {
             TransferMessageFormatter transferMessageFormatter)
             throws TransferMessageException {
         SebBankTransferRequestEntity request =
-                new SebBankTransferRequestEntity(transfer, customerNumber, true);
+                new SebBankTransferRequestEntity(transfer, customerNumber);
         request.type = "E";
         request.bankPrefix = "SEB";
 
@@ -54,22 +54,8 @@ public class SebBankTransferRequestEntity extends SebTransferRequestEntity {
             String customerNumber,
             TransferMessageFormatter transferMessageFormatter)
             throws TransferMessageException {
-
-        boolean withinSEB = false;
-        if (Objects.equal(transfer.getDestination().getType(), AccountIdentifier.Type.SE)) {
-            Optional<ClearingNumber.Details> clearingNumber =
-                    ClearingNumber.get(
-                            transfer.getDestination()
-                                    .to(SwedishIdentifier.class)
-                                    .getClearingNumber());
-            withinSEB =
-                    clearingNumber.isPresent()
-                            && Objects.equal(
-                                    clearingNumber.get().getBank(), ClearingNumber.Bank.SEB);
-        }
-
         SebBankTransferRequestEntity request =
-                new SebBankTransferRequestEntity(transfer, customerNumber, withinSEB);
+                new SebBankTransferRequestEntity(transfer, customerNumber);
         request.type = "M";
         request.bankPrefix = BankPrefix.fromAccountIdentifier(transfer.getDestination());
 
