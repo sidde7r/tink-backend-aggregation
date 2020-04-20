@@ -1,5 +1,5 @@
 java_library(
-    name = "operation",
+    name = "command",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:provider_configurations",
@@ -13,6 +13,8 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive/executor",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/base",
+        "//src/integration/payment:enums",
+        "//src/integration/payment:rpc",
         "//src/libraries/metrics:registry",
         "//src/libraries/strings",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

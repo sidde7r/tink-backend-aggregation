@@ -4,6 +4,7 @@ java_library(
     data = [],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/enums",
         "//src/integration/lib",
@@ -17,7 +18,7 @@ java_library(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/base",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/operation",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/command",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/libraries/metrics:registry",
         "//src/libraries/strings",

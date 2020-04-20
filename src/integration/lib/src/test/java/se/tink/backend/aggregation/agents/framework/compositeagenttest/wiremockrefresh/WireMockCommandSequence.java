@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommandSequence;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.operation.LoginCommand;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.operation.RefreshCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.command.RefreshCommand;
 
 public final class WireMockCommandSequence implements CompositeAgentTestCommandSequence {
 

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework.compositeagenttest.operation;
+package se.tink.backend.aggregation.agents.framework.compositeagenttest.command;
 
 import com.google.inject.Inject;
 import org.junit.Assert;
