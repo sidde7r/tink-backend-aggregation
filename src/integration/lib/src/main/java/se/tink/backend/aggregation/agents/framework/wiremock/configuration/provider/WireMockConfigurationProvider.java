@@ -2,22 +2,25 @@ package se.tink.backend.aggregation.agents.framework.wiremock.configuration.prov
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import java.net.InetSocketAddress;
+import com.google.inject.ProvisionException;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 
 public final class WireMockConfigurationProvider implements Provider<WireMockConfiguration> {
 
-    private final InetSocketAddress fakeBankSocket;
+    private final FakeBankSocket fakeBankSocket;
 
     @Inject
-    private WireMockConfigurationProvider(@FakeBankSocket final InetSocketAddress fakeBankSocket) {
+    private WireMockConfigurationProvider(final FakeBankSocket fakeBankSocket) {
         this.fakeBankSocket = fakeBankSocket;
     }
 
     @Override
     public WireMockConfiguration get() {
-        return WireMockConfiguration.builder(
-                        fakeBankSocket.getHostString() + ":" + fakeBankSocket.getPort())
-                .build();
+        try {
+            return WireMockConfiguration.builder().build();
+        } catch (IllegalStateException e) {
+            throw new ProvisionException(e.getMessage());
+        }
     }
 }

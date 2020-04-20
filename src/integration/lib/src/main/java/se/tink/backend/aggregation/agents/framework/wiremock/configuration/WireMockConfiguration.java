@@ -7,24 +7,15 @@ import java.util.Map;
 
 public final class WireMockConfiguration {
 
-    private final String serverUrl;
     private final String agentConfigurationPath;
     private final Map<String, String> callbackData;
     private final Module agentModule;
 
     private WireMockConfiguration(
-            String serverUrl,
-            String agentConfigurationPath,
-            Map<String, String> callbackData,
-            Module agentModule) {
-        this.serverUrl = serverUrl;
+            String agentConfigurationPath, Map<String, String> callbackData, Module agentModule) {
         this.agentConfigurationPath = agentConfigurationPath;
         this.callbackData = callbackData;
         this.agentModule = agentModule;
-    }
-
-    public String getServerUrl() {
-        return serverUrl;
     }
 
     public String getAgentConfigurationPath() {
@@ -39,20 +30,17 @@ public final class WireMockConfiguration {
         return agentModule;
     }
 
-    public static Builder builder(String serverUrl) {
-        return new Builder(serverUrl);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
 
-        private final String serverUrl;
         private String configurationPath;
         private Map<String, String> callbackData;
         private Module agentModule;
 
-        private Builder(String serverUrl) {
-            this.serverUrl = serverUrl;
-        }
+        private Builder() {}
 
         public Builder setConfigurationPath(String configurationPath) {
             this.configurationPath = configurationPath;
@@ -79,8 +67,7 @@ public final class WireMockConfiguration {
                 agentModule = new AbstractModule() {}; // Empty Module
             }
 
-            return new WireMockConfiguration(
-                    serverUrl, configurationPath, callbackData, agentModule);
+            return new WireMockConfiguration(configurationPath, callbackData, agentModule);
         }
     }
 }

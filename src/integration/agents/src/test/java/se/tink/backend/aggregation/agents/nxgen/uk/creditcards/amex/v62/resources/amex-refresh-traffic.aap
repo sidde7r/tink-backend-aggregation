@@ -1,5 +1,5 @@
 # WireMock rules to be used to test AmexV62Uk RE agent
-# Use testUser as user name and testPassword as password
+# Use testuser as user name and testPassword as password
 
 REQUEST 3
 POST https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/loginsummary
@@ -22,7 +22,7 @@ X-AXP-AppVersion: 6.25.0
 X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
 
-{"cardArtRequest":[{"minimumWidth":"1260","tag":"big-image"}],"loginCredentials":{"userIdLogin":{"rememberMeFlag":true,"userId":"testUser","password":"testPassword"}}}
+{"cardArtRequest":[{"minimumWidth":"1260","tag":"big-image"}],"loginCredentials":{"userIdLogin":{"rememberMeFlag":true,"userId":"testuser","password":"testPassword"}}}
 
 RESPONSE 3
 200

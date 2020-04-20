@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.framework.legacy;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
@@ -22,13 +24,11 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
-import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
-import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
+import se.tink.backend.aggregation.agents.framework.modules.production.ProductionModule;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -66,9 +66,8 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         }
 
         // Provide AgentFactory with 'production' components.
-        factory =
-                new AgentFactoryImpl(
-                        new AgentPackageModuleFactory(new PackageModuleLoader()), configuration);
+        final Injector injector = Guice.createInjector(new ProductionModule(configuration));
+        factory = injector.getInstance(AgentFactory.class);
     }
 
     protected Provider constructProvider() {

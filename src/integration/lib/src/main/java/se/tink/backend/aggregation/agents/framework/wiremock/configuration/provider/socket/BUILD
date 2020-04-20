@@ -1,0 +1,12 @@
+java_library(
+    name = "socket",
+    srcs = glob(["*.java"]),
+    data = [
+    ],
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+    ],
+    deps = [
+        "//third_party:com_google_guava_guava",
+    ],
+)

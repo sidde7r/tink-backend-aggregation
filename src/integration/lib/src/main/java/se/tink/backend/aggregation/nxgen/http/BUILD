@@ -4,6 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/jersey/interceptor",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",

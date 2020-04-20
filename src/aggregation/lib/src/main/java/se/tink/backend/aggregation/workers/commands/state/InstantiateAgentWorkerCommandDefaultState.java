@@ -18,7 +18,7 @@ public class InstantiateAgentWorkerCommandDefaultState
     }
 
     @Override
-    public void doRightAfterInstantiation() {
+    public void doRightBeforeInstantiation() {
         // noop
     }
 

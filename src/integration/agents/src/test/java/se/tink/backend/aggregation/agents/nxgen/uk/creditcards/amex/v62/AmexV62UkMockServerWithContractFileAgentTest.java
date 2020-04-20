@@ -10,7 +10,7 @@ import se.tink.libraries.enums.MarketCode;
 
 public class AmexV62UkMockServerWithContractFileAgentTest {
 
-    private final String USERNAME = "testUser";
+    private final String USERNAME = "testuser";
     private final String PASSWORD = "testPassword";
 
     @Test

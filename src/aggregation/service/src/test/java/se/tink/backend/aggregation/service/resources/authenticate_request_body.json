@@ -10,7 +10,7 @@
         "id": "aaaa",
         "nextUpdate": null,
         "fields": {
-            "username": "testUser",
+            "username": "testuser",
             "password": "testPassword"
         },
         "payload": "",

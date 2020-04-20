@@ -6,8 +6,8 @@ public interface InstantiateAgentWorkerCommandState {
 
     AgentFactory getAgentFactory();
 
-    /** Invoked right after the agent is instantiated. */
-    void doRightAfterInstantiation();
+    /** Invoked right before the agent is instantiated. */
+    void doRightBeforeInstantiation();
 
     /** Invoked when the resources allocated during instantiation need to be cleared. */
     void doAtInstantiationPostProcess();

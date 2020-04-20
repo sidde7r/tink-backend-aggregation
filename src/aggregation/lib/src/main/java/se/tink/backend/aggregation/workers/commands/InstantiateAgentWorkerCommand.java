@@ -18,9 +18,9 @@ public class InstantiateAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
-        context.setAgent(state.getAgentFactory().create(context.getRequest(), context));
+        state.doRightBeforeInstantiation();
 
-        state.doRightAfterInstantiation();
+        context.setAgent(state.getAgentFactory().create(context.getRequest(), context));
 
         return AgentWorkerCommandResult.CONTINUE;
     }

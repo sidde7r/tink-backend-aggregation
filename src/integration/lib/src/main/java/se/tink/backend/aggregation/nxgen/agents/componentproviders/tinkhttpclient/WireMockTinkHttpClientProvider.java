@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclie
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
 import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
@@ -18,7 +19,7 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
             final CredentialsRequest credentialsRequest,
             final CompositeAgentContext context,
             final SignatureKeyPair signatureKeyPair,
-            final String wireMockServerHost) {
+            final FakeBankSocket fakeBankSocket) {
 
         final TinkHttpClient httpClient =
                 NextGenTinkHttpClient.builder(
@@ -34,7 +35,7 @@ public final class WireMockTinkHttpClientProvider implements TinkHttpClientProvi
         httpClient.disableSslVerification();
 
         this.tinkHttpClient =
-                new IntegrationWireMockTestTinkHttpClient(httpClient, wireMockServerHost);
+                new IntegrationWireMockTestTinkHttpClient(httpClient, fakeBankSocket.get());
     }
 
     @Override

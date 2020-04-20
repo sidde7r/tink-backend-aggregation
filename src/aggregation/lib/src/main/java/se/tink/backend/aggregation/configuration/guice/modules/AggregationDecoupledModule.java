@@ -15,7 +15,6 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.dropwizard.setup.Environment;
 import io.grpc.ManagedChannelBuilder;
-import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Map;
 import org.apache.curator.framework.CuratorFramework;
@@ -27,8 +26,9 @@ import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.FakeBankAapFile;
-import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.WireMockConfigurationProvider;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.FakeAggregationControllerAggregationClient;
@@ -276,12 +276,10 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(EventProducerServiceClient.class).toProvider(EventProducerServiceClientProvider.class);
 
         // AgentFactoryWireMockModule
-        bind(WireMockConfiguration.class)
-                .toProvider(WireMockConfigurationProvider.class)
-                .in(Scopes.SINGLETON);
-        bind(InetSocketAddress.class)
-                .annotatedWith(FakeBankSocket.class)
-                .toInstance(new InetSocketAddress("localhost", 10000));
+        bind(WireMockConfiguration.class).toProvider(WireMockConfigurationProvider.class);
+        final MutableFakeBankSocket socketEntity = MutableFakeBankSocket.create();
+        bind(MutableFakeBankSocket.class).toInstance(socketEntity);
+        bind(FakeBankSocket.class).toInstance(socketEntity);
         bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
         bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
 
