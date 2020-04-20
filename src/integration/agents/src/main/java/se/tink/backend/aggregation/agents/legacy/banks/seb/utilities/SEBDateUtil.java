@@ -18,7 +18,7 @@ public class SEBDateUtil {
         Date nextPossibleDate =
                 withinSEB
                         ? dateHelper.getProvidedOrTodayDate(date)
-                        : dateHelper.getTransferDate(date, 13, 15);
+                        : dateHelper.getTransferDate(date, 13, 35);
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(nextPossibleDate);
     }
 
