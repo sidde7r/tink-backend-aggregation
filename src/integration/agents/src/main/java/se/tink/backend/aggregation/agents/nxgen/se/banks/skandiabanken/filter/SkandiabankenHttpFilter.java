@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.filter;
 
 import static io.vavr.API.$;
 import static io.vavr.API.Case;
@@ -51,6 +51,9 @@ public class SkandiabankenHttpFilter extends Filter {
                 .of(
                         Case(
                                 $(HttpStatus.SC_INTERNAL_SERVER_ERROR),
+                                run(() -> checkBankServiceError(response))),
+                        Case(
+                                $(HttpStatus.SC_BAD_GATEWAY),
                                 run(() -> checkBankServiceError(response))),
                         Case($(), run(() -> {})));
     }
