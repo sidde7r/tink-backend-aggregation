@@ -58,6 +58,9 @@ public final class NordeaSeConstants {
         public static final String CANCEL_ERROR = "nsp.returncode.cava.user_cancel_error";
         public static final String CANCELLED_ERROR = "nsp.returncode.cava.cancelled_error";
         public static final String TIME_OUT_ERROR = "nsp.returncode.cava.expired_transaction_error";
+        public static final String TIME_OUT_ERROR_NON_CUSTOMER = "The request has timed out";
+        public static final String NON_CUSTOMER_OR_CUSTOMER_TIME_OUT_ERROR =
+                "nsp.returncode.cava.already_collected_error";
         public static final String BANK_ID_IN_PROGRESS =
                 "nsp.returncode.cava.already_in_progress_error";
         public static final String UNEXPECTED_ERROR =
@@ -67,6 +70,10 @@ public final class NordeaSeConstants {
         public static final String PSU_ID = "psuId";
         public static final String PATTERN = "Pattern";
         public static final String INVALID_REFRESH_TOKEN = "Invalid refresh token";
+    }
+
+    public class TimeLimit {
+        public static final int NON_CUSTOMER_BANKID = 180000;
     }
 
     public static final class Tags {
