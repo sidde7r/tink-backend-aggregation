@@ -71,7 +71,9 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
                         .queryParam(QueryParams.REDIRECT_URI, redirectUri.toString());
 
-        return getBearerToken(url);
+        OAuth2Token token = getBearerToken(url);
+        persistentStorage.put(Storage.OAUTH_TOKEN, token);
+        return token;
     }
 
     private OAuth2Token getBearerToken(final URL url) {
@@ -118,15 +120,15 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.REFRESH_TOKEN)
                         .queryParam(QueryParams.REFRESH_TOKEN, refreshToken);
 
-        return getBearerToken(url);
+        OAuth2Token token = getBearerToken(url);
+        persistentStorage.put(Storage.OAUTH_TOKEN, token);
+        // TODO temporary log to trace newly received refresh token
+        logger.info("Volksbank - get new refresh token: {}", token.getRefreshToken().hashCode());
+        return token;
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         persistentStorage.put(Storage.OAUTH_TOKEN, accessToken);
-
-        // TODO temporary log to trace newly received refresh token
-        logger.info(
-                "Volksbank - get new refresh token: {}", accessToken.getRefreshToken().hashCode());
     }
 }
