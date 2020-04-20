@@ -422,7 +422,9 @@ jvm_maven_import_external(
     name = "com_google_guava_guava",  # Do not use, but do not remove
     artifact = "com.google.guava:guava:25.1-jre",
     artifact_sha256 = "6db0c3a244c397429c2e362ea2837c3622d5b68bb95105d37c21c36e5bc70abf",
+    fetch_sources = True,
     server_urls = MAVEN_REPOS,
+    srcjar_sha256 = "b7ffb578b2bd6445c958356e308d1c46c9ea6fb868fc9444bc8bda3a41875a1b",
 )
 
 jvm_maven_import_external(
@@ -1110,7 +1112,7 @@ maven_install(
     artifacts = [
         "org.projectlombok:lombok:1.18.10",
     ],
-    fetch_sources = False,
+    fetch_sources = True,
     repositories = MAVEN_REPOS,
 )
 
@@ -1136,7 +1138,7 @@ maven_install(
         "ch.qos.logback:logback-core:1.2.3",
         "ch.qos.logback:logback-classic:1.2.3",
     ],
-    fetch_sources = False,
+    fetch_sources = True,
     repositories = MAVEN_REPOS,
 )
 
@@ -1147,7 +1149,7 @@ maven_install(
         "org.mockito:mockito-core:2.10.0",
         "junit:junit:4.12",
     ],
-    fetch_sources = False,
+    fetch_sources = True,
     repositories = MAVEN_REPOS,
 )
 
