@@ -135,4 +135,8 @@ public class IbanIdentifier extends AccountIdentifier {
     public boolean isValidBic() {
         return isValidBic;
     }
+
+    public String getBankCode() {
+        return IbanUtil.getBankCode(iban);
+    }
 }

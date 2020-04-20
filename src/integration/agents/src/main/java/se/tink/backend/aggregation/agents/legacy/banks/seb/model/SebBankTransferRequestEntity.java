@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
-import se.tink.backend.aggregation.utils.transfer.IntraBankTransferChecker;
+import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -17,7 +17,7 @@ public class SebBankTransferRequestEntity extends SebTransferRequestEntity {
         transferDate =
                 SEBDateUtil.getTransferDate(
                         transfer.getDueDate(),
-                        IntraBankTransferChecker.isSwedishMarketIntraBankTransfer(
+                        IntraBankChecker.isSwedishMarketIntraBank(
                                 transfer.getSource(), transfer.getDestination()));
     }
 

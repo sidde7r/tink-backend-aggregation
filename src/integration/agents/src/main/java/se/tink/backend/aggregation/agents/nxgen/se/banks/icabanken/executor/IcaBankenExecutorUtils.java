@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBankenFormatUtils;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
-import se.tink.backend.aggregation.utils.transfer.IntraBankTransferChecker;
+import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -118,7 +118,7 @@ public class IcaBankenExecutorUtils {
             return ThreadSafeDateFormat.FORMATTER_DAILY.format(
                     dateHelper.getTransferDate(transfer.getDueDate(), 9, 30));
         } else {
-            if (IntraBankTransferChecker.isSwedishMarketIntraBankTransfer(
+            if (IntraBankChecker.isSwedishMarketIntraBank(
                     transfer.getSource(), transfer.getDestination())) {
                 return ThreadSafeDateFormat.FORMATTER_DAILY.format(
                         dateHelper.getProvidedOrTodayDate(transfer.getDueDate()));
