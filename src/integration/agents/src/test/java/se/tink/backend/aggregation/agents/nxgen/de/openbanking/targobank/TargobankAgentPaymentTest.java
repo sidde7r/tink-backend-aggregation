@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.LoadBeforeSaveAfterArgumentEnum;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -20,13 +21,13 @@ import se.tink.libraries.payment.rpc.Payment;
 public class TargobankAgentPaymentTest {
     private final ArgumentManager<LoadBeforeSaveAfterArgumentEnum> manager =
             new ArgumentManager<>(LoadBeforeSaveAfterArgumentEnum.values());
-    private TargobankAgentIntegrationTest.Builder builder;
+    private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
         manager.before();
         builder =
-                new TargobankAgentIntegrationTest.Builder("de", "de-targobank-password")
+                new AgentIntegrationTest.Builder("de", "de-targobank-password")
                         .loadCredentialsBefore(
                                 Boolean.parseBoolean(
                                         manager.get(LoadBeforeSaveAfterArgumentEnum.LOAD_BEFORE)))
