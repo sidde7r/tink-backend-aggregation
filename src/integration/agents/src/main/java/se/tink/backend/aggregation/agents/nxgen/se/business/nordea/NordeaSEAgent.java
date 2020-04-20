@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.business.nordea;
 
 import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.authenticator.NordeaSEBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.fetcher.transactionalaccount.NordeaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.fetcher.transactionalaccount.NordeaTransactionalAccountFetcher;
@@ -18,9 +21,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.libraries.identitydata.IdentityData;
 
 public class NordeaSEAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshIdentityDataExecutor {
     private final NordeaSEApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -75,5 +81,14 @@ public class NordeaSEAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(transactionFetcher)));
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(
+                IdentityData.builder()
+                        .setFullName(sessionStorage.get(StorageKeys.HOLDER_NAME))
+                        .setDateOfBirth(null)
+                        .build());
     }
 }

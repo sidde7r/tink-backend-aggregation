@@ -54,6 +54,7 @@ public class NordeaSEConstants {
 
     public static class StorageKeys {
         public static final String SECURITY_TOKEN = "security_token";
+        public static final String HOLDER_NAME = "holder_name";
     }
 
     public static class BankIdStatus {

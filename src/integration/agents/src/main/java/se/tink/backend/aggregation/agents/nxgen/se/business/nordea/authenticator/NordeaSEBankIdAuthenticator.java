@@ -67,6 +67,10 @@ public class NordeaSEBankIdAuthenticator implements BankIdAuthenticator<String> 
     private void fetchToken(ResultBankIdResponse resultBankIdResponse) {
         String securityToken = resultBankIdResponse.getToken();
         sessionStorage.put(StorageKeys.SECURITY_TOKEN, securityToken);
+
+        final String holderName = resultBankIdResponse.getHolderName();
+        sessionStorage.put(StorageKeys.HOLDER_NAME, holderName);
+
         final String id = resultBankIdResponse.getId();
         final FetchTokenRequest tokenRequest = new FetchTokenRequest(id);
         final FetchTokenResponse tokenResponse = apiClient.fetchToken(tokenRequest);

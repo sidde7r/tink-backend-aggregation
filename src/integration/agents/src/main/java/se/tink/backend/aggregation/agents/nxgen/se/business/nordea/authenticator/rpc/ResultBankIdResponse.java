@@ -21,4 +21,8 @@ public class ResultBankIdResponse extends NordeaSEResponse {
     public String getId() {
         return resultBankIdEntity.getId();
     }
+
+    public String getHolderName() {
+        return resultBankIdEntity.getHolderName();
+    }
 }

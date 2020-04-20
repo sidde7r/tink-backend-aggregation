@@ -19,4 +19,8 @@ public class ResultBankIdEntity {
     public String getId() {
         return agreements.getId();
     }
+
+    public String getHolderName() {
+        return agreements.getHolderName();
+    }
 }

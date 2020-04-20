@@ -15,4 +15,12 @@ public class AgreementsEntity {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
+
+    public String getHolderName() {
+        return agreement.stream()
+                .filter(a -> !Strings.isNullOrEmpty(a.getAgreementHolderName()))
+                .map(AgreementEntity::getAgreementHolderName)
+                .findFirst()
+                .orElse("");
+    }
 }
