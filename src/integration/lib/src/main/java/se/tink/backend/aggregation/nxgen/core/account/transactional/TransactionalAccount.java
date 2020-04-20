@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.WithTypeStep;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class TransactionalAccount extends Account {
     public static final ImmutableList<AccountTypes> ALLOWED_ACCOUNT_TYPES =
@@ -49,8 +50,14 @@ public class TransactionalAccount extends Account {
      */
     @Deprecated
     public static Builder<?, ?> builder(
-            AccountTypes type, String uniqueIdentifier, Amount balance) {
+        AccountTypes type, String uniqueIdentifier, Amount balance) {
         return builder(type, uniqueIdentifier).setBalance(balance);
+    }
+
+
+    public static Builder<?, ?> builder(
+        AccountTypes type, String uniqueIdentifier, ExactCurrencyAmount balance) {
+        return builder(type, uniqueIdentifier).setExactBalance(balance);
     }
 
     /**

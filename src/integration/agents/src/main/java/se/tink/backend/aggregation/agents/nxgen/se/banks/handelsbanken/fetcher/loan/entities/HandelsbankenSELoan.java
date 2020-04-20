@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -33,7 +32,8 @@ public class HandelsbankenSELoan {
     public LoanAccount toAccount() {
         BankIdValidator.validate(agreementNumber);
 
-        return LoanAccount.builder(agreementNumber, Amount.inSEK(calculateCurrentDebt()))
+        return LoanAccount.builder(
+                        agreementNumber, ExactCurrencyAmount.of(calculateCurrentDebt(), "SEK"))
                 .setBankIdentifier(agreementNumber)
                 .setAccountNumber(agreementNumber)
                 .setName(lender)

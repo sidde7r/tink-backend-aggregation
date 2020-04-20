@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class OwnCsdAccountEntity {
@@ -118,7 +118,7 @@ public class OwnCsdAccountEntity {
         return InvestmentAccount.builder(csdAccountNumber)
                 .setAccountNumber(csdAccountNumber)
                 .setName(name)
-                .setCashBalance(Amount.inNOK(portfolio.getCashValue()))
+                .setCashBalance(ExactCurrencyAmount.of(portfolio.getCashValue(), "NOK"))
                 .setPortfolios(Collections.singletonList(portfolio))
                 .build();
     }

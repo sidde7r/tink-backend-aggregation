@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -24,23 +23,23 @@ public class PendingTransaction extends BaseResponse {
 
     public UpcomingTransaction toTinkTransaction(Transfer transfer) {
         return UpcomingTransaction.builder()
-                .setAmount(Amount.inSEK(-1 * amount.asDouble()))
+                .setAmount(ExactCurrencyAmount.of(amount.asDouble(), "SEK"))
                 .setDate(dueDate)
                 .setDescription(recipient.getName())
                 .setUpcomingTransfer(transfer)
                 .build();
     }
 
-    public boolean isNotSuspended() {
+    boolean isNotSuspended() {
         return doesNotHaveLinkWith("status=suspended");
     }
 
-    public boolean isNotAbandoned() {
+    boolean isNotAbandoned() {
         return doesNotHaveLinkWith("status=abandoned");
     }
 
     private boolean doesNotHaveLinkWith(String parameter) {
-        return !getLinks().values().stream().anyMatch(link -> link.hasParameter(parameter));
+        return getLinks().values().stream().noneMatch(link -> link.hasParameter(parameter));
     }
 
     public Optional<URL> toPaymentDetails() {

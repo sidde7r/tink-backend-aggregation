@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
     private HandelsbankenAmount amountAvailable;
@@ -23,8 +23,9 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
 
         return CreditCardAccount.builder(
                         numberMasked,
-                        Amount.inSEK(cardTransactions.findUsedCredit(balance)),
-                        Amount.inSEK(cardTransactions.findSpendable(amountAvailable)))
+                        ExactCurrencyAmount.of(cardTransactions.findUsedCredit(balance), "SEK"),
+                        ExactCurrencyAmount.of(
+                                cardTransactions.findSpendable(amountAvailable), "SEK"))
                 .setAccountNumber(numberMasked)
                 .setName(name)
                 .setBankIdentifier(numberMasked)
