@@ -246,19 +246,20 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             lock.setBarrier();
             log.info(
                     String.format(
-                            "Supplemental information request of key %s is been waited for %s %s",
+                            "Supplemental information request of key %s is waiting for %s %s",
                             key, waitFor, unit));
             if (lock.waitOnBarrier(waitFor, unit)) {
                 String supplementalInformation =
                         supplementalInformationController.getSupplementalInformation(key);
 
-                if (Objects.equals(supplementalInformation, "null")) {
+                if (Objects.isNull(supplementalInformation)
+                        || Objects.equals(supplementalInformation, "null")) {
                     log.info(
                             "Supplemental information request was cancelled by client (returned null)");
                     return Optional.empty();
                 }
-
-                return Optional.ofNullable(supplementalInformation);
+                log.info("Supplemental information response (non-null) has been received");
+                return Optional.of(supplementalInformation);
             } else {
                 log.info("Supplemental information request timed out");
                 // Did not get lock, release anyways and return.
@@ -272,7 +273,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             Credentials credentials = request.getCredentials();
             credentials.setSupplementalInformation(null);
         }
-
+        log.info("Supplemental information (empty) will be returned");
         return Optional.empty();
     }
 
