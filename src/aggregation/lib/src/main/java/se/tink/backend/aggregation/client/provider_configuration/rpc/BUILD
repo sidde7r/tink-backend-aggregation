@@ -9,5 +9,6 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:joda_time_joda_time",
+        "@tink_backend//src/libraries/provider",
     ],
 )

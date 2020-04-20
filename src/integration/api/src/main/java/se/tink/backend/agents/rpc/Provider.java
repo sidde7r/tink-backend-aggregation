@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.client.provider_configuration.rpc.ProviderConfiguration;
+import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonInclude(Include.NON_NULL)
