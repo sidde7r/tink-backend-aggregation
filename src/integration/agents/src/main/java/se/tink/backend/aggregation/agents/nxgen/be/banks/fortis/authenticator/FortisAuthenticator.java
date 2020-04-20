@@ -93,7 +93,8 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
             String smid,
             String agreementId,
             String deviceFingerprint)
-            throws SupplementalInfoException, LoginException, AuthorizationException {
+            throws SupplementalInfoException, LoginException, AuthorizationException,
+                    SessionException {
         GenerateChallangeRequest challangeRequest =
                 new GenerateChallangeRequest(apiClient.getDistributorId(), authenticationProcessID);
         String challenge = apiClient.fetchChallenges(challangeRequest);
@@ -445,19 +446,36 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                     .askSupplementalInformation(
                             supplementalInformationFormer.getField(Field.Key.PASSWORD))
                     .get(Field.Key.PASSWORD.getFieldKey());
-        } catch (IllegalStateException ex) {
+        } catch (SupplementalInfoException ex) {
             // there was timeout on waiting for supplement information
             // should be handled as session expired
+            LOGGER.info("Timeout on waiting for the Password supplemental information");
             throw SessionError.SESSION_EXPIRED.exception(ex);
         }
     }
 
-    private String waitForLoginCode(String challenge) throws SupplementalInfoException {
-        return supplementalInformationHelper.waitForLoginChallengeResponse(challenge);
+    private String waitForLoginCode(String challenge)
+            throws SupplementalInfoException, SessionException {
+        try {
+            return supplementalInformationHelper.waitForLoginChallengeResponse(challenge);
+        } catch (SupplementalInfoException ex) {
+            // there was timeout on waiting for supplement information
+            // should be handled as session expired
+            LOGGER.info("Timeout on waiting for the Login Code supplemental information");
+            throw SessionError.SESSION_EXPIRED.exception(ex);
+        }
     }
 
-    private String waitForSignCode(String challenge) throws SupplementalInfoException {
-        return supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
+    private String waitForSignCode(String challenge)
+            throws SupplementalInfoException, SessionException {
+        try {
+            return supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
+        } catch (SupplementalInfoException ex) {
+            // there was timeout on waiting for supplement information
+            // should be handled as session expired
+            LOGGER.info("Timeout on waiting for the Sign Code supplemental information");
+            throw SessionError.SESSION_EXPIRED.exception(ex);
+        }
     }
 
     private String maskingCardNumber(String cardNumber) {
