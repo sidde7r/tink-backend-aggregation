@@ -8,4 +8,9 @@ public class SebConfiguration extends SebBaseConfiguration {
     public String getBaseUrl() {
         return Urls.BASE;
     }
+
+    @Override
+    public String getListAccountsUrl() {
+        return Urls.LIST_ACCOUNTS;
+    }
 }

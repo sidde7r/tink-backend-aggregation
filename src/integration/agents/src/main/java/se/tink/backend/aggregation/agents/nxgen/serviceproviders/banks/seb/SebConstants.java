@@ -20,7 +20,6 @@ public class SebConstants {
         public static final String AUTHENTICATE = "/auth/bid/v2/authentications";
         public static final String INITIATE_SESSION = "/PC_BankInit11Session01.asmx/Execute";
         public static final String ACTIVATE_SESSION = "/PC_BankAktivera01Session01.asmx/Execute";
-        public static final String LIST_ACCOUNTS = "/PC_BankLista01Konton_privat01.asmx/Execute";
         public static final String LIST_CARDS = "/PC_BankLista11Kort_privat05.asmx/Execute";
         public static final String LIST_LOANS = "/PC_BankLista11Laninfo_privat03.asmx/Execute";
         public static final String LIST_TRANSACTIONS = "/PC_BankLista01Rorelse_ftg03.asmx/Execute";

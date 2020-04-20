@@ -128,7 +128,7 @@ public class SebApiClient {
                         .addServiceInput(ServiceInputKeys.CUSTOMER_ID, customerId)
                         .addServiceInput(ServiceInputKeys.ACCOUNT_TYPE, accountType)
                         .build();
-        return post(Urls.LIST_ACCOUNTS, request);
+        return post(sebConfiguration.getListAccountsUrl(), request);
     }
 
     public Response fetchTransactions(TransactionQuery query) {
