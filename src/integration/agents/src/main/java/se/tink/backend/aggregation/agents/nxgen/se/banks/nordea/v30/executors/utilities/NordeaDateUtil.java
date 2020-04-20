@@ -14,7 +14,7 @@ public class NordeaDateUtil {
             new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
 
     public static Date getTransferDateForIntraBankTransfer(Date date) {
-        return dateHelper.getTransferDate(date, 23, 59);
+        return dateHelper.getProvidedOrTodayDate(date);
     }
 
     public static Date getTransferDateForInterBankTransfer(Date date) {
