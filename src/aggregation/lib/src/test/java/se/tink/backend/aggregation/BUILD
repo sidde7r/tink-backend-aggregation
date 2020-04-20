@@ -94,5 +94,6 @@ junit_test(
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@tink_backend//src/libraries/event_producer_service_client",
         "@tink_backend//src/libraries/event_producer_service_client/proto:java_proto",
+        "@tink_backend//src/libraries/provider",
     ],
 )

@@ -69,6 +69,7 @@ java_library(
         "//third_party:org_modelmapper_modelmapper",
         "//third_party:org_slf4j_slf4j_api",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
+        "@tink_backend//src/libraries/provider",
         "@tink_backend//src/libraries/strings",
         "@tink_backend//src/libraries/uuid",
     ],
