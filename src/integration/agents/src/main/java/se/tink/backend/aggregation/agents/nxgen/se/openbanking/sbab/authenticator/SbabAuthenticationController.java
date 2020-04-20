@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SbabAuthenticationController implements Authenticator {
@@ -42,7 +41,7 @@ public class SbabAuthenticationController implements Authenticator {
         if (request.isManual()) {
             bankIdAuthenticationController.authenticate(credentials);
         } else {
-            throw new NotImplementedException("Auto authentication not implemented");
+            bankIdAuthenticationController.autoAuthenticate();
         }
     }
 }

@@ -68,7 +68,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             DecoupledResponse decoupledResponse =
                     apiClient.getDecoupled(reference.getAuthorizationCode());
             token = decoupledResponse.getAccessToken();
-            sessionStorage.put(StorageKeys.OAUTH_TOKEN, token);
+            storeTokenForSession(token);
         } catch (HttpResponseException e) {
             if (e.getMessage().contains(BankIdStatusCodes.AUTHORIZATION_NOT_COMPLETED)) {
                 return BankIdStatus.WAITING;
@@ -103,6 +103,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             Optional<OAuth2Token> refreshedToken =
                     Optional.ofNullable(
                             apiClient.refreshAccessToken(refreshToken).getAccessToken());
+            refreshedToken.ifPresent(token -> storeTokenForSession(token));
             return refreshedToken;
         } catch (HttpResponseException hre) {
             if (hre.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
@@ -114,5 +115,9 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             }
             throw hre;
         }
+    }
+
+    private void storeTokenForSession(OAuth2Token token) {
+        sessionStorage.put(StorageKeys.OAUTH_TOKEN, token);
     }
 }
