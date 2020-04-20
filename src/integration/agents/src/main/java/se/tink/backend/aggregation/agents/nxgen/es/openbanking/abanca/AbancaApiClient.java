@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
@@ -169,10 +168,9 @@ public final class AbancaApiClient {
 
     public OAuth2Token getToken(TokenRequest tokenRequest) {
         return client.request(Urls.TOKEN)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(HeaderKeys.AUTH_KEY, configuration.getApiKey())
-                .body(tokenRequest, MediaType.APPLICATION_JSON_TYPE)
-                .post(TokenResponse.class)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .post(TokenResponse.class, tokenRequest)
                 .toTinkToken();
     }
 
