@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks;
 
 import com.google.common.collect.Maps;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -13,18 +12,11 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.Session;
-import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
 import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.libraries.account.identifiers.BankGiroIdentifier;
-import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.account.TestAccount;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.social.security.ssn.TestSSN;
-import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -79,99 +71,6 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
         agent.keepAlive();
         agent.logout();
         agent.close();
-    }
-
-    @Test
-    public void testTransferThatShouldIncludeClearingInApiCall() throws Exception {
-        Transfer t = new Transfer();
-        t.setType(TransferType.BANK_TRANSFER);
-        t.setAmount(Amount.inSEK(1.0));
-        t.setSource(new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH));
-        t.setDestination(new SwedishIdentifier(TestAccount.DANSKEBANK_FH));
-        t.setDestinationMessage("Tink Test");
-        t.setSourceMessage("Tink Test");
-
-        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
-    }
-
-    @Test
-    public void testTransferThatShouldOmitClearingInApiCall() throws Exception {
-        Transfer t = new Transfer();
-        t.setAmount(Amount.inSEK(1.0));
-        t.setSource(new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH));
-        t.setDestination(new SwedishIdentifier(TestAccount.HANDELSBANKEN_FH));
-        t.setDestinationMessage("Tink Test");
-        t.setSourceMessage("Tink Test");
-
-        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
-    }
-
-    @Test
-    public void testTransferToNordeaSSNAccountExcludingClearingInApiCall() throws Exception {
-        Transfer t = new Transfer();
-        t.setAmount(Amount.inSEK(1.0));
-        t.setSource(new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH));
-        t.setDestination(new SwedishIdentifier(TestAccount.NORDEASSN_EP));
-        t.setDestinationMessage("Tink Test");
-        t.setSourceMessage("Tink Test");
-
-        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
-    }
-
-    @Test
-    public void testTransferToLFUnknownClearingRange() throws Exception {
-        Transfer t = new Transfer();
-        t.setAmount(Amount.inSEK(1.0));
-        t.setSource(new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH));
-        t.setDestination(new SwedishIdentifier(TestAccount.NORDEA_EP));
-        t.setDestinationMessage("Tink Test");
-        t.setSourceMessage("Tink Test");
-
-        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
-    }
-
-    @Test
-    public void testPaymentBG() throws Exception {
-        Transfer t = new Transfer();
-        t.setAmount(Amount.inSEK(2.24));
-        t.setSource(new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH));
-        t.setDestination(new BankGiroIdentifier("7308596"));
-        t.setDestinationMessage("37578936060100475");
-        t.setSourceMessage("AmEx Test1");
-        t.setType(TransferType.PAYMENT);
-        t.setDueDate(DateUtils.addDays(new Date(), 2));
-
-        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
-    }
-
-    @Test
-    public void testPaymentBGExcessAmount() throws Exception {
-        expectedException.expect(TransferExecutionException.class);
-        expectedException.expectMessage(
-                TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get());
-        Transfer t = new Transfer();
-        t.setAmount(Amount.inSEK(14500000));
-        t.setSource(new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH));
-        t.setDestination(new BankGiroIdentifier("7308596"));
-        t.setDestinationMessage("37578936060100475");
-        t.setSourceMessage("AmEx Test1");
-        t.setType(TransferType.PAYMENT);
-        t.setDueDate(DateUtils.addDays(new Date(), 2));
-        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
-    }
-
-    @Test
-    public void testPaymentPG() throws Exception {
-        Transfer t = new Transfer();
-        t.setAmount(Amount.inSEK(2.24));
-        t.setSource(new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH));
-        t.setDestination(new PlusGiroIdentifier("9020900"));
-        t.setDestinationMessage("Från Fredrik");
-        t.setSourceMessage("Barncancerfonden Test1");
-        t.setType(TransferType.PAYMENT);
-        t.setDueDate(DateUtils.addDays(new Date(), 2));
-
-        testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
     }
 
     @Test
