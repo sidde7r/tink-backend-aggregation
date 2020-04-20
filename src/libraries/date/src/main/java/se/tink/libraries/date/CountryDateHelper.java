@@ -109,6 +109,10 @@ public class CountryDateHelper {
         return Date.from(clock.instant());
     }
 
+    public java.time.LocalDate getNowAsLocalDate() {
+        return java.time.LocalDate.now(clock);
+    }
+
     public Date getNextBusinessDay() {
         Date date = inclusiveEndTime(getNow());
 
