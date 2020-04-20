@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchCustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.Utils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -37,17 +36,17 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class SbabApiClient {
 
     private final TinkHttpClient client;
     private SbabConfiguration configuration;
-    private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
 
-    public SbabApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public SbabApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
     }
 
     protected void setConfiguration(SbabConfiguration configuration) {
@@ -75,8 +74,8 @@ public final class SbabApiClient {
     }
 
     private OAuth2Token getToken() {
-        return persistentStorage
-                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
+        return sessionStorage
+                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Expected token to be present"));
     }
 

@@ -13,23 +13,30 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.BankIdStatusCodes;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.DecoupledResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
 
     private final SbabApiClient apiClient;
+    private final SessionStorage sessionStorage;
     private final boolean requestRefreshableToken;
     private String autoStartToken;
     private OAuth2Token token;
     private static final Logger logger = LoggerFactory.getLogger(SbabAuthenticator.class);
 
-    public SbabAuthenticator(SbabApiClient apiClient, boolean requestRefreshableToken) {
+    public SbabAuthenticator(
+            SbabApiClient apiClient,
+            SessionStorage sessionStorage,
+            boolean requestRefreshableToken) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
         this.requestRefreshableToken = requestRefreshableToken;
     }
 
@@ -61,6 +68,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             DecoupledResponse decoupledResponse =
                     apiClient.getDecoupled(reference.getAuthorizationCode());
             token = decoupledResponse.getAccessToken();
+            sessionStorage.put(StorageKeys.OAUTH_TOKEN, token);
         } catch (HttpResponseException e) {
             if (e.getMessage().contains(BankIdStatusCodes.AUTHORIZATION_NOT_COMPLETED)) {
                 return BankIdStatus.WAITING;

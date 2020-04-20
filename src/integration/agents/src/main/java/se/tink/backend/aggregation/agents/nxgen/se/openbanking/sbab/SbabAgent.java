@@ -53,7 +53,7 @@ public final class SbabAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        apiClient = new SbabApiClient(client, persistentStorage);
+        apiClient = new SbabApiClient(client, sessionStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         SbabConfiguration sbabConfiguration = getClientConfiguration();
@@ -86,7 +86,7 @@ public final class SbabAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         SbabAuthenticator sbabAuthenticator =
-                new SbabAuthenticator(apiClient, shouldRequestRefreshableToken());
+                new SbabAuthenticator(apiClient, sessionStorage, shouldRequestRefreshableToken());
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalRequester, sbabAuthenticator, persistentStorage, credentials);
