@@ -87,7 +87,6 @@ public class IbanIdentifierTest {
         IbanIdentifier identifier = new IbanIdentifier("NDEAFIHH", "FI2112345600000785");
 
         String displayName = identifier.getIdentifier(new DisplayAccountIdentifierFormatter());
-
         assertThat(displayName).isEqualTo("FI21 1234 5600 0007 85");
     }
 

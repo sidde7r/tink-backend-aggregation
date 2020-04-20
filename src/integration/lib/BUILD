@@ -185,6 +185,7 @@ junit_test(
         "//third_party:org_hamcrest_hamcrest_core",
         "//third_party:org_hamcrest_hamcrest_library",
         "//third_party:org_hibernate_hibernate_validator",
+        "//third_party:org_iban4j_iban4j",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_slf4j_slf4j_api",
