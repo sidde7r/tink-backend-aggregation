@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
@@ -30,13 +29,12 @@ public class Xs2aDevelopersCreditCardAccountFetcher
         GetAccountsResponse getAccountsResponse = apiClient.getAccounts();
 
         return getAccountsResponse.getAccountList().stream()
+                .filter(AccountEntity::isCreditCardAccount)
                 .map(this::transformAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private Optional<CreditCardAccount> transformAccount(AccountEntity transactionAccountEntity) {
+    private CreditCardAccount transformAccount(AccountEntity transactionAccountEntity) {
         BalanceEntity balanceEntity =
                 apiClient.getBalance(transactionAccountEntity).getBalances().get(0);
         return transactionAccountEntity.toTinkCreditAccount(balanceEntity);
@@ -51,7 +49,8 @@ public class Xs2aDevelopersCreditCardAccountFetcher
                             .getCreditTransactions(account, fromDate, toDate)
                             .toTinkTransactions());
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == Transactions.ERROR_CODE_MAX_ACCESS_EXCEEDED) {
+            if (e.getResponse().getStatus() == Transactions.ERROR_CODE_MAX_ACCESS_EXCEEDED
+                    || e.getResponse().getStatus() == Transactions.ERROR_CODE_CONSENT_INVALID) {
                 return PaginatorResponseImpl.createEmpty(false);
             } else {
                 throw e;

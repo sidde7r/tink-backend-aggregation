@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -42,7 +40,6 @@ public class AccountEntity {
         return links;
     }
 
-    @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(BalanceEntity balanceEntity) {
         if (iban == null) {
             return Optional.empty();
@@ -65,22 +62,11 @@ public class AccountEntity {
                 .build();
     }
 
-    @JsonIgnore
-    public Optional<CreditCardAccount> toTinkCreditAccount(BalanceEntity balanceEntity) {
-        final AccountTypes type =
-                Xs2aDevelopersConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(accountType)
-                        .orElse(AccountTypes.CREDIT_CARD);
-
-        if (type.equals(AccountTypes.CREDIT_CARD)) {
-            return Optional.ofNullable(toCreditCardAccount(balanceEntity));
-        } else {
-            return Optional.empty();
-        }
+    public boolean isCreditCardAccount() {
+        return !Strings.isNullOrEmpty(maskedPan);
     }
 
-    @JsonIgnore
-    public CreditCardAccount toCreditCardAccount(BalanceEntity balanceEntity) {
+    public CreditCardAccount toTinkCreditAccount(BalanceEntity balanceEntity) {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
