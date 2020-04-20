@@ -167,6 +167,10 @@ public class CountryDateHelper {
         return (dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY);
     }
 
+    public Date getProvidedOrTodayDate(Date currentDueDate) {
+        return currentDueDate == null ? new Date() : currentDueDate;
+    }
+
     public Date getTransferDate(Date currentDueDate, int cutOffHours, int cutOffMinutes) {
         return currentDueDate == null
                 ? getBestPossibleTransferDate(cutOffHours, cutOffMinutes)
