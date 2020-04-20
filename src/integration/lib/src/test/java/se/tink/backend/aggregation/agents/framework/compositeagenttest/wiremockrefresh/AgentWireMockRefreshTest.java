@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentContextModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.module.AgentFactoryWireMockModule;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
@@ -45,11 +46,8 @@ public final class AgentWireMockRefreshTest {
         final Set<Module> modules =
                 ImmutableSet.of(
                         new AgentContextModule(
-                                marketCode,
-                                providerName,
-                                configuration,
-                                loginDetails,
-                                refreshableItems),
+                                marketCode, providerName, configuration, loginDetails),
+                        new RefreshRequestModule(refreshableItems),
                         new AgentFactoryWireMockModule(
                                 server.getHttpsPort(), callbackData, agentModule));
 
