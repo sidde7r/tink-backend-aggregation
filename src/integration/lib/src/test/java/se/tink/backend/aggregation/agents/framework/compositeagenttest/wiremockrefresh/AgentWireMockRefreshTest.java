@@ -28,6 +28,7 @@ import se.tink.libraries.enums.MarketCode;
 public final class AgentWireMockRefreshTest {
 
     private final CompositeAgentTest compositeAgentTest;
+    private final WireMockTestServer server;
 
     private AgentWireMockRefreshTest(
             MarketCode marketCode,
@@ -39,7 +40,7 @@ public final class AgentWireMockRefreshTest {
             Module agentModule,
             Set<RefreshableItem> refreshableItems) {
 
-        final WireMockTestServer server = new WireMockTestServer();
+        server = new WireMockTestServer();
         server.prepareMockServer(
                 new AapFileParser(new ResourceFileReader().read(wireMockFilePath)));
 
@@ -61,7 +62,14 @@ public final class AgentWireMockRefreshTest {
      * @throws Exception May throw any exception that the agent throws.
      */
     public void executeRefresh() throws Exception {
-        compositeAgentTest.execute();
+        try {
+            compositeAgentTest.execute();
+        } catch (Exception e) {
+            if (server.hadEncounteredAnError()) {
+                throw new RuntimeException(server.createErrorLogForFailedRequest());
+            }
+            throw e;
+        }
     }
 
     /**

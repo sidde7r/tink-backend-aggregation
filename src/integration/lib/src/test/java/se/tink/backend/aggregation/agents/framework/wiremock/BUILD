@@ -1,0 +1,37 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "wiremock",
+    srcs = glob(["*.java"]),
+    data = [
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/resources",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/comparor",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/form",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
+        "//src/libraries/metrics:registry",
+        "//third_party:com_auth0_java_jwt",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:com_google_code_findbugs_jsr305",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_http_client_google_http_client",
+        "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:io_vavr",
+        "//third_party:junit_junit",
+        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_apache_httpcomponents_httpcore",
+        "//third_party:org_slf4j_slf4j_api",
+    ],
+)

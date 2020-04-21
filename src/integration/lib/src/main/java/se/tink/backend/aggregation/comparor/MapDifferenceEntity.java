@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework.assertions.entities;
+package se.tink.backend.aggregation.comparor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +8,7 @@ import java.util.Map;
 public class MapDifferenceEntity implements DifferenceEntity {
 
     private final Map<String, Object> entriesOnlyOnExpected;
+    private final Map<String, Object> entriesOnlyOnGiven;
     private Map<String, ValueDifference<Object>> differenceInCommonKeys;
     private Map<String, Object> expectedMap;
     private Map<String, Object> givenMap;
@@ -15,21 +16,23 @@ public class MapDifferenceEntity implements DifferenceEntity {
 
     public MapDifferenceEntity(
             Map<String, Object> entriesOnlyOnExpected,
+            Map<String, Object> entriesOnlyOnGiven,
             Map<String, ValueDifference<Object>> differenceInCommonKeys,
             Map<String, Object> expectedMap,
             Map<String, Object> givenMap) {
         this.entriesOnlyOnExpected = entriesOnlyOnExpected;
+        this.entriesOnlyOnGiven = entriesOnlyOnGiven;
         this.differenceInCommonKeys = differenceInCommonKeys;
         this.expectedMap = expectedMap;
         this.givenMap = givenMap;
     }
 
-    public int getNumberOfDifferences() {
-        return this.entriesOnlyOnExpected.size() + this.differenceInCommonKeys.size();
-    }
-
     public Map<String, Object> getEntriesOnlyOnExpected() {
         return entriesOnlyOnExpected;
+    }
+
+    public Map<String, Object> getEntriesOnlyOnGiven() {
+        return entriesOnlyOnGiven;
     }
 
     public Map<String, ValueDifference<Object>> getDifferenceInCommonKeys() {
