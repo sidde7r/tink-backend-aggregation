@@ -36,6 +36,21 @@ public class CreatePaymentResponse {
         return new PaymentResponse(tinkPayment);
     }
 
+    @JsonIgnore
+    public PaymentResponse toTinkPaymentResponse(String paymentId, PaymentType paymentType) {
+        Payment.Builder buildingPaymentResponse =
+                new Payment.Builder()
+                        .withStatus(
+                                CbiGlobePaymentStatus.mapToTinkPaymentStatus(
+                                        CbiGlobePaymentStatus.fromString(transactionStatus)))
+                        .withUniqueId(paymentId)
+                        .withType(paymentType);
+
+        Payment tinkPayment = buildingPaymentResponse.build();
+
+        return new PaymentResponse(tinkPayment);
+    }
+
     public String getPaymentId() {
         return paymentId;
     }

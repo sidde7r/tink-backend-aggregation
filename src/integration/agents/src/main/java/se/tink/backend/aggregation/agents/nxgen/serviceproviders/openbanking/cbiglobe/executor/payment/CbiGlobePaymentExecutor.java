@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.InstructedAmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.RemittanceInformationStructuredEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -65,6 +66,8 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
+        RemittanceInformationStructuredEntity remittanceInformationStructuredEntity =
+                RemittanceInformationStructuredEntity.of(paymentRequest);
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -72,6 +75,9 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                         .withInstructedAmount(instructedAmountEntity)
                         .withCreditorAccount(creditorEntity)
                         .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
+                        .withRemittanceInformationUnstructured(
+                                paymentRequest.getPayment().getReference().getValue())
+                        .withRemittanceInformationStructured(remittanceInformationStructuredEntity)
                         .withTransactionType(FormValues.TRANSACTION_TYPE)
                         .build();
 
@@ -109,7 +115,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return paymentResponse;
     }
 
-    public CreatePaymentResponse fetchPaymentStatus(String paymentId, PaymentType type) {
+    public CreatePaymentResponse fetchPaymentStatus(String paymentId) {
         CreatePaymentResponse paymentResponse = apiClient.getPaymentStatus(paymentId);
         return paymentResponse;
     }
@@ -122,15 +128,13 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         waitForSupplementalInformation();
 
         CreatePaymentResponse createPaymentResponse =
-                fetchPaymentStatus(
-                        paymentMultiStepRequest.getPayment().getUniqueId(),
-                        paymentMultiStepRequest.getPayment().getType());
+                fetchPaymentStatus(paymentMultiStepRequest.getPayment().getUniqueId());
         String paymentStatus = createPaymentResponse.getTransactionStatus();
         String scaStatus = createPaymentResponse.getScaStatus();
         String psuAuthenticationStatus = createPaymentResponse.getPsuAuthenticationStatus();
 
         switch (paymentStatus) {
-                // signed
+                // After signing PIS
             case "ACCP":
             case "ACSC":
             case "ACSP":
@@ -138,7 +142,8 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             case "ACWC":
             case "ACWP":
                 {
-                    if ("AUTHENTICATED".equalsIgnoreCase(psuAuthenticationStatus)) {
+                    if ("AUTHENTICATED".equalsIgnoreCase(psuAuthenticationStatus)
+                            && "VERIFIED".equalsIgnoreCase(scaStatus)) {
                         return new PaymentMultiStepResponse(
                                 createPaymentResponse.toTinkPaymentResponse(
                                         paymentMultiStepRequest.getPayment().getType()),
@@ -147,7 +152,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                     }
                 }
                 break;
-                // not signed
+                // Before signing PIS
             case "RCVD":
             case "PDNG":
                 {
@@ -168,17 +173,21 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                     }
                     return new PaymentMultiStepResponse(
                             createPaymentResponse.toTinkPaymentResponse(
+                                    paymentMultiStepRequest.getPayment().getUniqueId(),
                                     paymentMultiStepRequest.getPayment().getType()),
                             "IN_PROGRESS",
                             new ArrayList<>());
                 }
-            case "RJCT":
+            case "RJCT": // failed case
                 {
-                    throw new PaymentAuthorizationException();
+                    if ("AUTHENTICATION_FAILED".equalsIgnoreCase(psuAuthenticationStatus)) {
+                        throw new PaymentAuthorizationException();
+                    }
                 }
         }
 
-        return null; // this method can return null only in case of exception
+        return null; // this method should never return null- If this scenario happen then
+                     // CBI Globe might have changed Payment Status Codes
     }
 
     @Override
