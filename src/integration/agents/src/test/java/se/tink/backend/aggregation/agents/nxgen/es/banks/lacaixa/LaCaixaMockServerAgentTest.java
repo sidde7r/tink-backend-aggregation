@@ -51,24 +51,34 @@ public class LaCaixaMockServerAgentTest {
                 expected.getIdentityData().orElseGet(Collections::emptyMap);
 
         // When
-        NewAgentTestContext context =
-                new AgentIntegrationTest.Builder("es", "es-lacaixa-password")
-                        .addCredentialField(Field.Key.USERNAME, USERNAME)
-                        .addCredentialField(Field.Key.PASSWORD, PASSWORD)
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false)
-                        .setWireMockConfiguration(configuration)
-                        .build()
-                        .testRefresh();
-
-        List<Transaction> givenTransactions = context.getTransactions();
-        List<Account> givenAccounts = context.getUpdatedAccounts();
-        IdentityData givenIdentityData =
-                context.getIdentityData()
-                        .orElseThrow(() -> new AssertionError("Expected identity data. Was null."));
+        List<Transaction> givenTransactions;
+        List<Account> givenAccounts;
+        IdentityData givenIdentityData;
+        try {
+            NewAgentTestContext context =
+                    new AgentIntegrationTest.Builder("es", "es-lacaixa-password")
+                            .addCredentialField(Field.Key.USERNAME, USERNAME)
+                            .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                            .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                            .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                            .loadCredentialsBefore(false)
+                            .saveCredentialsAfter(false)
+                            .expectLoggedIn(false)
+                            .setWireMockConfiguration(configuration)
+                            .build()
+                            .testRefresh();
+            givenTransactions = context.getTransactions();
+            givenAccounts = context.getUpdatedAccounts();
+            givenIdentityData =
+                    context.getIdentityData()
+                            .orElseThrow(
+                                    () -> new AssertionError("Expected identity data. Was null."));
+        } catch (Exception e) {
+            if (server.hadEncounteredAnError()) {
+                throw new RuntimeException(server.createErrorLogForFailedRequest());
+            }
+            throw e;
+        }
 
         // Then
         Assert.assertTrue(

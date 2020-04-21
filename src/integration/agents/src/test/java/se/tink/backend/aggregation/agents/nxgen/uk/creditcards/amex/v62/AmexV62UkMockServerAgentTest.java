@@ -154,19 +154,28 @@ public final class AmexV62UkMockServerAgentTest {
                 WireMockConfiguration.builder("localhost:" + server.getHttpsPort()).build();
 
         // When
-        NewAgentTestContext context =
-                new AgentIntegrationTest.Builder("uk", "uk-americanexpress-password")
-                        .addCredentialField(Field.Key.USERNAME, USERNAME)
-                        .addCredentialField(Field.Key.PASSWORD, PASSWORD)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false)
-                        .setWireMockConfiguration(configuration)
-                        .build()
-                        .testRefresh();
+        List<Transaction> givenTransactions;
+        List<Account> givenAccounts;
+        try {
+            NewAgentTestContext context =
+                    new AgentIntegrationTest.Builder("uk", "uk-americanexpress-password")
+                            .addCredentialField(Field.Key.USERNAME, USERNAME)
+                            .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                            .loadCredentialsBefore(false)
+                            .saveCredentialsAfter(false)
+                            .expectLoggedIn(false)
+                            .setWireMockConfiguration(configuration)
+                            .build()
+                            .testRefresh();
 
-        List<Transaction> givenTransactions = context.getTransactions();
-        List<Account> givenAccounts = context.getUpdatedAccounts();
+            givenTransactions = context.getTransactions();
+            givenAccounts = context.getUpdatedAccounts();
+        } catch (Exception e) {
+            if (server.hadEncounteredAnError()) {
+                throw new RuntimeException(server.createErrorLogForFailedRequest());
+            }
+            throw e;
+        }
 
         // Then
         Assert.assertTrue(
