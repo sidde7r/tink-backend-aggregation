@@ -11,21 +11,22 @@ import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommandSequence;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.provider.AgentProvider;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
 
 public final class AgentFactoryWireMockModule extends AbstractModule {
 
-    private final int port;
+    private final FakeBankSocket fakeBankSocket;
     private final Map<String, String> callbackData;
     private final Module agentModule;
     private final Class<? extends CompositeAgentTestCommandSequence> commandSequence;
 
     public AgentFactoryWireMockModule(
-            int port,
+            FakeBankSocket fakeBankSocket,
             Map<String, String> callbackData,
             Module agentModule,
             Class<? extends CompositeAgentTestCommandSequence> commandSequence) {
-        this.port = port;
+        this.fakeBankSocket = fakeBankSocket;
         this.callbackData = callbackData;
         this.agentModule = agentModule;
         this.commandSequence = commandSequence;
@@ -35,9 +36,10 @@ public final class AgentFactoryWireMockModule extends AbstractModule {
     protected void configure() {
 
         // TODO: Replace WireMockConfiguration, currently needed for AgentWireMockModuleFactory
+        bind(FakeBankSocket.class).toInstance(fakeBankSocket);
         bind(WireMockConfiguration.class)
                 .toInstance(
-                        WireMockConfiguration.builder("localhost:" + port)
+                        WireMockConfiguration.builder()
                                 .setCallbackData(callbackData)
                                 .setAgentModule(agentModule)
                                 .build());

@@ -1,6 +1,9 @@
 java_library(
     name = "modules",
     srcs = glob(["**/*.java"]),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/aggregationcontroller_api",
@@ -32,6 +35,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration/provider/socket",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/module",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/factory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",

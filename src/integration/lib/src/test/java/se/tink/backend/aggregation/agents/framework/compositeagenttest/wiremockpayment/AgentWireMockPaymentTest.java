@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.modu
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -49,7 +50,10 @@ public final class AgentWireMockPaymentTest {
                         new RefreshRequestModule(RefreshableItem.REFRESHABLE_ITEMS_ALL),
                         new PaymentRequestModule(paymentList),
                         new AgentFactoryWireMockModule(
-                                server.getHttpsPort(), callbackData, agentModule, commandSequence));
+                                MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
+                                callbackData,
+                                agentModule,
+                                commandSequence));
 
         Injector injector = Guice.createInjector(modules);
         compositeAgentTest = injector.getInstance(CompositeAgentTest.class);

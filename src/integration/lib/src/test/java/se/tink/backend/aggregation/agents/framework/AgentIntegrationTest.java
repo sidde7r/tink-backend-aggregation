@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,10 +37,8 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
-import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
-import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
+import se.tink.backend.aggregation.agents.framework.modules.production.ProductionModule;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
@@ -213,10 +213,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
 
-            AgentFactory factory =
-                    new AgentFactoryImpl(
-                            new AgentPackageModuleFactory(new PackageModuleLoader()),
-                            configuration);
+            final Injector injector = Guice.createInjector(new ProductionModule(configuration));
+            final AgentFactory factory = injector.getInstance(AgentFactory.class);
 
             return factory.create(credentialsRequest, context);
         } catch (Exception e) {

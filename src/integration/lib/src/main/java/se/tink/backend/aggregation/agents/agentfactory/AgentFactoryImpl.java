@@ -24,7 +24,7 @@ public class AgentFactoryImpl implements AgentFactory {
     private final AgentModuleFactory moduleLoader;
 
     @Inject
-    public AgentFactoryImpl(
+    private AgentFactoryImpl(
             AgentModuleFactory moduleLoader, AgentsServiceConfiguration configuration) {
         this.moduleLoader = moduleLoader;
         this.configuration = configuration;

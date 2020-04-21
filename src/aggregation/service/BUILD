@@ -179,7 +179,6 @@ command(
 multirun(
     name = "run_aggregation_decoupled_and_external_deps",
     commands = [
-        "//src/aggregation/fakebank/src/main/java/se/tink/backend/fakebank",
         ":run_fake_aggregation_controller",
         ":run_aggregation_decoupled",
     ],

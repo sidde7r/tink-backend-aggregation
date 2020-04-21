@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProvider;
@@ -28,14 +29,12 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
             CredentialsRequest request,
             AgentContext agentContext,
             AgentsServiceConfiguration configuration,
-            WireMockConfiguration wireMockConfiguration) {
+            WireMockConfiguration wireMockConfiguration,
+            FakeBankSocket fakeBankSocket) {
 
         this.wireMockTinkHttpClientProvider =
                 new WireMockTinkHttpClientProvider(
-                        request,
-                        agentContext,
-                        configuration.getSignatureKeyPair(),
-                        wireMockConfiguration.getServerUrl());
+                        request, agentContext, configuration.getSignatureKeyPair(), fakeBankSocket);
         this.mockSupplementalInformationProvider =
                 new MockSupplementalInformationProvider(wireMockConfiguration.getCallbackData());
         this.generatedValueProvider =

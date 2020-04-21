@@ -21,6 +21,15 @@ import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
+import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
+import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.FakeBankAapFile;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.WireMockConfigurationProvider;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
+import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
+import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.FakeAggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
@@ -53,6 +62,7 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandFakeBankState;
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
@@ -135,7 +145,9 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AgentWorkerOperation.AgentWorkerOperationState.class).in(Scopes.SINGLETON);
         bind(DebugAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(CircuitBreakerAgentWorkerCommandState.class).in(Scopes.SINGLETON);
-        bind(InstantiateAgentWorkerCommandState.class).in(Scopes.SINGLETON);
+        bind(InstantiateAgentWorkerCommandState.class)
+                .to(InstantiateAgentWorkerCommandFakeBankState.class)
+                .in(Scopes.SINGLETON);
         bind(LoginAgentWorkerCommandState.class).in(Scopes.SINGLETON);
         bind(ReportProviderMetricsAgentWorkerCommandState.class).in(Scopes.SINGLETON);
 
@@ -262,6 +274,20 @@ public class AggregationDecoupledModule extends AbstractModule {
                         ManagedChannelBuilder.class,
                         EventProducerServiceClientChannelBuilder.class));
         bind(EventProducerServiceClient.class).toProvider(EventProducerServiceClientProvider.class);
+
+        // AgentFactoryWireMockModule
+        bind(WireMockConfiguration.class).toProvider(WireMockConfigurationProvider.class);
+        final MutableFakeBankSocket socketEntity = MutableFakeBankSocket.create();
+        bind(MutableFakeBankSocket.class).toInstance(socketEntity);
+        bind(FakeBankSocket.class).toInstance(socketEntity);
+        bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
+        bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
+
+        // To be generalized to a map and moved to yml configuration probably
+        bind(String.class)
+                .annotatedWith(FakeBankAapFile.class)
+                .toInstance(
+                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap");
     }
 
     @Provides
