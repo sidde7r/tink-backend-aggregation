@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class HandelsbankenSECreditCardTransaction {
@@ -37,7 +37,7 @@ public class HandelsbankenSECreditCardTransaction {
         }
 
         return CreditCardTransaction.builder()
-                .setAmount(Amount.inSEK(calculateAmount(invertAmount)))
+                .setAmount(ExactCurrencyAmount.of(calculateAmount(invertAmount), "SEK"))
                 .setDate(date)
                 .setDescription(formattedDescription)
                 .setPending(pending)

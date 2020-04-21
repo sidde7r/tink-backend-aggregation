@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -62,7 +62,7 @@ public class AccountEntity {
         return links;
     }
 
-    public String getTransactionUrl() {
+    private String getTransactionUrl() {
         return links.get(HandelsbankenNOConstants.Tags.TRANSACTIONS).getHref();
     }
 
@@ -96,23 +96,21 @@ public class AccountEntity {
                 return AccountTypes.SAVINGS;
             default:
                 // This should never happen as we filter on checking and savings accounts
-                LOGGER.warn(
-                        String.format(
-                                "Could not map account type [%s] to a Tink account type", type));
+                LOGGER.warn("Could not map account type [{}] to a Tink account type", type);
                 return AccountTypes.OTHER;
         }
     }
 
     @JsonIgnore
-    private Amount getBalance(double balance) {
+    private ExactCurrencyAmount getBalance(double balance) {
         String currency = properties.getCurrencyCode();
 
         if (Strings.isNullOrEmpty(currency)) {
             LOGGER.warn("Handelsbanken Norway: No currency for account found. Defaulting to NOK.");
 
-            return Amount.inNOK(balance);
+            return ExactCurrencyAmount.of(balance, "NOK");
         }
 
-        return new Amount(currency, balance);
+        return ExactCurrencyAmount.of(balance, currency);
     }
 }
