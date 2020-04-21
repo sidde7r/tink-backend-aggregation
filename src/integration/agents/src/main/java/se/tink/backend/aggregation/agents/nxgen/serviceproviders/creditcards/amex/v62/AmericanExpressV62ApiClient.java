@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationResponse;
@@ -19,6 +21,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class AmericanExpressV62ApiClient {
+
+    private static final String AGENT_ID_COOKIE = "agent-id";
+
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
@@ -62,7 +67,7 @@ public class AmericanExpressV62ApiClient {
                                 persistentStorage.get(AmericanExpressV62Constants.Tags.HARDWARE_ID))
                         .header(
                                 AmericanExpressV62Constants.Headers.PROCESS_ID,
-                                sessionStorage.get(AmericanExpressV62Constants.Tags.PROCESS_ID))
+                                persistentStorage.get(AmericanExpressV62Constants.Tags.PROCESS_ID))
                         .header(
                                 AmericanExpressV62Constants.Headers.PUBLIC_GUID,
                                 persistentStorage.getOrDefault(
@@ -107,7 +112,9 @@ public class AmericanExpressV62ApiClient {
         String rawResponse =
                 createRequest(AmericanExpressV62Constants.Urls.LOG_ON)
                         .header(AmericanExpressV62Constants.Headers.REQUEST_SEQUENCE, 1)
+                        .header("Cookie", prepareLogonCookie())
                         .post(String.class, request);
+
         return AmericanExpressV62Utils.fromJson(rawResponse, LogonResponse.class);
     }
 
@@ -120,5 +127,17 @@ public class AmericanExpressV62ApiClient {
 
         return createRequestInSession(AmericanExpressV62Constants.Urls.TRANSACTION)
                 .post(TransactionResponse.class, request);
+    }
+
+    private String prepareLogonCookie() {
+        String agentIdCookieValue =
+                client.getCookies().stream()
+                        .filter(cookie -> AGENT_ID_COOKIE.equals(cookie.getName()))
+                        .findFirst()
+                        .map(Cookie::getValue)
+                        .orElse(StringUtils.EMPTY);
+
+        client.clearCookies();
+        return AGENT_ID_COOKIE + "=" + agentIdCookieValue;
     }
 }
