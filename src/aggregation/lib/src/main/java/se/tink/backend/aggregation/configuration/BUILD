@@ -8,6 +8,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/daos",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/repositories",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands/state/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/libraries/discovery/src/main/java/se/tink/libraries/discovery",
