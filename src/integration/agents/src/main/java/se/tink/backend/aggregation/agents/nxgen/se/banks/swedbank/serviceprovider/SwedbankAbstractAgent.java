@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.SwedbankDefaultPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.SwedbankDefaultBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.updatepayment.SwedbankDefaultUpdatePaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.creditcard.SwedbankDefaultCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.identitydata.SwedbankIdentityDataFetcher;
@@ -82,18 +83,21 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     private final boolean isBankId;
     private final SwedbankStorage swedbankStorage;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
+    private final SwedbankDateUtils dateUtils;
 
     public SwedbankAbstractAgent(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration,
-            SwedbankConfiguration configuration) {
+            SwedbankConfiguration configuration,
+            SwedbankDateUtils dateUtils) {
         this(
                 request,
                 context,
                 agentsServiceConfiguration,
                 configuration,
-                new SwedbankDefaultApiClientProvider());
+                new SwedbankDefaultApiClientProvider(),
+                dateUtils);
     }
 
     protected SwedbankAbstractAgent(
@@ -101,8 +105,10 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration,
             SwedbankConfiguration configuration,
-            SwedbankApiClientProvider apiClientProvider) {
+            SwedbankApiClientProvider apiClientProvider,
+            SwedbankDateUtils dateUtils) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+        this.dateUtils = dateUtils;
         this.agentsServiceConfiguration = agentsServiceConfiguration;
         configureHttpClient(client);
         swedbankStorage = new SwedbankStorage();
@@ -268,14 +274,14 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                         context, catalog, supplementalInformationHelper, apiClient, isBankId);
         SwedbankDefaultBankTransferExecutor transferExecutor =
                 new SwedbankDefaultBankTransferExecutor(
-                        catalog, apiClient, transferHelper, swedbankStorage);
+                        catalog, apiClient, transferHelper, swedbankStorage, dateUtils);
         SwedbankDefaultPaymentExecutor paymentExecutor =
                 new SwedbankDefaultPaymentExecutor(
-                        catalog, apiClient, transferHelper, swedbankStorage);
+                        catalog, apiClient, transferHelper, swedbankStorage, dateUtils);
         SwedbankDefaultApproveEInvoiceExecutor approveEInvoiceExecutor =
-                new SwedbankDefaultApproveEInvoiceExecutor(apiClient, transferHelper);
+                new SwedbankDefaultApproveEInvoiceExecutor(apiClient, transferHelper, dateUtils);
         SwedbankDefaultUpdatePaymentExecutor updatePaymentExecutor =
-                new SwedbankDefaultUpdatePaymentExecutor(apiClient, transferHelper);
+                new SwedbankDefaultUpdatePaymentExecutor(apiClient, transferHelper, dateUtils);
         return Optional.of(
                 new TransferController(
                         paymentExecutor,

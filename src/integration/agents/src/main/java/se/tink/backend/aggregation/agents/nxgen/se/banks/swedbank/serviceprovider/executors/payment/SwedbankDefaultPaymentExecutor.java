@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.function.Function;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.payment.rpc.RegisterRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.RegisteredTransfersResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
@@ -32,8 +34,9 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
             Catalog catalog,
             SwedbankDefaultApiClient apiClient,
             SwedbankTransferHelper transferHelper,
-            SwedbankStorage swedbankStorage) {
-        super(apiClient, transferHelper);
+            SwedbankStorage swedbankStorage,
+            SwedbankDateUtils dateUtils) {
+        super(apiClient, transferHelper, dateUtils);
         this.catalog = catalog;
         this.swedbankStorage = swedbankStorage;
     }
@@ -102,12 +105,13 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
 
     private RegisterTransferResponse registerPayment(
             Transfer transfer, String sourceAccountId, String destinationAccountId) {
+        Date dueDate = dateUtils.getTransferDateForPayments(transfer.getDueDate());
         try {
             return apiClient.registerPayment(
                     transfer.getAmount().getValue(),
                     transfer.getDestinationMessage(),
                     SwedbankTransferHelper.getReferenceTypeFor(transfer),
-                    transfer.getDueDate(),
+                    dueDate,
                     destinationAccountId,
                     sourceAccountId);
         } catch (HttpResponseException hre) {

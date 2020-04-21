@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.einvoice;
 
 import com.google.common.base.Strings;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.RegisterTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.RegisteredTransfersResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.einvoice.rpc.EInvoiceDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.einvoice.rpc.EInvoiceEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.einvoice.rpc.EInvoicePaymentEntity;
@@ -25,8 +27,10 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
         implements ApproveEInvoiceExecutor {
 
     public SwedbankDefaultApproveEInvoiceExecutor(
-            SwedbankDefaultApiClient apiClient, SwedbankTransferHelper transferHelper) {
-        super(apiClient, transferHelper);
+            SwedbankDefaultApiClient apiClient,
+            SwedbankTransferHelper transferHelper,
+            SwedbankDateUtils dateUtils) {
+        super(apiClient, transferHelper, dateUtils);
     }
 
     @Override
@@ -111,13 +115,13 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
             Transfer transfer,
             String sourceAccountId,
             EInvoicePaymentEntity eInvoicePaymentEntity) {
-
+        Date dueDate = dateUtils.getTransferDateForPayments(transfer.getDueDate());
         try {
             return apiClient.registerEInvoice(
                     transfer.getAmount().getValue(),
                     transfer.getDestinationMessage(),
                     SwedbankTransferHelper.getReferenceTypeFor(transfer),
-                    transfer.getDueDate(),
+                    dueDate,
                     eInvoicePaymentEntity.getEinvoiceReference(),
                     eInvoicePaymentEntity.getPayee().getId(),
                     sourceAccountId);

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonDouble.JsonType;
@@ -41,7 +40,7 @@ public class RegisterPaymentRequest {
         this.amount = amount;
         this.reference = reference;
         this.ocrScanned = "NO";
-        this.date = SwedbankTransferHelper.getDateOrNullIfDueDateIsToday(date);
+        this.date = date;
         this.type = type;
         this.recipientId = recipientId;
         this.fromAccountId = fromAccountId;

@@ -4,7 +4,6 @@ import static se.tink.backend.aggregation.annotations.JsonDouble.JsonType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -31,7 +30,7 @@ public class RegisterTransferRequest {
         this.recipientId = recipientId;
         this.noteToRecipient = noteToRecipient;
         this.fromAccountId = fromAccountId;
-        this.date = SwedbankTransferHelper.getDateOrNullIfDueDateIsToday(transferDueDate);
+        this.date = transferDueDate;
     }
 
     public static RegisterTransferRequest create(

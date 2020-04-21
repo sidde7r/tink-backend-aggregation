@@ -85,6 +85,10 @@ public class SwedbankSEPaymentTest {
 
     private Date getDueDate() {
         return Date.from(
-                LocalDate.now().atStartOfDay().plusDays(5).atZone(ZoneId.of("CET")).toInstant());
+                LocalDate.now()
+                        .atStartOfDay()
+                        .plusDays(5)
+                        .atZone(ZoneId.of("Europe/Stockholm"))
+                        .toInstant());
     }
 }
