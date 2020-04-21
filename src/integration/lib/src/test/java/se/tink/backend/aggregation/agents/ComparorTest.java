@@ -2,27 +2,49 @@ package se.tink.backend.aggregation.agents;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
-import se.tink.backend.aggregation.agents.framework.assertions.entities.DifferenceEntity;
-import se.tink.backend.aggregation.agents.framework.assertions.entities.EmptyDifferenceEntity;
-import se.tink.backend.aggregation.agents.framework.assertions.entities.ListDifferenceEntity;
-import se.tink.backend.aggregation.agents.framework.assertions.entities.MapDifferenceEntity;
+import se.tink.backend.aggregation.comparor.Comparor;
+import se.tink.backend.aggregation.comparor.DifferenceCounter;
+import se.tink.backend.aggregation.comparor.DifferenceEntity;
+import se.tink.backend.aggregation.comparor.EmptyDifferenceEntity;
+import se.tink.backend.aggregation.comparor.ListDifferenceEntity;
+import se.tink.backend.aggregation.comparor.MapDifferenceEntity;
 
-public class ContractAsserterTest {
+public class ComparorTest {
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    Comparor comparor =
+            new Comparor(
+                    new DifferenceCounter() {
+
+                        private List<String> ignoredFields =
+                                Arrays.asList(
+                                        "exactBalance",
+                                        "availableBalance",
+                                        "exactAvailableCredit",
+                                        "id",
+                                        "accountId");
+
+                        @Override
+                        public int numberOfDifferences(MapDifferenceEntity allDifferences) {
+                            return allDifferences.getEntriesOnlyOnExpected().size()
+                                    + allDifferences.getDifferenceInCommonKeys().size();
+                        }
+                    });
 
     @Test
     public void shouldDetectFieldsThatOnlyAppearsInExpectedObject() throws IOException {
         // given
         String given = "[{\"field1\": \"value1\"}]";
         String expected = "[{\"field1\": \"value1\", \"field2\": \"value2\"}]";
+
         // when
         DifferenceEntity diff =
-                AgentContractEntitiesAsserts.areListsMatching(
+                comparor.areListsMatching(
                         mapper.readValue(expected, List.class),
                         mapper.readValue(given, List.class));
         // then
@@ -38,7 +60,7 @@ public class ContractAsserterTest {
         String expected = "[{}]";
         // when
         DifferenceEntity diff =
-                AgentContractEntitiesAsserts.areListsMatching(
+                comparor.areListsMatching(
                         mapper.readValue(expected, List.class),
                         mapper.readValue(given, List.class));
         // then
@@ -56,7 +78,7 @@ public class ContractAsserterTest {
                 "[{\"object\": {\"field1\": \"value1\", \"field2\": \"differentvalue\"} }]";
         // when
         DifferenceEntity diff =
-                AgentContractEntitiesAsserts.areListsMatching(
+                comparor.areListsMatching(
                         mapper.readValue(expected, List.class),
                         mapper.readValue(given, List.class));
         // then
@@ -72,7 +94,7 @@ public class ContractAsserterTest {
         String expected = "[{\"object\": {\"field1\": \"value1\", \"field2\": \"value2\"}}]";
         // when
         DifferenceEntity diff =
-                AgentContractEntitiesAsserts.areListsMatching(
+                comparor.areListsMatching(
                         mapper.readValue(expected, List.class),
                         mapper.readValue(given, List.class));
         // then
@@ -88,7 +110,7 @@ public class ContractAsserterTest {
                 "[{\"data\": {\"field1\": \"object2_value1\", \"field2\": \"object2_value2\"}}, {\"data\": {\"field1\": \"object1_value1\", \"field2\": \"object1_value2\"}}]";
         // when
         DifferenceEntity diff =
-                AgentContractEntitiesAsserts.areListsMatching(
+                comparor.areListsMatching(
                         mapper.readValue(expected, List.class),
                         mapper.readValue(given, List.class));
         // then

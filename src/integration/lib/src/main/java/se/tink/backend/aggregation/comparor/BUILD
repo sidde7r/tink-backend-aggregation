@@ -1,15 +1,8 @@
-load("//tools/bzl:junit.bzl", "junit_test")
-
 java_library(
-    name = "assertions",
-    srcs = glob([
-        "*.java",
-        "**/*.java",
-    ]),
-    data = [],
+    name = "comparor",
+    srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/comparor",
         "//src/libraries/metrics:registry",
         "//src/libraries/strings",
         "//third_party:com_google_code_findbugs_jsr305",

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework.assertions.entities;
+package se.tink.backend.aggregation.comparor;
 
 public class EmptyDifferenceEntity implements DifferenceEntity {
 
