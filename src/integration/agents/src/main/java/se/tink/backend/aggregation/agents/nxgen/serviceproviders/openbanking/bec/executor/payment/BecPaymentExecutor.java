@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -42,6 +44,14 @@ public class BecPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
+
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+        }
 
         String paymentProduct = getPaymentProduct(payment);
 

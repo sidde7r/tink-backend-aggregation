@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -74,14 +76,23 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor, Fetchab
         DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest, type);
         CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest, type);
 
+        Payment payment = paymentRequest.getPayment();
+
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+        }
+
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
                         .withCreditor(creditorEntity)
                         .withDebtor(debtorEntity)
                         .withAmount(amountEntity)
                         .withRequestedExecutionDate(
-                                DateFormat.convertToDateViaInstant(
-                                        paymentRequest.getPayment().getExecutionDate()))
+                                DateFormat.convertToDateViaInstant(payment.getExecutionDate()))
                         .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
                         .withEndToEndIdentification(PaymentRequests.IDENTIFICATION)
                         .build();

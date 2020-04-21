@@ -139,6 +139,10 @@ public class Payment {
         return executionDate;
     }
 
+    public void setExecutionDate(LocalDate date) {
+        this.executionDate = date;
+    }
+
     public PaymentStatus getStatus() {
         return status;
     }

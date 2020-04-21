@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.entity.CreditorAccountRequest;
@@ -31,6 +33,14 @@ public class ErstebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     public PaymentResponse create(PaymentRequest paymentRequest) {
         final Payment payment = paymentRequest.getPayment();
 
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+        }
+
         final CreditorAccountRequest creditorAccount =
                 CreditorAccountRequest.builder()
                         .iban(payment.getCreditor().getAccountNumber())
@@ -52,9 +62,7 @@ public class ErstebankPaymentExecutor implements PaymentExecutor, FetchablePayme
                         .instructedAmount(instructedAmount)
                         .creditorName(payment.getCreditor().getName())
                         .requestedExecutionDate(
-                                paymentRequest
-                                        .getPayment()
-                                        .getExecutionDate()
+                                payment.getExecutionDate()
                                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                         .build();
 

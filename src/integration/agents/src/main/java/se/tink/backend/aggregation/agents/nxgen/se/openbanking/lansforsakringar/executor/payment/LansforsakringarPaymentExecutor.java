@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -63,6 +65,14 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
         final AccountIbanEntity creditor =
                 new AccountIbanEntity(paymentCreditor.getAccountNumber(), payment.getCurrency());
 
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+        }
+
         final CreditorAddressEntity creditorAddress =
                 new CreditorAddressEntity(FormValues.CITY, FormValues.COUNTRY, FormValues.STREET);
         final AccountEntity debtor =
@@ -76,9 +86,7 @@ public class LansforsakringarPaymentExecutor implements PaymentExecutor, Fetchab
                         debtor,
                         amount,
                         FormKeys.SEPA,
-                        paymentRequest
-                                .getPayment()
-                                .getExecutionDate()
+                        payment.getExecutionDate()
                                 .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)));
         final CrossBorderPaymentResponse crossBorderPaymentResponse =
                 apiClient.createCrossBorderPayment(crossBorderPaymentRequest);

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.executor.payment;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.PaymentDetails;
@@ -32,6 +34,14 @@ public class SantanderPaymentExecutorSelector implements FetchablePaymentExecuto
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
         Payment payment = paymentRequest.getPayment();
+
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+        }
 
         PaymentType type =
                 SantanderConstants.PAYMENT_TYPE_MAPPER

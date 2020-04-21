@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,16 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
         AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
         AmountEntity amount = AmountEntity.amountOf(paymentRequest);
 
+        Payment payment = paymentRequest.getPayment();
+
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+        }
+
         BnpParibasFortisPaymentType paymentType = getPaymentType(paymentRequest);
 
         CreatePaymentRequest createPaymentRequest =
@@ -62,17 +74,16 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
                         .withPaymentType(paymentType)
                         .withAmount(amount)
                         .withCreditorAccount(creditor)
-                        .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
+                        .withCreditorName(payment.getCreditor().getName())
                         .withDebtorAccount(debtor)
-                        .withExecutionDate(paymentRequest.getPayment().getExecutionDate())
+                        .withExecutionDate(payment.getExecutionDate())
                         .withCreationDateTime(LocalDateTime.now())
                         .withRedirectUrl(
                                 new URL(configuration.getRedirectUrl())
                                         .queryParam(
                                                 QueryKeys.STATE,
                                                 strongAuthenticationState.getState()))
-                        .withRemittanceInformation(
-                                paymentRequest.getPayment().getReference().getValue())
+                        .withRemittanceInformation(payment.getReference().getValue())
                         .build();
 
         PaymentResponse paymentResponse =

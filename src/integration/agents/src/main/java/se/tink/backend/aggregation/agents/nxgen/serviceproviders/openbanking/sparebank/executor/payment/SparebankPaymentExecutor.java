@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -77,14 +79,22 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
         AccountEntity debtorAccountEntity = AccountEntity.ofDebtor(paymentRequest, paymentProduct);
         AmountEntity amount = AmountEntity.of(paymentRequest);
 
+        Payment payment = paymentRequest.getPayment();
+
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+        }
+
         if (paymentProduct == SparebankPaymentProduct.CROSS_BORDER_CREDIT_TRANSFER) {
             throw new IllegalStateException(ErrorMessages.INTERNATIONAL_TRANFER_NOT_SUPPORTED);
         }
 
         String requestedExecutionDay =
-                paymentRequest
-                        .getPayment()
-                        .getExecutionDate()
+                payment.getExecutionDate()
                         .format(DateTimeFormatter.ofPattern(DatePatterns.YYYY_MM_DD_PATTERN));
 
         CreatePaymentRequest createPaymentRequest =

@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment;
 
 import java.security.interfaces.RSAPrivateKey;
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -83,6 +85,14 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
         Creditor creditor = payment.getCreditor();
         Debtor debtor = payment.getDebtor();
         Amount amount = payment.getAmount();
+
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+        }
 
         Othr other = new Othr(FormValues.OTHER_ID, new SchmeNm(FormValues.SCHEME_NAME));
 

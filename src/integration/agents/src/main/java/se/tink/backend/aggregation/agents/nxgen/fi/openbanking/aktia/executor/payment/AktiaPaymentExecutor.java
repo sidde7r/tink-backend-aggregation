@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.executor.payment;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaApiClient;
@@ -30,6 +32,15 @@ public class AktiaPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         final Payment payment = paymentRequest.getPayment();
+
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+        }
+
         final PaymentAccountEntity creditor =
                 new PaymentAccountEntity(payment.getCreditor().getAccountNumber());
         final PaymentAccountEntity debtor =
