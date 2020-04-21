@@ -1,11 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import se.tink.backend.aggregation.agents.banks.danskebank.v2.DanskebankV2Constants;
-import se.tink.libraries.date.CountryDateHelper;
-
 public class BillRequest {
     private String amount;
     private String reference;
@@ -79,29 +73,6 @@ public class BillRequest {
 
     public void setToAccountId(String toAccountId) {
         this.toAccountId = toAccountId;
-    }
-
-    public void setDate(Date date) {
-        CountryDateHelper dateHelper =
-                new CountryDateHelper(
-                        DanskebankV2Constants.Date.DEFAULT_LOCALE,
-                        TimeZone.getTimeZone(DanskebankV2Constants.Date.DEFAULT_ZONE_ID));
-        Calendar nextBusinessDay = dateHelper.getCalendar(dateHelper.getNextBusinessDay());
-        if (date == null || dateHelper.getCalendar(date).before(nextBusinessDay)) {
-            this.date =
-                    "\\/Date(" + nextBusinessDay.getTime().getTime() / 1000 * 1000 + "+0200)\\/";
-        } else {
-            this.date =
-                    "\\/Date("
-                            + dateHelper
-                                            .getCurrentOrNextBusinessDay(
-                                                    dateHelper.getCalendar(date))
-                                            .getTime()
-                                            .getTime()
-                                    / 1000
-                                    * 1000
-                            + "+0200)\\/";
-        }
     }
 
     public String getReceiverText() {

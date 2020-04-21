@@ -12,18 +12,17 @@ import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
@@ -49,7 +48,6 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
-import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption.MessageContainer;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers.BankIdResourceHelper;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers.BankIdServiceType;
@@ -78,6 +76,7 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferAccoun
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferDetailsResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferResponse;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.util.DanskeBankDateUtil;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -101,16 +100,15 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
+import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
@@ -162,6 +160,9 @@ public class DanskeBankV2Agent extends AbstractAgent
 
     private Map<AccountEntity, Account> accountMap = null;
     private CreateSessionResponse sessionResponse;
+    private final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
+    private final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
+    private DanskeBankDateUtil danskeBankDateUtil;
 
     public DanskeBankV2Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -172,6 +173,7 @@ public class DanskeBankV2Agent extends AbstractAgent
 
         credentials = request.getCredentials();
         loginId = getLoginIdFromCredentials(providerCountry, credentials);
+        danskeBankDateUtil = new DanskeBankDateUtil(DEFAULT_ZONE_ID, DEFAULT_LOCALE);
 
         if (Objects.equals(credentials.getType(), CredentialsTypes.MOBILE_BANKID)) {
             bankIdResourceHelper = new BankIdResourceHelper(credentials);
@@ -482,26 +484,17 @@ public class DanskeBankV2Agent extends AbstractAgent
                     .build();
         }
 
-        String bankId = DanskeUtils.getBankId(transfer.getDestination());
-
         // TODO: Adapt this to multiple markets.
 
-        CountryDateHelper dateHelper =
-                new CountryDateHelper(
-                        DanskebankV2Constants.Date.DEFAULT_LOCALE,
-                        TimeZone.getTimeZone(DanskebankV2Constants.Date.DEFAULT_ZONE_ID));
-        Calendar transferDate =
-                transfer.getDueDate() != null
-                        ? dateHelper.getCalendar(transfer.getDueDate())
-                        : dateHelper.getCalendar();
-        if (!Objects.equals(bankId, DanskeUtils.getBankId(ClearingNumber.Bank.DANSKE_BANK))) {
-            Calendar nextBusinessDay = dateHelper.getCalendar(dateHelper.getNextBusinessDay());
-            if (transferDate.before(nextBusinessDay)) {
-                transferDate = nextBusinessDay;
-            }
-            transferDate = dateHelper.getCurrentOrNextBusinessDay(transferDate);
+        String transferDate = null;
+        if (IntraBankChecker.isSwedishMarketIntraBank(
+                fromAccount.get().generalGetAccountIdentifier(), transfer.getDestination())) {
+            transferDate =
+                    danskeBankDateUtil.getTransferDateForInternalTransfer(transfer.getDueDate());
+        } else {
+            transferDate =
+                    danskeBankDateUtil.getTransferDateForExternalTransfer(transfer.getDueDate());
         }
-
         // Check if the transfer is between two accounts belonging to the same credentials.
         boolean isBetweenUserAccounts =
                 findAccount(transfer.getDestination(), detailsResponse.getFromAccounts())
@@ -509,13 +502,7 @@ public class DanskeBankV2Agent extends AbstractAgent
 
         TransferRequest transferRequest =
                 createTransferRequest(
-                        transfer,
-                        fromAccount.get(),
-                        transferDate
-                                .toInstant()
-                                .atZone(DanskebankV2Constants.Date.DEFAULT_ZONE_ID)
-                                .toLocalDate(),
-                        isBetweenUserAccounts);
+                        transfer, fromAccount.get(), transferDate, isBetweenUserAccounts);
         TransferResponse transferResponse = apiClient.createTransfer(transferRequest);
 
         if (transferResponse.isChallengeNeeded()) {
@@ -614,7 +601,7 @@ public class DanskeBankV2Agent extends AbstractAgent
     private TransferRequest createTransferRequest(
             Transfer transfer,
             TransferAccountEntity fromAccount,
-            LocalDate transferDate,
+            String transferDate,
             boolean isBetweenUserAccounts)
             throws TransferMessageException {
 
@@ -659,7 +646,7 @@ public class DanskeBankV2Agent extends AbstractAgent
             billRequest.setReceiverText(transfer.getDestinationMessage());
         }
 
-        billRequest.setDate(transfer.getDueDate());
+        billRequest.setDate(danskeBankDateUtil.getTransferDateForBgPg(transfer.getDueDate()));
 
         return billRequest;
     }
