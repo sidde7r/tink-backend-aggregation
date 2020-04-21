@@ -93,6 +93,34 @@ public class SystemTest {
     }
 
     @Test
+    public void getAuthenticateForBarclaysShouldSetCredentialsStatusUpdated() throws Exception {
+
+        // given
+        String requestBodyForAuthenticateEndpoint =
+                readRequestBodyFromFile(
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body_for_barclays.json");
+
+        // when
+        ResponseEntity<String> authenticationCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/authenticate",
+                                APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
+                        requestBodyForAuthenticateEndpoint);
+
+        Optional<String> updateCredentialsCallback =
+                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+                        String.format(
+                                "http://%s:%d/data",
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+
+        // then
+        Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
+        Assert.assertTrue(updateCredentialsCallback.isPresent());
+        Assert.assertEquals("UPDATED", updateCredentialsCallback.get());
+    }
+
+    @Test
     public void getRefreshShouldUploadEntities() throws Exception {
 
         // given
