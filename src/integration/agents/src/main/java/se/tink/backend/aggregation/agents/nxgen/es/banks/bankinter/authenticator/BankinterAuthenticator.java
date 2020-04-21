@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.authenticator;
 
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -33,10 +37,19 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
     private static final File phantomJsFile;
     private final BankinterApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final PrintStream logStream;
 
-    public BankinterAuthenticator(BankinterApiClient apiClient, SessionStorage sessionStorage) {
+    public BankinterAuthenticator(
+            BankinterApiClient apiClient,
+            SessionStorage sessionStorage,
+            ByteArrayOutputStream logOutputStream) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        try {
+            this.logStream = new PrintStream(logOutputStream, true, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     static {
@@ -106,6 +119,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
             throws AuthenticationException, AuthorizationException {
         // go to login page
         driver.navigate().to(Urls.LOGIN_PAGE);
+        logRequest("Logging in to " + Urls.LOGIN_PAGE, driver.getPageSource());
 
         // fill in form
         final WebElement loginForm = driver.findElement(By.id(LoginForm.FORM_ID));
@@ -120,9 +134,11 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         final WebDriverWait wait = new WebDriverWait(driver, LoginForm.SUBMIT_TIMEOUT_SECONDS);
         wait.ignoring(StaleElementReferenceException.class)
                 .until(didRedirectOrShowError(initialUrl));
+        final URL url = getCurrentUrl(driver);
+        logRequest("Login ended up in " + url.toString(), driver.getPageSource());
 
         // SCA
-        if (getCurrentUrl(driver).toUri().getPath().equalsIgnoreCase(Paths.VERIFY_SCA)) {
+        if (url.toUri().getPath().equalsIgnoreCase(Paths.VERIFY_SCA)) {
             // TODO: handle SCA properly
             // SCA triggers randomly for the same user, I haven't been able to see it in testing
             // When we get to this page, the SMS has already been sent
@@ -160,5 +176,12 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         submitLoginForm(driver, username, password);
         apiClient.storeLoginCookies(driver.manage().getCookies());
         driver.quit();
+    }
+
+    private void logRequest(String heading, String body) {
+        logStream.println("*** " + heading);
+        if (!Strings.isNullOrEmpty(body)) {
+            logStream.println(body);
+        }
     }
 }

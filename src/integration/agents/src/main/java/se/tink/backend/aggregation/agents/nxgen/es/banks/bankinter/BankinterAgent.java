@@ -61,7 +61,8 @@ public final class BankinterAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new BankinterAuthenticator(apiClient, sessionStorage));
+                new BankinterAuthenticator(
+                        apiClient, sessionStorage, context.getLogOutputStream()));
     }
 
     @Override
