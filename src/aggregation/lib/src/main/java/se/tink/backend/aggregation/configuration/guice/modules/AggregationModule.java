@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.configuration.guice.modules;
 
+import com.google.common.base.Predicate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import java.util.Objects;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClientImpl;
 import se.tink.backend.aggregation.api.AggregationService;
@@ -27,6 +30,8 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
+import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
+import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.libraries.http.client.RequestTracingFilter;
@@ -63,6 +68,10 @@ public class AggregationModule extends AbstractModule {
                     .to(AgentDebugLocalStorage.class)
                     .in(Scopes.SINGLETON);
         }
+
+        bind(new TypeLiteral<Predicate<Provider>>() {})
+                .annotatedWith(ShouldAddExtraCommands.class)
+                .to(IsPrevGenProvider.class);
 
         bind(CryptoConfigurationDao.class).in(Scopes.SINGLETON);
         bind(ControllerWrapperProvider.class).in(Scopes.SINGLETON);

@@ -4,9 +4,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.util.Locale;
 import org.apache.curator.framework.CuratorFramework;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,8 +18,6 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorkerContextTest {
@@ -57,45 +53,43 @@ public class AgentWorkerContextTest {
     }
 
     @Test
-    public void testAggregationControllerRefreshId() {
+    public void whenUpdatingCredentialsExcludingSensitiveRefreshIdIsPassedOnToControllerWrapper() {
+        // given
         RefreshInformationRequest request = new RefreshInformationRequest();
-        request.setRefreshId("TEST");
+        String testRefreshId = "testRefreshId";
+        request.setRefreshId(testRefreshId);
         request.setProvider(new Provider());
         AgentWorkerContext context = buildAgentWorkerContext(request);
-
         Credentials credentials = new Credentials();
+
+        // when
         context.updateCredentialsExcludingSensitiveInformation(credentials, false, false);
 
+        // then
         verify(controllerWrapper, times(1))
                 .updateCredentials(
                         argThat(
                                 (UpdateCredentialsStatusRequest controllerRequest) ->
-                                        controllerRequest.getRefreshId().equals("TEST")));
+                                        controllerRequest.getRefreshId().equals(testRefreshId)));
     }
 
     @Test
-    public void testRefreshWhenNotRefreshInformation() {
+    public void
+            whenUpdatingCredentialsExcludingSensitiveWithNullRefreshIdNullRefreshIdIsPassedOnToControllerWrapper() {
+        // given
         CredentialsRequest request = new TransferRequest();
         request.setProvider(new Provider());
         AgentWorkerContext context = buildAgentWorkerContext(request);
-
         Credentials credentials = new Credentials();
+
+        // when
         context.updateCredentialsExcludingSensitiveInformation(credentials, false, false);
 
+        // then
         verify(controllerWrapper, times(1))
                 .updateCredentials(
                         argThat(
                                 (UpdateCredentialsStatusRequest controllerRequest) ->
                                         controllerRequest.getRefreshId() == null));
-    }
-
-    @Test
-    public void testCatalogGetString() {
-        String lessThanOneSekEn = "The transfer amount, less than 1 SEK is not supported.";
-        String lessThanOneSekSv = "Överföringsbelopp på mindre än 1 kr stöds inte.";
-        Catalog catalog = new Catalog(new Locale("sv", "SE"));
-        Assert.assertEquals(lessThanOneSekSv, catalog.getString(lessThanOneSekEn));
-        Assert.assertEquals(
-                lessThanOneSekSv, catalog.getString(new LocalizableKey(lessThanOneSekEn)));
     }
 }

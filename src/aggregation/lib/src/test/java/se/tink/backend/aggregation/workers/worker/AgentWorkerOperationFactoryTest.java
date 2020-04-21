@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.base.Predicate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,11 +34,13 @@ import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsA
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
+import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public final class AgentWorkerOperationFactoryTest {
@@ -46,8 +50,9 @@ public final class AgentWorkerOperationFactoryTest {
     private static final String MARKET = "mymarket";
 
     private AgentWorkerOperationFactory factory;
-    private ManualAuthenticateRequest request;
     private ClientInfo clientInfo;
+    private Provider provider;
+    private CredentialsRequestType credentialsRequestType = CredentialsRequestType.CREATE;
 
     @Before
     public void setup() {
@@ -57,15 +62,9 @@ public final class AgentWorkerOperationFactoryTest {
         Injector injector = Guice.createInjector(new TestModule(controllerWrapperProvider));
         factory = injector.getInstance(AgentWorkerOperationFactory.class);
 
-        Provider provider = mock(Provider.class);
+        provider = mock(Provider.class);
         when(provider.getName()).thenReturn(PROVIDER_NAME);
         when(provider.getMarket()).thenReturn(MARKET);
-
-        CredentialsRequestType credentialsRequestType = CredentialsRequestType.CREATE;
-
-        request = mock(ManualAuthenticateRequest.class);
-        when(request.getProvider()).thenReturn(provider);
-        when(request.getType()).thenReturn(credentialsRequestType);
 
         clientInfo = mock(ClientInfo.class);
         when(clientInfo.getClusterId()).thenReturn(CLUSTER_ID);
@@ -81,8 +80,28 @@ public final class AgentWorkerOperationFactoryTest {
 
     @Test
     public void createdAuthenticateOperationShouldContainClusterIdFromClientInfo() {
+        // given
+        ManualAuthenticateRequest authenticateRequest = mock(ManualAuthenticateRequest.class);
+        when(authenticateRequest.getProvider()).thenReturn(provider);
+        when(authenticateRequest.getType()).thenReturn(credentialsRequestType);
+
         // when
-        AgentWorkerOperation operation = factory.createOperationAuthenticate(request, clientInfo);
+        AgentWorkerOperation operation =
+                factory.createOperationAuthenticate(authenticateRequest, clientInfo);
+
+        // then
+        assertThat(operation.getContext().getClusterId()).isEqualTo(CLUSTER_ID);
+    }
+
+    @Test
+    public void createdRefreshOperationShouldContainClusterIdFromClientInfo() {
+        // given
+        RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
+        when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getType()).thenReturn(credentialsRequestType);
+
+        // when
+        AgentWorkerOperation operation = factory.createOperationRefresh(refreshRequest, clientInfo);
 
         // then
         assertThat(operation.getContext().getClusterId()).isEqualTo(CLUSTER_ID);
@@ -102,6 +121,9 @@ public final class AgentWorkerOperationFactoryTest {
             bind(CacheClient.class).toInstance(mock(CacheClient.class));
             bind(MetricRegistry.class).toInstance(mock(MetricRegistry.class));
             bind(AgentDebugStorageHandler.class).toInstance(mock(AgentDebugStorageHandler.class));
+            bind(new TypeLiteral<Predicate<Provider>>() {})
+                    .annotatedWith(ShouldAddExtraCommands.class)
+                    .toInstance(p -> false);
             bind(AgentWorkerOperationState.class).toInstance(mock(AgentWorkerOperationState.class));
             bind(DebugAgentWorkerCommandState.class)
                     .toInstance(mock(DebugAgentWorkerCommandState.class));

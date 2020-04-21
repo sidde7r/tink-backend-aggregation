@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.workers.worker;
 
-import com.google.common.base.Strings;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -11,8 +11,6 @@ import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.agentfactory.AgentClassFactory;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
@@ -22,7 +20,6 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
@@ -72,6 +69,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
+import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
@@ -100,6 +98,7 @@ public class AgentWorkerOperationFactory {
     private final CredentialsEventProducer credentialsEventProducer;
     private final DataTrackerEventProducer dataTrackerEventProducer;
     private final LoginAgentEventProducer loginAgentEventProducer;
+    private final Predicate<Provider> shouldAddExtraCommands;
 
     // States
     private AgentWorkerOperationState agentWorkerOperationState;
@@ -139,7 +138,8 @@ public class AgentWorkerOperationFactory {
             LoginAgentEventProducer loginAgentEventProducer,
             AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             ManagedTppSecretsServiceClient tppSecretsServiceClient,
-            InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory) {
+            InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory,
+            @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands) {
         this.cacheClient = cacheClient;
 
         metricCacheLoader = new MetricCacheLoader(metricRegistry);
@@ -167,28 +167,7 @@ public class AgentWorkerOperationFactory {
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.tppSecretsServiceClient = tppSecretsServiceClient;
         this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
-    }
-
-    /**
-     * Helper method giving info if this is a Provider with a Next Generation Agent.
-     *
-     * @return a boolean telling if this provider points to a Next Generation Agent.
-     */
-    private static boolean isNextGenerationAgent(Provider provider) {
-        if (provider == null) {
-            return false;
-        }
-
-        if (Strings.isNullOrEmpty(provider.getClassName())) {
-            return false;
-        }
-
-        try {
-            Class<? extends Agent> agentClass = AgentClassFactory.getAgentClass(provider);
-            return SubsequentGenerationAgent.class.isAssignableFrom(agentClass);
-        } catch (Exception e) {
-            return false;
-        }
+        this.shouldAddExtraCommands = shouldAddExtraCommands;
     }
 
     private AgentWorkerCommandMetricState createCommandMetricState(CredentialsRequest request) {
@@ -264,7 +243,7 @@ public class AgentWorkerOperationFactory {
         // PRIO)
         // Due to the agents depending on updateTransactions to populate the the Accounts list
         // We need to reselect and send accounts to system
-        if (!isNextGenerationAgent(request.getProvider())) {
+        if (shouldAddExtraCommands.test(request.getProvider())) {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(

@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.configuration.guice.modules;
 
+import com.google.common.base.Predicate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.OptionalBinder;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
@@ -18,6 +20,7 @@ import java.util.Map;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.FakeAggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
@@ -57,6 +60,8 @@ import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMute
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryStub;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
+import se.tink.backend.aggregation.workers.worker.conditions.IsPrevGenProvider;
+import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientMockImpl;
 import se.tink.backend.integration.agent_data_availability_tracker.client.configuration.AgentDataAvailabilityTrackerConfiguration;
@@ -190,6 +195,9 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(InterProcessSemaphoreMutexFactory.class)
                 .to(InterProcessSemaphoreMutexFactoryStub.class);
         bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
+        bind(new TypeLiteral<Predicate<Provider>>() {})
+                .annotatedWith(ShouldAddExtraCommands.class)
+                .to(IsPrevGenProvider.class);
 
         bind(CryptoConfigurationsRepository.class).to(FakeCryptoConfigurationsRepository.class);
         bind(CryptoConfiguration.class)
