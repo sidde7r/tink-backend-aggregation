@@ -20,19 +20,24 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.rpc.ErrorRes
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
 
     private final SbabApiClient apiClient;
+    private final SessionStorage sessionStorage;
+    private final boolean requestRefreshableToken;
     private String autoStartToken;
     private OAuth2Token token;
-    private PersistentStorage persistentStorage;
     private static final Logger logger = LoggerFactory.getLogger(SbabAuthenticator.class);
 
-    public SbabAuthenticator(SbabApiClient apiClient, PersistentStorage persistentStorage) {
+    public SbabAuthenticator(
+            SbabApiClient apiClient,
+            SessionStorage sessionStorage,
+            boolean requestRefreshableToken) {
         this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
+        this.requestRefreshableToken = requestRefreshableToken;
     }
 
     @Override
@@ -42,9 +47,11 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             logger.error("SSN was passed as empty or null!");
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        persistentStorage.remove(StorageKeys.PAGINATION_INDICATOR_REFRESHED_TOKEN);
         try {
-            BankIdResponse response = apiClient.initBankId(ssn);
+            BankIdResponse response =
+                    requestRefreshableToken
+                            ? apiClient.authorizeBankId(ssn)
+                            : apiClient.authenticateBankId(ssn);
             autoStartToken = response.getAutostartToken();
             return response;
         } catch (HttpResponseException e) {
@@ -61,6 +68,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             DecoupledResponse decoupledResponse =
                     apiClient.getDecoupled(reference.getAuthorizationCode());
             token = decoupledResponse.getAccessToken();
+            storeTokenForSession(token);
         } catch (HttpResponseException e) {
             if (e.getMessage().contains(BankIdStatusCodes.AUTHORIZATION_NOT_COMPLETED)) {
                 return BankIdStatus.WAITING;
@@ -83,7 +91,10 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
 
     @Override
     public Optional<OAuth2Token> getAccessToken() {
-        return Optional.ofNullable(token);
+        if (token.canRefresh()) {
+            return Optional.ofNullable(token);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -92,9 +103,7 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             Optional<OAuth2Token> refreshedToken =
                     Optional.ofNullable(
                             apiClient.refreshAccessToken(refreshToken).getAccessToken());
-            if (refreshedToken.isPresent()) {
-                persistentStorage.put(StorageKeys.PAGINATION_INDICATOR_REFRESHED_TOKEN, false);
-            }
+            refreshedToken.ifPresent(token -> storeTokenForSession(token));
             return refreshedToken;
         } catch (HttpResponseException hre) {
             if (hre.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
@@ -106,5 +115,9 @@ public class SbabAuthenticator implements BankIdAuthenticator<BankIdResponse> {
             }
             throw hre;
         }
+    }
+
+    private void storeTokenForSession(OAuth2Token token) {
+        sessionStorage.put(StorageKeys.OAUTH_TOKEN, token);
     }
 }
