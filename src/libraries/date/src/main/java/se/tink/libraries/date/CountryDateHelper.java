@@ -17,9 +17,20 @@ import org.joda.time.LocalDate;
  * It is recommended to use in tink-backend-aggregation.
  */
 public class CountryDateHelper {
-    private Locale locale = new Locale("sv", "SE");
-    private TimeZone timezone = TimeZone.getTimeZone("CET");
+    private Locale locale = new Locale(LANGUAGE_CODE_SWEDISH, COUNTRY_CODE_SWEDEN);
+    private TimeZone timezone = TimeZone.getTimeZone(TIMEZONE_CODE_CET);
     private ImmutableSet<String> holidays;
+
+    public static final String COUNTRY_CODE_SWEDEN = "SE";
+    public static final String COUNTRY_CODE_BELGIUM = "BE";
+    public static final String COUNTRY_CODE_GB = "GB";
+    public static final String COUNTRY_CODE_PORTUGAL = "PT";
+
+    public static final String LANGUAGE_CODE_SWEDISH = "sv";
+    public static final String LANGUAGE_CODE_PORTUGAL = "pt";
+
+    public static final String TIMEZONE_CODE_CET = "CET";
+    public static final String TIMEZONE_CODE_GMT = "GMT";
 
     private Clock clock;
 
@@ -34,8 +45,9 @@ public class CountryDateHelper {
     public CountryDateHelper(Locale locale) {
         this.locale = locale;
 
-        if (locale.getCountry().equals("GB")) {
-            this.timezone = TimeZone.getTimeZone("GMT");
+        if (locale.getCountry().equals(COUNTRY_CODE_GB)
+                || locale.getCountry().equals(COUNTRY_CODE_PORTUGAL)) {
+            this.timezone = TimeZone.getTimeZone(TIMEZONE_CODE_GMT);
         }
 
         this.clock = Clock.system(timezone.toZoneId());
@@ -95,6 +107,10 @@ public class CountryDateHelper {
 
     private Date getNow() {
         return Date.from(clock.instant());
+    }
+
+    public java.time.LocalDate getNowAsLocalDate() {
+        return java.time.LocalDate.now(clock);
     }
 
     public Date getNextBusinessDay() {
@@ -202,10 +218,12 @@ public class CountryDateHelper {
         int year = localDate.getYear() - 20;
 
         HolidayCalendar calendar = HolidayCalendar.SWEDEN;
-        if (countryCode.equals("BE")) {
+        if (countryCode.equals(COUNTRY_CODE_BELGIUM)) {
             calendar = HolidayCalendar.BELGIUM;
-        } else if (countryCode.equals("GB")) {
+        } else if (countryCode.equals(COUNTRY_CODE_GB)) {
             calendar = HolidayCalendar.UNITED_KINGDOM;
+        } else if (countryCode.equals(COUNTRY_CODE_PORTUGAL)) {
+            calendar = HolidayCalendar.PORTUGAL;
         }
 
         HolidayManager holidayManager = HolidayManager.getInstance(calendar);
