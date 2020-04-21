@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -45,6 +46,7 @@ public class CbiGlobeApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
     private CbiGlobeConfiguration configuration;
     private boolean requestManual;
     protected TemporaryStorage temporaryStorage;
@@ -58,6 +60,23 @@ public class CbiGlobeApiClient {
             InstrumentType instrumentType) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.sessionStorage =
+                null; // todo - few Agent dont dont pass sessionStorage. Fix this in other PR
+        this.requestManual = requestManual;
+        this.temporaryStorage = temporaryStorage;
+        this.instrumentType = instrumentType;
+    }
+
+    public CbiGlobeApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
+            boolean requestManual,
+            TemporaryStorage temporaryStorage,
+            InstrumentType instrumentType) {
+        this.client = client;
+        this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
         this.requestManual = requestManual;
         this.temporaryStorage = temporaryStorage;
         this.instrumentType = instrumentType;
@@ -250,7 +269,7 @@ public class CbiGlobeApiClient {
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(getConfiguration().getRedirectUrl())
-                                .queryParam(QueryKeys.STATE, persistentStorage.get(QueryKeys.STATE))
+                                .queryParam(QueryKeys.STATE, sessionStorage.get(QueryKeys.STATE))
                                 .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }

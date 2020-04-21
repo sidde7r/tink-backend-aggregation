@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
@@ -43,17 +43,17 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     private final CbiGlobeApiClient apiClient;
     private final List<PaymentResponse> paymentResponses = new ArrayList<>();
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
 
     public CbiGlobePaymentExecutor(
             CbiGlobeApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
-        this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
     }
 
@@ -61,7 +61,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     public PaymentResponse create(PaymentRequest paymentRequest) {
         fetchToken();
 
-        persistentStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
+        sessionStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
 
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
@@ -82,7 +82,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                         .build();
 
         CreatePaymentResponse payment = apiClient.createPayment(createPaymentRequest);
-        persistentStorage.put(
+        sessionStorage.put(
                 StorageKeys.LINK,
                 payment.getLinks().getUpdatePsuAuthenticationRedirect().getHref());
         return payment.toTinkPaymentResponse(getPaymentType(paymentRequest));
@@ -124,7 +124,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentAuthorizationException {
 
-        openThirdPartyApp(new URL(persistentStorage.get(StorageKeys.LINK)));
+        openThirdPartyApp(new URL(sessionStorage.get(StorageKeys.LINK)));
         waitForSupplementalInformation();
 
         CreatePaymentResponse createPaymentResponse =
@@ -159,7 +159,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                     if ("IDENTIFICATION_REQUIRED".equalsIgnoreCase(psuAuthenticationStatus)
                             || "AUTHENTICATION_REQUIRED"
                                     .equalsIgnoreCase(psuAuthenticationStatus)) {
-                        persistentStorage.put(
+                        sessionStorage.put(
                                 StorageKeys.LINK,
                                 createPaymentResponse
                                         .getLinks()
@@ -167,7 +167,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                                         .getHref());
 
                     } else if ("INITIATED".equalsIgnoreCase(scaStatus)) {
-                        persistentStorage.put(
+                        sessionStorage.put(
                                 StorageKeys.LINK,
                                 createPaymentResponse.getLinks().getScaRedirect().getHref());
                     }
@@ -187,7 +187,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         }
 
         return null; // this method should never return null- If this scenario happen then
-                     // CBI Globe might have changed Payment Status Codes
+        // CBI Globe might have changed Payment Status Codes
     }
 
     @Override
