@@ -6,11 +6,16 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
+import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.CompareEntity;
+import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.ErrorDetector;
 import se.tink.backend.aggregation.agents.framework.wiremock.parsing.BodyParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.parsing.BodyParserImpl;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
@@ -44,6 +49,87 @@ public class WireMockTestServer {
     public void prepareMockServer(RequestResponseParser parser) {
         List<Pair<HTTPRequest, HTTPResponse>> data = parser.parseRequestResponsePairs();
         buildMockServer(data);
+    }
+
+    public void resetRequests() {
+        wireMockServer.resetRequests();
+    }
+
+    public boolean hadEncounteredAnError() {
+        return wireMockServer.findUnmatchedRequests().getRequests().size() > 0;
+    }
+
+    public CompareEntity findDifferencesBetweenFailedRequestAndItsClosestMatch()
+            throws IOException {
+        LoggedRequest failedRequest = wireMockServer.findUnmatchedRequests().getRequests().get(0);
+        RequestPattern closestMatch =
+                wireMockServer
+                        .findTopNearMissesFor(failedRequest)
+                        .getNearMisses()
+                        .get(0)
+                        .getStubMapping()
+                        .getRequest();
+
+        return new ErrorDetector().compare(failedRequest, closestMatch);
+    }
+
+    public String createErrorLogForFailedRequest() throws IOException {
+
+        CompareEntity entity = findDifferencesBetweenFailedRequestAndItsClosestMatch();
+
+        StringBuilder errorMessage = new StringBuilder();
+        errorMessage.append(
+                "The following request could not be matched with any expected requests\n");
+        errorMessage.append(entity.getGivenRequest() + "\n");
+        errorMessage.append("The closest expected request is the following\n");
+        errorMessage.append(entity.getExpectedRequest() + "\n");
+        errorMessage.append("The difference between them are the following\n");
+
+        // Check URL
+        if (!entity.areUrlsMatching()) {
+            errorMessage.append(
+                    "The URLs between the request and its closest match are different\n");
+        }
+
+        // Check HTTP methods
+        if (!entity.areMethodsMatching()) {
+            errorMessage.append("The HTTP methods are different\n");
+        }
+
+        // Check Headers
+        if (entity.getMissingHeaderKeysInGivenRequest().size() > 0) {
+            errorMessage.append("The following headers are missing in the request\n");
+            entity.getMissingHeaderKeysInGivenRequest()
+                    .forEach(key -> errorMessage.append(key + "\n"));
+        }
+
+        entity.getHeaderKeysWithDifferentValues()
+                .forEach(
+                        key -> {
+                            errorMessage.append(
+                                    "The header "
+                                            + key
+                                            + " has different values for the request and its closest match\n");
+                        });
+
+        if (entity.getMissingBodyKeysInGivenRequest().size() > 0
+                || entity.getBodyKeysWithDifferentValues().size() > 0) {
+            errorMessage.append("There is a mismatch between request bodies\n");
+            errorMessage.append("The differences are the following:\n");
+            if (entity.getMissingBodyKeysInGivenRequest().size() > 0) {
+                errorMessage.append("The following keys only appear in expected object\n");
+                entity.getMissingBodyKeysInGivenRequest()
+                        .forEach(key -> errorMessage.append(key + "\n"));
+            }
+            if (entity.getBodyKeysWithDifferentValues().size() > 0) {
+                errorMessage.append(
+                        "For the following keys the expected and given objects have different values\n");
+                entity.getBodyKeysWithDifferentValues()
+                        .forEach(key -> errorMessage.append(key + "\n"));
+            }
+        }
+
+        return errorMessage.toString();
     }
 
     private void buildMockServer(List<Pair<HTTPRequest, HTTPResponse>> pairs) {

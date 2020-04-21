@@ -10,6 +10,7 @@ java_library(
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/parsing",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/comparor",
         "//src/libraries/metrics:registry",
         "//src/libraries/pair",
         "//src/libraries/strings",
