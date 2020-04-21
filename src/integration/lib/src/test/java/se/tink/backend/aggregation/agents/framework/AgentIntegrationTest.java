@@ -37,8 +37,6 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
-import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
-import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
 import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.agents.module.loader.PackageModuleLoader;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
@@ -108,8 +106,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
 
-    private WireMockConfiguration wireMockConfiguration;
-
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
         this.user = builder.getUser();
@@ -124,7 +120,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
-        this.wireMockConfiguration = builder.getWireMockConfiguration();
 
         this.clusterIdForSecretsService =
                 MoreObjects.firstNonNull(
@@ -218,21 +213,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
 
-            AgentFactory factory;
-            if (wireMockConfiguration != null) {
-                // Provide AgentFactory with mocked http client and supplemental information.
-                factory =
-                        new AgentFactoryImpl(
-                                new AgentWireMockModuleFactory(wireMockConfiguration),
-                                configuration);
-
-            } else {
-                // Provide AgentFactory with 'production' components.
-                factory =
-                        new AgentFactoryImpl(
-                                new AgentPackageModuleFactory(new PackageModuleLoader()),
-                                configuration);
-            }
+            AgentFactory factory =
+                    new AgentFactoryImpl(
+                            new AgentPackageModuleFactory(new PackageModuleLoader()),
+                            configuration);
 
             return factory.create(credentialsRequest, context);
         } catch (Exception e) {
@@ -638,26 +622,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     private void readConfigurationFile() throws ConfigurationException, IOException {
-        if (wireMockConfiguration != null) {
-
-            final String configurationPath = wireMockConfiguration.getAgentConfigurationPath();
-            if (configurationPath != null) {
-                configuration = readConfiguration(configurationPath);
-            } else {
-                configuration = new AgentsServiceConfiguration();
+        try {
+            configuration = readConfiguration("etc/development.yml");
+        } catch (FileNotFoundException e) {
+            if (e.getMessage().equals("File etc/development.yml not found")) {
+                final String message =
+                        "etc/development.yml missing. Please make a copy of etc/test.yml.";
+                throw new IllegalStateException(message);
             }
-
-        } else {
-            try {
-                configuration = readConfiguration("etc/development.yml");
-            } catch (FileNotFoundException e) {
-                if (e.getMessage().equals("File etc/development.yml not found")) {
-                    final String message =
-                            "etc/development.yml missing. Please make a copy of etc/test.yml.";
-                    throw new IllegalStateException(message);
-                }
-                throw new IllegalStateException(e);
-            }
+            throw new IllegalStateException(e);
         }
     }
 
@@ -1024,8 +997,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String redirectUrl;
         private String clusterIdForSecretsService = null;
 
-        private WireMockConfiguration wireMockConfiguration;
-
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
@@ -1264,15 +1235,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
 
             return new AgentIntegrationTest(this);
-        }
-
-        public WireMockConfiguration getWireMockConfiguration() {
-            return wireMockConfiguration;
-        }
-
-        public Builder setWireMockConfiguration(WireMockConfiguration wireMockConfiguration) {
-            this.wireMockConfiguration = wireMockConfiguration;
-            return this;
         }
     }
 }
