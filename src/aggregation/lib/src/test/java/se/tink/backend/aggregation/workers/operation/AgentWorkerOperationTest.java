@@ -50,7 +50,8 @@ public final class AgentWorkerOperationTest {
         // given
         CredentialsRequest credentialsRequest = mock(CredentialsRequest.class);
         Credentials credentials = new Credentials();
-        credentials.setStatus(CredentialsStatus.UPDATING);
+        final CredentialsStatus SAMPLE_STATUS = CredentialsStatus.UPDATING;
+        credentials.setStatus(SAMPLE_STATUS);
         AgentWorkerCommand command = mock(AgentWorkerCommand.class);
         when(credentialsRequest.getCredentials()).thenReturn(credentials);
         AgentWorkerOperationState state = mock(AgentWorkerOperationState.class);
@@ -70,7 +71,7 @@ public final class AgentWorkerOperationTest {
         operation.run();
 
         // then
-        assertThat(credentials.getStatus()).isEqualTo(CredentialsStatus.UPDATING);
+        assertThat(credentials.getStatus()).isEqualTo(SAMPLE_STATUS);
     }
 
     @Test
