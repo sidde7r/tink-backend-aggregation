@@ -78,3 +78,15 @@ Otherwise, pass them in `--cert` and `--key` arguments:
 ```
 $ pipenv run python ./agent_test_server.py --cert /path/to/cert.pem --key /path/to/key.pem
 ```
+
+## Python 3 in macOS Catalina: Fixing the abort trap
+At some point in the beta program of macOS Catalina Homebrew’s python 3 broke and only ended up showing an 
+“Abort trap: 6” for every command that involved using it. This included pip3 and other tools that were previously 
+downloaded and worked as expected.
+
+Quick fix:
+
+```
+ln -s /usr/local/Cellar/openssl@1.1/1.1.1d/lib/libcrypto.dylib /usr/local/lib/libcrypto.dylib
+ln -s /usr/local/Cellar/openssl@1.1/1.1.1d/lib/libssl.dylib /usr/local/lib/libssl.dylib
+```
