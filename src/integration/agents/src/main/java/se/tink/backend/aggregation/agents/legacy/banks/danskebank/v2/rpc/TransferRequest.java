@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -132,11 +130,8 @@ public class TransferRequest {
             return this;
         }
 
-        public Builder date(LocalDate date) {
-            this.date =
-                    date.isEqual(LocalDate.now())
-                            ? TODAY_AS_TRANSFER_DATE
-                            : date.format(DateTimeFormatter.BASIC_ISO_DATE);
+        public Builder date(String date) {
+            this.date = date;
             return this;
         }
 
