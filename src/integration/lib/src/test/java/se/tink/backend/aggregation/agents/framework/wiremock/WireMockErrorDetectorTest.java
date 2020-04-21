@@ -1,0 +1,224 @@
+package se.tink.backend.aggregation.agents.framework.wiremock;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.ws.rs.core.MediaType;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.CompareEntity;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
+import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
+import se.tink.backend.aggregation.logmasker.LogMaskerImpl;
+import se.tink.backend.aggregation.nxgen.http.IntegrationWireMockTestTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.NextGenTinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+
+public class WireMockErrorDetectorTest {
+
+    private static IntegrationWireMockTestTinkHttpClient httpClient;
+    private static ObjectMapper mapper = new ObjectMapper();
+    private static WireMockTestServer server;
+
+    @BeforeClass
+    public static void setup() {
+        // given
+        NextGenTinkHttpClient nextGenhttpClient =
+                NextGenTinkHttpClient.builder(
+                                new FakeLogMasker(),
+                                LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
+                        .build();
+
+        server = new WireMockTestServer();
+
+        server.prepareMockServer(
+                new AapFileParser(
+                        new ResourceFileReader()
+                                .read(
+                                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/resources/test.aap")));
+
+        httpClient =
+                new IntegrationWireMockTestTinkHttpClient(
+                        nextGenhttpClient, "localhost:" + server.getHttpPort());
+    }
+
+    @Before
+    public void resetRequests() {
+        // given
+        server.resetRequests();
+    }
+
+    @Test
+    public void
+            whenFailedJSONRequestIsMadeErrorDetectorShouldDetectURLMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+        // given
+        Map<String, String> body = new HashMap<>();
+        body.put("key1", "value1");
+        body.put("key2", "value2");
+
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/wrong_endpoint")
+                            .header("Header1", "HeaderValue1")
+                            .header("Header2", "HeaderValue2")
+                            .type(MediaType.APPLICATION_JSON_TYPE)
+                            .post(String.class, mapper.writeValueAsString(body));
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNotNull(differences);
+        Assert.assertTrue(differences.areMethodsMatching());
+        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
+        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertFalse(differences.areUrlsMatching());
+    }
+
+    @Test
+    public void
+            whenFailedJSONRequestIsMadeErrorDetectorShouldDetectMethodMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+        // given
+        Map<String, String> body = new HashMap<>();
+        body.put("key1", "value1");
+        body.put("key2", "value2");
+
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/json")
+                            .header("Header1", "HeaderValue1")
+                            .header("Header2", "HeaderValue2")
+                            .type(MediaType.APPLICATION_JSON_TYPE)
+                            .get(String.class);
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNotNull(differences);
+        Assert.assertFalse(differences.areMethodsMatching());
+        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
+        Assert.assertTrue(differences.areUrlsMatching());
+    }
+
+    @Test
+    public void
+            whenFailedJSONRequestIsMadeErrorDetectorShouldDetectHeaderMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+        // given
+        Map<String, String> body = new HashMap<>();
+        body.put("key1", "value1");
+        body.put("key2", "value2");
+
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/json")
+                            .header("Header1", "WrongValue")
+                            .type(MediaType.APPLICATION_JSON_TYPE)
+                            .post(String.class, mapper.writeValueAsString(body));
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNotNull(differences);
+        Assert.assertTrue(differences.areMethodsMatching());
+        Assert.assertTrue(differences.areUrlsMatching());
+        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertEquals(1, differences.getMissingHeaderKeysInGivenRequest().size());
+        Assert.assertEquals(1, differences.getHeaderKeysWithDifferentValues().size());
+        Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("header2"));
+        Assert.assertTrue(differences.getHeaderKeysWithDifferentValues().contains("header1"));
+    }
+
+    @Test
+    public void
+            whenFailedJSONRequestIsMadeErrorDetectorShouldDetectRequestBodyMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+        // given
+        Map<String, String> body = new HashMap<>();
+        body.put("key1", "wrongValue1");
+
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/json")
+                            .header("Header1", "HeaderValue1")
+                            .header("Header2", "HeaderValue2")
+                            .type(MediaType.APPLICATION_JSON_TYPE)
+                            .post(String.class, mapper.writeValueAsString(body));
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNotNull(differences);
+        Assert.assertTrue(differences.areMethodsMatching());
+        Assert.assertTrue(differences.areUrlsMatching());
+        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
+        Assert.assertEquals(1, differences.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(1, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertTrue(differences.getMissingBodyKeysInGivenRequest().contains("key2"));
+        Assert.assertTrue(differences.getBodyKeysWithDifferentValues().contains("key1"));
+    }
+
+    @Test
+    public void
+            whenFormRequestIsMadeErrorDetectorShouldDetectRequestBodyMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+        String form = Form.builder().put("key1", "wrong_value").build().serialize();
+
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/urlencoded")
+                            .header("Header1", "HeaderValue1")
+                            .header("Header2", "HeaderValue2")
+                            .body(form, MediaType.APPLICATION_FORM_URLENCODED)
+                            .post(String.class);
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNotNull(differences);
+        Assert.assertTrue(differences.areMethodsMatching());
+        Assert.assertTrue(differences.areUrlsMatching());
+        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
+        Assert.assertEquals(1, differences.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(1, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertTrue(differences.getMissingBodyKeysInGivenRequest().contains("key2"));
+        Assert.assertTrue(differences.getBodyKeysWithDifferentValues().contains("key1"));
+    }
+}
