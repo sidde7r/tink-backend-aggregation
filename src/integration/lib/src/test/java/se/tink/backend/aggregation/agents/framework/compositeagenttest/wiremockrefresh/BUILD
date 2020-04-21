@@ -19,7 +19,6 @@ java_library(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/base",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/command",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//src/libraries/metrics:registry",
         "//src/libraries/strings",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
