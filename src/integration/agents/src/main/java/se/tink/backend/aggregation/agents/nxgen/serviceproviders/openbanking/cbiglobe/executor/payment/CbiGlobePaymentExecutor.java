@@ -35,7 +35,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
-import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -110,44 +109,76 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return paymentResponse;
     }
 
-    public PaymentResponse fetchPaymentStatus(String paymentId, PaymentType type) {
-        PaymentResponse paymentResponse =
-                apiClient.getPaymentStatus(paymentId).toTinkPaymentResponse(type);
-        paymentResponses.add(paymentResponse);
+    public CreatePaymentResponse fetchPaymentStatus(String paymentId, PaymentType type) {
+        CreatePaymentResponse paymentResponse = apiClient.getPaymentStatus(paymentId);
         return paymentResponse;
     }
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentAuthorizationException {
+
         openThirdPartyApp(new URL(persistentStorage.get(StorageKeys.LINK)));
-        collect();
-        PaymentResponse paymentResponse =
+        waitForSupplementalInformation();
+
+        CreatePaymentResponse createPaymentResponse =
                 fetchPaymentStatus(
                         paymentMultiStepRequest.getPayment().getUniqueId(),
                         paymentMultiStepRequest.getPayment().getType());
+        String paymentStatus = createPaymentResponse.getTransactionStatus();
+        String scaStatus = createPaymentResponse.getScaStatus();
+        String psuAuthenticationStatus = createPaymentResponse.getPsuAuthenticationStatus();
 
-        PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
+        switch (paymentStatus) {
+                // signed
+            case "ACCP":
+            case "ACSC":
+            case "ACSP":
+            case "ACTC":
+            case "ACWC":
+            case "ACWP":
+                {
+                    if ("AUTHENTICATED".equalsIgnoreCase(psuAuthenticationStatus)) {
+                        return new PaymentMultiStepResponse(
+                                createPaymentResponse.toTinkPaymentResponse(
+                                        paymentMultiStepRequest.getPayment().getType()),
+                                AuthenticationStepConstants.STEP_FINALIZE,
+                                new ArrayList<>());
+                    }
+                }
+                break;
+                // not signed
+            case "RCVD":
+            case "PDNG":
+                {
+                    if ("IDENTIFICATION_REQUIRED".equalsIgnoreCase(psuAuthenticationStatus)
+                            || "AUTHENTICATION_REQUIRED"
+                                    .equalsIgnoreCase(psuAuthenticationStatus)) {
+                        persistentStorage.put(
+                                StorageKeys.LINK,
+                                createPaymentResponse
+                                        .getLinks()
+                                        .getUpdatePsuAuthenticationRedirect()
+                                        .getHref());
 
-        PaymentMultiStepResponse paymentMultiStepResponse = null;
-        if (PaymentStatus.SIGNED.equals(paymentStatus)) {
-            paymentMultiStepResponse =
-                    new PaymentMultiStepResponse(
-                            paymentResponse,
-                            AuthenticationStepConstants.STEP_FINALIZE,
+                    } else if ("INITIATED".equalsIgnoreCase(scaStatus)) {
+                        persistentStorage.put(
+                                StorageKeys.LINK,
+                                createPaymentResponse.getLinks().getScaRedirect().getHref());
+                    }
+                    return new PaymentMultiStepResponse(
+                            createPaymentResponse.toTinkPaymentResponse(
+                                    paymentMultiStepRequest.getPayment().getType()),
+                            "IN_PROGRESS",
                             new ArrayList<>());
-        }
-        if (PaymentStatus.PENDING.equals(paymentStatus)
-                || PaymentStatus.CREATED.equals(paymentStatus)) {
-            paymentMultiStepResponse =
-                    new PaymentMultiStepResponse(paymentResponse, "IN_PROGRESS", new ArrayList<>());
-        }
-        if (PaymentStatus.REJECTED.equals(paymentStatus)
-                || PaymentStatus.CANCELLED.equals(paymentStatus)) {
-            throw new PaymentAuthorizationException();
+                }
+            case "RJCT":
+                {
+                    throw new PaymentAuthorizationException();
+                }
         }
 
-        return paymentMultiStepResponse;
+        return null; // this method can return null only in case of exception
     }
 
     @Override
@@ -179,7 +210,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
     }
 
-    private void collect() {
+    private void waitForSupplementalInformation() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
     }

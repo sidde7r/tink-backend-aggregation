@@ -15,6 +15,9 @@ public class CreatePaymentResponse {
     private String transactionStatus;
     private String paymentId;
 
+    private String psuAuthenticationStatus;
+    private String scaStatus;
+
     @JsonProperty("_links")
     private LinksEntity links;
 
@@ -39,5 +42,17 @@ public class CreatePaymentResponse {
 
     public LinksEntity getLinks() {
         return links;
+    }
+
+    public String getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public String getPsuAuthenticationStatus() {
+        return psuAuthenticationStatus;
+    }
+
+    public String getScaStatus() {
+        return scaStatus;
     }
 }
