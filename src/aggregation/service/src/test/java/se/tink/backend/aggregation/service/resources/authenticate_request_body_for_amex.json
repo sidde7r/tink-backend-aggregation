@@ -7,7 +7,7 @@
     "credentials": {
         "debugUntil": 695260800,
         "providerLatency": 0,
-        "id": "aaaa",
+        "id": "authenticate-test-for-amex",
         "nextUpdate": null,
         "fields": {
             "username": "testuser",

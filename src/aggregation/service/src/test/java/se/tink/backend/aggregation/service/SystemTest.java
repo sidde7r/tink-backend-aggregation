@@ -65,12 +65,12 @@ public class SystemTest {
     }
 
     @Test
-    public void getAuthenticateShouldSetCredentialsStatusUpdated() throws Exception {
+    public void getAuthenticateForAmexShouldSetCredentialsStatusUpdated() throws Exception {
 
         // given
         String requestBodyForAuthenticateEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body.json");
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body_for_amex.json");
 
         // when
         ResponseEntity<String> authenticationCallResult =
