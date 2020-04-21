@@ -1,18 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.barclays.mock;
 
-import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
-import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
-import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
-import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
-import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.AccountIdentifier;
@@ -65,61 +58,42 @@ public class BarclaysAgentWireMockTest {
     @Test
     public void testPayment() throws Exception {
 
-        // Given
-        WireMockTestServer server = new WireMockTestServer();
-        server.prepareMockServer(
-                new AapFileParser(
-                        new ResourceFileReader()
-                                .read(
-                                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_payment_mock_log.aap")));
+        // given
+        final String wireMockFilePath =
+                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_payment_mock_log.aap";
 
-        final WireMockConfiguration configuration =
-                WireMockConfiguration.builder("localhost:" + server.getHttpsPort())
-                        .setConfigurationPath(CONFIGURATION_PATH)
-                        .setCallbackData(
-                                ImmutableMap.<String, String>builder()
-                                        .put("code", "DUMMY_AUTH_CODE")
-                                        .build())
-                        .build();
+        final AgentsServiceConfiguration configuration =
+                AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
 
-        AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("uk", "uk-barclays-oauth2")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false)
-                        .setAppId("tink")
-                        .setWireMockConfiguration(configuration);
+        final AgentWireMockPaymentTest agentWireMockPaymentTest =
+                AgentWireMockPaymentTest.builder(
+                                MarketCode.UK, "uk-barclays-oauth2", wireMockFilePath)
+                        .withConfigurationFile(configuration)
+                        .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .addPayment(createMockedDomesticPayment())
+                        .buildWithoutLogin();
 
-        builder.build().testGenericPaymentUKOB(createMockedDomesticPayment());
+        // when / then (execution and assertion currently done in the same step)
+        agentWireMockPaymentTest.executePayment();
     }
 
-    private List<Payment> createMockedDomesticPayment() {
-
-        List<Payment> payments = new ArrayList<>();
-
+    private Payment createMockedDomesticPayment() {
         ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "GBP");
         LocalDate executionDate = LocalDate.now();
         String currency = "GBP";
 
-        payments.add(
-                new Payment.Builder()
-                        .withCreditor(
-                                new Creditor(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.SORT_CODE,
-                                                DESTINATION_IDENTIFIER),
-                                        "Ritesh Tink"))
-                        .withDebtor(
-                                new Debtor(
-                                        AccountIdentifier.create(
-                                                Type.SORT_CODE, SOURCE_IDENTIFIER)))
-                        .withExactCurrencyAmount(amount)
-                        .withExecutionDate(executionDate)
-                        .withCurrency(currency)
-                        .withReference(new Reference("TRANSFER", "UK Demo"))
-                        .withUniqueId("b900555d03124056b54930e1c53c9cac")
-                        .build());
-
-        return payments;
+        return new Payment.Builder()
+                .withCreditor(
+                        new Creditor(
+                                AccountIdentifier.create(
+                                        AccountIdentifier.Type.SORT_CODE, DESTINATION_IDENTIFIER),
+                                "Ritesh Tink"))
+                .withDebtor(new Debtor(AccountIdentifier.create(Type.SORT_CODE, SOURCE_IDENTIFIER)))
+                .withExactCurrencyAmount(amount)
+                .withExecutionDate(executionDate)
+                .withCurrency(currency)
+                .withReference(new Reference("TRANSFER", "UK Demo"))
+                .withUniqueId("b900555d03124056b54930e1c53c9cac")
+                .build();
     }
 }
