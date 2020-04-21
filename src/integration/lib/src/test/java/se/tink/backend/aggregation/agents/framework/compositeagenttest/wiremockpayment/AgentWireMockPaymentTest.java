@@ -1,35 +1,33 @@
-package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh;
+package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Assert;
-import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
-import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
-import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommandSequence;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.module.AgentFactoryWireMockModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
+import se.tink.libraries.payment.rpc.Payment;
 
-public final class AgentWireMockRefreshTest {
+public final class AgentWireMockPaymentTest {
 
     private final CompositeAgentTest compositeAgentTest;
 
-    private AgentWireMockRefreshTest(
+    private AgentWireMockPaymentTest(
             MarketCode marketCode,
             String providerName,
             String wireMockFilePath,
@@ -37,7 +35,8 @@ public final class AgentWireMockRefreshTest {
             Map<String, String> loginDetails,
             Map<String, String> callbackData,
             Module agentModule,
-            Set<RefreshableItem> refreshableItems) {
+            List<Payment> paymentList,
+            Class<? extends CompositeAgentTestCommandSequence> commandSequence) {
 
         final WireMockTestServer server = new WireMockTestServer();
         server.prepareMockServer(
@@ -47,9 +46,10 @@ public final class AgentWireMockRefreshTest {
                 ImmutableSet.of(
                         new AgentContextModule(
                                 marketCode, providerName, configuration, loginDetails),
-                        new RefreshRequestModule(refreshableItems),
+                        new RefreshRequestModule(RefreshableItem.REFRESHABLE_ITEMS_ALL),
+                        new PaymentRequestModule(paymentList),
                         new AgentFactoryWireMockModule(
-                                server.getHttpsPort(), callbackData, agentModule));
+                                server.getHttpsPort(), callbackData, agentModule, commandSequence));
 
         Injector injector = Guice.createInjector(modules);
         compositeAgentTest = injector.getInstance(CompositeAgentTest.class);
@@ -60,37 +60,12 @@ public final class AgentWireMockRefreshTest {
      *
      * @throws Exception May throw any exception that the agent throws.
      */
-    public void executeRefresh() throws Exception {
+    public void executePayment() throws Exception {
         compositeAgentTest.execute();
     }
 
     /**
-     * Assert that data fetched by agent matches the data provided in the AgentContractEntity.
-     *
-     * @param expected Data to be matched with data fetched by agent.
-     */
-    public void assertExpectedData(final AgentContractEntity expected) {
-
-        final NewAgentTestContext context = compositeAgentTest.getContext();
-
-        Assert.assertTrue(
-                AgentContractEntitiesAsserts.areListsMatchingVerbose(
-                        expected.getIdentityData()
-                                .map(Collections::singletonList)
-                                .orElseGet(Collections::emptyList),
-                        context.getIdentityData()
-                                .map(Collections::singletonList)
-                                .orElseGet(Collections::emptyList)));
-        Assert.assertTrue(
-                AgentContractEntitiesAsserts.areListsMatchingVerbose(
-                        expected.getAccounts(), context.getUpdatedAccounts()));
-        Assert.assertTrue(
-                AgentContractEntitiesAsserts.areListsMatchingVerbose(
-                        expected.getTransactions(), context.getTransactions()));
-    }
-
-    /**
-     * Construct builder for creating an AgentWireMockRefreshTest.
+     * Construct builder for creating an AgentWireMockPaymentTest.
      *
      * @param market MarketCode for provider to test.
      * @param providerName Provider name as specified in provider configuration.
@@ -108,7 +83,7 @@ public final class AgentWireMockRefreshTest {
         private final String wireMockFilePath;
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
-        private final Set<RefreshableItem> refreshableItems;
+        private final List<Payment> paymentList;
 
         private AgentsServiceConfiguration configuration;
         private Module agentModule;
@@ -120,7 +95,7 @@ public final class AgentWireMockRefreshTest {
             this.configuration = new AgentsServiceConfiguration();
             this.credentialFields = new HashMap<>();
             this.callbackData = new HashMap<>();
-            this.refreshableItems = new HashSet<>();
+            this.paymentList = new ArrayList<>();
         }
 
         /**
@@ -179,26 +154,26 @@ public final class AgentWireMockRefreshTest {
         }
 
         /**
-         * Add refreshable items. If not specified agent will use <code>
-         * RefreshableItem.REFRESHABLE_ITEMS_ALL</code>.
+         * Add payment to be executed by the agent.
          *
          * <p>Can be called multiple times to add several items.
          *
-         * @param items Items to refresh.
+         * @param payment Payment request
          * @return This builder.
          */
-        public Builder addRefreshableItems(RefreshableItem... items) {
-            this.refreshableItems.addAll(Arrays.asList(items));
+        public Builder addPayment(Payment payment) {
+            this.paymentList.add(payment);
             return this;
         }
 
-        public AgentWireMockRefreshTest build() {
-            if (refreshableItems.isEmpty()) {
-                refreshableItems.addAll(
-                        RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL));
-            }
+        /**
+         * Builds payment test that does not attempt to login before executing payment.
+         *
+         * @return WireMock payment test.
+         */
+        public AgentWireMockPaymentTest buildWithoutLogin() {
 
-            return new AgentWireMockRefreshTest(
+            return new AgentWireMockPaymentTest(
                     market,
                     providerName,
                     wireMockFilePath,
@@ -206,7 +181,27 @@ public final class AgentWireMockRefreshTest {
                     credentialFields,
                     callbackData,
                     agentModule,
-                    refreshableItems);
+                    paymentList,
+                    WireMockNoLoginPaymentCommandSequence.class);
+        }
+
+        /**
+         * Builds payment test that will login before executing the payment.
+         *
+         * @return WireMock payment test.
+         */
+        public AgentWireMockPaymentTest buildWithLogin() {
+
+            return new AgentWireMockPaymentTest(
+                    market,
+                    providerName,
+                    wireMockFilePath,
+                    configuration,
+                    credentialFields,
+                    callbackData,
+                    agentModule,
+                    paymentList,
+                    WireMockPaymentWithLoginCommandSequence.class);
         }
     }
 }

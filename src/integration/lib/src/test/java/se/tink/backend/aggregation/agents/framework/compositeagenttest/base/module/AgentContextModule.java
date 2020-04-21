@@ -9,7 +9,6 @@ import com.google.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
@@ -24,9 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
@@ -41,24 +37,20 @@ public final class AgentContextModule extends AbstractModule {
     private final String providerName;
     private final AgentsServiceConfiguration configuration;
     private final Map<String, String> loginDetails;
-    private final Set<RefreshableItem> refreshableItems;
 
     public AgentContextModule(
             MarketCode marketCode,
             String providerName,
             AgentsServiceConfiguration configuration,
-            Map<String, String> loginDetails,
-            Set<RefreshableItem> refreshableItems) {
+            Map<String, String> loginDetails) {
         this.marketCode = marketCode;
         this.providerName = providerName;
         this.configuration = configuration;
         this.loginDetails = loginDetails;
-        this.refreshableItems = refreshableItems;
     }
 
     @Override
     protected void configure() {
-        bind(CredentialsRequest.class).to(RefreshInformationRequest.class).in(Scopes.SINGLETON);
         bind(AgentContext.class).to(NewAgentTestContext.class).in(Scopes.SINGLETON);
         bind(AgentsServiceConfiguration.class).toInstance(configuration);
         bind(TppSecretsServiceConfiguration.class)
@@ -102,16 +94,6 @@ public final class AgentContextModule extends AbstractModule {
         credential.setFields(loginDetails);
 
         return credential;
-    }
-
-    @Provides
-    @Singleton
-    protected RefreshInformationRequest provideRefreshInformationRequest(
-            User user, Credentials credential, Provider provider) {
-        RefreshInformationRequest refreshInformationRequest =
-                new RefreshInformationRequest(user, provider, credential, true);
-        refreshInformationRequest.setItemsToRefresh(refreshableItems);
-        return refreshInformationRequest;
     }
 
     @Provides

@@ -1,17 +1,15 @@
 java_library(
-    name = "operation",
+    name = "command",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:provider_configurations",
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive/executor",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/base",
         "//src/libraries/metrics:registry",
         "//src/libraries/strings",
