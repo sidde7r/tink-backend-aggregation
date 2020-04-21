@@ -81,8 +81,8 @@ public class CbiGlobeApiClient {
 
         return createRequest(url)
                 .addBearerToken(authToken)
-                .header(HeaderKeys.ASPSP_CODE, configuration.getAspspCode())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .header(HeaderKeys.ASPSP_CODE, configuration.getAspspCode())
                 .header(HeaderKeys.DATE, CbiGlobeUtils.formatDate(new Date()));
     }
 
@@ -97,15 +97,6 @@ public class CbiGlobeApiClient {
         }
 
         return rb;
-    }
-
-    private RequestBuilder createRequestWithConsentSandbox(URL url) {
-        return createRequestInSession(url)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
-    }
-
-    private RequestBuilder createSepaPayment(URL url) {
-        return createRequestInSession(url);
     }
 
     protected RequestBuilder createAccountsRequestWithConsent() {
@@ -252,9 +243,10 @@ public class CbiGlobeApiClient {
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
 
-        return createSepaPayment(Urls.PAYMENT)
+        return createRequestInSession(Urls.PAYMENT)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(getConfiguration().getRedirectUrl())
@@ -264,10 +256,15 @@ public class CbiGlobeApiClient {
     }
 
     public CreatePaymentResponse getPayment(String uniqueId) {
-        return createRequestWithConsentSandbox(
-                        Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
+        return createRequestInSession(Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
+                .get(CreatePaymentResponse.class);
+    }
+
+    public CreatePaymentResponse getPaymentStatus(String uniqueId) {
+        return createRequestInSession(
+                        Urls.FETCH_PAYMENT_STATUS.parameter(IdTags.PAYMENT_ID, uniqueId))
                 .get(CreatePaymentResponse.class);
     }
 

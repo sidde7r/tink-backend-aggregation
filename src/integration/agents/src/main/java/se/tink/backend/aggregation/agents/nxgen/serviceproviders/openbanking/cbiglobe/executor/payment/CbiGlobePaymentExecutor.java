@@ -4,6 +4,7 @@ import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
@@ -33,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
@@ -41,19 +44,24 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     private final List<PaymentResponse> paymentResponses = new ArrayList<>();
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final PersistentStorage persistentStorage;
+    private final StrongAuthenticationState strongAuthenticationState;
 
     public CbiGlobePaymentExecutor(
             CbiGlobeApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            PersistentStorage persistentStorage) {
+            PersistentStorage persistentStorage,
+            StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.persistentStorage = persistentStorage;
+        this.strongAuthenticationState = strongAuthenticationState;
     }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
         fetchToken();
+
+        persistentStorage.put(QueryKeys.STATE, strongAuthenticationState.getState());
 
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
@@ -102,18 +110,44 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return paymentResponse;
     }
 
+    public PaymentResponse fetchPaymentStatus(String paymentId, PaymentType type) {
+        PaymentResponse paymentResponse =
+                apiClient.getPaymentStatus(paymentId).toTinkPaymentResponse(type);
+        paymentResponses.add(paymentResponse);
+        return paymentResponse;
+    }
+
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentAuthorizationException {
         openThirdPartyApp(new URL(persistentStorage.get(StorageKeys.LINK)));
         collect();
-        apiClient
-                .getPayment(paymentMultiStepRequest.getPayment().getUniqueId())
-                .toTinkPaymentResponse(PaymentType.SEPA);
+        PaymentResponse paymentResponse =
+                fetchPaymentStatus(
+                        paymentMultiStepRequest.getPayment().getUniqueId(),
+                        paymentMultiStepRequest.getPayment().getType());
 
-        return new PaymentMultiStepResponse(
-                paymentMultiStepRequest.getPayment(),
-                AuthenticationStepConstants.STEP_FINALIZE,
-                new ArrayList<>());
+        PaymentStatus paymentStatus = paymentResponse.getPayment().getStatus();
+
+        PaymentMultiStepResponse paymentMultiStepResponse = null;
+        if (PaymentStatus.SIGNED.equals(paymentStatus)) {
+            paymentMultiStepResponse =
+                    new PaymentMultiStepResponse(
+                            paymentResponse,
+                            AuthenticationStepConstants.STEP_FINALIZE,
+                            new ArrayList<>());
+        }
+        if (PaymentStatus.PENDING.equals(paymentStatus)
+                || PaymentStatus.CREATED.equals(paymentStatus)) {
+            paymentMultiStepResponse =
+                    new PaymentMultiStepResponse(paymentResponse, "IN_PROGRESS", new ArrayList<>());
+        }
+        if (PaymentStatus.REJECTED.equals(paymentStatus)
+                || PaymentStatus.CANCELLED.equals(paymentStatus)) {
+            throw new PaymentAuthorizationException();
+        }
+
+        return paymentMultiStepResponse;
     }
 
     @Override
@@ -147,7 +181,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     private void collect() {
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(QueryKeys.STATE), 9L, TimeUnit.MINUTES);
+                strongAuthenticationState.getSupplementalKey(), 9L, TimeUnit.MINUTES);
     }
 
     protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
@@ -161,10 +195,6 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                                 new NotImplementedException(
                                         "No PaymentType found for your AccountIdentifiers pair "
                                                 + accountIdentifiersKey));
-    }
-
-    private String formatSupplementalKey(String key) {
-        return String.format("tpcb_%s", key);
     }
 
     private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>

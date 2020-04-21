@@ -40,6 +40,8 @@ public final class CbiGlobeConstants {
         public static final URL CONSENTS_STATUS = new URL(BASE_URL + ApiServices.CONSENTS_STATUS);
         public static final URL PAYMENT = new URL(BASE_URL + ApiServices.PAYMENT);
         public static final URL FETCH_PAYMENT = new URL(BASE_URL + ApiServices.FETCH_PAYMENT);
+        public static final URL FETCH_PAYMENT_STATUS =
+                new URL(BASE_URL + ApiServices.FETCH_PAYMENT_STATUS);
         public static final URL CARD_ACCOUNTS = new URL(BASE_URL + ApiServices.CARD_ACCOUNTS);
         public static final URL CARD_BALANCES = new URL(BASE_URL + ApiServices.CARD_BALANCES);
         public static final URL CARD_TRANSACTIONS =
@@ -63,6 +65,8 @@ public final class CbiGlobeConstants {
                 "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers";
         private static final String FETCH_PAYMENT =
                 "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}";
+        private static final String FETCH_PAYMENT_STATUS =
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}/status";
         public static final String CARD_ACCOUNTS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts";
         public static final String CARD_BALANCES =
@@ -106,6 +110,7 @@ public final class CbiGlobeConstants {
         public static final String DATE = "date";
         public static final String X_REQUEST_ID = "x-request-id";
         public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
+        public static final String TPP_REDIRECT_PREFERRED = "tpp-redirect-preferred";
         public static final String TPP_NOK_REDIRECT_URI = "tpp-nok-redirect-uri";
         public static final String CONSENT_ID = "consent-id";
         public static final String PSU_ID_TYPE = "psu-id-type";
