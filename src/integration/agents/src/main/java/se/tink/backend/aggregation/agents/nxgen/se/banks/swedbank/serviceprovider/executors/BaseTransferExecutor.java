@@ -135,8 +135,7 @@ public class BaseTransferExecutor {
     }
 
     // convert HttpResponseException to TransferExecutionException if response indicates bad date
-    // for payment
-    // used by EInvoice and Payment
+    // for payment or transfer
     protected RuntimeException convertExceptionIfBadPaymentDate(HttpResponseException hre)
             throws TransferExecutionException {
         HttpResponse httpResponse = hre.getResponse();
