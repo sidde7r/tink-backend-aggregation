@@ -27,9 +27,9 @@ public enum CbiGlobePaymentStatus {
         paymentStatusToTinkMapper.put(ACCP, PaymentStatus.SIGNED);
         paymentStatusToTinkMapper.put(ACSC, PaymentStatus.SIGNED);
         paymentStatusToTinkMapper.put(ACSP, PaymentStatus.SIGNED);
-        paymentStatusToTinkMapper.put(ACTC, PaymentStatus.PENDING);
-        paymentStatusToTinkMapper.put(ACWC, PaymentStatus.PENDING);
-        paymentStatusToTinkMapper.put(ACWP, PaymentStatus.PENDING);
+        paymentStatusToTinkMapper.put(ACTC, PaymentStatus.SIGNED);
+        paymentStatusToTinkMapper.put(ACWC, PaymentStatus.SIGNED);
+        paymentStatusToTinkMapper.put(ACWP, PaymentStatus.SIGNED);
         paymentStatusToTinkMapper.put(RCVD, PaymentStatus.CREATED);
         paymentStatusToTinkMapper.put(RJCT, PaymentStatus.REJECTED);
         paymentStatusToTinkMapper.put(PDNG, PaymentStatus.PENDING);
