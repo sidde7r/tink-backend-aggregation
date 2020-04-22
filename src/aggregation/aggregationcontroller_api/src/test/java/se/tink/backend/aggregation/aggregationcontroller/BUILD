@@ -12,7 +12,9 @@ junit_test(
     ],
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/iface",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/rpc",
         "//src/integration/credentials:service",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",

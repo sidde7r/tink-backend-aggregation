@@ -6,6 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/rpc",
         "//src/integration/agent_data_availability_tracker/client:serialization",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
         "//src/integration/agent_data_availability_tracker/proto",
