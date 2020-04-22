@@ -17,8 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
@@ -46,8 +44,6 @@ public class FakeAggregationControllerAggregationClient
     private static final int AGGREGATION_CONTROLLER_PORT = 8080;
 
     private final ClientConfig config;
-    private static final Logger log =
-            LoggerFactory.getLogger(FakeAggregationControllerAggregationClient.class);
 
     private static ObjectMapper mapper = new ObjectMapper();
 
