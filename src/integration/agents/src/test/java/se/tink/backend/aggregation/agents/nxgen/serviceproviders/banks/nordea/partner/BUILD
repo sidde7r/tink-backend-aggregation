@@ -4,10 +4,8 @@ junit_test(
     name = "partner",
     srcs = glob(["**/*.java"]),
     data = [
+        "//:agent_test_data",
         "//data:agents",
-        "//data:aggregation_test",
-        "//data:cryptography_test",
-        "//etc:development",
     ],
     tags = [
         "external",
@@ -18,7 +16,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/nordea/partner",
     ],
     deps = [
-        "//src/integration/api",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:org_mockito_mockito_core",
