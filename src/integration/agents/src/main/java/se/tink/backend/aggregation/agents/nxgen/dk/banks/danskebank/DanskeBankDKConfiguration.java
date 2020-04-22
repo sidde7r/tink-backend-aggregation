@@ -82,11 +82,17 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     @Override
     public List<String> getCheckingAccountTypes() {
         return ImmutableList.<String>builder()
-                .add("542")
                 .add("13X")
                 .add("19C")
                 .add("15C")
                 .add("12G")
+                .add("008")
+                .add("009")
+                .add("136")
+                .add("100")
+                .add("16E")
+                .add("16K")
+                .add("016")
                 .build();
     }
 
@@ -102,6 +108,9 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
                 .add("15U")
                 .add("655")
                 .add("12K")
+                .add("007")
+                .add("542")
+                .add("471")
                 .build();
     }
 
@@ -110,6 +119,7 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
         return ImmutableMap.<String, Loan.Type>builder()
                 .put("155", Loan.Type.MORTGAGE)
                 .put("165", Loan.Type.MORTGAGE)
+                .put("80X", Loan.Type.MORTGAGE)
                 .put("16L", Loan.Type.BLANCO)
                 .put("094", Loan.Type.VEHICLE)
                 .build();
