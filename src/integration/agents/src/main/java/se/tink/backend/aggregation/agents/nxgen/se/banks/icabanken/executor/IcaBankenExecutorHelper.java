@@ -432,10 +432,6 @@ public class IcaBankenExecutorHelper {
         return !apiClient.fetchUnsignedTransfers().isEmpty();
     }
 
-    /**
-     * Try to put transfer in user's outbox. If the date is not a bank day ICA Banken returns a 409
-     * response with a new suggested date. Will then update the date and try to add to outbox again.
-     */
     public void putTransferInOutbox(TransferRequest transferRequest) {
 
         try {
@@ -443,8 +439,7 @@ public class IcaBankenExecutorHelper {
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
 
-            // Conflict (409) means the date was a non bank day, update transfer request with
-            // suggested date.
+            // Conflict (409) means the date was a non bank day
             if (response.getStatus() == HttpStatus.SC_CONFLICT) {
                 TransferResponse transferResponse = response.getBody(TransferResponse.class);
 
@@ -455,7 +450,7 @@ public class IcaBankenExecutorHelper {
                                     getEndUserMessage(
                                             transferResponse,
                                             TransferExecutionException.EndUserMessage
-                                                    .TRANSFER_EXECUTE_FAILED))
+                                                    .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY))
                             .setException(e)
                             .build();
                 }
