@@ -14,7 +14,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/metrics",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation/type",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
-        "//src/integration/credentials:rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
         "//src/integration/identity_data",

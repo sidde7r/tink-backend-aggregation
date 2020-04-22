@@ -13,8 +13,8 @@ junit_test(
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
-        "//src/integration/credentials:rpc",
         "//src/integration/credentials:service",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//third_party:com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
         "//third_party:com_google_inject_guice",
