@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.config.ClientConfig;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -43,8 +42,6 @@ public class FakeAggregationControllerAggregationClient
     private static final String AGGREGATION_CONTROLLER_NAME = "fake_aggregation_controller";
     private static final int AGGREGATION_CONTROLLER_PORT = 8080;
 
-    private final ClientConfig config;
-
     private static ObjectMapper mapper = new ObjectMapper();
 
     static {
@@ -54,9 +51,7 @@ public class FakeAggregationControllerAggregationClient
     }
 
     @Inject
-    private FakeAggregationControllerAggregationClient(ClientConfig custom) {
-        this.config = custom;
-    }
+    private FakeAggregationControllerAggregationClient() {}
 
     @Override
     public Response generateStatisticsAndActivityAsynchronously(
