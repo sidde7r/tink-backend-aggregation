@@ -110,8 +110,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new DanskeBankTransactionalAccountFetcher(
-                        this.credentials, this.apiClient, this.configuration),
+                new DanskeBankTransactionalAccountFetcher(this.apiClient, this.configuration),
                 createTransactionFetcherController());
     }
 

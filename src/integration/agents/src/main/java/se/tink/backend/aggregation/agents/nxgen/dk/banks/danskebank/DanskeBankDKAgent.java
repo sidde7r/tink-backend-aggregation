@@ -117,8 +117,7 @@ public class DanskeBankDKAgent extends DanskeBankAgent
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new DanskeBankTransactionalAccountFetcher(
-                        this.credentials, this.apiClient, this.configuration),
+                new DanskeBankTransactionalAccountFetcher(this.apiClient, this.configuration),
                 createTransactionFetcherController());
     }
 

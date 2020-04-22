@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.agents.rpc.Credentials;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
@@ -14,16 +15,16 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
-    private final Credentials credentials;
+
+    private static final Logger log =
+            LoggerFactory.getLogger(DanskeBankTransactionalAccountFetcher.class);
+
     private final DanskeBankApiClient apiClient;
     private final DanskeBankConfiguration configuration;
     private final String languageCode;
 
     public DanskeBankTransactionalAccountFetcher(
-            Credentials credentials,
-            DanskeBankApiClient apiClient,
-            DanskeBankConfiguration configuration) {
-        this.credentials = credentials;
+            DanskeBankApiClient apiClient, DanskeBankConfiguration configuration) {
         this.apiClient = apiClient;
         this.configuration = configuration;
         this.languageCode = configuration.getLanguageCode();
@@ -56,6 +57,12 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                         DanskeBankPredicates.knownSavingsAccountProducts(
                                         configuration.getSavingsAccountTypes())
                                 .negate())
+                .peek(
+                        accountEntity ->
+                                log.info(
+                                        "Account: apiIdentifier = {}, accountProduct = {}",
+                                        accountEntity.getAccountNoInt(),
+                                        accountEntity.getAccountProduct()))
                 .map(accountEntity -> accountEntity.toCheckingAccount())
                 .collect(Collectors.toList());
     }
