@@ -39,19 +39,17 @@ public class FakeAggregationControllerAggregationClient
         implements AggregationControllerAggregationClient {
 
     private final InetSocketAddress socket;
-
-    private static final ObjectMapper mapper = new ObjectMapper();
-
-    static {
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(ExactCurrencyAmount.class, new ExactCurrencyAmountDeserializer());
-        mapper.registerModule(module);
-    }
+    private final ObjectMapper mapper;
 
     @Inject
     private FakeAggregationControllerAggregationClient(
             @FakeAggregationControllerSocket final InetSocketAddress socket) {
         this.socket = socket;
+
+        mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(ExactCurrencyAmount.class, new ExactCurrencyAmountDeserializer());
+        mapper.registerModule(module);
     }
 
     @Override
