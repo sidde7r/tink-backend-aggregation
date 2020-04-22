@@ -116,15 +116,16 @@ public class IcaBankenExecutorUtils {
                         TimeZone.getTimeZone(IcaBankenConstants.Date.DEFAULT_ZONE_ID));
         if (transfer.getType().equals(TransferType.PAYMENT)) {
             return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                    dateHelper.getTransferDate(transfer.getDueDate(), 9, 30));
+                    dateHelper.getProvidedDateOrBestPossibleDate(transfer.getDueDate(), 9, 30));
         } else {
             if (IntraBankChecker.isSwedishMarketIntraBank(
                     transfer.getSource(), transfer.getDestination())) {
                 return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                        dateHelper.getProvidedOrTodayDate(transfer.getDueDate()));
+                        dateHelper.getProvidedDateOrCurrentDate(transfer.getDueDate()));
             } else {
                 return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                        dateHelper.getTransferDate(transfer.getDueDate(), 13, 00));
+                        dateHelper.getProvidedDateOrBestPossibleDate(
+                                transfer.getDueDate(), 13, 00));
             }
         }
     }

@@ -27,7 +27,7 @@ public class DanskeBankDateUtil {
 
     public Date getTransferDateForInternalTransfer(Date date, Clock now) {
         dateHelper.setClock(now);
-        return dateHelper.getProvidedOrTodayDate(date);
+        return dateHelper.getProvidedDateOrCurrentDate(date);
     }
 
     public String getTransferDateForExternalTransfer(Date date) {
@@ -41,7 +41,7 @@ public class DanskeBankDateUtil {
         // transfers
         // but according to new info, it accepts same day's transfers, if they are done before 13:00
         dateHelper.setClock(now);
-        return dateHelper.getTransferDate(date, 13, 0);
+        return dateHelper.getProvidedDateOrBestPossibleDate(date, 13, 0);
     }
 
     public String getTransferDateForBgPg(Date date) {
@@ -55,6 +55,6 @@ public class DanskeBankDateUtil {
         // payments
         // but according to new info, it accepts same day's transfers, if they are done before 10:00
         dateHelper.setClock(now);
-        return dateHelper.getTransferDate(date, 10, 0);
+        return dateHelper.getProvidedDateOrBestPossibleDate(date, 10, 0);
     }
 }

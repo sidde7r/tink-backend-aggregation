@@ -23,13 +23,13 @@ public class SwedbankDateUtils {
     }
 
     public Date getTransferDateForInternalTransfer(Date date) {
-        return getDateOrNullIfDueDateIsToday(dateHelper.getProvidedOrTodayDate(date));
+        return getDateOrNullIfDueDateIsToday(dateHelper.getProvidedDateOrCurrentDate(date));
     }
 
     // Used for testing purposes to be able to set a fixed "now"
     Date getTransferDateForInternalTransfer(Date date, Clock now) {
         dateHelper.setClock(now);
-        return getDateOrNullIfDueDateIsToday(dateHelper.getProvidedOrTodayDate(date));
+        return getDateOrNullIfDueDateIsToday(dateHelper.getProvidedDateOrCurrentDate(date));
     }
 
     public Date getTransferDateForExternalTransfer(Date date) {
@@ -54,7 +54,7 @@ public class SwedbankDateUtils {
 
     private Date getTransferDate(Date date, int cutoffHour, int cutoffMinute) {
         return getDateOrNullIfDueDateIsToday(
-                dateHelper.getTransferDate(date, cutoffHour, cutoffMinute));
+                dateHelper.getProvidedDateOrBestPossibleDate(date, cutoffHour, cutoffMinute));
     }
 
     /**

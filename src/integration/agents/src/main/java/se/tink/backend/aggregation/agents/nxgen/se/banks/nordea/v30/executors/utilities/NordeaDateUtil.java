@@ -14,14 +14,14 @@ public class NordeaDateUtil {
             new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
 
     public static Date getTransferDateForIntraBankTransfer(Date date) {
-        return dateHelper.getProvidedOrTodayDate(date);
+        return dateHelper.getProvidedDateOrCurrentDate(date);
     }
 
     public static Date getTransferDateForInterBankTransfer(Date date) {
-        return dateHelper.getTransferDate(date, 12, 45);
+        return dateHelper.getProvidedDateOrBestPossibleDate(date, 12, 45);
     }
 
     public static Date getTransferDateForBgPg(Date date) {
-        return dateHelper.getTransferDate(date, 9, 45);
+        return dateHelper.getProvidedDateOrBestPossibleDate(date, 9, 45);
     }
 }

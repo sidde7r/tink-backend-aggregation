@@ -16,6 +16,6 @@ public class LansforsakringarDateUtil {
             new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
 
     public static Long getNextPossiblePaymentDateForBgPg(Date dateFromTransfer) {
-        return dateHelper.getTransferDate(dateFromTransfer, 10, 0).getTime();
+        return dateHelper.getProvidedDateOrBestPossibleDate(dateFromTransfer, 10, 0).getTime();
     }
 }
