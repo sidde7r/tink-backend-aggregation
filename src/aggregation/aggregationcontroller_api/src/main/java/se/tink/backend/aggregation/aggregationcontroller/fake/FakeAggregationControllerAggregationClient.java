@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.aggregationcontroller;
+package se.tink.backend.aggregation.aggregationcontroller.fake;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

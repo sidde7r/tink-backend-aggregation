@@ -30,8 +30,8 @@ import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provi
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
-import se.tink.backend.aggregation.aggregationcontroller.FakeAggregationControllerAggregationClient;
-import se.tink.backend.aggregation.aggregationcontroller.FakeAggregationControllerSocket;
+import se.tink.backend.aggregation.aggregationcontroller.fake.FakeAggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.fake.FakeAggregationControllerSocket;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;

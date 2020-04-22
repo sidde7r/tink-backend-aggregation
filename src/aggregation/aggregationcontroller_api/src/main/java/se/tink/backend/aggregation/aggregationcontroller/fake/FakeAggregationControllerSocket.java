@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.aggregationcontroller;
+package se.tink.backend.aggregation.aggregationcontroller.fake;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
