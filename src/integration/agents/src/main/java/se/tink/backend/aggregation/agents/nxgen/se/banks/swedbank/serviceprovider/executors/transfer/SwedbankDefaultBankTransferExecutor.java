@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.function.Function;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -12,10 +13,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.RegisteredTransfersResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.rpc.RegisterTransferRecipientRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.rpc.RegisterTransferRecipientResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;
@@ -31,8 +35,9 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
             Catalog catalog,
             SwedbankDefaultApiClient apiClient,
             SwedbankTransferHelper transferHelper,
-            SwedbankStorage swedbankStorage) {
-        super(apiClient, transferHelper);
+            SwedbankStorage swedbankStorage,
+            SwedbankDateUtils dateUtils) {
+        super(apiClient, transferHelper, dateUtils);
         this.swedbankStorage = swedbankStorage;
         this.catalog = catalog;
     }
@@ -71,29 +76,40 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
             recipientAccountId = newDestinationAccount.getId();
         }
 
-        RegisterTransferResponse registerTransfer =
-                apiClient.registerTransfer(
-                        transfer.getAmount().getValue(),
-                        recipientAccountId,
-                        transfer.getDestinationMessage(),
-                        sourceAccountId,
-                        transfer.getDueDate());
-
-        RegisteredTransfersResponse registeredTransfers =
-                apiClient.registeredTransfers(registerTransfer.getLinks().getNextOrThrow());
-
-        registeredTransfers.oneUnsignedTransferOrThrow();
-
-        Optional<String> idToConfirm = registeredTransfers.getIdToConfirm();
-        if (!idToConfirm.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(
-                            TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
-                    .build();
+        Date dueDate;
+        if (IntraBankChecker.isAccountIdentifierIntraBank(
+                transfer.getSource(), transfer.getDestination())) {
+            dueDate = dateUtils.getTransferDateForInternalTransfer(transfer.getDueDate());
+        } else {
+            dueDate = dateUtils.getTransferDateForExternalTransfer(transfer.getDueDate());
         }
 
-        return registeredTransfers;
+        try {
+            RegisterTransferResponse registerTransfer =
+                    apiClient.registerTransfer(
+                            transfer.getAmount().getValue(),
+                            recipientAccountId,
+                            transfer.getDestinationMessage(),
+                            sourceAccountId,
+                            dueDate);
+            RegisteredTransfersResponse registeredTransfers =
+                    apiClient.registeredTransfers(registerTransfer.getLinks().getNextOrThrow());
+
+            registeredTransfers.oneUnsignedTransferOrThrow();
+
+            Optional<String> idToConfirm = registeredTransfers.getIdToConfirm();
+            if (!idToConfirm.isPresent()) {
+                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setEndUserMessage(
+                                TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED)
+                        .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
+                        .build();
+            }
+
+            return registeredTransfers;
+        } catch (HttpResponseException e) {
+            throw convertExceptionIfBadPaymentDate(e);
+        }
     }
 
     private AbstractAccountEntity createSignedRecipient(final Transfer transfer) {

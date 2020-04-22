@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -208,30 +205,6 @@ public class SwedbankTransferHelper {
         }
 
         return sourceAccount;
-    }
-
-    /**
-     * Swedbank reject today's date as a possible execution date. If the payment/transfer is suppose
-     * to be executed today the date field needs to be left blank (null).
-     *
-     * @return Input date if a future date, null if input date is today's date.
-     */
-    public static Date getDateOrNullIfDueDateIsToday(Date transferDate) {
-        if (transferDate == null) {
-            return null;
-        }
-
-        LocalDate todayLocalDate = LocalDate.now(ZoneId.of("CET"));
-
-        LocalDate transferLocalDate =
-                transferDate.toInstant().atZone(ZoneId.of("CET")).toLocalDate();
-
-        // Use localdate for comparison as we don't care about time
-        if (todayLocalDate.equals(transferLocalDate)) {
-            return null;
-        }
-
-        return transferDate;
     }
 
     public static void ensureLinksNotNull(

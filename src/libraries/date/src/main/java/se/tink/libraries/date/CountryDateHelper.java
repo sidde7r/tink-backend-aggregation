@@ -199,14 +199,32 @@ public class CountryDateHelper {
         return (dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY);
     }
 
-    public Date getProvidedOrTodayDate(Date currentDueDate) {
-        return currentDueDate == null ? getNow() : currentDueDate;
+    /**
+     * If providedDate is null it will return the current date, otherwise return providedDate
+     *
+     * @param providedDate the date to consider
+     * @return current date or providedDate
+     */
+    public Date getProvidedDateOrCurrentDate(Date providedDate) {
+        return providedDate == null ? getNow() : providedDate;
     }
 
-    public Date getTransferDate(Date currentDueDate, int cutOffHours, int cutOffMinutes) {
-        return currentDueDate == null
+    /**
+     * If providedDate is not null it will return providedDate otherwise it will calculate the next
+     * date that is not a holiday
+     *
+     * @param providedDate the date to consider
+     * @param cutOffHours if the time of day is past this hour, the returned date will be the next
+     *     business day.
+     * @param cutOffMinutes if the time of day is past this minute, the returned date will be the
+     *     next business day.
+     * @return the next available business day or providedDate
+     */
+    public Date getProvidedDateOrBestPossibleDate(
+            Date providedDate, int cutOffHours, int cutOffMinutes) {
+        return providedDate == null
                 ? getBestPossibleTransferDate(cutOffHours, cutOffMinutes)
-                : currentDueDate;
+                : providedDate;
     }
 
     private ImmutableSet<String> getCountryHolidays(String countryCode) {

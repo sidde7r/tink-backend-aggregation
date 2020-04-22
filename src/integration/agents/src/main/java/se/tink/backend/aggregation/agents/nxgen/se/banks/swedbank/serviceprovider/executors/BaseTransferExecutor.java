@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.rpc.TransferTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.updatepayment.rpc.PaymentDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.TransferDestinationAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfile;
@@ -34,11 +35,15 @@ public class BaseTransferExecutor {
 
     protected final SwedbankDefaultApiClient apiClient;
     protected final SwedbankTransferHelper transferHelper;
+    protected final SwedbankDateUtils dateUtils;
 
     protected BaseTransferExecutor(
-            SwedbankDefaultApiClient apiClient, SwedbankTransferHelper transferHelper) {
+            SwedbankDefaultApiClient apiClient,
+            SwedbankTransferHelper transferHelper,
+            SwedbankDateUtils dateUtils) {
         this.apiClient = apiClient;
         this.transferHelper = transferHelper;
+        this.dateUtils = dateUtils;
     }
 
     /**
@@ -130,8 +135,7 @@ public class BaseTransferExecutor {
     }
 
     // convert HttpResponseException to TransferExecutionException if response indicates bad date
-    // for payment
-    // used by EInvoice and Payment
+    // for payment or transfer
     protected RuntimeException convertExceptionIfBadPaymentDate(HttpResponseException hre)
             throws TransferExecutionException {
         HttpResponse httpResponse = hre.getResponse();

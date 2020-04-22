@@ -16,17 +16,17 @@ public class HandelsbankenDateUtils {
 
     public static String getTransferDateForInternalTransfer(Date date) {
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                dateHelper.getTransferDate(date, 23, 59));
+                dateHelper.getProvidedDateOrBestPossibleDate(date, 23, 59));
     }
 
     public static String getTransferDateForExternalTransfer(Date date) {
 
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                dateHelper.getTransferDate(date, 14, 00));
+                dateHelper.getProvidedDateOrBestPossibleDate(date, 14, 00));
     }
 
     public static String getTransferDateForBgPg(Date date) {
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                dateHelper.getTransferDate(date, 00, 00));
+                dateHelper.getProvidedDateOrBestPossibleDate(date, 00, 00));
     }
 }

@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.updatepayment.rpc.ConfirmedTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.updatepayment.rpc.PaymentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.updatepayment.rpc.PaymentsConfirmedResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.UpdatePaymentExecutor;
@@ -22,8 +23,10 @@ public class SwedbankDefaultUpdatePaymentExecutor extends BaseTransferExecutor
         implements UpdatePaymentExecutor {
 
     public SwedbankDefaultUpdatePaymentExecutor(
-            SwedbankDefaultApiClient apiClient, SwedbankTransferHelper transferHelper) {
-        super(apiClient, transferHelper);
+            SwedbankDefaultApiClient apiClient,
+            SwedbankTransferHelper transferHelper,
+            SwedbankDateUtils dateUtils) {
+        super(apiClient, transferHelper, dateUtils);
     }
 
     @Override

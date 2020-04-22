@@ -17,12 +17,13 @@ public class SEBDateUtil {
     public static String getTransferDate(Date date, boolean withinSEB) {
         Date nextPossibleDate =
                 withinSEB
-                        ? dateHelper.getProvidedOrTodayDate(date)
-                        : dateHelper.getTransferDate(date, 13, 35);
+                        ? dateHelper.getProvidedDateOrCurrentDate(date)
+                        : dateHelper.getProvidedDateOrBestPossibleDate(date, 13, 35);
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(nextPossibleDate);
     }
 
     public static String getTransferDateForBgPg(Date date) {
-        return ThreadSafeDateFormat.FORMATTER_DAILY.format(dateHelper.getTransferDate(date, 9, 45));
+        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                dateHelper.getProvidedDateOrBestPossibleDate(date, 9, 45));
     }
 }

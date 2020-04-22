@@ -1,13 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.transfer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,9 +17,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankTransferHelperTest {
     private SwedbankTransferHelper transferHelper;
-    private Calendar calendarCET =
-            Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("CET")), new Locale("sv", "SE"));
-
     @Rule public ExpectedException thrown = ExpectedException.none();
 
     @Before
@@ -128,31 +117,5 @@ public class SwedbankTransferHelperTest {
 
         transferHelper.confirmSuccessfulTransferOrThrow(
                 confirmTransferResponse, SwedbankTransferConfirmationData.TRANSFER_ID);
-    }
-
-    @Test
-    public void verifyGetDateOrNullIfDueDateIsToday_ReturnsNull_IfInputDateIsToday() {
-        Date currentDate = calendarCET.getTime();
-
-        Date dateToSendToBank = SwedbankTransferHelper.getDateOrNullIfDueDateIsToday(currentDate);
-
-        assertNull(dateToSendToBank);
-    }
-
-    @Test
-    public void verifyGetDateOrNullIfDueDateIsToday_ReturnsInputDate_IfInputDateIsFuture() {
-        calendarCET.add(Calendar.DAY_OF_MONTH, 7);
-        Date futureDate = calendarCET.getTime();
-
-        Date dateToSendToBank = SwedbankTransferHelper.getDateOrNullIfDueDateIsToday(futureDate);
-
-        assertEquals(dateToSendToBank, futureDate);
-    }
-
-    @Test
-    public void verifyGetDateOrNullIfDueDateIsToday_ReturnsNull_IfInputDateIsNull() {
-        Date dateToSendToBank = SwedbankTransferHelper.getDateOrNullIfDueDateIsToday(null);
-
-        assertNull(dateToSendToBank);
     }
 }

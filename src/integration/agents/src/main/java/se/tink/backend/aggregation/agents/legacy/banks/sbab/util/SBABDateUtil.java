@@ -21,8 +21,8 @@ public class SBABDateUtil {
     public static String getTransferDate(Date date, boolean isInternalTransfer) {
         Date nextPossibleDate =
                 isInternalTransfer
-                        ? dateHelper.getTransferDate(date, 23, 59)
-                        : dateHelper.getTransferDate(date, 14, 00);
+                        ? dateHelper.getProvidedDateOrBestPossibleDate(date, 23, 59)
+                        : dateHelper.getProvidedDateOrBestPossibleDate(date, 14, 00);
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(nextPossibleDate);
     }
 }
