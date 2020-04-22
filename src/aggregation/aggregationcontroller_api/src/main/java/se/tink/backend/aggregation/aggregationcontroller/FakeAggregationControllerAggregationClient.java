@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.aggregationcontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.config.ClientConfig;
 import java.io.BufferedWriter;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactio
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class FakeAggregationControllerAggregationClient
@@ -48,6 +50,12 @@ public class FakeAggregationControllerAggregationClient
             LoggerFactory.getLogger(FakeAggregationControllerAggregationClient.class);
 
     private static ObjectMapper mapper = new ObjectMapper();
+
+    static {
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(ExactCurrencyAmount.class, new ExactCurrencyAmountDeserializer());
+        mapper.registerModule(module);
+    }
 
     @Inject
     private FakeAggregationControllerAggregationClient(ClientConfig custom) {
