@@ -10,7 +10,7 @@ java_library(
         "//po:i18n",
     ],
     deps = [
-        "//src/aggregation/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/metrics",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation/type",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",

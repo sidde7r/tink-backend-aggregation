@@ -14,7 +14,7 @@ junit_test(
         "//third_party:ch_qos_logback_logback_classic",
     ],
     deps = [
-        "//src/aggregation/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/api",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
         "//src/aggregation/lib",

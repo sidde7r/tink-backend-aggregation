@@ -1,8 +1,8 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "aggregationcontroller_api",
-    srcs = glob(["src/main/**/*.java"]),
+    name = "aggregationcontroller",
+    srcs = glob(["**/*.java"]),
     visibility = [
         "//src/aggregation:__subpackages__",
         "//src/integration:__subpackages__",
