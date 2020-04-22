@@ -27,10 +27,10 @@ import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentCon
 
 public class SystemTest {
 
-    private static final String APP_UNDER_TEST_HOST = "appundertest";
+    private static final String APP_UNDER_TEST_HOST = "aggregation_service";
     private static final int APP_UNDER_TEST_PORT = 9095;
 
-    private static final String AGGREGATION_CONTROLLER_HOST = "appundertest";
+    private static final String AGGREGATION_CONTROLLER_HOST = "fake_aggregation_controller";
     private static final int AGGREGATION_CONTROLLER_PORT = 8080;
 
     private static final ObjectMapper mapper = new ObjectMapper();
