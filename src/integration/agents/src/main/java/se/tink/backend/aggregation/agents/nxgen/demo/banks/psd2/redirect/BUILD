@@ -16,7 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/integration/payment:enums",
-        "//src/integration/signableoperation:enums",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//third_party:com_sun_jersey_jersey_core",

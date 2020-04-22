@@ -132,7 +132,7 @@ junit_test(
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
-        "//src/integration/signableoperation:enums",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/tpp_secrets_service/client",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:mocks",

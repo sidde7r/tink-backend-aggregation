@@ -29,7 +29,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/accountidentifier",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/qrcode",
         "//src/integration/models",
-        "//src/integration/signableoperation:enums",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
