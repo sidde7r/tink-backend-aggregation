@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public class FortisConstants {
 
@@ -13,10 +13,20 @@ public class FortisConstants {
     public static final String CARD_FRAME_ID = "010119659";
     public static final DateFormat TRANSACTION_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "HELLO4YOU", "COMFORT PACK")
-                    .put(AccountTypes.SAVINGS, "CPTE EPARGNE", "SPAARREKENING", "ster spaarrek.")
+    public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            TransactionalAccountTypeMapper.builder()
+                    .put(
+                            TransactionalAccountType.CHECKING,
+                            "HELLO4YOU",
+                            "ESSENTIAL PRO",
+                            "COMFORT PACK",
+                            "COMPTE VUE PRO")
+                    .put(
+                            TransactionalAccountType.SAVINGS,
+                            "CPTE EPARGNE",
+                            "SPAARREKENING",
+                            "PRO SPAAR",
+                            "ster spaarrek.")
                     .build();
 
     public static class Urls {
@@ -47,7 +57,6 @@ public class FortisConstants {
     public static class ErrorCode {
         public static String ERROR_CODE = "ErrCode";
         public static String INVALID_SIGNATURE = "EEBA0028";
-        public static String WRONG_PASSWORD = "EEBA0028";
         public static String MAXIMUM_NUMBER_OF_TRIES = "EEBA0026";
         public static String INVALID_SIGNATURE_KO = "EWAS0372";
         public static String COMBINATION_HARDWARE_ID_AND_LOGIN_ID_NOT_FOUND = "EEBW6112";
@@ -111,7 +120,6 @@ public class FortisConstants {
         public static final String MUID = "muid";
         public static final String DEVICE_FINGERPRINT = "devicefingerprint";
         public static final String CALCULATED_CHALLENGE = "calculatedChallenge";
-        public static final String DISTRIBUTOR_ID = "distributorId";
         public static final String CHALLENGE = "challenge";
         public static final String MANUAL_AUTHENTICATION_REQUIRED = "manualAuthenticationRequired";
     }
@@ -126,10 +134,6 @@ public class FortisConstants {
                 LogTag.from("FORTIS_MULTIPLE_USER_ENTITIES");
         public static final LogTag UPCOMING_TRANSACTIONS =
                 LogTag.from("FORTIS_UPCOMING_TRANSACTIONS");
-        public static final LogTag UPCOMING_TRANSACTIONS_ERR =
-                LogTag.from("FORTIS_UPCOMING_TRANSACTIONS_ERR");
-        public static final LogTag TRANSACTION_VALIDATION_ERR =
-                LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERR");
     }
 
     static class HttpClient {

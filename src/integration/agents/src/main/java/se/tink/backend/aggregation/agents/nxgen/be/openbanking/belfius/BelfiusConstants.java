@@ -1,18 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class BelfiusConstants {
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
-                    .put(AccountTypes.SAVINGS, "some_string2_the_integratee_uses")
-                    .put(AccountTypes.CREDIT_CARD, "some_string3_the_integratee_uses")
-                    .ignoreKeys("some_string4_the_integratee_uses")
-                    .build();
 
     private BelfiusConstants() {
         throw new AssertionError();
@@ -53,7 +43,6 @@ public final class BelfiusConstants {
         public static final String REDIRECT_URI = "redirect-uri";
         public static final String CODE_CHALLENGE = "Code-Challenge";
         public static final String CODE_CHALLENGE_METHOD = "Code-Challenge-Method";
-        public static final String X_TINK_DEBUG = "X-Tink-Debug";
         public static final String SIGNATURE = "Signature";
         public static final String LOCATION = "Location";
     }
@@ -78,7 +67,6 @@ public final class BelfiusConstants {
         public static final String AUTHORIZATION = "Bearer ";
         public static final String ACCEPT_LANGUAGE = "fr";
         public static final String CODE_CHALLENGE_TYPE = "S256";
-        public static final String FORCE = "force";
     }
 
     public static class CredentialKeys {

@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.UpcomingTransactionsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -23,9 +21,6 @@ public class FortisTransactionalAccountFetcher
                 TransactionPagePaginator<TransactionalAccount>,
                 UpcomingTransactionFetcher<TransactionalAccount> {
 
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(FortisTransactionalAccountFetcher.class);
-
     private final FortisApiClient apiClient;
 
     public FortisTransactionalAccountFetcher(FortisApiClient apiClient) {
@@ -34,7 +29,7 @@ public class FortisTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return this.apiClient.fetchAccounts().toTinkAccounts();
+        return apiClient.fetchAccounts().toTinkAccounts();
     }
 
     @Override
@@ -53,8 +48,7 @@ public class FortisTransactionalAccountFetcher
                         apiClient.fetchUpcomingTransactions(page, accountProductId);
                 upcomingTransactions.addAll(upcomingTransactionsResponse.getTinkTransactions());
                 page = page + 1;
-            } while (upcomingTransactionsResponse != null
-                    && upcomingTransactionsResponse.canFetchMore().isPresent()
+            } while (upcomingTransactionsResponse.canFetchMore().isPresent()
                     && upcomingTransactionsResponse.canFetchMore().get());
             return upcomingTransactions;
         } catch (HttpResponseException hre) {
@@ -76,10 +70,8 @@ public class FortisTransactionalAccountFetcher
 
             verifyProductId(accountProductId);
 
-            TransactionsResponse res = this.apiClient.fetchTransactions(page, accountProductId);
-
-            return res;
-        } catch (HttpResponseException hre) { // TODO: add logging
+            return apiClient.fetchTransactions(page, accountProductId);
+        } catch (HttpResponseException hre) {
             return PaginatorResponseImpl.createEmpty(false);
         }
     }
