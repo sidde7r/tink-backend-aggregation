@@ -4,8 +4,11 @@ import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
@@ -46,6 +49,8 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
+
+    private static final Logger logger = LoggerFactory.getLogger(CbiGlobePaymentExecutor.class);
 
     public CbiGlobePaymentExecutor(
             CbiGlobeApiClient apiClient,
@@ -119,6 +124,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentAuthorizationException {
 
+        PaymentMultiStepResponse paymentMultiStepResponse = null;
         openThirdPartyApp(new URL(sessionStorage.get(StorageKeys.LINK)));
         waitForSupplementalInformation();
 
@@ -137,36 +143,48 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             case ACTC:
             case ACWC:
             case ACWP:
-                return handleSignedPayment(
-                        createPaymentResponse,
-                        scaStatus,
-                        psuAuthenticationStatus,
-                        paymentMultiStepRequest.getPayment().getType());
+                paymentMultiStepResponse =
+                        handleSignedPayment(
+                                createPaymentResponse,
+                                paymentMultiStepRequest.getPayment().getType());
+                break;
                 // Before signing PIS
             case RCVD:
             case PDNG:
-                return handleUnsignedPayment(
-                        paymentMultiStepRequest,
-                        createPaymentResponse,
-                        scaStatus,
-                        psuAuthenticationStatus);
+                paymentMultiStepResponse =
+                        handleUnsignedPayment(paymentMultiStepRequest, createPaymentResponse);
+                break;
             case RJCT: // failed case
-                if ("AUTHENTICATION_FAILED".equalsIgnoreCase(psuAuthenticationStatus)) {
+                if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_FAILED
+                        .equalsIgnoreCase(psuAuthenticationStatus)) {
+                    logger.error(
+                            "PSU Authentication failed, psuAuthenticationStatus="
+                                    + psuAuthenticationStatus);
                     throw new PaymentAuthorizationException();
+                } else {
+                    logger.error(
+                            "Payment rejected by ASPSP: psuAuthenticationStatus={} , scaStatus={}",
+                            psuAuthenticationStatus,
+                            scaStatus);
                 }
+                break;
         }
 
-        return null; // this method should never return null- If this scenario happen then
+        // Note: this method should never return null, If this scenario happen then
         // CBI Globe might have changed Payment Status Codes
+        return paymentMultiStepResponse;
     }
 
     private PaymentMultiStepResponse handleUnsignedPayment(
             PaymentMultiStepRequest paymentMultiStepRequest,
-            CreatePaymentResponse createPaymentResponse,
-            String scaStatus,
-            String psuAuthenticationStatus) {
-        if ("IDENTIFICATION_REQUIRED".equalsIgnoreCase(psuAuthenticationStatus)
-                || "AUTHENTICATION_REQUIRED".equalsIgnoreCase(psuAuthenticationStatus)) {
+            CreatePaymentResponse createPaymentResponse) {
+
+        String psuAuthenticationStatus = createPaymentResponse.getPsuAuthenticationStatus();
+
+        if (CbiGlobeConstants.PSUAuthenticationStatus.IDENTIFICATION_REQUIRED.equalsIgnoreCase(
+                        psuAuthenticationStatus)
+                || CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_REQUIRED
+                        .equalsIgnoreCase(psuAuthenticationStatus)) {
             sessionStorage.put(
                     StorageKeys.LINK,
                     createPaymentResponse
@@ -174,7 +192,8 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                             .getUpdatePsuAuthenticationRedirect()
                             .getHref());
 
-        } else if ("INITIATED".equalsIgnoreCase(scaStatus)) {
+        } else if (CbiGlobeConstants.SCAStatus.INITIATED.equalsIgnoreCase(
+                createPaymentResponse.getScaStatus())) {
             sessionStorage.put(
                     StorageKeys.LINK, createPaymentResponse.getLinks().getScaRedirect().getHref());
         }
@@ -182,17 +201,17 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 createPaymentResponse.toTinkPaymentResponse(
                         paymentMultiStepRequest.getPayment().getUniqueId(),
                         paymentMultiStepRequest.getPayment().getType()),
-                "IN_PROGRESS",
+                CbiGlobeConstants.PaymentStep.IN_PROGRESS,
                 new ArrayList<>());
     }
 
     private PaymentMultiStepResponse handleSignedPayment(
-            CreatePaymentResponse createPaymentResponse,
-            String scaStatus,
-            String psuAuthenticationStatus,
-            PaymentType paymentType) {
-        if ("AUTHENTICATED".equalsIgnoreCase(psuAuthenticationStatus)
-                && "VERIFIED".equalsIgnoreCase(scaStatus)) {
+            CreatePaymentResponse createPaymentResponse, PaymentType paymentType) {
+
+        if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATED.equalsIgnoreCase(
+                        createPaymentResponse.getPsuAuthenticationStatus())
+                && CbiGlobeConstants.PSUAuthenticationStatus.VERIFIED.equalsIgnoreCase(
+                        createPaymentResponse.getScaStatus())) {
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(paymentType),
                     AuthenticationStepConstants.STEP_FINALIZE,
@@ -200,7 +219,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         } else {
             return new PaymentMultiStepResponse(
                     createPaymentResponse.toTinkPaymentResponse(paymentType),
-                    "IN_PROGRESS_AUTHENTICATION_REQUIRED",
+                    CbiGlobeConstants.PaymentStep.IN_PROGRESS_AUTHENTICATION_REQUIRED,
                     new ArrayList<>());
         }
     }

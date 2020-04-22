@@ -23,30 +23,19 @@ public class CreatePaymentResponse {
 
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(PaymentType paymentType) {
-        Payment.Builder buildingPaymentResponse =
-                new Payment.Builder()
-                        .withStatus(
-                                CbiGlobePaymentStatus.mapToTinkPaymentStatus(
-                                        CbiGlobePaymentStatus.fromString(transactionStatus)))
-                        .withUniqueId(paymentId)
-                        .withType(paymentType);
-
-        Payment tinkPayment = buildingPaymentResponse.build();
-
-        return new PaymentResponse(tinkPayment);
+        return toTinkPaymentResponse(paymentId, paymentType);
     }
 
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(String paymentId, PaymentType paymentType) {
-        Payment.Builder buildingPaymentResponse =
+        Payment tinkPayment =
                 new Payment.Builder()
                         .withStatus(
                                 CbiGlobePaymentStatus.mapToTinkPaymentStatus(
                                         CbiGlobePaymentStatus.fromString(transactionStatus)))
                         .withUniqueId(paymentId)
-                        .withType(paymentType);
-
-        Payment tinkPayment = buildingPaymentResponse.build();
+                        .withType(paymentType)
+                        .build();
 
         return new PaymentResponse(tinkPayment);
     }
