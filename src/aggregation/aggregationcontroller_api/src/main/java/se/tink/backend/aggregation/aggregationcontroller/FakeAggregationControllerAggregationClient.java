@@ -42,7 +42,7 @@ public class FakeAggregationControllerAggregationClient
     private static final String AGGREGATION_CONTROLLER_NAME = "fake_aggregation_controller";
     private static final int AGGREGATION_CONTROLLER_PORT = 8080;
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
         SimpleModule module = new SimpleModule();
