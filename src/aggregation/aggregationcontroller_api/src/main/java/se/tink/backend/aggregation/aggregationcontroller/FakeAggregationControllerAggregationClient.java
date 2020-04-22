@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -37,10 +38,7 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class FakeAggregationControllerAggregationClient
         implements AggregationControllerAggregationClient {
 
-    // TODO Make this configurable. Should be localhost if run locally.
-    // https://tinkab.atlassian.net/jira/software/projects/AAP/boards/136?selectedIssue=AAP-279
-    private static final String AGGREGATION_CONTROLLER_NAME = "fake_aggregation_controller";
-    private static final int AGGREGATION_CONTROLLER_PORT = 8080;
+    private final InetSocketAddress socket;
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -51,7 +49,10 @@ public class FakeAggregationControllerAggregationClient
     }
 
     @Inject
-    private FakeAggregationControllerAggregationClient() {}
+    private FakeAggregationControllerAggregationClient(
+            @FakeAggregationControllerSocket final InetSocketAddress socket) {
+        this.socket = socket;
+    }
 
     @Override
     public Response generateStatisticsAndActivityAsynchronously(
@@ -118,8 +119,7 @@ public class FakeAggregationControllerAggregationClient
             URL serverAddress =
                     new URL(
                             String.format(
-                                    "http://%s:%d/data",
-                                    AGGREGATION_CONTROLLER_NAME, AGGREGATION_CONTROLLER_PORT));
+                                    "http://%s:%d/data", socket.getHostString(), socket.getPort()));
             HttpURLConnection connection = (HttpURLConnection) serverAddress.openConnection();
             connection.setDoOutput(true);
             connection.setDoInput(true);

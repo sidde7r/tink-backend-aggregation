@@ -15,6 +15,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.dropwizard.setup.Environment;
 import io.grpc.ManagedChannelBuilder;
+import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Map;
 import org.apache.curator.framework.CuratorFramework;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provi
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.FakeAggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.FakeAggregationControllerSocket;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.api.MonitoringService;
@@ -199,6 +201,9 @@ public class AggregationDecoupledModule extends AbstractModule {
         // AggregationModule
         bind(AggregationControllerAggregationClient.class)
                 .to(FakeAggregationControllerAggregationClient.class);
+        bind(InetSocketAddress.class)
+                .annotatedWith(FakeAggregationControllerSocket.class)
+                .toInstance(new InetSocketAddress("fake_aggregation_controller", 8080));
         bind(AgentWorker.class).in(Scopes.SINGLETON);
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
