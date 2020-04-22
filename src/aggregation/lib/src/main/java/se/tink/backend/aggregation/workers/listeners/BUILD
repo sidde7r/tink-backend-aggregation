@@ -8,8 +8,8 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/context",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents",
-        "//src/integration/signableoperation:rpc",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//third_party:com_google_guava_guava",
     ],
 )

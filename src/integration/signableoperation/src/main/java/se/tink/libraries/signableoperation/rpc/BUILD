@@ -1,6 +1,6 @@
 java_library(
     name = "rpc",
-    srcs = glob(["src/main/**/rpc/*.java"]),
+    srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/generic_application",

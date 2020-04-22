@@ -16,7 +16,7 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/enums",
         "//src/integration/models",
-        "//src/integration/signableoperation:rpc",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/integration/transfer:rpc",
         "//src/libraries/api_annotations",
         "//src/libraries/http:http_annotations",
