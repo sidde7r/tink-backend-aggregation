@@ -2,6 +2,7 @@ java_library(
     name = "modules",
     srcs = glob(["**/*.java"]),
     data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources",
         "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources",
     ],
     visibility = ["//visibility:public"],
@@ -22,6 +23,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/repositories",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/debug",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands/state/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/concurrency",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
@@ -40,6 +42,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/factory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/agents/componentproviders",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/configuration",
         "//src/libraries/cache",

@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
 import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
-import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.FakeBankAapFile;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.WireMockConfigurationProvider;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
@@ -38,6 +37,7 @@ import se.tink.backend.aggregation.api.MonitoringService;
 import se.tink.backend.aggregation.client.provider_configuration.ProviderConfigurationService;
 import se.tink.backend.aggregation.cluster.jersey.JerseyClientProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.models.AggregationDecoupledAapFileProvider;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
@@ -66,6 +66,7 @@ import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorker
 import se.tink.backend.aggregation.workers.commands.state.InstantiateAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
+import se.tink.backend.aggregation.workers.commands.state.configuration.AapFileProvider;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactory;
 import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMutexFactoryStub;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
@@ -282,12 +283,7 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(FakeBankSocket.class).toInstance(socketEntity);
         bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
         bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
-
-        // To be generalized to a map and moved to yml configuration probably
-        bind(String.class)
-                .annotatedWith(FakeBankAapFile.class)
-                .toInstance(
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap");
+        bind(AapFileProvider.class).to(AggregationDecoupledAapFileProvider.class);
     }
 
     @Provides

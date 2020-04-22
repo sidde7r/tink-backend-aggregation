@@ -6,10 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
-import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.FakeBankAapFile;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
+import se.tink.backend.aggregation.workers.commands.state.configuration.AapFileProvider;
 
 public class InstantiateAgentWorkerCommandFakeBankState
         implements InstantiateAgentWorkerCommandState {
@@ -19,17 +19,17 @@ public class InstantiateAgentWorkerCommandFakeBankState
 
     private final AgentFactory agentFactory;
     private final MutableFakeBankSocket fakeBankSocket;
-    private final String fakeBankAapFile;
+    private final AapFileProvider fakeBankAapFileMapper;
     private WireMockTestServer server;
 
     @Inject
-    public InstantiateAgentWorkerCommandFakeBankState(
+    private InstantiateAgentWorkerCommandFakeBankState(
             AgentFactory agentFactory,
             MutableFakeBankSocket fakeBankSocket,
-            @FakeBankAapFile String fakeBankAapFile) {
+            AapFileProvider fakeBankAapFileMapper) {
         this.agentFactory = agentFactory;
         this.fakeBankSocket = fakeBankSocket;
-        this.fakeBankAapFile = fakeBankAapFile;
+        this.fakeBankAapFileMapper = fakeBankAapFileMapper;
     }
 
     public AgentFactory getAgentFactory() {
@@ -37,13 +37,12 @@ public class InstantiateAgentWorkerCommandFakeBankState
     }
 
     @Override
-    public void doRightBeforeInstantiation() {
-
+    public void doRightBeforeInstantiation(String providerName) {
         server = new WireMockTestServer();
-
         fakeBankSocket.set("localhost:" + server.getHttpsPort());
-
-        server.prepareMockServer(new AapFileParser(new ResourceFileReader().read(fakeBankAapFile)));
+        String fakeBankAapFilePath = fakeBankAapFileMapper.getAapFilePath(providerName);
+        server.prepareMockServer(
+                new AapFileParser(new ResourceFileReader().read(fakeBankAapFilePath)));
     }
 
     @Override
