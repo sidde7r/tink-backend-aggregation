@@ -121,12 +121,11 @@ public class SystemTest {
     }
 
     @Test
-    public void getRefreshShouldUploadEntities() throws Exception {
-
+    public void getRefreshShouldUploadEntitiesForAmex() throws Exception {
         // given
         AgentContractEntity expected =
                 contractParser.parseContractOnBasisOfFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities.json");
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities_for_amex.json");
 
         List<Map<String, Object>> expectedTransactions = expected.getTransactions();
         List<Map<String, Object>> expectedAccounts = expected.getAccounts();
@@ -135,7 +134,7 @@ public class SystemTest {
 
         String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body.json");
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body_for_amex.json");
 
         String aggregationControllerEndpoint =
                 String.format(
@@ -143,7 +142,7 @@ public class SystemTest {
                         AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT);
 
         // when
-        ResponseEntity<String> authenticationCallResult =
+        ResponseEntity<String> refreshCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/refresh",
@@ -170,7 +169,7 @@ public class SystemTest {
                                 aggregationControllerEndpoint, "updateIdentity", 100, 1));
 
         // then
-        Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
+        Assert.assertEquals(204, refreshCallResult.getStatusCodeValue());
 
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
@@ -184,5 +183,60 @@ public class SystemTest {
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         Collections.singletonList(expectedIdentityData),
                         Collections.singletonList(givenIdentityData)));
+    }
+
+    @Test
+    public void getRefreshShouldUploadEntitiesForBarclays() throws Exception {
+        // given
+        AgentContractEntity expected =
+                contractParser.parseContractOnBasisOfFile(
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities_for_barclays.json");
+
+        List<Map<String, Object>> expectedTransactions = expected.getTransactions();
+        List<Map<String, Object>> expectedAccounts = expected.getAccounts();
+        Map<String, Object> expectedIdentityData =
+                expected.getIdentityData().orElseGet(Collections::emptyMap);
+
+        String requestBodyForRefreshEndpoint =
+                readRequestBodyFromFile(
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body_for_barclays.json");
+
+        String aggregationControllerEndpoint =
+                String.format(
+                        "http://%s:%d/data",
+                        AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT);
+
+        // when
+        ResponseEntity<String> refreshCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/refresh",
+                                APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
+                        requestBodyForRefreshEndpoint);
+
+        // Why I need "?"
+        List<?> givenAccounts =
+                parseAccounts(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint, "updateAccount", 100, 1));
+
+        List<Map<String, Object>> givenTransactions =
+                parseTransactions(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint,
+                                "updateTransactionsAsynchronously",
+                                100,
+                                1));
+
+        // then
+        Assert.assertEquals(204, refreshCallResult.getStatusCodeValue());
+
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransactions, givenTransactions));
+
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedAccounts, givenAccounts));
     }
 }

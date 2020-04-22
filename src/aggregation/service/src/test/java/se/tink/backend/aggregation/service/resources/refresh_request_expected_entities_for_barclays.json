@@ -1,0 +1,117 @@
+{
+    "accounts": [
+        {
+            "accountNumber": "00000000000000",
+            "accountExclusion": "NONE",
+            "currencyCode": "GBP",
+            "bankId": "00000000000000",
+            "name": "00000000000000",
+            "ownership": 1.0,
+            "type": "CHECKING",
+            "identifiers": "[\"sort-code://00000000000000\"]",
+            "closed": false,
+            "holderName": "LITTLE BIG DIGITAL LTD",
+            "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+            "availableCredit": 0.0,
+            "balance": 30.0
+        }
+    ],
+    "transactions": [
+        {
+            "amount": 20.0,
+            "date": 1579604400000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": 10.0,
+            "date": 1579258800000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -319.31,
+            "date": 1579258800000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -6.5,
+            "date": 1578567600000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -282.29,
+            "date": 1578222000000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -16.34,
+            "date": 1559296800000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -12.0,
+            "date": 1559037600000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -4.5,
+            "date": 1558951200000,
+            "description": "DUMMY_VALUE",
+            "internalPayload": {},
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        }
+    ]
+}

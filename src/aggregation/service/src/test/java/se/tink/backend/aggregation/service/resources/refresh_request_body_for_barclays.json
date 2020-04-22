@@ -1,0 +1,73 @@
+{
+    "manual": true,
+    "refreshId": "dummyId",
+    "itemsToRefresh": [
+        "CHECKING_ACCOUNTS",
+        "SAVING_ACCOUNTS",
+        "CHECKING_TRANSACTIONS",
+        "SAVING_TRANSACTIONS",
+        "CREDITCARD_ACCOUNTS",
+        "CREDITCARD_TRANSACTIONS"
+    ],
+    "create": false,
+    "callbackUri": "callbackUri",
+    "appUriId": "appUriId",
+    "userDeviceId": "userDeviceId",
+    "credentials": {
+        "debugUntil": 695260800,
+        "providerLatency": 0,
+        "id": "refresh-test-for-barclays",
+        "nextUpdate": null,
+        "fields": {},
+        "payload": "",
+        "providerName": "uk-barclays-oauth2",
+        "sessionExpiryDate": null,
+        "status": "CREATED",
+        "statusPayload": "CREATED",
+        "statusPrompt": "",
+        "statusUpdated": "695260800",
+        "supplementalInformation": "",
+        "type": "PASSWORD",
+        "updated": "695260800",
+        "userId": "userId",
+        "dataVersion": 1
+    },
+    "provider": {
+        "accessType": "OPEN_BANKING",
+        "backgroundRefreshEnabled": true,
+        "backgroundRefreshMaxFrequency": 4,
+        "capabilities": [
+            "TRANSFERS"
+        ],
+        "className": "nxgen.uk.openbanking.barclays.BarclaysV31Agent",
+        "credentialsType": "PASSWORD",
+        "displayName": "Barclays",
+        "fields": [],
+        "financialInstitutionId": "0ee1cda5943e4662bb9775c34de291d6",
+        "financialInstitutionName": "Barclays",
+        "groupDisplayName": "",
+        "multiFactor": false,
+        "name": "uk-barclays-oauth2",
+        "passwordhelptext": "Authentication is done on external page",
+        "payload": "tink:barclays",
+        "popular": true,
+        "refreshFrequency": 1,
+        "refreshFrequencyFactor": 1,
+        "status": "ENABLED",
+        "transactional": true,
+        "type": "BANK",
+        "currency": "GBP",
+        "market": "UK"
+    },
+    "user": {
+        "flags": [],
+        "flagsSerialized": "[]",
+        "id": "userId",
+        "profile": {
+            "locale": "en_US"
+        },
+        "username": "username",
+        "debugUntil": 695260800
+    },
+    "accounts": []
+}
