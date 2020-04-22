@@ -13,9 +13,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class FetchTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
+public class BaseFetchTransactionsResponse<T extends TransactionsEntity>
+        implements TransactionKeyPaginatorResponse<String> {
 
-    private TransactionsEntity transactions;
+    private T transactions;
 
     private AccountEntity account;
 

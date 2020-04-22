@@ -13,9 +13,11 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.IngBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -39,7 +41,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public abstract class IngBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                AspspConfiguration {
 
     protected final IngBaseApiClient apiClient;
 
@@ -63,7 +67,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         marketInUppercase,
                         providerSessionCacheController,
-                        isManualAuthentication);
+                        isManualAuthentication,
+                        this);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
@@ -204,5 +209,10 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         return Objects.equals(CredentialsTypes.THIRD_PARTY_APP, CredentialsTypes.PASSWORD)
                 && !request.isUpdate()
                 && !request.isCreate();
+    }
+
+    @Override
+    public Class<? extends BaseFetchTransactionsResponse> getTransactionsResponseClass() {
+        return BaseFetchTransactionsResponse.class;
     }
 }
