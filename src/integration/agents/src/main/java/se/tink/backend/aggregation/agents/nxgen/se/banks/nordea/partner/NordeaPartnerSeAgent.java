@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.partner;
 
+import java.time.ZoneId;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.fetcher.mapper.NordeaPartnerAccountMapper;
@@ -21,5 +22,10 @@ public final class NordeaPartnerSeAgent extends NordeaPartnerAgent {
             accountMapper = new NordeaPartnerSeAccountMapper();
         }
         return accountMapper;
+    }
+
+    @Override
+    protected ZoneId getPaginatorZoneId() {
+        return ZoneId.of("Europe/Stockholm");
     }
 }

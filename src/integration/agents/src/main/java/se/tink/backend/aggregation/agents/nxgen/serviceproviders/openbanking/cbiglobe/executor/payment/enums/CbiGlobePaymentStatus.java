@@ -20,19 +20,19 @@ public enum CbiGlobePaymentStatus {
 
     private String statusText;
 
-    private static EnumMap<CbiGlobePaymentStatus, PaymentStatus> icaPaymentStatusToTinkMapper =
+    private static EnumMap<CbiGlobePaymentStatus, PaymentStatus> paymentStatusToTinkMapper =
             new EnumMap<>(CbiGlobePaymentStatus.class);
 
     static {
-        icaPaymentStatusToTinkMapper.put(ACCP, PaymentStatus.PENDING);
-        icaPaymentStatusToTinkMapper.put(ACSC, PaymentStatus.PAID);
-        icaPaymentStatusToTinkMapper.put(ACSP, PaymentStatus.PENDING);
-        icaPaymentStatusToTinkMapper.put(ACTC, PaymentStatus.PENDING);
-        icaPaymentStatusToTinkMapper.put(ACWC, PaymentStatus.PENDING);
-        icaPaymentStatusToTinkMapper.put(ACWP, PaymentStatus.PENDING);
-        icaPaymentStatusToTinkMapper.put(RCVD, PaymentStatus.CREATED);
-        icaPaymentStatusToTinkMapper.put(RJCT, PaymentStatus.REJECTED);
-        icaPaymentStatusToTinkMapper.put(PDNG, PaymentStatus.PENDING);
+        paymentStatusToTinkMapper.put(ACCP, PaymentStatus.SIGNED);
+        paymentStatusToTinkMapper.put(ACSC, PaymentStatus.SIGNED);
+        paymentStatusToTinkMapper.put(ACSP, PaymentStatus.SIGNED);
+        paymentStatusToTinkMapper.put(ACTC, PaymentStatus.SIGNED);
+        paymentStatusToTinkMapper.put(ACWC, PaymentStatus.SIGNED);
+        paymentStatusToTinkMapper.put(ACWP, PaymentStatus.SIGNED);
+        paymentStatusToTinkMapper.put(RCVD, PaymentStatus.CREATED);
+        paymentStatusToTinkMapper.put(RJCT, PaymentStatus.REJECTED);
+        paymentStatusToTinkMapper.put(PDNG, PaymentStatus.PENDING);
     }
 
     CbiGlobePaymentStatus(String status) {
@@ -51,7 +51,7 @@ public enum CbiGlobePaymentStatus {
     }
 
     public static PaymentStatus mapToTinkPaymentStatus(CbiGlobePaymentStatus paymentStatus) {
-        return Optional.ofNullable(icaPaymentStatusToTinkMapper.get(paymentStatus))
+        return Optional.ofNullable(paymentStatusToTinkMapper.get(paymentStatus))
                 .orElseThrow(
                         () ->
                                 new IllegalArgumentException(

@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -45,6 +46,7 @@ public class CbiGlobeApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
     private CbiGlobeConfiguration configuration;
     private boolean requestManual;
     protected TemporaryStorage temporaryStorage;
@@ -58,6 +60,23 @@ public class CbiGlobeApiClient {
             InstrumentType instrumentType) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.sessionStorage =
+                null; // todo - few Agent dont dont pass sessionStorage. Fix this in other PR
+        this.requestManual = requestManual;
+        this.temporaryStorage = temporaryStorage;
+        this.instrumentType = instrumentType;
+    }
+
+    public CbiGlobeApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
+            boolean requestManual,
+            TemporaryStorage temporaryStorage,
+            InstrumentType instrumentType) {
+        this.client = client;
+        this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
         this.requestManual = requestManual;
         this.temporaryStorage = temporaryStorage;
         this.instrumentType = instrumentType;
@@ -81,8 +100,8 @@ public class CbiGlobeApiClient {
 
         return createRequest(url)
                 .addBearerToken(authToken)
-                .header(HeaderKeys.ASPSP_CODE, configuration.getAspspCode())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .header(HeaderKeys.ASPSP_CODE, configuration.getAspspCode())
                 .header(HeaderKeys.DATE, CbiGlobeUtils.formatDate(new Date()));
     }
 
@@ -97,11 +116,6 @@ public class CbiGlobeApiClient {
         }
 
         return rb;
-    }
-
-    private RequestBuilder createRequestWithConsentSandbox(URL url) {
-        return createRequestInSession(url)
-                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
     }
 
     protected RequestBuilder createAccountsRequestWithConsent() {
@@ -131,6 +145,13 @@ public class CbiGlobeApiClient {
                 .queryParam(QueryKeys.SCOPE, QueryValues.PRODUCTION)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(GetTokenResponse.class);
+    }
+
+    public void getAndSaveToken() {
+        GetTokenResponse getTokenResponse =
+                getToken(configuration.getClientId(), configuration.getClientSecret());
+        OAuth2Token token = getTokenResponse.toTinkToken();
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
     }
 
     public ConsentResponse createConsent(
@@ -240,21 +261,29 @@ public class CbiGlobeApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-        URL redirectUrl =
-                new URL(configuration.getRedirectUrl())
-                        .queryParam(QueryKeys.STATE, QueryValues.STATE);
-        return createRequestWithConsentSandbox(Urls.PAYMENT)
+
+        return createRequestInSession(Urls.PAYMENT)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
+                .header(
+                        HeaderKeys.TPP_REDIRECT_URI,
+                        new URL(getConfiguration().getRedirectUrl())
+                                .queryParam(QueryKeys.STATE, sessionStorage.get(QueryKeys.STATE))
+                                .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
     public CreatePaymentResponse getPayment(String uniqueId) {
-        return createRequestWithConsentSandbox(
-                        Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
+        return createRequestInSession(Urls.FETCH_PAYMENT.parameter(IdTags.PAYMENT_ID, uniqueId))
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.DEFAULT_PSU_IP_ADDRESS)
                 .header(HeaderKeys.ASPSP_PRODUCT_CODE, configuration.getAspspProductCode())
+                .get(CreatePaymentResponse.class);
+    }
+
+    public CreatePaymentResponse getPaymentStatus(String uniqueId) {
+        return createRequestInSession(
+                        Urls.FETCH_PAYMENT_STATUS.parameter(IdTags.PAYMENT_ID, uniqueId))
                 .get(CreatePaymentResponse.class);
     }
 

@@ -40,6 +40,8 @@ public final class CbiGlobeConstants {
         public static final URL CONSENTS_STATUS = new URL(BASE_URL + ApiServices.CONSENTS_STATUS);
         public static final URL PAYMENT = new URL(BASE_URL + ApiServices.PAYMENT);
         public static final URL FETCH_PAYMENT = new URL(BASE_URL + ApiServices.FETCH_PAYMENT);
+        public static final URL FETCH_PAYMENT_STATUS =
+                new URL(BASE_URL + ApiServices.FETCH_PAYMENT_STATUS);
         public static final URL CARD_ACCOUNTS = new URL(BASE_URL + ApiServices.CARD_ACCOUNTS);
         public static final URL CARD_BALANCES = new URL(BASE_URL + ApiServices.CARD_BALANCES);
         public static final URL CARD_TRANSACTIONS =
@@ -60,9 +62,11 @@ public final class CbiGlobeConstants {
         public static final String CONSENTS_STATUS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
         private static final String PAYMENT =
-                "/sbx/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers";
         private static final String FETCH_PAYMENT =
-                "/sbx/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}";
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}";
+        private static final String FETCH_PAYMENT_STATUS =
+                "/platform/enabler/psd2orchestrator/pis/2.3.2/payments/sepa-credit-transfers/{payment-id}/status";
         public static final String CARD_ACCOUNTS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/card-accounts";
         public static final String CARD_BALANCES =
@@ -106,16 +110,19 @@ public final class CbiGlobeConstants {
         public static final String DATE = "date";
         public static final String X_REQUEST_ID = "x-request-id";
         public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
+        public static final String TPP_REDIRECT_PREFERRED = "tpp-redirect-preferred";
         public static final String TPP_NOK_REDIRECT_URI = "tpp-nok-redirect-uri";
         public static final String CONSENT_ID = "consent-id";
         public static final String PSU_ID_TYPE = "psu-id-type";
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
         public static final String OPERATION_NAME = "operation-name";
+        public static final String CODE = "code";
     }
 
     public static class HeaderValues {
         public static final String DEFAULT_PSU_IP_ADDRESS = "0.0.0.0";
         public static final String UPDATE_PSU_DATA = "updatePsuData";
+        public static final String CODE = "code";
     }
 
     public static class FormValues {
@@ -133,5 +140,23 @@ public final class CbiGlobeConstants {
         public static final String ACCOUNT_ID = "accountId";
         public static final String CONSENT_ID = "consentId";
         public static final String PAYMENT_ID = "payment-id";
+    }
+
+    public static class PSUAuthenticationStatus {
+        public static final String AUTHENTICATION_FAILED = "AUTHENTICATION_FAILED";
+        public static final String IDENTIFICATION_REQUIRED = "IDENTIFICATION_REQUIRED";
+        public static final String AUTHENTICATION_REQUIRED = "AUTHENTICATION_REQUIRED";
+        public static final String AUTHENTICATED = "AUTHENTICATED";
+        public static final String VERIFIED = "VERIFIED";
+    }
+
+    public static class SCAStatus {
+        public static final String INITIATED = "INITIATED";
+    }
+
+    public static class PaymentStep {
+        public static final String IN_PROGRESS_AUTHENTICATION_REQUIRED =
+                "IN_PROGRESS_AUTHENTICATION_REQUIRED";
+        public static final String IN_PROGRESS = "IN_PROGRESS";
     }
 }

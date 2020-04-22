@@ -15,20 +15,27 @@ public class CreatePaymentResponse {
     private String transactionStatus;
     private String paymentId;
 
+    private String psuAuthenticationStatus;
+    private String scaStatus;
+
     @JsonProperty("_links")
     private LinksEntity links;
 
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(PaymentType paymentType) {
-        Payment.Builder buildingPaymentResponse =
+        return toTinkPaymentResponse(paymentId, paymentType);
+    }
+
+    @JsonIgnore
+    public PaymentResponse toTinkPaymentResponse(String paymentId, PaymentType paymentType) {
+        Payment tinkPayment =
                 new Payment.Builder()
                         .withStatus(
                                 CbiGlobePaymentStatus.mapToTinkPaymentStatus(
                                         CbiGlobePaymentStatus.fromString(transactionStatus)))
                         .withUniqueId(paymentId)
-                        .withType(paymentType);
-
-        Payment tinkPayment = buildingPaymentResponse.build();
+                        .withType(paymentType)
+                        .build();
 
         return new PaymentResponse(tinkPayment);
     }
@@ -39,5 +46,17 @@ public class CreatePaymentResponse {
 
     public LinksEntity getLinks() {
         return links;
+    }
+
+    public String getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public String getPsuAuthenticationStatus() {
+        return psuAuthenticationStatus;
+    }
+
+    public String getScaStatus() {
+        return scaStatus;
     }
 }

@@ -6,11 +6,11 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
-import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernameArgumentEnum;
 
 public class NordeaPartnerAgentTest {
-    private final ArgumentManager<SsnArgumentEnum> manager =
-            new ArgumentManager<>(SsnArgumentEnum.values());
+    private final ArgumentManager<UsernameArgumentEnum> manager =
+            new ArgumentManager<>(UsernameArgumentEnum.values());
 
     @Before
     public void setup() {
@@ -25,7 +25,7 @@ public class NordeaPartnerAgentTest {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("se", "se-nordeapartner-jwt")
-                .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                .addCredentialField(Field.Key.USERNAME, manager.get(UsernameArgumentEnum.USERNAME))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .setClusterId("neston-staging")
