@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.collection.List;
+import java.util.Collection;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.IbanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.ValueEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
 public class UserDataResponse {
@@ -41,25 +44,35 @@ public class UserDataResponse {
         return cardsList.cards;
     }
 
-    public List<AccountEntity> getAccounts() {
-        // This mapping is done since IBAN is not included in the accountList, instead it is
-        // included as a seperate list at the same "level" as the accountlist.
-        accountsList.accounts.asJava().stream()
-                .forEach(
-                        t ->
-                                t.setIbanEntity(
-                                        ibanList.ibans.asJava().stream()
-                                                .filter(
-                                                        a ->
-                                                                a.getCodIban()
-                                                                        .getIban()
-                                                                        .contains(
-                                                                                t.getAccountInfoOldFormat()
-                                                                                        .getContractNumber()))
-                                                .findFirst()
-                                                .get()
-                                                .getCodIban()));
+    public Collection<TransactionalAccount> toTinkAccounts() {
+        return accountsList
+                .accounts
+                .filter(AccountEntity::isTransactionalAccount)
+                .map(this::toTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .asJava();
+    }
 
+    private Optional<TransactionalAccount> toTransactionalAccount(AccountEntity t) {
+        return t.toTinkAccount(mapIbanToAccountNumber(t));
+    }
+
+    private String mapIbanToAccountNumber(AccountEntity t) {
+        return ibanList.ibans.asJava().stream()
+                .filter(
+                        ibanEntity ->
+                                ibanEntity
+                                        .getIbanEntity()
+                                        .getIban()
+                                        .contains(t.getAccountInfoOldFormat().getContractNumber()))
+                .findFirst()
+                .orElse(null)
+                .getIbanEntity()
+                .getComposedIban();
+    }
+
+    public List<AccountEntity> getAccounts() {
         return accountsList.accounts;
     }
 
@@ -85,10 +98,10 @@ public class UserDataResponse {
 
     private static class CodIban {
         @JsonProperty("codIban")
-        private IbanEntity codIban;
+        private IbanEntity ibanEntity;
 
-        public IbanEntity getCodIban() {
-            return codIban;
+        public IbanEntity getIbanEntity() {
+            return ibanEntity;
         }
     }
 }

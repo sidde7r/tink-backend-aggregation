@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entit
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.ACCOUNT_TYPE_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Optional;
@@ -27,6 +26,7 @@ public class AccountEntity {
     @JsonProperty("cviejo")
     private AccountInfoEntity accountInfoOldFormat;
 
+    @JsonProperty("codiban")
     private IbanEntity ibanEntity;
 
     @JsonProperty("nombretitular")
@@ -93,14 +93,6 @@ public class AccountEntity {
                 .orElse(AccountTypes.OTHER);
     }
 
-    private String getIban() {
-        return ibanEntity
-                .getCountry()
-                .concat(ibanEntity.getCheckDigits())
-                .concat(ibanEntity.getIban())
-                .trim();
-    }
-
     private String getAccountName() {
         final String contractNumber = getAccountInfoOldFormat().getContractNumber();
 
@@ -111,7 +103,7 @@ public class AccountEntity {
                 getDescription(), contractNumber.substring(contractNumber.length() - 4));
     }
 
-    public Optional<TransactionalAccount> toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount(String iban) {
         // Openbank account number is the last 10 digits of the IBAN
         final AccountInfoEntity accountInfoOldFormat = getAccountInfoOldFormat();
         final String accountNumber =
@@ -127,8 +119,7 @@ public class AccountEntity {
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(getAccountName())
                                 .addIdentifier(
-                                        AccountIdentifier.create(
-                                                AccountIdentifier.Type.IBAN, getIban()))
+                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                                 .build())
                 .addHolderName(holderName)
                 .putInTemporaryStorage(
@@ -220,10 +211,5 @@ public class AccountEntity {
 
     public boolean isIsRoboAccount() {
         return isRoboAccount;
-    }
-
-    @JsonIgnore
-    public void setIbanEntity(IbanEntity ibanEntity) {
-        this.ibanEntity = ibanEntity;
     }
 }

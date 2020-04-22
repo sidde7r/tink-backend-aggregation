@@ -18,6 +18,10 @@ public class IbanEntity {
         return iban;
     }
 
+    public String getComposedIban() {
+        return country.concat(checkDigits).concat(iban).trim();
+    }
+
     public String getCheckDigits() {
         return checkDigits;
     }

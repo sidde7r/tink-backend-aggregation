@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LogoutResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.rpc.CardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.rpc.CardTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc.IdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc.UserDataResponse;
@@ -67,12 +66,8 @@ public class OpenbankApiClient {
         return createRequestInSession(OpenbankConstants.Urls.LOGOUT).post(LogoutResponse.class);
     }
 
-    public UserDataResponse fetchUserData() {
+    public UserDataResponse fetchAccounts() {
         return createRequestInSession(OpenbankConstants.Urls.USER_DATA).get(UserDataResponse.class);
-    }
-
-    public List<AccountEntity> fetchAccounts() {
-        return Option.of(fetchUserData()).map(UserDataResponse::getAccounts).getOrElse(List::empty);
     }
 
     public AccountTransactionsResponse fetchTransactions(
@@ -129,7 +124,7 @@ public class OpenbankApiClient {
     }
 
     public List<CardEntity> fetchCards() {
-        return Option.of(fetchUserData()).map(UserDataResponse::getCards).getOrElse(List::empty);
+        return Option.of(fetchAccounts()).map(UserDataResponse::getCards).getOrElse(List::empty);
     }
 
     public CardTransactionsResponse fetchCardTransactions(CardTransactionsRequest request) {
