@@ -71,7 +71,6 @@ public class CardTransaction {
                         .setDate(getDate())
                         .setDescription(title)
                         .setPending(!booked)
-                        // .setRawDetails(this)
                         .setPayload(TransactionPayloadTypes.EXTERNAL_ID, transactionId);
         if (hasExchangeRateInfo()) {
             builder.setPayload(TransactionPayloadTypes.EXCHANGE_RATE, exchangeRate.toPlainString());
