@@ -164,7 +164,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "861337ae8d52cc3a1b0a92b990aea01f34aa50aa",
+    commit = "e4ce4f979588da6b3e137c72fab424e05cbf1ad2",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1586908800 +0000",
 )
@@ -212,6 +212,17 @@ container_pull(
     registry = "gcr.io",
     repository = "tink-containers/openjdk-8-jre",
     tag = "8",
+)
+
+RULES_CODEOWNERS_VERSION = "b08239b88705a5d2d9c613afc6a70ece73e32cad"
+
+RULES_CODEOWNERS_SHA = "cbb9fdfb30ac57678c8bbf6a07b2ccf7993799dbdf6cb3c8549499bb23d09235"
+
+http_archive(
+    name = "rules_codeowners",
+    sha256 = RULES_CODEOWNERS_SHA,
+    strip_prefix = "rules_codeowners-%s" % RULES_CODEOWNERS_VERSION,
+    url = "https://github.com/zegl/rules_codeowners/archive/%s.zip" % RULES_CODEOWNERS_VERSION,
 )
 
 # You *must* import the Go rules before setting up the go_image rules.
@@ -531,6 +542,22 @@ maven_deps("@tink_backend//third_party/maven:maven_install.json")
 load("@maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()
+
+# Agents Platform
+
+load("@tink_backend//src/agents-platform:deps.bzl", "agent_platform_deps", "lombok_deps")
+
+lombok_deps("@tink_backend//src/agents-platform:lombok_maven_install.json")
+
+load("@lombok_maven//:defs.bzl", pin_lombok = "pinned_maven_install")
+
+pin_lombok()
+
+agent_platform_deps("@tink_backend//src/agents-platform:agent_platform_maven_install.json", GRPC_JAVA_VERSION)
+
+load("@agents_platform_maven//:defs.bzl", pin_agent_platform = "pinned_maven_install")
+
+pin_agent_platform()
 
 # This aims become the singular place for specifying the full collection of direct and transitive
 # dependencies of the aggregation service monolith jar. All aggregation code -- including agent code
