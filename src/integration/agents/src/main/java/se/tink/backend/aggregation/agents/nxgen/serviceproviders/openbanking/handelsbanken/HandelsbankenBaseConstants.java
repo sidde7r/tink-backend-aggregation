@@ -172,4 +172,10 @@ public final class HandelsbankenBaseConstants {
         public static final LocalizableKey ACTIVATION_NEEDED =
                 new LocalizableKey("You need to activate your BankID in the Handelsbanken app.");
     }
+
+    public static class UnacceptedTermsAndConditionsException {
+        public static final LocalizableKey KNOW_YOUR_CUSTOMER =
+                new LocalizableKey(
+                        "To continue using this app you must answer some questions from your bank. Please log in with your bank's app or website.");
+    }
 }
