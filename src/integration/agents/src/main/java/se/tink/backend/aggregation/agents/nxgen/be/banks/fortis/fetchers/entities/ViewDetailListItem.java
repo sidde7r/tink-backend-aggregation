@@ -1,19 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ViewDetailListItem {
-
-    private static final AggregationLogger LOGGER = new AggregationLogger(ViewDetailListItem.class);
 
     private String accountType;
     private Object viewDetailId;
@@ -21,48 +19,24 @@ public class ViewDetailListItem {
     private String accountNumber;
     private Account account;
 
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public Object getViewDetailId() {
-        return viewDetailId;
-    }
-
-    public String getAccountSequenceNumber() {
-        return accountSequenceNumber;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
     @JsonIgnore
-    private AccountTypes getTinkAccountType() {
-        final String type = getAccount().getAccountType(); // TODO: verify
-
-        return FortisConstants.ACCOUNT_TYPE_MAPPER.translate(type).orElse(AccountTypes.OTHER);
+    private TransactionalAccountType getTinkAccountType() {
+        final String accountType = account.getAccountType();
+        return FortisConstants.ACCOUNT_TYPE_MAPPER
+                .translate(accountType)
+                .orElse(TransactionalAccountType.OTHER);
     }
 
     @JsonIgnore
     private String getIban() {
-        return getAccount().getIban();
+        return account.getIban();
     }
 
     @JsonIgnore
-    private Amount getTinkAmount() {
-        return new Amount(
-                getAccount().getBalance().getCurrency(),
-                Double.parseDouble(getAccount().getBalance().getAmount()));
-    }
-
-    @JsonIgnore
-    private String getAccountName() {
-        return getAccount().getAccountName();
+    private ExactCurrencyAmount getBalance() {
+        Balance balance = account.getBalance();
+        return ExactCurrencyAmount.of(
+                Double.parseDouble(balance.getAmount()), balance.getCurrency());
     }
 
     @JsonIgnore
@@ -71,34 +45,32 @@ public class ViewDetailListItem {
             toTinkAccount();
             return true;
         } catch (Exception e) {
-            LOGGER.errorExtraLong(
-                    "error validating transaction!",
-                    FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERR,
-                    e);
             return false;
         }
     }
 
     @JsonIgnore
-    private AccountIdentifier getIbanIdentifier() {
-        return AccountIdentifier.create(
-                AccountIdentifier.Type.IBAN, getIban(), AccountIdentifier.Type.IBAN.toString());
-    }
-
-    @JsonIgnore
-    private HolderName getHoldername() {
-        return new HolderName(getAccount().getAlias());
-    }
-
-    @JsonIgnore
     public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(getTinkAccountType(), getIban(), getTinkAmount())
-                .setAccountNumber(getIban())
-                .setHolderName(getHoldername())
-                .setName(getAccountName())
-                .addIdentifier(getIbanIdentifier())
+        String iban = getIban();
+        return TransactionalAccount.nxBuilder()
+                .withType(getTinkAccountType())
+                .withPaymentAccountFlag()
+                .withBalance(BalanceModule.of(getBalance()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(account.getAccountName())
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.IBAN,
+                                                iban,
+                                                AccountIdentifier.Type.IBAN.name()))
+                                .build())
+                .setApiIdentifier(getIban())
                 .putInTemporaryStorage(
                         FortisConstants.Storage.ACCOUNT_PRODUCT_ID, account.getProductId())
-                .build();
+                .build()
+                .get();
     }
 }

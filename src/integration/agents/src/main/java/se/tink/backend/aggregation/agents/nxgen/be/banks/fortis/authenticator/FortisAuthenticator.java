@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.AuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.EBankingUserId;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ExecuteContractUpdateRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ExecuteContractUpdateResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.PrepareContractUpdateRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.PrepareContractUpdateResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.SignatureEntity;
@@ -221,9 +220,8 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
             }
 
-            ExecuteContractUpdateResponse executeContractUpdateResponse =
-                    apiClient.executeContractUpdate(
-                            new ExecuteContractUpdateRequest(new SignatureEntity(token, signCode)));
+            apiClient.executeContractUpdate(
+                    new ExecuteContractUpdateRequest(new SignatureEntity(token, signCode)));
         }
         if (!isCredentialsCorrect()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
@@ -233,7 +231,6 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
     }
 
     private PrepareContractUpdateResponse prepareContractUpdate(String password) {
-
         if (Strings.isNullOrEmpty(password)) {
             password = FortisConstants.Values.PASSWORD;
         }
@@ -307,14 +304,17 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
     }
 
     private boolean isCredentialsCorrect() throws LoginException {
-        String muid =
-                checkNotNullOrEmpty(
-                        persistentStorage.get(FortisConstants.Storage.MUID),
-                        FortisConstants.Storage.MUID);
-        String agreementId =
-                checkNotNullOrEmpty(
-                        persistentStorage.get(FortisConstants.Storage.AGREEMENT_ID),
-                        FortisConstants.Storage.AGREEMENT_ID);
+        checkNotNullOrEmpty(
+                persistentStorage.get(FortisConstants.Storage.MUID), FortisConstants.Storage.MUID);
+        checkNotNullOrEmpty(
+                persistentStorage.get(FortisConstants.Storage.AGREEMENT_ID),
+                FortisConstants.Storage.AGREEMENT_ID);
+        checkNotNullOrEmpty(
+                persistentStorage.get(FortisConstants.Storage.DEVICE_FINGERPRINT),
+                FortisConstants.Storage.DEVICE_FINGERPRINT);
+        checkNotNullOrEmpty(
+                persistentStorage.get(FortisConstants.Storage.PASSWORD),
+                FortisConstants.Storage.PASSWORD);
 
         String cardNumber =
                 checkNotNullOrEmpty(
@@ -324,22 +324,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
                 checkNotNullOrEmpty(
                         persistentStorage.get(FortisConstants.Storage.SMID),
                         FortisConstants.Storage.SMID);
-        String deviceFingerprint =
-                checkNotNullOrEmpty(
-                        persistentStorage.get(FortisConstants.Storage.DEVICE_FINGERPRINT),
-                        FortisConstants.Storage.DEVICE_FINGERPRINT);
-
-        String password =
-                checkNotNullOrEmpty(
-                        persistentStorage.get(FortisConstants.Storage.PASSWORD),
-                        FortisConstants.Storage.PASSWORD);
-
-        Optional<EBankingUserId> ebankingUsersId = getEbankingUserId(cardNumber, smid);
-        if (!ebankingUsersId.isPresent()) {
-            return false;
-        }
-
-        return true;
+        return getEbankingUserId(cardNumber, smid).isPresent();
     }
 
     private String checkNotNullOrEmpty(String persistentStoreValue, String persistentStorageKey) {
@@ -466,8 +451,7 @@ public class FortisAuthenticator implements TypedAuthenticator, AutoAuthenticato
         }
     }
 
-    private String waitForSignCode(String challenge)
-            throws SupplementalInfoException, SessionException {
+    private String waitForSignCode(String challenge) throws SessionException {
         try {
             return supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
         } catch (SupplementalInfoException ex) {

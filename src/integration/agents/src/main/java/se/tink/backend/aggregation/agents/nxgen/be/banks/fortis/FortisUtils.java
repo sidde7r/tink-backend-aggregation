@@ -54,8 +54,7 @@ public class FortisUtils {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        byte[] bArr = new byte[0];
-        bArr = str.getBytes(StandardCharsets.ISO_8859_1);
+        byte[] bArr = str.getBytes(StandardCharsets.ISO_8859_1);
         messageDigest.update(bArr, 0, bArr.length);
         return m3275(messageDigest.digest());
     }
@@ -64,11 +63,8 @@ public class FortisUtils {
         Mac mac = null;
         try {
             mac = Mac.getInstance("hmacSHA256");
-        } catch (Throwable e) {
-        }
-        try {
             mac.init(wlm3249(bArr));
-        } catch (Throwable e2) {
+        } catch (Throwable e) {
         }
         return mac;
     }
@@ -138,12 +134,12 @@ public class FortisUtils {
         if (str9.toLowerCase().indexOf("sha512") > 1) {
             str8 = "HmacSHA512";
         }
-        int intValue = Integer.decode(str9.substring(str9.lastIndexOf("-") + 1)).intValue();
+        int intValue = Integer.decode(str9.substring(str9.lastIndexOf('-') + 1));
         if (str10.toLowerCase().startsWith("c")) {
             str3 = m3272(str3, 16, true);
             i = 8;
         }
-        if (str10.toLowerCase().startsWith("q") || str10.toLowerCase().indexOf("-q") >= 0) {
+        if (str10.toLowerCase().startsWith("q") || str10.toLowerCase().contains("-q")) {
             str4 = m3272(str4, 256, false);
             i2 = 128;
         }
@@ -203,7 +199,7 @@ public class FortisUtils {
             bytes = m3279(str7);
             System.arraycopy(bytes, 0, obj, ((((length + 1) + i) + i2) + i3) + i4, bytes.length);
         }
-        byte[] arr = m3280(str8, m3279(str2), (byte[]) obj);
+        byte[] arr = m3280(str8, m3279(str2), obj);
         int i6 = arr[arr.length - 1] & 15;
         return m3272(
                 Integer.toString(
@@ -219,11 +215,11 @@ public class FortisUtils {
     private static String m3272(String str, int i, boolean z) {
         StringBuilder stringBuilder = new StringBuilder(str);
         if (z) {
-            String stringBuilder2 = stringBuilder.toString();
-            while (stringBuilder2.length() < i) {
-                stringBuilder2 = m3270(stringBuilder2);
+            String value = stringBuilder.toString();
+            while (value.length() < i) {
+                value = m3270(value);
             }
-            stringBuilder = new StringBuilder(stringBuilder2);
+            stringBuilder = new StringBuilder(value);
         } else {
             while (stringBuilder.length() < i) {
                 stringBuilder.append("0");
@@ -268,17 +264,13 @@ public class FortisUtils {
     }
 
     private static String wlm3252(byte[] bArr) {
-        StringBuilder stringBuilder = new StringBuilder("");
-        String str = ""; // BuildConfig.FLAVOR
-        for (int i = 0; i < bArr.length; i++) {
-            str = Integer.toHexString(bArr[i] & 255);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte b : bArr) {
+            String str = Integer.toHexString(b & 255);
             if (str.length() == 1) {
-                stringBuilder = stringBuilder.append("0").append(str);
+                stringBuilder.append("0").append(str);
             } else {
-                stringBuilder = stringBuilder.append(str);
-            }
-            if (i < bArr.length - 1) {
-                stringBuilder = stringBuilder.append(""); // BuildConfig.FLAVOR
+                stringBuilder.append(str);
             }
         }
         return stringBuilder.toString();
