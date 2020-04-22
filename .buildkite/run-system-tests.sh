@@ -4,17 +4,20 @@
 set -x
 
 # Port exposed by application under test
-PORT=9095
+PORT_AGGREGATION=9095
+PORT_AGGREGATION_CONTROLLER=8080
 
-# Port exposed by application under test
-CONTAINER_UNDER_TEST_NAME="appundertest"
+CONTAINER_AGGREGATION_NAME="aggregation_service"
+CONTAINER_AGGREGATION_CONTROLLER_NAME="fake_aggregation_controller"
 
 teardown() {
     # Find a way to do this that doesn't couple this script with the name of the container
-    appundertest_container_id="$(docker ps | grep $CONTAINER_UNDER_TEST_NAME | awk -F' ' '{print $1}')"
+    aggregation_container_id="$(docker ps | grep $CONTAINER_AGGREGATION_NAME | awk -F' ' '{print $1}')"
+    aggregation_controller_container_id="$(docker ps | grep $CONTAINER_AGGREGATION_CONTROLLER_NAME | awk -F' ' '{print $1}')"
 
     # Tear down container under test
-    docker stop "$appundertest_container_id"
+    docker stop "$aggregation_container_id"
+    docker stop "$aggregation_controller_container_id"
 
     .buildkite/upload-test-files.sh
 
@@ -46,7 +49,7 @@ fi
 
 echo "System tests starting..."
 
-echo "Waiting for app under test to become healthy..."
+echo "Waiting for aggregation container to become healthy..."
 
 exit_code=1
 
@@ -60,12 +63,31 @@ while [ "$exit_code" != 0 ]; do
     fi
 
     # Ping continuously until service responds
-    response="$(curl --silent $CONTAINER_UNDER_TEST_NAME:$PORT/aggregation/ping)"
+    response="$(curl --silent $CONTAINER_AGGREGATION_NAME:$PORT_AGGREGATION/aggregation/ping)"
     exit_code="$?"
     sleep 1
 done
 
-echo "App under test is now healthy. Testing..."
+echo "Waiting for fake aggregation controller container to become healthy..."
+
+exit_code=1
+
+while [ "$exit_code" != 0 ]; do
+
+    if [ "$exit_code" == 6 ]; then
+        # Couldn't resolve host -> container stopped because service failed to start
+        echo "Fake aggregation controller service seemed to have crashed upon boot."
+        teardown
+        exit 1
+    fi
+
+    # Ping continuously until service responds
+    response="$(curl --silent $CONTAINER_AGGREGATION_CONTROLLER_NAME:$PORT_AGGREGATION_CONTROLLER/ping)"
+    exit_code="$?"
+    sleep 1
+done
+
+echo "Containers under test are now healthy. Testing..."
 
 ./bazel-wrapper test \
     --workspace_status_command $(pwd)/stamp.sh \

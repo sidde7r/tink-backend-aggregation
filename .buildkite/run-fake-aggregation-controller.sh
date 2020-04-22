@@ -6,7 +6,7 @@ set -x
 commit="$(git rev-parse HEAD)"
 
 # Shared volume
-LOGFILE="/cache/aggregation_decoupled-$commit.log"
+LOGFILE="/cache/fake_aggregation_controller-$commit.log"
 
 ./bazel-wrapper run \
     --workspace_status_command $(pwd)/stamp.sh \
@@ -18,5 +18,6 @@ LOGFILE="/cache/aggregation_decoupled-$commit.log"
     --test_output=streamed \
     --curses=no \
     -- \
-    //src/aggregation/service:bin_decoupled \
-    &> "$LOGFILE"
+    //src/aggregation/service/src/test/java/se/tink/backend/aggregation/aggregationcontroller:fake_aggregationcontroller_bin \
+    2>&1 | tee "$LOGFILE"
+#    &> "$LOGFILE"

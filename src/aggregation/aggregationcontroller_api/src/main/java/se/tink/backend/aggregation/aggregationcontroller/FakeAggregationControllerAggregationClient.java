@@ -38,7 +38,9 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class FakeAggregationControllerAggregationClient
         implements AggregationControllerAggregationClient {
 
-    private static final String AGGREGATION_CONTROLLER_NAME = "localhost";
+    // TODO Make this configurable. Should be localhost if run locally.
+    // https://tinkab.atlassian.net/jira/software/projects/AAP/boards/136?selectedIssue=AAP-279
+    private static final String AGGREGATION_CONTROLLER_NAME = "fake_aggregation_controller";
     private static final int AGGREGATION_CONTROLLER_PORT = 8080;
 
     private final ClientConfig config;
