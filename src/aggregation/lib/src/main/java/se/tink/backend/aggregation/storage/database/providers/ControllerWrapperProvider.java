@@ -6,8 +6,8 @@ import com.google.inject.name.Named;
 import java.util.Map;
 import java.util.Set;
 import org.assertj.core.util.Strings;
-import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.storage.database.converter.HostConfigurationConverter;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 

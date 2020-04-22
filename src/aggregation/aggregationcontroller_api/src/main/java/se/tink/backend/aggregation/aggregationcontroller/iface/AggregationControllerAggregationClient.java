@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.aggregationcontroller;
+package se.tink.backend.aggregation.aggregationcontroller.iface;
 
 import javax.ws.rs.core.Response;
 import se.tink.backend.agents.rpc.Account;
