@@ -332,6 +332,7 @@ public class HandelsbankenBaseApiClient {
         try {
             return get(request, responseType);
         } catch (HttpResponseException hre) {
+            verifyKnowYourCustomer(hre);
             verifyIsTokenNotActiveErrorOrThrow(hre);
             refreshAndStoreOauthToken();
             request.overrideHeader(HttpHeaders.AUTHORIZATION, getOauthToken().toAuthorizeHeader());
@@ -433,6 +434,14 @@ public class HandelsbankenBaseApiClient {
         if (!errorResponse.isTokenNotActiveError()) {
             // Unexpected error message, throw original exception.
             throw hre;
+        }
+    }
+
+    private void verifyKnowYourCustomer(HttpResponseException hre) {
+        if (hre.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+            throw BankServiceError.CONSENT_INVALID.exception(
+                    HandelsbankenBaseConstants.UnacceptedTermsAndConditionsException
+                            .KNOW_YOUR_CUSTOMER);
         }
     }
 }

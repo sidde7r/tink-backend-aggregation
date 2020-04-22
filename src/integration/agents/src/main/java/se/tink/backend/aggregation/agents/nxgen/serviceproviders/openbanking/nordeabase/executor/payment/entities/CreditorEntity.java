@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums.NordeaAccountType;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.rpc.Creditor;
 
 @JsonObject
@@ -21,30 +21,35 @@ public class CreditorEntity {
         return reference;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setReference(ReferenceEntity reference) {
+        this.reference = reference;
+    }
+
     @JsonIgnore
     private CreditorEntity(Builder builder) {
         this.account = builder.account;
-        this.message = builder.message;
         this.name = builder.name;
-        this.reference = builder.reference;
     }
 
     @JsonIgnore
     public static CreditorEntity of(PaymentRequest paymentRequest) {
-        return new CreditorEntity.Builder()
-                .withAccount(
-                        new AccountEntity(
-                                NordeaAccountType.mapToNordeaAccountType(
-                                                paymentRequest
-                                                        .getPayment()
-                                                        .getCreditor()
-                                                        .getAccountIdentifierType())
-                                        .name(),
-                                paymentRequest.getPayment().getCurrency(),
-                                paymentRequest.getPayment().getCreditor().getAccountNumber()))
-                .withMessage("Message")
-                .withReference(getReference(paymentRequest.getPayment().getUniqueId()))
-                .build();
+        CreditorEntity creditorEntity =
+                new CreditorEntity.Builder().withAccount(getAccount(paymentRequest)).build();
+        String referenceMessage = paymentRequest.getPayment().getReference().getValue();
+        if (isTypeBgPg(paymentRequest.getPayment().getCreditor().getAccountIdentifierType())) {
+            creditorEntity.setReference(new ReferenceEntity("OCR", referenceMessage));
+        } else {
+            creditorEntity.setMessage(referenceMessage);
+        }
+        return creditorEntity;
     }
 
     @JsonIgnore
@@ -52,24 +57,12 @@ public class CreditorEntity {
         return new Creditor(account.toTinkAccountIdentifier());
     }
 
-    @JsonIgnore
-    private static ReferenceEntity getReference(String uniqueId) {
-        return Strings.isNullOrEmpty(uniqueId) ? null : new ReferenceEntity("RF", uniqueId);
-    }
-
     public static class Builder {
         private AccountEntity account;
-        private String message;
         private String name;
-        private ReferenceEntity reference;
 
         public Builder withAccount(AccountEntity account) {
             this.account = account;
-            return this;
-        }
-
-        public Builder withMessage(String message) {
-            this.message = message;
             return this;
         }
 
@@ -78,13 +71,31 @@ public class CreditorEntity {
             return this;
         }
 
-        public Builder withReference(ReferenceEntity reference) {
-            this.reference = reference;
-            return this;
-        }
-
         public CreditorEntity build() {
             return new CreditorEntity(this);
         }
+    }
+
+    @JsonIgnore
+    private static AccountEntity getAccount(PaymentRequest paymentRequest) {
+        return new AccountEntity(
+                NordeaAccountType.mapToNordeaAccountType(
+                                paymentRequest
+                                        .getPayment()
+                                        .getCreditor()
+                                        .getAccountIdentifierType())
+                        .name(),
+                paymentRequest.getPayment().getCurrency(),
+                paymentRequest.getPayment().getCreditor().getAccountNumber());
+    }
+
+    @JsonIgnore
+    private static boolean isTypeBgPg(AccountIdentifier.Type accountIdentifierType) {
+        switch (accountIdentifierType) {
+            case SE_BG:
+            case SE_PG:
+                return true;
+        }
+        return false;
     }
 }
