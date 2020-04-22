@@ -51,7 +51,7 @@ java_library(
     ],
     deps = [
         "//src/integration/credentials:enums",
-        "//src/libraries/field:rpc",
+        "//src/libraries/field/src/main/java/se/tink/libraries/field/rpc",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
