@@ -1,0 +1,63 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "some_iban",
+      "accountExclusion": "NONE",
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "doubleValue": 274.56,
+        "unscaledValue": 2076465881737131641,
+        "scale": 44,
+        "exactValue": 274.56
+      },
+      "currencyCode": "EUR",
+      "bankId": "someiban",
+      "name": "some_iban",
+      "ownership": 1.0,
+      "type": "CHECKING",
+      "identifiers": "[]",
+      "closed": false,
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "availableCredit": 0.0,
+      "balance": 274.56
+    }
+  ],
+  "transactions": [
+    {
+      "amount": -10.0,
+      "date": 1580382000000,
+      "description": "To own account IBAN: another_iban BIC: PBNKDEFFXXX",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 30.0,
+      "date": 1583146800000,
+      "description": "To own account IBAN: another_iban BIC: PBNKDEFFXXX",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": -1.0,
+      "date": 1585562400000,
+      "description": "To own account IBAN: another_iban BIC: PBNKDEFFXXX",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    }
+  ]
+}

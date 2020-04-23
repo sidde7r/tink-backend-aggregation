@@ -1,21 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
+import com.google.inject.Inject;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -24,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class FiduciaAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
@@ -32,11 +30,9 @@ public final class FiduciaAgent extends NextGenerationAgent
     private final FiduciaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public FiduciaAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    @Inject
+    public FiduciaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
 
         String serverUrl = request.getProvider().getPayload();
         FiduciaRequestBuilder fiduciaRequestBuilder =
@@ -44,24 +40,19 @@ public final class FiduciaAgent extends NextGenerationAgent
                         client,
                         sessionStorage,
                         getClientConfiguration(),
-                        createSignatureHeaderGenerator(agentsServiceConfiguration));
+                        createSignatureHeaderGenerator(qsealcSigner));
 
         this.apiClient = new FiduciaApiClient(persistentStorage, serverUrl, fiduciaRequestBuilder);
 
-        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    private SignatureHeaderGenerator createSignatureHeaderGenerator(
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+    private SignatureHeaderGenerator createSignatureHeaderGenerator(QsealcSigner qsealcSigner) {
         return new SignatureHeaderGenerator(
                 FiduciaConstants.SIGNATURE_HEADER,
                 FiduciaConstants.HEADERS_TO_SIGN,
                 getClientConfiguration().getKeyId(),
-                QsealcSignerImpl.build(
-                        agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        getEidasIdentity()));
+                qsealcSigner);
     }
 
     protected FiduciaConfiguration getClientConfiguration() {

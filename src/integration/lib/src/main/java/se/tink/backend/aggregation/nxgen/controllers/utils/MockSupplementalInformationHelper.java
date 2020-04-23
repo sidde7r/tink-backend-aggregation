@@ -17,18 +17,18 @@ public final class MockSupplementalInformationHelper implements SupplementalInfo
     }
 
     @Override
-    public String waitForLoginInput() throws SupplementalInfoException {
-        throw new UnsupportedOperationException("Not implemented");
+    public String waitForLoginInput() {
+        return callbackData.get(Field.Key.LOGIN_INPUT.getFieldKey());
     }
 
     @Override
-    public String waitForAddBeneficiaryInput() throws SupplementalInfoException {
-        throw new UnsupportedOperationException("Not implemented");
+    public String waitForAddBeneficiaryInput() {
+        return callbackData.get(Field.Key.ADD_BENEFICIARY_INPUT.getFieldKey());
     }
 
     @Override
-    public String waitForOtpInput() throws SupplementalInfoException {
-        throw new UnsupportedOperationException("Not implemented");
+    public String waitForOtpInput() {
+        return callbackData.get(Field.Key.OTP_INPUT.getFieldKey());
     }
 
     @Override
