@@ -121,7 +121,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
     }
 
     private void submitLoginForm(WebDriver driver, String username, String password)
-            throws AuthenticationException, AuthorizationException {
+            throws LoginException {
         // go to login page
         driver.navigate().to(Urls.LOGIN_PAGE);
         logRequest("Logging in to " + Urls.LOGIN_PAGE, driver.getPageSource());
@@ -167,7 +167,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
 
         // Unhandled error
         LOG.error("Did not reach logged in state or error message: " + driver.getCurrentUrl());
-        throw AuthorizationError.UNAUTHORIZED.exception();
+        throw LoginError.NOT_SUPPORTED.exception();
     }
 
     private URL getCurrentUrl(WebDriver driver) {
@@ -175,8 +175,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password)
-            throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password) throws LoginException {
         final WebDriver driver = createWebDriver();
         submitLoginForm(driver, username, password);
         apiClient.storeLoginCookies(driver.manage().getCookies());
