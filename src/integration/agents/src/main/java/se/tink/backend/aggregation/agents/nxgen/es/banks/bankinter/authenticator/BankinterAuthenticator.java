@@ -157,6 +157,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         passwordField.sendKeys(password);
 
         // submit and wait for error or redirect
+        LOG.info("Submitting login form");
         loginForm.submit();
         waitForErrorOrRedirect(driver, initialUrl);
         final URL afterLoginUrl = getCurrentUrl(driver);
@@ -164,6 +165,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
 
         // SCA
         if (afterLoginUrl.toUri().getPath().equalsIgnoreCase(Paths.VERIFY_SCA)) {
+            LOG.info("Reached SCA form");
             submitScaForm(driver);
         }
 
@@ -177,6 +179,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
                 .getPath()
                 .equalsIgnoreCase(Paths.GLOBAL_POSITION)) {
             // login successful
+            LOG.info("Login successful");
             return;
         }
 
