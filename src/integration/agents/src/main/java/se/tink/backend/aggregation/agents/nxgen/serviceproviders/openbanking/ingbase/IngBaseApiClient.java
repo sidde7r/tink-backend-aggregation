@@ -119,7 +119,6 @@ public class IngBaseApiClient {
                         .queryParam(
                                 IngBaseConstants.QueryKeys.LIMIT, QueryValues.TRANSACTIONS_LIMIT)
                         .toString();
-        BaseFetchTransactionsResponse response = fetchTransactionsPage(path);
         return fetchTransactionsPage(path);
     }
 
