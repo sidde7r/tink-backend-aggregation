@@ -48,11 +48,6 @@ public class WireMockTestServer {
         return wireMockServer.port();
     }
 
-    private void prepareMockServer(RequestResponseParser parser) {
-        Set<Pair<HTTPRequest, HTTPResponse>> data = parser.parseRequestResponsePairs();
-        buildMockServer(data);
-    }
-
     public void shutdown() {
         wireMockServer.shutdown();
     }
