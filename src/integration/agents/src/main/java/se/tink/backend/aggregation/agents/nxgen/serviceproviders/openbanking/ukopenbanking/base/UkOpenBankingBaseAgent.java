@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
@@ -53,6 +55,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor {
 
     private final URL wellKnownURL;
+    private final JwtSigner jwtSigner;
 
     protected UkOpenBankingApiClient apiClient;
     protected SoftwareStatementAssertion softwareStatement;
@@ -73,10 +76,12 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     public UkOpenBankingBaseAgent(
             AgentComponentProvider componentProvider,
+            JwtSigner jwtSigner,
             UkOpenBankingAisConfig agentConfig,
             boolean disableSslVerification) {
         super(componentProvider);
         this.wellKnownURL = agentConfig.getWellKnownURL();
+        this.jwtSigner = jwtSigner;
         this.disableSslVerification = disableSslVerification;
         this.agentConfig = agentConfig;
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
@@ -115,10 +120,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 .orElse(this::useEidasProxy)
                 .applyConfiguration(client);
 
-        JwtSigner signer =
-                ukOpenBankingConfiguration.getSignerOverride().orElseGet(this::getQsealSigner);
-
-        apiClient = createApiClient(client, signer, softwareStatement, providerConfiguration);
+        apiClient = createApiClient(client, jwtSigner, softwareStatement, providerConfiguration);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
@@ -132,10 +134,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         httpClient.setEidasProxy(configuration.getEidasProxy());
     }
 
-    private JwtSigner getQsealSigner() {
-
-        return new EidasJwtSigner(
-                configuration.getEidasProxy().toInternalConfig(), getEidasIdentity());
+    protected static JwtSigner createEidasJwtSigner(
+            final AgentsServiceConfiguration configuration,
+            final EidasContext context,
+            final Class<? extends UkOpenBankingBaseAgent> agentClass) {
+        final EidasIdentity identity =
+                new EidasIdentity(context.getClusterId(), context.getAppId(), agentClass);
+        return new EidasJwtSigner(configuration.getEidasProxy().toInternalConfig(), identity);
     }
 
     protected UkOpenBankingApiClient createApiClient(

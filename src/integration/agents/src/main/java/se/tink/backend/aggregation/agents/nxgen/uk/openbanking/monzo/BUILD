@@ -4,9 +4,11 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/base",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/base/module",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/v31",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid/jwt/signer/iface",
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
