@@ -11,9 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Account;
@@ -62,6 +65,7 @@ import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.demo.DemoCredentials.DemoUserFeature;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -310,7 +314,7 @@ public class DemoAgent extends AbstractAgent
     private Transaction transferToTransaction(Transfer transfer) throws JsonProcessingException {
         Transaction t = new Transaction();
         t.setDescription(transfer.getSourceMessage());
-        t.setDate(se.tink.libraries.date.DateUtils.flattenTime(transfer.getDueDate()));
+        t.setDate(getDueDate(transfer.getDueDate()));
         t.setAmount(transfer.getAmount().getValue());
         t.setPending(true);
         t.setPayload(
@@ -321,6 +325,14 @@ public class DemoAgent extends AbstractAgent
                 UUIDUtils.toTinkUUID(transfer.getId()));
 
         return t;
+    }
+
+    private Date getDueDate(Date currentDueDate) {
+        CountryDateHelper countryDateHelper =
+                new CountryDateHelper(
+                        new Locale("sv", "SE"), TimeZone.getTimeZone("Europe/Stockholm"));
+        return countryDateHelper.flattenTime(
+                countryDateHelper.getProvidedDateOrCurrentDate(currentDueDate));
     }
 
     private String requestChallengeResponse(Credentials credentials, String code) {

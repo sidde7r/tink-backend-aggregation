@@ -85,7 +85,8 @@ public class AccountTypeToPaymentTypeMapper {
     }
 
     private static PaymentType checkFutureDate(Payment payment, PaymentType paymentType) {
-        if (!payment.getExecutionDate().isEqual(LocalDate.now())) {
+        if (payment.getExecutionDate() != null
+                && !payment.getExecutionDate().isEqual(LocalDate.now())) {
             switch (paymentType) {
                 case DOMESTIC:
                     return PaymentType.DOMESTIC_FUTURE;
