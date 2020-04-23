@@ -11,6 +11,7 @@ import static se.tink.backend.aggregation.service.SystemTestUtils.pollForAllCall
 import static se.tink.backend.aggregation.service.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
 import static se.tink.backend.aggregation.service.SystemTestUtils.readRequestBodyFromFile;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
@@ -238,5 +239,43 @@ public class SystemTest {
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedAccounts, givenAccounts));
+    }
+
+    @Test
+    public void getTransferShouldExecuteAPaymentForBarclays() throws Exception {
+        // given
+        String requestBodyForRefreshEndpoint =
+                readRequestBodyFromFile(
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/transfer_request_body_for_barclays.json");
+
+        String aggregationControllerEndpoint =
+                String.format(
+                        "http://%s:%d/data",
+                        AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT);
+
+        // when
+        ResponseEntity<String> transferCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/transfer",
+                                APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
+                        requestBodyForRefreshEndpoint);
+
+        Optional<String> updateCredentialsCallback =
+                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+                        String.format(
+                                "http://%s:%d/data",
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+
+        List<JsonNode> credentialsCallbacks =
+                pollForAllCallbacksForAnEndpoint(
+                        aggregationControllerEndpoint, "updateCredentials", 100, 1);
+
+        // then
+        JsonNode latestCredentials = credentialsCallbacks.get(credentialsCallbacks.size() - 1);
+        Assert.assertEquals(204, transferCallResult.getStatusCodeValue());
+        Assert.assertTrue(updateCredentialsCallback.isPresent());
+        Assert.assertEquals("UPDATED", updateCredentialsCallback.get());
+        Assert.assertEquals("TRANSFER", latestCredentials.get("requestType").asText());
     }
 }
