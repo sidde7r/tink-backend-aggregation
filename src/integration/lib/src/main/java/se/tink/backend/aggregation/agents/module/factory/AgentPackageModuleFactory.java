@@ -24,8 +24,19 @@ public final class AgentPackageModuleFactory implements AgentModuleFactory {
         this.packageModuleLoader = packageModuleLoader;
     }
 
+    /**
+     * Gets modules needed to run the agent in production. It will load a set of default
+     * dependencies as well as any modules specified under the agent package.
+     *
+     * @param request CredentialsRequest to bind.
+     * @param context Context to bind.
+     * @param configuration Configuration to bind.
+     * @return Set of modules that specifies bindings for the agent instantiation.
+     * @throws ReflectiveOperationException If something went wrong when looking for modules in
+     *     agent package.
+     */
     @Override
-    public Set<Module> getAgentModules(
+    public ImmutableSet<Module> getAgentModules(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration configuration)

@@ -3,12 +3,13 @@ package se.tink.backend.aggregation.agents.framework.wiremock.module;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Module;
-import java.util.Set;
+import com.google.inject.util.Modules;
 import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.module.AgentRequestScopeModule;
+import se.tink.backend.aggregation.agents.module.factory.AgentPackageModuleFactory;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -16,16 +17,52 @@ public final class AgentWireMockModuleFactory implements AgentModuleFactory {
 
     private final WireMockConfiguration wireMockConfiguration;
     private final FakeBankSocket fakeBankSocket;
+    private final AgentPackageModuleFactory agentPackageModuleFactory;
 
     @Inject
     private AgentWireMockModuleFactory(
-            WireMockConfiguration wireMockConfiguration, FakeBankSocket fakeBankSocket) {
+            AgentPackageModuleFactory agentPackageModuleFactory,
+            WireMockConfiguration wireMockConfiguration,
+            FakeBankSocket fakeBankSocket) {
+        this.agentPackageModuleFactory = agentPackageModuleFactory;
         this.wireMockConfiguration = wireMockConfiguration;
         this.fakeBankSocket = fakeBankSocket;
     }
 
+    /**
+     * Gets modules needed to run a WireMock test for this agent. It will load a set of default
+     * dependencies as well as any modules specified under the agent package. It will then override
+     * all of these bindings with test specific bindings if they are specified.
+     *
+     * @param request CredentialsRequest to bind.
+     * @param context Context to bind.
+     * @param agentConfiguration Configuration to bind.
+     * @return Set of modules that specifies bindings for the agent instantiation.
+     * @throws ReflectiveOperationException If something went wrong when looking for modules in
+     *     agent package.
+     */
     @Override
-    public Set<Module> getAgentModules(
+    public ImmutableSet<Module> getAgentModules(
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentConfiguration)
+            throws ReflectiveOperationException {
+
+        return ImmutableSet.of(
+                Modules.override(getProductionModules(request, context, agentConfiguration))
+                        .with(getWireMockModules(request, context, agentConfiguration)));
+    }
+
+    private ImmutableSet<Module> getProductionModules(
+            CredentialsRequest request,
+            AgentContext context,
+            AgentsServiceConfiguration agentConfiguration)
+            throws ReflectiveOperationException {
+
+        return agentPackageModuleFactory.getAgentModules(request, context, agentConfiguration);
+    }
+
+    private ImmutableSet<Module> getWireMockModules(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentConfiguration) {
@@ -37,7 +74,6 @@ public final class AgentWireMockModuleFactory implements AgentModuleFactory {
                         agentConfiguration,
                         wireMockConfiguration,
                         fakeBankSocket),
-                new AgentRequestScopeModule(request, context, agentConfiguration),
-                wireMockConfiguration.getAgentModule());
+                new AgentRequestScopeModule(request, context, agentConfiguration));
     }
 }
