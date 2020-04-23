@@ -10,6 +10,8 @@ import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
@@ -25,11 +27,13 @@ public class WireMockTestServer {
 
     private final WireMockServer wireMockServer;
     private final BodyParser bodyParser;
+    private final Map<HTTPRequest, HTTPResponse> registeredPairs;
 
     public WireMockTestServer(Set<RequestResponseParser> parsers) {
         wireMockServer = new WireMockServer(wireMockConfig().dynamicPort().dynamicHttpsPort());
         bodyParser = new BodyParserImpl();
         wireMockServer.start();
+        this.registeredPairs = new HashMap<>();
         parsers.forEach(parser -> buildMockServer(parser.parseRequestResponsePairs()));
     }
 
@@ -131,6 +135,18 @@ public class WireMockTestServer {
 
             final HTTPRequest request = pair.first;
             final HTTPResponse response = pair.second;
+
+            // Check if this request has already been registered
+            if (registeredPairs.containsKey(request)
+                    && !registeredPairs.get(request).equals(response)) {
+                throw new RuntimeException(
+                        "There is a conflict for the request with URL = "
+                                + request.getPath()
+                                + " the same request has been already registered with a different response, "
+                                + "please remove the conflict");
+            }
+
+            registeredPairs.put(request, response);
 
             final MappingBuilder builder = parseRequestType(request);
 
