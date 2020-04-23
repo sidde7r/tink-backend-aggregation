@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.framework.wiremock.utils;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
@@ -30,13 +32,13 @@ public class AapFileParser implements RequestResponseParser {
     }
 
     @Override
-    public List<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
+    public Set<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
 
         List<Integer> requestStartIndices =
                 findLineIndicesContainingGivenExpression(lines, "REQUEST");
         List<Integer> responseStartIndices =
                 findLineIndicesContainingGivenExpression(lines, "RESPONSE");
-        List<Pair<HTTPRequest, HTTPResponse>> pairs = new ArrayList<>();
+        Set<Pair<HTTPRequest, HTTPResponse>> pairs = new HashSet<>();
         int totalPairAmount = requestStartIndices.size();
         for (int currentPairIndex = 0; currentPairIndex < totalPairAmount; currentPairIndex++) {
             List<String> requestLines =
@@ -69,7 +71,7 @@ public class AapFileParser implements RequestResponseParser {
         Optional<String> expectedState = parseExpectedState(requestLines);
         String requestMethod = parseRequestMethod(requestLines);
         String requestURL = removeHost(parseRequestURL(requestLines));
-        List<Pair<String, String>> requestHeaders = parseHeaders(requestLines);
+        Set<Pair<String, String>> requestHeaders = parseHeaders(requestLines);
         Optional<String> requestBody = parseBody(requestLines);
 
         HTTPRequest.Builder httpRequestBuilder =
@@ -83,7 +85,7 @@ public class AapFileParser implements RequestResponseParser {
 
         Optional<String> toState = parseToState(responseLines);
         Integer statusCode = parseStatusCode(responseLines);
-        List<Pair<String, String>> responseHeaders = parseHeaders(responseLines);
+        Set<Pair<String, String>> responseHeaders = parseHeaders(responseLines);
         Optional<String> responseBody = parseBody(responseLines);
         HTTPResponse.Builder httpResponseBuilder =
                 new HTTPResponse.Builder(responseHeaders, statusCode);
@@ -92,14 +94,14 @@ public class AapFileParser implements RequestResponseParser {
         return httpResponseBuilder.build();
     }
 
-    private List<Pair<String, String>> parseHeaders(List<String> rawData) {
+    private Set<Pair<String, String>> parseHeaders(List<String> rawData) {
         /*
          * Starting from third line, we have response headers. Headers continue until empty line
          */
         int firstEmptyLineIndex = rawData.indexOf("");
         return rawData.subList(2, firstEmptyLineIndex).stream()
                 .map(this::parseHeader)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     private Pair<String, String> parseHeader(String header) {

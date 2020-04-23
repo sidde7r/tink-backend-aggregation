@@ -4,8 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -16,22 +17,22 @@ import se.tink.libraries.pair.Pair;
 public class HTTPRequest {
     private final String method;
     private final String path;
-    private final List<NameValuePair> query;
-    private final List<Pair<String, String>> requestHeaders;
+    private final Set<NameValuePair> query;
+    private final Set<Pair<String, String>> requestHeaders;
     private String requestBody;
     private String expectedState;
 
     public static class Builder {
         private final String method;
         private final String url;
-        private final List<Pair<String, String>> requestHeaders;
+        private final Set<Pair<String, String>> requestHeaders;
         private String requestBody;
         private String expectedState;
 
         public Builder(
                 final String method,
                 final String url,
-                final List<Pair<String, String>> requestHeaders) {
+                final Set<Pair<String, String>> requestHeaders) {
             this.method = method;
             this.url = url;
             this.requestHeaders = requestHeaders;
@@ -56,14 +57,12 @@ public class HTTPRequest {
     }
 
     private HTTPRequest(
-            final String method,
-            final String url,
-            final List<Pair<String, String>> requestHeaders) {
+            final String method, final String url, final Set<Pair<String, String>> requestHeaders) {
 
         URI uri = URI.create(url);
 
         this.path = uri.getRawPath();
-        this.query = URLEncodedUtils.parse(uri, StandardCharsets.UTF_8.name());
+        this.query = new HashSet<>(URLEncodedUtils.parse(uri, StandardCharsets.UTF_8.name()));
 
         this.method = method;
         this.requestHeaders = requestHeaders;
@@ -83,7 +82,7 @@ public class HTTPRequest {
         }
     }
 
-    public List<NameValuePair> getQuery() {
+    public Set<NameValuePair> getQuery() {
         return query;
     }
 
@@ -107,7 +106,7 @@ public class HTTPRequest {
         return path;
     }
 
-    public List<Pair<String, String>> getRequestHeaders() {
+    public Set<Pair<String, String>> getRequestHeaders() {
         return requestHeaders;
     }
 }

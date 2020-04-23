@@ -10,7 +10,6 @@ import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
@@ -50,7 +49,7 @@ public class WireMockTestServer {
     }
 
     private void prepareMockServer(RequestResponseParser parser) {
-        List<Pair<HTTPRequest, HTTPResponse>> data = parser.parseRequestResponsePairs();
+        Set<Pair<HTTPRequest, HTTPResponse>> data = parser.parseRequestResponsePairs();
         buildMockServer(data);
     }
 
@@ -139,7 +138,7 @@ public class WireMockTestServer {
         return errorMessage.toString();
     }
 
-    private void buildMockServer(List<Pair<HTTPRequest, HTTPResponse>> pairs) {
+    private void buildMockServer(Set<Pair<HTTPRequest, HTTPResponse>> pairs) {
         for (Pair<HTTPRequest, HTTPResponse> pair : pairs) {
 
             final HTTPRequest request = pair.first;
