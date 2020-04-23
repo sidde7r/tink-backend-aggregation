@@ -33,13 +33,6 @@ public class WireMockTestServer {
         parsers.forEach(parser -> buildMockServer(parser.parseRequestResponsePairs()));
     }
 
-    public WireMockTestServer(int httpPort, int httpsPort, Set<RequestResponseParser> parsers) {
-        wireMockServer = new WireMockServer(wireMockConfig().port(httpPort).httpsPort(httpsPort));
-        bodyParser = new BodyParserImpl();
-        wireMockServer.start();
-        parsers.forEach(parser -> buildMockServer(parser.parseRequestResponsePairs()));
-    }
-
     public int getHttpsPort() {
         return wireMockServer.httpsPort();
     }
