@@ -41,9 +41,11 @@ public final class AgentWireMockRefreshTest {
             Module agentModule,
             Set<RefreshableItem> refreshableItems) {
 
-        server = new WireMockTestServer();
-        server.prepareMockServer(
-                new AapFileParser(new ResourceFileReader().read(wireMockFilePath)));
+        server =
+                new WireMockTestServer(
+                        ImmutableSet.of(
+                                new AapFileParser(
+                                        new ResourceFileReader().read(wireMockFilePath))));
 
         final Set<Module> modules =
                 ImmutableSet.of(

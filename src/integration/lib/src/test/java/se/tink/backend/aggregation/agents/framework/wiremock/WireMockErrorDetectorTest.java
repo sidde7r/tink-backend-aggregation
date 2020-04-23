@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.framework.wiremock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,13 +35,13 @@ public class WireMockErrorDetectorTest {
                                 LogMaskerImpl.LoggingMode.UNSURE_IF_MASKER_COVERS_SECRETS)
                         .build();
 
-        server = new WireMockTestServer();
-
-        server.prepareMockServer(
-                new AapFileParser(
-                        new ResourceFileReader()
-                                .read(
-                                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/resources/test.aap")));
+        server =
+                new WireMockTestServer(
+                        ImmutableSet.of(
+                                new AapFileParser(
+                                        new ResourceFileReader()
+                                                .read(
+                                                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/wiremock/resources/test.aap"))));
 
         httpClient =
                 new IntegrationWireMockTestTinkHttpClient(

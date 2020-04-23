@@ -12,6 +12,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
 import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.CompareEntity;
@@ -26,16 +27,18 @@ public class WireMockTestServer {
     private final WireMockServer wireMockServer;
     private final BodyParser bodyParser;
 
-    public WireMockTestServer() {
+    public WireMockTestServer(Set<RequestResponseParser> parsers) {
         wireMockServer = new WireMockServer(wireMockConfig().dynamicPort().dynamicHttpsPort());
         bodyParser = new BodyParserImpl();
         wireMockServer.start();
+        parsers.forEach(parser -> buildMockServer(parser.parseRequestResponsePairs()));
     }
 
-    public WireMockTestServer(int httpPort, int httpsPort) {
+    public WireMockTestServer(int httpPort, int httpsPort, Set<RequestResponseParser> parsers) {
         wireMockServer = new WireMockServer(wireMockConfig().port(httpPort).httpsPort(httpsPort));
         bodyParser = new BodyParserImpl();
         wireMockServer.start();
+        parsers.forEach(parser -> buildMockServer(parser.parseRequestResponsePairs()));
     }
 
     public int getHttpsPort() {
@@ -46,7 +49,7 @@ public class WireMockTestServer {
         return wireMockServer.port();
     }
 
-    public void prepareMockServer(RequestResponseParser parser) {
+    private void prepareMockServer(RequestResponseParser parser) {
         List<Pair<HTTPRequest, HTTPResponse>> data = parser.parseRequestResponsePairs();
         buildMockServer(data);
     }
