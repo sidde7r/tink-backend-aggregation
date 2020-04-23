@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class TransactionsEntity {
+public class TransactionsEntity<T extends TransactionEntity> {
 
-    private List<TransactionEntity> booked;
-    private List<TransactionEntity> pending;
+    private List<T> booked;
+    private List<T> pending;
 
     @JsonProperty("_links")
     private LinksEntity links;
@@ -28,8 +28,7 @@ public class TransactionsEntity {
     }
 
     @JsonIgnore
-    private Stream<? extends TransactionEntity> getNonNullStream(
-            List<TransactionEntity> transactions) {
+    private Stream<T> getNonNullStream(List<T> transactions) {
         return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream();
     }
 

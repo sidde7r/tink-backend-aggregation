@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.ing;
 
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.ing.fetcher.rpc.IngNLTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -14,7 +16,12 @@ public class IngAgent extends IngBaseAgent {
     }
 
     @Override
-    protected LocalDate earliestTransactionHistoryDate() {
+    public LocalDate earliestTransactionHistoryDate() {
         return LocalDate.now().minusYears(2);
+    }
+
+    @Override
+    public Class<? extends BaseFetchTransactionsResponse> getTransactionsResponseClass() {
+        return IngNLTransactionResponse.class;
     }
 }

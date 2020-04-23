@@ -14,13 +14,13 @@ public class IngAgent extends IngBaseAgent {
     }
 
     @Override
-    protected boolean shouldReturnLowercaseAccountId() {
+    public boolean shouldReturnLowercaseAccountId() {
         // ING Spain RE agent uses lowercase account IDs
         return true;
     }
 
     @Override
-    protected LocalDate earliestTransactionHistoryDate() {
+    public LocalDate earliestTransactionHistoryDate() {
         // All transaction information since the payment account was opened
         return LocalDate.now().minusYears(7);
     }

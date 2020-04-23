@@ -170,12 +170,12 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
 
     @Override
     public void setEidasIdentity(EidasIdentity eidasIdentity) {
-        tinkHttpClient.setEidasIdentity(eidasIdentity);
+        // NOOP
     }
 
     @Override
     public void setEidasProxy(EidasProxyConfiguration conf) {
-        tinkHttpClient.setEidasProxy(conf);
+        // NOOP
     }
 
     @Override

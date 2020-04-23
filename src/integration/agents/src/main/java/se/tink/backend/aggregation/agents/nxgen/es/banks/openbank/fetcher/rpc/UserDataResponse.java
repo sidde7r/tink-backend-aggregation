@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.collection.List;
+import java.util.Collection;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.IbanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.ValueEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
 public class UserDataResponse {
@@ -30,7 +33,7 @@ public class UserDataResponse {
         return valuesList;
     }
 
-    public List<IbanEntity> getIbans() {
+    public List<CodIban> getIbans() {
         return ibanList.ibans;
     }
 
@@ -39,6 +42,34 @@ public class UserDataResponse {
             return List.empty();
         }
         return cardsList.cards;
+    }
+
+    public Collection<TransactionalAccount> toTinkAccounts() {
+        return accountsList
+                .accounts
+                .filter(AccountEntity::isTransactionalAccount)
+                .map(this::toTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .asJava();
+    }
+
+    private Optional<TransactionalAccount> toTransactionalAccount(AccountEntity t) {
+        return t.toTinkAccount(mapIbanToAccountNumber(t));
+    }
+
+    private String mapIbanToAccountNumber(AccountEntity t) {
+        return ibanList.ibans.asJava().stream()
+                .filter(
+                        ibanEntity ->
+                                ibanEntity
+                                        .getIbanEntity()
+                                        .getIban()
+                                        .contains(t.getAccountInfoOldFormat().getContractNumber()))
+                .findFirst()
+                .orElse(null)
+                .getIbanEntity()
+                .getComposedIban();
     }
 
     public List<AccountEntity> getAccounts() {
@@ -52,7 +83,7 @@ public class UserDataResponse {
 
     private static class IbanList {
         @JsonProperty("datosIban")
-        private List<IbanEntity> ibans;
+        private List<CodIban> ibans;
     }
 
     private static class CardsList {
@@ -63,5 +94,14 @@ public class UserDataResponse {
     private static class AccountsList {
         @JsonProperty("cuentas")
         private List<AccountEntity> accounts;
+    }
+
+    private static class CodIban {
+        @JsonProperty("codIban")
+        private IbanEntity ibanEntity;
+
+        public IbanEntity getIbanEntity() {
+            return ibanEntity;
+        }
     }
 }

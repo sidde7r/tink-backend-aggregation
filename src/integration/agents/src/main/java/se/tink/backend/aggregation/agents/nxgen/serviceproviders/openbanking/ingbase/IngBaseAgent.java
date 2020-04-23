@@ -14,8 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.IngBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseTransactionsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -39,7 +41,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
 public abstract class IngBaseAgent extends NextGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                MarketConfiguration {
 
     protected final IngBaseApiClient apiClient;
 
@@ -63,7 +67,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         marketInUppercase,
                         providerSessionCacheController,
-                        isManualAuthentication);
+                        isManualAuthentication,
+                        this);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
 
@@ -170,8 +175,14 @@ public abstract class IngBaseAgent extends NextGenerationAgent
      * Use a lowercase IBAN as account ID. Defaults to false (uppercase). Can be overridden per
      * market to match RE agent if needed.
      */
-    protected boolean shouldReturnLowercaseAccountId() {
+    @Override
+    public boolean shouldReturnLowercaseAccountId() {
         return false;
+    }
+
+    @Override
+    public LocalDate earliestTransactionHistoryDate() {
+        return null;
     }
 
     private LocalDate getTransactionsFromDate() {
@@ -188,7 +199,6 @@ public abstract class IngBaseAgent extends NextGenerationAgent
      * Available transaction history per market
      * see https://developer.ing.com/api-marketplace/marketplace/b6d5093d-626e-41e9-b9e8-ff287bbe2c07/versions/b063703e-1437-4995-90e2-06dac67fef92/documentation#country-specific-information
      */
-    protected abstract LocalDate earliestTransactionHistoryDate();
 
     private boolean shouldDoManualAuthentication(final Credentials credentials) {
         return !forceAutoAuthentication()
@@ -204,5 +214,10 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         return Objects.equals(CredentialsTypes.THIRD_PARTY_APP, CredentialsTypes.PASSWORD)
                 && !request.isUpdate()
                 && !request.isCreate();
+    }
+
+    @Override
+    public Class<? extends BaseFetchTransactionsResponse> getTransactionsResponseClass() {
+        return BaseFetchTransactionsResponse.class;
     }
 }

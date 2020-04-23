@@ -44,23 +44,7 @@ public class TransactionEntity {
 
     private Transaction toTinkTransaction(boolean isPending) {
 
-        String description =
-                Stream.of(
-                                Objects.nonNull(remittanceInformationUnstructured)
-                                        ? cleanUnstructuredInformation(
-                                                remittanceInformationUnstructured)
-                                        : null,
-                                creditorName,
-                                debtorName)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                        .orElse(
-                                Stream.of(creditorAccount, debtorAccount)
-                                        .filter(Objects::nonNull)
-                                        .findFirst()
-                                        .map(TransactionAccountEntity::getIban)
-                                        .orElse(""))
-                        .replace("<br>", "\n");
+        final String description = toTinkDescription();
 
         Date executionDate = null;
         if (!Strings.isNullOrEmpty(executionDateTime)) {
@@ -95,9 +79,7 @@ public class TransactionEntity {
                 .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
                         getCounterPartyName())
-                .setPayload(
-                        TransactionPayloadTypes.MESSAGE,
-                        cleanUnstructuredInformation(remittanceInformationUnstructured))
+                .setPayload(TransactionPayloadTypes.MESSAGE, remittanceInformationUnstructured)
                 .build();
     }
 
@@ -118,13 +100,20 @@ public class TransactionEntity {
                 .orElse("");
     }
 
-    private String cleanUnstructuredInformation(String data) {
-        if (data.contains("<br>")) {
-            return data.substring(0, data.indexOf("<")).replace("Naam: ", "").trim();
-        }
-        if (data.contains("\\n")) {
-            return data.substring(0, data.indexOf("\\n")).replace("Naam: ", "").trim();
-        }
-        return data;
+    public String toTinkDescription() {
+        return Stream.of(remittanceInformationUnstructured, creditorName, debtorName)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(
+                        Stream.of(creditorAccount, debtorAccount)
+                                .filter(Objects::nonNull)
+                                .findFirst()
+                                .map(TransactionAccountEntity::getIban)
+                                .orElse(""))
+                .replace("<br>", "\n");
+    }
+
+    public String getRemittanceInformationUnstructured() {
+        return remittanceInformationUnstructured;
     }
 }

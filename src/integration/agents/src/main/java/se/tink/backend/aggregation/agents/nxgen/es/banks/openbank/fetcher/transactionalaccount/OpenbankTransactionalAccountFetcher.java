@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankApiCli
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.ErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountTransactionsRequestQueryParams;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -29,11 +28,7 @@ public class OpenbankTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient
-                .fetchAccounts()
-                .filter(AccountEntity::isTransactionalAccount)
-                .map(AccountEntity::toTinkAccount)
-                .asJava();
+        return apiClient.fetchAccounts().toTinkAccounts();
     }
 
     @Override

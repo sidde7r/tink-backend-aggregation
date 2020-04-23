@@ -25,10 +25,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.IngBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.utils.IngBaseUtils;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
@@ -54,6 +55,7 @@ public class IngBaseApiClient {
     private String certificateSerial;
     private final ProviderSessionCacheController providerSessionCacheController;
     private final boolean isManualAuthentication;
+    private MarketConfiguration marketConfiguration;
 
     private static final Logger logger = LoggerFactory.getLogger(IngBaseApiClient.class);
 
@@ -62,12 +64,14 @@ public class IngBaseApiClient {
             PersistentStorage persistentStorage,
             String market,
             ProviderSessionCacheController providerSessionCacheController,
-            boolean isManualAuthentication) {
+            boolean isManualAuthentication,
+            MarketConfiguration marketConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.market = market;
         this.providerSessionCacheController = providerSessionCacheController;
         this.isManualAuthentication = isManualAuthentication;
+        this.marketConfiguration = marketConfiguration;
     }
 
     public IngBaseConfiguration getConfiguration() {
@@ -102,7 +106,7 @@ public class IngBaseApiClient {
                 .get(FetchBalancesResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactions(
+    public BaseFetchTransactionsResponse fetchTransactions(
             final String transactionsUrl, LocalDate fromDate, LocalDate toDate) {
         final String path =
                 new URL(transactionsUrl)
@@ -118,12 +122,12 @@ public class IngBaseApiClient {
         return fetchTransactionsPage(path);
     }
 
-    public FetchTransactionsResponse fetchTransactionsPage(final String transactionsUrl) {
+    public BaseFetchTransactionsResponse fetchTransactionsPage(final String transactionsUrl) {
         return buildRequestWithSignature(
                         transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
-                .get(FetchTransactionsResponse.class);
+                .get(marketConfiguration.getTransactionsResponseClass());
     }
 
     public URL getAuthorizeUrl(final String state) {
