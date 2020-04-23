@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount;
 
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.entities.EeIConsultationMovementsPostponedViewEntity;
@@ -45,7 +46,7 @@ public class EvoBancoTransactionFetcher
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
 
-            if (statusCode == EvoBancoConstants.StatusCodes.BAD_REQUEST_STATUS_CODE) {
+            if (statusCode == HttpStatus.SC_BAD_REQUEST) {
                 TransactionsResponse errorResponse =
                         e.getResponse().getBody(TransactionsResponse.class);
 

@@ -24,6 +24,7 @@ public class EvoBancoSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
+        // TODO: Consider using persistent session since the agent/device is pinned
         EeISessionMaintainerEntity eeISessionMaintainerEntity =
                 new EeISessionMaintainerEntity(
                         sessionStorage.get(EvoBancoConstants.Storage.USER_BE),

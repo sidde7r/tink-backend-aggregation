@@ -1,18 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator;
 
 import java.util.UUID;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.EeILinkingAndLoginEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.SignatureDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginResponse1;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginResponse2;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities.ErrorEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -38,16 +42,25 @@ public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPass
     @Override
     public String init(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        String deviceId =
-                UUID.randomUUID()
-                        .toString()
-                        .toUpperCase()
-                        .substring(0, EvoBancoConstants.Constants.DEVICE_ID_LENGTH);
-        persistentStorage.put(EvoBancoConstants.Storage.DEVICE_ID, deviceId);
 
         try {
-            // Construct login request from username and hashed password
             bankClient.login(new LoginRequest(username, password));
+        } catch (HttpResponseException e) {
+            if (e.getResponse()
+                    .getBody(ErrorEntity.class)
+                    .getMessage()
+                    .equalsIgnoreCase(ErrorMessages.AUTHENTICATION_ERROR_MSG)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+        }
+
+        try {
+            String deviceId =
+                    UUID.randomUUID()
+                            .toString()
+                            .toUpperCase()
+                            .substring(0, EvoBancoConstants.Constants.DEVICE_ID_LENGTH);
+            persistentStorage.put(EvoBancoConstants.Storage.DEVICE_ID, deviceId);
 
             SignatureDataEntity signatureDataEntity =
                     new SignatureDataEntity.Builder()
@@ -67,7 +80,7 @@ public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPass
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
 
-            if (statusCode == EvoBancoConstants.StatusCodes.BAD_REQUEST_STATUS_CODE) {
+            if (statusCode == HttpStatus.SC_BAD_REQUEST) {
                 e.getResponse().getBody(LinkingLoginResponse1.class).handleReturnCode();
             }
 
@@ -106,7 +119,7 @@ public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPass
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
 
-            if (statusCode == EvoBancoConstants.StatusCodes.BAD_REQUEST_STATUS_CODE) {
+            if (statusCode == HttpStatus.SC_BAD_REQUEST) {
                 e.getResponse().getBody(LinkingLoginResponse2.class).handleReturnCode();
             }
 

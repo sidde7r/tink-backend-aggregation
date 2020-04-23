@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.GlobalPositionFirstTimeResponse;
@@ -61,7 +60,7 @@ public class EvoBancoApiClient {
         return linkingLoginResponse2;
     }
 
-    public LoginResponse login(LoginRequest loginRequest) throws LoginException {
+    public LoginResponse login(LoginRequest loginRequest) {
         LoginResponse loginResponse =
                 createRequest(EvoBancoConstants.Urls.LOGIN)
                         .body(loginRequest, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
