@@ -166,7 +166,7 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response updateSignableOperation(
             HostConfiguration hostConfiguration, SignableOperation signableOperation) {
-        throw new UnsupportedOperationException("Not implemented");
+        return null;
     }
 
     @Override
