@@ -8,12 +8,12 @@ import se.tink.libraries.date.CountryDateHelper;
 
 public class LansforsakringarDateUtil {
 
-    private LansforsakringarDateUtil() {}
-
     private static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
     private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Europe/Stockholm");
     private static final CountryDateHelper dateHelper =
             new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
+
+    private LansforsakringarDateUtil() {}
 
     public static long getNextPossiblePaymentDateForBgPg(Date dateFromTransfer) {
         return dateHelper.getProvidedDateOrBestPossibleDate(dateFromTransfer, 10, 0).getTime();
