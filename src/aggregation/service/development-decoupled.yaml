@@ -43,6 +43,10 @@ developmentConfiguration:
       keyId: 1
     base64encodedkey: 'QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE='
 
+  aggregationControllerClientConfiguration:
+    host: fake_aggregation_controller
+    port: 8080
+
 database:
   driverClass: com.mysql.jdbc.Driver
   username: tink
