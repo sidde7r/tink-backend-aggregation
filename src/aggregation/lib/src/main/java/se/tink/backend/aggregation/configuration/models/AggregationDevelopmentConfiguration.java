@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.configuration.models;
 
+import se.tink.backend.aggregation.storage.database.models.AggregationControllerClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
@@ -10,6 +11,7 @@ public class AggregationDevelopmentConfiguration {
     private ClientConfiguration clientConfiguration;
     private AggregatorConfiguration aggregatorConfiguration;
     private CryptoConfiguration cryptoConfiguration;
+    private AggregationControllerClientConfiguration aggregationControllerClientConfiguration;
 
     public ClusterConfiguration getClusterConfiguration() {
         return clusterConfiguration;
@@ -27,6 +29,10 @@ public class AggregationDevelopmentConfiguration {
         return cryptoConfiguration;
     }
 
+    public AggregationControllerClientConfiguration getAggregationControllerClientConfiguration() {
+        return aggregationControllerClientConfiguration;
+    }
+
     public boolean isValid() {
         if (this.clusterConfiguration == null) {
             return false;
@@ -41,6 +47,10 @@ public class AggregationDevelopmentConfiguration {
         }
 
         if (this.aggregatorConfiguration == null) {
+            return false;
+        }
+
+        if (this.aggregationControllerClientConfiguration == null) {
             return false;
         }
 

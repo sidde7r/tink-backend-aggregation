@@ -52,6 +52,7 @@ import se.tink.backend.aggregation.resources.MonitoringServiceResource;
 import se.tink.backend.aggregation.startupchecks.StartupChecksHandler;
 import se.tink.backend.aggregation.startupchecks.StartupChecksHandlerImpl;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
+import se.tink.backend.aggregation.storage.database.models.AggregationControllerClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
@@ -201,9 +202,6 @@ public class AggregationDecoupledModule extends AbstractModule {
         // AggregationModule
         bind(AggregationControllerAggregationClient.class)
                 .to(FakeAggregationControllerAggregationClient.class);
-        bind(InetSocketAddress.class)
-                .annotatedWith(FakeAggregationControllerSocket.class)
-                .toInstance(new InetSocketAddress("fake_aggregation_controller", 8080));
         bind(AgentWorker.class).in(Scopes.SINGLETON);
         bind(ManagedTppSecretsServiceClient.class)
                 .to(TppSecretsServiceClientImpl.class)
@@ -289,6 +287,17 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
         bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
         bind(AapFileProvider.class).to(AggregationDecoupledAapFileProvider.class);
+    }
+
+    @Provides
+    @Singleton
+    @FakeAggregationControllerSocket
+    public InetSocketAddress provideFakeAggregationControllerClientConfiguration() {
+        final AggregationControllerClientConfiguration config =
+                configuration
+                        .getDevelopmentConfiguration()
+                        .getAggregationControllerClientConfiguration();
+        return new InetSocketAddress(config.getHost(), config.getPort());
     }
 
     @Provides
