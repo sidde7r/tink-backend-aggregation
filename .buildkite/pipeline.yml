@@ -99,8 +99,6 @@ steps:
     command: "/bin/sh /opt/detect-secrets"
     if: |
       build.branch != 'master' && build.branch != 'staging'
-    soft_fail:
-      - exit_status: 1
     plugins:
       - docker#v3.3.0:
           image: gcr.io/tink-containers/detect-secrets:latest
