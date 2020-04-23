@@ -24,8 +24,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.CustomerTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.AspspConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.IngBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.MarketConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchAccountsResponse;
@@ -55,7 +55,7 @@ public class IngBaseApiClient {
     private String certificateSerial;
     private final ProviderSessionCacheController providerSessionCacheController;
     private final boolean isManualAuthentication;
-    private AspspConfiguration aspspConfiguration;
+    private MarketConfiguration marketConfiguration;
 
     private static final Logger logger = LoggerFactory.getLogger(IngBaseApiClient.class);
 
@@ -65,13 +65,13 @@ public class IngBaseApiClient {
             String market,
             ProviderSessionCacheController providerSessionCacheController,
             boolean isManualAuthentication,
-            AspspConfiguration aspspConfiguration) {
+            MarketConfiguration marketConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.market = market;
         this.providerSessionCacheController = providerSessionCacheController;
         this.isManualAuthentication = isManualAuthentication;
-        this.aspspConfiguration = aspspConfiguration;
+        this.marketConfiguration = marketConfiguration;
     }
 
     public IngBaseConfiguration getConfiguration() {
@@ -128,7 +128,7 @@ public class IngBaseApiClient {
                         transactionsUrl, Signature.HTTP_METHOD_GET, StringUtils.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
-                .get(aspspConfiguration.getTransactionsResponseClass());
+                .get(marketConfiguration.getTransactionsResponseClass());
     }
 
     public URL getAuthorizeUrl(final String state) {

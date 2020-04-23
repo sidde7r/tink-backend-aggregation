@@ -14,7 +14,7 @@ public class IngAgent extends IngBaseAgent {
     }
 
     @Override
-    protected LocalDate earliestTransactionHistoryDate() {
+    public LocalDate earliestTransactionHistoryDate() {
         // All transaction information since the payment account was opened
         return LocalDate.now().minusYears(7);
     }
