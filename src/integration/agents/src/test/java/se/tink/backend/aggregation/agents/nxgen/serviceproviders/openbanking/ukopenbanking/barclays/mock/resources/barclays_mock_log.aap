@@ -1,7 +1,5 @@
-
 REQUEST 1
 GET https://oauth.tiaa.barclays.com/BarclaysPersonal/.well-known/openid-configuration
-X-Aggregator: Tink
 Connection : keep-alive
 User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
 X-Aggregator : Tink Testing
