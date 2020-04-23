@@ -33,7 +33,7 @@ public class IcaBankenPaymentExecutor implements PaymentExecutor {
                 executorHelper.findDestinationAccount(transfer.getDestination());
 
         TransferRequest transferRequest =
-                TransferRequest.create(transfer, sourceAccount, destinationAccount);
+                TransferRequest.createPaymentRequest(transfer, sourceAccount, destinationAccount);
 
         executorHelper.putTransferInOutbox(transferRequest);
 

@@ -53,7 +53,8 @@ public class TransferRequest {
             AccountEntity sourceAccount,
             RecipientEntity destinationAccount,
             String sourceMessage,
-            String destinationMessage) {
+            String destinationMessage,
+            String typeOfPayment) {
         this.recipientAccountNumber = destinationAccount.getAccountNumber();
         this.amount = transfer.getAmount().getValue();
         this.registrationId = null;
@@ -63,23 +64,30 @@ public class TransferRequest {
         this.type = destinationAccount.getType();
         this.isStandingTransaction = false;
         this.eventId = null;
+        this.type = typeOfPayment;
         this.dueDate = IcaBankenExecutorUtils.getDueDate(transfer);
-        this.type = IcaBankenConstants.Transfers.PAYMENT;
-        this.referenceType = IcaBankenExecutorUtils.getReferenceTypeFor(transfer);
+        if (IcaBankenConstants.Transfers.BANK_TRANSFER.equalsIgnoreCase(typeOfPayment)) {
+            this.referenceType = null;
+            this.recipientType = typeOfPayment;
+        } else {
+            this.referenceType = IcaBankenExecutorUtils.getReferenceTypeFor(transfer);
+        }
+
         this.recipientId = destinationAccount.getRecipientId();
     }
 
-    public static TransferRequest create(
+    public static TransferRequest createPaymentRequest(
             Transfer transfer, AccountEntity sourceAccount, RecipientEntity destinationAccount) {
         return new TransferRequest(
                 transfer,
                 sourceAccount,
                 destinationAccount,
                 transfer.getSourceMessage(),
-                transfer.getDestinationMessage());
+                transfer.getDestinationMessage(),
+                IcaBankenConstants.Transfers.PAYMENT);
     }
 
-    public static TransferRequest create(
+    public static TransferRequest createTransferRequest(
             Transfer transfer,
             AccountEntity sourceAccount,
             RecipientEntity destinationAccount,
@@ -91,6 +99,7 @@ public class TransferRequest {
                 sourceAccount,
                 destinationAccount,
                 formattedMessages.getSourceMessage(),
-                formattedMessages.getDestinationMessage());
+                formattedMessages.getDestinationMessage(),
+                IcaBankenConstants.Transfers.BANK_TRANSFER);
     }
 }

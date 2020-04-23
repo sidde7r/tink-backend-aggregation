@@ -46,7 +46,7 @@ public class IcaBankenBankTransferExecutor implements BankTransferExecutor {
         RecipientEntity destinationAccount = getRecipient(transfer, transferSourceAccounts);
 
         TransferRequest transferRequest =
-                TransferRequest.create(
+                TransferRequest.createTransferRequest(
                         transfer, sourceAccount, destinationAccount, transferMessageFormatter);
         executeBankTransfer(transferRequest, transfer, sourceAccount);
         return Optional.empty();
