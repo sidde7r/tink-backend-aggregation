@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands.state;
 
 import java.io.IOException;
+import java.util.Set;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +41,12 @@ public class InstantiateAgentWorkerCommandFakeBankState
     public void doRightBeforeInstantiation(String providerName) {
         server = new WireMockTestServer();
         fakeBankSocket.set("localhost:" + server.getHttpsPort());
-        String fakeBankAapFilePath = fakeBankAapFileMapper.getAapFilePath(providerName);
-        server.prepareMockServer(
-                new AapFileParser(new ResourceFileReader().read(fakeBankAapFilePath)));
+        Set<String> fakeBankAapFilePaths = fakeBankAapFileMapper.getAapFilePaths(providerName);
+        fakeBankAapFilePaths.forEach(
+                fakeBankAapFilePath ->
+                        server.prepareMockServer(
+                                new AapFileParser(
+                                        new ResourceFileReader().read(fakeBankAapFilePath))));
     }
 
     @Override
