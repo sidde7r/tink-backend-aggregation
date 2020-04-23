@@ -1,15 +1,15 @@
-package se.tink.backend.aggregation.aggregationcontroller;
+package se.tink.backend.aggregation.aggregationcontroller.fake;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.config.ClientConfig;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -17,10 +17,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
@@ -40,26 +39,18 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class FakeAggregationControllerAggregationClient
         implements AggregationControllerAggregationClient {
 
-    // TODO Make this configurable. Should be localhost if run locally.
-    // https://tinkab.atlassian.net/jira/software/projects/AAP/boards/136?selectedIssue=AAP-279
-    private static final String AGGREGATION_CONTROLLER_NAME = "fake_aggregation_controller";
-    private static final int AGGREGATION_CONTROLLER_PORT = 8080;
+    private final InetSocketAddress socket;
+    private final ObjectMapper mapper;
 
-    private final ClientConfig config;
-    private static final Logger log =
-            LoggerFactory.getLogger(FakeAggregationControllerAggregationClient.class);
+    @Inject
+    private FakeAggregationControllerAggregationClient(
+            @FakeAggregationControllerSocket final InetSocketAddress socket) {
+        this.socket = socket;
 
-    private static ObjectMapper mapper = new ObjectMapper();
-
-    static {
+        mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(ExactCurrencyAmount.class, new ExactCurrencyAmountDeserializer());
         mapper.registerModule(module);
-    }
-
-    @Inject
-    private FakeAggregationControllerAggregationClient(ClientConfig custom) {
-        this.config = custom;
     }
 
     @Override
@@ -127,8 +118,7 @@ public class FakeAggregationControllerAggregationClient
             URL serverAddress =
                     new URL(
                             String.format(
-                                    "http://%s:%d/data",
-                                    AGGREGATION_CONTROLLER_NAME, AGGREGATION_CONTROLLER_PORT));
+                                    "http://%s:%d/data", socket.getHostString(), socket.getPort()));
             HttpURLConnection connection = (HttpURLConnection) serverAddress.openConnection();
             connection.setDoOutput(true);
             connection.setDoInput(true);

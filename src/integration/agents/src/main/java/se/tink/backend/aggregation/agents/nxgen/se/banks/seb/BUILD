@@ -20,7 +20,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
-        "//src/integration/signableoperation:enums",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/libraries/account_identifier",
         "//src/libraries/i18n",
         "//src/libraries/social_security_number",

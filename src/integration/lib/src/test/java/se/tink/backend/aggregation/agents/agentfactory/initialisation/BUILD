@@ -20,7 +20,8 @@ junit_test(
     runtime_deps = [
     ],
     deps = [
-        "//src/aggregation/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/iface",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",

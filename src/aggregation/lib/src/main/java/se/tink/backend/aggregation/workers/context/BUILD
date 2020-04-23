@@ -9,7 +9,8 @@ java_library(
     runtime_deps = [
     ],
     deps = [
-        "//src/aggregation/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/rpc",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
         "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
@@ -21,8 +22,8 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/models",
-        "//src/integration/signableoperation:enums",
-        "//src/integration/signableoperation:rpc",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/libraries/pair",
         "//third_party:com_google_guava_guava",
         "//third_party:io_dropwizard_dropwizard_lifecycle",

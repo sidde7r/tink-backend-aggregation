@@ -1,16 +1,10 @@
 java_library(
-    name = "enums",
-    srcs = glob(["src/main/**/enums/*.java"]),
-    visibility = ["//visibility:public"],
-)
-
-java_library(
     name = "rpc",
-    srcs = glob(["src/main/**/rpc/*.java"]),
+    srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/generic_application",
-        "//src/integration/signableoperation:enums",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
         "//src/libraries/serialization",

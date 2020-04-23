@@ -4,7 +4,7 @@ junit_test(
     name = "worker",
     srcs = glob(["*.java"]),
     deps = [
-        "//src/aggregation/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/events",

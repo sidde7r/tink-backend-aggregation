@@ -1,0 +1,16 @@
+java_library(
+    name = "rpc",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
+        "//src/integration/amount",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/enums",
+        "//src/integration/models",
+        "//src/integration/transfer:rpc",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
+    ],
+)

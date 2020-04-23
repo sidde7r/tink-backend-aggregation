@@ -38,7 +38,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
-        "//src/integration/signableoperation:rpc",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client:tpp-secrets-service-client",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",

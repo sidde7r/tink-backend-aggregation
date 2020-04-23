@@ -3,7 +3,7 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregation/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",

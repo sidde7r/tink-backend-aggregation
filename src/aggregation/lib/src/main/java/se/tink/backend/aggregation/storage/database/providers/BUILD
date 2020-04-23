@@ -7,7 +7,8 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregation/aggregationcontroller_api",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
+        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/iface",
         "//src/aggregation/api",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/cluster/exceptions",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/converter",

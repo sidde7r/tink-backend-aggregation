@@ -16,7 +16,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
         "//src/integration/models",
-        "//src/integration/signableoperation:rpc",
+        "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/integration/transfer:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

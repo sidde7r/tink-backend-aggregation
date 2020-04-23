@@ -41,25 +41,6 @@ java_library(
     visibility = ["//src/integration:__subpackages__"],
 )
 
-java_library(
-    name = "rpc",
-    srcs = glob(["src/main/**/rpc/*.java"]),
-    visibility = [
-        "//src/aggregation:__subpackages__",
-        "//src/aggregation/aggregationcontroller_api:__subpackages__",
-        "//src/integration:__subpackages__",
-    ],
-    deps = [
-        "//src/integration/credentials:enums",
-        "//src/libraries/field:rpc",
-        "//src/libraries/serialization",
-        "//src/libraries/uuid",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
-        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
-        "@aggregation//:com_google_guava_guava",
-    ],
-)
-
 alias(
     name = "service",
     actual = "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
