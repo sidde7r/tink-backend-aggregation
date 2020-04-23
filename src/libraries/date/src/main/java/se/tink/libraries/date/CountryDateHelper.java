@@ -66,6 +66,10 @@ public class CountryDateHelper {
         this.clock = clock;
     }
 
+    public Clock getClock() {
+        return clock;
+    }
+
     public Date addDays(Date date, int days) {
         Calendar calendar = getCalendar();
         calendar.setTime(date);

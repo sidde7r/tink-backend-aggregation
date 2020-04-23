@@ -1,18 +1,23 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.util;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import se.tink.libraries.date.CountryDateHelper;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class DanskeBankDateUtil {
 
     private final ZoneId zoneId;
     private final CountryDateHelper dateHelper;
+    private static final int EXTERNAL_CUTOFF_HOUR = 13;
+    private static final int EXTERNAL_CUTOFF_MINUTE = 0;
+    private static final int BGPG_CUTOFF_HOUR = 10;
+    private static final int BGPG_CUTOFF_MINUTE = 0;
+    private static final String TODAY_AS_TRANSFER_DATE = "Now";
 
     public DanskeBankDateUtil(ZoneId timeZoneId, Locale locale) {
         zoneId = timeZoneId;
@@ -20,41 +25,59 @@ public class DanskeBankDateUtil {
     }
 
     public String getTransferDateForInternalTransfer(Date date) {
-        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                getTransferDateForInternalTransfer(
-                        date, Clock.fixed(LocalDateTime.now().atZone(zoneId).toInstant(), zoneId)));
+        return getTransferDate(date);
     }
 
-    public Date getTransferDateForInternalTransfer(Date date, Clock now) {
+    public String getTransferDateForInternalTransfer(Date date, Clock now) {
         dateHelper.setClock(now);
-        return dateHelper.getProvidedDateOrCurrentDate(date);
+        return getTransferDate(date);
     }
 
     public String getTransferDateForExternalTransfer(Date date) {
-        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                getTransferDateForExternalTransfer(
-                        date, Clock.fixed(LocalDateTime.now().atZone(zoneId).toInstant(), zoneId)));
+        return getTransferDate(date, EXTERNAL_CUTOFF_HOUR, EXTERNAL_CUTOFF_MINUTE);
     }
 
-    public Date getTransferDateForExternalTransfer(Date date, Clock now) {
+    public String getTransferDateForExternalTransfer(Date date, Clock now) {
         // according to previous logic, Danskebanken does not accepts today's date for external
         // transfers
         // but according to new info, it accepts same day's transfers, if they are done before 13:00
         dateHelper.setClock(now);
-        return dateHelper.getProvidedDateOrBestPossibleDate(date, 13, 0);
+        return getTransferDate(date, EXTERNAL_CUTOFF_HOUR, EXTERNAL_CUTOFF_MINUTE);
     }
 
     public String getTransferDateForBgPg(Date date) {
-        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                getTransferDateForBgPg(
-                        date, Clock.fixed(LocalDateTime.now().atZone(zoneId).toInstant(), zoneId)));
+        return getTransferDate(date, BGPG_CUTOFF_HOUR, BGPG_CUTOFF_MINUTE);
     }
 
-    public Date getTransferDateForBgPg(Date date, Clock now) {
+    public String getTransferDateForBgPg(Date date, Clock now) {
         // according to previous logic, Danskebanken does not accepts today's date for bg/pg
         // payments
         // but according to new info, it accepts same day's transfers, if they are done before 10:00
         dateHelper.setClock(now);
-        return dateHelper.getProvidedDateOrBestPossibleDate(date, 10, 0);
+        return getTransferDate(date, BGPG_CUTOFF_HOUR, BGPG_CUTOFF_MINUTE);
+    }
+
+    private String getTransferDate(Date date, int cutoffHour, int cutoffMinute) {
+        LocalDate localDate =
+                dateHelper
+                        .getProvidedDateOrBestPossibleDate(date, cutoffHour, cutoffMinute)
+                        .toInstant()
+                        .atZone(zoneId)
+                        .toLocalDate();
+        return localDate.isEqual(LocalDate.now(dateHelper.getClock()))
+                ? TODAY_AS_TRANSFER_DATE
+                : localDate.format(DateTimeFormatter.BASIC_ISO_DATE);
+    }
+
+    private String getTransferDate(Date date) {
+        LocalDate localDate =
+                dateHelper
+                        .getProvidedDateOrCurrentDate(date)
+                        .toInstant()
+                        .atZone(zoneId)
+                        .toLocalDate();
+        return localDate.isEqual(LocalDate.now(dateHelper.getClock()))
+                ? TODAY_AS_TRANSFER_DATE
+                : localDate.format(DateTimeFormatter.BASIC_ISO_DATE);
     }
 }
