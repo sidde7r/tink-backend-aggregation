@@ -17,10 +17,8 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.HeaderValues;
@@ -29,23 +27,23 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BankinterAuthenticator implements PasswordAuthenticator {
     private static final AggregationLogger LOG =
             new AggregationLogger(BankinterAuthenticator.class);
     private static final File phantomJsFile;
     private final BankinterApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final PrintStream logStream;
 
     public BankinterAuthenticator(
             BankinterApiClient apiClient,
-            SessionStorage sessionStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
             ByteArrayOutputStream logOutputStream) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         try {
             this.logStream = new PrintStream(logOutputStream, true, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -120,6 +118,30 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         };
     }
 
+    private void waitForErrorOrRedirect(WebDriver driver, String fromUrl) {
+        new WebDriverWait(driver, LoginForm.SUBMIT_TIMEOUT_SECONDS)
+                .ignoring(StaleElementReferenceException.class)
+                .until(didRedirectOrShowError(fromUrl));
+    }
+
+    private void submitScaForm(WebDriver driver) throws LoginException {
+        final WebElement codeField =
+                driver.findElement(By.cssSelector("input[name$=inputSignCodeOtp].claveseguridad"));
+        final WebElement submitButton =
+                driver.findElement(By.cssSelector("button[onclick*=enviarYFinalizar]"));
+
+        final String code;
+        try {
+            code = supplementalInformationHelper.waitForOtpInput();
+        } catch (SupplementalInfoException e) {
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e);
+        }
+        codeField.sendKeys(code);
+        submitButton.click();
+        waitForErrorOrRedirect(driver, driver.getCurrentUrl());
+        logRequest("Submitted SCA: " + driver.getCurrentUrl(), driver.getPageSource());
+    }
+
     private void submitLoginForm(WebDriver driver, String username, String password)
             throws LoginException {
         // go to login page
@@ -136,20 +158,13 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
 
         // submit and wait for error or redirect
         loginForm.submit();
-        final WebDriverWait wait = new WebDriverWait(driver, LoginForm.SUBMIT_TIMEOUT_SECONDS);
-        wait.ignoring(StaleElementReferenceException.class)
-                .until(didRedirectOrShowError(initialUrl));
-        final URL url = getCurrentUrl(driver);
-        logRequest("Login ended up in " + url.toString(), driver.getPageSource());
+        waitForErrorOrRedirect(driver, initialUrl);
+        final URL afterLoginUrl = getCurrentUrl(driver);
+        logRequest("Login ended up in " + afterLoginUrl.toString(), driver.getPageSource());
 
         // SCA
-        if (url.toUri().getPath().equalsIgnoreCase(Paths.VERIFY_SCA)) {
-            // TODO: handle SCA properly
-            // SCA triggers randomly for the same user, I haven't been able to see it in testing
-            // When we get to this page, the SMS has already been sent
-            // Throw a bank side failure, since it will most likely not trigger SCA next time
-            LOG.error("SCA not implemented");
-            throw BankServiceError.BANK_SIDE_FAILURE.exception("SCA not implemented");
+        if (afterLoginUrl.toUri().getPath().equalsIgnoreCase(Paths.VERIFY_SCA)) {
+            submitScaForm(driver);
         }
 
         if (isShowingError(driver)) {

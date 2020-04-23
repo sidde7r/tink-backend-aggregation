@@ -62,7 +62,7 @@ public final class BankinterAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
                 new BankinterAuthenticator(
-                        apiClient, sessionStorage, context.getLogOutputStream()));
+                        apiClient, supplementalInformationHelper, context.getLogOutputStream()));
     }
 
     @Override
