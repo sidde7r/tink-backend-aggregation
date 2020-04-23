@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
+import org.apache.http.HttpHeaders;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -73,6 +74,10 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         capabilities.setCapability(
                 PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent",
                 HeaderValues.USER_AGENT);
+        capabilities.setCapability(
+                PhantomJSDriverService.PHANTOMJS_PAGE_CUSTOMHEADERS_PREFIX
+                        + HttpHeaders.ACCEPT_LANGUAGE,
+                HeaderValues.ACCEPT_LANGUAGE);
 
         final String[] phantomArgs =
                 new String[] {

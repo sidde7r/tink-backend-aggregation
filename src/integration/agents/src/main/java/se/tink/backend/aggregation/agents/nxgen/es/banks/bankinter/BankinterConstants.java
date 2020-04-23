@@ -91,6 +91,7 @@ public final class BankinterConstants {
                 "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 6.2.1-236 WRAPPER";
         public static final String JSF_PARTIAL = "partial/ajax";
         public static final String REQUESTED_WITH = "XMLHttpRequest";
+        public static final String ACCEPT_LANGUAGE = "es-ES";
     }
 
     public static class StorageKeys {
