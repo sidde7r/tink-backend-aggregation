@@ -24,6 +24,11 @@ public class RedirectAuthenticationDemoAgentConstants {
     public static final String OXFORD_PREPROD = "oxford-preprod";
     public static final String OXFORD_PREPROD_CALLBACK =
             "https://api.preprod.oxford.tink.com/api/v1/credentials/third-party/callback";
+
+    public static final String OXFORD_STAGING = "oxford-staging";
+    public static final String OXFORD_STAGING_CALLBACK =
+            "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback";
+
     public static final TransferExecutionException FAILED_CASE_EXCEPTION =
             TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(
