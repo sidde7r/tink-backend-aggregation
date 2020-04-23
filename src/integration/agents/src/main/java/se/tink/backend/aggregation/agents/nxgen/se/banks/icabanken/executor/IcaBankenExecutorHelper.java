@@ -445,7 +445,7 @@ public class IcaBankenExecutorHelper {
 
                 if (transferResponse.getResponseStatus().getCode()
                         != IcaBankenConstants.StatusCodes.OK_RESPONSE) {
-                    throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                             .setEndUserMessage(
                                     getEndUserMessage(
                                             transferResponse,
