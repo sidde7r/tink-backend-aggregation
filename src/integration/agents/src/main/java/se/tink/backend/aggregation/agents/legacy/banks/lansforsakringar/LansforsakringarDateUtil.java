@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar;
 
+import java.time.Clock;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
@@ -14,6 +15,10 @@ public class LansforsakringarDateUtil {
             new CountryDateHelper(DEFAULT_LOCALE, TimeZone.getTimeZone(DEFAULT_ZONE_ID));
 
     private LansforsakringarDateUtil() {}
+
+    public static void setClock(Clock clock) {
+        dateHelper.setClock(clock);
+    }
 
     public static long getNextPossiblePaymentDateForBgPg(Date dateFromTransfer) {
         return dateHelper.getProvidedDateOrBestPossibleDate(dateFromTransfer, 10, 0).getTime();
