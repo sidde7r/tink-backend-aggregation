@@ -74,6 +74,7 @@ public final class AgentWireMockModuleFactory implements AgentModuleFactory {
                         agentConfiguration,
                         wireMockConfiguration,
                         fakeBankSocket),
-                new AgentRequestScopeModule(request, context, agentConfiguration));
+                new AgentRequestScopeModule(request, context, agentConfiguration),
+                wireMockConfiguration.getAgentModule());
     }
 }
