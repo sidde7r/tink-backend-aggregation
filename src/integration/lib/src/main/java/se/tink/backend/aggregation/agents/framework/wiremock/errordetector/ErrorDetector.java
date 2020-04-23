@@ -170,8 +170,11 @@ public class ErrorDetector {
             CompareEntity.Builder builder)
             throws IOException {
 
+        Map<String, String> headers = parseHeadersInGivenRequest(givenRequest);
         MediaType mediaType =
-                MediaType.valueOf(parseHeadersInGivenRequest(givenRequest).get("content-type"));
+                headers.containsKey("content-type")
+                        ? MediaType.valueOf(headers.get("content-type"))
+                        : null;
         BodyEntity givenBodyEntity = parseRequestBodyInGivenRequest(givenRequest, mediaType);
         BodyEntity expectedBodyEntity =
                 parseRequestBodyInExpectedRequest(expectedRequest, mediaType);
