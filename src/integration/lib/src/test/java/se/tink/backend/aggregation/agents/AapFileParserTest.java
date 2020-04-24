@@ -51,6 +51,38 @@ public class AapFileParserTest {
                                         .build(),
                                 new HTTPResponse.Builder(expectedResponseHeaders, 200)
                                         .setResponseBody("{\"extendSession\":{\"status\":0}}")
+                                        .build()),
+                        new Pair<>(
+                                new HTTPRequest.Builder(
+                                                "POST",
+                                                "/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener",
+                                                Arrays.asList(
+                                                        new Pair<>(
+                                                                "SOAPAction",
+                                                                "https://www.bsan.mobi/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener"),
+                                                        new Pair<>(
+                                                                "Content-Type",
+                                                                "text/xml; charset=utf-8")))
+                                        .setRequestBody(
+                                                "<v:Envelope xmlns:v=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:d=\"http://www.w3.org/2001/XMLSchema\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"><v:Header /><v:Body><n0:authenticateCredential xmlns:n0=\"http://www.isban.es/webservices/TECHNICAL_FACADES/Security/F_facseg_security/internet/loginServicesNSegSAN/v1\" facade=\"loginServicesNSegSAN\"><CB_AuthenticationData i:type=\":CB_AuthenticationData\"><documento i:type=\":documento\"><CODIGO_DOCUM_PERSONA_CORP i:type=\"d:string\">12345678</CODIGO_DOCUM_PERSONA_CORP><TIPO_DOCUM_PERSONA_CORP i:type=\"d:string\">N</TIPO_DOCUM_PERSONA_CORP></documento><password i:type=\"d:string\">hunter2</password></CB_AuthenticationData><userAddress i:type=\"d:string\">127.0.0.1</userAddress></n0:authenticateCredential></v:Body></v:Envelope>")
+                                        .build(),
+                                new HTTPResponse.Builder(
+                                                Arrays.asList(
+                                                        new Pair<>(
+                                                                "Content-Type",
+                                                                "text/xml;charset=UTF-8")),
+                                                200)
+                                        .setResponseBody(
+                                                "<soap-env:Envelope xmlns:soap-env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
+                                                        + "<soap-env:Header/>\n"
+                                                        + "<soap-env:Body>\n"
+                                                        + "<prefixRigel0:authenticateCredentialResponse xmlns:prefixRigel0=\"http://www.isban.es/webservices/SBAMOV/Services_la/F_sbamov_services_la/internet/loginServicesNew/v1\">\n"
+                                                        + "<methodResult>\n"
+                                                        + "<tokenCredential>aaaaaaaa-aaaa-4000-aaaa-aaaaaaaaaaaa</tokenCredential>\n"
+                                                        + "</methodResult>\n"
+                                                        + "</prefixRigel0:authenticateCredentialResponse>\n"
+                                                        + "</soap-env:Body>\n"
+                                                        + "</soap-env:Envelope>")
                                         .build()));
 
         final String fileContent =

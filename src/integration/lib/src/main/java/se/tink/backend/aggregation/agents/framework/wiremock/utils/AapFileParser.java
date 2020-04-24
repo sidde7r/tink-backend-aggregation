@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.utils;
 
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -110,13 +111,20 @@ public class AapFileParser implements RequestResponseParser {
 
     private Optional<String> parseBody(List<String> rawData) {
         /*
-         * Starting from third line, we check where is the first empty line, after that if there is
-         * a line which is not empty, it must be the body
+         * Starting from third line, we check where is the first empty line, after that,
+         * everything is body, except the last line if it's empty.
          */
-        int firstEmptyLineIndex = rawData.indexOf("");
-        return rawData.subList(firstEmptyLineIndex, rawData.size()).stream()
-                .filter(line -> line.trim().length() > 0)
-                .findFirst();
+        final int firstEmptyLineIndex = rawData.indexOf("");
+        final int lastLineIndex = rawData.size() - 1;
+        final int afterBodyLineIndex =
+                firstEmptyLineIndex < lastLineIndex && rawData.get(lastLineIndex).isEmpty()
+                        ? lastLineIndex
+                        : rawData.size();
+
+        return Optional.ofNullable(
+                Strings.emptyToNull(
+                        rawData.subList(firstEmptyLineIndex + 1, afterBodyLineIndex).stream()
+                                .collect(Collectors.joining("\n"))));
     }
 
     private String parseRequestMethod(List<String> rawData) {
