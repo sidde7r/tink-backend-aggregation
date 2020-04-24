@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -66,6 +65,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.SelectedProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.TouchResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -76,11 +76,11 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class SwedbankDefaultApiClient {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
-    private static final SecureRandom RANDOM = new SecureRandom();
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
     private final String username;
     private final SwedbankStorage swedbankStorage;
+    private final AgentComponentProvider componentProvider;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
 
@@ -88,19 +88,19 @@ public class SwedbankDefaultApiClient {
             TinkHttpClient client,
             SwedbankConfiguration configuration,
             String username,
-            SwedbankStorage swedbankStorage) {
+            SwedbankStorage swedbankStorage,
+            AgentComponentProvider componentProvider) {
         this.client = client;
         this.configuration = configuration;
         this.username = username;
         this.swedbankStorage = swedbankStorage;
+        this.componentProvider = componentProvider;
         ensureAuthorizationHeaderIsSet();
     }
 
-    private static String generateDSID() {
-        byte bytes[] = new byte[6];
+    private String generateDSID() {
         Base64 base64 = new Base64(100, null, true);
-        RANDOM.nextBytes(bytes);
-        return base64.encodeAsString(bytes);
+        return base64.encodeAsString(componentProvider.getRandomValueGenerator().secureRandom(6));
     }
 
     private <T> T makeGetRequest(URL url, Class<T> responseClass) {

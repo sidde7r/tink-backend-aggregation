@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.FeatureFlag;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankDefaultBankIdAuthenticator;
@@ -40,8 +39,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankBaseHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.interfaces.SwedbankApiClientProvider;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
@@ -60,7 +59,6 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.retry.TimeoutRetryFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
@@ -72,7 +70,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
 
-    protected final SwedbankConfiguration configuration;
+    protected final SwedbankConfiguration swedbankConfiguration;
     protected final SwedbankDefaultApiClient apiClient;
     private EInvoiceRefreshController eInvoiceRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
@@ -82,41 +80,23 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final boolean isBankId;
     private final SwedbankStorage swedbankStorage;
-    private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final SwedbankDateUtils dateUtils;
 
-    public SwedbankAbstractAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            SwedbankConfiguration configuration,
-            SwedbankDateUtils dateUtils) {
-        this(
-                request,
-                context,
-                agentsServiceConfiguration,
-                configuration,
-                new SwedbankDefaultApiClientProvider(),
-                dateUtils);
-    }
-
     protected SwedbankAbstractAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration,
+            AgentComponentProvider componentProvider,
             SwedbankConfiguration configuration,
             SwedbankApiClientProvider apiClientProvider,
             SwedbankDateUtils dateUtils) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+        super(componentProvider);
         this.dateUtils = dateUtils;
-        this.agentsServiceConfiguration = agentsServiceConfiguration;
         configureHttpClient(client);
         swedbankStorage = new SwedbankStorage();
         this.isBankId =
                 request.getProvider().getCredentialsType().equals(CredentialsTypes.MOBILE_BANKID);
-        this.configuration = configuration;
+        this.swedbankConfiguration = configuration;
         this.apiClient =
-                apiClientProvider.getApiAgent(client, configuration, credentials, swedbankStorage);
+                apiClientProvider.getApiAgent(
+                        client, configuration, credentials, swedbankStorage, componentProvider);
         eInvoiceRefreshController = null;
 
         SwedbankDefaultInvestmentFetcher investmentFetcher =
@@ -263,8 +243,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new SwedbankDefaultSessionHandler(
-                apiClient,
-                agentsServiceConfiguration.isFeatureEnabled(FeatureFlag.CHECK_KEEP_ALIVE));
+                apiClient, this.configuration.isFeatureEnabled(FeatureFlag.CHECK_KEEP_ALIVE));
     }
 
     @Override

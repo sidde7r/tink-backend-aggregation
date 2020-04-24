@@ -5,6 +5,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.interfaces.SwedbankApiClientProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class SwedbankSEApiClientProvider implements SwedbankApiClientProvider {
@@ -13,8 +14,13 @@ public class SwedbankSEApiClientProvider implements SwedbankApiClientProvider {
             TinkHttpClient client,
             SwedbankConfiguration configuration,
             Credentials credentials,
-            SwedbankStorage swedbankStorage) {
+            SwedbankStorage swedbankStorage,
+            AgentComponentProvider componentProvider) {
         return new SwedbankSEApiClient(
-                client, configuration, credentials.getField(Field.Key.USERNAME), swedbankStorage);
+                client,
+                configuration,
+                credentials.getField(Field.Key.USERNAME),
+                swedbankStorage,
+                componentProvider);
     }
 }
