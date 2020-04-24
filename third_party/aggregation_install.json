@@ -5122,6 +5122,92 @@
                 "sha256": "e88c52fb97591ec5bd8afdf9e74bdb0d60ad12c59f66719fec0b22bca5b1218c"
             },
             {
+                "coord": "jakarta.activation:jakarta.activation-api:1.2.2",
+                "file": "v1/https/repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.jar",
+                    "https://jcenter.bintray.com/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.jar",
+                    "https://maven.google.com/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.jar"
+                ],
+                "sha256": "a187a939103aef5849a7af84bd7e27be2d120c410af291437375ffe061f4f09d"
+            },
+            {
+                "coord": "jakarta.activation:jakarta.activation-api:jar:sources:1.2.2",
+                "file": "v1/https/repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2-sources.jar",
+                    "https://jcenter.bintray.com/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2-sources.jar",
+                    "https://maven.google.com/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2-sources.jar"
+                ],
+                "sha256": "d796357781c245863f310599daf09fa95e8deacb61d150ab73b9db9cfff0dbab"
+            },
+            {
+                "coord": "jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
+                "file": "v1/https/repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3.jar",
+                "directDependencies": [
+                    "jakarta.activation:jakarta.activation-api:1.2.2"
+                ],
+                "dependencies": [
+                    "jakarta.activation:jakarta.activation-api:1.2.2"
+                ],
+                "url": "https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3.jar",
+                    "https://jcenter.bintray.com/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3.jar",
+                    "https://maven.google.com/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3.jar"
+                ],
+                "sha256": "c04539f472e9a6dd0c7685ea82d677282269ab8e7baca2e14500e381e0c6cec5"
+            },
+            {
+                "coord": "jakarta.xml.bind:jakarta.xml.bind-api:jar:sources:2.3.3",
+                "file": "v1/https/repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3-sources.jar",
+                "directDependencies": [
+                    "jakarta.activation:jakarta.activation-api:jar:sources:1.2.2"
+                ],
+                "dependencies": [
+                    "jakarta.activation:jakarta.activation-api:jar:sources:1.2.2"
+                ],
+                "url": "https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3-sources.jar",
+                    "https://jcenter.bintray.com/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3-sources.jar",
+                    "https://maven.google.com/jakarta/xml/bind/jakarta.xml.bind-api/2.3.3/jakarta.xml.bind-api-2.3.3-sources.jar"
+                ],
+                "sha256": "6da17f357f2e37a53ddeefb2d7445c1da550e50119fe87e0b4c7f275dc48b3cb"
+            },
+            {
+                "coord": "jakarta.xml.soap:jakarta.xml.soap-api:1.4.1",
+                "file": "v1/https/repo1.maven.org/maven2/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1.jar",
+                    "https://jcenter.bintray.com/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1.jar",
+                    "https://maven.google.com/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1.jar"
+                ],
+                "sha256": "f15a714c0aa20d11cd40ebeba1720967cf53b71f7099a75fbbb2c58960feb413"
+            },
+            {
+                "coord": "jakarta.xml.soap:jakarta.xml.soap-api:jar:sources:1.4.1",
+                "file": "v1/https/repo1.maven.org/maven2/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1-sources.jar",
+                "directDependencies": [],
+                "dependencies": [],
+                "url": "https://repo1.maven.org/maven2/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1-sources.jar",
+                "mirror_urls": [
+                    "https://repo1.maven.org/maven2/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1-sources.jar",
+                    "https://jcenter.bintray.com/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1-sources.jar",
+                    "https://maven.google.com/jakarta/xml/soap/jakarta.xml.soap-api/1.4.1/jakarta.xml.soap-api-1.4.1-sources.jar"
+                ],
+                "sha256": "f207d75455e9f366f8bc8e8eb40f62b4834c800ae9b0197e95cb5fbe8e8c9632"
+            },
+            {
                 "coord": "javax.el:javax.el-api:2.2.5",
                 "file": "v1/https/repo1.maven.org/maven2/javax/el/javax.el-api/2.2.5/javax.el-api-2.2.5.jar",
                 "directDependencies": [],
@@ -8030,6 +8116,6 @@
             }
         ],
         "version": "0.1.0",
-        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": 544280255
+        "__AUTOGENERATED_FILE_DO_NOT_MODIFY_THIS_FILE_MANUALLY": -1561123099
     }
 }

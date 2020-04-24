@@ -715,6 +715,8 @@ maven_install(
         "io.vavr:vavr-match:0.10.0",
         "io.vavr:vavr-test:0.10.0",
         "io.vavr:vavr:0.10.0",
+        "jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
+        "jakarta.xml.soap:jakarta.xml.soap-api:1.4.1",
         "javax.el:javax.el-api:2.2.5",
         "javax.inject:javax.inject:1",
         "javax.servlet:javax.servlet-api:4.0.1",
