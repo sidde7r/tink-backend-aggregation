@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.rpc.ErrorRespons
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
@@ -76,7 +76,7 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
                 .setPortfolios(Collections.singletonList(portfolio))
                 .setName(contract.getAlias())
                 .setBankIdentifier(contract.getIdentifierProductContractInternal())
-                .setCashBalance(Amount.inEUR(0.0))
+                .setCashBalance(ExactCurrencyAmount.inEUR(0.0))
                 .build();
     }
 

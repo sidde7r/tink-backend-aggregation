@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.TypeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchInvestmentAccountDetailsResponse {
@@ -112,7 +112,7 @@ public class FetchInvestmentAccountDetailsResponse {
             SecuritiesAccountsEntity accountsEntity,
             FetchInvestmentHoldingsResponse holdingsResponse) {
         return InvestmentAccount.builder(accountsEntity.getNumber())
-                .setCashBalance(new Amount(currency, 0))
+                .setCashBalance(ExactCurrencyAmount.of(0.0, currency))
                 .setBankIdentifier(accountsEntity.getEncryptedNumber())
                 .setAccountNumber(accountsEntity.getNumber())
                 .setName(accountsEntity.getDisplayName())

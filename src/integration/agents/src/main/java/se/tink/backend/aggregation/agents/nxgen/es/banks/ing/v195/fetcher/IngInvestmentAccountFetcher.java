@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
 
@@ -65,7 +65,7 @@ public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
 
         return InvestmentAccount.builder(product.getProductNumber())
                 .setAccountNumber(product.getProductNumber())
-                .setCashBalance(new Amount(product.getCurrency(), 0.0))
+                .setCashBalance(ExactCurrencyAmount.of(0.0, product.getCurrency()))
                 .setPortfolios(Collections.singletonList(portfolio))
                 .setBankIdentifier(product.getUuid())
                 .setHolderName(new HolderName(product.getHolders().get(0).getAnyName()))

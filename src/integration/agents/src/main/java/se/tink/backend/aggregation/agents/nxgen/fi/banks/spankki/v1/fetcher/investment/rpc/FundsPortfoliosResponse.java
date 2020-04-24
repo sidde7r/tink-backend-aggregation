@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.fetcher.inve
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.rpc.SpankkiResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FundsPortfoliosResponse extends SpankkiResponse {
@@ -66,7 +66,7 @@ public class FundsPortfoliosResponse extends SpankkiResponse {
 
             investmentAccounts.add(
                     InvestmentAccount.builder(accountData.id)
-                            .setCashBalance(new Amount(accountData.currency, 0))
+                            .setCashBalance(ExactCurrencyAmount.of(0.0, accountData.currency))
                             .setAccountNumber(accountData.id)
                             .setPortfolios(accountData.portfolios)
                             .setName(accountData.name)

@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstant
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PortfolioEntity {
@@ -103,7 +103,7 @@ public class PortfolioEntity {
                 .setAccountNumber(accountNumber)
                 .setName(getAccountName())
                 .setHolderName(holderName)
-                .setCashBalance(Amount.inSEK(totalBalance + interestPayable))
+                .setCashBalance(ExactCurrencyAmount.inSEK(totalBalance + interestPayable))
                 .setBankIdentifier(getAccountId())
                 .setPortfolios(Lists.newArrayList(portfolio))
                 .build();

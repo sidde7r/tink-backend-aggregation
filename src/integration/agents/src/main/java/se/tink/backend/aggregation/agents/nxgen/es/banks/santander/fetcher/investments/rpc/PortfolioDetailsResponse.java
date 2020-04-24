@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.inves
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @XmlRootElement(name = "methodResult")
@@ -54,7 +54,7 @@ public class PortfolioDetailsResponse {
         List<Portfolio> portfolios = toTinkPortfolio(portfolio, instruments);
 
         return InvestmentAccount.builder(portfolio.getContractId().getAccountNumber())
-                .setCashBalance(Amount.inEUR(0.0))
+                .setCashBalance(ExactCurrencyAmount.inEUR(0.0))
                 .setName(portfolio.getGeneralInfo().getAlias())
                 .setAccountNumber(portfolio.getContractId().getAccountNumber())
                 .setHolderName(holderName)

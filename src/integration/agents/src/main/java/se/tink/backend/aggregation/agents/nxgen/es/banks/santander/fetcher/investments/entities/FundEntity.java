@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.inves
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @XmlRootElement
@@ -46,7 +46,8 @@ public class FundEntity {
                 .setAccountNumber(generalInfo.getAlias())
                 .setHolderName(getHolderName(fundDetailsResponse))
                 .setPortfolios(getPortfolios(fundDetailsResponse))
-                .setCashBalance(new Amount(totalValue.getTinkAmount().getCurrencyCode(), 0.0))
+                .setCashBalance(
+                        ExactCurrencyAmount.of(0.0, totalValue.getTinkAmount().getCurrencyCode()))
                 .build();
     }
 

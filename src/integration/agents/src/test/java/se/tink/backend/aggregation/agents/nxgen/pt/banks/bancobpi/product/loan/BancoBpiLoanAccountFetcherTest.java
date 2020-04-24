@@ -46,8 +46,9 @@ public class BancoBpiLoanAccountFetcherTest {
         Assert.assertEquals(p1.getName(), a.getName());
         Assert.assertTrue(
                 p1.getInitialBalance().doubleValue()
-                        == a.getDetails().getInitialBalance().doubleValue());
-        Assert.assertEquals(p1.getCurrencyCode(), a.getDetails().getInitialBalance().getCurrency());
+                        == a.getDetails().getInitialBalance().getDoubleValue());
+        Assert.assertEquals(
+                p1.getCurrencyCode(), a.getDetails().getInitialBalance().getCurrencyCode());
         Assert.assertEquals(p1.getBalance(), a.getExactBalance().getExactValue());
         Assert.assertEquals(p1.getCurrencyCode(), a.getExactBalance().getCurrencyCode());
         Assert.assertEquals(Type.CREDIT, a.getDetails().getType());
@@ -70,8 +71,9 @@ public class BancoBpiLoanAccountFetcherTest {
         Assert.assertEquals(p1.getName(), a.getName());
         Assert.assertTrue(
                 p1.getInitialBalance().doubleValue()
-                        == a.getDetails().getInitialBalance().doubleValue());
-        Assert.assertEquals(p1.getCurrencyCode(), a.getDetails().getInitialBalance().getCurrency());
+                        == a.getDetails().getInitialBalance().getDoubleValue());
+        Assert.assertEquals(
+                p1.getCurrencyCode(), a.getDetails().getInitialBalance().getCurrencyCode());
         Assert.assertEquals(p1.getBalance(), a.getExactBalance().getExactValue());
         Assert.assertEquals(p1.getCurrencyCode(), a.getExactBalance().getCurrencyCode());
         Assert.assertEquals(Type.VEHICLE, a.getDetails().getType());
@@ -94,8 +96,9 @@ public class BancoBpiLoanAccountFetcherTest {
         Assert.assertEquals(p1.getName(), a.getName());
         Assert.assertTrue(
                 p1.getInitialBalance().doubleValue()
-                        == a.getDetails().getInitialBalance().doubleValue());
-        Assert.assertEquals(p1.getCurrencyCode(), a.getDetails().getInitialBalance().getCurrency());
+                        == a.getDetails().getInitialBalance().getDoubleValue());
+        Assert.assertEquals(
+                p1.getCurrencyCode(), a.getDetails().getInitialBalance().getCurrencyCode());
         Assert.assertEquals(p1.getBalance(), a.getExactBalance().getExactValue());
         Assert.assertEquals(p1.getCurrencyCode(), a.getExactBalance().getCurrencyCode());
         Assert.assertEquals(Type.MORTGAGE, a.getDetails().getType());

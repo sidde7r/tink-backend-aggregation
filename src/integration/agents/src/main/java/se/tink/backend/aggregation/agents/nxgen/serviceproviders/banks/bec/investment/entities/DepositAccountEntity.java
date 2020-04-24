@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class DepositAccountEntity {
@@ -65,7 +66,7 @@ public class DepositAccountEntity {
 
     public InvestmentAccount toTinkInvestmentAccount(List<Portfolio> portfolios) {
         return InvestmentAccount.builder(getId())
-                .setCashBalance(Amount.inDKK(0))
+                .setCashBalance(ExactCurrencyAmount.inDKK(0))
                 .setAccountNumber(getAccountNo())
                 .setBankIdentifier(getId())
                 .setName(getName())

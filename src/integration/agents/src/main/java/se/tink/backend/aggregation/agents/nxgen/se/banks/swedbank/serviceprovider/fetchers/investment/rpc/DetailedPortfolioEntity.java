@@ -124,7 +124,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
 
         return Optional.of(
                 InvestmentAccount.builder(accountNumber)
-                        .setCashBalance(new Amount(defaultCurrency, cashBalance))
+                        .setCashBalance(ExactCurrencyAmount.of(cashBalance, defaultCurrency))
                         .setAccountNumber(accountNumber)
                         .setName(name)
                         .setPortfolios(portfolios)

@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBankenFormatUtils;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -71,24 +70,25 @@ public class IcaBankenLoanParsingHelper {
         }
     }
 
-    public Amount getInitialBalance() {
+    public ExactCurrencyAmount getInitialBalance() {
         Double initialDebt = getInitialDebt();
 
         if (initialDebt == null) {
             return null;
         }
 
-        return Amount.inSEK(-1.0 * initialDebt);
+        return ExactCurrencyAmount.inSEK(-1.0 * initialDebt);
     }
 
-    public Amount getAmortized(String presentDebt) {
+    public ExactCurrencyAmount getAmortized(String presentDebt) {
         Double initialDebt = getInitialDebt();
 
         if (initialDebt == null) {
             return null;
         }
 
-        return Amount.inSEK(initialDebt - AgentParsingUtils.parseAmountTrimCurrency(presentDebt));
+        return ExactCurrencyAmount.inSEK(
+                initialDebt - AgentParsingUtils.parseAmountTrimCurrency(presentDebt));
     }
 
     private Double getInitialDebt() {

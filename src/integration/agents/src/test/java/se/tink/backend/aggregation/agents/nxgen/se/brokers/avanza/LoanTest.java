@@ -7,7 +7,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LoanTest {
@@ -131,7 +131,8 @@ public class LoanTest {
         Assert.assertEquals(
                 BigDecimal.valueOf(170700.14), loanAccount.getExactBalance().getExactValue());
         Assert.assertEquals(
-                new Amount("SEK", 5378947.00), loanAccount.getDetails().getInitialBalance());
+                ExactCurrencyAmount.inSEK(5378947.00),
+                loanAccount.getDetails().getInitialBalance());
         Assert.assertEquals(
                 0,
                 BigDecimal.valueOf(3528.60)

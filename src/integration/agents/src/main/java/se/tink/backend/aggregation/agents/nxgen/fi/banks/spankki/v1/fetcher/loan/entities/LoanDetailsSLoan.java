@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
@@ -28,7 +28,7 @@ public class LoanDetailsSLoan {
 
         return LoanDetails.builder(LoanDetails.Type.BLANCO)
                 .setLoanNumber(loanDetails.getLoanNumber())
-                .setInitialBalance(Amount.inEUR(-originalAmount))
+                .setInitialBalance(ExactCurrencyAmount.inEUR(-originalAmount))
                 .setInitialDate(getBeginDateParsed())
                 .build();
     }

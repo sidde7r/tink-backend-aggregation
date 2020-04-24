@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.entiti
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.entities.PoolAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchInvestmentResponse {
@@ -38,7 +38,7 @@ public class FetchInvestmentResponse {
                                 InvestmentAccount.builder(custodyAccount.createUniqueIdentifier())
                                         .setAccountNumber(custodyAccount.createUniqueIdentifier())
                                         .setName(custodyAccount.getName())
-                                        .setCashBalance(Amount.inDKK(0))
+                                        .setCashBalance(ExactCurrencyAmount.inDKK(0))
                                         .setPortfolios(
                                                 holdingOption
                                                         .map(

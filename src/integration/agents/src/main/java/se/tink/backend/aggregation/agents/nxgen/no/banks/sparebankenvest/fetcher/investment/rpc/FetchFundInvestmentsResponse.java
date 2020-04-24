@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.investment.entities.FundInvestmentEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity> {
@@ -46,7 +46,7 @@ public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity
                 .setAccountNumber(investmentItem.accountNumber)
                 .setName(investmentItem.accountName)
                 .setBankIdentifier(investmentItem.accountNumber)
-                .setCashBalance(Amount.inNOK(0))
+                .setCashBalance(ExactCurrencyAmount.inNOK(0))
                 .setPortfolios(Collections.singletonList(portfolio))
                 .build();
     }

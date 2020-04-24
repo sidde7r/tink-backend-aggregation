@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transac
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PortfolioEntity {
@@ -64,7 +64,7 @@ public class PortfolioEntity {
     public InvestmentAccount toInvestmentAccount(
             HolderName holderName, List<Instrument> instruments) {
         return InvestmentAccount.builder(accountNumber)
-                .setCashBalance(new Amount(currentValue.getCurrency(), 0.0))
+                .setCashBalance(ExactCurrencyAmount.of(0.0, currentValue.getCurrency()))
                 .setAccountNumber(contractNumber)
                 .setName(contractNumber)
                 .setHolderName(holderName)

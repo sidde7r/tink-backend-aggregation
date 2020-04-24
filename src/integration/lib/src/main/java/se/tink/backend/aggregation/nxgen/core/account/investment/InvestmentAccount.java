@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.investment.InvestmentBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.investment.WithPortfoliosStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class InvestmentAccount extends Account {
@@ -77,18 +76,6 @@ public class InvestmentAccount extends Account {
         public Builder<A, T> setPortfolios(List<Portfolio> portfolios) {
             this.portfolios = portfolios;
             return self();
-        }
-
-        @Deprecated
-        Amount getCashBalance() {
-            return new Amount(cashBalance.getCurrencyCode(), cashBalance.getDoubleValue());
-        }
-
-        @Deprecated
-        public Builder<A, T> setCashBalance(Amount cashBalance) {
-            this.cashBalance =
-                    ExactCurrencyAmount.of(cashBalance.toBigDecimal(), cashBalance.getCurrency());
-            return this;
         }
 
         public Builder<A, T> setCashBalance(ExactCurrencyAmount cashBalance) {

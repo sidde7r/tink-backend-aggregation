@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEn
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PortfolioDetailsResponse extends OpBankResponseEntity {
@@ -29,7 +30,7 @@ public class PortfolioDetailsResponse extends OpBankResponseEntity {
     @JsonIgnore
     public InvestmentAccount toTinkInvestmentAccount() {
         return InvestmentAccount.builder(portfolioId)
-                .setCashBalance(new Amount(currency, 0))
+                .setCashBalance(ExactCurrencyAmount.of(0.0, currency))
                 .setAccountNumber(portfolioId)
                 .setBankIdentifier(portfolioId)
                 .setPortfolios(Lists.newArrayList(getTinkPortfolio()))

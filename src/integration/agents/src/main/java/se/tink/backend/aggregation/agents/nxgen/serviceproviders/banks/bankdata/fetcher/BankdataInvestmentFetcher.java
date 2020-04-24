@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BankdataInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final AggregationLogger log =
@@ -58,7 +58,7 @@ public class BankdataInvestmentFetcher implements AccountFetcher<InvestmentAccou
                                     collectDepositInstruments(deposit, depositContents));
 
                             return InvestmentAccount.builder(deposit.getAccountNumber())
-                                    .setCashBalance(Amount.inDKK(0))
+                                    .setCashBalance(ExactCurrencyAmount.inDKK(0))
                                     .setAccountNumber(deposit.getAccountNumberFormatted())
                                     .setBankIdentifier(deposit.getAccountNumber())
                                     .setName(deposit.getName())

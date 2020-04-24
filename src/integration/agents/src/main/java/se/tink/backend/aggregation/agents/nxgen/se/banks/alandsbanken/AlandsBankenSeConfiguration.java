@@ -59,7 +59,7 @@ public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
         }
 
         return InvestmentAccount.builder(account.getAccountId())
-                .setCashBalance(new Amount(account.getCurrency(), 0))
+                .setCashBalance(ExactCurrencyAmount.of(0.0, account.getCurrency()))
                 .setAccountNumber(account.getBbanFormatted())
                 .setName(account.getAccountNickname())
                 .addIdentifiers(getIdentifiers(account))
@@ -131,7 +131,8 @@ public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
         return LoanDetails.builder(account.getLoanType())
                 .setLoanNumber(account.getBban())
                 .setInitialBalance(
-                        new Amount(account.getCurrency(), loanDetails.getGrantedAmount()))
+                        ExactCurrencyAmount.of(
+                                loanDetails.getGrantedAmount(), account.getCurrency()))
                 .setInitialDate(loanDetails.getOpeningDate())
                 .setNextDayOfTermsChange(loanDetails.getNextInterestAdjustmentDate())
                 .build();
