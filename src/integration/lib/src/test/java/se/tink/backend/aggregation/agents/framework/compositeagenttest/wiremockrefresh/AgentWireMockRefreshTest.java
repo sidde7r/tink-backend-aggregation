@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.Assert;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
@@ -43,13 +42,13 @@ public final class AgentWireMockRefreshTest {
             Module agentModule,
             Set<RefreshableItem> refreshableItems) {
 
-        Set<RequestResponseParser> parsers =
+        ImmutableSet<RequestResponseParser> parsers =
                 wireMockFilePaths.stream()
                         .map(
                                 wireMockFilePath ->
                                         new AapFileParser(
                                                 new ResourceFileReader().read(wireMockFilePath)))
-                        .collect(Collectors.toSet());
+                        .collect(ImmutableSet.toImmutableSet());
 
         server = new WireMockTestServer(parsers);
 

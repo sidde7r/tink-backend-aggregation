@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.utils;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class AapFileParser implements RequestResponseParser {
     }
 
     @Override
-    public Set<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
+    public ImmutableSet<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
 
         List<Integer> requestStartIndices =
                 findLineIndicesContainingGivenExpression(lines, "REQUEST");
@@ -55,7 +56,7 @@ public class AapFileParser implements RequestResponseParser {
             HTTPResponse response = parseResponse(responseLines);
             pairs.add(new Pair<>(request, response));
         }
-        return pairs;
+        return ImmutableSet.copyOf(pairs);
     }
 
     private List<Integer> findLineIndicesContainingGivenExpression(
@@ -71,7 +72,7 @@ public class AapFileParser implements RequestResponseParser {
         Optional<String> expectedState = parseExpectedState(requestLines);
         String requestMethod = parseRequestMethod(requestLines);
         String requestURL = removeHost(parseRequestURL(requestLines));
-        Set<Pair<String, String>> requestHeaders = parseHeaders(requestLines);
+        ImmutableSet<Pair<String, String>> requestHeaders = parseHeaders(requestLines);
         Optional<String> requestBody = parseBody(requestLines);
 
         HTTPRequest.Builder httpRequestBuilder =
@@ -85,7 +86,7 @@ public class AapFileParser implements RequestResponseParser {
 
         Optional<String> toState = parseToState(responseLines);
         Integer statusCode = parseStatusCode(responseLines);
-        Set<Pair<String, String>> responseHeaders = parseHeaders(responseLines);
+        ImmutableSet<Pair<String, String>> responseHeaders = parseHeaders(responseLines);
         Optional<String> responseBody = parseBody(responseLines);
         HTTPResponse.Builder httpResponseBuilder =
                 new HTTPResponse.Builder(responseHeaders, statusCode);
@@ -94,14 +95,14 @@ public class AapFileParser implements RequestResponseParser {
         return httpResponseBuilder.build();
     }
 
-    private Set<Pair<String, String>> parseHeaders(List<String> rawData) {
+    private ImmutableSet<Pair<String, String>> parseHeaders(List<String> rawData) {
         /*
          * Starting from third line, we have response headers. Headers continue until empty line
          */
         int firstEmptyLineIndex = rawData.indexOf("");
         return rawData.subList(2, firstEmptyLineIndex).stream()
                 .map(this::parseHeader)
-                .collect(Collectors.toSet());
+                .collect(ImmutableSet.toImmutableSet());
     }
 
     private Pair<String, String> parseHeader(String header) {

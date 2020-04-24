@@ -9,6 +9,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class WireMockTestServer {
     private final BodyParser bodyParser;
     private final Map<HTTPRequest, HTTPResponse> registeredPairs;
 
-    public WireMockTestServer(Set<RequestResponseParser> parsers) {
+    public WireMockTestServer(ImmutableSet<RequestResponseParser> parsers) {
         wireMockServer = new WireMockServer(wireMockConfig().dynamicPort().dynamicHttpsPort());
         bodyParser = new BodyParserImpl();
         wireMockServer.start();

@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.workers.commands.state;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +40,10 @@ public class InstantiateAgentWorkerCommandFakeBankState
 
     @Override
     public void doRightBeforeInstantiation(String providerName) {
-        Set<RequestResponseParser> parsers =
+        ImmutableSet<RequestResponseParser> parsers =
                 fakeBankAapFileMapper.getAapFilePaths(providerName).stream()
                         .map(filePath -> new AapFileParser(new ResourceFileReader().read(filePath)))
-                        .collect(Collectors.toSet());
+                        .collect(ImmutableSet.toImmutableSet());
 
         server = new WireMockTestServer(parsers);
         fakeBankSocket.set("localhost:" + server.getHttpsPort());

@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.entities;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import lombok.EqualsAndHashCode;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -17,22 +16,22 @@ import se.tink.libraries.pair.Pair;
 public class HTTPRequest {
     private final String method;
     private final String path;
-    private final Set<NameValuePair> query;
-    private final Set<Pair<String, String>> requestHeaders;
+    private final ImmutableSet<NameValuePair> query;
+    private final ImmutableSet<Pair<String, String>> requestHeaders;
     private String requestBody;
     private String expectedState;
 
     public static class Builder {
         private final String method;
         private final String url;
-        private final Set<Pair<String, String>> requestHeaders;
+        private final ImmutableSet<Pair<String, String>> requestHeaders;
         private String requestBody;
         private String expectedState;
 
         public Builder(
                 final String method,
                 final String url,
-                final Set<Pair<String, String>> requestHeaders) {
+                final ImmutableSet<Pair<String, String>> requestHeaders) {
             this.method = method;
             this.url = url;
             this.requestHeaders = requestHeaders;
@@ -57,12 +56,14 @@ public class HTTPRequest {
     }
 
     private HTTPRequest(
-            final String method, final String url, final Set<Pair<String, String>> requestHeaders) {
+            final String method,
+            final String url,
+            final ImmutableSet<Pair<String, String>> requestHeaders) {
 
         URI uri = URI.create(url);
 
         this.path = uri.getRawPath();
-        this.query = new HashSet<>(URLEncodedUtils.parse(uri, StandardCharsets.UTF_8.name()));
+        this.query = ImmutableSet.copyOf(URLEncodedUtils.parse(uri, StandardCharsets.UTF_8.name()));
 
         this.method = method;
         this.requestHeaders = requestHeaders;
@@ -82,7 +83,7 @@ public class HTTPRequest {
         }
     }
 
-    public Set<NameValuePair> getQuery() {
+    public ImmutableSet<NameValuePair> getQuery() {
         return query;
     }
 
@@ -106,7 +107,7 @@ public class HTTPRequest {
         return path;
     }
 
-    public Set<Pair<String, String>> getRequestHeaders() {
+    public ImmutableSet<Pair<String, String>> getRequestHeaders() {
         return requestHeaders;
     }
 }

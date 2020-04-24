@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.entities;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
@@ -8,18 +9,19 @@ import se.tink.libraries.pair.Pair;
 @EqualsAndHashCode
 public class HTTPResponse {
 
-    private final Set<Pair<String, String>> responseHeaders;
+    private final ImmutableSet<Pair<String, String>> responseHeaders;
     private String responseBody;
     private final int statusCode;
     private String toState;
 
     public static class Builder {
-        private final Set<Pair<String, String>> responseHeaders;
+        private final ImmutableSet<Pair<String, String>> responseHeaders;
         private final int statusCode;
         private String responseBody;
         private String toState;
 
-        public Builder(final Set<Pair<String, String>> responseHeaders, final int statusCode) {
+        public Builder(
+                final ImmutableSet<Pair<String, String>> responseHeaders, final int statusCode) {
             this.responseHeaders = responseHeaders;
             this.statusCode = statusCode;
         }
@@ -42,7 +44,8 @@ public class HTTPResponse {
         }
     }
 
-    private HTTPResponse(final Set<Pair<String, String>> responseHeaders, final int statusCode) {
+    private HTTPResponse(
+            final ImmutableSet<Pair<String, String>> responseHeaders, final int statusCode) {
         this.responseHeaders = responseHeaders;
         this.statusCode = statusCode;
     }
