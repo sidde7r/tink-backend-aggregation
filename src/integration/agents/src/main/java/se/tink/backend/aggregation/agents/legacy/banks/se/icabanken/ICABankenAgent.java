@@ -1179,8 +1179,6 @@ public class ICABankenAgent extends AbstractAgent
     private void logDepots(List<DepotEntity> depots) {
         LogTag investmentLogTag = LogTag.from("icabanken_investment");
         try {
-            String logMessage = SerializationUtils.serializeToString(depots);
-            log.infoExtraLong(logMessage, investmentLogTag);
         } catch (Exception e) {
             log.info("error when fetching investment " + investmentLogTag.toString(), e);
         }
@@ -1207,14 +1205,6 @@ public class ICABankenAgent extends AbstractAgent
         instrument.setUniqueIdentifier(fundDetails.getIsin() + fundDetails.getTradingCode());
 
         return Optional.of(instrument);
-    }
-
-    private void logLoansIfNotEmpty(List<LoanEntity> loansList) {
-        if (!loansList.isEmpty()) {
-            log.infoExtraLong(
-                    SerializationUtils.serializeToString(loansList),
-                    LogTag.from("icabanken-blanco-loans"));
-        }
     }
 
     private Pair<Account, AccountFeatures> updateAccount(LoanEntity loanEntity) throws Exception {
@@ -1654,7 +1644,6 @@ public class ICABankenAgent extends AbstractAgent
         try {
             Map<Account, AccountFeatures> accounts = new HashMap<>();
             List<DepotEntity> depots = fetchDepots();
-            logDepots(depots);
             for (DepotEntity depot : depots) {
                 Account account = depot.toAccount();
                 Portfolio portfolio = depot.toPortfolio();
@@ -1701,8 +1690,6 @@ public class ICABankenAgent extends AbstractAgent
                 MortgageListEntity mortgageList = loansResponseBody.getMortgageList();
 
                 if (loansList.getLoans() != null) {
-
-                    logLoansIfNotEmpty(loansList.getLoans());
 
                     for (LoanEntity loanEntity : loansList.getLoans()) {
                         Pair<Account, AccountFeatures> account = updateAccount(loanEntity);
