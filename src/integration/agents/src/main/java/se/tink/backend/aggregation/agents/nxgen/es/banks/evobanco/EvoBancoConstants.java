@@ -48,10 +48,6 @@ public class EvoBancoConstants {
                 new URL(BASE_MOBILE_SERVICES + ApiService.INVESTMENTS_PATH);
     }
 
-    public static class StatusCodes {
-        public static final int BAD_REQUEST_STATUS_CODE = 400;
-    }
-
     public static class ReturnCodes {
         public static final String UNSUCCESSFUL_RETURN_CODE = "0";
     }
@@ -59,6 +55,10 @@ public class EvoBancoConstants {
     public static class ErrorCodes {
         public static final String NO_TRANSACTIONS_FOUND = "00350";
         public static final String AUTHENTICATION_ERROR = "1500";
+    }
+
+    public static class ErrorMessages {
+        public static final String AUTHENTICATION_ERROR_MSG = "Authentication Error";
     }
 
     public static class QueryParamsKeys {

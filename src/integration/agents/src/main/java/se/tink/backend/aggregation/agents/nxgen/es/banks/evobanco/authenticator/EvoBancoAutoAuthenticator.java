@@ -1,18 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator;
 
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.EeILoginEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities.ErrorEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -43,8 +45,18 @@ public class EvoBancoAutoAuthenticator implements AutoAuthenticator {
         String password = credentials.getField(Field.Key.PASSWORD);
 
         try {
-            // Construct login request from username and password
             bankClient.login(new LoginRequest(username, password));
+        } catch (HttpResponseException e) {
+            if (e.getResponse()
+                    .getBody(ErrorEntity.class)
+                    .getMessage()
+                    .equalsIgnoreCase(ErrorMessages.AUTHENTICATION_ERROR_MSG)) {
+                // Redo pinning since stored credentials are not valid
+                throw SessionError.SESSION_EXPIRED.exception(e);
+            }
+        }
+
+        try {
 
             EeILoginEntity eeILoginEntity =
                     new EeILoginEntity.Builder()
@@ -69,24 +81,11 @@ public class EvoBancoAutoAuthenticator implements AutoAuthenticator {
                     eeLoginResponse.getEeOLogin().getAnswer().getInternalIdPe());
 
         } catch (HttpResponseException e) {
-            int statusCode = e.getResponse().getStatus();
-
-            if (statusCode == EvoBancoConstants.StatusCodes.BAD_REQUEST_STATUS_CODE) {
-
-                // We should be able to throw a Login Exception from autoAuthenticate method, this
-                // is a workaround due to the fact that we don't support it at the moment
-                try {
-                    e.getResponse().getBody(EELoginResponse.class).handleReturnCode();
-                } catch (LoginException e1) {
-                    throw AuthorizationError.NO_VALID_PROFILE.exception(e1.getUserMessage(), e1);
-                }
-            } else {
-                throw e;
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                // Let's just re-do linking(pinning)
+                throw SessionError.SESSION_EXPIRED.exception(e);
             }
-        } catch (LoginException e) {
-            throw AuthorizationError.NO_VALID_PROFILE.exception(e.getUserMessage(), e);
         }
-
         // Workaround needed due to the fact that EvoBanco's backend expects a check of the
         // global
         // position (accounts and cards)
