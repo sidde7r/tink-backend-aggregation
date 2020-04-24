@@ -45,10 +45,9 @@ public class ErrorDetector {
                 .getHeaders()
                 .keys()
                 .forEach(
-                        key -> {
-                            headersInGivenRequest.put(
-                                    key.toLowerCase(), givenRequest.getHeader(key));
-                        });
+                        key ->
+                                headersInGivenRequest.put(
+                                        key.toLowerCase(), givenRequest.getHeader(key)));
         return headersInGivenRequest;
     }
 
@@ -60,10 +59,9 @@ public class ErrorDetector {
                 .getHeaders()
                 .keySet()
                 .forEach(
-                        key -> {
-                            headersInExpectedRequest.put(
-                                    key.toLowerCase(), expectedRequest.getHeaders().get(key));
-                        });
+                        key ->
+                                headersInExpectedRequest.put(
+                                        key.toLowerCase(), expectedRequest.getHeaders().get(key)));
         return headersInExpectedRequest;
     }
 

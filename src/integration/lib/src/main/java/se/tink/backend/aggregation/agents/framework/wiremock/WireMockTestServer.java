@@ -32,7 +32,9 @@ public class WireMockTestServer {
         wireMockServer.start();
         Map<HTTPRequest, HTTPResponse> registeredPairs = new HashMap<>();
         parsers.forEach(
-                parser -> registerRequestResponsePairs(parser.parseRequestResponsePairs(), registeredPairs));
+                parser ->
+                        registerRequestResponsePairs(
+                                parser.parseRequestResponsePairs(), registeredPairs));
     }
 
     public int getHttpsPort() {
@@ -101,12 +103,11 @@ public class WireMockTestServer {
 
         entity.getHeaderKeysWithDifferentValues()
                 .forEach(
-                        key -> {
-                            errorMessage.append(
-                                    "The header "
-                                            + key
-                                            + " has different values for the request and its closest match\n");
-                        });
+                        key ->
+                                errorMessage.append(
+                                        "The header "
+                                                + key
+                                                + " has different values for the request and its closest match\n"));
 
         if (entity.getMissingBodyKeysInGivenRequest().size() > 0
                 || entity.getBodyKeysWithDifferentValues().size() > 0) {

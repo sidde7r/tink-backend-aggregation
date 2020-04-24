@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.utils;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -63,7 +63,7 @@ public class AapFileParser implements RequestResponseParser {
             List<String> lines, String searchedExpression) {
         return lines.stream()
                 .filter(line -> line.contains(searchedExpression))
-                .map(line -> lines.indexOf(line))
+                .map(lines::indexOf)
                 .collect(Collectors.toList());
     }
 
@@ -77,8 +77,8 @@ public class AapFileParser implements RequestResponseParser {
 
         HTTPRequest.Builder httpRequestBuilder =
                 new HTTPRequest.Builder(requestMethod, requestURL, requestHeaders);
-        requestBody.ifPresent(body -> httpRequestBuilder.setRequestBody(body));
-        expectedState.ifPresent(state -> httpRequestBuilder.setExpectedState(state));
+        requestBody.ifPresent(httpRequestBuilder::setRequestBody);
+        expectedState.ifPresent(httpRequestBuilder::setExpectedState);
         return httpRequestBuilder.build();
     }
 
@@ -90,8 +90,8 @@ public class AapFileParser implements RequestResponseParser {
         Optional<String> responseBody = parseBody(responseLines);
         HTTPResponse.Builder httpResponseBuilder =
                 new HTTPResponse.Builder(responseHeaders, statusCode);
-        responseBody.ifPresent(body -> httpResponseBuilder.setResponseBody(body));
-        toState.ifPresent(state -> httpResponseBuilder.setToState(state));
+        responseBody.ifPresent(httpResponseBuilder::setResponseBody);
+        toState.ifPresent(httpResponseBuilder::setToState);
         return httpResponseBuilder.build();
     }
 
@@ -106,7 +106,7 @@ public class AapFileParser implements RequestResponseParser {
     }
 
     private Pair<String, String> parseHeader(String header) {
-        final int deliminatorIndex = header.indexOf(":");
+        final int deliminatorIndex = header.indexOf(':');
         String key = header.substring(0, deliminatorIndex).trim();
         String value = header.substring(deliminatorIndex + 1).trim();
         return new Pair<>(key, value);
@@ -139,7 +139,7 @@ public class AapFileParser implements RequestResponseParser {
     }
 
     private Integer parseStatusCode(List<String> rawData) {
-        return new Integer(rawData.get(1).trim());
+        return Integer.parseInt(rawData.get(1).trim());
     }
 
     private Optional<String> parseToState(List<String> rawData) {

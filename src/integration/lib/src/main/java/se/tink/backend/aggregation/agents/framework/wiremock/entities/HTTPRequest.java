@@ -1,15 +1,12 @@
 package se.tink.backend.aggregation.agents.framework.wiremock.entities;
 
 import com.google.common.collect.ImmutableSet;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import lombok.EqualsAndHashCode;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import se.tink.libraries.pair.Pair;
 
 @EqualsAndHashCode
@@ -73,16 +70,6 @@ public class HTTPRequest {
         return Optional.ofNullable(expectedState);
     }
 
-    private NameValuePair urlEncode(final NameValuePair pair) {
-        try {
-            return new BasicNameValuePair(
-                    URLEncoder.encode(pair.getName(), StandardCharsets.UTF_8.name()),
-                    URLEncoder.encode(pair.getValue(), StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     public ImmutableSet<NameValuePair> getQuery() {
         return query;
     }
@@ -94,7 +81,7 @@ public class HTTPRequest {
     public Optional<String> getContentType() {
 
         return requestHeaders.stream()
-                .filter((p) -> p.first.equalsIgnoreCase("content-type"))
+                .filter(p -> p.first.equalsIgnoreCase("content-type"))
                 .findAny()
                 .map(p -> p.second);
     }
