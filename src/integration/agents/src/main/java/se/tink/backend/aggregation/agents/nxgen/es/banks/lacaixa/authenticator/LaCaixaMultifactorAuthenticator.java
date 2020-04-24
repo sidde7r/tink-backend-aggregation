@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -39,6 +41,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthenticator {
+    private static final Logger LOG =
+            LoggerFactory.getLogger(LaCaixaMultifactorAuthenticator.class);
     private final LaCaixaApiClient apiClient;
     private final CredentialsRequest credentialsRequest;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -108,15 +112,18 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
     private AuthenticationStepResponse initiateEnrolment() {
         // only ask for SCA on manual authentication
         if (!isManualAuthentication(credentialsRequest)) {
+            LOG.info("Skipping enrolment - not a manual authentication");
             return AuthenticationStepResponse.authenticationSucceeded();
         }
 
         // ask for SCA
+        LOG.info("Initiating enrolment");
         final ScaResponse response = apiClient.initiateEnrolment();
         return handleScaResponse(response);
     }
 
     private AuthenticationStepResponse handleScaResponse(ScaResponse response) {
+        LOG.info("SCA Type: " + response.getScaType());
         switch (response.getScaType().toUpperCase()) {
             case AuthenticationParams.SCA_TYPE_APP:
                 // SCA with CaixaBank Sign app
@@ -147,6 +154,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
     }
 
     private void processOtp(String otp, Credentials credentials) {
+        LOG.info("Sending OTP");
         final SmsEntity smsData =
                 authStorage
                         .get(TemporaryStorage.SCA_SMS, SmsEntity.class)
@@ -164,6 +172,7 @@ public class LaCaixaMultifactorAuthenticator extends StatelessProgressiveAuthent
     }
 
     private AuthenticationStepResponse waitForAppSign() {
+        LOG.info("Waiting for app signature");
         apiClient.initiateAuthSignature();
 
         // launch signing app
