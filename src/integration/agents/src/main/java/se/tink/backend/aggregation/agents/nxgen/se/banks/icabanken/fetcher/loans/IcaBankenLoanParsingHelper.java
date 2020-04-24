@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenCons
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBankenFormatUtils;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class IcaBankenLoanParsingHelper {
@@ -22,9 +23,10 @@ public class IcaBankenLoanParsingHelper {
         this.loanDetailsMap = loanDetailsMap;
     }
 
-    public Amount getBalance(String presentDebt) {
+    public ExactCurrencyAmount getBalance(String presentDebt) {
         Preconditions.checkNotNull(presentDebt);
-        return Amount.inSEK(-1.0 * AgentParsingUtils.parseAmountTrimCurrency(presentDebt));
+        return ExactCurrencyAmount.inSEK(
+                -1.0 * AgentParsingUtils.parseAmountTrimCurrency(presentDebt));
     }
 
     public String getTypeOfLoan() {

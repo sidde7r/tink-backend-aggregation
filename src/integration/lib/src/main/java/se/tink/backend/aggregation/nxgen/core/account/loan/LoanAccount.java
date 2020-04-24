@@ -7,7 +7,6 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.loan.LoanBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.loan.LoanDetailsStep;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LoanAccount extends Account {
@@ -36,14 +35,6 @@ public class LoanAccount extends Account {
     @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultLoanBuilder(uniqueIdentifier);
-    }
-
-    /** @deprecated Use {@link #nxBuilder()} instead. */
-    @Deprecated
-    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier)
-                .setExactBalance(
-                        ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency()));
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, ExactCurrencyAmount balance) {

@@ -8,13 +8,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -68,11 +66,11 @@ public class AccountEntity {
         return TransactionalAccount.builder(
                         ACCOUNT_TYPE_MAPPER.translate(getType()).get(),
                         iban,
-                        new Amount(IberCajaConstants.currency, balance))
+                        ExactCurrencyAmount.inEUR(balance))
                 .setAccountNumber(iban)
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .setBankIdentifier(number)
-                .setExactBalance(ExactCurrencyAmount.of(balance, IberCajaConstants.currency))
+                .setExactBalance(ExactCurrencyAmount.inEUR(balance))
                 .setName(alias)
                 .build();
     }
@@ -87,7 +85,7 @@ public class AccountEntity {
                 .setBankIdentifier(number)
                 .setName(alias)
                 .setPortfolios(Collections.singletonList(portfolio))
-                .setCashBalance(new Amount(IberCajaConstants.currency, balance))
+                .setCashBalance(ExactCurrencyAmount.inEUR(balance))
                 .build();
     }
 
@@ -116,8 +114,8 @@ public class AccountEntity {
     public CreditCardAccount toTinkCreditCardAccount() {
         return CreditCardAccount.builder(
                         number,
-                        new Amount(IberCajaConstants.currency, disposed),
-                        new Amount(IberCajaConstants.currency, limit))
+                        ExactCurrencyAmount.inEUR(disposed),
+                        ExactCurrencyAmount.inEUR(limit))
                 .setAccountNumber(number)
                 .setBankIdentifier(number)
                 .setName(alias)

@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PocketEntity {
@@ -31,7 +31,9 @@ public class PocketEntity {
             String accountNumber, String holderName, AccountTypes accountType) {
         TransactionalAccount.Builder builder =
                 TransactionalAccount.builder(
-                                accountType, id, new Amount(currency.toUpperCase(), getBalance()))
+                                accountType,
+                                id,
+                                ExactCurrencyAmount.of(getBalance(), currency.toUpperCase()))
                         .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                         .setName(getAccountName())
                         .setHolderName(new HolderName(holderName))

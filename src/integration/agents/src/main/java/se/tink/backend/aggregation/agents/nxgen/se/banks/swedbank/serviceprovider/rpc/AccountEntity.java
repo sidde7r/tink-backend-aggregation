@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -80,7 +81,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                 TransactionalAccount.builder(
                                 type,
                                 fullyFormattedNumber,
-                                new Amount(currency, StringUtils.parseAmount(balance)))
+                                ExactCurrencyAmount.of(StringUtils.parseAmount(balance), currency))
                         .setAccountNumber(fullyFormattedNumber)
                         .setName(name)
                         .setBankIdentifier(id)

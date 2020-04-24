@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class GenericCardEntity {
@@ -115,8 +115,8 @@ public class GenericCardEntity {
 
     public CreditCardAccount toTinkCard() {
         return CreditCardAccount.builderFromFullNumber(cardNumber, description)
-                .setBalance(this.getBalance())
-                .setAvailableCredit(this.getAvailableCredit())
+                .setExactBalance(this.getBalance())
+                .setExactAvailableCredit(this.getAvailableCredit())
                 .setBankIdentifier(refValNumtarjeta)
                 .build();
     }
@@ -130,13 +130,13 @@ public class GenericCardEntity {
                 || ImaginBankConstants.CreditCard.PREPAID.equalsIgnoreCase(cardType);
     }
 
-    private Amount getAvailableCredit() {
+    private ExactCurrencyAmount getAvailableCredit() {
         return ImaginBankConstants.CreditCard.PREPAID.equalsIgnoreCase(cardType)
                 ? liquidationData.getPrepaidAmount()
                 : liquidationData.getAvailableCredit();
     }
 
-    private Amount getBalance() {
+    private ExactCurrencyAmount getBalance() {
         return liquidationData.getBalance();
     }
 }

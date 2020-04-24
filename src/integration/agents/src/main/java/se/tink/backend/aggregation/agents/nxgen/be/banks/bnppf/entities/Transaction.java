@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.BnpPfConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class Transaction {
@@ -52,11 +53,7 @@ public class Transaction {
                 .build();
     }
 
-    private String getExternalId(String externalAccountId) {
-        return externalAccountId + getTransactionTimestampString();
-    }
-
-    private se.tink.libraries.amount.Amount getAmount() {
+    private ExactCurrencyAmount getAmount() {
         return amount.toTinkAmount();
     }
 

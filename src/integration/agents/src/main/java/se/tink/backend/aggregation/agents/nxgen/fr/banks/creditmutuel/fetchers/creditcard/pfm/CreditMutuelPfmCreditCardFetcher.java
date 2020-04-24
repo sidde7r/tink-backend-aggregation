@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
@@ -106,7 +106,7 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
                         .orElseThrow(IllegalStateException::new)
                         .getValue();
 
-        Amount paymentLimit =
+        ExactCurrencyAmount paymentLimit =
                 CreditMututelPmfCreditCardStringParsingUtils.extractAmountFromString(
                         paymentLimitString);
 
@@ -117,13 +117,13 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
                         .findFirst()
                         .orElseThrow(IllegalStateException::new)
                         .getValue();
-        Amount balance = EuroInformationUtils.parseAmount(amount);
+        ExactCurrencyAmount balance = EuroInformationUtils.parseAmount(amount);
 
         CreditCardAccount build =
                 CreditCardAccount.builder(cardNumber)
                         .setAccountNumber(cardNumber)
-                        .setBalance(balance)
-                        .setAvailableCredit(balance.add(paymentLimit))
+                        .setExactBalance(balance)
+                        .setExactAvailableCredit(balance.add(paymentLimit))
                         .setName(title.map(t -> t.getValue()).orElse(""))
                         .build();
 

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JacksonXmlRootElement(localName = "SyntInternalAccountEntity")
@@ -80,8 +81,9 @@ public class AccountEntity {
     @JacksonXmlProperty(localName = "NvAutoCpt")
     private String nvAutoCpt;
 
-    private Amount getBalance() {
-        return Amount.valueOf(currencyCode, Math.round(amountBalanceAccount), 2);
+    private ExactCurrencyAmount getBalance() {
+        return ExactCurrencyAmount.of(
+                BigDecimal.valueOf(Math.round(amountBalanceAccount), 2), currencyCode);
     }
 
     public TransactionalAccount toTinkAccount() {

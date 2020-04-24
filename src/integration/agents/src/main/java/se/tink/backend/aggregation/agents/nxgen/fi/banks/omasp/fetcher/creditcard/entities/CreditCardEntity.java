@@ -4,7 +4,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CreditCardEntity {
@@ -23,8 +23,8 @@ public class CreditCardEntity {
         return Objects.nonNull(creditLimit) && creditLimit.getValue() > 0.0;
     }
 
-    private Amount getBalance() {
-        return Amount.inEUR(0.0 - creditLimit.getValue() - remainingCredit.getValue());
+    private ExactCurrencyAmount getBalance() {
+        return ExactCurrencyAmount.inEUR(0.0 - creditLimit.getValue() - remainingCredit.getValue());
     }
 
     public CreditCardAccount toTinkAccount() {

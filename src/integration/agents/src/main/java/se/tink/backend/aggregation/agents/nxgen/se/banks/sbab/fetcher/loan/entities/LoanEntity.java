@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class LoanEntity {
@@ -112,7 +113,8 @@ public class LoanEntity {
         final Double interestRate =
                 Optional.ofNullable(loanTerms).map(LoanTermsEntity::getInterestRate).orElse(null);
 
-        return LoanAccount.builder(loanNumber, Amount.inSEK(currentLoanAmount).negate())
+        return LoanAccount.builder(
+                        loanNumber, ExactCurrencyAmount.inSEK(currentLoanAmount).negate())
                 .setName(loanNumber)
                 .setAccountNumber(loanNumber)
                 .setBankIdentifier(loanNumber)

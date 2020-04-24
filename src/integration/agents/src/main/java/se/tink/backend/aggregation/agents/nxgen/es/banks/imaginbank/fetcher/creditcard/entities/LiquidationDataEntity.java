@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.cre
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class LiquidationDataEntity {
@@ -22,15 +22,15 @@ public class LiquidationDataEntity {
     @JsonProperty("datosUltimoMovimiento")
     private LastMovementDataEntity lastMovementData;
 
-    public Amount getPrepaidAmount() {
-        return Amount.inEUR(prepaidAmount);
+    public ExactCurrencyAmount getPrepaidAmount() {
+        return ExactCurrencyAmount.inEUR(prepaidAmount);
     }
 
-    public Amount getAvailableCredit() {
-        return Amount.inEUR(availableCredit);
+    public ExactCurrencyAmount getAvailableCredit() {
+        return ExactCurrencyAmount.inEUR(availableCredit);
     }
 
-    public Amount getBalance() {
-        return Amount.inEUR(balance);
+    public ExactCurrencyAmount getBalance() {
+        return ExactCurrencyAmount.inEUR(balance);
     }
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.entities;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -31,7 +32,7 @@ public class PfmAccount {
     }
 
     public TransactionalAccount toTransactionalAccount() {
-        return CheckingAccount.builder(externalAccId, balance.toTinkAmount())
+        return CheckingAccount.builder(AccountTypes.CHECKING, externalAccId, balance.toTinkAmount())
                 .setAccountNumber(maskIban(iban))
                 .setName(accType)
                 .setBankIdentifier(externalAccId)

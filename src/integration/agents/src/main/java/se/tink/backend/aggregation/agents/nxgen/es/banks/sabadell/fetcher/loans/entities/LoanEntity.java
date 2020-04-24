@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -24,22 +24,22 @@ public class LoanEntity {
     }
 
     @JsonIgnore
-    public Amount getAmortized() {
+    public ExactCurrencyAmount getAmortized() {
         return initialCapital.parseToTinkAmount().subtract(pendingCapital.parseToTinkAmount());
     }
 
     @JsonIgnore
-    public Amount getInitialBalance() {
+    public ExactCurrencyAmount getInitialBalance() {
         return initialCapital.parseToTinkAmount();
     }
 
     @JsonIgnore
-    public Amount getInstalmentValue() {
+    public ExactCurrencyAmount getInstalmentValue() {
         return instalmentAmount.parseToTinkAmount();
     }
 
     @JsonIgnore
-    public Amount getBalance() {
+    public ExactCurrencyAmount getBalance() {
         return pendingCapital.parseToTinkAmount();
     }
 }

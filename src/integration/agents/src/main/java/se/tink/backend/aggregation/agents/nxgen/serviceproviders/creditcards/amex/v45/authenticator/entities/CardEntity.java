@@ -52,13 +52,6 @@ public class CardEntity {
         return -StringUtils.parseAmount(value.replaceAll("[^0-9,.]", ""));
     }
 
-    public double parseValueFromStringToDouble(String value) {
-        if (value.equalsIgnoreCase("n/a")) {
-            return 0d;
-        }
-        return StringUtils.parseAmount(value.replaceAll("[^0-9,.]", ""));
-    }
-
     public String getEmbossedName() {
         return embossedName;
     }

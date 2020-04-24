@@ -12,7 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngAtCreditCardTransactionParser {
     private final Document doc;
@@ -48,7 +48,7 @@ public class IngAtCreditCardTransactionParser {
     private Optional<Transaction> toTransaction(Element row) {
         Date transactionDate = getDateFromRow(row);
         String transactionDetails = getDetailsFromRow(row);
-        Amount amount = getAmountFromRow(row);
+        ExactCurrencyAmount amount = getAmountFromRow(row);
         if (transactionDate == null || amount == null || transactionDetails.isEmpty()) {
             return Optional.empty();
         }
@@ -86,11 +86,11 @@ public class IngAtCreditCardTransactionParser {
         return transactionName.text();
     }
 
-    private Amount getAmountFromRow(final Element row) {
+    private ExactCurrencyAmount getAmountFromRow(final Element row) {
         Element amountElement = row.select("td.transactions-table__amount-col").first();
         if (Objects.isNull(amountElement) || amountElement.text().isEmpty()) {
             return null;
         }
-        return IngAtAmmountParser.toAmount(amountElement.text());
+        return IngAtAmountParser.toAmount(amountElement.text());
     }
 }

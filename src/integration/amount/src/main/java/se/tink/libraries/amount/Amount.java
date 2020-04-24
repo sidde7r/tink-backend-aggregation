@@ -7,7 +7,6 @@ import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
-import java.util.Optional;
 
 @Deprecated
 public class Amount extends Number {
@@ -48,13 +47,6 @@ public class Amount extends Number {
             value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
         }
         return value;
-    }
-
-    public static Optional<Amount> createFromAmount(Amount amount) {
-        return Optional.ofNullable(amount)
-                .filter(a -> a.getCurrency() != null)
-                .filter(a -> Double.isFinite(a.getValue()))
-                .map(a -> new Amount(a.getCurrency(), a.getValue()));
     }
 
     public static Amount inSEK(Number value) {

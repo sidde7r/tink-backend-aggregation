@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class IberCajaConstants {
-
-    public static final String currency = "EUR";
 
     public static class ApiService {
 
@@ -95,10 +92,6 @@ public class IberCajaConstants {
         public static final String NICI = "NICI";
         public static final String CONTRACT = "CONTRACT";
         public static final String NIP = "NIP";
-    }
-
-    public static class Log {
-        public static final LogTag NIF_NOT_PRESENT = LogTag.from("Ibercaja_NIF_not_present");
     }
 
     public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =

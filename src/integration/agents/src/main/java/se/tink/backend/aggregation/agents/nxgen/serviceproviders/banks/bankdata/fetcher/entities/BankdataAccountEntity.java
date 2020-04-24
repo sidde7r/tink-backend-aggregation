@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BankdataAccountEntity {
@@ -45,7 +45,9 @@ public class BankdataAccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return CheckingAccount.builder(
-                        constructUniqueIdentifier(), new Amount(currencyCode, balance))
+                        AccountTypes.CHECKING,
+                        constructUniqueIdentifier(),
+                        ExactCurrencyAmount.of(balance, currencyCode))
                 .setAccountNumber(iban)
                 .setName(name)
                 .setBankIdentifier(constructUniqueIdentifier())
@@ -54,12 +56,6 @@ public class BankdataAccountEntity {
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                 .build();
-    }
-
-    private AccountTypes convertAccountType() {
-        // until we have more information
-        // TODO: fix me(account type)
-        return AccountTypes.CHECKING;
     }
 
     private String constructUniqueIdentifier() {

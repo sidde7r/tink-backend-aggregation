@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity extends AccountBriefEntity {
@@ -65,8 +65,8 @@ public class AccountEntity extends AccountBriefEntity {
         return regNo + accountNo;
     }
 
-    private Amount getTinkBalance() {
-        return new Amount(currencyCode, balance);
+    private ExactCurrencyAmount getTinkBalance() {
+        return ExactCurrencyAmount.of(balance, currencyCode);
     }
 
     public TransactionalAccount toTransactionalAccount() {

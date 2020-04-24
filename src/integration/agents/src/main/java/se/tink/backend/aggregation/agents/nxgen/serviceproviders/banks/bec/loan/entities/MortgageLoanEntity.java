@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class MortgageLoanEntity {
@@ -40,7 +40,7 @@ public class MortgageLoanEntity {
     }
 
     public LoanAccount toTinkLoan(LoanDetailsResponse loanDetails) {
-        return LoanAccount.builder(getLoanNumber(), new Amount(currency, 0 - amount))
+        return LoanAccount.builder(getLoanNumber(), ExactCurrencyAmount.of(0 - amount, currency))
                 .setAccountNumber(getLoanNumber())
                 .setName(getDisplayName())
                 .setInterestRate(loanDetails.getInterestRate().orElse(null))

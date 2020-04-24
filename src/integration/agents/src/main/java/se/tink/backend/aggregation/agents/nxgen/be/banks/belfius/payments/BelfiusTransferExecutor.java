@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments;
 
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils.getFormattedAmount;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -24,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.pair.Pair;
@@ -71,7 +72,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
 
         List<Pair<TransactionalAccount, BelfiusProduct>> accountPairedWithProduct =
                 getTransactionalAccounts();
-        Amount sourceAccountBalance =
+        ExactCurrencyAmount sourceAccountBalance =
                 getSourceAccount(transfer, accountPairedWithProduct).second.getAvailableBalance();
         boolean ownAccount =
                 tryFindAccount(accountPairedWithProduct, transfer.getDestination()).isPresent();
@@ -112,7 +113,10 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         }
 
         if (immediateTransfer
-                && sourceAccountBalance.isLessThan(transfer.getAmount().doubleValue())) {
+                && sourceAccountBalance
+                                .getExactValue()
+                                .compareTo(BigDecimal.valueOf(transfer.getAmount().doubleValue()))
+                        < 0) {
             return Optional.of(
                     catalog.getString(
                             TransferExecutionException.EndUserMessage

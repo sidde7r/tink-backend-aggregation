@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.utils.CreditCardMasker;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ProductsEntity {
@@ -67,11 +67,11 @@ public class ProductsEntity {
         return AccountTypes.OTHER;
     }
 
-    public Amount getTinkBalance() {
-        return new Amount(originalBalance.getCurrency(), originalBalance.getValue());
+    public ExactCurrencyAmount getTinkBalance() {
+        return ExactCurrencyAmount.of(originalBalance.getValue(), originalBalance.getCurrency());
     }
 
-    public Amount getTinkCredit() {
+    public ExactCurrencyAmount getTinkCredit() {
         return creditLimit.toTinkAmount();
     }
 

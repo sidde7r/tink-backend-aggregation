@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -18,7 +18,7 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public Amount toTinkAmount() {
-        return new Amount(currency, amount);
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }

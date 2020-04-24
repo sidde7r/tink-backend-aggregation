@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -63,7 +64,7 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                                         "Account: apiIdentifier = {}, accountProduct = {}",
                                         accountEntity.getAccountNoInt(),
                                         accountEntity.getAccountProduct()))
-                .map(accountEntity -> accountEntity.toCheckingAccount())
+                .map(AccountEntity::toCheckingAccount)
                 .collect(Collectors.toList());
     }
 }

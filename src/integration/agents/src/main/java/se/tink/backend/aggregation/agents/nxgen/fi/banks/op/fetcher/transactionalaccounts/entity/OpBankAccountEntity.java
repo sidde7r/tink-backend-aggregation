@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class OpBankAccountEntity {
@@ -39,7 +39,7 @@ public class OpBankAccountEntity {
     @JsonIgnore
     public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(
-                        getTinkAccountType(), accountNumber, Amount.inEUR(balance))
+                        getTinkAccountType(), accountNumber, ExactCurrencyAmount.inEUR(balance))
                 .setAccountNumber(accountNumber)
                 .setName(getAccountName())
                 .setHolderName(new HolderName(ownerName))

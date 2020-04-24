@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.fetcher.cre
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CreditCardEntity {
@@ -84,8 +84,8 @@ public class CreditCardEntity {
         return totalLimit;
     }
 
-    public Amount toTinkAmount(String m) {
-        return Amount.inEUR(Double.parseDouble(m));
+    public ExactCurrencyAmount toTinkAmount(String m) {
+        return ExactCurrencyAmount.inEUR(Double.parseDouble(m));
     }
 
     public CreditCardAccount toTinkAccount() {

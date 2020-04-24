@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.e
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.rpc.LinksResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CreditCard extends LinksResponse {
 
@@ -16,8 +16,10 @@ public class CreditCard extends LinksResponse {
     private AmountEntity availableCredit;
     private String type;
 
-    private Amount getAvailableCredit() {
-        return availableCredit != null ? availableCredit.toTinkAmount() : Amount.inEUR(0d);
+    private ExactCurrencyAmount getAvailableCredit() {
+        return availableCredit != null
+                ? availableCredit.toTinkAmount()
+                : ExactCurrencyAmount.inEUR(0d);
     }
 
     public Optional<LinkEntity> getDetailsLink() {
@@ -28,7 +30,7 @@ public class CreditCard extends LinksResponse {
         return cardId != null && cardId.equalsIgnoreCase(account.getAccountNumber());
     }
 
-    public CreditCardAccount toTinkAccount(Amount balance) {
+    public CreditCardAccount toTinkAccount(ExactCurrencyAmount balance) {
         return CreditCardAccount.builder(number, balance, getAvailableCredit())
                 .setAccountNumber(cardId)
                 .setName(name)

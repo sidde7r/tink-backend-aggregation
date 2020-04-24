@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.Belf
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BelfiusTransaction {
@@ -62,7 +62,7 @@ public class BelfiusTransaction {
     }
 
     public Transaction toTinkTransaction() {
-        Optional<Amount> amount = BelfiusStringUtils.parseStringToAmount(this.amount);
+        Optional<ExactCurrencyAmount> amount = BelfiusStringUtils.parseStringToAmount(this.amount);
 
         if (!amount.isPresent()) {
             return null;

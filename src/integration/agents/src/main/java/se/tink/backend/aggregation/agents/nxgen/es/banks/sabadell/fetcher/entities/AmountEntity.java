@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entit
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -28,27 +27,22 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public Amount parseToNegativeTinkAmount() {
+    public ExactCurrencyAmount parseToNegativeTinkAmount() {
         return parseToTinkAmount(-1 * getValueAsDouble());
     }
 
     @JsonIgnore
-    public Amount parseToTinkAmount() {
+    public ExactCurrencyAmount parseToTinkAmount() {
         return parseToTinkAmount(getValueAsDouble());
     }
 
     @JsonIgnore
-    private Amount parseToTinkAmount(double amount) {
+    private ExactCurrencyAmount parseToTinkAmount(double amount) {
         if (!Strings.isNullOrEmpty(currency)) {
-            return new Amount(currency, amount);
+            return ExactCurrencyAmount.of(amount, currency);
         }
 
-        return Amount.inEUR(amount);
-    }
-
-    @JsonIgnore
-    public ExactCurrencyAmount parseToExactCurrencyAmount() {
-        return new ExactCurrencyAmount(parseToTinkAmount().toBigDecimal(), currency);
+        return ExactCurrencyAmount.of(amount, currency);
     }
 
     @JsonIgnore

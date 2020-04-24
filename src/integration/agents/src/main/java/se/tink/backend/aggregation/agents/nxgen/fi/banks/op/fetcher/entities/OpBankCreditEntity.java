@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class OpBankCreditEntity {
@@ -52,8 +52,9 @@ public class OpBankCreditEntity {
     public CreditCardAccount toTinkCreditAccount() {
         return CreditCardAccount.builder(
                         agreementNumberIban,
-                        Amount.inEUR(balance),
-                        Amount.inEUR(AgentParsingUtils.parseAmount(withdrawableAmount)))
+                        ExactCurrencyAmount.inEUR(balance),
+                        ExactCurrencyAmount.inEUR(
+                                AgentParsingUtils.parseAmount(withdrawableAmount)))
                 .setAccountNumber(agreementNumberIban)
                 .setBankIdentifier(encryptedAgreementNumber) // to fetch transactions
                 .setName(getCreditAccountName())

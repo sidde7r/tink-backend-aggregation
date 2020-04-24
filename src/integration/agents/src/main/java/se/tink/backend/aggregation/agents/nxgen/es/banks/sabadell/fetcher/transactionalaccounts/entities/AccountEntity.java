@@ -48,7 +48,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.from(getTinkAccountType()).get())
                 .withInferredAccountFlags()
-                .withBalance(BalanceModule.of(amount.parseToExactCurrencyAmount()))
+                .withBalance(BalanceModule.of(amount.parseToTinkAmount()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)

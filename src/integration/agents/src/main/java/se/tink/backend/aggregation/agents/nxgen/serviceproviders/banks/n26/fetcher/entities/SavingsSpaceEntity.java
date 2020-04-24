@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.entities;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class SavingsSpaceEntity {
@@ -26,7 +27,7 @@ public class SavingsSpaceEntity {
     }
 
     public TransactionalAccount toSavingsAccount() {
-        return SavingsAccount.builder(getAccountId(), getAmount())
+        return SavingsAccount.builder(AccountTypes.SAVINGS, getAccountId(), getAmount())
                 .setAccountNumber(getAccountId())
                 .setName(getName())
                 .setBankIdentifier(getAccountId())
@@ -42,7 +43,7 @@ public class SavingsSpaceEntity {
         return name;
     }
 
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         return balance.getAvailableBalance();
     }
 }

@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngAtCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
 
@@ -64,10 +64,10 @@ public class IngAtCreditCardAccountFetcher implements AccountFetcher<CreditCardA
         final IngAtCreditCardParser parser =
                 new IngAtCreditCardParser(response.getBody(String.class));
         final String accountHolder = webLoginResponse.getAccountHolder();
-        final Amount availableCredit = parser.getAvailableCredit();
+        final ExactCurrencyAmount availableCredit = parser.getAvailableCredit();
         final String bankIdentifier = parser.getIdentifier();
         final String connectedAccountNumber = parser.getConnectedAccountNumber();
-        final Amount saldo = parser.getSaldo();
+        final ExactCurrencyAmount saldo = parser.getSaldo();
         final String uniqueIdentifier = parser.getUniqueIdentifier();
         return Optional.of(
                 CreditCardAccount.builder(uniqueIdentifier, saldo, availableCredit)

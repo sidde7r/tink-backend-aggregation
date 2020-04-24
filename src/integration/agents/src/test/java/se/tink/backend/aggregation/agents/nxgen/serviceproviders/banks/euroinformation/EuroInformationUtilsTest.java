@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class EuroInformationUtilsTest {
 
@@ -15,32 +15,32 @@ public class EuroInformationUtilsTest {
 
     @Test
     public void parseAmount_whenCurrencySpecified() {
-        Amount amount = EuroInformationUtils.parseAmount("+23.30SEK", CURRENCY_INPUT);
-        assertEquals(Amount.inEUR(23.30d), amount);
+        ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("+23.30SEK", CURRENCY_INPUT);
+        assertEquals(ExactCurrencyAmount.inEUR(23.30d), amount);
     }
 
     @Test
     public void parseAmount_whenCurrencyNotSpecified() {
-        Amount amount = EuroInformationUtils.parseAmount("+23.30SEK");
-        assertEquals(Amount.inSEK(23.30d), amount);
+        ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("+23.30SEK");
+        assertEquals(ExactCurrencyAmount.inSEK(23.30d), amount);
     }
 
     @Test
     public void parseAmount_withNegativeValue() {
-        Amount amount = EuroInformationUtils.parseAmount("-23.30SEK", CURRENCY_INPUT);
-        assertEquals(Amount.inEUR(-23.30d), amount);
+        ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("-23.30SEK", CURRENCY_INPUT);
+        assertEquals(ExactCurrencyAmount.inEUR(-23.30d), amount);
     }
 
     @Test
     public void parseAmount_zeroWithSign() {
-        Amount amount = EuroInformationUtils.parseAmount("+0.00SEK", CURRENCY_INPUT);
-        assertEquals(Amount.inEUR(0.00d), amount);
+        ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("+0.00SEK", CURRENCY_INPUT);
+        assertEquals(ExactCurrencyAmount.inEUR(0.00d), amount);
     }
 
     @Test
     public void parseAmount_zeroWithoutSign() {
-        Amount amount = EuroInformationUtils.parseAmount("0.00SEK", CURRENCY_INPUT);
-        assertEquals(Amount.inEUR(0.00d), amount);
+        ExactCurrencyAmount amount = EuroInformationUtils.parseAmount("0.00SEK", CURRENCY_INPUT);
+        assertEquals(ExactCurrencyAmount.inEUR(0.00d), amount);
     }
 
     @Test

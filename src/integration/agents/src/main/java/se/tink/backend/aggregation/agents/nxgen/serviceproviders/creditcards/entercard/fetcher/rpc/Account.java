@@ -4,7 +4,7 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @SuppressWarnings("unused")
 @JsonObject
@@ -27,9 +27,9 @@ public class Account {
         return CreditCardAccount.builder(accountId)
                 .setHolderName(new HolderName(user.name))
                 .setBankIdentifier(accountId)
-                .setAvailableCredit(Amount.inSEK(openToBuy))
+                .setExactAvailableCredit(ExactCurrencyAmount.inSEK(openToBuy))
                 .setAccountNumber(accountId)
-                .setBalance(Amount.inSEK(usedCredit).negate())
+                .setExactBalance(ExactCurrencyAmount.inSEK(usedCredit).negate())
                 .setName(productName)
                 .build();
     }

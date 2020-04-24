@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.enti
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardEntity {
@@ -95,8 +96,11 @@ public class CardEntity {
     public CreditCardAccount toTinkCreditCard() {
         return CreditCardAccount.builder(numeroContrato28)
                 .setAccountNumber(formattedAccountNumber)
-                .setAvailableCredit(availbaleCredit)
-                .setBalance(balance)
+                .setExactAvailableCredit(
+                        ExactCurrencyAmount.of(
+                                availbaleCredit.doubleValue(), availbaleCredit.getCurrency()))
+                .setExactBalance(
+                        ExactCurrencyAmount.of(balance.doubleValue(), balance.getCurrency()))
                 .setHolderName(getHolderName())
                 .setName(getName())
                 .setBankIdentifier(cardKey)

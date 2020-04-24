@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.utils.CreditCardMasker;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardDetailsResponse {
@@ -16,15 +16,15 @@ public class CardDetailsResponse {
     @JsonProperty("methodResult")
     private MethodResult methodResult;
 
-    private Amount getAvailableBalance() {
-        return new Amount(
-                methodResult.getAvailableAmount().getdIVISA(),
-                methodResult.getAvailableAmount().getiMPORTE());
+    private ExactCurrencyAmount getAvailableBalance() {
+        return ExactCurrencyAmount.of(
+                methodResult.getAvailableAmount().getiMPORTE(),
+                methodResult.getAvailableAmount().getdIVISA());
     }
 
-    private Amount getBalance() {
-        return new Amount(
-                methodResult.getSaldo().getdIVISA(), methodResult.getSaldo().getiMPORTE());
+    private ExactCurrencyAmount getBalance() {
+        return ExactCurrencyAmount.of(
+                methodResult.getSaldo().getiMPORTE(), methodResult.getSaldo().getdIVISA());
     }
 
     public CreditCardAccount toCreditCardAccount(String localContractDetail) {

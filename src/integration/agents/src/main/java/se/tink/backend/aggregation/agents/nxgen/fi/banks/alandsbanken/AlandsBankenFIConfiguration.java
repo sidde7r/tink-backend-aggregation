@@ -23,6 +23,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.FiIdentityData;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -45,7 +46,7 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
         return TransactionalAccount.builder(
                         account.translateAccountType(),
                         account.getAccountId(),
-                        new Amount(account.getCurrency(), account.getBalance()))
+                        ExactCurrencyAmount.of(account.getBalance(), account.getCurrency()))
                 .setAccountNumber(account.getBbanFormatted())
                 .setName(account.getAccountTypeName())
                 .addIdentifiers(getIdentifiers(account))
@@ -126,7 +127,7 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
 
         return LoanAccount.builder(
                         account.getAccountNumber(),
-                        new Amount(account.getCurrency(), account.getBalance()))
+                        ExactCurrencyAmount.of(account.getBalance(), account.getCurrency()))
                 .setAccountNumber(account.getBbanFormatted())
                 .setName(account.getAccountNickname())
                 .setInterestRate(account.getInterestRate())
@@ -139,7 +140,8 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
         return LoanDetails.builder(account.getLoanType())
                 .setLoanNumber(account.getBban())
                 .setInitialBalance(
-                        new Amount(account.getCurrency(), loanDetails.getGrantedAmount()))
+                        ExactCurrencyAmount.of(
+                                loanDetails.getGrantedAmount(), account.getCurrency()))
                 .setInitialDate(loanDetails.getOpeningDate())
                 .setNextDayOfTermsChange(loanDetails.getNextInterestAdjustmentDate())
                 .build();

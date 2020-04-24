@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.i18n.Catalog;
 
 public class LoanGenerator {
@@ -24,10 +24,10 @@ public class LoanGenerator {
         loanAccounts.add(
                 LoanAccount.builder(
                                 accountDefinition.getMortgageId(),
-                                new Amount(
-                                        currency,
+                                ExactCurrencyAmount.of(
                                         DemoConstants.getSekToCurrencyConverter(
-                                                currency, accountDefinition.getMortgageBalance())))
+                                                currency, accountDefinition.getMortgageBalance()),
+                                        currency))
                         .setAccountNumber(accountDefinition.getMortgageId())
                         .setName(catalog.getString(accountDefinition.getMortgageLoanName()))
                         .setBankIdentifier(accountDefinition.getMortgageId())
@@ -38,10 +38,10 @@ public class LoanGenerator {
         loanAccounts.add(
                 LoanAccount.builder(
                                 accountDefinition.getBlancoId(),
-                                new Amount(
-                                        currency,
+                                ExactCurrencyAmount.of(
                                         DemoConstants.getSekToCurrencyConverter(
-                                                currency, accountDefinition.getBlancoBalance())))
+                                                currency, accountDefinition.getBlancoBalance()),
+                                        currency))
                         .setAccountNumber(accountDefinition.getBlancoId())
                         .setName(catalog.getString(accountDefinition.getBlancoLoanName()))
                         .setBankIdentifier(accountDefinition.getBlancoId())

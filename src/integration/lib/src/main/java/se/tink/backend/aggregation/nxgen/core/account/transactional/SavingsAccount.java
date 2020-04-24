@@ -32,12 +32,6 @@ public class SavingsAccount extends TransactionalAccount {
         return new DefaultSavingAccountsBuilder(uniqueIdentifier);
     }
 
-    /** @deprecated Use SavingsAccount.builder() instead */
-    @Deprecated
-    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier).setBalance(balance);
-    }
-
     public static UniqueIdentifierStep<SavingsBuildStep> builder() {
         return new SavingsAccountBuilder();
     }

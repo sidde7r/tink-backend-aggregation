@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class GetAccountInformationListResponse {
     private static final Logger logger =
@@ -138,13 +139,13 @@ public final class GetAccountInformationListResponse {
                                 TransactionalAccount.builder(
                                                 type,
                                                 accountInfo.getAccountNumber(),
-                                                new Amount(
+                                                ExactCurrencyAmount.of(
                                                         accountInfo
                                                                 .getCurrentBalanceEntity()
-                                                                .getCurrency(),
+                                                                .getAmount(),
                                                         accountInfo
                                                                 .getCurrentBalanceEntity()
-                                                                .getAmount()))
+                                                                .getCurrency()))
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))
                                         .setBankIdentifier(accountInfo.getAccountNumber())
@@ -166,20 +167,20 @@ public final class GetAccountInformationListResponse {
                         type ->
                                 CreditCardAccount.builder(
                                                 accountInfo.getAccountNumber(),
-                                                new Amount(
+                                                ExactCurrencyAmount.of(
                                                         accountInfo
                                                                 .getCurrentSaldoEntity()
-                                                                .getCurrency(),
+                                                                .getAmount(),
                                                         accountInfo
                                                                 .getCurrentSaldoEntity()
-                                                                .getAmount()),
-                                                new Amount(
+                                                                .getCurrency()),
+                                                ExactCurrencyAmount.of(
                                                         accountInfo
                                                                 .getDisposableBalanceEntity()
-                                                                .getCurrency(),
+                                                                .getAmount(),
                                                         accountInfo
                                                                 .getDisposableBalanceEntity()
-                                                                .getAmount()))
+                                                                .getCurrency()))
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))
                                         .setBankIdentifier(accountInfo.getAccountNumber())
@@ -201,13 +202,13 @@ public final class GetAccountInformationListResponse {
                         type ->
                                 LoanAccount.builder(
                                                 accountInfo.getAccountNumber(),
-                                                new Amount(
+                                                ExactCurrencyAmount.of(
                                                         accountInfo
                                                                 .getCurrentBalanceEntity()
-                                                                .getCurrency(),
+                                                                .getAmount(),
                                                         accountInfo
                                                                 .getCurrentBalanceEntity()
-                                                                .getAmount()))
+                                                                .getCurrency()))
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))
                                         .setBankIdentifier(accountInfo.getAccountNumber())
@@ -228,14 +229,14 @@ public final class GetAccountInformationListResponse {
                         type ->
                                 InvestmentAccount.builder(accountInfo.getAccountNumber())
                                         // Need to set balance to prevent NPE
-                                        .setBalance(
-                                                new Amount(
+                                        .setExactBalance(
+                                                ExactCurrencyAmount.of(
                                                         accountInfo
                                                                 .getCurrentBalanceEntity()
-                                                                .getCurrency(),
+                                                                .getAmount(),
                                                         accountInfo
                                                                 .getCurrentBalanceEntity()
-                                                                .getAmount()))
+                                                                .getCurrency()))
                                         .setCashBalance(
                                                 new Amount(
                                                         accountInfo

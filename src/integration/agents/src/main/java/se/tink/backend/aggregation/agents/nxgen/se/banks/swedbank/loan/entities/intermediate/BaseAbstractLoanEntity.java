@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public abstract class BaseAbstractLoanEntity {
     protected final Optional<LoanDetailsAccountEntity> loanDetails;
@@ -34,7 +34,7 @@ public abstract class BaseAbstractLoanEntity {
                 .orElse(loanOverview.getAccount().getAccountNumber());
     }
 
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         return loanOverview.getDebt().toTinkAmount();
     }
 

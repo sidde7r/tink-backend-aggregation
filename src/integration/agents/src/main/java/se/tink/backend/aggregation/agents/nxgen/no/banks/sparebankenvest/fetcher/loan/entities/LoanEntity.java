@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class LoanEntity {
@@ -50,9 +50,10 @@ public class LoanEntity {
         LoanDetails loanDetails =
                 LoanDetails.builder(getLoanType())
                         .setLoanNumber(loanNumber)
-                        .setInitialBalance(Amount.inNOK(loanDetailsResponse.getInitialBalanace()))
+                        .setInitialBalance(
+                                ExactCurrencyAmount.inNOK(loanDetailsResponse.getInitialBalanace()))
                         .build();
-        return LoanAccount.builder(loanNumber, Amount.inNOK(balance))
+        return LoanAccount.builder(loanNumber, ExactCurrencyAmount.inNOK(balance))
                 .setAccountNumber(loanNumber)
                 .setName(name)
                 .setInterestRate(loanDetailsResponse.getNominalInterestRate())

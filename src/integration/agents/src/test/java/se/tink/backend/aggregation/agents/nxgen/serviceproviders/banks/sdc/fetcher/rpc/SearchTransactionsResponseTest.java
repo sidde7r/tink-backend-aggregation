@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.parser.SdcSeTrans
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SearchTransactionsResponseTest {
     @Test
@@ -34,7 +34,9 @@ public class SearchTransactionsResponseTest {
 
         CreditCardAccount creditCardAccount =
                 CreditCardAccount.builder(
-                                "uniqueIdentifier", Amount.inSEK(9500.0), Amount.inSEK(10500.0))
+                                "uniqueIdentifier",
+                                ExactCurrencyAmount.inSEK(9500.0),
+                                ExactCurrencyAmount.inSEK(10500.0))
                         .setAccountNumber("0123456789")
                         .setName("Credit-card")
                         .build();

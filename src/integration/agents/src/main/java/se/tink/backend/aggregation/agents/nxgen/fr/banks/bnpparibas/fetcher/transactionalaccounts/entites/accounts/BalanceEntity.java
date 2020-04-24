@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
@@ -17,7 +17,7 @@ public class BalanceEntity {
     }
 
     @JsonIgnore
-    public Amount getTinkAmount() {
-        return Amount.inEUR(balance);
+    public ExactCurrencyAmount getTinkAmount() {
+        return ExactCurrencyAmount.inEUR(balance);
     }
 }

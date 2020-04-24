@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.tran
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class Cards {
@@ -49,7 +49,7 @@ public class Cards {
         return accountNumberSort;
     }
 
-    private Amount getAvailableCredit() {
+    private ExactCurrencyAmount getAvailableCredit() {
         return availableBalance.toTinkAmount();
     }
 

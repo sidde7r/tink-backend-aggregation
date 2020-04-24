@@ -466,27 +466,12 @@ public abstract class Account {
             return self();
         }
 
-        @Deprecated
-        public T setBalance(Amount balance) {
-            thisObj.exactBalance =
-                    ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency());
-            return self();
-        }
-
         public ExactCurrencyAmount getExactBalance() {
             return Optional.ofNullable(thisObj.exactBalance).orElseThrow(NullPointerException::new);
         }
 
         public T setExactBalance(ExactCurrencyAmount exactBalance) {
             this.exactBalance = exactBalance;
-            return self();
-        }
-
-        @Deprecated
-        public T setAvailableCredit(Amount availableCredit) {
-            this.exactAvailableCredit =
-                    ExactCurrencyAmount.of(
-                            availableCredit.toBigDecimal(), availableCredit.getCurrency());
             return self();
         }
 

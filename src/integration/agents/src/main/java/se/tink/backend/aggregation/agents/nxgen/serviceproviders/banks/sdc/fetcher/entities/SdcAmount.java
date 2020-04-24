@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -56,8 +55,8 @@ public class SdcAmount {
     }
 
     @JsonIgnore
-    public Amount toTinkAmount() {
-        return new Amount(currency, BigDecimal.valueOf(value, scale).doubleValue());
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(BigDecimal.valueOf(value, scale), currency);
     }
 
     @JsonIgnore

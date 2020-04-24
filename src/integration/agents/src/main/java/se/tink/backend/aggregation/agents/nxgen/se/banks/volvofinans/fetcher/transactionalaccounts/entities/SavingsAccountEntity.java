@@ -5,11 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class SavingsAccountEntity {
@@ -42,11 +44,11 @@ public class SavingsAccountEntity {
     private String bankgiroInbetalning;
     private String ocrnummerInbetalning;
 
-    public SavingsAccount toTinkAccount() {
-        return SavingsAccount.builder(accountNumber, Amount.inSEK(balance))
+    public TransactionalAccount toTinkAccount() {
+        return SavingsAccount.builder(
+                        AccountTypes.SAVINGS, accountNumber, ExactCurrencyAmount.inSEK(balance))
                 .setBankIdentifier(accountId)
                 .setAccountNumber(accountNumber)
-                .setInterestRate(interestRate)
                 .setName(name)
                 .setHolderName(getHolderName())
                 .build();
