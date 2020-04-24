@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.authenticator.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.rpc.TimelineRequest;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public interface AmericanExpressConfiguration extends ClientConfiguration {
 
@@ -20,7 +20,7 @@ public interface AmericanExpressConfiguration extends ClientConfiguration {
     // == Credit Card Account ==
     String getBankId(CardEntity cardEntity);
 
-    Amount toAmount(Double amount);
+    ExactCurrencyAmount toAmount(Double amount);
 
     // == Timeline Api ==
     TimelineRequest createTimelineRequest(Integer cardIndex);

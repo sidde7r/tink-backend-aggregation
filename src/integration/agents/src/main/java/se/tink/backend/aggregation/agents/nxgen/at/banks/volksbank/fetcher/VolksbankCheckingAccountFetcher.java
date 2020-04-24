@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 public class VolksbankCheckingAccountFetcher implements AccountFetcher<TransactionalAccount> {
@@ -52,12 +52,11 @@ public class VolksbankCheckingAccountFetcher implements AccountFetcher<Transacti
                     TransactionalAccount.builder(
                                     AccountTypes.CHECKING,
                                     iban,
-                                    new Amount(
-                                            matcher.group(VolksbankConstants.REGEX_GROUP.CURRENCY),
+                                    ExactCurrencyAmount.of(
                                             StringUtils.parseAmount(
                                                     matcher.group(
-                                                            VolksbankConstants.REGEX_GROUP
-                                                                    .AMOUNT))))
+                                                            VolksbankConstants.REGEX_GROUP.AMOUNT)),
+                                            matcher.group(VolksbankConstants.REGEX_GROUP.CURRENCY)))
                             .setAccountNumber(iban)
                             .setName(matcher.group(VolksbankConstants.REGEX_GROUP.PRODUCT_NAME))
                             .addIdentifier(

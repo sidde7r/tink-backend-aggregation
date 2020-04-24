@@ -49,13 +49,6 @@ public class InvestmentAccount extends Account {
         return new DefaultInvestmentAccountsBuilder(uniqueIdentifier);
     }
 
-    /** @deprecated Use {@link #nxBuilder()} instead */
-    @Deprecated
-    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
-            String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier).setBalance(balance);
-    }
-
     public List<Portfolio> getSystemPortfolios() {
         return Optional.ofNullable(this.systemPortfolios)
                 .<List<Portfolio>>map(ImmutableList::copyOf)
@@ -105,14 +98,6 @@ public class InvestmentAccount extends Account {
 
         ExactCurrencyAmount getExactCashBalance() {
             return cashBalance;
-        }
-
-        /** @deprecated Use {@link #setCashBalance(Amount)} instead */
-        @Override
-        @Deprecated
-        public Builder<A, T> setBalance(Amount balance) {
-            return super.setExactBalance(
-                    ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency()));
         }
 
         @Override

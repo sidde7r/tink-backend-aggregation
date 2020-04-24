@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.se
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ProductEntity {
@@ -69,12 +69,12 @@ public class ProductEntity {
         return Optional.ofNullable(Strings.emptyToNull(currency));
     }
 
-    public Optional<Amount> getBalanceAmount() {
-        return getCurrency().map(currency -> new Amount(currency, getBalance()));
+    public Optional<ExactCurrencyAmount> getBalanceAmount() {
+        return getCurrency().map(currency -> ExactCurrencyAmount.of(getBalance(), currency));
     }
 
-    public Optional<Amount> getNegativeBalanceAmount() {
-        return getCurrency().map(currency -> new Amount(currency, -1 * getBalance()));
+    public Optional<ExactCurrencyAmount> getNegativeBalanceAmount() {
+        return getCurrency().map(currency -> ExactCurrencyAmount.of(-1 * getBalance(), currency));
     }
 
     public Map<String, Object> getFundsAvailable() {

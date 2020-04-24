@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -93,10 +92,10 @@ public class AccountEntity {
                 CreditCardAccount.builder(getUniqueId(credentialsId, accountNumber))
                         .setName(accountName)
                         .setAccountNumber(accountNumber)
-                        .setBalance(Amount.inSEK(totalBalance))
+                        .setExactBalance(ExactCurrencyAmount.inSEK(totalBalance))
                         .setHolderName(holdername)
                         .setBankIdentifier(String.valueOf(this.accountType))
-                        .setAvailableCredit(Amount.inSEK(balance))
+                        .setExactAvailableCredit(ExactCurrencyAmount.inSEK(balance))
                         .addIdentifiers(identifiers)
                         .build();
 

@@ -30,8 +30,7 @@ public class LoanDetailsResponse {
         AccountEntity account = loanLine.getAccount();
 
         return LoanAccount.builder(
-                        account.getContractNumberFormatted(),
-                        loan.getBalance().stripSign().negate())
+                        account.getContractNumberFormatted(), loan.getBalance().abs().negate())
                 .setName(account.getDescription())
                 .setAccountNumber(account.getContractNumberFormatted())
                 .addIdentifier(new IbanIdentifier(account.getBic(), account.getIban()))

@@ -4,7 +4,7 @@ import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngAtTransactionalAccountParser {
 
@@ -22,12 +22,12 @@ public class IngAtTransactionalAccountParser {
         return doc;
     }
 
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         final Element e = doc.select(String.format("h3:contains(%s)", "Kontostand")).first();
         final Element p = e.parent().parent();
         final Element b = p.select("span:matches(€?\\s*\\-?\\d)").first();
 
-        return IngAtAmmountParser.toAmount(b.text());
+        return IngAtAmountParser.toAmount(b.text());
     }
 
     private String getAccountIdentifier(final String type) {

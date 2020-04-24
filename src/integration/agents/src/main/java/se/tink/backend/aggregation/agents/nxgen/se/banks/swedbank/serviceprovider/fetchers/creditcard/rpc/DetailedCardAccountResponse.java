@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -64,7 +64,6 @@ public class DetailedCardAccountResponse {
         String currentBalance = cardAccount.getCurrentBalance();
         String reservedAmount = cardAccount.getReservedAmount();
         String availableAmount = cardAccount.getAvailableAmount();
-        String creditLimit = cardAccount.getCreditLimit();
         if (cardAccount == null
                 || currentBalance == null
                 || reservedAmount == null
@@ -74,11 +73,9 @@ public class DetailedCardAccountResponse {
 
         double balanceValue =
                 StringUtils.parseAmount(currentBalance) + StringUtils.parseAmount(reservedAmount);
-        Amount balance = new Amount(defaultCurrency, balanceValue);
-        Amount creditLimitAmount =
-                new Amount(defaultCurrency, StringUtils.parseAmount(creditLimit));
-        Amount availableAmountValue =
-                new Amount(defaultCurrency, StringUtils.parseAmount(availableAmount));
+        ExactCurrencyAmount balance = ExactCurrencyAmount.of(balanceValue, defaultCurrency);
+        ExactCurrencyAmount availableAmountValue =
+                ExactCurrencyAmount.of(StringUtils.parseAmount(availableAmount), defaultCurrency);
 
         return Optional.of(
                 CreditCardAccount.builder(

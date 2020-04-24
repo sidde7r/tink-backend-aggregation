@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CrossKeyCard {
@@ -27,7 +27,9 @@ public class CrossKeyCard {
 
     public CreditCardAccount toCreditCardAccount() {
         return CreditCardAccount.builder(
-                        id, Amount.inEUR(-currentTotalDebt), Amount.inEUR(usageLimit))
+                        id,
+                        ExactCurrencyAmount.inEUR(-currentTotalDebt),
+                        ExactCurrencyAmount.inEUR(usageLimit))
                 .setAccountNumber(maskedCardNumber)
                 .setName(maskedCardNumber)
                 .setBankIdentifier(id)

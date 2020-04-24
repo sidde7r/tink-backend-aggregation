@@ -37,7 +37,7 @@ public class ContractsItem {
                                 .setAccountNumber(number)
                                 .setBankIdentifier(id)
                                 .setName(alias)
-                                .setBalance(detail.getBalance())
+                                .setExactBalance(detail.getBalance())
                                 .build());
             } catch (Exception e) {
                 logger.error("{} {}", BbvaMxConstants.LOGGING.LOAN_PARSING_ERROR, e.toString(), e);

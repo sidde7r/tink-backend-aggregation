@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CollateralCreditDetailsResponse extends OpBankResponseEntity {
@@ -47,7 +48,8 @@ public class CollateralCreditDetailsResponse extends OpBankResponseEntity {
 
     @JsonIgnore
     public LoanAccount toLoanAccount(OpBankCreditEntity creditEntity) {
-        return LoanAccount.builder(creditEntity.getAgreementNumberIban(), Amount.inEUR(balance))
+        return LoanAccount.builder(
+                        creditEntity.getAgreementNumberIban(), ExactCurrencyAmount.inEUR(balance))
                 .setAccountNumber(creditEntity.getAgreementNumberIban())
                 .setInterestRate(interestRate)
                 .setBankIdentifier(creditEntity.getAgreementNumberIban())

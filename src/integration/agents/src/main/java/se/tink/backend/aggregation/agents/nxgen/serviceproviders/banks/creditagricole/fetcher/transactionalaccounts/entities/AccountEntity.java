@@ -3,11 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditag
 import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.AccountType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Currency;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -37,7 +36,7 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(
-                        getTinkAccounType(), accountNumber, new Amount(Currency.EUR, balance))
+                        getTinkAccountType(), accountNumber, ExactCurrencyAmount.inEUR(balance))
                 .setAccountNumber(accountNumber)
                 .setHolderName(new HolderName(holder))
                 .setName(label)
@@ -48,7 +47,7 @@ public class AccountEntity {
         return productType.equalsIgnoreCase(AccountType.CHECKING);
     }
 
-    private AccountTypes getTinkAccounType() {
+    private AccountTypes getTinkAccountType() {
         // Currently only has data on checking accounts, so this
         // statement is to show how future implementation could look
         if (productType.equalsIgnoreCase(AccountType.CHECKING)) {

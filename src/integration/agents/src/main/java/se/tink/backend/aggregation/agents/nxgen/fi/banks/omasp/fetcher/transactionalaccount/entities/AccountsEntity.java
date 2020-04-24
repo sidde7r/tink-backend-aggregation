@@ -4,7 +4,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountsEntity {
@@ -47,7 +47,9 @@ public class AccountsEntity {
 
     public TransactionalAccount toTransactionalAccount(AccountTypes accountType) {
         return TransactionalAccount.builder(
-                        accountType, this.id, Amount.inEUR(this.availableBalance.getValue()))
+                        accountType,
+                        this.id,
+                        ExactCurrencyAmount.inEUR(this.availableBalance.getValue()))
                 .setAccountNumber(this.id)
                 .setBankIdentifier(this.id)
                 .setName(this.name)

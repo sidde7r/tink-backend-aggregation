@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfo
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class EuroInformationUtils {
 
@@ -14,15 +14,15 @@ public class EuroInformationUtils {
 
     private static final Pattern pattern = Pattern.compile(AMOUNT_REGEX);
 
-    public static Amount parseAmount(String input) {
+    public static ExactCurrencyAmount parseAmount(String input) {
         return parseAmountForInput(input, null);
     }
 
-    public static Amount parseAmount(String input, String currencyInput) {
+    public static ExactCurrencyAmount parseAmount(String input, String currencyInput) {
         return parseAmountForInput(input, currencyInput);
     }
 
-    private static Amount parseAmountForInput(String input, String currencyInput) {
+    private static ExactCurrencyAmount parseAmountForInput(String input, String currencyInput) {
         Optional<String> currencyOptional = Optional.ofNullable(currencyInput);
 
         Matcher matcher = pattern.matcher(input);
@@ -30,7 +30,7 @@ public class EuroInformationUtils {
             throw new IllegalArgumentException("Cannot parse amount: " + input);
         }
         Double amountInDouble = Double.parseDouble(matcher.group(1));
-        return new Amount(currencyOptional.orElse(matcher.group(2)), amountInDouble);
+        return ExactCurrencyAmount.of(amountInDouble, currencyOptional.orElse(matcher.group(2)));
     }
 
     public static boolean isSuccess(String responseReturnCode) {

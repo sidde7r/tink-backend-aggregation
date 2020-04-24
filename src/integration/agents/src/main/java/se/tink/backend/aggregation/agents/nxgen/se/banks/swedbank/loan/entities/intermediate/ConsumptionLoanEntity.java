@@ -32,7 +32,7 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
         List<String> borrowers = getBorrowers();
         return LoanAccount.builder(getFullAccountNumber())
                 .setAccountNumber(getAccountNumber())
-                .setBalance(getAmount())
+                .setExactBalance(getAmount())
                 .setName(getName())
                 .setInterestRate(getInterest())
                 .setDetails(buildLoanDetails(borrowers))

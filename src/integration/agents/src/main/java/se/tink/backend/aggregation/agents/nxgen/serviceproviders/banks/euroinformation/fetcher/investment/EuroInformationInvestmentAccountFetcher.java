@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
@@ -62,7 +62,7 @@ public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<I
                             int page = 1;
                             InvestmentAccountOverviewResponse investmentAccount =
                                     apiClient.requestAccountDetails(a.getNumber(), page);
-                            Amount amount =
+                            ExactCurrencyAmount amount =
                                     EuroInformationUtils.parseAmount(
                                             investmentAccount
                                                     .getSecurityAccountOverview()
@@ -74,7 +74,8 @@ public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<I
                                             .getOverview()
                                             .getNumber();
                             accountsDetails.add(
-                                    InvestmentAccount.builder(accountNumber, amount)
+                                    InvestmentAccount.builder(accountNumber)
+                                            .setExactBalance(amount)
                                             .setAccountNumber(accountNumber)
                                             .build());
                         });

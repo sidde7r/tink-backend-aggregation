@@ -8,7 +8,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -29,7 +29,7 @@ public class LoanAccountEntity extends AccountEntity {
         return Optional.of(
                 LoanAccount.builder(
                                 fullyFormattedNumber,
-                                new Amount(currency, StringUtils.parseAmount(balance)))
+                                ExactCurrencyAmount.of(StringUtils.parseAmount(balance), currency))
                         .setAccountNumber(fullyFormattedNumber)
                         .setDetails(loanDetails)
                         .setInterestRate(parsePercentageToDouble(interest))

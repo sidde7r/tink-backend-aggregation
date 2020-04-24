@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardDetailsResponse {
@@ -24,12 +24,13 @@ public class CardDetailsResponse {
     @JsonFormat(pattern = "M/y")
     private Date expiration;
 
-    public Optional<Amount> calculateBalance(Consumer<String> logger) {
+    public Optional<ExactCurrencyAmount> calculateBalance(Consumer<String> logger) {
         if (this.creditLimit == null || this.availableCredit == null) {
             return Optional.empty();
         }
         logger.accept("Found an actual credit card!");
         return Optional.of(
-                Amount.inEUR(this.creditLimit.getAmount() - this.availableCredit.getAmount()));
+                ExactCurrencyAmount.inEUR(
+                        this.creditLimit.getAmount() - this.availableCredit.getAmount()));
     }
 }

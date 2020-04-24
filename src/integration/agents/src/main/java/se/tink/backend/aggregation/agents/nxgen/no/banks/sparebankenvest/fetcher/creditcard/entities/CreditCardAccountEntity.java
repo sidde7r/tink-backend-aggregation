@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetche
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreditCardAccountEntity {
@@ -39,7 +39,9 @@ public class CreditCardAccountEntity {
     public CreditCardAccount toTinkCreditCardAccount() {
         // spv uses positive amount for balance of a credit card
         return CreditCardAccount.builder(
-                        transactionAccountNumber, Amount.inNOK(balance), Amount.inNOK(available))
+                        transactionAccountNumber,
+                        ExactCurrencyAmount.inNOK(balance),
+                        ExactCurrencyAmount.inNOK(available))
                 .setAccountNumber(cardNumber)
                 .setName(name)
                 .setBankIdentifier(createBankIdentifier())

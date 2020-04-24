@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cred
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.MetaEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CreditBalanceResponse {
@@ -31,18 +31,19 @@ public class CreditBalanceResponse {
         return availableLimit - creditLimit;
     }
 
-    public Amount toTinkBalanceAmount(String accountId) {
+    public ExactCurrencyAmount toTinkBalanceAmount(String accountId) {
         final BalanceEntity balance = getBalance(accountId);
 
-        return new Amount(balance.getBalanceEntity().getCurrency(), getTinkBalance(balance));
+        return ExactCurrencyAmount.of(
+                getTinkBalance(balance), balance.getBalanceEntity().getCurrency());
     }
 
-    public Amount toTinkAvailableCreditAmount(String accountId) {
+    public ExactCurrencyAmount toTinkAvailableCreditAmount(String accountId) {
         final BalanceEntity balance = getBalance(accountId);
 
-        return new Amount(
-                balance.getBalanceEntity().getCurrency(),
-                Double.parseDouble(balance.getBalanceEntity().getAvailableLimit()));
+        return ExactCurrencyAmount.of(
+                Double.parseDouble(balance.getBalanceEntity().getAvailableLimit()),
+                balance.getBalanceEntity().getCurrency());
     }
 
     public BalanceEntity getBalance(String accountId) {

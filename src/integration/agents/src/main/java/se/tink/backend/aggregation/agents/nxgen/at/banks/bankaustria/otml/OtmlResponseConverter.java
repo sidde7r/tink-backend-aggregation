@@ -27,6 +27,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.BankAustriaConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.RtaMessage;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -129,13 +130,15 @@ public class OtmlResponseConverter {
                                 BankAustriaConstants.XPathExpression.XPATH_SETTINGS_ACCOUNT_TYPE));
         switch (accountType.toUpperCase()) {
             case BankAustriaConstants.BankAustriaAccountTypes.CURRENT:
-                return CheckingAccount.builder(accountNumber, Amount.inEUR(0D))
+                return CheckingAccount.builder(
+                                AccountTypes.CHECKING, accountNumber, ExactCurrencyAmount.inEUR(0D))
                         .setAccountNumber(accountNumber)
                         .setName(accountNickName)
                         .setBankIdentifier(accountKey)
                         .build();
             case BankAustriaConstants.BankAustriaAccountTypes.SAVING:
-                return SavingsAccount.builder(accountNumber, Amount.inEUR(0))
+                return SavingsAccount.builder(
+                                AccountTypes.SAVINGS, accountNumber, ExactCurrencyAmount.inEUR(0))
                         .setAccountNumber(accountNumber)
                         .setName(accountNickName)
                         .setBankIdentifier(accountKey)

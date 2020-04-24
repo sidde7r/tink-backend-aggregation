@@ -10,7 +10,7 @@ import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @XmlRootElement(name = "compte")
@@ -134,11 +134,11 @@ public class AccountDetailsEntity {
     // because of that mapper searcher for field `accountBuilder` and throws `NullPointerException`
     @JsonIgnore
     public Account.Builder<? extends Account, ?> getAccountBuilder() {
-        Amount amount = EuroInformationUtils.parseAmount(amountToParse, currency);
+        ExactCurrencyAmount amount = EuroInformationUtils.parseAmount(amountToParse, currency);
 
         return Account.builder(getTinkTypeByTypeNumber().getTinkType(), decideUniqueIdentifier())
                 .setAccountNumber(accountNumber)
-                .setBalance(amount);
+                .setExactBalance(amount);
     }
 
     @JsonIgnore

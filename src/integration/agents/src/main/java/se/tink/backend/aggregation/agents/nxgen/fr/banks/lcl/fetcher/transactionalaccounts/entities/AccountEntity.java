@@ -8,7 +8,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 public class AccountEntity {
@@ -80,8 +80,8 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private Amount getAmount() {
-        return Amount.inEUR(StringUtils.parseAmount(availableBalance));
+    private ExactCurrencyAmount getAmount() {
+        return ExactCurrencyAmount.inEUR(StringUtils.parseAmount(availableBalance));
     }
 
     @JsonIgnore

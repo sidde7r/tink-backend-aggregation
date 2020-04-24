@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.transactionalaccount.entities;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.rpc.LinksResponse;
@@ -43,7 +44,8 @@ public class AccountEntity extends LinksResponse {
     }
 
     public TransactionalAccount toTransactionalAccount() {
-        return CheckingAccount.builder(accountId.getIban(), usableBalance.toTinkAmount())
+        return CheckingAccount.builder(
+                        AccountTypes.CHECKING, accountId.getIban(), usableBalance.toTinkAmount())
                 .setAccountNumber(accountId.getIban())
                 .setBankIdentifier(getLinks().getLinkPath(SamlinkConstants.LinkRel.TRANSACTIONS))
                 .build();

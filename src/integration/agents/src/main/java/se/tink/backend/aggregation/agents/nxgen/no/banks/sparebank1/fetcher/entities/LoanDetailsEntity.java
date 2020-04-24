@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class LoanDetailsEntity {
@@ -156,7 +156,7 @@ public class LoanDetailsEntity {
     }
 
     @JsonIgnore
-    public Amount getInitialBalance() {
+    public ExactCurrencyAmount getInitialBalance() {
         return Sparebank1AmountUtils.constructAmount(loanAmountInteger, loanAmountFraction);
     }
 }

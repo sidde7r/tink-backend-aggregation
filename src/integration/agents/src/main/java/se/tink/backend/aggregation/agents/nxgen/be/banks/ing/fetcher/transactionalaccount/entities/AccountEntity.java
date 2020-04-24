@@ -24,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @XmlRootElement
@@ -246,7 +245,8 @@ public class AccountEntity {
                 TransactionalAccount.builder(
                                 accountType,
                                 ibanNumber,
-                                Amount.inEUR(IngHelper.parseAmountStringToDouble(balance)))
+                                ExactCurrencyAmount.inEUR(
+                                        IngHelper.parseAmountStringToDouble(balance)))
                         .setAccountNumber(ibanNumber)
                         .setName(type)
                         .setBankIdentifier(bbanNumber)

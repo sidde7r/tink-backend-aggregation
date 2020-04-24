@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CreditCardTransactionEntity {
@@ -25,7 +24,7 @@ public class CreditCardTransactionEntity {
     @JsonIgnore
     public CreditCardTransaction toTinkTransaction() {
         return CreditCardTransaction.builder()
-                .setAmount(new Amount(IberCajaConstants.currency, amount))
+                .setAmount(ExactCurrencyAmount.inEUR(amount))
                 .setDate(dateOfTransaction)
                 .setDescription(description)
                 .build();

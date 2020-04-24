@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.transactionalaccount.entities;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class HandelsbankenFIAccount extends HandelsbankenAccount {
 
@@ -18,7 +19,9 @@ public class HandelsbankenFIAccount extends HandelsbankenAccount {
 
     public TransactionalAccount toTinkAccount() {
         return CheckingAccount.builder(
-                        unformattedNumber, Amount.inEUR(chooseAmountField().asDouble()))
+                        AccountTypes.CHECKING,
+                        unformattedNumber,
+                        ExactCurrencyAmount.inEUR(chooseAmountField().asDouble()))
                 .setAccountNumber(number)
                 .setName(displayName)
                 .addIdentifier(new FinnishIdentifier(unformattedNumber))

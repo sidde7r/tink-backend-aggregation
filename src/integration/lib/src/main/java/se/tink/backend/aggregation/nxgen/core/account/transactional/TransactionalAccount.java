@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithBal
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.WithTypeStep;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class TransactionalAccount extends Account {
@@ -41,17 +40,6 @@ public class TransactionalAccount extends Account {
 
     protected TransactionalAccount(StepBuilder<? extends TransactionalAccount, ?> builder) {
         super(builder);
-    }
-
-    /**
-     * @deprecated Use {@link #nxBuilder()} instead.
-     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
-     *     project
-     */
-    @Deprecated
-    public static Builder<?, ?> builder(
-            AccountTypes type, String uniqueIdentifier, Amount balance) {
-        return builder(type, uniqueIdentifier).setBalance(balance);
     }
 
     public static Builder<?, ?> builder(

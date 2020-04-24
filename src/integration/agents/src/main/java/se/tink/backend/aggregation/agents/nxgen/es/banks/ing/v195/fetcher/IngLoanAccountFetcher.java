@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
 
@@ -55,7 +56,8 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
                 .setInterestRate(interestRate)
                 .setDetails(loanDetails)
                 .setAccountNumber(product.getProductNumber())
-                .setBalance(new Amount(product.getCurrency(), product.getBalance()))
+                .setExactBalance(
+                        ExactCurrencyAmount.of(product.getBalance(), product.getCurrency()))
                 .setBankIdentifier(product.getUuid())
                 .setHolderName(new HolderName(product.getHolders().get(0).getAnyName()))
                 .setAccountNumber(product.getProductNumber())

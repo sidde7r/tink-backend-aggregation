@@ -21,6 +21,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
@@ -41,7 +42,7 @@ public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
         return TransactionalAccount.builder(
                         account.translateAccountType(),
                         account.getAccountId(),
-                        new Amount(account.getCurrency(), account.getBalance()))
+                        ExactCurrencyAmount.of(account.getBalance(), account.getCurrency()))
                 .setAccountNumber(account.getBbanFormatted())
                 .setName(account.getAccountNickname())
                 .addIdentifiers(getIdentifiers(account))
@@ -117,7 +118,7 @@ public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
 
         return LoanAccount.builder(
                         account.getAccountId(),
-                        new Amount(account.getCurrency(), account.getBalance()))
+                        ExactCurrencyAmount.of(account.getBalance(), account.getCurrency()))
                 .setAccountNumber(account.getBbanFormatted())
                 .setName(account.getAccountNickname())
                 .setInterestRate(account.getInterestRate())

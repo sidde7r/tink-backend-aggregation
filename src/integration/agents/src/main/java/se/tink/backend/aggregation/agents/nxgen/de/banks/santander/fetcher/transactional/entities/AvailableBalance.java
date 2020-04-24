@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AvailableBalance {
@@ -20,7 +20,7 @@ public class AvailableBalance {
         return currency;
     }
 
-    public Amount toTinkAmount() {
-        return new Amount(currency, amount);
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }

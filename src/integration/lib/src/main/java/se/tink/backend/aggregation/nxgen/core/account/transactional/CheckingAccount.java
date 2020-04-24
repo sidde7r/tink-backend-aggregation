@@ -49,16 +49,6 @@ public class CheckingAccount extends TransactionalAccount {
      *     project
      */
     @Deprecated
-    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier).setBalance(balance);
-    }
-
-    /**
-     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
-     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
-     *     project
-     */
-    @Deprecated
     public static UniqueIdentifierStep<CheckingBuildStep> builder() {
         return new CheckingAccountBuilder();
     }

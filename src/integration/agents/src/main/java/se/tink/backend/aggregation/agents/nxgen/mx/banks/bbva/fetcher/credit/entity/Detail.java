@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.en
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class Detail {
@@ -16,7 +16,7 @@ public class Detail {
     private String expirationDate;
     private String agreementContract;
 
-    public Amount getBalance() {
+    public ExactCurrencyAmount getBalance() {
         return specificAmounts.stream()
                 .filter(x -> BbvaMxConstants.VALUES.CURRENT_BALANCE.equalsIgnoreCase(x.getId()))
                 .findFirst()
@@ -26,7 +26,7 @@ public class Detail {
                 .toTinkAmount();
     }
 
-    public Amount getAvailableCredit() {
+    public ExactCurrencyAmount getAvailableCredit() {
         return specificAmounts.stream()
                 .filter(x -> BbvaMxConstants.VALUES.AVAILABLE_BALANCE.equalsIgnoreCase(x.getId()))
                 .findFirst()

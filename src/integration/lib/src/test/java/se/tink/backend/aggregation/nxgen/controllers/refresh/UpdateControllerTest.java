@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.user.rpc.User;
 
@@ -43,7 +42,7 @@ public final class UpdateControllerTest {
         final LoanAccount loanAccount =
                 LoanAccount.builder("1337")
                         .setAccountNumber("777")
-                        .setBalance(new Amount("SEK", -7.0))
+                        .setExactBalance(ExactCurrencyAmount.inSEK(-7.0))
                         .build();
 
         final Collection<AggregationTransaction> transactions = Collections.emptySet();

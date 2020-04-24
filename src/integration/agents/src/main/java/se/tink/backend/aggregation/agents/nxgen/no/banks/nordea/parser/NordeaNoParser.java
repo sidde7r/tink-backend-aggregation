@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.Lo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.builder.LoanModuleBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class NordeaNoParser extends NordeaV17Parser {
@@ -113,7 +112,7 @@ public class NordeaNoParser extends NordeaV17Parser {
         return TransactionalAccount.builder(
                         getTinkAccountType(pe),
                         pe.getAccountNumber(false),
-                        pe.getBalanceAmount().orElse(Amount.inNOK(pe.getBalance())))
+                        pe.getBalanceAmount().orElse(ExactCurrencyAmount.inNOK(pe.getBalance())))
                 .setAccountNumber(pe.getAccountNumber(false))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
@@ -124,10 +123,14 @@ public class NordeaNoParser extends NordeaV17Parser {
     public CreditCardAccount parseCreditCardAccount(ProductEntity pe, CardsEntity cardsEntity) {
         return CreditCardAccount.builder(
                         pe.getAccountNumber(false),
-                        pe.getNegativeBalanceAmount().orElse(Amount.inNOK(-1 * pe.getBalance())),
+                        pe.getNegativeBalanceAmount()
+                                .orElse(ExactCurrencyAmount.inNOK(-1 * pe.getBalance())),
                         pe.getCurrency()
-                                .map(c -> new Amount(c, cardsEntity.getFundsAvailable()))
-                                .orElse(Amount.inNOK(cardsEntity.getFundsAvailable())))
+                                .map(
+                                        c ->
+                                                ExactCurrencyAmount.of(
+                                                        cardsEntity.getFundsAvailable(), c))
+                                .orElse(ExactCurrencyAmount.inNOK(cardsEntity.getFundsAvailable())))
                 .setAccountNumber(pe.getAccountNumber(false))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
@@ -139,7 +142,7 @@ public class NordeaNoParser extends NordeaV17Parser {
         return InvestmentAccount.builder(custodyAccount.getAccountId())
                 .setAccountNumber(custodyAccount.getAccountNumber())
                 .setName(custodyAccount.getName())
-                .setCashBalance(Amount.inNOK(0))
+                .setCashBalance(ExactCurrencyAmount.inNOK(0d))
                 .setPortfolios(Collections.singletonList(parsePortfolio(custodyAccount)))
                 .build();
     }

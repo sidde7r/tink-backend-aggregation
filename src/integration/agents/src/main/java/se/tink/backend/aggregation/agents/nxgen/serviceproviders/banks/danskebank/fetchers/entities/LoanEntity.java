@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class LoanEntity {
@@ -43,18 +44,19 @@ public class LoanEntity {
                         .setLoanNumber(loanNumber)
                         .setSecurity(realEstateNumber)
                         .build();
-        return LoanAccount.builder(getAccoutNumber())
+        return LoanAccount.builder(getAccountNumber())
                 .setDetails(details)
-                .setBalance(getBalance())
+                .setExactBalance(getBalance())
                 .setName(loanTypeName)
-                .setAccountNumber(getAccoutNumber())
+                .setAccountNumber(getAccountNumber())
                 .build();
     }
 
     @JsonIgnore
-    private Amount getBalance() {
-        Amount balance = new Amount(currencyCode, outstandingDebt);
-        if (balance.isZero()) {
+    private ExactCurrencyAmount getBalance() {
+        ExactCurrencyAmount balance =
+                ExactCurrencyAmount.of(new BigDecimal(outstandingDebt), currencyCode);
+        if (balance.compareTo(BigDecimal.ZERO) == 0) {
             return balance;
         }
 
@@ -62,7 +64,7 @@ public class LoanEntity {
     }
 
     @JsonIgnore
-    private String getAccoutNumber() {
+    private String getAccountNumber() {
         return String.format("%s-%s", realEstateNumber, loanNumber);
     }
 }

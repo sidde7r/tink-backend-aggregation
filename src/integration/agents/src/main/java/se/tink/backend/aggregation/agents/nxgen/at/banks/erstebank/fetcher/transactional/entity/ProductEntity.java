@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ProductEntity {
@@ -80,7 +80,7 @@ public class ProductEntity {
         }
     }
 
-    private Amount getTinkBalance() {
+    private ExactCurrencyAmount getTinkBalance() {
         return getAmountEntity().getTinkBalance();
     }
 
@@ -131,7 +131,7 @@ public class ProductEntity {
         }
     }
 
-    private Amount getAvailableCredit() {
+    private ExactCurrencyAmount getAvailableCredit() {
         return cardInfoEntity.getAvailableAmount().getTinkBalance();
     }
 

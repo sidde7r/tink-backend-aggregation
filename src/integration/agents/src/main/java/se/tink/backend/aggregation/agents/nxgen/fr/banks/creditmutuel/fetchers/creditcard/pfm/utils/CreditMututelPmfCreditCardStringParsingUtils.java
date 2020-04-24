@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.creditmutuel.fetchers.
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 public class CreditMututelPmfCreditCardStringParsingUtils {
@@ -48,13 +48,13 @@ public class CreditMututelPmfCreditCardStringParsingUtils {
         return lastFourDigits;
     }
 
-    public static Amount extractAmountFromString(String input) {
+    public static ExactCurrencyAmount extractAmountFromString(String input) {
         Matcher matcher = MAX_AMOUNT_PATTERN.matcher(input);
         if (!matcher.find()) {
             throw new IllegalArgumentException("Cannot parse amount: " + input);
         }
         String amount = matcher.group(1);
         String currency = matcher.group(2);
-        return new Amount(currency, StringUtils.parseAmount(amount));
+        return ExactCurrencyAmount.of(StringUtils.parseAmount(amount), currency);
     }
 }

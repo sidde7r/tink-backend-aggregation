@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardAccountEntity {
@@ -29,8 +29,8 @@ public class CardAccountEntity {
     public CreditCardAccount toTinkCreditCard() {
         return CreditCardAccount.builder(
                         creditAccountIBAN,
-                        Amount.inEUR(statementBalanceAmount),
-                        Amount.inEUR(amountAvailable))
+                        ExactCurrencyAmount.inEUR(statementBalanceAmount),
+                        ExactCurrencyAmount.inEUR(amountAvailable))
                 .setAccountNumber(card.getCardNumberMasked())
                 .setName(getName())
                 .setBankIdentifier(card.getEncryptedCardNumber())

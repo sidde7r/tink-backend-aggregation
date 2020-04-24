@@ -2,11 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.en
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -98,8 +97,8 @@ public class AccountEntity {
         return AccountTypes.CHECKING;
     }
 
-    public Amount getTinkBalance() {
-        return new Amount(FidorConstants.CURRENCY_EUR, availableBalance);
+    public ExactCurrencyAmount getTinkBalance() {
+        return ExactCurrencyAmount.inEUR(availableBalance);
     }
 
     public TransactionalAccount toTransactionalAccount() {

@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.entities;
 
 import com.google.common.base.Strings;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class SavingsAccountEntity {
@@ -24,8 +25,8 @@ public class SavingsAccountEntity {
         return balance;
     }
 
-    public Amount getAmount() {
-        return Amount.inEUR(balance);
+    public ExactCurrencyAmount getAmount() {
+        return ExactCurrencyAmount.inEUR(balance);
     }
 
     public boolean isValid() {
@@ -33,7 +34,7 @@ public class SavingsAccountEntity {
     }
 
     public TransactionalAccount toSavingsAccount() {
-        return SavingsAccount.builder(getId(), getAmount())
+        return SavingsAccount.builder(AccountTypes.SAVINGS, getId(), getAmount())
                 .setAccountNumber(getId())
                 .setName(getName())
                 .setBankIdentifier(getId())

@@ -85,15 +85,12 @@ public class AccountEntity {
     }
 
     public TransactionalAccount toTinkAccount() {
-
         TransactionalAccount.Builder builder =
                 TransactionalAccount.builder(toTinkAccountType(), number, balance);
-
         builder.setAccountNumber(number);
         builder.setName(
                 Strings.isNullOrEmpty(libelleCustomize) ? nature.getLabel() : libelleCustomize);
         builder.setBankIdentifier(number);
-
         return builder.build();
     }
 }

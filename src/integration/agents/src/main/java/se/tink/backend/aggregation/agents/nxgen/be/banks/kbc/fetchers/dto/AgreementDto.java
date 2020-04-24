@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AgreementDto implements GeneralAccountEntity {
@@ -181,8 +181,8 @@ public class AgreementDto implements GeneralAccountEntity {
         return settleSavingsAccount;
     }
 
-    public Amount getAmount() {
-        return new Amount(currency.getValue(), Double.valueOf(balance.getValue()));
+    public ExactCurrencyAmount getAmount() {
+        return ExactCurrencyAmount.of(Double.valueOf(balance.getValue()), currency.getValue());
     }
 
     @Transient
@@ -216,7 +216,7 @@ public class AgreementDto implements GeneralAccountEntity {
     }
 
     private boolean getIsBusinessAccount() {
-        return isBusiness != null && Boolean.valueOf(isBusiness.getValue());
+        return isBusiness != null && Boolean.parseBoolean(isBusiness.getValue());
     }
 
     @Override

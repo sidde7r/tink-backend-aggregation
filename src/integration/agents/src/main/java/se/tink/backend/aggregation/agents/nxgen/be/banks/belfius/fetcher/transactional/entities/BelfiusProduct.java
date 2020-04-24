@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BelfiusProduct implements GeneralAccountEntity {
@@ -81,26 +81,26 @@ public class BelfiusProduct implements GeneralAccountEntity {
     private String zoomItAllowed;
     // ------- End logged for credit card
 
-    private Optional<Amount> getAmount() {
+    private Optional<ExactCurrencyAmount> getAmount() {
         return BelfiusStringUtils.parseStringToAmount(this.amount);
     }
 
-    private Optional<Amount> getBalance() {
-        Optional<Amount> amount = getAmount();
-        Optional<Amount> available = getAvailableAmount();
+    private Optional<ExactCurrencyAmount> getBalance() {
+        Optional<ExactCurrencyAmount> amount = getAmount();
+        Optional<ExactCurrencyAmount> available = getAvailableAmount();
         if (amount.isPresent() && available.isPresent()) {
-            if (available.get().isLessThan(amount.get().doubleValue())) {
+            if (available.get().getExactValue().compareTo(amount.get().getExactValue()) < 0) {
                 return available;
             }
         }
         return amount.isPresent() ? amount : available;
     }
 
-    public Amount getAvailableBalance() {
-        Optional<Amount> amount = getAmount();
-        Optional<Amount> available = getAvailableAmount();
+    public ExactCurrencyAmount getAvailableBalance() {
+        Optional<ExactCurrencyAmount> amount = getAmount();
+        Optional<ExactCurrencyAmount> available = getAvailableAmount();
         if (amount.isPresent() && available.isPresent()) {
-            if (available.get().isGreaterThan(amount.get().doubleValue())) {
+            if (available.get().getExactValue().compareTo(amount.get().getExactValue()) > 0) {
                 return available.get();
             }
         }
@@ -160,13 +160,13 @@ public class BelfiusProduct implements GeneralAccountEntity {
                 .orElse(null);
     }
 
-    private Optional<Amount> parseAvailableForCreditCard() {
-        Optional<Amount> parsedAvailableAmount = getAvailableAmount();
+    private Optional<ExactCurrencyAmount> parseAvailableForCreditCard() {
+        Optional<ExactCurrencyAmount> parsedAvailableAmount = getAvailableAmount();
         if (parsedAvailableAmount.isPresent()) return parsedAvailableAmount;
         return BelfiusStringUtils.parseStringToAmount(this.effectiveAvailableCard);
     }
 
-    private Optional<Amount> getAvailableAmount() {
+    private Optional<ExactCurrencyAmount> getAvailableAmount() {
         return BelfiusStringUtils.parseStringToAmount(this.available);
     }
 
@@ -192,8 +192,7 @@ public class BelfiusProduct implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        SepaEurIdentifier bi = new SepaEurIdentifier(this.extIntAccount.replace(" ", ""));
-        return bi;
+        return new SepaEurIdentifier(this.extIntAccount.replace(" ", ""));
     }
 
     @Override

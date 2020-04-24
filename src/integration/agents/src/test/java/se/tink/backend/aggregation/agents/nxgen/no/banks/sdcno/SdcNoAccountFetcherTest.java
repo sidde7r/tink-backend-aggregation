@@ -16,7 +16,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class SdcNoAccountFetcherTest {
 
@@ -61,7 +61,7 @@ public class SdcNoAccountFetcherTest {
 
     private TransactionalAccount transactionalAccount() {
         return TransactionalAccount.builder(
-                        AccountTypes.CHECKING, "sample id", new Amount("EUR", 12.34d))
+                        AccountTypes.CHECKING, "sample id", ExactCurrencyAmount.inEUR(12.34d))
                 .setAccountNumber("sample account number")
                 .setName("sample name")
                 .setBankIdentifier("sample bank identifier")

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CardsEntity {
@@ -46,8 +46,8 @@ public class CardsEntity {
 
         return CreditCardAccount.builder(
                         credit.getMaskedCreditCardNumber(),
-                        new Amount(currency, credit.getCreditBookedBalance()),
-                        new Amount(currency, credit.getCreditAvailableBalance()))
+                        ExactCurrencyAmount.of(credit.getCreditBookedBalance(), currency),
+                        ExactCurrencyAmount.of(credit.getCreditAvailableBalance(), currency))
                 .setAccountNumber(credit.getMaskedCreditCardNumber())
                 .setHolderName(new HolderName(cardholderName))
                 .setBankIdentifier(cardId)

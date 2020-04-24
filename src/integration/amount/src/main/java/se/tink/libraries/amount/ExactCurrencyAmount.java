@@ -95,6 +95,22 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
                 this.getExactValue().add(amount.getExactValue()), this.getCurrencyCode());
     }
 
+    public static ExactCurrencyAmount inSEK(double value) {
+        return ExactCurrencyAmount.of(value, "SEK");
+    }
+
+    public static ExactCurrencyAmount inNOK(double value) {
+        return ExactCurrencyAmount.of(value, "NOK");
+    }
+
+    public static ExactCurrencyAmount inDKK(double value) {
+        return ExactCurrencyAmount.of(value, "DKK");
+    }
+
+    public static ExactCurrencyAmount inEUR(double value) {
+        return ExactCurrencyAmount.of(value, "EUR");
+    }
+
     @Override
     public int compareTo(ExactCurrencyAmount other) {
         return compareTo(other.value);

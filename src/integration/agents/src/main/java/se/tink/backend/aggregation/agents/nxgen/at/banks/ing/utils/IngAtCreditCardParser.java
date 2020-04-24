@@ -7,7 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngAtCreditCardParser {
     private final Document doc;
@@ -34,25 +34,25 @@ public class IngAtCreditCardParser {
                         .replace(",", "."));
     }
 
-    public Amount getSaldo() {
+    public ExactCurrencyAmount getSaldo() {
         final Element e = doc.select(String.format("h3:contains(%s)", "saldo")).first();
         if (!Objects.isNull(e)) {
             final Element p = e.parent().parent();
             if (!Objects.isNull(p)) {
                 final Element b = p.select("span:matches(€?\\s*\\-?\\d)").first();
-                return IngAtAmmountParser.toAmount(b.text());
+                return IngAtAmountParser.toAmount(b.text());
             }
         }
         return null;
     }
 
-    public Amount getAvailableCredit() {
+    public ExactCurrencyAmount getAvailableCredit() {
         final Element e = doc.select(String.format("h3:contains(%s)", "Verfügbar")).first();
         if (!Objects.isNull(e)) {
             final Element p = e.parent().parent();
             if (!Objects.isNull(p)) {
                 final Element b = p.select("span:matches(€?\\s*\\-?\\d)").first();
-                return new Amount("EUR", valueFromAmountString(b.text()));
+                return ExactCurrencyAmount.inEUR(valueFromAmountString(b.text()));
             }
         }
         return null;

@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -26,11 +27,11 @@ public class AmountEntity {
         return new Amount(currencyCode, AgentParsingUtils.parseAmount(amount));
     }
 
-    public Amount toTinkAmount() {
+    public ExactCurrencyAmount toTinkAmount() {
         if (currencyCode == null || currencyCode.isEmpty()) {
             return null;
         }
 
-        return new Amount(currencyCode, AgentParsingUtils.parseAmount(amount));
+        return ExactCurrencyAmount.of(AgentParsingUtils.parseAmount(amount), currencyCode);
     }
 }

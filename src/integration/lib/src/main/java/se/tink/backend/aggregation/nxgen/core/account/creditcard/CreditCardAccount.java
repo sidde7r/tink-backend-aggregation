@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardDetailsStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CreditCardAccount extends Account {
@@ -42,27 +41,6 @@ public class CreditCardAccount extends Account {
     @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultCreditCardBuilder(uniqueIdentifier);
-    }
-
-    /**
-     * @deprecated Use {@link #nxBuilder()} instead.
-     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
-     *     project
-     */
-    @Deprecated
-    public static Builder<?, ?> builder(
-            String uniqueIdentifier, Amount balance, Amount availableCredit) {
-        return builder(uniqueIdentifier)
-                .setExactBalance(
-                        ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency()))
-                .setAvailableCredit(availableCredit);
-    }
-
-    public static Builder<?, ?> builder(
-            String uniqueIdentifier, ExactCurrencyAmount balance, Amount availableCredit) {
-        return builder(uniqueIdentifier)
-                .setExactBalance(balance)
-                .setAvailableCredit(availableCredit);
     }
 
     public static Builder<?, ?> builder(

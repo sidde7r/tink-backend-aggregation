@@ -4,7 +4,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountResponse {
@@ -63,12 +63,11 @@ public class AccountResponse {
         return AccountTypes.CHECKING;
     }
 
-    public Amount getTinkBalance() {
-        return new Amount(currency, availableBalance);
+    public ExactCurrencyAmount getTinkBalance() {
+        return ExactCurrencyAmount.of(availableBalance, currency);
     }
 
     public TransactionalAccount toTransactionalAccount() {
-
         return TransactionalAccount.builder(getType(), getId(), getTinkBalance())
                 .setAccountNumber(getId())
                 .setName(getBankName())

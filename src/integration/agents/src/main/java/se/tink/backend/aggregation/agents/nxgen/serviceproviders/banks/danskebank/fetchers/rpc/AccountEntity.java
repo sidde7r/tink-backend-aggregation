@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -133,7 +135,7 @@ public class AccountEntity {
     }
 
     public LoanAccount toLoanAccount() {
-        return LoanAccount.builder(accountNoInt, new Amount(currency, balance))
+        return LoanAccount.builder(accountNoInt, ExactCurrencyAmount.of(balance, currency))
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
@@ -141,18 +143,22 @@ public class AccountEntity {
     }
 
     public CreditCardAccount toCreditCardAccount() {
-
         return CreditCardAccount.builder(
-                        accountNoInt, new Amount(currency, balance), calculateAvailableCredit())
+                        accountNoInt,
+                        ExactCurrencyAmount.of(balance, currency),
+                        calculateAvailableCredit())
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
                 .build();
     }
 
-    public CheckingAccount toCheckingAccount() {
-        return CheckingAccount.builder(accountNoInt, new Amount(currency, balance))
-                .setAvailableCredit(calculateAvailableCredit())
+    public TransactionalAccount toCheckingAccount() {
+        return CheckingAccount.builder(
+                        AccountTypes.CHECKING,
+                        accountNoInt,
+                        ExactCurrencyAmount.of(balance, currency))
+                .setExactAvailableCredit(calculateAvailableCredit())
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
@@ -160,15 +166,18 @@ public class AccountEntity {
                 .build();
     }
 
-    public SavingsAccount toSavingsAccount() {
-        return SavingsAccount.builder(accountNoInt, new Amount(currency, balance))
+    public TransactionalAccount toSavingsAccount() {
+        return SavingsAccount.builder(
+                        AccountTypes.SAVINGS,
+                        accountNoInt,
+                        ExactCurrencyAmount.of(balance, currency))
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
                 .build();
     }
 
-    private Amount calculateAvailableCredit() {
-        return new Amount(currency, Math.max(balanceAvailable - balance, 0.0));
+    private ExactCurrencyAmount calculateAvailableCredit() {
+        return ExactCurrencyAmount.of(Math.max(balanceAvailable - balance, 0.0), currency);
     }
 }

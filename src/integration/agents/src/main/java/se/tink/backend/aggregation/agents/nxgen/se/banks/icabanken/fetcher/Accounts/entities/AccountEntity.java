@@ -18,7 +18,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity implements GeneralAccountEntity {
@@ -78,7 +78,9 @@ public class AccountEntity implements GeneralAccountEntity {
         AccountTypes accountType = getTinkAccountType();
         Builder builder =
                 TransactionalAccount.builder(
-                                accountType, accountNumber, Amount.inSEK(availableAmount))
+                                accountType,
+                                accountNumber,
+                                ExactCurrencyAmount.inSEK(availableAmount))
                         .setAccountNumber(accountNumber)
                         .setName(name)
                         .setHolderName(new HolderName(holder))
@@ -102,14 +104,14 @@ public class AccountEntity implements GeneralAccountEntity {
     }
 
     @JsonIgnore
-    private Amount getBalance() {
-        return Amount.inSEK(currentAmount - outstandingAmount);
+    private ExactCurrencyAmount getBalance() {
+        return ExactCurrencyAmount.inSEK(currentAmount - outstandingAmount);
     }
 
     @JsonIgnore
-    private Amount getAvailableCredit() {
+    private ExactCurrencyAmount getAvailableCredit() {
         double availableCredit = Math.floor(creditLimit - (currentAmount + outstandingAmount));
-        return Amount.inSEK(availableCredit);
+        return ExactCurrencyAmount.inSEK(availableCredit);
     }
 
     @JsonIgnore

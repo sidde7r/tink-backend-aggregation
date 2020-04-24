@@ -27,7 +27,7 @@ public class CarLoanEntity extends BaseAbstractLoanEntity {
     public LoanAccount toTinkLoan() {
         return LoanAccount.builder(getFullAccountNumber())
                 .setName(getName())
-                .setBalance(getAmount())
+                .setExactBalance(getAmount())
                 .setAccountNumber(getAccountNumber())
                 .setDetails(buildLoanDetails())
                 .build();

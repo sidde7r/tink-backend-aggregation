@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -67,8 +67,8 @@ public class AccountEntity {
         return hasExpenditureOverview;
     }
 
-    public Amount getTinkBalance() {
-        return new Amount(currency, balance);
+    public ExactCurrencyAmount getTinkBalance() {
+        return ExactCurrencyAmount.of(balance, currency);
     }
 
     public TransactionalAccount toTinkTransactionalAccount(AccountDetailsResponse details) {

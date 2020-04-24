@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -117,15 +117,15 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private Amount getBalance(double balance) {
+    private ExactCurrencyAmount getBalance(double balance) {
         String currency = properties.getCurrencyCode();
 
         if (Strings.isNullOrEmpty(currency)) {
             LOGGER.warn("Sparebanken Sor: No currency for account found. Defaulting to NOK.");
 
-            return Amount.inNOK(balance);
+            return ExactCurrencyAmount.inNOK(balance);
         }
 
-        return new Amount(currency, balance);
+        return ExactCurrencyAmount.of(balance, currency);
     }
 }

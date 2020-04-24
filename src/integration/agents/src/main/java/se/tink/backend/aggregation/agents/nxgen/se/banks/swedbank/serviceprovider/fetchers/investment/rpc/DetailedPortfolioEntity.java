@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
@@ -161,7 +162,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
                 Optional.ofNullable(this.settlements).orElseGet(Collections::emptyList).stream()
                         .map(SettlementEntity::getBuyingPower)
                         .map(AmountEntity::toTinkAmount)
-                        .mapToDouble(Amount::getValue)
+                        .mapToDouble(ExactCurrencyAmount::getDoubleValue)
                         .sum());
 
         portfolio.setInstruments(instruments);

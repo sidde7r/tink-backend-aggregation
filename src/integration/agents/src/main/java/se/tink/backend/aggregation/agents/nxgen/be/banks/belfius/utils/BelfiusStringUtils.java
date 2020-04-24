@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils;
 import java.util.Locale;
 import java.util.Optional;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BelfiusStringUtils {
 
@@ -10,7 +11,7 @@ public class BelfiusStringUtils {
         return panNumber.replaceAll(" ", "").replaceAll(".{4}(?=)", "$0 ");
     }
 
-    public static Optional<Amount> parseStringToAmount(String amount) {
+    public static Optional<ExactCurrencyAmount> parseStringToAmount(String amount) {
         if (amount == null || !amount.contains(" ")) {
             return Optional.empty();
         }
@@ -32,7 +33,7 @@ public class BelfiusStringUtils {
             formattedAmount = formattedAmount + s;
         }
 
-        return Optional.of(new Amount(currency, Double.valueOf(formattedAmount)));
+        return Optional.of(ExactCurrencyAmount.of(Double.valueOf(formattedAmount), currency));
     }
 
     /**

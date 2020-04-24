@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.fetcher.loa
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -18,7 +18,7 @@ public class LoanDetailsEntity extends LoanOverviewEntity {
         }
 
         LoanAccount.Builder<?, ?> loanAccountBuilder =
-                LoanAccount.builder(getLoanNumber(), Amount.inEUR(-getBalance()));
+                LoanAccount.builder(getLoanNumber(), ExactCurrencyAmount.inEUR(-getBalance()));
         loanAccountBuilder
                 .setAccountNumber(getLoanNumber())
                 .setName(getLoanName().getFi())

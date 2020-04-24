@@ -6,10 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionDetailsEntity {
@@ -32,7 +31,7 @@ public class TransactionDetailsEntity {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(new Amount(IberCajaConstants.currency, amount))
+                .setAmount(ExactCurrencyAmount.inEUR(amount))
                 .setDate(dateOfTransaction)
                 .setDescription(getDescription())
                 .build();

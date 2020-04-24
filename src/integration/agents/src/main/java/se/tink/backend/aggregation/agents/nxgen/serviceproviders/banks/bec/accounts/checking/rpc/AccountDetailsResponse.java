@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountDetailsResponse {
@@ -97,8 +97,8 @@ public class AccountDetailsResponse {
         return this.notYetDeductedTxt;
     }
 
-    public Amount getTinkMaxAmount() {
-        return new Amount(this.currency, this.maxAmount);
+    public ExactCurrencyAmount getTinkMaxAmount() {
+        return ExactCurrencyAmount.of(this.maxAmount, this.currency);
     }
 
     public boolean isTransactionalAccount() {

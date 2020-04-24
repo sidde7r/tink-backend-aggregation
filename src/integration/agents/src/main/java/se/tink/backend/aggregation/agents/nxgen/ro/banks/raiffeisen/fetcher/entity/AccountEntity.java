@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -26,10 +26,10 @@ public class AccountEntity {
     @JsonProperty("_links")
     private AccountLinksEntity links;
 
-    public Amount toTinkAmount() {
-        return new Amount(
-                balances.get(0).getBalanceAmount().getCurrency(),
-                balances.get(0).getBalanceAmount().getAmount()); // TODO: verify!
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(
+                balances.get(0).getBalanceAmount().getAmount(),
+                balances.get(0).getBalanceAmount().getCurrency());
     }
 
     private String getAccountNumber() {

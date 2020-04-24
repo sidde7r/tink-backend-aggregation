@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
 
@@ -62,8 +62,9 @@ public class IngCreditCardAccountFetcher implements AccountFetcher<CreditCardAcc
                         : IngConstants.CURRENCY;
 
         return CreditCardAccount.builderFromFullNumber(product.getProductNumber())
-                .setAvailableCredit(new Amount(currency, product.getAvailableBalance()))
-                .setBalance(new Amount(currency, product.getSpentAmount()))
+                .setExactAvailableCredit(
+                        ExactCurrencyAmount.of(product.getAvailableBalance(), currency))
+                .setExactBalance(ExactCurrencyAmount.of(product.getSpentAmount(), currency))
                 .setBankIdentifier(product.getUuid())
                 .setHolderName(new HolderName(product.getHolder().getAnyName()))
                 .setName(product.getName())

@@ -7,7 +7,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -74,8 +74,8 @@ public class MastercardAgreementEntity {
                 mastercardEntity ->
                         CreditCardAccount.builder(
                                         constructUniqueIdentifier(),
-                                        Amount.inDKK(balance),
-                                        Amount.inDKK(maxBalance))
+                                        ExactCurrencyAmount.inDKK(balance),
+                                        ExactCurrencyAmount.inDKK(maxBalance))
                                 .setAccountNumber(mastercardEntity.getCardNo())
                                 .setName(mastercardEntity.getCardName())
                                 .setBankIdentifier(constructUniqueIdentifier())

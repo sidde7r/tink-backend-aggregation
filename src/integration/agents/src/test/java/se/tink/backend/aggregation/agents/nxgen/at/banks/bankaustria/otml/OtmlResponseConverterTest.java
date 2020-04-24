@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.Rt
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class OtmlResponseConverterTest {
 
@@ -55,7 +55,8 @@ public class OtmlResponseConverterTest {
     @Test
     public void fillAccountInformation() {
         TransactionalAccount account =
-                CheckingAccount.builder("IBAN", Amount.inEUR(0D))
+                CheckingAccount.builder(
+                                AccountTypes.CHECKING, "IBAN", ExactCurrencyAmount.inEUR(0D))
                         .setAccountNumber("IBAN")
                         .setName("")
                         .setBankIdentifier("accountKey")

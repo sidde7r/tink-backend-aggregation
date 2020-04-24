@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CreditCardEntity {
@@ -44,7 +44,9 @@ public class CreditCardEntity {
 
     public CreditCardAccount toTinkAccount() {
         return CreditCardAccount.builder(
-                        accountNumber, Amount.inSEK(balance), Amount.inSEK(availableCredit))
+                        accountNumber,
+                        ExactCurrencyAmount.inSEK(balance),
+                        ExactCurrencyAmount.inSEK(availableCredit))
                 .setAccountNumber(accountNumber)
                 .setName(name)
                 .putInTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, accountId)
