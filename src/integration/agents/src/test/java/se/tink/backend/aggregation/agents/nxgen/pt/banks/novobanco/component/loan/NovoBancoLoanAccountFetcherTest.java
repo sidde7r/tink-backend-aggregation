@@ -17,8 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.detail.LoanAc
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.fetcher.NovoBancoLoanAccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class NovoBancoLoanAccountFetcherTest {
 
@@ -76,8 +74,7 @@ public class NovoBancoLoanAccountFetcherTest {
         assertTrue(account.isUniqueIdentifierEqual(referenceAccount.getUniqueIdentifier()));
         assertEquals(referenceAccount.getContractId(), account.getDetails().getLoanNumber());
         assertEquals(
-                referenceAccount.getInitialBalance(),
-                getExactCurrencyAmount(account.getDetails().getInitialBalance()));
+                referenceAccount.getInitialBalance(), account.getDetails().getInitialBalance());
         assertEquals(
                 referenceAccount.getInitialDate(),
                 dateToString(account.getDetails().getInitialDate()));
@@ -89,9 +86,5 @@ public class NovoBancoLoanAccountFetcherTest {
 
     private String dateToString(Date date) {
         return new SimpleDateFormat("dd-MM-yyyy").format(date);
-    }
-
-    private ExactCurrencyAmount getExactCurrencyAmount(Amount amount) {
-        return ExactCurrencyAmount.of(amount.toBigDecimal(), amount.getCurrency());
     }
 }

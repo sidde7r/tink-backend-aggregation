@@ -41,10 +41,10 @@ public class LoanResponseTest {
         assertEquals("Perengana García de Cual", applicants.get(1));
 
         assertNotNull(loanAccount.getInterestRate());
-        assertEquals(0.0119, loanAccount.getInterestRate().doubleValue(), 0.00001);
+        assertEquals(0.0119, loanAccount.getInterestRate(), 0.00001);
 
         assertNotNull(loanDetails.getInitialBalance());
-        assertEquals(-170000.00d, loanDetails.getInitialBalance().doubleValue(), 0.001);
+        assertEquals(-170000.00d, loanDetails.getInitialBalance().getDoubleValue(), 0.001);
 
         assertNotNull(loanAccount.getExactBalance());
         assertEquals(-116525.73d, loanAccount.getExactBalance().getDoubleValue(), 0.001);

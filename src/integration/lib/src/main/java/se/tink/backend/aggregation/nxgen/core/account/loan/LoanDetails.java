@@ -85,17 +85,6 @@ public class LoanDetails {
         return null;
     }
 
-    @Deprecated
-    public Amount getMonthlyAmortization() {
-        return Optional.ofNullable(monthlyAmortization)
-                .map(
-                        e ->
-                                new Amount(
-                                        monthlyAmortization.getCurrencyCode(),
-                                        monthlyAmortization.getDoubleValue()))
-                .orElse(null);
-    }
-
     public ExactCurrencyAmount getExactMonthlyAmortization() {
         return monthlyAmortization;
     }
@@ -114,13 +103,13 @@ public class LoanDetails {
         return monthsAmortized != 0 ? amortizedValue / monthsAmortized : 0;
     }
 
-    public Amount getInitialBalance() {
+    public ExactCurrencyAmount getInitialBalance() {
         return Optional.ofNullable(initialBalance)
                 .map(
                         i ->
-                                new Amount(
-                                        initialBalance.getCurrencyCode(),
-                                        initialBalance.getDoubleValue()))
+                                ExactCurrencyAmount.of(
+                                        initialBalance.getDoubleValue(),
+                                        initialBalance.getCurrencyCode()))
                 .orElse(null);
     }
 
@@ -245,13 +234,6 @@ public class LoanDetails {
             this.type = type;
         }
 
-        @Deprecated
-        public Builder setAmortized(Amount amortized) {
-            this.amortized =
-                    ExactCurrencyAmount.of(amortized.toBigDecimal(), amortized.getCurrency());
-            return this;
-        }
-
         public Builder setAmortized(ExactCurrencyAmount amortized) {
             this.amortized = amortized;
             return this;
@@ -276,14 +258,6 @@ public class LoanDetails {
 
         public ExactCurrencyAmount getExactMonthlyAmortization() {
             return monthlyAmortization;
-        }
-
-        @Deprecated
-        public Builder setInitialBalance(Amount initialBalance) {
-            this.initialBalance =
-                    ExactCurrencyAmount.of(
-                            initialBalance.toBigDecimal(), initialBalance.getCurrency());
-            return this;
         }
 
         public Builder setInitialBalance(ExactCurrencyAmount initialBalance) {

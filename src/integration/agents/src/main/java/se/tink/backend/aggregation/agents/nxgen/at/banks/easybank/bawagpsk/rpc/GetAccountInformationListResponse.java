@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class GetAccountInformationListResponse {
@@ -238,13 +237,13 @@ public final class GetAccountInformationListResponse {
                                                                 .getCurrentBalanceEntity()
                                                                 .getCurrency()))
                                         .setCashBalance(
-                                                new Amount(
+                                                ExactCurrencyAmount.of(
                                                         accountInfo
                                                                 .getCurrentBalanceEntity()
-                                                                .getCurrency(),
+                                                                .getAmount(),
                                                         accountInfo
                                                                 .getCurrentBalanceEntity()
-                                                                .getAmount()))
+                                                                .getCurrency()))
                                         .setPortfolios(Collections.emptyList())
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))

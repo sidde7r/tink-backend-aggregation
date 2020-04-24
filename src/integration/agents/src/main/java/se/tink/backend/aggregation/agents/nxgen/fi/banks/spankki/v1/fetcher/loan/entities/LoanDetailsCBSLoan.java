@@ -7,7 +7,7 @@ import java.util.Scanner;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.v1.SpankkiConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class LoanDetailsCBSLoan {
@@ -65,7 +65,7 @@ public class LoanDetailsCBSLoan {
 
         return LoanDetails.builder(getTinkLoanType(loanNameFI))
                 .setLoanNumber(loanDetails.getLoanNumber())
-                .setInitialBalance(new Amount(currency, -withdrawnAmount))
+                .setInitialBalance(ExactCurrencyAmount.of(-withdrawnAmount, currency))
                 .setInitialDate(openingDate)
                 .setNumMonthsBound(getInterestBindingMonths())
                 .build();

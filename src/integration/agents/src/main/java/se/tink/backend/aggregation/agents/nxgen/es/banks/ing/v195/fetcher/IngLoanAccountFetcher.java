@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
@@ -68,12 +67,14 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
     private static LoanDetails mapLoanDetailsForMortgage(Product product) {
         return LoanDetails.builder(LoanDetails.Type.MORTGAGE)
                 .setAmortized(
-                        new Amount(
-                                product.getCurrency(),
-                                product.getInitialAmount() - product.getPendingAmount()))
-                .setInitialBalance(new Amount(product.getCurrency(), product.getInitialAmount()))
+                        ExactCurrencyAmount.of(
+                                product.getInitialAmount() - product.getPendingAmount(),
+                                product.getCurrency()))
+                .setInitialBalance(
+                        ExactCurrencyAmount.of(product.getInitialAmount(), product.getCurrency()))
                 .setMonthlyAmortization(
-                        new Amount(product.getCurrency(), product.getNextPaymentAmount()))
+                        ExactCurrencyAmount.of(
+                                product.getNextPaymentAmount(), product.getCurrency()))
                 .setApplicants(
                         product.getHolders().stream()
                                 .map(Holder::getAnyName)
@@ -87,10 +88,13 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
 
     private static LoanDetails mapLoanDetailsForLoanAccount(Product product) {
         return LoanDetails.builder(LoanDetails.Type.OTHER)
-                .setAmortized(new Amount(product.getCurrency(), product.getPaidAmount()))
-                .setInitialBalance(new Amount(product.getCurrency(), product.getInitialAmount()))
+                .setAmortized(
+                        ExactCurrencyAmount.of(product.getPaidAmount(), product.getCurrency()))
+                .setInitialBalance(
+                        ExactCurrencyAmount.of(product.getInitialAmount(), product.getCurrency()))
                 .setMonthlyAmortization(
-                        new Amount(product.getCurrency(), product.getNextPayOffAmount()))
+                        ExactCurrencyAmount.of(
+                                product.getNextPayOffAmount(), product.getCurrency()))
                 .setApplicants(
                         product.getHolders().stream()
                                 .map(Holder::getAnyName)

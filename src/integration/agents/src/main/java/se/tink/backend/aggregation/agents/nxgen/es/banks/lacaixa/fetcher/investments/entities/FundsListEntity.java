@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.invest
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transac
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FundsListEntity {
@@ -55,7 +56,9 @@ public class FundsListEntity {
                         .setAccountNumber(accountId)
                         .setHolderName(holderName)
                         .setName(investmentName)
-                        .setCashBalance(Amount.valueOf(totalBalance.getCurrency(), 0, 2))
+                        .setCashBalance(
+                                ExactCurrencyAmount.of(
+                                        BigDecimal.valueOf(0, 2), totalBalance.getCurrency()))
                         .setPortfolios(Lists.newArrayList(portfolio))
                         .build());
     }

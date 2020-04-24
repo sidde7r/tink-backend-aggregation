@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class InvestmentAccountEntity {
@@ -39,7 +39,7 @@ public class InvestmentAccountEntity {
 
     public InvestmentAccount toTinkInvestmentAccount() {
         return InvestmentAccount.builder(id)
-                .setCashBalance(new Amount(NordeaFIConstants.CURRENCY, balance))
+                .setCashBalance(ExactCurrencyAmount.of(balance, NordeaFIConstants.CURRENCY))
                 .setBankIdentifier(id)
                 .setAccountNumber(accountNumber)
                 .setName(name)

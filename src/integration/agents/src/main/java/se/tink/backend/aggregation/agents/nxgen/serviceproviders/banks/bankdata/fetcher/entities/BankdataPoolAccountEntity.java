@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BankdataPoolAccountEntity {
@@ -74,7 +75,7 @@ public class BankdataPoolAccountEntity {
         portfolio.setTotalValue(getBalance());
 
         return InvestmentAccount.builder(getAccountNumber())
-                .setCashBalance(new Amount(currency, 0))
+                .setCashBalance(ExactCurrencyAmount.of(0.0, currency))
                 .setAccountNumber(getFormattedAccountNumber())
                 .setBankIdentifier(getAccountNumber())
                 .setName(name)

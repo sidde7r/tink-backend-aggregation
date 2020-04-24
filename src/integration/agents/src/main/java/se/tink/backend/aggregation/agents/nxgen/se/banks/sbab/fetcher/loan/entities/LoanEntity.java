@@ -96,9 +96,9 @@ public class LoanEntity {
     @JsonIgnore
     public LoanDetails toTinkLoanDetails() {
         return LoanDetails.builder(loanType.toTinkLoanType())
-                .setAmortized(Amount.inSEK(initialLoanAmount - currentLoanAmount))
+                .setAmortized(ExactCurrencyAmount.inSEK(initialLoanAmount - currentLoanAmount))
                 .setMonthlyAmortization(Amount.inSEK(loanTerms.getAmortisationAmount()))
-                .setInitialBalance(Amount.inSEK(initialLoanAmount).negate())
+                .setInitialBalance(ExactCurrencyAmount.inSEK(initialLoanAmount).negate())
                 .setInitialDate(disbursementDate)
                 .setLoanNumber(loanNumber)
                 .setNumMonthsBound(loanTerms.getBindingTimeMonths())

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Am
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PortfolioEntity {
@@ -141,7 +141,7 @@ public class PortfolioEntity {
         return InvestmentAccount.builder(id)
                 .setAccountNumber(id)
                 .setName(name)
-                .setCashBalance(Amount.inNOK(0))
+                .setCashBalance(ExactCurrencyAmount.inNOK(0))
                 .setPortfolios(Collections.singletonList(portfolio))
                 .build();
     }

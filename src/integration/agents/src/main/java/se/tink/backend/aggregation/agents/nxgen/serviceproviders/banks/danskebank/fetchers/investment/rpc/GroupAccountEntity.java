@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class GroupAccountEntity {
@@ -43,7 +43,7 @@ public class GroupAccountEntity {
 
     public InvestmentAccount toInvestmentAccount(String currency, List<Portfolio> portfolios) {
         return InvestmentAccount.builder(accountIdentifier)
-                .setCashBalance(new Amount(currency, 0))
+                .setCashBalance(ExactCurrencyAmount.of(0.0, currency))
                 .setAccountNumber(displayAccountIdentifier)
                 .setName(name)
                 .setPortfolios(portfolios)
@@ -52,13 +52,11 @@ public class GroupAccountEntity {
 
     public Portfolio toTinkPortfolio(ListSecuritiesResponse response) {
         Portfolio portfolio = new Portfolio();
-
         portfolio.setTotalValue(response.getMarketValue());
         portfolio.setRawType(type);
         portfolio.setType(getTinkPortfolioType());
         portfolio.setUniqueIdentifier(accountIdentifier);
         portfolio.setTotalProfit(response.getPerformance());
-
         return portfolio;
     }
 

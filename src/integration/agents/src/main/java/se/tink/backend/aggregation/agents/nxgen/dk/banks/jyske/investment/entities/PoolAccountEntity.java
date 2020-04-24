@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PoolAccountEntity {
@@ -31,7 +31,7 @@ public class PoolAccountEntity {
                 InvestmentAccount.builder(uniqueIdentifier)
                         .setAccountNumber(uniqueIdentifier)
                         .setName(name)
-                        .setCashBalance(Amount.inDKK(balance))
+                        .setCashBalance(ExactCurrencyAmount.inDKK(balance))
                         .setPortfolios(Collections.singletonList(toPortfolio(uniqueIdentifier)))
                         .build());
     }

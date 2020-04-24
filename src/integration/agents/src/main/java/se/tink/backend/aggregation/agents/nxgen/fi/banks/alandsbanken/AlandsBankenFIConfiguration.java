@@ -63,7 +63,7 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
         }
 
         return InvestmentAccount.builder(account.getAccountId())
-                .setCashBalance(new Amount(account.getCurrency(), 0))
+                .setCashBalance(ExactCurrencyAmount.of(0.0, account.getCurrency()))
                 .setAccountNumber(account.getBbanFormatted())
                 .setName(account.getAccountNickname())
                 .addIdentifiers(getIdentifiers(account))

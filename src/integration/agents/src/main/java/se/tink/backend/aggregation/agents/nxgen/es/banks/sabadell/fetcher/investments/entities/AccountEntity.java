@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entiti
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -47,7 +47,7 @@ public class AccountEntity {
                 .setAccountNumber(contractNumberFormatted)
                 .setName(alias)
                 .setHolderName(new HolderName(owner))
-                .setCashBalance(Amount.inEUR(0.0))
+                .setCashBalance(ExactCurrencyAmount.inEUR(0.0))
                 .setBankIdentifier(number)
                 .setPortfolios(portfolios)
                 .build();
