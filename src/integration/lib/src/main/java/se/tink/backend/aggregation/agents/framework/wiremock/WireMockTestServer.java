@@ -9,14 +9,16 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
 import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.CompareEntity;
 import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.ErrorDetector;
-import se.tink.backend.aggregation.agents.framework.wiremock.parsing.BodyParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.parsing.BodyParserImpl;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
 import se.tink.libraries.pair.Pair;
@@ -24,18 +26,15 @@ import se.tink.libraries.pair.Pair;
 public class WireMockTestServer {
 
     private final WireMockServer wireMockServer;
-    private final BodyParser bodyParser;
 
-    public WireMockTestServer() {
+    public WireMockTestServer(ImmutableSet<RequestResponseParser> parsers) {
         wireMockServer = new WireMockServer(wireMockConfig().dynamicPort().dynamicHttpsPort());
-        bodyParser = new BodyParserImpl();
         wireMockServer.start();
-    }
-
-    public WireMockTestServer(int httpPort, int httpsPort) {
-        wireMockServer = new WireMockServer(wireMockConfig().port(httpPort).httpsPort(httpsPort));
-        bodyParser = new BodyParserImpl();
-        wireMockServer.start();
+        Map<HTTPRequest, HTTPResponse> registeredPairs = new HashMap<>();
+        parsers.forEach(
+                parser ->
+                        registerRequestResponsePairs(
+                                parser.parseRequestResponsePairs(), registeredPairs));
     }
 
     public int getHttpsPort() {
@@ -44,11 +43,6 @@ public class WireMockTestServer {
 
     public int getHttpPort() {
         return wireMockServer.port();
-    }
-
-    public void prepareMockServer(RequestResponseParser parser) {
-        List<Pair<HTTPRequest, HTTPResponse>> data = parser.parseRequestResponsePairs();
-        buildMockServer(data);
     }
 
     public void shutdown() {
@@ -109,12 +103,11 @@ public class WireMockTestServer {
 
         entity.getHeaderKeysWithDifferentValues()
                 .forEach(
-                        key -> {
-                            errorMessage.append(
-                                    "The header "
-                                            + key
-                                            + " has different values for the request and its closest match\n");
-                        });
+                        key ->
+                                errorMessage.append(
+                                        "The header "
+                                                + key
+                                                + " has different values for the request and its closest match\n"));
 
         if (entity.getMissingBodyKeysInGivenRequest().size() > 0
                 || entity.getBodyKeysWithDifferentValues().size() > 0) {
@@ -136,11 +129,25 @@ public class WireMockTestServer {
         return errorMessage.toString();
     }
 
-    private void buildMockServer(List<Pair<HTTPRequest, HTTPResponse>> pairs) {
+    private void registerRequestResponsePairs(
+            Set<Pair<HTTPRequest, HTTPResponse>> pairs,
+            Map<HTTPRequest, HTTPResponse> registeredPairs) {
         for (Pair<HTTPRequest, HTTPResponse> pair : pairs) {
 
             final HTTPRequest request = pair.first;
             final HTTPResponse response = pair.second;
+
+            // Check if this request has already been registered
+            if (registeredPairs.containsKey(request)
+                    && !registeredPairs.get(request).equals(response)) {
+                throw new RuntimeException(
+                        "There is a conflict for the request with URL = "
+                                + request.getPath()
+                                + " the same request has been already registered with a different response, "
+                                + "please remove the conflict");
+            }
+
+            registeredPairs.put(request, response);
 
             final MappingBuilder builder = parseRequestType(request);
 
@@ -195,6 +202,7 @@ public class WireMockTestServer {
     private void parseRequestBody(final HTTPRequest request, final MappingBuilder builder) {
 
         final Optional<String> requestBody = request.getRequestBody();
+
         if (!requestBody.isPresent()) {
             return; // No body, no parsing needed.
         }
@@ -206,7 +214,7 @@ public class WireMockTestServer {
                                         new IllegalStateException(
                                                 "Could not find or parse Content-Type header in requests when reading mock file. To use WireMock test server each of the requests coming from the agents needs to specify the correct Content-Type."));
 
-        bodyParser
+        new BodyParserImpl()
                 .getStringValuePatterns(requestBody.get(), contentType)
                 .forEach(builder::withRequestBody);
     }

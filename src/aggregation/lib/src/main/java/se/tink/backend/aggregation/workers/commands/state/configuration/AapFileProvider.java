@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.workers.commands.state.configuration;
 
+import java.util.Set;
+
 public interface AapFileProvider {
-    String getAapFilePath(String providerName);
+    Set<String> getAapFilePaths(String providerName);
 }

@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.agents;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Arrays;
-import java.util.List;
+import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPRequest;
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
@@ -16,20 +15,20 @@ public class AapFileParserTest {
     @Test
     public void testParser() throws Exception {
 
-        // Construct the list of expected result
-        final List<Pair<String, String>> expectedRequestHeaders =
-                Arrays.asList(
+        // Construct the set of expected result
+        final ImmutableSet<Pair<String, String>> expectedRequestHeaders =
+                ImmutableSet.of(
                         new Pair<>("Accept", "application/json"),
                         new Pair<>("X-Aggregator", "Tink Testing"));
 
-        final List<Pair<String, String>> expectedResponseHeaders =
-                Arrays.asList(
+        final ImmutableSet<Pair<String, String>> expectedResponseHeaders =
+                ImmutableSet.of(
                         new Pair<>("Content-Type", "application/json;charset=utf-8"),
                         new Pair<>(
                                 "Cache-Control", "private, no-store, no-cache, must-revalidate"));
 
-        List<Pair<HTTPRequest, HTTPResponse>> expectedResult =
-                Arrays.asList(
+        ImmutableSet<Pair<HTTPRequest, HTTPResponse>> expectedResult =
+                ImmutableSet.of(
                         new Pair<>(
                                 new HTTPRequest.Builder(
                                                 "POST",
@@ -56,7 +55,7 @@ public class AapFileParserTest {
                                 new HTTPRequest.Builder(
                                                 "POST",
                                                 "/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener",
-                                                Arrays.asList(
+                                                ImmutableSet.of(
                                                         new Pair<>(
                                                                 "SOAPAction",
                                                                 "https://www.bsan.mobi/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener"),
@@ -67,7 +66,7 @@ public class AapFileParserTest {
                                                 "<v:Envelope xmlns:v=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:d=\"http://www.w3.org/2001/XMLSchema\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"><v:Header /><v:Body><n0:authenticateCredential xmlns:n0=\"http://www.isban.es/webservices/TECHNICAL_FACADES/Security/F_facseg_security/internet/loginServicesNSegSAN/v1\" facade=\"loginServicesNSegSAN\"><CB_AuthenticationData i:type=\":CB_AuthenticationData\"><documento i:type=\":documento\"><CODIGO_DOCUM_PERSONA_CORP i:type=\"d:string\">12345678</CODIGO_DOCUM_PERSONA_CORP><TIPO_DOCUM_PERSONA_CORP i:type=\"d:string\">N</TIPO_DOCUM_PERSONA_CORP></documento><password i:type=\"d:string\">hunter2</password></CB_AuthenticationData><userAddress i:type=\"d:string\">127.0.0.1</userAddress></n0:authenticateCredential></v:Body></v:Envelope>")
                                         .build(),
                                 new HTTPResponse.Builder(
-                                                Arrays.asList(
+                                                ImmutableSet.of(
                                                         new Pair<>(
                                                                 "Content-Type",
                                                                 "text/xml;charset=UTF-8")),
@@ -92,7 +91,7 @@ public class AapFileParserTest {
 
         AapFileParser parser = new AapFileParser(fileContent);
 
-        List<Pair<HTTPRequest, HTTPResponse>> pairs = parser.parseRequestResponsePairs();
+        ImmutableSet<Pair<HTTPRequest, HTTPResponse>> pairs = parser.parseRequestResponsePairs();
         assertThat(pairs).isEqualTo(expectedResult);
     }
 }

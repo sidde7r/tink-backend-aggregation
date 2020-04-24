@@ -37,7 +37,6 @@ Content-Type: application/json;charset=utf-8
 
 {}
 
-
 REQUEST 4
 POST https://aggregation.com/aggregation/controller/v1/system/process/transactions/update
 Accept: application/json
@@ -51,7 +50,6 @@ Content-Type: application/json;charset=utf-8
 
 {}
 
-
 REQUEST 5
 POST https://aggregation.com/aggregation/controller/v1/system/process/transactions/update
 Accept: application/json
@@ -64,7 +62,6 @@ RESPONSE 5
 Content-Type: application/json;charset=utf-8
 
 {}
-
 
 REQUEST 6
 POST https://aggregation.com/aggregation/controller/v1/system/process/transactions/update

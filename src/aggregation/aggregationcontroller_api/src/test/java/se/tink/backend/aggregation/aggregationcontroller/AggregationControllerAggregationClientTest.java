@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.aggregationcontroller;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.sun.jersey.api.client.UniformInterfaceException;
@@ -117,13 +118,13 @@ public final class AggregationControllerAggregationClientTest {
                 Guice.createInjector(new TestModule())
                         .getInstance(AggregationControllerAggregationClientImpl.class);
 
-        server = new WireMockTestServer();
-
-        server.prepareMockServer(
-                new AapFileParser(
-                        new ResourceFileReader()
-                                .read(
-                                        "src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/resources/aggregation_controller_mock_traffic.aap")));
+        server =
+                new WireMockTestServer(
+                        ImmutableSet.of(
+                                new AapFileParser(
+                                        new ResourceFileReader()
+                                                .read(
+                                                        "src/aggregation/aggregationcontroller_api/src/test/java/se/tink/backend/aggregation/aggregationcontroller/resources/aggregation_controller_mock_traffic.aap"))));
 
         hostConfiguration = new HostConfiguration();
         hostConfiguration.setHost("http://localhost:" + server.getHttpPort());

@@ -63,7 +63,7 @@ public class FakeAggregationControllerAggregationClient
     public Response updateTransactionsAsynchronously(
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request) {
         callFakeAggregationController("updateTransactionsAsynchronously", request);
-        return null;
+        return Response.ok().build();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class FakeAggregationControllerAggregationClient
     public Response processAccounts(
             HostConfiguration hostConfiguration, ProcessAccountsRequest request) {
         callFakeAggregationController("processAccounts", request);
-        return null;
+        return Response.ok().build();
     }
 
     @Override
@@ -160,13 +160,13 @@ public class FakeAggregationControllerAggregationClient
     public Response updateCredentials(
             HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
         callFakeAggregationController("updateCredentials", request);
-        return null;
+        return Response.ok().build();
     }
 
     @Override
     public Response updateSignableOperation(
             HostConfiguration hostConfiguration, SignableOperation signableOperation) {
-        throw new UnsupportedOperationException("Not implemented");
+        return Response.ok().build();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class FakeAggregationControllerAggregationClient
             HostConfiguration hostConfiguration, Credentials credentials, String sensitiveData) {
         callFakeAggregationController("updateCredentialSensitive", credentials);
         callFakeAggregationController("updateCredentialSensitiveString", sensitiveData);
-        return null;
+        return Response.ok().build();
     }
 
     @Override
@@ -198,6 +198,6 @@ public class FakeAggregationControllerAggregationClient
     public Response updateIdentity(
             HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
         callFakeAggregationController("updateIdentity", request);
-        return null;
+        return Response.ok().build();
     }
 }

@@ -39,9 +39,11 @@ public final class AgentWireMockPaymentTest {
             List<Payment> paymentList,
             Class<? extends CompositeAgentTestCommandSequence> commandSequence) {
 
-        final WireMockTestServer server = new WireMockTestServer();
-        server.prepareMockServer(
-                new AapFileParser(new ResourceFileReader().read(wireMockFilePath)));
+        final WireMockTestServer server =
+                new WireMockTestServer(
+                        ImmutableSet.of(
+                                new AapFileParser(
+                                        new ResourceFileReader().read(wireMockFilePath))));
 
         final Set<Module> modules =
                 ImmutableSet.of(

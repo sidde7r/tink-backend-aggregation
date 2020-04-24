@@ -1,0 +1,75 @@
+{
+    "signableOperation": {
+        "created": 695260800,
+        "id": "00000000-0000-0000-0000-000000000000",
+        "status": "CREATED",
+        "underlyingId": "00000000-0000-0000-0000-000000000000",
+        "updated": 0,
+        "userId": "00000000-0000-0000-0000-000000000000",
+        "credentialsId": "00000000-0000-0000-0000-000000000000",
+        "signableObject": "{\"id\":\"b900555d-0312-4056-b549-30e1c53c9cac\", \"destinationMessage\": \"UK Demo\", \"amount\": 1.00, \"credentialsId\": \"00000000-0000-0000-0000-000000000000\", \"currency\": \"GBP\", \"destinationUri\": \"sort-code://04000469430924?name=Ritesh%20Tink\", \"sourceUri\": \"sort-code://2314701111111\", \"sourceMessage\": \"UK Demo\", \"userId\": \"00000000-0000-0000-0000-000000000000\", \"type\": \"PAYMENT\", \"dueDate\": 695260800, \"messageType\": \"\", \"payloadSerialized\": \"\", \"remittanceInformation\": {\"reference\": \"UK Demo\"} }"
+    },
+    "update": true,
+    "create": true,
+    "skipRefresh": true,
+    "userDeviceId": "userDeviceId",
+    "callbackUri": "callbackUri",
+    "appUriId": "appUriId",
+    "credentials": {
+        "debugUntil": 695260800,
+        "providerLatency": 0,
+        "id": "00000000-0000-0000-0000-000000000000",
+        "nextUpdate": null,
+        "fields": {},
+        "payload": "",
+        "providerName": "uk-barclays-oauth2",
+        "sessionExpiryDate": null,
+        "status": "CREATED",
+        "statusPayload": "CREATED",
+        "statusPrompt": "",
+        "statusUpdated": "695260800",
+        "supplementalInformation": "",
+        "type": "PASSWORD",
+        "updated": "695260800",
+        "userId": "userId",
+        "dataVersion": 1
+    },
+    "provider": {
+        "accessType": "OPEN_BANKING",
+        "backgroundRefreshEnabled": true,
+        "backgroundRefreshMaxFrequency": 4,
+        "capabilities": [
+            "TRANSFERS"
+        ],
+        "className": "nxgen.uk.openbanking.barclays.BarclaysV31Agent",
+        "credentialsType": "PASSWORD",
+        "displayName": "Barclays",
+        "fields": [],
+        "financialInstitutionId": "0ee1cda5943e4662bb9775c34de291d6",
+        "financialInstitutionName": "Barclays",
+        "groupDisplayName": "",
+        "multiFactor": false,
+        "name": "uk-barclays-oauth2",
+        "passwordhelptext": "Authentication is done on external page",
+        "payload": "tink:barclays",
+        "popular": true,
+        "refreshFrequency": 1,
+        "refreshFrequencyFactor": 1,
+        "status": "ENABLED",
+        "transactional": true,
+        "type": "BANK",
+        "currency": "GBP",
+        "market": "UK"
+    },
+    "user": {
+        "flags": [],
+        "flagsSerialized": "[]",
+        "id": "00000000-0000-0000-0000-000000000000",
+        "profile": {
+            "locale": "en_US"
+        },
+        "username": "username",
+        "debugUntil": 695260800
+    },
+    "accounts": []
+}

@@ -11,6 +11,7 @@ import static se.tink.backend.aggregation.service.SystemTestUtils.pollForAllCall
 import static se.tink.backend.aggregation.service.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
 import static se.tink.backend.aggregation.service.SystemTestUtils.readRequestBodyFromFile;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +37,10 @@ public class SystemTest {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static AgentContractEntitiesJsonFileParser contractParser =
             new AgentContractEntitiesJsonFileParser();
+
+    private static final String aggregationControllerEndpoint =
+            String.format(
+                    "http://%s:%d/data", AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT);
 
     @Before
     public void resetFakeAggregationControllerCache() throws Exception {
@@ -73,83 +78,76 @@ public class SystemTest {
                         "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body_for_amex.json");
 
         // when
-        ResponseEntity<String> authenticationCallResult =
+        ResponseEntity<String> authenticateEndpointCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/authenticate",
                                 APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
                         requestBodyForAuthenticateEndpoint);
 
-        Optional<String> updateCredentialsCallback =
+        Optional<String> finalStatusForCredentials =
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         String.format(
                                 "http://%s:%d/data",
                                 AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
 
         // then
-        Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
-        Assert.assertTrue(updateCredentialsCallback.isPresent());
-        Assert.assertEquals("UPDATED", updateCredentialsCallback.get());
+        Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
+        Assert.assertTrue(finalStatusForCredentials.isPresent());
+        Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
     }
 
     @Test
     public void getAuthenticateForBarclaysShouldSetCredentialsStatusUpdated() throws Exception {
-
         // given
         String requestBodyForAuthenticateEndpoint =
                 readRequestBodyFromFile(
                         "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body_for_barclays.json");
 
         // when
-        ResponseEntity<String> authenticationCallResult =
+        ResponseEntity<String> authenticateEndpointCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/authenticate",
                                 APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
                         requestBodyForAuthenticateEndpoint);
 
-        Optional<String> updateCredentialsCallback =
+        Optional<String> finalStatusForCredentials =
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         String.format(
                                 "http://%s:%d/data",
                                 AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
 
         // then
-        Assert.assertEquals(204, authenticationCallResult.getStatusCodeValue());
-        Assert.assertTrue(updateCredentialsCallback.isPresent());
-        Assert.assertEquals("UPDATED", updateCredentialsCallback.get());
+        Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
+        Assert.assertTrue(finalStatusForCredentials.isPresent());
+        Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
     }
 
     @Test
     public void getRefreshShouldUploadEntitiesForAmex() throws Exception {
         // given
-        AgentContractEntity expected =
+        AgentContractEntity expectedBankEntities =
                 contractParser.parseContractOnBasisOfFile(
                         "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities_for_amex.json");
 
-        List<Map<String, Object>> expectedTransactions = expected.getTransactions();
-        List<Map<String, Object>> expectedAccounts = expected.getAccounts();
+        List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
+        List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
         Map<String, Object> expectedIdentityData =
-                expected.getIdentityData().orElseGet(Collections::emptyMap);
+                expectedBankEntities.getIdentityData().orElseGet(Collections::emptyMap);
 
         String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(
                         "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body_for_amex.json");
 
-        String aggregationControllerEndpoint =
-                String.format(
-                        "http://%s:%d/data",
-                        AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT);
-
         // when
-        ResponseEntity<String> refreshCallResult =
+        ResponseEntity<String> refreshEndpointCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/refresh",
                                 APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
                         requestBodyForRefreshEndpoint);
 
-        // Why I need "?"
         List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
@@ -169,16 +167,13 @@ public class SystemTest {
                                 aggregationControllerEndpoint, "updateIdentity", 100, 1));
 
         // then
-        Assert.assertEquals(204, refreshCallResult.getStatusCodeValue());
-
+        Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedTransactions, givenTransactions));
-
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedAccounts, givenAccounts));
-
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         Collections.singletonList(expectedIdentityData),
@@ -188,33 +183,27 @@ public class SystemTest {
     @Test
     public void getRefreshShouldUploadEntitiesForBarclays() throws Exception {
         // given
-        AgentContractEntity expected =
+        AgentContractEntity expectedBankEntities =
                 contractParser.parseContractOnBasisOfFile(
                         "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities_for_barclays.json");
 
-        List<Map<String, Object>> expectedTransactions = expected.getTransactions();
-        List<Map<String, Object>> expectedAccounts = expected.getAccounts();
+        List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
+        List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
         Map<String, Object> expectedIdentityData =
-                expected.getIdentityData().orElseGet(Collections::emptyMap);
+                expectedBankEntities.getIdentityData().orElseGet(Collections::emptyMap);
 
         String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(
                         "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body_for_barclays.json");
 
-        String aggregationControllerEndpoint =
-                String.format(
-                        "http://%s:%d/data",
-                        AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT);
-
         // when
-        ResponseEntity<String> refreshCallResult =
+        ResponseEntity<String> refreshEndpointCallResult =
                 makePostRequest(
                         String.format(
                                 "http://%s:%d/aggregation/refresh",
                                 APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
                         requestBodyForRefreshEndpoint);
 
-        // Why I need "?"
         List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
@@ -229,14 +218,46 @@ public class SystemTest {
                                 1));
 
         // then
-        Assert.assertEquals(204, refreshCallResult.getStatusCodeValue());
-
+        Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedTransactions, givenTransactions));
-
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedAccounts, givenAccounts));
+    }
+
+    @Test
+    public void getTransferShouldExecuteAPaymentForBarclays() throws Exception {
+        // given
+        String requestBodyForTransferEndpoint =
+                readRequestBodyFromFile(
+                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/transfer_request_body_for_barclays.json");
+
+        // when
+        ResponseEntity<String> transferEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/transfer",
+                                APP_UNDER_TEST_HOST, APP_UNDER_TEST_PORT),
+                        requestBodyForTransferEndpoint);
+
+        Optional<String> finalStatusForCredentials =
+                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+                        String.format(
+                                "http://%s:%d/data",
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+
+        List<JsonNode> credentialsCallbacks =
+                pollForAllCallbacksForAnEndpoint(
+                        aggregationControllerEndpoint, "updateCredentials", 100, 1);
+        JsonNode lastCallbackForCredentials =
+                credentialsCallbacks.get(credentialsCallbacks.size() - 1);
+
+        // then
+        Assert.assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        Assert.assertTrue(finalStatusForCredentials.isPresent());
+        Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
+        Assert.assertEquals("TRANSFER", lastCallbackForCredentials.get("requestType").asText());
     }
 }

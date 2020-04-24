@@ -13,5 +13,6 @@ java_library(
         "//third_party:lombok_libs",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

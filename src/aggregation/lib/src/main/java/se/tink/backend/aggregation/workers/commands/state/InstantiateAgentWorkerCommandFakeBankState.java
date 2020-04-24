@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands.state;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.workers.commands.state.configuration.AapFileProvider;
 
@@ -38,11 +40,13 @@ public class InstantiateAgentWorkerCommandFakeBankState
 
     @Override
     public void doRightBeforeInstantiation(String providerName) {
-        server = new WireMockTestServer();
+        ImmutableSet<RequestResponseParser> parsers =
+                fakeBankAapFileMapper.getAapFilePaths(providerName).stream()
+                        .map(filePath -> new AapFileParser(new ResourceFileReader().read(filePath)))
+                        .collect(ImmutableSet.toImmutableSet());
+
+        server = new WireMockTestServer(parsers);
         fakeBankSocket.set("localhost:" + server.getHttpsPort());
-        String fakeBankAapFilePath = fakeBankAapFileMapper.getAapFilePath(providerName);
-        server.prepareMockServer(
-                new AapFileParser(new ResourceFileReader().read(fakeBankAapFilePath)));
     }
 
     @Override

@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
+import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -34,16 +35,22 @@ public final class AgentWireMockRefreshTest {
     private AgentWireMockRefreshTest(
             MarketCode marketCode,
             String providerName,
-            String wireMockFilePath,
+            Set<String> wireMockFilePaths,
             AgentsServiceConfiguration configuration,
             Map<String, String> loginDetails,
             Map<String, String> callbackData,
             Module agentModule,
             Set<RefreshableItem> refreshableItems) {
 
-        server = new WireMockTestServer();
-        server.prepareMockServer(
-                new AapFileParser(new ResourceFileReader().read(wireMockFilePath)));
+        ImmutableSet<RequestResponseParser> parsers =
+                wireMockFilePaths.stream()
+                        .map(
+                                wireMockFilePath ->
+                                        new AapFileParser(
+                                                new ResourceFileReader().read(wireMockFilePath)))
+                        .collect(ImmutableSet.toImmutableSet());
+
+        server = new WireMockTestServer(parsers);
 
         final Set<Module> modules =
                 ImmutableSet.of(
@@ -116,7 +123,7 @@ public final class AgentWireMockRefreshTest {
 
         private final MarketCode market;
         private final String providerName;
-        private final String wireMockFilePath;
+        private final Set<String> wireMockFilePaths;
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
         private final Set<RefreshableItem> refreshableItems;
@@ -127,7 +134,7 @@ public final class AgentWireMockRefreshTest {
         private Builder(MarketCode market, String providerName, String wireMockFilePath) {
             this.market = market;
             this.providerName = providerName;
-            this.wireMockFilePath = wireMockFilePath;
+            this.wireMockFilePaths = new HashSet<>(Collections.singleton(wireMockFilePath));
             this.configuration = new AgentsServiceConfiguration();
             this.credentialFields = new HashMap<>();
             this.callbackData = new HashMap<>();
@@ -203,6 +210,19 @@ public final class AgentWireMockRefreshTest {
             return this;
         }
 
+        /**
+         * Add AAP file to be used.
+         *
+         * <p>Can be called multiple times to add several files.
+         *
+         * @param items AAP file to be used.
+         * @return This builder.
+         */
+        public Builder addAnotherWireMockFile(String wireMockFilePath) {
+            this.wireMockFilePaths.add(wireMockFilePath);
+            return this;
+        }
+
         public AgentWireMockRefreshTest build() {
             if (refreshableItems.isEmpty()) {
                 refreshableItems.addAll(
@@ -212,7 +232,7 @@ public final class AgentWireMockRefreshTest {
             return new AgentWireMockRefreshTest(
                     market,
                     providerName,
-                    wireMockFilePath,
+                    wireMockFilePaths,
                     configuration,
                     credentialFields,
                     callbackData,
