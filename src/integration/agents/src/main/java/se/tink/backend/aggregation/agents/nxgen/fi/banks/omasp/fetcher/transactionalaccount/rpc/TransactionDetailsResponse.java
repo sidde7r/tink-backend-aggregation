@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.entities.DateEnti
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.rpc.OmaspBaseResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionDetailsResponse extends OmaspBaseResponse {
@@ -25,7 +25,7 @@ public class TransactionDetailsResponse extends OmaspBaseResponse {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(sum.getValue()))
+                .setAmount(ExactCurrencyAmount.inEUR(sum.getValue()))
                 .setDate(entryDate.getValue())
                 .setDescription(message)
                 .build();

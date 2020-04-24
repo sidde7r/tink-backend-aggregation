@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.entity.InstructedAmountResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -33,7 +33,8 @@ public class FetchPaymentResponse {
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
-                        .withAmount(Amount.inEUR(instructedAmount.getAmount()))
+                        .withExactCurrencyAmount(
+                                ExactCurrencyAmount.inEUR(instructedAmount.getAmount()))
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(

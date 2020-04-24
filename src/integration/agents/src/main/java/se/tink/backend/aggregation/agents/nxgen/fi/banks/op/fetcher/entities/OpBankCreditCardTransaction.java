@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
@@ -26,7 +26,7 @@ public class OpBankCreditCardTransaction {
     public CreditCardTransaction toTinkCreditCardTransaction(CreditCardAccount account) {
         return CreditCardTransaction.builder()
                 .setDate(getTransactionDateParsed())
-                .setAmount(amountToAmount())
+                .setAmount(ExactCurrencyAmount.inEUR(AgentParsingUtils.parseAmount(amount)))
                 .setDescription(getDescription())
                 .setCreditAccount(account)
                 .build();
@@ -42,22 +42,17 @@ public class OpBankCreditCardTransaction {
     }
 
     @JsonIgnore
-    public Amount amountToAmount() {
-        return Amount.inEUR(AgentParsingUtils.parseAmount(amount));
-    }
-
-    @JsonIgnore
     public boolean isValidTransaction() {
         return transactionDate != null && amount != null && explanation != null;
     }
 
     @JsonIgnore
     public boolean isDuplicateTransaction(List<OpBankCreditCardTransaction> processedTransactions) {
-        return processedTransactions.stream().anyMatch(transaction -> this.equals(transaction));
+        return processedTransactions.stream().anyMatch(this::equals);
     }
 
     @JsonIgnore
-    public Date getTransactionDateParsed() {
+    private Date getTransactionDateParsed() {
         try {
             return ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.parse(transactionDate);
         } catch (ParseException e) {

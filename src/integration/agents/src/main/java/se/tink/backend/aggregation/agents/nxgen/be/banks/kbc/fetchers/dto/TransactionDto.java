@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTup
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionDto {
@@ -58,7 +58,7 @@ public class TransactionDto {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(Double.valueOf(amount.getValue())))
+                .setAmount(ExactCurrencyAmount.inEUR(Double.parseDouble(amount.getValue())))
                 .setDescription(descriptionLine01.getValue())
                 .setRawDetails(getRawDetails())
                 .setDate(parseTransactionDate())

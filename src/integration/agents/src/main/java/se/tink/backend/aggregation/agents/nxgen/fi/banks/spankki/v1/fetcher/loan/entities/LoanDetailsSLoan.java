@@ -34,7 +34,7 @@ public class LoanDetailsSLoan {
     }
 
     @JsonIgnore
-    public Date getBeginDateParsed() {
+    private Date getBeginDateParsed() {
         try {
             return ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITH_TIMEZONE.parse(beginDate);
         } catch (ParseException pe) {

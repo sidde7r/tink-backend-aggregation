@@ -27,6 +27,7 @@ public class PoolAccountEntity {
             return Optional.empty();
         }
         String uniqueIdentifier = IdEntity.createUniqueIdentifier(id);
+
         return Optional.of(
                 InvestmentAccount.builder(uniqueIdentifier)
                         .setAccountNumber(uniqueIdentifier)

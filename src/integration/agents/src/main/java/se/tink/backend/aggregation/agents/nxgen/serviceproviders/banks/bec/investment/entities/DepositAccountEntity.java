@@ -4,7 +4,6 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -58,10 +57,6 @@ public class DepositAccountEntity {
 
     public String getUrlDetail() {
         return urlDetail;
-    }
-
-    private Amount toTinkAmount() {
-        return Amount.inDKK(getMarketValue());
     }
 
     public InvestmentAccount toTinkInvestmentAccount(List<Portfolio> portfolios) {

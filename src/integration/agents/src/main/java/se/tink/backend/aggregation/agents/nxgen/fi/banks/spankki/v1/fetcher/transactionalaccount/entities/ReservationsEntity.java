@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
@@ -26,7 +26,7 @@ public class ReservationsEntity {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(amount))
+                .setAmount(ExactCurrencyAmount.inEUR(amount))
                 .setDate(dateParsed())
                 .setDescription(sourceName)
                 .setPending(true)

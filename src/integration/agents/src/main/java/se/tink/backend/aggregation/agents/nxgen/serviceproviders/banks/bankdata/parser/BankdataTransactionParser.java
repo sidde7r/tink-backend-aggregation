@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataTransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BankdataTransactionParser {
 
@@ -16,7 +16,7 @@ public class BankdataTransactionParser {
         return Transaction.builder()
                 .setDescription(bankdataTransaction.getText())
                 .setDate(parseDate(bankdataTransaction.getTransactionDate()))
-                .setAmount(Amount.inDKK(bankdataTransaction.getMainAmount()))
+                .setAmount(ExactCurrencyAmount.inDKK(bankdataTransaction.getMainAmount()))
                 .build();
     }
 
@@ -25,7 +25,7 @@ public class BankdataTransactionParser {
         return UpcomingTransaction.builder()
                 .setDescription(bankdataTransaction.getText())
                 .setDate(parseDate(bankdataTransaction.getTransactionDate()))
-                .setAmount(Amount.inDKK(bankdataTransaction.getMainAmount()))
+                .setAmount(ExactCurrencyAmount.inDKK(bankdataTransaction.getMainAmount()))
                 .build();
     }
 

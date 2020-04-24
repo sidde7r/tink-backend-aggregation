@@ -83,7 +83,8 @@ public class PensionEntity {
                 .setName(displayName)
                 .setHolderName(getHolderName())
                 .setPortfolios(getPortfolio())
-                .setCashBalance(ExactCurrencyAmount.inSEK(0.0))
+                .setCashBalance(
+                        ExactCurrencyAmount.inSEK(0.0)) // Amount is set in framework from parts.
                 .build();
     }
 

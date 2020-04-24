@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject
@@ -112,7 +112,7 @@ public class TransactionEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDescription(getTinkDescription())
-                .setAmount(Amount.inEUR(IngHelper.parseAmountStringToDouble(amount)))
+                .setAmount(ExactCurrencyAmount.inEUR(IngHelper.parseAmountStringToDouble(amount)))
                 .setDate(DateUtils.parseDate(postingDate))
                 .setRawDetails(getRawDetails())
                 .build();
