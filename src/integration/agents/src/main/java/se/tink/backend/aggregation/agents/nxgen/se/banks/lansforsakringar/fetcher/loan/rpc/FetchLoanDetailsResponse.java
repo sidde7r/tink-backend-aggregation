@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.LoanModule;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
@@ -103,8 +102,7 @@ public class FetchLoanDetailsResponse {
         } else if (loanName.toLowerCase().contains("bolån")) {
             return Type.MORTGAGE;
         } else {
-            log.infoExtraLong(
-                    SerializationUtils.serializeToString(this), LogTags.UNKNOWN_LOAN_TYPE);
+            log.infoExtraLong("Found new unknown entity", LogTags.UNKNOWN_LOAN_TYPE);
             return Type.OTHER;
         }
     }

@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetche
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class LansforsakringarInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
@@ -40,9 +39,7 @@ public class LansforsakringarInvestmentFetcher implements AccountFetcher<Investm
         if (!pensionResponse.getIpsPensionsResponseModel().isEmpty()
                 || !pensionResponse.getLivPensionsResponseModel().isPrivatPensionsEmpty()
                 || !pensionResponse.getLivPensionsResponseModel().isCapitalInsurancesEmpty()) {
-            log.infoExtraLong(
-                    SerializationUtils.serializeToString(pensionResponse),
-                    LogTags.UNKNOWN_PENSION_TYPE);
+            log.infoExtraLong("Found new unknown entity", LogTags.UNKNOWN_PENSION_TYPE);
         }
 
         return investmentAccounts;
