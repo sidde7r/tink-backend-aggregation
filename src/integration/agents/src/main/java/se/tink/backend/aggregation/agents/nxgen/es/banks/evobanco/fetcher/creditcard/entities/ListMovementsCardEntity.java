@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class ListMovementsCardEntity {
@@ -122,7 +122,9 @@ public class ListMovementsCardEntity {
 
     public CreditCardTransaction toTinkTransaction() {
         return new CreditCardTransaction.Builder()
-                .setAmount(Amount.inEUR(AgentParsingUtils.parseAmount(getTransactionAmount())))
+                .setAmount(
+                        ExactCurrencyAmount.inEUR(
+                                AgentParsingUtils.parseAmount(getTransactionAmount())))
                 .setDateTime(getZonedDateTime())
                 .setDescription(getDescription())
                 .build();

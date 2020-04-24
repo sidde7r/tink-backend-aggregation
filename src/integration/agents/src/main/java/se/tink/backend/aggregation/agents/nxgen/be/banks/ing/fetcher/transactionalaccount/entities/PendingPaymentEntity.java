@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject
@@ -132,7 +132,7 @@ public class PendingPaymentEntity {
 
     public UpcomingTransaction toTinkUpcomingTransaction() {
         return UpcomingTransaction.builder()
-                .setAmount(Amount.inEUR(IngHelper.parseAmountStringToDouble(amount)))
+                .setAmount(ExactCurrencyAmount.inEUR(IngHelper.parseAmountStringToDouble(amount)))
                 .setDate(DateUtils.parseDate(executionDate))
                 .setDescription(beneficiaryName)
                 .setRawDetails(getRawDetails())

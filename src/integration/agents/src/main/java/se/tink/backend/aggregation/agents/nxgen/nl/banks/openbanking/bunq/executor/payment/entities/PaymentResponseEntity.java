@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.entities;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.enums.BunqPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
@@ -22,7 +24,7 @@ public class PaymentResponseEntity {
             return Collections.emptyList();
         }
 
-        return entries.stream().map(e -> toTinkPaymentResponse(e)).collect(Collectors.toList());
+        return entries.stream().map(this::toTinkPaymentResponse).collect(Collectors.toList());
     }
 
     public PaymentResponse toTinkPaymentResponse() {
@@ -35,21 +37,15 @@ public class PaymentResponseEntity {
     }
 
     private PaymentResponse toTinkPaymentResponse(EntryEntity entry) {
-
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(entry.toTinkCreditor())
                         .withDebtor(entry.toTinkDebtor())
-                        .withAmount(
-                                Amount.valueOf(
-                                        entry.getAmount().getCurrency(),
-                                        Double.valueOf(
-                                                        Double.parseDouble(
-                                                                        entry.getAmount()
-                                                                                .getValue())
-                                                                * 100)
-                                                .longValue(),
-                                        2))
+                        .withExactCurrencyAmount(
+                                ExactCurrencyAmount.of(
+                                        new BigDecimal(entry.getAmount().getValue())
+                                                .setScale(2, RoundingMode.DOWN),
+                                        entry.getAmount().getCurrency()))
                         .withExecutionDate(null)
                         .withCurrency(entry.getAmount().getCurrency())
                         .withUniqueId(id)

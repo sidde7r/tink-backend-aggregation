@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.TransferType;
 
 @JsonObject
@@ -107,7 +107,7 @@ public class UpcomingTransactionEntity {
         return UpcomingTransaction.builder()
                 .setDescription(recipientName)
                 .setDate(dueDate)
-                .setAmount(Amount.inSEK(-1.0 * amount))
+                .setAmount(ExactCurrencyAmount.inSEK(-1.0 * amount))
                 .build();
     }
 

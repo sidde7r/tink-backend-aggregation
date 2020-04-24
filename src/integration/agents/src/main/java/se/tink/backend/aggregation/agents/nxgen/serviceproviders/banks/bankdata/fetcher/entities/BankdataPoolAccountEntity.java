@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -39,10 +38,6 @@ public class BankdataPoolAccountEntity {
 
     public boolean isKnownType() {
         return BankdataConstants.POOLACCOUNT_TYPES.containsKey(type.toLowerCase());
-    }
-
-    private Amount getBalanceAsAmount() {
-        return Amount.inDKK(unsettledValue);
     }
 
     private double getBalance() {

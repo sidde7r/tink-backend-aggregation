@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class CreditCardTransactionEntity {
@@ -16,7 +16,7 @@ public class CreditCardTransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(totalAmount))
+                .setAmount(ExactCurrencyAmount.inEUR(totalAmount))
                 .setDescription(createDescription())
                 .setDate(transactionDate)
                 .build();

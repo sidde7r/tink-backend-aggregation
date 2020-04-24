@@ -5,7 +5,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class HandelsbankenFITransaction extends BaseResponse {
 
@@ -17,7 +17,7 @@ public class HandelsbankenFITransaction extends BaseResponse {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(amount.asDouble()))
+                .setAmount(ExactCurrencyAmount.inEUR(amount.asDouble()))
                 .setDate(bookingDate)
                 .setDescription(reference)
                 .build();

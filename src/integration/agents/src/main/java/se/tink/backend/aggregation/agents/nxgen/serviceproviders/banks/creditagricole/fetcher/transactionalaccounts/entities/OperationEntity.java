@@ -6,7 +6,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class OperationEntity {
@@ -34,7 +34,7 @@ public class OperationEntity {
         }
 
         return Transaction.builder()
-                .setAmount(Amount.inEUR(amount))
+                .setAmount(ExactCurrencyAmount.inEUR(amount))
                 .setDate(parsedDate)
                 .setDescription(label)
                 .setRawDetails(this)

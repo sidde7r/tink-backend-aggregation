@@ -2,11 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.CaisseEpargneConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JacksonXmlRootElement(localName = "HistoCptEntity")
@@ -41,21 +42,21 @@ public class TransactionEntity {
         Transaction.Builder builder =
                 Transaction.builder()
                         .setDate(LocalDateTime.parse(date).toLocalDate())
-                        .setAmount(this.getAmount())
+                        .setAmount(getExactCurrencyAmount())
                         .setDescription(description);
 
         return builder.build();
     }
 
-    private Amount getAmount() {
+    private ExactCurrencyAmount getExactCurrencyAmount() {
         // Seems odd/reversed...
         if (CaisseEpargneConstants.ResponseValue.TRANSACTION_TYPE_INCOME.equalsIgnoreCase(
                 codeTypeWritten)) {
             // Revenus (income)
-            return Amount.valueOf(currency, -unscaledAmount, 2);
+            return ExactCurrencyAmount.of(BigDecimal.valueOf(-unscaledAmount, 2), currency);
         } else {
             // Dépenses (spending)
-            return Amount.valueOf(currency, unscaledAmount, 2);
+            return ExactCurrencyAmount.of(BigDecimal.valueOf(unscaledAmount, 2), currency);
         }
     }
 }

@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.entities.CreditorAddress;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.entities.InstructedAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.executor.payment.enums.TargobankPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -23,12 +25,10 @@ public class GetPaymentResponse {
 
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse(PaymentType type, String uniqueId) {
-        Amount amount =
-                Amount.valueOf(
-                        instructedAmount.getCurrency(),
-                        Double.valueOf(Double.parseDouble(instructedAmount.getAmount()) * 100)
-                                .longValue(),
-                        2);
+        ExactCurrencyAmount exactCurrencyAmount =
+                ExactCurrencyAmount.of(
+                        new BigDecimal(instructedAmount.getAmount()).setScale(2, RoundingMode.DOWN),
+                        instructedAmount.getCurrency());
 
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
@@ -37,7 +37,7 @@ public class GetPaymentResponse {
                         .withStatus(
                                 TargobankPaymentStatus.mapToTinkPaymentStatus(
                                         TargobankPaymentStatus.fromString(transactionStatus)))
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(exactCurrencyAmount)
                         .withType(type)
                         .withCurrency(instructedAmount.getCurrency())
                         .withUniqueId(uniqueId);

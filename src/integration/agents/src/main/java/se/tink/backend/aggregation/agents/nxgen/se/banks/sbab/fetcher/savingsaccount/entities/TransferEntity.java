@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransferEntity {
@@ -98,19 +98,18 @@ public class TransferEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
-        final Amount tinkAmount;
+        final ExactCurrencyAmount tinkAmount;
 
         switch (type) {
             case DEPOSIT:
             case INTEREST_RATE:
-                tinkAmount = Amount.inSEK(amount);
+                tinkAmount = ExactCurrencyAmount.inSEK(amount);
                 break;
             case WITHDRAWAL:
             case OTHER:
-                tinkAmount = Amount.inSEK(amount).negate();
-                break;
             default:
-                tinkAmount = Amount.inSEK(amount).negate();
+                tinkAmount = ExactCurrencyAmount.inSEK(amount).negate();
+                break;
         }
 
         return Transaction.builder()

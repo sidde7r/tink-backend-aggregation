@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsacc
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -94,10 +93,11 @@ public class LoanEntity {
     }
 
     @JsonIgnore
-    public LoanDetails toTinkLoanDetails() {
+    private LoanDetails toTinkLoanDetails() {
         return LoanDetails.builder(loanType.toTinkLoanType())
                 .setAmortized(ExactCurrencyAmount.inSEK(initialLoanAmount - currentLoanAmount))
-                .setMonthlyAmortization(Amount.inSEK(loanTerms.getAmortisationAmount()))
+                .setMonthlyAmortization(
+                        ExactCurrencyAmount.inSEK(loanTerms.getAmortisationAmount()))
                 .setInitialBalance(ExactCurrencyAmount.inSEK(initialLoanAmount).negate())
                 .setInitialDate(disbursementDate)
                 .setLoanNumber(loanNumber)

@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionsEntity {
@@ -35,7 +35,7 @@ public class TransactionsEntity {
         return Transaction.builder()
                 .setDate(bookingDate)
                 .setDescription(getDescription())
-                .setAmount(Amount.inEUR(amount))
+                .setAmount(ExactCurrencyAmount.inEUR(amount))
                 .build();
     }
 }

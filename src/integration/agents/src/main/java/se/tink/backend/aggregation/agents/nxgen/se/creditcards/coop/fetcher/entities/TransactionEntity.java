@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject
@@ -29,7 +29,7 @@ public class TransactionEntity {
 
         return Optional.of(
                 Transaction.builder()
-                        .setAmount(Amount.inSEK(amount))
+                        .setAmount(ExactCurrencyAmount.inSEK(amount))
                         .setDescription(text)
                         .setDate(getTransactionDate())
                         .build());
@@ -41,7 +41,7 @@ public class TransactionEntity {
             return null;
         }
 
-        String dateStringWithoutTimeZone = date.substring(0, date.indexOf("+"));
+        String dateStringWithoutTimeZone = date.substring(0, date.indexOf('+'));
         String dateStringInMillis = dateStringWithoutTimeZone.replaceAll("[^0-9]", "");
 
         Date date = new Date(Long.parseLong(dateStringInMillis));

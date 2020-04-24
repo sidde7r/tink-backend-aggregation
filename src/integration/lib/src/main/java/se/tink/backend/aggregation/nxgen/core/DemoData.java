@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.enums.SwedishGiroType;
@@ -60,7 +61,7 @@ public class DemoData {
 
             Transaction updatedTransaction =
                     Transaction.builder()
-                            .setAmount(Amount.inSEK(randAmount))
+                            .setAmount(ExactCurrencyAmount.inSEK(randAmount))
                             .setDate(t.getDate())
                             .setDescription(t.getDescription())
                             .setPending(t.isPending())
@@ -91,7 +92,8 @@ public class DemoData {
                 continue;
             }
 
-            final Amount amount = Amount.inSEK(StringUtils.parseAmount(txFields.get(2)));
+            final ExactCurrencyAmount amount =
+                    ExactCurrencyAmount.inSEK(StringUtils.parseAmount(txFields.get(2)));
             final String description = txFields.get(1);
             final boolean pending = txFields.size() > 4 && Boolean.getBoolean(txFields.get(4));
 
@@ -160,7 +162,9 @@ public class DemoData {
 
             UpcomingTransaction upcomingTransaction =
                     UpcomingTransaction.builder()
-                            .setAmount(Amount.inSEK(StringUtils.parseAmount(txFields.get(2))))
+                            .setAmount(
+                                    ExactCurrencyAmount.inSEK(
+                                            StringUtils.parseAmount(txFields.get(2))))
                             .setDate(DateUtils.flattenTime(transactionDate))
                             .setDescription(description)
                             .setUpcomingTransfer(upcomingTransfer)
@@ -172,7 +176,7 @@ public class DemoData {
         return upcomingTransactions;
     }
 
-    public static Transfer createFakeTransfer(
+    private static Transfer createFakeTransfer(
             String name,
             String ocr,
             double amount,

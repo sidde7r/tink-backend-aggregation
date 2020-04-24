@@ -16,6 +16,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
@@ -271,7 +272,7 @@ public class PaymentEntity {
         return UpcomingTransaction.builder()
                 .setDescription(getDestinationName())
                 .setDate(due)
-                .setAmount(Amount.inSEK(-1.0 * amount))
+                .setAmount(ExactCurrencyAmount.inSEK(-1.0 * amount))
                 .build();
     }
 

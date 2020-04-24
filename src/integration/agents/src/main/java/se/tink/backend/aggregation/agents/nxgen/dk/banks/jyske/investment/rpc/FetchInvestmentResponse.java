@@ -42,8 +42,8 @@ public class FetchInvestmentResponse {
                                         .setPortfolios(
                                                 holdingOption
                                                         .map(
-                                                                holding ->
-                                                                        holding.toPortfolio(
+                                                                holdingEntity ->
+                                                                        holdingEntity.toPortfolio(
                                                                                 custodyAccount))
                                                         .map(Collections::singletonList)
                                                         .orElseGet(Collections::emptyList))

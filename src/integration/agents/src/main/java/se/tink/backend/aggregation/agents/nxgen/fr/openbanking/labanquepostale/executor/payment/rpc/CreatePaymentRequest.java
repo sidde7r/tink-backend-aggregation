@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.e
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -70,18 +71,18 @@ public class CreatePaymentRequest {
         InstructedAmountEntity instructedAmount =
                 creditTransferTransactionEntity.getInstructedAmount();
 
-        Amount amount =
-                Amount.valueOf(
-                        instructedAmount.getCurrency(),
-                        Double.valueOf(instructedAmount.getAmount() * 100).longValue(),
-                        2);
+        ExactCurrencyAmount amount =
+                ExactCurrencyAmount.of(
+                        BigDecimal.valueOf(
+                                Double.valueOf(instructedAmount.getAmount() * 100).longValue(), 2),
+                        instructedAmount.getCurrency());
 
         return new PaymentResponse(
                 new Payment.Builder()
                         .withExecutionDate(executionDate)
                         .withCreditor(new Creditor(new IbanIdentifier(creditorAccount.getIban())))
-                        .withAmount(amount)
-                        .withCurrency(amount.getCurrency())
+                        .withExactCurrencyAmount(amount)
+                        .withCurrency(amount.getCurrencyCode())
                         .withStatus(paid ? PaymentStatus.PAID : PaymentStatus.PENDING)
                         .build());
     }

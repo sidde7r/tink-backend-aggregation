@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
 
@@ -75,7 +75,7 @@ public class TransactionEntity {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(getTinkAmount())
+                .setAmount(getExactCurrencyAmount())
                 .setDate(parseTransactionDate())
                 .setPending(valueDate == null)
                 .setDescription(getFormattedDescription())
@@ -96,15 +96,15 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
-    private Amount getTinkAmount() {
-        Double amount = StringUtils.parseAmount(transactionAmount);
+    private ExactCurrencyAmount getExactCurrencyAmount() {
+        double amount = StringUtils.parseAmount(transactionAmount);
 
         if (!Strings.isNullOrEmpty(transactionCurrency)) {
-            return new Amount(transactionCurrency, amount);
+            return ExactCurrencyAmount.of(amount, transactionCurrency);
         }
 
         // Fall back on EUR if we don't get a currency with the transaction
-        return Amount.inEUR(amount);
+        return ExactCurrencyAmount.inEUR(amount);
     }
 
     @JsonIgnore

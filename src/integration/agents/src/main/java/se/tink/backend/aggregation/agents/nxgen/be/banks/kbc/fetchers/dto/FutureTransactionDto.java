@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValueEncode
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class FutureTransactionDto {
@@ -31,7 +31,7 @@ public class FutureTransactionDto {
 
     public UpcomingTransaction toUpcomingTransaction() {
         return UpcomingTransaction.builder()
-                .setAmount(Amount.inEUR(Double.valueOf(amount.getValue())))
+                .setAmount(ExactCurrencyAmount.inEUR(Double.parseDouble(amount.getValue())))
                 .setDescription(descriptionLine01.getValue())
                 .setRawDetails(getRawDetails())
                 .setDate(parseExecutionDate())

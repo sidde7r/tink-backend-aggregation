@@ -7,7 +7,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -47,7 +47,7 @@ public class TransactionEntity {
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inSEK(amount))
+                .setAmount(ExactCurrencyAmount.inSEK(amount))
                 .setDate(postedDate)
                 .setDescription(memoText)
                 .build();

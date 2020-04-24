@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.execut
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.entities.AccountEntity;
@@ -12,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executo
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -43,11 +45,10 @@ public class GetPaymentResponse {
 
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse() {
-        Amount amount =
-                Amount.valueOf(
-                        instructedAmount.getCurrency(),
-                        Double.valueOf(instructedAmount.getAmount() * 100).longValue(),
-                        2);
+        ExactCurrencyAmount amount =
+                ExactCurrencyAmount.of(
+                        new BigDecimal(instructedAmount.getAmount()).setScale(2, RoundingMode.DOWN),
+                        instructedAmount.getCurrency());
 
         PaymentStatus paymentStatus =
                 IcaPaymentStatus.mapToTinkPaymentStatus(
@@ -63,7 +64,7 @@ public class GetPaymentResponse {
                 new Payment.Builder()
                         .withStatus(paymentStatus)
                         .withCurrency(instructedAmount.getCurrency())
-                        .withAmount(amount)
+                        .withExactCurrencyAmount(amount)
                         .withDebtor(new Debtor(new IbanIdentifier(debtorAccount.getIban())))
                         .withCreditor(new Creditor(new IbanIdentifier(creditorAccount.getIban())))
                         .withExecutionDate(LocalDate.parse(requestedExecutionDate.substring(0, 10)))

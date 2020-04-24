@@ -7,7 +7,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class OpBankTransactionEntity {
@@ -46,7 +46,7 @@ public class OpBankTransactionEntity {
     @JsonIgnore
     public Transaction toTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(AgentParsingUtils.parseAmount(amount)))
+                .setAmount(ExactCurrencyAmount.inEUR(AgentParsingUtils.parseAmount(amount)))
                 .setDescription(getDescription())
                 .setDate(getDate())
                 .setPending(dateOfValue == null)

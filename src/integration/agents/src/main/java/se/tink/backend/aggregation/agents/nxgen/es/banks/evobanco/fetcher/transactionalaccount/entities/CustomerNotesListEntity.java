@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConsta
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject
@@ -104,18 +104,19 @@ public class CustomerNotesListEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(getAmount())
+                .setAmount(getExactCurrencyAmount())
                 .setDate(DateUtils.parseDate(dateOfTransaction))
                 .setDescription(senderText)
                 .setPending(isPending())
                 .build();
     }
 
-    private Amount getAmount() {
+    private ExactCurrencyAmount getExactCurrencyAmount() {
         // It appears in some cases that the actual amount has a negative sign and information about
         // the sign, in those cases (double checked in the app), the amount should appear as
         // positive
-        final Amount amount = Amount.inEUR(AgentParsingUtils.parseAmount(amountAmount));
+        final ExactCurrencyAmount amount =
+                ExactCurrencyAmount.inEUR(AgentParsingUtils.parseAmount(amountAmount));
         if (Constants.ACCOUNT_TRANSACTION_PLUS_SIGN.equalsIgnoreCase(sign)) {
             return amount;
         } else {
