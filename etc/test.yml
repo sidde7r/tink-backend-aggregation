@@ -17,6 +17,7 @@ agentsServiceConfiguration:
     beProxy: false
     esProxy: false
     swedbankKeepAlive: true
+    resetSuplementalInformation: false
   integrations:
     004685af33dd4a74995ba16d3f066acb:
       tink:

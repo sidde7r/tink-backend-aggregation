@@ -441,6 +441,7 @@ featureFlags:
   esProxy: true
   beProxy: false
   swedbankKeepAlive: true
+  resetSuplementalInformation: false
 
 providerConfigurationServiceConfiguration:
   enabled: true

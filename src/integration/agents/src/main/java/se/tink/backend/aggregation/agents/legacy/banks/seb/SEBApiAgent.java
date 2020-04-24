@@ -80,6 +80,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.FeatureFlag;
 import se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.SystemCode;
 import se.tink.backend.aggregation.agents.banks.seb.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.AuthenticationResponse;
@@ -1152,7 +1153,9 @@ public class SEBApiAgent extends AbstractAgent
         Preconditions.checkNotNull(customerId);
         Preconditions.checkNotNull(userId);
         checkLoggedInCustomerId(customerId, userinfo.bankIdUserId);
-
+        if (configuration.isFeatureEnabled(FeatureFlag.RESET_SUPPLEMENTAL_INFORMATION)) {
+            credentials.setSupplementalInformation(null);
+        }
         return true;
     }
 
