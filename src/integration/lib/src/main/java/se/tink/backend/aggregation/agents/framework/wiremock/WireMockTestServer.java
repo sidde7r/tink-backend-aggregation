@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPReques
 import se.tink.backend.aggregation.agents.framework.wiremock.entities.HTTPResponse;
 import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.CompareEntity;
 import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.ErrorDetector;
-import se.tink.backend.aggregation.agents.framework.wiremock.parsing.BodyParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.parsing.BodyParserImpl;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
 import se.tink.libraries.pair.Pair;
@@ -27,15 +26,13 @@ import se.tink.libraries.pair.Pair;
 public class WireMockTestServer {
 
     private final WireMockServer wireMockServer;
-    private final BodyParser bodyParser;
-    private final Map<HTTPRequest, HTTPResponse> registeredPairs;
 
     public WireMockTestServer(ImmutableSet<RequestResponseParser> parsers) {
         wireMockServer = new WireMockServer(wireMockConfig().dynamicPort().dynamicHttpsPort());
-        bodyParser = new BodyParserImpl();
         wireMockServer.start();
-        this.registeredPairs = new HashMap<>();
-        parsers.forEach(parser -> buildMockServer(parser.parseRequestResponsePairs()));
+        Map<HTTPRequest, HTTPResponse> registeredPairs = new HashMap<>();
+        parsers.forEach(
+                parser -> buildMockServer(parser.parseRequestResponsePairs(), registeredPairs));
     }
 
     public int getHttpsPort() {
@@ -131,7 +128,9 @@ public class WireMockTestServer {
         return errorMessage.toString();
     }
 
-    private void buildMockServer(Set<Pair<HTTPRequest, HTTPResponse>> pairs) {
+    private void buildMockServer(
+            Set<Pair<HTTPRequest, HTTPResponse>> pairs,
+            Map<HTTPRequest, HTTPResponse> registeredPairs) {
         for (Pair<HTTPRequest, HTTPResponse> pair : pairs) {
 
             final HTTPRequest request = pair.first;
@@ -202,6 +201,7 @@ public class WireMockTestServer {
     private void parseRequestBody(final HTTPRequest request, final MappingBuilder builder) {
 
         final Optional<String> requestBody = request.getRequestBody();
+
         if (!requestBody.isPresent()) {
             return; // No body, no parsing needed.
         }
@@ -213,7 +213,7 @@ public class WireMockTestServer {
                                         new IllegalStateException(
                                                 "Could not find or parse Content-Type header in requests when reading mock file. To use WireMock test server each of the requests coming from the agents needs to specify the correct Content-Type."));
 
-        bodyParser
+        new BodyParserImpl()
                 .getStringValuePatterns(requestBody.get(), contentType)
                 .forEach(builder::withRequestBody);
     }
