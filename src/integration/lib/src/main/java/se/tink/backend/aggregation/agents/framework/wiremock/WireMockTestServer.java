@@ -32,7 +32,7 @@ public class WireMockTestServer {
         wireMockServer.start();
         Map<HTTPRequest, HTTPResponse> registeredPairs = new HashMap<>();
         parsers.forEach(
-                parser -> buildMockServer(parser.parseRequestResponsePairs(), registeredPairs));
+                parser -> registerRequestResponsePairs(parser.parseRequestResponsePairs(), registeredPairs));
     }
 
     public int getHttpsPort() {
@@ -128,7 +128,7 @@ public class WireMockTestServer {
         return errorMessage.toString();
     }
 
-    private void buildMockServer(
+    private void registerRequestResponsePairs(
             Set<Pair<HTTPRequest, HTTPResponse>> pairs,
             Map<HTTPRequest, HTTPResponse> registeredPairs) {
         for (Pair<HTTPRequest, HTTPResponse> pair : pairs) {
