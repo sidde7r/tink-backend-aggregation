@@ -1,0 +1,22 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+junit_test(
+    name = "authentication",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/progressive",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/payloads",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive/executor",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
+        "//third_party:org_apache_httpcomponents_httpcore",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)
