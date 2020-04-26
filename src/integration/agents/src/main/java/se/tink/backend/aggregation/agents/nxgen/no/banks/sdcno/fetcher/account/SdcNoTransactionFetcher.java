@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.account;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcAgreement;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SearchTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.SearchTransactionsResponse;
@@ -19,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.pair.Pair;
 
-class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
+public class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
 
     private static final int NUMBER_OF_MONTHS_AGO = -12;
 
@@ -27,7 +28,7 @@ class SdcNoTransactionFetcher implements TransactionFetcher<TransactionalAccount
     private final SdcTransactionParser transactionParser;
     private Supplier<Date> dateSupplier;
 
-    SdcNoTransactionFetcher(
+    public SdcNoTransactionFetcher(
             final SdcNoApiClient bankClient,
             final SdcTransactionParser parser,
             final Supplier<Date> dateSupplier) {

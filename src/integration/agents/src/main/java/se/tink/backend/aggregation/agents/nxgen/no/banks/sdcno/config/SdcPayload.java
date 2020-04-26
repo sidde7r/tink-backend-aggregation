@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config;
 
 public class SdcPayload {
     private String bankcode;
