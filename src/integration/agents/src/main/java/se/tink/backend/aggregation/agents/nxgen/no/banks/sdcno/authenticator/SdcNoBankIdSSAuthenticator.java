@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator;
 
 import java.util.Optional;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -28,6 +26,7 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
     private final SdcNoConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
     private final TinkHttpClient tinkHttpClient;
+    private final PostAuthDriverProcessor postAuthDriverProcessor;
 
     public SdcNoBankIdSSAuthenticator(
             SdcNoConfiguration configuration, TinkHttpClient tinkHttpClient) {
@@ -35,6 +34,8 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
         this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
         this.configuration = configuration;
         this.tinkHttpClient = tinkHttpClient;
+        this.postAuthDriverProcessor =
+                new PostAuthDriverProcessor(driver, webDriverHelper, tinkHttpClient, configuration);
     }
 
     @Override
@@ -58,21 +59,9 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
 
         controller.doLogin();
 
-        driver.manage()
-                .getCookies()
-                .forEach(cookie -> tinkHttpClient.addCookie(toTinkCookie(cookie)));
+        postAuthDriverProcessor.processWebDriver();
 
         driver.close();
-    }
-
-    private BasicClientCookie toTinkCookie(final Cookie cookie) {
-
-        BasicClientCookie clientCookie = new BasicClientCookie(cookie.getName(), cookie.getValue());
-        clientCookie.setDomain(cookie.getDomain());
-        clientCookie.setExpiryDate(cookie.getExpiry());
-        clientCookie.setPath(cookie.getPath());
-        clientCookie.setSecure(cookie.isSecure());
-        return clientCookie;
     }
 
     private MobilInitializer constructMobilInitializer(

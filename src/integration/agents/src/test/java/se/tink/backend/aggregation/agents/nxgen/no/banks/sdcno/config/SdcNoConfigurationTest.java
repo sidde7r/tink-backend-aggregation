@@ -9,8 +9,11 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.ban
 public class SdcNoConfigurationTest {
 
     private static final String NETT_BANK_CODE = "1254";
+    private static final String NETT_BANK_INDIVIDUAL_URL = "https://www.cultura.no/";
     private static final String PORTAL_BANK_CODE = "3730";
+    private static final String PORTAL_BANK_INDIVIDUAL_URL = "https://www.sognbank.no/";
     private static final String EIKA_BANK_CODE = "1821";
+    private static final String EIKA_INDIVIDUAL_URL = "https://www.eika.no/";
     private static final Provider NETTBANK_PROVIDER = new Provider();
     private static final Provider PORTALBANK_PROVIDER = new Provider();
     private static final Provider EIKA_PROVIDER = new Provider();
@@ -31,6 +34,7 @@ public class SdcNoConfigurationTest {
         String baseApiUrl = config.getBaseApiUrl();
         String loginUrl = config.getLoginUrl();
         AuthenticationType authType = config.getAuthenticationType();
+        String individualUrl = config.getIndividualBaseURL();
 
         // then
         assertThat(baseUrl).isEqualTo("https://www.nettbankportal.no/" + NETT_BANK_CODE + "/");
@@ -41,6 +45,7 @@ public class SdcNoConfigurationTest {
                                 + NETT_BANK_CODE
                                 + "/nettbank2/logon/bankidjs/?portletname=bankidloginjs&portletaction=openmobilelogin");
         assertThat(authType).isEqualTo(AuthenticationType.NETTBANK);
+        assertThat(individualUrl).isEqualTo(NETT_BANK_INDIVIDUAL_URL);
     }
 
     @Test
@@ -53,6 +58,7 @@ public class SdcNoConfigurationTest {
         String baseApiUrl = config.getBaseApiUrl();
         String loginUrl = config.getLoginUrl();
         AuthenticationType authType = config.getAuthenticationType();
+        String individualUrl = config.getIndividualBaseURL();
 
         // then
         assertThat(baseUrl).isEqualTo("https://www.portalbank.no/" + PORTAL_BANK_CODE + "/");
@@ -60,6 +66,7 @@ public class SdcNoConfigurationTest {
         assertThat(loginUrl)
                 .isEqualTo("https://id.portalbank.no/wsl/slogin/Run?n_bank=" + PORTAL_BANK_CODE);
         assertThat(authType).isEqualTo(AuthenticationType.PORTAL);
+        assertThat(individualUrl).isEqualTo(PORTAL_BANK_INDIVIDUAL_URL);
     }
 
     @Test
@@ -72,6 +79,7 @@ public class SdcNoConfigurationTest {
         String baseApiUrl = config.getBaseApiUrl();
         String loginUrl = config.getLoginUrl();
         AuthenticationType authType = config.getAuthenticationType();
+        String individualUrl = config.getIndividualBaseURL();
 
         // then
         assertThat(baseUrl).isEqualTo("https://www.portalbank.no/" + EIKA_BANK_CODE + "/");
@@ -80,5 +88,6 @@ public class SdcNoConfigurationTest {
                 .isEqualTo(
                         "https://id.portalbank.no/web-kundeid/webresources/identifiser/eika/0770?returnUrl=https%3a%2f%2feika.no%2flogin%3freturnUrl%3d%2foversikt");
         assertThat(authType).isEqualTo(AuthenticationType.EIKA);
+        assertThat(individualUrl).isEqualTo(EIKA_INDIVIDUAL_URL);
     }
 }

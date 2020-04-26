@@ -1,9 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
 
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.CREDIT_CARD_PATH;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.CREDIT_CARD_TRANSACTION_PATH;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.QueryParams.ACCOUNT_NUMBER;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.QueryParams.BANKREGNR;
+
+import java.util.LinkedHashMap;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditcard.entity.CreditCardTransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcAgreement;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsResponse;
@@ -13,22 +21,22 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-class SdcNoApiClient {
+public class SdcNoApiClient {
     private final TinkHttpClient client;
     private final SdcNoConfiguration agentConfig;
 
-    SdcNoApiClient(TinkHttpClient client, SdcNoConfiguration agentConfig) {
+    public SdcNoApiClient(TinkHttpClient client, SdcNoConfiguration agentConfig) {
         this.client = client;
         this.agentConfig = agentConfig;
     }
 
-    String initWebPage() {
+    public String initWebPage() {
         return createApiRequest(
                         new URL(agentConfig.getBasePageUrl() + SdcNoConstants.MINE_KONTOER_PATH))
                 .get(String.class);
     }
 
-    void postAccountNoToBank(final String accountId, final String accountNo) {
+    public void postAccountNoToBank(final String accountId, final String accountNo) {
         String formToPost =
                 "accountno="
                         + accountNo
@@ -54,14 +62,14 @@ class SdcNoApiClient {
                 .post(formToPost);
     }
 
-    SdcAgreement fetchAgreement() {
+    public SdcAgreement fetchAgreement() {
         return createApiRequest(
                         new URL(agentConfig.getBaseApiUrl() + SdcNoConstants.USER_AGREEMENT_PATH),
                         Headers.API_VERSION_1)
                 .get(SdcAgreement.class);
     }
 
-    FilterAccountsResponse filterAccounts(FilterAccountsRequest filterRequest) {
+    public FilterAccountsResponse filterAccounts(FilterAccountsRequest filterRequest) {
 
         return createApiRequest(
                         new URL(agentConfig.getBaseApiUrl() + SdcNoConstants.ACCOUNTS_PATH),
@@ -69,7 +77,8 @@ class SdcNoApiClient {
                 .post(FilterAccountsResponse.class, filterRequest);
     }
 
-    SearchTransactionsResponse filterTransactionsFor(SearchTransactionsRequest searchRequest) {
+    public SearchTransactionsResponse filterTransactionsFor(
+            SearchTransactionsRequest searchRequest) {
 
         return createApiRequest(
                         new URL(
@@ -91,5 +100,20 @@ class SdcNoApiClient {
                 .header(Headers.X_SDC_API_VERSION, apiVersion)
                 .header(Headers.X_SDC_CLIENT_TYPE, Headers.CLIENT_TYPE)
                 .header(Headers.X_SDC_LOCALE, Headers.LOCALE_EN);
+    }
+
+    public List<LinkedHashMap<String, String>> fetchCreditCards() {
+        return client.request(new URL(agentConfig.getIndividualBaseURL() + CREDIT_CARD_PATH))
+                .get(List.class);
+    }
+
+    public CreditCardTransactionsEntity fetchCreditCardTransactions(String apiIdentifier) {
+        String bankregnr = apiIdentifier.substring(0, 4);
+
+        return client.request(
+                        new URL(agentConfig.getIndividualBaseURL() + CREDIT_CARD_TRANSACTION_PATH)
+                                .parameter(BANKREGNR, bankregnr)
+                                .parameter(ACCOUNT_NUMBER, apiIdentifier))
+                .get(CreditCardTransactionsEntity.class);
     }
 }

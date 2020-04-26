@@ -15,7 +15,7 @@ public class ProviderMappingTest {
         // when
         Throwable throwable =
                 Assertions.catchThrowable(
-                        () -> ProviderMapping.getAuthenticationTypeByBankCode(dummyBankCode));
+                        () -> ProviderMapping.getProviderMappingTypeByBankCode(dummyBankCode));
 
         // then
         assertThat(throwable).isInstanceOf(IllegalArgumentException.class);
@@ -27,8 +27,9 @@ public class ProviderMappingTest {
         String availableCode = ProviderMapping.CULTURA_BANK.getBankCode();
 
         // when
-        AuthenticationType authenticationType =
-                ProviderMapping.getAuthenticationTypeByBankCode(availableCode);
+        ProviderMapping providerMapping =
+                ProviderMapping.getProviderMappingTypeByBankCode(availableCode);
+        AuthenticationType authenticationType = providerMapping.getAuthenticationType();
 
         // then
         assertThat(authenticationType).isEqualTo(AuthenticationType.NETTBANK);
@@ -40,8 +41,9 @@ public class ProviderMappingTest {
         String availableCode = ProviderMapping.SPAREBANKEN.getBankCode();
 
         // when
-        AuthenticationType authenticationType =
-                ProviderMapping.getAuthenticationTypeByBankCode(availableCode);
+        ProviderMapping providerMapping =
+                ProviderMapping.getProviderMappingTypeByBankCode(availableCode);
+        AuthenticationType authenticationType = providerMapping.getAuthenticationType();
 
         // then
         assertThat(authenticationType).isEqualTo(AuthenticationType.PORTAL);

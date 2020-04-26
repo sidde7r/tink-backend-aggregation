@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcPayload;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankmappers.AuthenticationType;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankmappers.ProviderMapping;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.EikaBankPortal;
@@ -19,12 +18,16 @@ import se.tink.libraries.payloadparser.PayloadParser;
 public class SdcNoConfiguration implements ClientConfiguration {
     private final String bankCode;
     private final AuthenticationType authenticationType;
+    private final String domain;
     private Map<AuthenticationType, String> baseUrlMap = new HashMap<>();
     private Map<AuthenticationType, String> loginUrlMap = new HashMap<>();
 
     public SdcNoConfiguration(Provider provider) {
         this.bankCode = getBankCode(provider.getPayload());
-        this.authenticationType = ProviderMapping.getAuthenticationTypeByBankCode(bankCode);
+        ProviderMapping providerMapping =
+                ProviderMapping.getProviderMappingTypeByBankCode(bankCode);
+        this.authenticationType = providerMapping.getAuthenticationType();
+        this.domain = providerMapping.getDomain();
         generateBaseUrlMap();
         generateLoginUrlMap();
     }
@@ -73,6 +76,14 @@ public class SdcNoConfiguration implements ClientConfiguration {
                         () ->
                                 new SdcConfigurationException(
                                         authenticationType + " base api url not found."));
+    }
+
+    public String getIndividualBaseURL() {
+        return Optional.ofNullable(SdcNoConstants.DOMAIN_MATCHER.replaceAll(domain))
+                .orElseThrow(
+                        () ->
+                                new SdcConfigurationException(
+                                        bankCode + " individual base url not found."));
     }
 
     public AuthenticationType getAuthenticationType() {

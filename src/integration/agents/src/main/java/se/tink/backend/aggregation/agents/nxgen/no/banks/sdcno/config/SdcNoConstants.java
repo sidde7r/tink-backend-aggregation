@@ -6,6 +6,10 @@ import java.util.regex.Pattern;
 public class SdcNoConstants {
 
     private static final Pattern BANKCODE_PATTERN = Pattern.compile("\\{bankcode}");
+    private static final Pattern DOMAIN_PATTERN = Pattern.compile("\\{domain}");
+
+    public static final String INDIVIDUAL_BASE_URL = "https://www.{domain}.no/";
+    public static final Matcher DOMAIN_MATCHER = DOMAIN_PATTERN.matcher(INDIVIDUAL_BASE_URL);
 
     private SdcNoConstants() {}
 
@@ -47,6 +51,12 @@ public class SdcNoConstants {
     public static final String ACCOUNTS_PATH = API_VER + "accounts/list/filter";
     public static final String ACCOUNTS_TRANSACTION_PATH = API_VER + "accounts/transactions/search";
 
+    public static final String CARD_PORTAL_PATH = "min-oversikt/kort";
+    public static final String CARD_PATH = "kredittbank-kredittkort-betjening-web/rest/resource/";
+    public static final String CREDIT_CARD_PATH = CARD_PATH + "kort/next";
+    public static final String CREDIT_CARD_TRANSACTION_PATH =
+            CARD_PATH + "bevegelser/bankregnr/{bankregnr}/kontonummer/{accountnumber}";
+
     public static class ErrorMessages {
         private ErrorMessages() {}
 
@@ -69,5 +79,24 @@ public class SdcNoConstants {
         public static final String API_VERSION_1 = "1";
         public static final String API_VERSION_2 = "2";
         public static final String API_VERSION_3 = "3";
+    }
+
+    public static class QueryParams {
+        private QueryParams() {}
+
+        public static final String BANKREGNR = "bankregnr";
+        public static final String ACCOUNT_NUMBER = "accountnumber";
+    }
+
+    public static class SdcPayload {
+        private String bankcode;
+
+        public SdcPayload(final String bankcode) {
+            this.bankcode = bankcode;
+        }
+
+        public String getBankcode() {
+            return bankcode;
+        }
     }
 }
