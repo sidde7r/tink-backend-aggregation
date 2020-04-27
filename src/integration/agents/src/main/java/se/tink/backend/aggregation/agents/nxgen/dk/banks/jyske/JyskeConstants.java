@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske;
 
 import com.google.common.base.Charsets;
 import java.nio.charset.Charset;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class JyskeConstants {
@@ -26,14 +23,9 @@ public final class JyskeConstants {
 
         public static final URL GET_ACCOUNTS_WITH_EXTERNALS = toBankDataUrl("/accounts");
 
-        public static final URL GET_TRANSACTIONS_WITH_EXTERNALS =
-                toBankDataUrl("/pfm/transactions");
-        public static final URL GET_FUTURE_TRANSACTIONS = toBankDataUrl("/pfm/transactions/future");
-        public static final URL GET_INVESTMENT_GROUPS = toBankDataUrl("/investment/groups");
         public static final URL LOGOUT = toBankDataUrl("/invalidate");
         public static final URL TRANSPORT_KEY = toMobileServiceUrl("/V1-0/transportkey");
         public static final URL MOBILE_SERVICE_LOGIN = toMobileServiceUrl("/V1-0/login");
-        public static final URL GET_CARDS = toMobileServiceUrl("/V1-0/cardapp/cards");
 
         private static URL toBankDataUrl(String endpoint) {
             return new URL(BANKDATA_BASE_URL + endpoint);
@@ -86,40 +78,6 @@ public final class JyskeConstants {
     public static final class ErrorMessages {
         public static final String BANK_UNAVAILABLE_DURING_MIDNIGHT =
                 "mobilbanken er lukket hverdage og ";
-    }
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.SAVINGS, "Jyske Munnypot", "Opsparing")
-                    .put(
-                            AccountTypes.CHECKING,
-                            "Budget",
-                            "Totalkonto",
-                            "Totalkonto Ung",
-                            "Lønkonto",
-                            "Budgetkonto",
-                            "Budgetkonto Ung",
-                            "Grundkonto",
-                            "Forbrug")
-                    .build();
-
-    public static final class Log {
-        public static final LogTag CREDITCARD_LOGGING = LogTag.from("#dk_jyske_creditcard");
-        public static final LogTag INVESTMENT_LOGGING = LogTag.from("#dk_jyske_investment");
-    }
-
-    public static final class Fetcher {
-
-        public static final class CreditCard {
-            public static final String DANKORT = "DANKORT";
-            public static final String DEBIT = "DEBIT";
-        }
-
-        public static final class Investment {
-            public static final String PENSION_TYPE = "pension";
-            public static final String CHILD_SAVING_TYPE = "childsaving";
-            public static final String CURRENCY = "DKK";
-        }
     }
 
     public static class TimeoutFilter {
