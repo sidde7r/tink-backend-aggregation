@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.util.Optional;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,12 +28,6 @@ public class Instrument {
     private String ticker;
     private Type type;
     private String rawType;
-
-    @Deprecated
-    @JsonIgnore
-    private static Double getAmountValue(Amount amount) {
-        return Optional.ofNullable(amount).map(Amount::getValue).orElse(null);
-    }
 
     @JsonIgnore
     private static Double getAmountValueFromExactAmount(ExactCurrencyAmount amount) {
@@ -150,22 +143,10 @@ public class Instrument {
         this.rawType = rawType;
     }
 
-    @Deprecated
-    @JsonIgnore
-    public void setAverageAcquisitionPriceFromAmount(Amount averageAcquisitionPrice) {
-        this.averageAcquisitionPrice = getAmountValue(averageAcquisitionPrice);
-    }
-
     @JsonIgnore
     public void setAverageAcquisitionPriceFromAmount(ExactCurrencyAmount averageAcquisitionPrice) {
         this.averageAcquisitionPrice =
                 getAmountValueFromExactAmount(averageAcquisitionPrice).doubleValue();
-    }
-
-    @Deprecated
-    @JsonIgnore
-    public void setMarketValueFromAmount(Amount marketValue) {
-        this.marketValue = getAmountValue(marketValue);
     }
 
     @JsonIgnore
@@ -173,21 +154,9 @@ public class Instrument {
         this.marketValue = getAmountValueFromExactAmount(marketValue).doubleValue();
     }
 
-    @Deprecated
-    @JsonIgnore
-    public void setPriceFromAmount(Amount price) {
-        this.price = getAmountValue(price);
-    }
-
     @JsonIgnore
     public void setPriceFromAmount(ExactCurrencyAmount price) {
         this.price = getAmountValueFromExactAmount(price).doubleValue();
-    }
-
-    @Deprecated
-    @JsonIgnore
-    public void setProfitFromAmount(Amount profit) {
-        this.profit = getAmountValue(profit);
     }
 
     @JsonIgnore
