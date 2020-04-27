@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import java.nio.charset.Charset;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BankdataConstants {
@@ -96,6 +98,21 @@ public class BankdataConstants {
             ImmutableMap.<String, Portfolio.Type>builder()
                     .put("pension", Portfolio.Type.PENSION)
                     .put("childsaving", Portfolio.Type.OTHER)
+                    .build();
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.SAVINGS, "Opsparing")
+                    .put(
+                            AccountTypes.CHECKING,
+                            "Budget",
+                            "Totalkonto",
+                            "Totalkonto Ung",
+                            "Lønkonto",
+                            "Budgetkonto",
+                            "Budgetkonto Ung",
+                            "Grundkonto",
+                            "Forbrug")
                     .build();
 
     public static class ErrorCodes {
