@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.entity.CreditorAccountRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.entity.DebtorAccountRequest;
@@ -17,9 +18,13 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class ErstebankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
 
     private final ErstebankApiClient apiClient;
 
@@ -30,6 +35,14 @@ public class ErstebankPaymentExecutor implements PaymentExecutor, FetchablePayme
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
         final Payment payment = paymentRequest.getPayment();
+
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(dateHelper.getNowAsLocalDate());
+        }
 
         final CreditorAccountRequest creditorAccount =
                 CreditorAccountRequest.builder()
@@ -52,9 +65,7 @@ public class ErstebankPaymentExecutor implements PaymentExecutor, FetchablePayme
                         .instructedAmount(instructedAmount)
                         .creditorName(payment.getCreditor().getName())
                         .requestedExecutionDate(
-                                paymentRequest
-                                        .getPayment()
-                                        .getExecutionDate()
+                                payment.getExecutionDate()
                                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                         .build();
 

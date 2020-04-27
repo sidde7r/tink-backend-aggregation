@@ -2,11 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.libraries.date.CountryDateHelper;
+import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
 public class CreditTransferTransactionEntity {
+
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
+
     private PaymentId paymentId;
     private String requestedExecutionDate;
     private InstructedAmountEntity instructedAmount;
@@ -15,11 +22,21 @@ public class CreditTransferTransactionEntity {
     public static List<CreditTransferTransactionEntity> of(PaymentRequest paymentRequest) {
         InstructedAmountEntity instructedAmount = InstructedAmountEntity.of(paymentRequest);
         ArrayList<CreditTransferTransactionEntity> transactions = new ArrayList<>();
+
+        Payment payment = paymentRequest.getPayment();
+
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (payment.getExecutionDate() == null) {
+            payment.setExecutionDate(dateHelper.getNowAsLocalDate());
+        }
+
         transactions.add(
                 new CreditTransferTransactionEntity.Builder()
                         .withInstructedAmount(instructedAmount)
-                        .withRequestedExecutionDate(
-                                paymentRequest.getPayment().getExecutionDate().toString())
+                        .withRequestedExecutionDate(payment.getExecutionDate().toString())
                         .build());
         return transactions;
     }

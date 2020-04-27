@@ -86,6 +86,9 @@ public class DemoAgent extends AbstractAgent
     private static final Integer NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE = 3;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
+
     private DemoCredentials demoCredentials;
     private String userPath;
     private File accountsFile;
@@ -258,7 +261,6 @@ public class DemoAgent extends AbstractAgent
 
     @Override
     public void execute(Transfer transfer) throws Exception, TransferExecutionException {
-
         if (!Objects.equal(demoCredentials.getUsername(), "201212121212")) {
             String response = requestChallengeResponse(request.getCredentials(), "code1");
             if (Strings.isNullOrEmpty(response) || !response.equals("code1")) {
@@ -312,6 +314,14 @@ public class DemoAgent extends AbstractAgent
     }
 
     private Transaction transferToTransaction(Transfer transfer) throws JsonProcessingException {
+        // Backwards compatibility patch: some agents would break if the dueDate was null, so we
+        // defaulted it. This behaviour is no longer true for agents that properly implement the
+        // execution of future dueDate. For more info about the fix, check PAY-549; for the support
+        // of future dueDate, check PAY1-273.
+        if (transfer.getDueDate() == null) {
+            transfer.setDueDate(dateHelper.getNowAsDate());
+        }
+
         Transaction t = new Transaction();
         t.setDescription(transfer.getSourceMessage());
         t.setDate(getDueDate(transfer.getDueDate()));

@@ -48,9 +48,9 @@ public class PaymentRequest {
                 new Payment.Builder()
                         .withCreditor(creditorInRequest)
                         .withAmount(transfer.getAmount())
-                        .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withCurrency(transfer.getAmount().getCurrency())
                         .withReference(referenceInRequest)
+                        .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
 
         if (!isSkipRefresh) {
