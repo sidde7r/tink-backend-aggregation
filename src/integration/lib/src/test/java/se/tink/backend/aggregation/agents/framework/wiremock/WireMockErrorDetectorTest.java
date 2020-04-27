@@ -222,4 +222,141 @@ public class WireMockErrorDetectorTest {
         Assert.assertTrue(differences.getMissingBodyKeysInGivenRequest().contains("key2"));
         Assert.assertTrue(differences.getBodyKeysWithDifferentValues().contains("key1"));
     }
+
+    @Test
+    public void whenSuccessfulXMLRequestIsMadeErrorDetectorShouldDetectNothing()
+            throws IOException {
+
+        String body =
+                "<v:Envelope xmlns:v=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:d=\"http://www.w3.org/2001/XMLSchema\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
+                        + "  <v:Header />\n"
+                        + "  <v:Body>\n"
+                        + "  <n0:authenticateCredential xmlns:n0=\"http://www.isban.es/webservices/TECHNICAL_FACADES/Security/F_facseg_security/internet/loginServicesNSegSAN/v1\" facade=\"loginServicesNSegSAN\">\n"
+                        + "      <CB_AuthenticationData i:type=\":CB_AuthenticationData\">\n"
+                        + "        <documento i:type=\":documento\">\n"
+                        + "  <CODIGO_DOCUM_PERSONA_CORP i:type=\"d:string\">12345678</CODIGO_DOCUM_PERSONA_CORP>\n"
+                        + "          <TIPO_DOCUM_PERSONA_CORP i:type=\"d:string\">N</TIPO_DOCUM_PERSONA_CORP>\n"
+                        + "        </documento>\n"
+                        + "        <password i:type=\"d:string\">hunter2</password>\n"
+                        + "      </CB_AuthenticationData>\n"
+                        + "      <userAddress i:type=\"d:string\">127.0.0.1</userAddress>\n"
+                        + "    </n0:authenticateCredential>\n"
+                        + "  </v:Body>\n"
+                        + "</v:Envelope>";
+
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/xml_endpoint")
+                            .header("SOAPAction", "SoapAction")
+                            .type(MediaType.TEXT_XML_TYPE)
+                            .accept(MediaType.WILDCARD)
+                            .post(String.class, body);
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNull(differences);
+    }
+
+    @Test
+    public void
+            whenFailedXMLRequestIsMadeErrorDetectorShouldDetectRequestBodyMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+
+        String body =
+                "<v:Envelope xmlns:v=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:d=\"http://www.w3.org/2001/XMLSchema\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
+                        + "  <v:Header />\n"
+                        + "  <v:Body>\n"
+                        + "    <n0:authenticateCredential xmlns:n0=\"http://www.isban.es/webservices/TECHNICAL_FACADES/Security/F_facseg_security/internet/loginServicesNSegSAN/v1\" facade=\"loginServicesNSegSAN\">\n"
+                        + "      <CB_AuthenticationData i:type=\":CB_AuthenticationData\">\n"
+                        + "        <documento i:type=\":documento\">\n"
+                        + "          <TIPO_DOCUM_PERSONA_CORP i:type=\"d:string\">N</TIPO_DOCUM_PERSONA_CORP>\n"
+                        + "        </documento>\n"
+                        + "        <password i:type=\"d:string\">hunter2</password>\n"
+                        + "      </CB_AuthenticationData>\n"
+                        + "      <userAddress i:type=\"d:string\">127.0.0.1</userAddress>\n"
+                        + "    </n0:authenticateCredential>\n"
+                        + "  </v:Body>\n"
+                        + "</v:Envelope>";
+
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/xml_endpoint")
+                            .header("SOAPAction", "SoapAction")
+                            .type(MediaType.TEXT_XML_TYPE)
+                            .accept(MediaType.WILDCARD)
+                            .post(String.class, body);
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNotNull(differences);
+        Assert.assertTrue(differences.areMethodsMatching());
+        Assert.assertTrue(differences.areUrlsMatching());
+        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
+        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(1, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertTrue(
+                differences
+                        .getBodyKeysWithDifferentValues()
+                        .contains("Request bodies are different"));
+    }
+
+    @Test
+    public void
+            whenFailedXMLRequestIsMadeErrorDetectorShouldDetectHeaderMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+
+        String body =
+                "<v:Envelope xmlns:v=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:d=\"http://www.w3.org/2001/XMLSchema\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
+                        + "  <v:Header />\n"
+                        + "  <v:Body>\n"
+                        + "    <n0:authenticateCredential xmlns:n0=\"http://www.isban.es/webservices/TECHNICAL_FACADES/Security/F_facseg_security/internet/loginServicesNSegSAN/v1\" facade=\"loginServicesNSegSAN\">\n"
+                        + "      <CB_AuthenticationData i:type=\":CB_AuthenticationData\">\n"
+                        + "        <documento i:type=\":documento\">\n"
+                        + "          <CODIGO_DOCUM_PERSONA_CORP i:type=\"d:string\">12345678</CODIGO_DOCUM_PERSONA_CORP>\n"
+                        + "          <TIPO_DOCUM_PERSONA_CORP i:type=\"d:string\">N</TIPO_DOCUM_PERSONA_CORP>\n"
+                        + "        </documento>\n"
+                        + "        <password i:type=\"d:string\">hunter2</password>\n"
+                        + "      </CB_AuthenticationData>\n"
+                        + "      <userAddress i:type=\"d:string\">127.0.0.1</userAddress>\n"
+                        + "    </n0:authenticateCredential>\n"
+                        + "  </v:Body>\n"
+                        + "</v:Envelope>";
+
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/xml_endpoint")
+                            .type(MediaType.TEXT_XML_TYPE)
+                            .accept(MediaType.WILDCARD)
+                            .post(String.class, body);
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNotNull(differences);
+        Assert.assertTrue(differences.areMethodsMatching());
+        Assert.assertTrue(differences.areUrlsMatching());
+        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertEquals(1, differences.getMissingHeaderKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
+        Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("soapaction"));
+    }
 }
