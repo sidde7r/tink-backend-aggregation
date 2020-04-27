@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpHeaders;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiC
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Paths;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.ScaForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
@@ -118,17 +120,17 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         };
     }
 
-    private void waitForErrorOrRedirect(WebDriver driver, String fromUrl) {
-        new WebDriverWait(driver, LoginForm.SUBMIT_TIMEOUT_SECONDS)
+    private void waitForErrorOrRedirect(WebDriver driver, String fromUrl, long timeoutSeconds) {
+        new WebDriverWait(driver, timeoutSeconds)
                 .ignoring(StaleElementReferenceException.class)
                 .until(didRedirectOrShowError(fromUrl));
     }
 
     private void submitScaForm(WebDriver driver) throws LoginException {
         final WebElement codeField =
-                driver.findElement(By.cssSelector("input[name$=inputSignCodeOtp].claveseguridad"));
+                driver.findElement(By.cssSelector(ScaForm.CODE_FIELD_SELECTOR));
         final WebElement submitButton =
-                driver.findElement(By.cssSelector("button[onclick*=enviarYFinalizar]"));
+                driver.findElement(By.cssSelector(ScaForm.SUBMIT_BUTTON_SELECTOR));
 
         final String code;
         try {
@@ -137,8 +139,17 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e);
         }
         codeField.sendKeys(code);
+        LOG.info("Submitting SCA");
         submitButton.click();
-        waitForErrorOrRedirect(driver, driver.getCurrentUrl());
+
+        try {
+            waitForErrorOrRedirect(driver, driver.getCurrentUrl(), ScaForm.SUBMIT_TIMEOUT_SECONDS);
+        } catch (TimeoutException ex) {
+            LOG.error("Timed out after submitting SCA");
+            logRequest("Timed out after submitting SCA", driver.getPageSource());
+            throw ex;
+        }
+
         logRequest("Submitted SCA: " + driver.getCurrentUrl(), driver.getPageSource());
     }
 
@@ -159,7 +170,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         // submit and wait for error or redirect
         LOG.info("Submitting login form");
         loginForm.submit();
-        waitForErrorOrRedirect(driver, initialUrl);
+        waitForErrorOrRedirect(driver, initialUrl, LoginForm.SUBMIT_TIMEOUT_SECONDS);
         final URL afterLoginUrl = getCurrentUrl(driver);
         logRequest("Login ended up in " + afterLoginUrl.toString(), driver.getPageSource());
 

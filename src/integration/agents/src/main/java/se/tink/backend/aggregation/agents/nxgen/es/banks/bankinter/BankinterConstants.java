@@ -46,6 +46,13 @@ public final class BankinterConstants {
         public static final long SUBMIT_TIMEOUT_SECONDS = 5;
     }
 
+    public static class ScaForm {
+        public static final String CODE_FIELD_SELECTOR =
+                "input[name$=inputSignCodeOtp].claveseguridad";
+        public static final String SUBMIT_BUTTON_SELECTOR = "button[onclick*=enviarYFinalizar]";
+        public static final long SUBMIT_TIMEOUT_SECONDS = 15;
+    }
+
     public static class FormKeys {
         public static final String JSF_VIEWSTATE = "javax.faces.ViewState";
         public static final String JSF_PARTIAL_AJAX = "javax.faces.partial.ajax";
@@ -88,7 +95,7 @@ public final class BankinterConstants {
 
     public static class HeaderValues {
         public static final String USER_AGENT =
-                "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 6.2.1-236 WRAPPER";
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 6.2.2-239 WRAPPER";
         public static final String JSF_PARTIAL = "partial/ajax";
         public static final String REQUESTED_WITH = "XMLHttpRequest";
         public static final String ACCEPT_LANGUAGE = "es-ES";
