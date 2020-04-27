@@ -110,11 +110,24 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
+
+        log.info(
+                String.format(
+                        "Credentials contain - supplemental Information: {}: %s",
+                        credentials.getSupplementalInformation()));
+        log.info(
+                String.format(
+                        "Credentials contain - status payload: {}: %s",
+                        credentials.getStatusPayload()));
+        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+
         agent = context.getAgent();
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
 
         AgentWorkerCommandResult result;
+
         try {
+
             if (context.getRequest().getType() == CredentialsRequestType.TRANSFER
                     && credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR) {
 
@@ -142,6 +155,16 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             }
         } finally {
             metrics.stop();
+            log.info(
+                    String.format(
+                            "Credentials contain - supplemental Information: {}: %s",
+                            credentials.getSupplementalInformation()));
+            log.info(
+                    String.format(
+                            "Credentials contain - status payload: {}: %s",
+                            credentials.getStatusPayload()));
+            log.info(
+                    String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
         }
 
         if (Objects.equals(result, AgentWorkerCommandResult.CONTINUE)) {
@@ -149,6 +172,19 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         }
 
         if (Objects.equals(AgentWorkerCommandResult.CONTINUE, result)) {
+
+            log.info(
+                    String.format(
+                            "Credentials contain - supplemental Information: {}: %s",
+                            credentials.getSupplementalInformation()));
+            log.info(
+                    String.format(
+                            "Credentials contain - status payload: {}: %s",
+                            credentials.getStatusPayload()));
+            log.info(
+                    String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+
+            credentials.setSupplementalInformation(null);
             statusUpdater.updateStatus(CredentialsStatus.UPDATING);
         }
 
@@ -317,6 +353,17 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         // Note: Are we sure about the comment above? We need to investigate it further...
         // For now we implement a custom logic for Fortis CardReader agent to persist the
         // storage even if login attempt is not successful
+
+        log.info(
+                String.format(
+                        "Credentials contain - supplemental Information: {}: %s",
+                        credentials.getSupplementalInformation()));
+        log.info(
+                String.format(
+                        "Credentials contain - status payload: {}: %s",
+                        credentials.getStatusPayload()));
+        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+
         if ((!weHavePreviouslyLoggedInSuccessfully || agent == null)
                 && !context.getRequest().getProvider().getName().equals("be-fortis-cardreader")) {
             return;
