@@ -25,7 +25,6 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
     private final WebDriver driver;
     private final SdcNoConfiguration configuration;
     private final WebDriverHelper webDriverHelper;
-    private final TinkHttpClient tinkHttpClient;
     private final PostAuthDriverProcessor postAuthDriverProcessor;
 
     public SdcNoBankIdSSAuthenticator(
@@ -33,7 +32,6 @@ public class SdcNoBankIdSSAuthenticator implements AutoAuthenticator, TypedAuthe
         this.webDriverHelper = new WebDriverHelper();
         this.driver = webDriverHelper.constructPhantomJsWebDriver(WebScrapingConstants.USER_AGENT);
         this.configuration = configuration;
-        this.tinkHttpClient = tinkHttpClient;
         this.postAuthDriverProcessor =
                 new PostAuthDriverProcessor(driver, webDriverHelper, tinkHttpClient, configuration);
     }
