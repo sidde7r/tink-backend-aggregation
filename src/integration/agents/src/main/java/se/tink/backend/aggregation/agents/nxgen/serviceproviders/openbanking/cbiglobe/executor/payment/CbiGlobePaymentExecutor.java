@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.InstructedAmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.RemittanceInformationStructuredEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
@@ -72,8 +71,6 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
-        RemittanceInformationStructuredEntity remittanceInformationStructuredEntity =
-                RemittanceInformationStructuredEntity.of(paymentRequest);
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -83,7 +80,6 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                         .withCreditorName(paymentRequest.getPayment().getCreditor().getName())
                         .withRemittanceInformationUnstructured(
                                 paymentRequest.getPayment().getReference().getValue())
-                        .withRemittanceInformationStructured(remittanceInformationStructuredEntity)
                         .withTransactionType(FormValues.TRANSACTION_TYPE)
                         .build();
 
