@@ -23,7 +23,5 @@ build --host_force_python=PY2
 test --host_force_python=PY2
 run --host_force_python=PY2
 
-# Sebastian Olsson's config
-common:seb --subcommands
-common:seb --build_manual_tests
-common:seb --deleted_packages=deb,docker,src/integration/service
+# If you would like to add more configuration, you can create user.bazelrc and add it there
+try-import user.bazelrc

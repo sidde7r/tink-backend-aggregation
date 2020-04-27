@@ -30,7 +30,7 @@ test_suite(
     name = "most_tests",
     tests = [
         "//src/aggregation/api:api_test",
-        "//src/aggregation/lib/src/test/java/se/tink/backend/aggregation",
+        "//src/aggregation/lib/src/test/java/se/tink/backend/aggregation/wrappers",
         "//src/integration/lib:lib_test",
     ],
 )

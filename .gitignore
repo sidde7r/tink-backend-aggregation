@@ -33,7 +33,7 @@ Thumbs.db
 /bazel-out
 /bazel-testlogs
 /bazel-tink-backend-aggregation
-.bazelrc
+user.bazelrc
 
 # Editors
 .ijwb
