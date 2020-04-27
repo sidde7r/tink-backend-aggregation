@@ -93,6 +93,10 @@ public class ErrorDetector {
             return new BodyEntity(BodyType.TEXT, xmlParser.normalizeXmlData(requestBodySerialized));
         }
 
+        if (mediaType.equals(MediaType.TEXT_PLAIN_TYPE)) {
+            return new BodyEntity(BodyType.TEXT, requestBodySerialized);
+        }
+
         throw new IllegalStateException("Could not parse request body");
     }
 
@@ -124,6 +128,9 @@ public class ErrorDetector {
                             .collect(Collectors.joining("&"));
             return parseRequestBody(requestBodySerialized, mediaType);
         } else if (mediaType.equals(MediaType.TEXT_XML_TYPE)) {
+            return parseRequestBody(
+                    expectedRequest.getBodyPatterns().get(0).getExpected().trim(), mediaType);
+        } else if (mediaType.equals(MediaType.TEXT_PLAIN_TYPE)) {
             return parseRequestBody(
                     expectedRequest.getBodyPatterns().get(0).getExpected().trim(), mediaType);
         }
