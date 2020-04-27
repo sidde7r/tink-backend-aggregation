@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.bankmappers;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config;
 
 import java.util.Arrays;
 
