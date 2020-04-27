@@ -36,7 +36,7 @@ public final class KnabConstants {
     public static class Urls {
 
         public static final String BASE_AUTH_URL = "https://login.knab.nl";
-        public static final String BASE_API_URL = "https://api.knab.nl:443";
+        public static final String BASE_API_URL = "https://tpp-loket.knab.nl";
 
         public static final URL AUTHORIZE = new URL(BASE_AUTH_URL + Endpoints.AUTHORIZE);
         public static final URL TOKEN = new URL(BASE_AUTH_URL + Endpoints.TOKEN);
@@ -49,12 +49,11 @@ public final class KnabConstants {
     public static class Endpoints {
         public static final String AUTHORIZE = "/connect/authorize";
         public static final String TOKEN = "/connect/token";
-        public static final String CONSENT = "/openbanking-sandbox/v1/consents";
-        public static final String ACCOUNTS = "/openbanking-sandbox/v1/accounts";
-        public static final String BALANCES =
-                "/openbanking-sandbox/v1/accounts/{accountId}/balances";
+        public static final String CONSENT = "/openbanking/v1/consents";
+        public static final String ACCOUNTS = "/openbanking/v1/accounts";
+        public static final String BALANCES = "/openbanking/v1/accounts/{accountId}/balances";
         public static final String TRANSACTIONS =
-                "/openbanking-sandbox/v1/accounts/{accountId}/transactions";
+                "/openbanking/v1/accounts/{accountId}/transactions";
     }
 
     public static class PathVariables {
