@@ -17,7 +17,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
-        "//src/libraries/date",
         "//src/libraries/pair",
         "//src/libraries/selenium",
         "//third_party:com_sun_jersey_jersey_core",
