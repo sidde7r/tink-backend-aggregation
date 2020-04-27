@@ -359,4 +359,92 @@ public class WireMockErrorDetectorTest {
         Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
         Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("soapaction"));
     }
+
+    @Test
+    public void whenSuccessfulPlainTextRequestIsMadeErrorDetectorShouldDetectNothing()
+            throws IOException {
+
+        String body = "this request body must be sent";
+
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/plaintext")
+                            .header("Header1", "HeaderValue1")
+                            .type(MediaType.TEXT_PLAIN_TYPE)
+                            .post(String.class, body);
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNull(differences);
+    }
+
+    @Test
+    public void
+            whenFailedPlainTextRequestIsMadeErrorDetectorShouldDetectRequestBodyMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+
+        String body = "wrong body";
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/plaintext")
+                            .header("Header1", "HeaderValue1")
+                            .type(MediaType.TEXT_PLAIN_TYPE)
+                            .post(String.class, body);
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNotNull(differences);
+        Assert.assertTrue(differences.areMethodsMatching());
+        Assert.assertTrue(differences.areUrlsMatching());
+        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
+        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(1, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertTrue(
+                differences
+                        .getBodyKeysWithDifferentValues()
+                        .contains("Request bodies are different"));
+    }
+
+    @Test
+    public void
+            whenFailedPlainTextRequestIsMadeErrorDetectorShouldDetectHeaderMismatchBetweenFailedRequestAndClosestMatch()
+                    throws IOException {
+
+        String body = "this request body must be sent";
+        CompareEntity differences = null;
+
+        // when
+        try {
+            String response =
+                    httpClient
+                            .request("http://dummy.com/plaintext")
+                            .type(MediaType.TEXT_PLAIN_TYPE)
+                            .post(String.class, body);
+        } catch (HttpResponseException e) {
+            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        }
+
+        // then
+        Assert.assertNotNull(differences);
+        Assert.assertTrue(differences.areMethodsMatching());
+        Assert.assertTrue(differences.areUrlsMatching());
+        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertEquals(1, differences.getMissingHeaderKeysInGivenRequest().size());
+        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
+        Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("header1"));
+    }
 }

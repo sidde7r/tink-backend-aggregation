@@ -61,3 +61,16 @@ Content-Type: text/xml
 </prefixRigel0:authenticateCredentialResponse>
 </soap-env:Body>
 </soap-env:Envelope>
+
+REQUEST 4
+POST https://dummy.com/plaintext
+Header1: HeaderValue1
+Content-Type: text/plain
+
+this request body must be sent
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{}
