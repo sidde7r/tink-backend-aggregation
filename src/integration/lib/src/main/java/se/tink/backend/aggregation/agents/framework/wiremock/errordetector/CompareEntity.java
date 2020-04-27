@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.framework.wiremock.errordetector;
 import com.google.common.collect.ImmutableSet;
 import java.util.HashSet;
 import java.util.Set;
+import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.body.comparison.ComparisonReporter;
 
 public class CompareEntity {
 
@@ -12,11 +13,9 @@ public class CompareEntity {
         private final String expectedRequest;
         private Boolean areUrlsMatching;
         private Boolean areHTTPMethodsMatching;
-        private Boolean areBodyTypesMatching;
         private final Set<String> missingHeaderKeysInGivenRequest = new HashSet<>();
         private final Set<String> headerKeysWithDifferentValues = new HashSet<>();
-        private final Set<String> missingBodyKeysInGivenRequest = new HashSet<>();
-        private final Set<String> bodyKeysWithDifferentValues = new HashSet<>();
+        private ComparisonReporter bodyComparisonReporter;
 
         public Builder(String givenRequest, String expectedRequest) {
             this.givenRequest = givenRequest;
@@ -33,18 +32,8 @@ public class CompareEntity {
             return this;
         }
 
-        public Builder setBodyTypesMatching(boolean value) {
-            this.areBodyTypesMatching = value;
-            return this;
-        }
-
         public Builder addMissingHeaderKeyInGivenRequest(String key) {
             this.missingHeaderKeysInGivenRequest.add(key);
-            return this;
-        }
-
-        public Builder addMissingBodyKeyInGivenRequest(String key) {
-            this.missingBodyKeysInGivenRequest.add(key);
             return this;
         }
 
@@ -53,8 +42,8 @@ public class CompareEntity {
             return this;
         }
 
-        public Builder addBodyKeyWithDifferentValue(String key) {
-            this.bodyKeysWithDifferentValues.add(key);
+        public Builder addBodyComparisonReporter(ComparisonReporter reporter) {
+            this.bodyComparisonReporter = reporter;
             return this;
         }
 
@@ -64,11 +53,9 @@ public class CompareEntity {
                     expectedRequest,
                     areUrlsMatching,
                     areHTTPMethodsMatching,
-                    areBodyTypesMatching,
                     missingHeaderKeysInGivenRequest,
                     headerKeysWithDifferentValues,
-                    missingBodyKeysInGivenRequest,
-                    bodyKeysWithDifferentValues);
+                    bodyComparisonReporter);
         }
     }
 
@@ -77,20 +64,16 @@ public class CompareEntity {
             String expectedRequest,
             boolean areUrlsMatching,
             boolean areMethodsMatching,
-            boolean areBodyTypesMatching,
             Set<String> missingHeaderKeysInGivenRequest,
             Set<String> headerKeysWithDifferentValues,
-            Set<String> missingBodyKeysInGivenRequest,
-            Set<String> bodyKeysWithDifferentValues) {
+            ComparisonReporter reporter) {
         this.givenRequest = givenRequest;
         this.expectedRequest = expectedRequest;
         this.areUrlsMatching = areUrlsMatching;
         this.areMethodsMatching = areMethodsMatching;
-        this.areBodyTypesMatching = areBodyTypesMatching;
         this.missingHeaderKeysInGivenRequest = missingHeaderKeysInGivenRequest;
         this.headerKeysWithDifferentValues = headerKeysWithDifferentValues;
-        this.missingBodyKeysInGivenRequest = missingBodyKeysInGivenRequest;
-        this.bodyKeysWithDifferentValues = bodyKeysWithDifferentValues;
+        this.bodyComparisonReporter = reporter;
     }
 
     private String givenRequest;
@@ -103,8 +86,7 @@ public class CompareEntity {
     private Set<String> missingHeaderKeysInGivenRequest;
     private Set<String> headerKeysWithDifferentValues;
 
-    private Set<String> missingBodyKeysInGivenRequest;
-    private Set<String> bodyKeysWithDifferentValues;
+    private ComparisonReporter bodyComparisonReporter;
 
     public String getGivenRequest() {
         return givenRequest;
@@ -134,11 +116,7 @@ public class CompareEntity {
         return ImmutableSet.copyOf(headerKeysWithDifferentValues);
     }
 
-    public Set<String> getMissingBodyKeysInGivenRequest() {
-        return ImmutableSet.copyOf(missingBodyKeysInGivenRequest);
-    }
-
-    public Set<String> getBodyKeysWithDifferentValues() {
-        return ImmutableSet.copyOf(bodyKeysWithDifferentValues);
+    public ComparisonReporter getBodyComparisonReporter() {
+        return bodyComparisonReporter;
     }
 }

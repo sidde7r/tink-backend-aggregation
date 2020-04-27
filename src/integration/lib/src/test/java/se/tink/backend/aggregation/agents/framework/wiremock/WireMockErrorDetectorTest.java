@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.CompareEntity;
+import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.body.comparison.MapComparisonReporter;
+import se.tink.backend.aggregation.agents.framework.wiremock.errordetector.body.comparison.PlainTextComparisonReporter;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
@@ -83,8 +85,11 @@ public class WireMockErrorDetectorTest {
         Assert.assertTrue(differences.areMethodsMatching());
         Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
         Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertTrue(differences.getBodyComparisonReporter() instanceof MapComparisonReporter);
+        MapComparisonReporter reporter =
+                (MapComparisonReporter) differences.getBodyComparisonReporter();
+        Assert.assertEquals(0, reporter.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(0, reporter.getBodyKeysWithDifferentValue().size());
         Assert.assertFalse(differences.areUrlsMatching());
     }
 
@@ -147,8 +152,11 @@ public class WireMockErrorDetectorTest {
         Assert.assertNotNull(differences);
         Assert.assertTrue(differences.areMethodsMatching());
         Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertTrue(differences.getBodyComparisonReporter() instanceof MapComparisonReporter);
+        MapComparisonReporter reporter =
+                (MapComparisonReporter) differences.getBodyComparisonReporter();
+        Assert.assertEquals(0, reporter.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(0, reporter.getBodyKeysWithDifferentValue().size());
         Assert.assertEquals(1, differences.getMissingHeaderKeysInGivenRequest().size());
         Assert.assertEquals(1, differences.getHeaderKeysWithDifferentValues().size());
         Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("header2"));
@@ -184,10 +192,13 @@ public class WireMockErrorDetectorTest {
         Assert.assertTrue(differences.areUrlsMatching());
         Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
         Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertEquals(1, differences.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(1, differences.getBodyKeysWithDifferentValues().size());
-        Assert.assertTrue(differences.getMissingBodyKeysInGivenRequest().contains("key2"));
-        Assert.assertTrue(differences.getBodyKeysWithDifferentValues().contains("key1"));
+        Assert.assertTrue(differences.getBodyComparisonReporter() instanceof MapComparisonReporter);
+        MapComparisonReporter reporter =
+                (MapComparisonReporter) differences.getBodyComparisonReporter();
+        Assert.assertEquals(1, reporter.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(1, reporter.getBodyKeysWithDifferentValue().size());
+        Assert.assertTrue(reporter.getMissingBodyKeysInGivenRequest().contains("key2"));
+        Assert.assertTrue(reporter.getBodyKeysWithDifferentValue().contains("key1"));
     }
 
     @Test
@@ -217,10 +228,13 @@ public class WireMockErrorDetectorTest {
         Assert.assertTrue(differences.areUrlsMatching());
         Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
         Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertEquals(1, differences.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(1, differences.getBodyKeysWithDifferentValues().size());
-        Assert.assertTrue(differences.getMissingBodyKeysInGivenRequest().contains("key2"));
-        Assert.assertTrue(differences.getBodyKeysWithDifferentValues().contains("key1"));
+        Assert.assertTrue(differences.getBodyComparisonReporter() instanceof MapComparisonReporter);
+        MapComparisonReporter reporter =
+                (MapComparisonReporter) differences.getBodyComparisonReporter();
+        Assert.assertEquals(1, reporter.getMissingBodyKeysInGivenRequest().size());
+        Assert.assertEquals(1, reporter.getBodyKeysWithDifferentValue().size());
+        Assert.assertTrue(reporter.getMissingBodyKeysInGivenRequest().contains("key2"));
+        Assert.assertTrue(reporter.getBodyKeysWithDifferentValue().contains("key1"));
     }
 
     @Test
@@ -305,12 +319,11 @@ public class WireMockErrorDetectorTest {
         Assert.assertTrue(differences.areUrlsMatching());
         Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
         Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(1, differences.getBodyKeysWithDifferentValues().size());
         Assert.assertTrue(
-                differences
-                        .getBodyKeysWithDifferentValues()
-                        .contains("Request bodies are different"));
+                differences.getBodyComparisonReporter() instanceof PlainTextComparisonReporter);
+        PlainTextComparisonReporter reporter =
+                (PlainTextComparisonReporter) differences.getBodyComparisonReporter();
+        Assert.assertTrue(reporter.isThereDifference());
     }
 
     @Test
@@ -353,8 +366,11 @@ public class WireMockErrorDetectorTest {
         Assert.assertNotNull(differences);
         Assert.assertTrue(differences.areMethodsMatching());
         Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertTrue(
+                differences.getBodyComparisonReporter() instanceof PlainTextComparisonReporter);
+        PlainTextComparisonReporter reporter =
+                (PlainTextComparisonReporter) differences.getBodyComparisonReporter();
+        Assert.assertTrue(!reporter.isThereDifference());
         Assert.assertEquals(1, differences.getMissingHeaderKeysInGivenRequest().size());
         Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
         Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("soapaction"));
@@ -410,12 +426,11 @@ public class WireMockErrorDetectorTest {
         Assert.assertTrue(differences.areUrlsMatching());
         Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
         Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(1, differences.getBodyKeysWithDifferentValues().size());
         Assert.assertTrue(
-                differences
-                        .getBodyKeysWithDifferentValues()
-                        .contains("Request bodies are different"));
+                differences.getBodyComparisonReporter() instanceof PlainTextComparisonReporter);
+        PlainTextComparisonReporter reporter =
+                (PlainTextComparisonReporter) differences.getBodyComparisonReporter();
+        Assert.assertTrue(reporter.isThereDifference());
     }
 
     @Test
@@ -441,8 +456,11 @@ public class WireMockErrorDetectorTest {
         Assert.assertNotNull(differences);
         Assert.assertTrue(differences.areMethodsMatching());
         Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertEquals(0, differences.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getBodyKeysWithDifferentValues().size());
+        Assert.assertTrue(
+                differences.getBodyComparisonReporter() instanceof PlainTextComparisonReporter);
+        PlainTextComparisonReporter reporter =
+                (PlainTextComparisonReporter) differences.getBodyComparisonReporter();
+        Assert.assertTrue(!reporter.isThereDifference());
         Assert.assertEquals(1, differences.getMissingHeaderKeysInGivenRequest().size());
         Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
         Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("header1"));
