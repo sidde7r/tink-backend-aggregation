@@ -27,6 +27,7 @@ public class ArgentaConstants {
     public static final ImmutableMap<String, String> HEADERS =
             ImmutableMap.<String, String>builder()
                     .put("App-Version", Application.APPLICATION_VERSION)
+                    .put("User-Agent", Application.USER_AGENT)
                     .put("Accept-Language", "nl")
                     .build();
 
@@ -57,7 +58,8 @@ public class ArgentaConstants {
 
     public static class Application {
         // Probably also want to change User-Agent
-        public static final String APPLICATION_VERSION = "5.3.0";
+        static final String APPLICATION_VERSION = "5.6.1";
+        static final String USER_AGENT = "Argenta-PROD/2737 CFNetwork/1121.2.2 Darwin/19.3.0";
     }
 
     public static class Device {
