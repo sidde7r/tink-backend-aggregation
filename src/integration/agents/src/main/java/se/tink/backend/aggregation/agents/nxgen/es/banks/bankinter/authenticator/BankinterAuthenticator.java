@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiC
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.LoginForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Paths;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.ScaForm;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
@@ -126,9 +127,9 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
 
     private void submitScaForm(WebDriver driver) throws LoginException {
         final WebElement codeField =
-                driver.findElement(By.cssSelector("input[name$=inputSignCodeOtp].claveseguridad"));
+                driver.findElement(By.cssSelector(ScaForm.CODE_FIELD_SELECTOR));
         final WebElement submitButton =
-                driver.findElement(By.cssSelector("button[onclick*=enviarYFinalizar]"));
+                driver.findElement(By.cssSelector(ScaForm.SUBMIT_BUTTON_SELECTOR));
 
         final String code;
         try {
