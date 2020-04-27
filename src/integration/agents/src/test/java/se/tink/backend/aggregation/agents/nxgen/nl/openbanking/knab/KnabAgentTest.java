@@ -37,10 +37,4 @@ public class KnabAgentTest {
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
     }
-
-    private enum Arg {
-        IBANS,
-        LOAD_BEFORE,
-        SAVE_AFTER,
-    }
 }
