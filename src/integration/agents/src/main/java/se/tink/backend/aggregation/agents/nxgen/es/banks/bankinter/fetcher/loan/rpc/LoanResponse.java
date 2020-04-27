@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.ObjectUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.InstallmentStatus;
@@ -139,11 +140,15 @@ public class LoanResponse extends HtmlResponse {
     }
 
     private String getDataValue(String key) {
-        return dataValues.get(key).get(0);
+        final List<String> values = dataValues.get(key);
+        if (values == null) {
+            return null;
+        }
+        return values.get(0);
     }
 
     private String getIban() {
-        return getDataValue("prestamo");
+        return ObjectUtils.firstNonNull(getDataValue("prestamo"), getDataValue("préstamo"));
     }
 
     private String getAssociatedAccount() {
