@@ -119,8 +119,8 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         };
     }
 
-    private void waitForErrorOrRedirect(WebDriver driver, String fromUrl) {
-        new WebDriverWait(driver, LoginForm.SUBMIT_TIMEOUT_SECONDS)
+    private void waitForErrorOrRedirect(WebDriver driver, String fromUrl, long timeoutSeconds) {
+        new WebDriverWait(driver, timeoutSeconds)
                 .ignoring(StaleElementReferenceException.class)
                 .until(didRedirectOrShowError(fromUrl));
     }
@@ -139,7 +139,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         }
         codeField.sendKeys(code);
         submitButton.click();
-        waitForErrorOrRedirect(driver, driver.getCurrentUrl());
+        waitForErrorOrRedirect(driver, driver.getCurrentUrl(), ScaForm.SUBMIT_TIMEOUT_SECONDS);
         logRequest("Submitted SCA: " + driver.getCurrentUrl(), driver.getPageSource());
     }
 
@@ -160,7 +160,7 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
         // submit and wait for error or redirect
         LOG.info("Submitting login form");
         loginForm.submit();
-        waitForErrorOrRedirect(driver, initialUrl);
+        waitForErrorOrRedirect(driver, initialUrl, LoginForm.SUBMIT_TIMEOUT_SECONDS);
         final URL afterLoginUrl = getCurrentUrl(driver);
         logRequest("Login ended up in " + afterLoginUrl.toString(), driver.getPageSource());
 

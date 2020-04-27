@@ -50,6 +50,7 @@ public final class BankinterConstants {
         public static final String CODE_FIELD_SELECTOR =
                 "input[name$=inputSignCodeOtp].claveseguridad";
         public static final String SUBMIT_BUTTON_SELECTOR = "button[onclick*=enviarYFinalizar]";
+        public static final long SUBMIT_TIMEOUT_SECONDS = 15;
     }
 
     public static class FormKeys {
