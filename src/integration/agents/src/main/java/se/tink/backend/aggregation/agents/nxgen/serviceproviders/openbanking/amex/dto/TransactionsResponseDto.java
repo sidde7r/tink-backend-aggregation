@@ -14,4 +14,12 @@ public class TransactionsResponseDto {
     private Integer totalTransactionCount;
 
     private List<TransactionDto> transactions;
+
+    public Integer getTotalTransactionCount() {
+        return totalTransactionCount;
+    }
+
+    public List<TransactionDto> getTransactions() {
+        return transactions;
+    }
 }
