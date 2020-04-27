@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc;
 
+import com.google.common.base.Strings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -39,7 +40,7 @@ public class HtmlResponse {
     private static final XPathFactory xpathFactory = XPathFactory.newInstance();
     private final DecimalFormat amountFormat;
     private static final Pattern AMOUNT_PATTERN =
-            Pattern.compile("[\\+\\-]?[0-9\\.,]+(?:€|EUROS)?");
+            Pattern.compile("(?<value>[\\+\\-]?[0-9\\.,]+)(?<currency>€|EUROS|\\w{3})?");
     private static final DateTimeFormatter TRANSACTION_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Pattern TRANSACTION_DATE_PATTERN =
@@ -105,13 +106,26 @@ public class HtmlResponse {
     @VisibleForTesting
     protected ExactCurrencyAmount parseAmount(String amountString) {
         final String amountWithoutSpaces = amountString.replaceAll("[\\s\\u00a0]+", "");
-        if (!AMOUNT_PATTERN.matcher(amountWithoutSpaces).matches()) {
+        final Matcher matcher = AMOUNT_PATTERN.matcher(amountWithoutSpaces);
+        if (!matcher.matches()) {
             throw new IllegalStateException(
                     "Unexpected amount format for '" + amountWithoutSpaces + "'");
         }
 
-        return ExactCurrencyAmount.of(
-                parseValue(amountWithoutSpaces), BankinterConstants.DEFAULT_CURRENCY);
+        final String amountValue = matcher.group("value");
+        final String amountCurrency = matcher.group("currency");
+
+        return ExactCurrencyAmount.of(parseValue(amountValue), parseCurrency(amountCurrency));
+    }
+
+    protected String parseCurrency(String currency) {
+        if (Strings.isNullOrEmpty(currency)) {
+            return BankinterConstants.DEFAULT_CURRENCY;
+        } else if (currency.equals("€") || currency.equalsIgnoreCase("EUROS")) {
+            return "EUR";
+        } else {
+            return currency;
+        }
     }
 
     protected BigDecimal parseValue(String amountString) {
