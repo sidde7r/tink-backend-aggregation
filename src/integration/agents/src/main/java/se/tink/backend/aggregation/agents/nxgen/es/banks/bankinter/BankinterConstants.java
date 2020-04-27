@@ -88,7 +88,7 @@ public final class BankinterConstants {
 
     public static class HeaderValues {
         public static final String USER_AGENT =
-                "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60 6.2.1-236 WRAPPER";
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 12_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 6.2.2-239 WRAPPER";
         public static final String JSF_PARTIAL = "partial/ajax";
         public static final String REQUESTED_WITH = "XMLHttpRequest";
         public static final String ACCEPT_LANGUAGE = "es-ES";
