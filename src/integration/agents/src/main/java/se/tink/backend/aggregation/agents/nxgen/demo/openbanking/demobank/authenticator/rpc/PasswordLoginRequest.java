@@ -4,22 +4,22 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 @JsonObject
-public class LoginReqest {
+public class PasswordLoginRequest {
     private String username;
     private String password;
-    private String grant_type;
+    private String grantType;
 
-    public LoginReqest(String username, String password, String grant_type) {
+    public PasswordLoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
-        this.grant_type = grant_type;
+        this.grantType = "password";
     }
 
     public String toData() {
         return Form.builder()
                 .put("username", username)
                 .put("password", password)
-                .put("grant_type", grant_type)
+                .put("grant_type", grantType)
                 .build()
                 .serialize();
     }

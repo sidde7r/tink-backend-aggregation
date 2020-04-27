@@ -27,7 +27,6 @@ public class DemobankTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         List<TransactionalAccount> accounts = Lists.newArrayList();
-
         FetchAccountResponse accountResponse = apiClient.fetchAccounts();
         accountResponse.stream()
                 .map(AccountEntity::toTinkAccount)
@@ -38,7 +37,6 @@ public class DemobankTransactionalAccountFetcher
 
     @Override
     public TransactionKeyPaginatorResponse getTransactionsFor(Account account, Object key) {
-        final String accountNumber = account.getAccountNumber();
-        return apiClient.fetchTransactions("a100000");
+        return apiClient.fetchTransactions(account.getApiIdentifier());
     }
 }

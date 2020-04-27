@@ -1,11 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 
-import java.util.Optional;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams.ACCOUNT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
+
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.BasicAuthParams;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.LoginReqest;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.configuration.DemobankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.PasswordLoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectLoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectRefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -16,47 +21,42 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DemobankApiClient {
 
-    private static final String REDIRECT_HOST = "https://cdn.tink.se/fake-bank/redirect-v3.html";
-    private DemobankConfiguration configuration;
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+    private final String callbackUri;
 
-    public DemobankApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public DemobankApiClient(
+            TinkHttpClient client, SessionStorage sessionStorage, String callbackUri) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-    }
-
-    public DemobankConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException("MISSING_CONFIGURATION"));
-    }
-
-    public URL getAuthorizeUrl(String state) {
-        return new URL(REDIRECT_HOST);
+        this.callbackUri = callbackUri;
     }
 
     public OAuth2Token getToken(String code) {
-        return null;
+        return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .addBasicAuth(BasicAuthParams.CLIENT_ID, BasicAuthParams.CLIENT_SECRET)
+                .post(TokenEntity.class, new RedirectLoginRequest(code, callbackUri).toData())
+                .toOAuth2Token();
     }
 
-    public void setTokenToSession(OAuth2Token accessToken) {}
+    public void setTokenToSession(OAuth2Token accessToken) {
+        sessionStorage.put(StorageKeys.OAUTH2_TOKEN, accessToken);
+    }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        return null;
-    }
-
-    public void setConfiguration(DemobankConfiguration clientConfiguration) {
-        this.configuration = clientConfiguration;
+        return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .addBasicAuth(BasicAuthParams.CLIENT_ID, BasicAuthParams.CLIENT_SECRET)
+                .post(TokenEntity.class, new RedirectRefreshTokenRequest(refreshToken).toData())
+                .toOAuth2Token();
     }
 
     public FetchAccountResponse fetchAccounts() {
         final URL url = fetchBaseUrl().concat(Urls.ACCOUNTS);
-        OAuth2Token token =
-                OAuth2Token.createBearer(
-                        sessionStorage.get("accessToken"),
-                        sessionStorage.get("refreshToken"),
-                        Long.parseLong(sessionStorage.get("expiresIn")));
-        return createRequestInSession(url, token).get(FetchAccountResponse.class);
+
+        return createRequestInSession(url, getOauth2TokenFromStorage())
+                .get(FetchAccountResponse.class);
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -70,25 +70,30 @@ public class DemobankApiClient {
     }
 
     public URL fetchBaseUrl() {
-        return new URL("http://localhost:3001");
+        return new URL(BASE_URL);
     }
 
-    public TokenEntity login(String username, String password) {
+    public OAuth2Token login(String username, String password) {
 
         return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .addBasicAuth("client", "password")
-                .post(TokenEntity.class, new LoginReqest(username, password, "password").toData());
+                .addBasicAuth(BasicAuthParams.CLIENT_ID, BasicAuthParams.CLIENT_SECRET)
+                .post(TokenEntity.class, new PasswordLoginRequest(username, password).toData())
+                .toOAuth2Token();
     }
 
     public FetchTransactionsResponse fetchTransactions(String accountId) {
-        final URL url = fetchBaseUrl().concat(Urls.TRANSACTIONS).parameter("accountId", accountId);
+        final URL url = fetchBaseUrl().concat(Urls.TRANSACTIONS).parameter(ACCOUNT_ID, accountId);
+        return createRequestInSession(url, getOauth2TokenFromStorage())
+                .get(FetchTransactionsResponse.class);
+    }
 
-        OAuth2Token token =
-                OAuth2Token.createBearer(
-                        sessionStorage.get("accessToken"),
-                        sessionStorage.get("refreshToken"),
-                        Long.parseLong(sessionStorage.get("expiresIn")));
-        return createRequestInSession(url, token).get(FetchTransactionsResponse.class);
+    public OAuth2Token getOauth2TokenFromStorage() {
+        return sessionStorage
+                .get(StorageKeys.OAUTH2_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Couldn't find token from session storage"));
     }
 }

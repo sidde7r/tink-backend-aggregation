@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class TokenEntity {
     @JsonProperty("access_token")
@@ -40,5 +41,9 @@ public class TokenEntity {
 
     public String getScope() {
         return scope;
+    }
+
+    public OAuth2Token toOAuth2Token() {
+        return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn);
     }
 }
