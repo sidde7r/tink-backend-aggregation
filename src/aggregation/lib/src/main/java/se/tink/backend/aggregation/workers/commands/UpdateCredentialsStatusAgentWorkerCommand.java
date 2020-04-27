@@ -39,6 +39,17 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
 
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
+
+        log.info(
+                String.format(
+                        "Credentials contain - supplemental Information: {}: %s",
+                        credentials.getSupplementalInformation()));
+        log.info(
+                String.format(
+                        "Credentials contain - status payload: {}: %s",
+                        credentials.getStatusPayload()));
+        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+
         if (Objects.equals(CredentialsStatus.AUTHENTICATING, credentials.getStatus())) {
             return AgentWorkerCommandResult.CONTINUE;
         }
@@ -53,6 +64,16 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
         if (!setStatusUpdatedPredicate.test(context)) {
             return;
         }
+
+        log.info(
+                String.format(
+                        "Credentials contain - supplemental Information: {}: %s",
+                        credentials.getSupplementalInformation()));
+        log.info(
+                String.format(
+                        "Credentials contain - status payload: {}: %s",
+                        credentials.getStatusPayload()));
+        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
 
         if (CredentialsStatus.FAILED_OPERATION_STATUSES.contains(credentials.getStatus())) {
             log.info(

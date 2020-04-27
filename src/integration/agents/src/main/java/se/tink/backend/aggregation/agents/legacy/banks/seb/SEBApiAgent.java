@@ -1135,6 +1135,17 @@ public class SEBApiAgent extends AbstractAgent
 
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
+
+        log.info(
+                String.format(
+                        "Credentials contain - supplemental Information: {}: %s",
+                        credentials.getSupplementalInformation()));
+        log.info(
+                String.format(
+                        "Credentials contain - status payload: {}: %s",
+                        credentials.getStatusPayload()));
+        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+
         switch (credentials.getType()) {
             case MOBILE_BANKID:
                 final String csrfToken = initiateBankId();
@@ -1154,7 +1165,43 @@ public class SEBApiAgent extends AbstractAgent
         Preconditions.checkNotNull(userId);
         checkLoggedInCustomerId(customerId, userinfo.bankIdUserId);
         if (configuration.isFeatureEnabled(FeatureFlag.RESET_SUPPLEMENTAL_INFORMATION)) {
+
+            log.info(
+                    String.format(
+                            "Credentials contain - supplemental Information: {}: %s",
+                            credentials.getSupplementalInformation()));
+            log.info(
+                    String.format(
+                            "Credentials contain - status payload: {}: %s",
+                            credentials.getStatusPayload()));
+            log.info(
+                    String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+
+            log.info("clearing out supplemental information");
             credentials.setSupplementalInformation(null);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING);
+
+            log.info(
+                    String.format(
+                            "Credentials contain - supplemental Information: {}: %s",
+                            credentials.getSupplementalInformation()));
+            log.info(
+                    String.format(
+                            "Credentials contain - status payload: {}: %s",
+                            credentials.getStatusPayload()));
+            log.info(
+                    String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
+        } else {
+            log.info(
+                    String.format(
+                            "Credentials contain - supplemental Information: {}: %s",
+                            credentials.getSupplementalInformation()));
+            log.info(
+                    String.format(
+                            "Credentials contain - status payload: {}: %s",
+                            credentials.getStatusPayload()));
+            log.info(
+                    String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
         }
         return true;
     }
