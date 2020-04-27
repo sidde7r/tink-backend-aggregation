@@ -29,6 +29,7 @@ public class BankinterLoanFetcher
     public Collection<LoanAccount> fetchAccounts() {
         return this.apiClient.fetchGlobalPosition().getLoanLinks().stream()
                 .map(apiClient::fetchLoan)
+                .filter(LoanResponse::isSingleCurrency)
                 .map(LoanResponse::toLoanAccount)
                 .collect(Collectors.toList());
     }

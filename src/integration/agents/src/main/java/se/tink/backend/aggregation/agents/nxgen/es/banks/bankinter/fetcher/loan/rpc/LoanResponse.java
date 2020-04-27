@@ -95,6 +95,10 @@ public class LoanResponse extends HtmlResponse {
         return Optional.empty();
     }
 
+    public boolean isSingleCurrency() {
+        return getBalance().getCurrencyCode().equals(getInitialBalance().getCurrencyCode());
+    }
+
     public LoanAccount toLoanAccount() {
         final String accountNumber = getIban();
         final AccountIdentifier iban =

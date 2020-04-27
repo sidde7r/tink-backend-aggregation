@@ -27,6 +27,7 @@ public class LoanResponseTest {
     @Test
     public void testLoanResponse() {
         final LoanResponse response = loadTestResponse("10.loan.xhtml", LoanResponse.class);
+        assertTrue(response.isSingleCurrency());
         final LoanAccount loanAccount = response.toLoanAccount();
         final LoanDetails loanDetails = loanAccount.getDetails();
         assertNotNull(loanDetails);
