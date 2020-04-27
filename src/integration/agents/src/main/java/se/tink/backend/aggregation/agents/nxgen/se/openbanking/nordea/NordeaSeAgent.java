@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -12,15 +10,13 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
-import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntityImpl;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSePaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.transactionalaccount.NordeaSeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -30,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class NordeaSeAgent extends NordeaBaseAgent
@@ -121,22 +117,7 @@ public final class NordeaSeAgent extends NordeaBaseAgent
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        return new FetchTransferDestinationsResponse(
-                new TransferDestinationPatternBuilder()
-                        .setTinkAccounts(accounts)
-                        .setSourceAccounts(
-                                accounts.stream()
-                                        .map(GeneralAccountEntityImpl::createFromCoreAccount)
-                                        .filter(Optional::isPresent)
-                                        .map(Optional::get)
-                                        .collect(Collectors.toList()))
-                        .setDestinationAccounts(new ArrayList<>())
-                        .addMultiMatchPattern(
-                                AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
-                        .addMultiMatchPattern(
-                                AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL)
-                        .addMultiMatchPattern(
-                                AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)
-                        .build());
+        return InferredTransferDestinations.forPaymentAccounts(
+                accounts, Type.IBAN, Type.SE, Type.SE_BG, Type.SE_PG);
     }
 }
