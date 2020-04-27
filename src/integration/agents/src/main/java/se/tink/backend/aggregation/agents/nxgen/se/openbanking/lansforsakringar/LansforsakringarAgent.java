@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.LansforsakringarPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.ServiceBlockedFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.session.LansforsakringarSessionHandler;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -22,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class LansforsakringarAgent extends NextGenerationAgent
@@ -35,7 +37,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
+        configureHttpClient(client);
         apiClient =
                 new LansforsakringarApiClient(
                         client, sessionStorage, credentials, persistentStorage);
@@ -47,6 +49,10 @@ public final class LansforsakringarAgent extends NextGenerationAgent
                         .getAgentConfiguration(LansforsakringarConfiguration.class);
         apiClient.setConfiguration(lansforsakringarConfiguration);
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+    }
+
+    private void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new ServiceBlockedFilter(systemUpdater, credentials));
     }
 
     @Override

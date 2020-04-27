@@ -1,17 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator;
 
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -53,19 +49,9 @@ public class LansforsakringarAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws BankServiceException, SessionException {
-        try {
-            final OAuth2Token accessToken = apiClient.refreshToken(refreshToken);
-            sessionStorage.put(LansforsakringarConstants.StorageKeys.ACCESS_TOKEN, accessToken);
-            return accessToken;
-        } catch (HttpResponseException e) {
-            ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);
-            if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN
-                    && response.isAnyServiceBlocked()) {
-                throw SessionError.SESSION_EXPIRED.exception();
-            }
-
-            throw e;
-        }
+        final OAuth2Token accessToken = apiClient.refreshToken(refreshToken);
+        sessionStorage.put(LansforsakringarConstants.StorageKeys.ACCESS_TOKEN, accessToken);
+        return accessToken;
     }
 
     @Override
