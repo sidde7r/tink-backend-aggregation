@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpHeaders;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -138,8 +139,17 @@ public class BankinterAuthenticator implements PasswordAuthenticator {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(e);
         }
         codeField.sendKeys(code);
+        LOG.info("Submitting SCA");
         submitButton.click();
-        waitForErrorOrRedirect(driver, driver.getCurrentUrl(), ScaForm.SUBMIT_TIMEOUT_SECONDS);
+
+        try {
+            waitForErrorOrRedirect(driver, driver.getCurrentUrl(), ScaForm.SUBMIT_TIMEOUT_SECONDS);
+        } catch (TimeoutException ex) {
+            LOG.error("Timed out after submitting SCA");
+            logRequest("Timed out after submitting SCA", driver.getPageSource());
+            throw ex;
+        }
+
         logRequest("Submitted SCA: " + driver.getCurrentUrl(), driver.getPageSource());
     }
 
