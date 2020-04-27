@@ -116,7 +116,7 @@ public class LoanResponse extends HtmlResponse {
                                 .setInitialDate(getInitialDate())
                                 .setMonthlyAmortization(getMonthlyAmortization())
                                 .setNextDayOfTermsChange(getNextDayOfTermsChange())
-                                .setNumMonthsBound(getNumMonthsBound())
+                                .setNumMonthsBound(getNumMonthsBound().orElse(null))
                                 .build())
                 .withId(
                         IdModule.builder()
@@ -170,8 +170,11 @@ public class LoanResponse extends HtmlResponse {
         return LocalDate.parse(getDataValue("fecha revisión"), DATE_FORMATTER);
     }
 
-    private int getNumMonthsBound() {
+    private Optional<Integer> getNumMonthsBound() {
         final String stringValue = getDataValue("plazo de revisión");
+        if (Objects.isNull(stringValue)) {
+            return Optional.empty();
+        }
         final Matcher matcher =
                 Pattern.compile("^(?<value>\\d+)(?<unit>[^\\d]+)$").matcher(stringValue);
         if (!matcher.find()) {
@@ -181,7 +184,7 @@ public class LoanResponse extends HtmlResponse {
         final int value = Integer.parseInt(matcher.group("value"));
         final String unit = matcher.group("unit");
         if (unit.equals("mes(es)")) {
-            return value;
+            return Optional.of(value);
         } else {
             throw new IllegalStateException("Cannot parse months bound value: " + stringValue);
         }
