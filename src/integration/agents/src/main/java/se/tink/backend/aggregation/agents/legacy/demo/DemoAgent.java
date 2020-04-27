@@ -9,12 +9,11 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.io.File;
 import java.io.IOException;
-import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -64,6 +63,7 @@ import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.demo.DemoCredentials.DemoUserFeature;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -83,6 +83,9 @@ public class DemoAgent extends AbstractAgent
     private static final String BASE_PATH = "data/demo";
     private static final Integer NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE = 3;
     private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
 
     private DemoCredentials demoCredentials;
     private String userPath;
@@ -314,7 +317,7 @@ public class DemoAgent extends AbstractAgent
         // execution of future dueDate. For more info about the fix, check PAY-549; for the support
         // of future dueDate, check PAY1-273.
         if (transfer.getDueDate() == null) {
-            transfer.setDueDate(Date.from(Clock.systemDefaultZone().instant()));
+            transfer.setDueDate(dateHelper.getNowAsDate());
         }
 
         Transaction t = new Transaction();

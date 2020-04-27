@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor;
 
-import java.time.Clock;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.QueryKeys;
@@ -29,10 +28,15 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
+
     private final BnpParibasFortisApiClient apiClient;
     private final BnpParibasFortisPaymentAuthenticator paymentAuthenticator;
     private final BnpParibasFortisConfiguration configuration;
@@ -64,7 +68,7 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
         // execution of future dueDate. For more info about the fix, check PAY-549; for the support
         // of future dueDate, check PAY1-273.
         if (payment.getExecutionDate() == null) {
-            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+            payment.setExecutionDate(dateHelper.getNowAsLocalDate());
         }
 
         BnpParibasFortisPaymentType paymentType = getPaymentType(paymentRequest);

@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment;
 
-import java.time.Clock;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants.CountryCodes;
@@ -36,12 +35,17 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
+
     private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
             accountIdentifiersToPaymentTypeMapper =
                     GenericTypeMapper
@@ -86,7 +90,7 @@ public class SparebankPaymentExecutor implements PaymentExecutor, FetchablePayme
         // execution of future dueDate. For more info about the fix, check PAY-549; for the support
         // of future dueDate, check PAY1-273.
         if (payment.getExecutionDate() == null) {
-            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+            payment.setExecutionDate(dateHelper.getNowAsLocalDate());
         }
 
         if (paymentProduct == SparebankPaymentProduct.CROSS_BORDER_CREDIT_TRANSFER) {

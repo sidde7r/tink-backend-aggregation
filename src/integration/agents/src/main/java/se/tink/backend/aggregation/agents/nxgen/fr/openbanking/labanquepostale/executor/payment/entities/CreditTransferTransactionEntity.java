@@ -1,15 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.entities;
 
-import java.time.Clock;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
 public class CreditTransferTransactionEntity {
+
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
+
     private PaymentId paymentId;
     private String requestedExecutionDate;
     private InstructedAmountEntity instructedAmount;
@@ -26,7 +30,7 @@ public class CreditTransferTransactionEntity {
         // execution of future dueDate. For more info about the fix, check PAY-549; for the support
         // of future dueDate, check PAY1-273.
         if (payment.getExecutionDate() == null) {
-            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+            payment.setExecutionDate(dateHelper.getNowAsLocalDate());
         }
 
         transactions.add(

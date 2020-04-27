@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment;
 
-import java.time.Clock;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Locale;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.FormValues;
@@ -25,12 +24,17 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BelfiusPaymentExecutor implements PaymentExecutor {
+
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
+
     private BelfiusApiClient apiClient;
     private SessionStorage sessionStorage;
     private AgentsServiceConfiguration configuration;
@@ -57,7 +61,7 @@ public class BelfiusPaymentExecutor implements PaymentExecutor {
         // execution of future dueDate. For more info about the fix, check PAY-549; for the support
         // of future dueDate, check PAY1-273.
         if (payment.getExecutionDate() == null) {
-            payment.setExecutionDate(LocalDate.now(Clock.systemDefaultZone()));
+            payment.setExecutionDate(dateHelper.getNowAsLocalDate());
         }
 
         CreatePaymentRequest createPaymentRequest =

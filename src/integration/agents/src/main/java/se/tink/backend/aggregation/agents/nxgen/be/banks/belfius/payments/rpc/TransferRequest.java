@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc;
 
-import java.time.Clock;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
@@ -13,9 +13,13 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSt
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferRequest extends BelfiusRequest {
+
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
 
     /**
      * Formats a Date to a String acceptable for Belfius Creates a string on the format dd\/mm\/yyyy
@@ -30,7 +34,7 @@ public class TransferRequest extends BelfiusRequest {
         // execution of future dueDate. For more info about the fix, check PAY-549; for the support
         // of future dueDate, check PAY1-273.
         if (date == null) {
-            date = Date.from(Clock.systemDefaultZone().instant());
+            date = dateHelper.getNowAsDate();
         }
 
         String day = (date.getDate() > 9) ? "" + date.getDate() : "0" + date.getDate();
