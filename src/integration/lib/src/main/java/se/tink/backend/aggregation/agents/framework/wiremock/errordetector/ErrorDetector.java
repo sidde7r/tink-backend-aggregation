@@ -38,6 +38,7 @@ public class ErrorDetector {
                     });
 
     private final ObjectMapper mapper = new ObjectMapper();
+    private final XmlParser xmlParser = new XmlParser();
 
     private Map<String, String> parseHeadersInGivenRequest(LoggedRequest givenRequest) {
         Map<String, String> headersInGivenRequest = new HashMap<>();
@@ -88,6 +89,10 @@ public class ErrorDetector {
             return new BodyEntity(BodyType.MAP, mapper.writeValueAsString(requestBody));
         }
 
+        if (mediaType.equals(MediaType.TEXT_XML_TYPE)) {
+            return new BodyEntity(BodyType.TEXT, xmlParser.normalizeXmlData(requestBodySerialized));
+        }
+
         throw new IllegalStateException("Could not parse request body");
     }
 
@@ -118,6 +123,9 @@ public class ErrorDetector {
                             .map(e -> e.getExpected().trim())
                             .collect(Collectors.joining("&"));
             return parseRequestBody(requestBodySerialized, mediaType);
+        } else if (mediaType.equals(MediaType.TEXT_XML_TYPE)) {
+            return parseRequestBody(
+                    expectedRequest.getBodyPatterns().get(0).getExpected().trim(), mediaType);
         }
 
         throw new IllegalStateException("Could not handle request body");
@@ -195,6 +203,14 @@ public class ErrorDetector {
                 List<?> expectedBody = BodyEntity.getList(expectedBodyEntity);
                 List<?> failedBody = BodyEntity.getList(givenBodyEntity);
                 difference = comparor.areListsMatching(expectedBody, failedBody);
+            }
+
+            if (expectedBodyEntity.getBodyType().equals(BodyType.TEXT)) {
+                String expectedBody = BodyEntity.getText(expectedBodyEntity);
+                String failedBody = BodyEntity.getText(givenBodyEntity);
+                if (!expectedBody.equals(failedBody)) {
+                    builder.addBodyKeyWithDifferentValue("Request bodies are different");
+                }
             }
 
             if (difference instanceof MapDifferenceEntity) {

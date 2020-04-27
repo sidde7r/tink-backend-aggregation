@@ -12,7 +12,8 @@ public class BodyEntity {
     public enum BodyType {
         EMPTY,
         MAP,
-        LIST
+        LIST,
+        TEXT
     }
 
     private BodyType bodyType;
@@ -45,6 +46,14 @@ public class BodyEntity {
         }
 
         return mapper.readValue(entity.getBodyDataSerialized(), List.class);
+    }
+
+    public static String getText(BodyEntity entity) {
+        if (!entity.getBodyType().equals(BodyType.TEXT)) {
+            throw new IllegalStateException("This entity does not have a list data");
+        }
+
+        return entity.getBodyDataSerialized();
     }
 
     public static BodyEntity emptyBody() {
