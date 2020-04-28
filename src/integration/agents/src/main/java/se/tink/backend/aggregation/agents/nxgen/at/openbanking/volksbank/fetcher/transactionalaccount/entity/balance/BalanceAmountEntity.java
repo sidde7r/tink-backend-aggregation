@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount.entity.balance;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -14,7 +14,7 @@ public class BalanceAmountEntity {
         return currency;
     }
 
-    public Amount toAmount() {
-        return new Amount(currency, StringUtils.parseAmount(amount));
+    public ExactCurrencyAmount toAmount() {
+        return ExactCurrencyAmount.of(StringUtils.parseAmount(amount), currency);
     }
 }

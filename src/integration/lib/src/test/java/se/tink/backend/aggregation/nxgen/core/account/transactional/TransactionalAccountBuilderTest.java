@@ -19,7 +19,6 @@ import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 /**
@@ -44,7 +43,7 @@ public class TransactionalAccountBuilderTest {
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.from(AccountTypes.LOAN).orElse(null))
                         .withoutFlags()
-                        .withBalance(BalanceModule.of(Amount.inEUR(2)))
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(2)))
                         .withId(ID_MODULE)
                         .build());
     }
@@ -74,7 +73,7 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withoutFlags()
-                .withBalance(BalanceModule.of(Amount.inEUR(2)))
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(2)))
                 .withId(null)
                 .build();
     }
@@ -84,7 +83,7 @@ public class TransactionalAccountBuilderTest {
         TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.SAVINGS)
                 .withFlags((AccountFlag) null)
-                .withBalance(BalanceModule.of(Amount.inSEK(2572.28)))
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.inSEK(2572.28)))
                 .withId(ID_MODULE)
                 .build();
     }
@@ -99,7 +98,7 @@ public class TransactionalAccountBuilderTest {
                                 AccountFlag.BUSINESS,
                                 AccountFlag.MANDATE,
                                 AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                        .withBalance(BalanceModule.of(Amount.inSEK(2572.28)))
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inSEK(2572.28)))
                         .withId(ID_MODULE)
                         .build()
                         .orElse(null);
@@ -121,9 +120,9 @@ public class TransactionalAccountBuilderTest {
                         .withoutFlags()
                         .withBalance(
                                 BalanceModule.builder()
-                                        .withBalance(Amount.inSEK(398.32))
+                                        .withBalance(ExactCurrencyAmount.inSEK(398.32))
                                         .setInterestRate(0.0015)
-                                        .setAvailableCredit(Amount.inSEK(4500))
+                                        .setAvailableCredit(ExactCurrencyAmount.inSEK(4500))
                                         .build())
                         .withId(ID_MODULE)
                         .putInTemporaryStorage("box", box)
@@ -164,7 +163,7 @@ public class TransactionalAccountBuilderTest {
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
                         .withoutFlags()
-                        .withBalance(BalanceModule.of(Amount.inNOK(3483.23)))
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inNOK(3483.23)))
                         .withId(ID_MODULE)
                         .addHolderName("Britte Larsen")
                         .addHolderName("Britte Larsen")
@@ -181,7 +180,7 @@ public class TransactionalAccountBuilderTest {
                 TransactionalAccount.nxBuilder()
                         .withType(TransactionalAccountType.SAVINGS)
                         .withoutFlags()
-                        .withBalance(BalanceModule.of(Amount.inDKK(20)))
+                        .withBalance(BalanceModule.of(ExactCurrencyAmount.inDKK(20)))
                         .withId(ID_MODULE)
                         .setApiIdentifier("2a3ffe-38320c")
                         .build()
@@ -240,8 +239,8 @@ public class TransactionalAccountBuilderTest {
                         .withoutFlags()
                         .withBalance(
                                 BalanceModule.builder()
-                                        .withBalance(Amount.inEUR(579.3))
-                                        .setAvailableCredit(Amount.inEUR(420.7))
+                                        .withBalance(ExactCurrencyAmount.inEUR(579.3))
+                                        .setAvailableCredit(ExactCurrencyAmount.inEUR(420.7))
                                         .setAvailableBalance(ExactCurrencyAmount.of(529.3, "EUR"))
                                         .setCreditLimit(ExactCurrencyAmount.of(1000.0, "EUR"))
                                         .setInterestRate(0.00155)

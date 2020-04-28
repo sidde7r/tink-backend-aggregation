@@ -11,7 +11,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
@@ -241,14 +240,6 @@ public class LoanDetails {
 
         public ExactCurrencyAmount getExactAmortized() {
             return amortized;
-        }
-
-        @Deprecated
-        public Builder setMonthlyAmortization(Amount monthlyAmortization) {
-            this.monthlyAmortization =
-                    ExactCurrencyAmount.of(
-                            monthlyAmortization.toBigDecimal(), monthlyAmortization.getCurrency());
-            return this;
         }
 
         public Builder setMonthlyAmortization(ExactCurrencyAmount monthlyAmortization) {

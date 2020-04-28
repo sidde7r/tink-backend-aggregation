@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.loan.bu
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -367,7 +366,7 @@ public class AccountDetailsResponse {
                         TransactionalAccountType.from(toTinkAccountType())
                                 .orElse(TransactionalAccountType.OTHER))
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(Amount.inSEK(ownCapital)))
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(ownCapital, "SEK")))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountId)

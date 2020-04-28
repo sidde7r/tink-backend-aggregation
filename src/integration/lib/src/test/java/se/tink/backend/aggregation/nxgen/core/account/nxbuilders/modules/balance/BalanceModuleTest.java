@@ -6,7 +6,6 @@ import static org.junit.Assert.assertFalse;
 
 import java.math.BigDecimal;
 import org.junit.Test;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BalanceModuleTest {
@@ -24,27 +23,23 @@ public class BalanceModuleTest {
 
     @Test
     public void of() {
-        Amount amount = Amount.inSEK(257.90);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.inSEK(257.90);
         BalanceModule balance = BalanceModule.of(amount);
 
         // Test successful build
         assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(257.90);
         assertThat(balance.getAvailableCredit().isPresent()).isFalse();
         assertThat(balance.getInterestRate().isPresent()).isFalse();
-
-        // Ensure immutability
-        amount.setValue(100);
-        assertThat(balance.getExactBalance().getDoubleValue()).isEqualTo(257.90);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullBalanceOf() {
-        BalanceModule.of((Amount) null);
+        BalanceModule.of(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullBalanceOf_exactAmount() {
-        BalanceModule.of((ExactCurrencyAmount) null);
+        BalanceModule.of(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -66,8 +61,8 @@ public class BalanceModuleTest {
 
     @Test
     public void successfulBuild() {
-        Amount bal = Amount.inDKK(25_506.32);
-        Amount credit = Amount.inDKK(9473.27);
+        ExactCurrencyAmount bal = ExactCurrencyAmount.inDKK(25_506.32);
+        ExactCurrencyAmount credit = ExactCurrencyAmount.inDKK(9473.27);
 
         BalanceModule balance =
                 BalanceModule.builder()
@@ -77,8 +72,7 @@ public class BalanceModuleTest {
                         .build();
 
         // Try to mutate
-        bal.add(Amount.inDKK(20));
-        credit.setCurrency("USD");
+        bal.add(ExactCurrencyAmount.inDKK(20));
 
         assertThat(balance.getInterestRate().isPresent()).isTrue();
         assertThat(balance.getAvailableCredit().isPresent()).isTrue();

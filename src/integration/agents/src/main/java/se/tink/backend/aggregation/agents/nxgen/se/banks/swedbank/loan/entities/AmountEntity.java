@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -19,7 +19,7 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public Amount getTinkAmount() {
+    public ExactCurrencyAmount getTinkAmount() {
         return SwedbankSeSerializationUtils.parseAmountForInput(amount, currencyCode);
     }
 }

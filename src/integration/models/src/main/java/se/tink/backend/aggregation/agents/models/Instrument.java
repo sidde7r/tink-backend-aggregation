@@ -150,22 +150,10 @@ public class Instrument {
         this.rawType = rawType;
     }
 
-    @Deprecated
-    @JsonIgnore
-    public void setAverageAcquisitionPriceFromAmount(Amount averageAcquisitionPrice) {
-        this.averageAcquisitionPrice = getAmountValue(averageAcquisitionPrice);
-    }
-
     @JsonIgnore
     public void setAverageAcquisitionPriceFromAmount(ExactCurrencyAmount averageAcquisitionPrice) {
         this.averageAcquisitionPrice =
                 getAmountValueFromExactAmount(averageAcquisitionPrice).doubleValue();
-    }
-
-    @Deprecated
-    @JsonIgnore
-    public void setMarketValueFromAmount(Amount marketValue) {
-        this.marketValue = getAmountValue(marketValue);
     }
 
     @JsonIgnore
@@ -173,21 +161,9 @@ public class Instrument {
         this.marketValue = getAmountValueFromExactAmount(marketValue).doubleValue();
     }
 
-    @Deprecated
-    @JsonIgnore
-    public void setPriceFromAmount(Amount price) {
-        this.price = getAmountValue(price);
-    }
-
     @JsonIgnore
     public void setPriceFromAmount(ExactCurrencyAmount price) {
         this.price = getAmountValueFromExactAmount(price).doubleValue();
-    }
-
-    @Deprecated
-    @JsonIgnore
-    public void setProfitFromAmount(Amount profit) {
-        this.profit = getAmountValue(profit);
     }
 
     @JsonIgnore

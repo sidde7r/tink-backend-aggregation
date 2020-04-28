@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
 
@@ -48,7 +48,7 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
                         .setApplicants(borrowers)
                         .setCoApplicant(borrowers.size() > 1);
 
-        Amount monthlyAmortization = getMonthlyAmortization();
+        ExactCurrencyAmount monthlyAmortization = getMonthlyAmortization();
 
         if (monthlyAmortization != null) {
             builder.setMonthlyAmortization(monthlyAmortization);

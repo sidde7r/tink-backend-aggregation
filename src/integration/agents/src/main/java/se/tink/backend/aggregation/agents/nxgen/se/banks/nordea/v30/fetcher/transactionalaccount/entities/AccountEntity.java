@@ -20,7 +20,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity implements GeneralAccountEntity {
@@ -79,7 +79,7 @@ public class AccountEntity implements GeneralAccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(accountType)
                 .withInferredAccountFlags()
-                .withBalance(BalanceModule.of(new Amount(currency, availableBalance)))
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(availableBalance, currency)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(maskAccountNumber())

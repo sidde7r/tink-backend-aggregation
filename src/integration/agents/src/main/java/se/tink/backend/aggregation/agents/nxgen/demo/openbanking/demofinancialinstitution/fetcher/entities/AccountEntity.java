@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -129,7 +128,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(transactionalAccountType)
                 .withoutFlags()
-                .withBalance(BalanceModule.of(new Amount(currency, balance)))
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(balance, currency)))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)

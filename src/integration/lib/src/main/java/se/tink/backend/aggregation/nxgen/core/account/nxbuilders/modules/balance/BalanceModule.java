@@ -28,11 +28,6 @@ public final class BalanceModule {
         return new Builder();
     }
 
-    @Deprecated
-    public static BalanceModule of(Amount amount) {
-        return builder().withBalance(amount).build();
-    }
-
     public static BalanceModule of(ExactCurrencyAmount amount) {
         return builder().withBalance(amount).build();
     }
@@ -91,15 +86,6 @@ public final class BalanceModule {
         public BalanceBuilderStep setAvailableCredit(@Nonnull ExactCurrencyAmount availableCredit) {
             Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
             this.exactAvailableCredit = availableCredit;
-            return this;
-        }
-
-        @Deprecated
-        @Override
-        public BalanceBuilderStep withBalance(@Nonnull Amount balance) {
-            Preconditions.checkNotNull(balance, "Balance must not be null.");
-            this.exactBalance =
-                    ExactCurrencyAmount.of(balance.toBigDecimal(), balance.getCurrency());
             return this;
         }
 
