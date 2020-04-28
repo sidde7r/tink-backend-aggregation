@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.FeatureFlag;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
@@ -36,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.interfaces.SwedbankApiClientProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -51,7 +51,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGenerationAgent
         implements RefreshEInvoiceExecutor,
@@ -61,7 +60,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
                 RefreshCreditCardAccountsExecutor,
                 RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor {
-    protected final SwedbankConfiguration configuration;
+    protected final SwedbankConfiguration swedbankConfiguration;
     protected final SwedbankDefaultApiClient apiClient;
     private final SwedbankDateUtils dateUtils;
     private EInvoiceRefreshController eInvoiceRefreshController;
@@ -74,39 +73,23 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     private final SwedbankStorage swedbankStorage;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
 
-    public SwedbankAbstractAgentPaymentsRevamp(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            SwedbankConfiguration configuration,
-            SwedbankDateUtils dateUtils) {
-        this(
-                request,
-                context,
-                agentsServiceConfiguration,
-                configuration,
-                new SwedbankDefaultApiClientProvider(),
-                dateUtils);
-    }
-
     protected SwedbankAbstractAgentPaymentsRevamp(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration,
+            AgentComponentProvider componentProvider,
             SwedbankConfiguration configuration,
             SwedbankApiClientProvider apiClientProvider,
             SwedbankDateUtils dateUtils) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+        super(componentProvider);
         this.dateUtils = dateUtils;
-        this.agentsServiceConfiguration = agentsServiceConfiguration;
+        this.agentsServiceConfiguration = this.configuration;
         configureHttpClient(client);
         swedbankStorage = new SwedbankStorage();
 
         this.isBankId =
                 request.getProvider().getCredentialsType().equals(CredentialsTypes.MOBILE_BANKID);
-        this.configuration = configuration;
+        this.swedbankConfiguration = configuration;
         this.apiClient =
-                apiClientProvider.getApiAgent(client, configuration, credentials, swedbankStorage);
+                apiClientProvider.getApiAgent(
+                        client, configuration, credentials, swedbankStorage, componentProvider);
         eInvoiceRefreshController = null;
 
         SwedbankDefaultInvestmentFetcher investmentFetcher =
