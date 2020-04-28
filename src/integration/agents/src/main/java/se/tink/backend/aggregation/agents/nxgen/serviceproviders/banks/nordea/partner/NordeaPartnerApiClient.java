@@ -6,7 +6,6 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.EndPoints;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.PathParamsKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerConstants.QueryParamsKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.authenticator.NordeaPartnerJweHelper;
@@ -28,14 +27,19 @@ public class NordeaPartnerApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
+    private final String locale;
     private NordeaPartnerConfiguration configuration;
     private NordeaPartnerJweHelper jweHelper;
 
     public NordeaPartnerApiClient(
-            TinkHttpClient client, SessionStorage sessionStorage, Credentials credentials) {
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            Credentials credentials,
+            String locale) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
+        this.locale = locale;
     }
 
     public void setConfiguration(NordeaPartnerConfiguration configuration) {
@@ -77,7 +81,7 @@ public class NordeaPartnerApiClient {
         try {
             return request.addBearerToken(getAccessToken())
                     .accept(MediaType.APPLICATION_JSON)
-                    .acceptLanguage(HeaderValues.ACCEPT_LANGUAGE)
+                    .acceptLanguage(locale)
                     .get(responseType);
 
         } catch (HttpResponseException e) {

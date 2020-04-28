@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.partner;
 
+import com.google.common.collect.ImmutableSet;
 import java.time.ZoneId;
+import java.util.Collection;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.partner.NordeaPartnerAgent;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -17,5 +19,10 @@ public final class NordeaPartnerFiAgent extends NordeaPartnerAgent {
     @Override
     protected ZoneId getPaginatorZoneId() {
         return ZoneId.of("Europe/Helsinki");
+    }
+
+    @Override
+    protected Collection<String> getSupportedLocales() {
+        return ImmutableSet.of("fi-FI", "sv-FI", "en-FI");
     }
 }
