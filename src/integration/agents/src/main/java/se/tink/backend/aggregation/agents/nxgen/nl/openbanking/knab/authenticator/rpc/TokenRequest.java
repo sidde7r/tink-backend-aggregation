@@ -10,6 +10,7 @@ public class TokenRequest {
     private String clientSecret;
     private String state;
     private String redirectUri;
+    private String refreshToken;
 
     private TokenRequest(Builder builder) {
         grantType = builder.grantType;
@@ -18,6 +19,7 @@ public class TokenRequest {
         clientSecret = builder.clientSecret;
         state = builder.state;
         redirectUri = builder.redirectUri;
+        refreshToken = builder.refreshToken;
     }
 
     public static Builder builder() {
@@ -32,6 +34,7 @@ public class TokenRequest {
         private String clientSecret;
         private String state;
         private String redirectUri;
+        private String refreshToken;
 
         public Builder grantType(String val) {
             grantType = val;
@@ -63,12 +66,17 @@ public class TokenRequest {
             return this;
         }
 
+        public Builder refreshToken(String val) {
+            refreshToken = val;
+            return this;
+        }
+
         public TokenRequest build() {
             return new TokenRequest(this);
         }
     }
 
-    public String toData() {
+    public String toTokenData() {
         return Form.builder()
                 .put(FormKeys.GRANT_TYPE, grantType)
                 .put(FormKeys.CODE, code)
@@ -76,6 +84,16 @@ public class TokenRequest {
                 .put(FormKeys.CLIENT_SECRET, clientSecret)
                 .put(FormKeys.STATE, state)
                 .put(FormKeys.REDIRECT_URI, redirectUri)
+                .build()
+                .serialize();
+    }
+
+    public String toRefreshTokenData() {
+        return Form.builder()
+                .put(FormKeys.GRANT_TYPE, grantType)
+                .put(FormKeys.CLIENT_ID, clientId)
+                .put(FormKeys.CLIENT_SECRET, clientSecret)
+                .put(FormKeys.REFRESH_TOKEN, refreshToken)
                 .build()
                 .serialize();
     }

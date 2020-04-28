@@ -64,7 +64,10 @@ public class KnabAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        return null;
+        final OAuth2Token accessToken = apiClient.refreshToken(refreshToken);
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+
+        return accessToken;
     }
 
     @Override

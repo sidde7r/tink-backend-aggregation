@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.ent
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import java.util.Objects;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.KnabConstants.Formats;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -21,16 +23,18 @@ public class TransactionEntity {
     private Date valueDate;
 
     private String creditorName;
+    private String debtorName;
     private String remittanceInformationUnstructured;
     private String remittanceInformationStructured;
     private String endToEndId;
     private String mandateId;
     private String creditorId;
     private String transactionId;
+    private String proprietaryBankTransactionCode;
 
     private Transaction toTinkTransaction(boolean pending) {
         return Transaction.builder()
-                .setDescription(remittanceInformationUnstructured)
+                .setDescription(getDescription())
                 .setDate(valueDate)
                 .setAmount(transactionAmount.toTinkAmount())
                 .setPending(pending)
@@ -43,5 +47,25 @@ public class TransactionEntity {
 
     public Transaction toTinkPendingTransaction() {
         return toTinkTransaction(true);
+    }
+
+    private String getCounterPartyAccount() {
+        return Stream.of(creditorAccount, debtorAccount)
+                .filter(Objects::nonNull)
+                .map(AccountInfoEntity::getAccountNumber)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse("");
+    }
+
+    private String getDescription() {
+        return Stream.of(
+                        creditorName,
+                        debtorName,
+                        remittanceInformationUnstructured,
+                        proprietaryBankTransactionCode)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(getCounterPartyAccount());
     }
 }
