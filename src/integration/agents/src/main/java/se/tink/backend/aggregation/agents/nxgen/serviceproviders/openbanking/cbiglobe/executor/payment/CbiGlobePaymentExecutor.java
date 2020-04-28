@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
@@ -118,7 +120,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentAuthorizationException {
+            throws PaymentException {
 
         PaymentMultiStepResponse paymentMultiStepResponse = null;
         openThirdPartyApp(new URL(sessionStorage.get(StorageKeys.LINK)));
@@ -150,20 +152,26 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                 paymentMultiStepResponse =
                         handleUnsignedPayment(paymentMultiStepRequest, createPaymentResponse);
                 break;
-            case RJCT: // failed case
+            case RJCT: // cancelled case
                 if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_FAILED
                         .equalsIgnoreCase(psuAuthenticationStatus)) {
                     logger.error(
-                            "PSU Authentication failed, psuAuthenticationStatus="
-                                    + psuAuthenticationStatus);
-                    throw new PaymentAuthorizationException();
+                            "PSU Authentication failed, psuAuthenticationStatus={}",
+                            psuAuthenticationStatus);
+                    throw new PaymentAuthenticationException(
+                            "Payment authentication failed.", new PaymentRejectedException());
                 } else {
                     logger.error(
                             "Payment rejected by ASPSP: psuAuthenticationStatus={} , scaStatus={}",
                             psuAuthenticationStatus,
                             scaStatus);
+                    throw new PaymentRejectedException();
                 }
-                break;
+            default:
+                logger.error(
+                        "Payment failed. Invalid Payment status returned by CBI Globe cbiGlobePaymentStatus={}",
+                        cbiGlobePaymentStatus);
+                throw new PaymentException("Payment failed");
         }
 
         // Note: this method should never return null, If this scenario happen then
