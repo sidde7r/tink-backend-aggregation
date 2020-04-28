@@ -25,3 +25,52 @@ RESPONSE 2
 Content-Type: application/json;charset=utf-8
 
 {}
+
+REQUEST 3
+POST https://dummy.com/xml_endpoint
+SOAPAction: SoapAction
+Content-Type: text/xml
+
+<v:Envelope xmlns:v="http://schemas.xmlsoap.org/soap/envelope/" xmlns:c="http://schemas.xmlsoap.org/soap/encoding/" xmlns:d="http://www.w3.org/2001/XMLSchema" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <v:Header />
+  <v:Body>
+    <n0:authenticateCredential xmlns:n0="http://www.isban.es/webservices/TECHNICAL_FACADES/Security/F_facseg_security/internet/loginServicesNSegSAN/v1" facade="loginServicesNSegSAN">
+      <CB_AuthenticationData i:type=":CB_AuthenticationData">
+        <documento i:type=":documento">
+          <CODIGO_DOCUM_PERSONA_CORP i:type="d:string">12345678</CODIGO_DOCUM_PERSONA_CORP>
+          <TIPO_DOCUM_PERSONA_CORP i:type="d:string">N</TIPO_DOCUM_PERSONA_CORP>
+        </documento>
+        <password i:type="d:string">hunter2</password>
+      </CB_AuthenticationData>
+      <userAddress i:type="d:string">127.0.0.1</userAddress>
+    </n0:authenticateCredential>
+  </v:Body>
+</v:Envelope>
+
+RESPONSE 3
+200
+Content-Type: text/xml
+
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<soap-env:Header/>
+<soap-env:Body>
+<prefixRigel0:authenticateCredentialResponse xmlns:prefixRigel0="http://www.isban.es/webservices/SBAMOV/Services_la/F_sbamov_services_la/internet/loginServicesNew/v1">
+<methodResult>
+<tokenCredential>aaaaaaaa-aaaa-4000-aaaa-aaaaaaaaaaaa</tokenCredential>
+</methodResult>
+</prefixRigel0:authenticateCredentialResponse>
+</soap-env:Body>
+</soap-env:Envelope>
+
+REQUEST 4
+POST https://dummy.com/plaintext
+Header1: HeaderValue1
+Content-Type: text/plain
+
+this request body must be sent
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{}

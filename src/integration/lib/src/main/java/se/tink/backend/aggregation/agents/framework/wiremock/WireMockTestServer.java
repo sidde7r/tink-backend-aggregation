@@ -109,23 +109,7 @@ public class WireMockTestServer {
                                                 + key
                                                 + " has different values for the request and its closest match\n"));
 
-        if (entity.getMissingBodyKeysInGivenRequest().size() > 0
-                || entity.getBodyKeysWithDifferentValues().size() > 0) {
-            errorMessage.append("There is a mismatch between request bodies\n");
-            errorMessage.append("The differences are the following:\n");
-            if (entity.getMissingBodyKeysInGivenRequest().size() > 0) {
-                errorMessage.append("The following keys only appear in expected object\n");
-                entity.getMissingBodyKeysInGivenRequest()
-                        .forEach(key -> errorMessage.append(key + "\n"));
-            }
-            if (entity.getBodyKeysWithDifferentValues().size() > 0) {
-                errorMessage.append(
-                        "For the following keys the expected and given objects have different values\n");
-                entity.getBodyKeysWithDifferentValues()
-                        .forEach(key -> errorMessage.append(key + "\n"));
-            }
-        }
-
+        errorMessage.append(entity.getBodyComparisonReporter().report());
         return errorMessage.toString();
     }
 

@@ -29,12 +29,20 @@ public final class BodyParserImpl implements BodyParser {
             return asFormPattern(body);
         }
 
+        if (MediaType.TEXT_XML.equalsIgnoreCase(mediaType)) {
+            return asXmlPattern(body);
+        }
+
         if (MediaType.TEXT_PLAIN.equalsIgnoreCase(mediaType)) {
             return asPlainText(body);
         }
 
         throw new UnsupportedOperationException(
                 String.format("No implemented parsing for Content-Type: %s", mediaType));
+    }
+
+    private ImmutableList<StringValuePattern> asXmlPattern(final String body) {
+        return ImmutableList.of(WireMock.equalToXml(body));
     }
 
     private ImmutableList<StringValuePattern> asJsonPattern(final String body) {
