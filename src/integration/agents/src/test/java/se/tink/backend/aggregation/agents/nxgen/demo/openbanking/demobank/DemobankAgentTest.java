@@ -14,7 +14,7 @@ public class DemobankAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("uk", "uk-demobank-open-banking-password")
+                new AgentIntegrationTest.Builder("uk", "uk-demobank-password")
                         .addCredentialField(Field.Key.USERNAME, USERNAME)
                         .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                         .loadCredentialsBefore(false)

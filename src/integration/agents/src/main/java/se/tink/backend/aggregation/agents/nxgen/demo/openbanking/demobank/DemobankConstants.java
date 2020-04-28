@@ -2,10 +2,55 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 
 public class DemobankConstants {
     public static class Urls {
+        public static final String BASE_URL = "http://192.168.64.12:30788";
         public static final String LOGIN = "/api/login";
         public static final String OAUTH_TOKEN = "/oauth/token";
+        public static final String OAUTH_AUTHORIZE = "/oauth/authorize";
         public static final String ACCOUNTS = "/api/accounts";
         public static final String ACCOUNT_DETAILS = "/api/account/{accountId}/details";
         public static final String TRANSACTIONS = "/api/account/{accountId}/transactions";
+    }
+
+    public static class QueryParams {
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String CLIENT_ID = "client_id";
+        public static final String STATE = "state";
+        public static final String ACCOUNT_ID = "accountId";
+    }
+
+    public static class QueryParamsValues {
+        public static final String RESPONSE_TYPE = "code";
+        public static final String CLIENT_ID = "client";
+    }
+
+    public static class BasicAuthParams {
+        public static final String CLIENT_ID = "client";
+        public static final String CLIENT_SECRET = "password";
+    }
+
+    public static class StorageKeys {
+        public static final String OAUTH2_TOKEN = "oAuth2Token";
+        public static final String ACCOUNT_ID = "ACCOUNT_ID";
+    }
+
+    public static class ProviderNameRegex {
+        public static final String PASSWORD_PROVIDER = "^.*-demobank-password";
+    }
+
+    public static class ClusterIds {
+        public static final String OXFORD_PREPROD = "oxford-preprod";
+        public static final String OXFORD_STAGING = "oxford-staging";
+    }
+
+    public static class ClusterSpecificCallbacks {
+
+        public static final String OXFORD_STAGING_CALLBACK =
+                "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback";
+        public static final String OXFORD_PREPROD_CALLBACK =
+                "https://api.preprod.oxford.tink.com/api/v1/credentials/third-party/callback";
+        public static final String OXFORD_PROD_CALLBACK =
+                "https://api.tink.com/api/v1/credentials/third-party/callback";
+        public static final String LOCAL_CALLBACK =
+                "https://127.0.0.1:7357/api/v1/credentials/third-party/callback";
     }
 }

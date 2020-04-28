@@ -6,6 +6,9 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParamsValues;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -29,14 +32,18 @@ public class DemobankRedirectAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return apiClient.getAuthorizeUrl(state);
+        return new URL(Urls.BASE_URL)
+                .concat(Urls.OAUTH_AUTHORIZE)
+                .queryParam(QueryParams.RESPONSE_TYPE, QueryParamsValues.RESPONSE_TYPE)
+                .queryParam(QueryParams.CLIENT_ID, QueryParamsValues.CLIENT_ID)
+                .queryParam(QueryParams.STATE, state);
     }
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code)
             throws BankServiceException, AuthenticationException {
+
         final OAuth2Token token = apiClient.getToken(code);
-        persistentStorage.put("AUTHENTICATION_TIME", System.currentTimeMillis());
         return token;
     }
 
