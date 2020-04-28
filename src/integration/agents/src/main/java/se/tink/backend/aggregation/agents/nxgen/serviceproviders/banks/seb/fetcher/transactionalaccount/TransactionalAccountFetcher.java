@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.ServiceInputValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
@@ -17,11 +18,15 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class TransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final SebApiClient apiClient;
     private final SebSessionStorage sessionStorage;
+    private final SebBaseConfiguration sebBaseConfiguration;
 
     public TransactionalAccountFetcher(
-            final SebApiClient apiClient, final SebSessionStorage sessionStorage) {
+            final SebApiClient apiClient,
+            final SebSessionStorage sessionStorage,
+            final SebBaseConfiguration sebConfiguration) {
         this.apiClient = Objects.requireNonNull(apiClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
+        this.sebBaseConfiguration = sebConfiguration;
     }
 
     @Override
@@ -30,7 +35,7 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
         final Response response =
                 apiClient.fetchAccounts(customerNumber, ServiceInputValues.DEFAULT_ACCOUNT_TYPE);
         final List<AccountEntity> accountEntities =
-                response.getAccountEntities().orElseGet(() -> new ArrayList<>());
+                sebBaseConfiguration.getAccountEntities(response).orElseGet(ArrayList::new);
 
         return accountEntities.stream()
                 .filter(AccountEntity::isTransactionalAccount)

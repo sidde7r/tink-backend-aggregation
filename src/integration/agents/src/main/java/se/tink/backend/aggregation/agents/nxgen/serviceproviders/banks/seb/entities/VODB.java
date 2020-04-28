@@ -52,6 +52,9 @@ class VODB {
     @JsonProperty("PCBW4311")
     public List<ReservedTransactionEntity> reservedTransactions;
 
+    @JsonProperty("PCBW4401")
+    public List<AccountEntity> businessAccountEntities;
+
     @JsonProperty("PCBW1361")
     public List<UpcomingTransactionEntity> upcomingTransactions;
 

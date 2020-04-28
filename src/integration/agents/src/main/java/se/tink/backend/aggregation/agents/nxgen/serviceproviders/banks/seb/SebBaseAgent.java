@@ -63,7 +63,7 @@ public abstract class SebBaseAgent extends NextGenerationAgent
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
-                new TransactionalAccountFetcher(apiClient, sebSessionStorage),
+                new TransactionalAccountFetcher(apiClient, sebSessionStorage, sebConfiguration),
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(new TransactionFetcher(apiClient)),

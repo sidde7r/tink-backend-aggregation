@@ -97,6 +97,11 @@ public class Response {
     }
 
     @JsonIgnore
+    public Optional<List<AccountEntity>> getBusinessAccountEntities() {
+        return Optional.ofNullable(payload.getBusinessAccountEntities());
+    }
+
+    @JsonIgnore
     public TransactionQuery getTransactionQuery() {
         return payload.getTransactionQuery();
     }

@@ -118,6 +118,12 @@ public class Payload {
     }
 
     @JsonIgnore
+    public List<AccountEntity> getBusinessAccountEntities() {
+        Preconditions.checkNotNull(vodb);
+        return vodb.businessAccountEntities;
+    }
+
+    @JsonIgnore
     public TransactionQuery getTransactionQuery() {
         Preconditions.checkNotNull(vodb);
         return vodb.transactionQuery;
