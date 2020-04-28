@@ -136,7 +136,23 @@ public class KnabApiClient {
 
         return client.request(Urls.TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class, tokenRequest.toData())
+                .post(TokenResponse.class, tokenRequest.toTokenData())
+                .toTinkToken();
+    }
+
+    public OAuth2Token refreshToken(String refreshToken) {
+
+        TokenRequest tokenRequest =
+                TokenRequest.builder()
+                        .grantType(FormValues.REFRESH_TOKEN)
+                        .clientId(configuration.getClientId())
+                        .clientSecret(configuration.getClientSecret())
+                        .refreshToken(refreshToken)
+                        .build();
+
+        return client.request(Urls.TOKEN)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .post(TokenResponse.class, tokenRequest.toRefreshTokenData())
                 .toTinkToken();
     }
 
