@@ -58,6 +58,15 @@ public class LansforsakringarConstants {
                 new URL(BASE + ApiService.PAYMENT_AND_TRANSFER_BANKID_SIGN_VERIFICATION);
         public static final URL FETCH_CARD_TRANSACTIONS =
                 new URL(BASE + ApiService.CARD_TRANSACTIONS);
+        public static final URL FETCH_ISK = new URL(BASE + ApiService.ISK);
+        public static final URL FETCH_INSTRUMENTS_FUND =
+                new URL(BASE + ApiService.INSTRUMENTS_FUND);
+        public static final URL FETCH_INSTRUMENTS_STOCK =
+                new URL(BASE + ApiService.INSTRUMENTS_STOCK);
+        public static final URL FETCH_PORTFOLIO_CASH_BALANCE =
+                new URL(BASE + ApiService.PORTFOLIO_CASH_BALANCE);
+        public static final URL FETCH_INSTRUMENT_WITH_ISIN =
+                new URL(BASE + ApiService.INSTRUMENT_WITH_ISIN);
     }
 
     public static class ApiService {
@@ -98,6 +107,15 @@ public class LansforsakringarConstants {
         public static final String PAYMENT_AND_TRANSFER_BANKID_SIGN_VERIFICATION =
                 "appoutlet/unsigned/paymentsandtransfers/bankid/send/2.0";
         public static final String CARD_TRANSACTIONS = "appoutlet/card/transaction";
+        public static final String ISK = "appoutlet/depot/investmentsavings/3.0";
+        public static final String INSTRUMENTS_FUND =
+                "appoutlet/depot/holding/fund/securityholdings/withdetails/2.0";
+        public static final String INSTRUMENTS_STOCK =
+                "appoutlet/depot/holding/share/securityholdings/2.0";
+        public static final String PORTFOLIO_CASH_BALANCE =
+                "appoutlet/depot/holding/depotcashbalance/2.0";
+        public static final String INSTRUMENT_WITH_ISIN =
+                "appoutlet/depot/trading/share/instrumentwithisin";
     }
 
     public static class StorageKeys {
@@ -127,6 +145,7 @@ public class LansforsakringarConstants {
                         .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD_PRIVATE")
                         .build();
         public static final String CURRENCY = "SEK";
+        public static final String SHARE_DEPOT_ACCOUNT_NAME = "Aktiedepå";
         public static final Pattern PATTERN_BG_RECIPIENT = Pattern.compile("^\\d{3,4}-\\d{4}");
         public static final Pattern PATTERN_PG_RECIPIENT = Pattern.compile("^\\d{1,7}-\\d");
     }
@@ -162,5 +181,10 @@ public class LansforsakringarConstants {
         public LocalizableKey getKey() {
             return this.userMessage;
         }
+    }
+
+    public class QueryKeys {
+        public static final String DEPOT_NUMBER = "depotNumber";
+        public static final String ISIN_CODE = "isinCode";
     }
 }
