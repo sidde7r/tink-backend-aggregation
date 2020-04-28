@@ -94,6 +94,7 @@ public final class KnabConstants {
 
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class CredentialKeys {
