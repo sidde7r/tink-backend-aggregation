@@ -29,6 +29,8 @@ public class FetchAccountResponse {
 
     private Boolean multicurrency;
 
+    private String accountName;
+
     @JsonProperty("other_compartments")
     private List<Object> otherCompartments;
 
@@ -54,57 +56,9 @@ public class FetchAccountResponse {
                                 .withAccountName(type)
                                 .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                                 .build())
-                .addHolderName(type)
+                .addHolderName(accountName)
                 .setApiIdentifier(logicalId)
                 .addAccountFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public String getIban() {
-        return iban;
-    }
-
-    public void setIban(String iban) {
-        this.iban = iban;
-    }
-
-    public Boolean getMulticurrency() {
-        return multicurrency;
-    }
-
-    public void setMulticurrency(Boolean multicurrency) {
-        this.multicurrency = multicurrency;
-    }
-
-    public List<Object> getOtherCompartments() {
-        return otherCompartments;
-    }
-
-    public void setOtherCompartments(List<Object> otherCompartments) {
-        this.otherCompartments = otherCompartments;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 }
