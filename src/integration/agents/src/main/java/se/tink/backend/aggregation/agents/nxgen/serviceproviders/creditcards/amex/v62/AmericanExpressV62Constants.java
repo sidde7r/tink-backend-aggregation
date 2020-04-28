@@ -89,6 +89,7 @@ public final class AmericanExpressV62Constants {
         public static final String GATEKEEPER = "x-axp-gatekeeper";
         public static final String PUBLIC_GUID = "x-axp-public-guid";
         public static final String REQUEST_SEQUENCE = "x-axp-request-sequence";
+        public static final String REQUEST_ID = "x-axp-request-id";
         public static final String GIT_SHA = "x-axp-git-sha";
         public static final String AUTHORIZATION = "authorization";
     }
