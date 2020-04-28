@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -29,8 +30,16 @@ public class DanskebankBusinessAgent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public DanskebankBusinessAgent(AgentComponentProvider componentProvider) {
-        super(componentProvider, aisConfig, true);
+    public DanskebankBusinessAgent(
+            AgentComponentProvider componentProvider, AgentsServiceConfiguration configuration) {
+        super(
+                componentProvider,
+                createEidasJwtSigner(
+                        configuration,
+                        componentProvider.getContext(),
+                        DanskebankBusinessAgent.class),
+                aisConfig,
+                true);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 

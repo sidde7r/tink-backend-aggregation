@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
 public class UlsterV31Agent extends UkOpenBankingBaseAgent {
@@ -33,8 +34,8 @@ public class UlsterV31Agent extends UkOpenBankingBaseAgent {
     }
 
     @Inject
-    public UlsterV31Agent(AgentComponentProvider componentProvider) {
-        super(componentProvider, aisConfig, false);
+    public UlsterV31Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
+        super(componentProvider, jwtSigner, aisConfig, false);
         pisConfig = new UkOpenBankingV31PisConfiguration(V31.PIS_API_URL);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
         this.randomValueGenerator = componentProvider.getRandomValueGenerator();
