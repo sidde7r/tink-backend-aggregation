@@ -16,7 +16,7 @@ public class KnabConfiguration implements ClientConfiguration {
 
     @JsonProperty @SensitiveSecret private String clientSecret;
 
-    @JsonProperty @AgentConfigParam private String psuIpAddress;
+    @JsonProperty @Secret private String psuIpAddress;
 
     public String getClientId() {
         return clientId;
