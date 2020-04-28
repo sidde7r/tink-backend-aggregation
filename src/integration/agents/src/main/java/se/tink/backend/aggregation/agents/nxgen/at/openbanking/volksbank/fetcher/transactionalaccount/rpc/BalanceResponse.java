@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.Volksba
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount.entity.balance.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetcher.transactionalaccount.entity.common.AccountInfoEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceResponse {
@@ -13,7 +13,7 @@ public class BalanceResponse {
     private AccountInfoEntity account;
     private List<BalanceEntity> balances;
 
-    public Amount getBalance() {
+    public ExactCurrencyAmount getBalance() {
         return balances.stream()
                 .filter(BalanceEntity::isInterimAvailable)
                 .findFirst()

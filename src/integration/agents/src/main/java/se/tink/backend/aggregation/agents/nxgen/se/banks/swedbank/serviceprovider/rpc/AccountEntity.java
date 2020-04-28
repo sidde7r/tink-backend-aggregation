@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
@@ -50,7 +49,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
     }
 
     @JsonIgnore
-    public Amount getTinkAmount() {
+    public ExactCurrencyAmount getTinkAmount() {
         return SwedbankSeSerializationUtils.parseAmountForInput(balance, currency);
     }
 

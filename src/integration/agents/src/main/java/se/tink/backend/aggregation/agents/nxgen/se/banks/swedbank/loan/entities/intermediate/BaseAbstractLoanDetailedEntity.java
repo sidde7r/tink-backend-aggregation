@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanDetailsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEntity {
 
@@ -34,7 +34,7 @@ public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEnt
         return SwedbankSeSerializationUtils.parseInterestRate(loanOverview.getInterestRate());
     }
 
-    protected Amount getMonthlyAmortization() {
+    protected ExactCurrencyAmount getMonthlyAmortization() {
         return allLoanDetails
                 .filter(ld -> Objects.nonNull(ld.getUpcomingInvoice()))
                 .map(

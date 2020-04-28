@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pay
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.entities.shared.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.entities.shared.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountBalanceResponse {
@@ -22,7 +22,7 @@ public class AccountBalanceResponse {
 
     private List<LinkEntity> links;
 
-    public Amount getAvailableBalance() {
+    public ExactCurrencyAmount getAvailableBalance() {
         return totalAvailable.toTinkAmount();
     }
 }

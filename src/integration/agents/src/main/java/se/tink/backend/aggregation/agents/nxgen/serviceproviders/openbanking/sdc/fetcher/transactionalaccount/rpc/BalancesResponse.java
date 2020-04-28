@@ -6,7 +6,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.balance.BalanceAccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.entity.balance.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalancesResponse {
@@ -18,11 +18,11 @@ public class BalancesResponse {
         return Optional.ofNullable(balances).orElse(Lists.newArrayList());
     }
 
-    public Amount getBalance() {
+    public ExactCurrencyAmount getBalance() {
         return getBalances().stream()
                 .filter(BalanceEntity::isAvailable)
                 .findFirst()
                 .map(balanceEntity -> balanceEntity.getBalanceAmount().toAmount())
-                .orElseGet(() -> Amount.inSEK(0));
+                .orElseGet(() -> ExactCurrencyAmount.inSEK(0));
     }
 }

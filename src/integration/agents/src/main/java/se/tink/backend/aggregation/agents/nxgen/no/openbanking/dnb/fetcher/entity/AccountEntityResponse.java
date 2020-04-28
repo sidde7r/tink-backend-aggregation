@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntityResponse {
@@ -42,7 +42,7 @@ public class AccountEntityResponse {
                 .build();
     }
 
-    private Amount getAmount(final BalancesResponse balancesResponse) {
+    private ExactCurrencyAmount getAmount(final BalancesResponse balancesResponse) {
         final Balance balance =
                 balancesResponse.getBalances().stream()
                         .filter(this::isUsableBalanceType)
@@ -50,7 +50,8 @@ public class AccountEntityResponse {
                         .orElseThrow(
                                 () -> new IllegalStateException(ErrorMessages.WRONG_BALANCE_TYPE));
 
-        return new Amount(currency, Double.valueOf(balance.getBalanceAmount().getAmount()));
+        return ExactCurrencyAmount.of(
+                Double.valueOf(balance.getBalanceAmount().getAmount()), currency);
     }
 
     private TransactionalAccountType getAccountType() {

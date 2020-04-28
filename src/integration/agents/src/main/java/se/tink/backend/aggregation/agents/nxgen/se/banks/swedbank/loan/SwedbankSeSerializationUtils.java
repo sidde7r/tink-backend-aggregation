@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 public class SwedbankSeSerializationUtils {
@@ -16,7 +16,7 @@ public class SwedbankSeSerializationUtils {
     private static final Pattern amountPattern = Pattern.compile(AMOUNT_REGEX);
     private static final Pattern interestRatePttern = Pattern.compile(INTEREST_RATE_REGEX);
 
-    public static Amount parseAmountForInput(String input, String currencyInput) {
+    public static ExactCurrencyAmount parseAmountForInput(String input, String currencyInput) {
         Optional<String> currencyOptional = Optional.ofNullable(currencyInput);
 
         Matcher matcher = amountPattern.matcher(input);
@@ -25,7 +25,7 @@ public class SwedbankSeSerializationUtils {
         }
         int sign = "-".equals(matcher.group(1)) ? -1 : 1;
         Double amountInDouble = StringUtils.parseAmount(matcher.group(2)) * sign;
-        return new Amount(currencyOptional.orElse(SEK), amountInDouble);
+        return ExactCurrencyAmount.of(amountInDouble, currencyOptional.orElse(SEK));
     }
 
     public static Double parseInterestRate(String interest) {

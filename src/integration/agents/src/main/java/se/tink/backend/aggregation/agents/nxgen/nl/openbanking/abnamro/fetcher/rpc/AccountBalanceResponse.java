@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.rpc;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountBalanceResponse {
@@ -27,7 +27,7 @@ public class AccountBalanceResponse {
         return amount;
     }
 
-    public Amount toAmount() {
-        return new Amount(getCurrency(), getAmount());
+    public ExactCurrencyAmount toAmount() {
+        return ExactCurrencyAmount.of(getAmount(), getCurrency());
     }
 }
