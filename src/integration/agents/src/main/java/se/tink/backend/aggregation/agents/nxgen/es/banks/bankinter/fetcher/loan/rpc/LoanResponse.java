@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.ObjectUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.InstallmentStatus;
@@ -95,6 +96,10 @@ public class LoanResponse extends HtmlResponse {
         return Optional.empty();
     }
 
+    public boolean isSingleCurrency() {
+        return getBalance().getCurrencyCode().equals(getInitialBalance().getCurrencyCode());
+    }
+
     public LoanAccount toLoanAccount() {
         final String accountNumber = getIban();
         final AccountIdentifier iban =
@@ -112,7 +117,7 @@ public class LoanResponse extends HtmlResponse {
                                 .setInitialDate(getInitialDate())
                                 .setMonthlyAmortization(getMonthlyAmortization())
                                 .setNextDayOfTermsChange(getNextDayOfTermsChange())
-                                .setNumMonthsBound(getNumMonthsBound())
+                                .setNumMonthsBound(getNumMonthsBound().orElse(null))
                                 .build())
                 .withId(
                         IdModule.builder()
@@ -135,11 +140,15 @@ public class LoanResponse extends HtmlResponse {
     }
 
     private String getDataValue(String key) {
-        return dataValues.get(key).get(0);
+        final List<String> values = dataValues.get(key);
+        if (values == null) {
+            return null;
+        }
+        return values.get(0);
     }
 
     private String getIban() {
-        return getDataValue("prestamo");
+        return ObjectUtils.firstNonNull(getDataValue("prestamo"), getDataValue("préstamo"));
     }
 
     private String getAssociatedAccount() {
@@ -166,8 +175,11 @@ public class LoanResponse extends HtmlResponse {
         return LocalDate.parse(getDataValue("fecha revisión"), DATE_FORMATTER);
     }
 
-    private int getNumMonthsBound() {
+    private Optional<Integer> getNumMonthsBound() {
         final String stringValue = getDataValue("plazo de revisión");
+        if (Objects.isNull(stringValue)) {
+            return Optional.empty();
+        }
         final Matcher matcher =
                 Pattern.compile("^(?<value>\\d+)(?<unit>[^\\d]+)$").matcher(stringValue);
         if (!matcher.find()) {
@@ -177,7 +189,7 @@ public class LoanResponse extends HtmlResponse {
         final int value = Integer.parseInt(matcher.group("value"));
         final String unit = matcher.group("unit");
         if (unit.equals("mes(es)")) {
-            return value;
+            return Optional.of(value);
         } else {
             throw new IllegalStateException("Cannot parse months bound value: " + stringValue);
         }
