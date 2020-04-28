@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +60,9 @@ public class AmericanExpressV62ApiClient {
                         .header(AmericanExpressV62Constants.ConstantValueHeaders.ACCEPT_LANGUAGE)
                         .header(HttpHeaders.USER_AGENT, config.getUserAgent())
                         .header(
+                                AmericanExpressV62Constants.Headers.REQUEST_ID,
+                                UUID.randomUUID().toString().toUpperCase())
+                        .header(
                                 AmericanExpressV62Constants.Headers.INSTALLATION_ID,
                                 persistentStorage.get(
                                         AmericanExpressV62Constants.Tags.INSTALLATION_ID))
@@ -112,7 +116,6 @@ public class AmericanExpressV62ApiClient {
         String rawResponse =
                 createRequest(AmericanExpressV62Constants.Urls.LOG_ON)
                         .header(AmericanExpressV62Constants.Headers.REQUEST_SEQUENCE, 1)
-                        .header("Cookie", prepareLogonCookie())
                         .post(String.class, request);
 
         return AmericanExpressV62Utils.fromJson(rawResponse, LogonResponse.class);
@@ -129,6 +132,7 @@ public class AmericanExpressV62ApiClient {
                 .post(TransactionResponse.class, request);
     }
 
+    // TODO: remove if will not be needed again in near future
     private String prepareLogonCookie() {
         String agentIdCookieValue =
                 client.getCookies().stream()
