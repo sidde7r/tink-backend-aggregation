@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.business.handels
 
 public class HandelsbankenSEConstants {
 
-    public static final int MAX_FETCH_PERIOD_MONTHS = 15;
+    public static final int MAX_FETCH_PERIOD_MONTHS = 12;
 
     public static class CredentialKeys {
         public static final String SCOPE = "scope";
