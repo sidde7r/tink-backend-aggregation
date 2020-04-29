@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditca
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoApiClient;
@@ -32,7 +32,7 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
                 .collect(Collectors.toList());
     }
 
-    private CardEntity mapToCardEntityObject(LinkedHashMap<String, String> jsonObject) {
+    private CardEntity mapToCardEntityObject(Map<String, String> jsonObject) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(jsonObject, CardEntity.class);
     }

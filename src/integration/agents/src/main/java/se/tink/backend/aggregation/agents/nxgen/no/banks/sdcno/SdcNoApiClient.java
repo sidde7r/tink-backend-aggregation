@@ -5,8 +5,8 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.Sdc
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.QueryParams.ACCOUNT_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.QueryParams.BANKREGNR;
 
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants;
@@ -102,7 +102,7 @@ public class SdcNoApiClient {
                 .header(Headers.X_SDC_LOCALE, Headers.LOCALE_EN);
     }
 
-    public List<LinkedHashMap<String, String>> fetchCreditCards() {
+    public List<Map<String, String>> fetchCreditCards() {
         return client.request(new URL(agentConfig.getIndividualBaseURL() + CREDIT_CARD_PATH))
                 .get(List.class);
     }
