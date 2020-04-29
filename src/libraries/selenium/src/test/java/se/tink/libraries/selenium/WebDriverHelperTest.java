@@ -85,7 +85,7 @@ public class WebDriverHelperTest {
         // then
         assertThat(throwable)
                 .isInstanceOf(HtmlElementNotFoundException.class)
-                .hasMessage("Can't find iframe element");
+                .hasMessage("Can't find element By.tagName: iframe");
     }
 
     @Test
