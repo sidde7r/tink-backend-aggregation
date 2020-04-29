@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoApiClient;
@@ -40,7 +41,7 @@ public class CreditCardFetcherTest {
     @Test
     public void fetchAccountsShouldReturnTransformedActiveCreditCards() {
         // given
-        List<LinkedHashMap<String, String>> response =
+        List<Map<String, String>> response =
                 Arrays.asList(
                         createCardsResponse("CREDIT", "ACTIVE"),
                         createCardsResponse("DEBET", "ACTIVE"),
