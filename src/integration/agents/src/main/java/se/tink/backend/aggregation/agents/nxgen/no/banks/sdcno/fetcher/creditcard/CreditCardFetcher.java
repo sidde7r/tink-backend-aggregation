@@ -20,8 +20,8 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     private final SdcNoApiClient bankClient;
 
     private static final String CURRENCY = "NOK";
-    private static final String STATUS = "ACTIVE";
-    private static final String TYPE = "CREDIT";
+    private static final String ACTIVE_STATUS = "ACTIVE";
+    private static final String CREDIT_CARD_TYPE = "CREDIT";
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
@@ -63,6 +63,6 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     }
 
     private boolean filterCreditCards(CardEntity card) {
-        return STATUS.equals(card.getStatus()) && TYPE.equals(card.getType());
+        return ACTIVE_STATUS.equals(card.getStatus()) && CREDIT_CARD_TYPE.equals(card.getType());
     }
 }
