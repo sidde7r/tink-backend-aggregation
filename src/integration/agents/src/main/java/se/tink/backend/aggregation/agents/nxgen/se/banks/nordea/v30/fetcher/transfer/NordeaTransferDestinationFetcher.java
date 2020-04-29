@@ -42,7 +42,7 @@ public class NordeaTransferDestinationFetcher implements TransferDestinationFetc
         final List<GeneralAccountEntity> paymentSourceAccounts =
                 accountEntityList.stream()
                         .filter(account -> Objects.nonNull(account.getPermissions()))
-                        .filter(account -> account.getPermissions().isCanPayFromAccount())
+                        .filter(account -> account.getPermissions().isCanPayPgbgFromAccount())
                         .collect(Collectors.toList());
 
         // all account that can pay to
