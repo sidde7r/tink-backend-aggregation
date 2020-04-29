@@ -5,7 +5,7 @@ import java.text.ParseException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
@@ -104,7 +104,7 @@ public class TransactionEntity {
     public Transaction toTinkTransaction() {
         Transaction.Builder transactionBuilder =
                 Transaction.builder()
-                        .setAmount(new Amount(currency, amount))
+                        .setAmount(ExactCurrencyAmount.of(amount, currency))
                         .setDescription(text)
                         .setPending(isPending());
 
@@ -121,7 +121,7 @@ public class TransactionEntity {
     public UpcomingTransaction toTinkUpcomingTransaction() {
         UpcomingTransaction.Builder upcomingTransactionBuilder =
                 UpcomingTransaction.builder()
-                        .setAmount(new Amount(currency, amount))
+                        .setAmount(ExactCurrencyAmount.of(amount, currency))
                         .setDescription(text);
 
         try {

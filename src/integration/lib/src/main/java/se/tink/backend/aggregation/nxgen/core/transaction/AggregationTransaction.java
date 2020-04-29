@@ -30,22 +30,6 @@ public abstract class AggregationTransaction {
     private final TransactionTypes type;
     private final Map<TransactionPayloadTypes, String> payload;
 
-    @Deprecated
-    protected AggregationTransaction(
-            Amount amount,
-            Date date,
-            String description,
-            String rawDetails,
-            TransactionTypes type,
-            Map<TransactionPayloadTypes, String> payload) {
-        this.amount = ExactCurrencyAmount.of(amount.toBigDecimal(), amount.getCurrency());
-        this.date = date;
-        this.description = description;
-        this.rawDetails = rawDetails;
-        this.type = type;
-        this.payload = payload;
-    }
-
     protected AggregationTransaction(
             ExactCurrencyAmount amount,
             Date date,

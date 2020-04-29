@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class BalanceEntity {
@@ -14,7 +15,7 @@ public class BalanceEntity {
         return balanceType.equalsIgnoreCase("expected");
     }
 
-    public Amount getAmount() {
+    public ExactCurrencyAmount getAmount() {
         return balanceAmount.toAmount();
     }
 }

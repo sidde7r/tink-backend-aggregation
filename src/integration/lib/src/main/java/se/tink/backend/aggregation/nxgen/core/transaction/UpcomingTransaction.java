@@ -19,28 +19,9 @@ import se.tink.libraries.uuid.UUIDUtils;
 public final class UpcomingTransaction extends AggregationTransaction {
     private final Transfer upcomingTransfer;
 
-    @Deprecated
-    protected UpcomingTransaction(
-            Amount amount, Date date, String description, Transfer upcomingTransfer) {
-        this(amount, date, description, upcomingTransfer, null, TransactionTypes.DEFAULT, null);
-    }
-
     protected UpcomingTransaction(
             ExactCurrencyAmount amount, Date date, String description, Transfer upcomingTransfer) {
         this(amount, date, description, upcomingTransfer, null, TransactionTypes.DEFAULT, null);
-    }
-
-    @Deprecated
-    protected UpcomingTransaction(
-            Amount amount,
-            Date date,
-            String description,
-            Transfer upcomingTransfer,
-            String rawDetails,
-            TransactionTypes type,
-            Map<TransactionPayloadTypes, String> payload) {
-        super(amount, date, description, rawDetails, type, payload);
-        this.upcomingTransfer = upcomingTransfer;
     }
 
     protected UpcomingTransaction(

@@ -18,16 +18,11 @@ public class BookedEntity {
     private Amount amount;
 
     public Transaction toTinkTransaction() {
-        amount = getAmount();
         return Transaction.builder()
                 .setAmount(ExactCurrencyAmount.of(amount.toBigDecimal(), amount.getCurrency()))
                 .setDate(bookingDate)
                 .setDescription(entryReference)
                 .setPending(false)
                 .build();
-    }
-
-    public Amount getAmount() {
-        return transactionAmount.toAmount();
     }
 }

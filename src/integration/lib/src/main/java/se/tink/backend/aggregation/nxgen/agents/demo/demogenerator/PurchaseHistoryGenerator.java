@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 public class PurchaseHistoryGenerator {
@@ -132,7 +133,7 @@ public class PurchaseHistoryGenerator {
                         .mapToObj(
                                 i ->
                                         Transaction.builder()
-                                                .setAmount(new Amount(currency, amount))
+                                                .setAmount(ExactCurrencyAmount.of(amount, currency))
                                                 .setPending(false)
                                                 .setDescription(name)
                                                 .setDate(

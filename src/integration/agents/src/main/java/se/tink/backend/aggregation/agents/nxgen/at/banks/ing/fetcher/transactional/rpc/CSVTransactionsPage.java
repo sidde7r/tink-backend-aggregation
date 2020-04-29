@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class CSVTransactionsPage implements PaginatorResponse {
     public static Logger logger = LoggerFactory.getLogger(CSVTransactionsPage.class);
@@ -57,7 +57,7 @@ public final class CSVTransactionsPage implements PaginatorResponse {
         }
 
         final double amountValue = incomingValue - outgoingValue;
-        final Amount amount = new Amount(currency.trim(), amountValue);
+        final ExactCurrencyAmount amount = ExactCurrencyAmount.of(amountValue, currency.trim());
 
         return Transaction.builder().setDate(date).setAmount(amount).setDescription(text).build();
     }
