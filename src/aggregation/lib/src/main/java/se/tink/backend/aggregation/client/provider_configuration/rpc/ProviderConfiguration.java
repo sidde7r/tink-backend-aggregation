@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -28,6 +29,17 @@ public class ProviderConfiguration {
         EMBEDDED,
         REDIRECT,
         DECOUPLED
+    }
+
+    public enum ReleaseStatus {
+        BETA,
+        LIMITED_RELEASE,
+        GENERALLY_AVAILABLE
+    }
+
+    public enum ComplianceStatus {
+        COMPLIANT,
+        NON_COMPLIANT
     }
 
     @SuppressWarnings("serial")
@@ -69,6 +81,10 @@ public class ProviderConfiguration {
     private boolean transactional;
     private ProviderTypes type;
     private String refreshScheduleSerialized;
+
+    private ReleaseStatus releaseStatus;
+
+    @Nullable private ComplianceStatus complianceStatus;
 
     public AccessType getAccessType() {
         return accessType;
@@ -346,5 +362,22 @@ public class ProviderConfiguration {
         return Optional.ofNullable(
                 SerializationUtils.deserializeFromString(
                         refreshScheduleSerialized, ProviderRefreshSchedule.class));
+    }
+
+    public ReleaseStatus getReleaseStatus() {
+        return releaseStatus;
+    }
+
+    public void setReleaseStatus(ReleaseStatus releaseStatus) {
+        this.releaseStatus = releaseStatus;
+    }
+
+    @Nullable
+    public ComplianceStatus getComplianceStatus() {
+        return complianceStatus;
+    }
+
+    public void setComplianceStatus(@Nullable ComplianceStatus complianceStatus) {
+        this.complianceStatus = complianceStatus;
     }
 }
