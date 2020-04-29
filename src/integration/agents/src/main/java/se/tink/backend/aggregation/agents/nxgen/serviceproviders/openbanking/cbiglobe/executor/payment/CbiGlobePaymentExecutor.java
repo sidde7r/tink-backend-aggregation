@@ -123,8 +123,11 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             throws PaymentException {
 
         PaymentMultiStepResponse paymentMultiStepResponse = null;
-        openThirdPartyApp(new URL(sessionStorage.get(StorageKeys.LINK)));
-        waitForSupplementalInformation();
+        String redirectUrl = sessionStorage.get(StorageKeys.LINK);
+        if (redirectUrl != null) { // dont redirect if CBI globe dont provide redirect URL.
+            openThirdPartyApp(new URL(redirectUrl));
+            waitForSupplementalInformation();
+        }
 
         CreatePaymentResponse createPaymentResponse =
                 fetchPaymentStatus(paymentMultiStepRequest.getPayment().getUniqueId());
@@ -196,8 +199,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                             .getUpdatePsuAuthenticationRedirect()
                             .getHref());
 
-        } else if (CbiGlobeConstants.SCAStatus.INITIATED.equalsIgnoreCase(
-                createPaymentResponse.getScaStatus())) {
+        } else if (createPaymentResponse.getLinks().getScaRedirect() != null) {
             sessionStorage.put(
                     StorageKeys.LINK, createPaymentResponse.getLinks().getScaRedirect().getHref());
         }
@@ -221,11 +223,37 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                     AuthenticationStepConstants.STEP_FINALIZE,
                     new ArrayList<>());
         } else {
-            return new PaymentMultiStepResponse(
-                    createPaymentResponse.toTinkPaymentResponse(paymentType),
-                    CbiGlobeConstants.PaymentStep.IN_PROGRESS_AUTHENTICATION_REQUIRED,
-                    new ArrayList<>());
+            return handleIntermediatePaymentStates(createPaymentResponse, paymentType);
         }
+    }
+
+    private PaymentMultiStepResponse handleIntermediatePaymentStates(
+            CreatePaymentResponse createPaymentResponse, PaymentType paymentType) {
+
+        String redirectURL = null;
+        if (createPaymentResponse.getLinks().getScaRedirect() != null) {
+            redirectURL = createPaymentResponse.getLinks().getScaRedirect().getHref();
+
+        } else if (createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect() != null) {
+            redirectURL =
+                    createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect().getHref();
+        }
+
+        // redirect URl from Bank should be null for intermediate states, If
+        // not null then it may be bug on CBI globe
+        if (redirectURL != null) {
+            logger.warn("IntermediatePaymentStates redirectURl was NOT null, check logs");
+        }
+        sessionStorage.put(
+                StorageKeys.LINK,
+                redirectURL); // redirectURL should be set to null to avoid multiple redirect to
+        // same old URL
+        createPaymentResponse.getLinks().getScaRedirect().getHref();
+
+        return new PaymentMultiStepResponse(
+                createPaymentResponse.toTinkPaymentResponse(paymentType),
+                CbiGlobeConstants.PaymentStep.IN_PROGRESS,
+                new ArrayList<>());
     }
 
     @Override
