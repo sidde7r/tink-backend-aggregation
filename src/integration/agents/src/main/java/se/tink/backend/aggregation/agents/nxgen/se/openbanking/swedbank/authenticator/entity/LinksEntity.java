@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entity;
 
 import se.tink.backend.aggregation.agents.Href;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Links {
+public class LinksEntity {
 
     private Href scaStatus;
 
