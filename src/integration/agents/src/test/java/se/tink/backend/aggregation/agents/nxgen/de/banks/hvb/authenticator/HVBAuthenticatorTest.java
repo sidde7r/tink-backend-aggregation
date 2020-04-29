@@ -18,8 +18,8 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.ConfigurationProvider;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.DateTimeProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBStorage;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 
 public class HVBAuthenticatorTest {
@@ -27,7 +27,7 @@ public class HVBAuthenticatorTest {
     private HVBStorage storage = mock(HVBStorage.class);
     private ConfigurationProvider configurationProvider = mock(ConfigurationProvider.class);
     private DataEncoder dataEncoder = mock(DataEncoder.class);
-    private DateTimeProvider dateTimeProvider = mock(DateTimeProvider.class);
+    private LocalDateTimeSource localDateTimeSource = mock(LocalDateTimeSource.class);
 
     private RegistrationCall registrationRequest = mock(RegistrationCall.class);
     private PreAuthorizationCall preAuthorizationRequest = mock(PreAuthorizationCall.class);
@@ -39,7 +39,7 @@ public class HVBAuthenticatorTest {
                     storage,
                     configurationProvider,
                     dataEncoder,
-                    dateTimeProvider,
+                    localDateTimeSource,
                     registrationRequest,
                     preAuthorizationRequest,
                     authorizationRequest,
@@ -67,7 +67,7 @@ public class HVBAuthenticatorTest {
         when(dataEncoder.base64Encode(any())).thenReturn("basedString");
 
         KeyPair givenKeyPair = givenKeyPairMock();
-        when(configurationProvider.generateRsaKeyPair()).thenReturn(givenKeyPair);
+        when(configurationProvider.getPredefinedRsaKeyPair()).thenReturn(givenKeyPair);
         when(storage.getKeyPair()).thenReturn(givenKeyPair);
 
         String givenUsername = "username";
@@ -100,7 +100,7 @@ public class HVBAuthenticatorTest {
         when(dataEncoder.base64Encode(any())).thenReturn("basedString");
 
         KeyPair givenKeyPair = givenKeyPairMock();
-        when(configurationProvider.generateRsaKeyPair()).thenReturn(givenKeyPair);
+        when(configurationProvider.getPredefinedRsaKeyPair()).thenReturn(givenKeyPair);
         when(storage.getKeyPair()).thenReturn(givenKeyPair);
 
         String givenUsername = "username";

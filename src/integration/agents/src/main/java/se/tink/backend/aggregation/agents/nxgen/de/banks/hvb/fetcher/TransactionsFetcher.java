@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import lombok.Value;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.ConfigurationProvider;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.DateTimeProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.TransactionsCall.Arg;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -26,7 +26,7 @@ public final class TransactionsFetcher
 
     private final HVBStorage storage;
     private final ConfigurationProvider configurationProvider;
-    private final DateTimeProvider dateTimeProvider;
+    private final LocalDateTimeSource localDateTimeSource;
 
     private final TransactionsCall transactionsCall;
     private final TransactionsMapper transactionsMapper;
@@ -34,12 +34,12 @@ public final class TransactionsFetcher
     public TransactionsFetcher(
             HVBStorage storage,
             ConfigurationProvider configurationProvider,
-            DateTimeProvider dateTimeProvider,
+            LocalDateTimeSource localDateTimeSource,
             TransactionsCall transactionsCall,
             TransactionsMapper transactionsMapper) {
         this.storage = storage;
         this.configurationProvider = configurationProvider;
-        this.dateTimeProvider = dateTimeProvider;
+        this.localDateTimeSource = localDateTimeSource;
         this.transactionsCall = transactionsCall;
         this.transactionsMapper = transactionsMapper;
     }
@@ -48,7 +48,7 @@ public final class TransactionsFetcher
     public TransactionKeyPaginatorResponse<Integer> getTransactionsFor(
             final TransactionalAccount account, final Integer key) {
 
-        LocalDate now = dateTimeProvider.getDateNow();
+        LocalDate now = localDateTimeSource.now().toLocalDate();
 
         Arg arg =
                 Arg.builder()

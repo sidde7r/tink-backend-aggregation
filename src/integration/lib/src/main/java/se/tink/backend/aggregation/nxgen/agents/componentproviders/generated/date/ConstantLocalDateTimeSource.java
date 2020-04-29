@@ -10,7 +10,11 @@ public final class ConstantLocalDateTimeSource implements LocalDateTimeSource {
 
     @Override
     public LocalDateTime now() {
-        return LocalDateTime.ofInstant(
-                Instant.ofEpochSecond(CONSTANT_EPOCH_SECONDS), ZoneId.of("UTC"));
+        return LocalDateTime.ofInstant(getInstant(), ZoneId.of("UTC"));
+    }
+
+    @Override
+    public Instant getInstant() {
+        return Instant.ofEpochSecond(CONSTANT_EPOCH_SECONDS);
     }
 }

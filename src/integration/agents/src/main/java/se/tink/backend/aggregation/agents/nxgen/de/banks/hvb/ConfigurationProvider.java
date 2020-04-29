@@ -1,23 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb;
 
-import static java.util.UUID.randomUUID;
 import static javax.ws.rs.core.HttpHeaders.ACCEPT_ENCODING;
 import static javax.ws.rs.core.HttpHeaders.ACCEPT_LANGUAGE;
 import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBConstants.RSA_KEY_SIZE;
+import static se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBConstants.PREDEFINED_RSA_KEY_PAIR;
 
 import com.sun.jersey.core.header.OutBoundHeaders;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 import javax.ws.rs.core.MultivaluedMap;
+import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
+@RequiredArgsConstructor
 public class ConfigurationProvider {
 
-    private static final Random RANDOM = new Random();
-
     private static final String BASE_URL = "https://my.hypovereinsbank.de:443/mfp/api";
+
+    private final RandomValueGenerator randomValueGenerator;
 
     public String getBaseUrl() {
         return BASE_URL;
@@ -36,21 +36,14 @@ public class ConfigurationProvider {
     }
 
     public String generateDeviceId() {
-        return randomUUID().toString().toUpperCase();
+        return randomValueGenerator.getUUID().toString().toUpperCase();
     }
 
     public String generateApplicationSessionId() {
-        return String.format("%08x", RANDOM.nextInt());
+        return String.format("%08x", randomValueGenerator.randomInt(Integer.MAX_VALUE));
     }
 
-    public KeyPair generateRsaKeyPair() {
-        final KeyPairGenerator keyPairGenerator;
-        try {
-            keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(e);
-        }
-        keyPairGenerator.initialize(RSA_KEY_SIZE);
-        return keyPairGenerator.genKeyPair();
+    public KeyPair getPredefinedRsaKeyPair() {
+        return SerializationUtils.deserializeKeyPair(PREDEFINED_RSA_KEY_PAIR);
     }
 }

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh;
 
+import static com.google.common.collect.ImmutableList.of;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -8,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Assert;
@@ -15,8 +18,11 @@ import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.command.RefreshCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.module.AgentFactoryWireMockModule;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
@@ -40,7 +46,9 @@ public final class AgentWireMockRefreshTest {
             Map<String, String> loginDetails,
             Map<String, String> callbackData,
             Module agentModule,
-            Set<RefreshableItem> refreshableItems) {
+            Set<RefreshableItem> refreshableItems,
+            List<Class<? extends CompositeAgentTestCommand>> commandSequence,
+            boolean httpDebugTrace) {
 
         ImmutableSet<RequestResponseParser> parsers =
                 wireMockFilePaths.stream()
@@ -60,7 +68,9 @@ public final class AgentWireMockRefreshTest {
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
                                 callbackData,
-                                agentModule));
+                                agentModule,
+                                commandSequence,
+                                httpDebugTrace));
 
         Injector injector = Guice.createInjector(modules);
         compositeAgentTest = injector.getInstance(CompositeAgentTest.class);
@@ -127,6 +137,7 @@ public final class AgentWireMockRefreshTest {
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
         private final Set<RefreshableItem> refreshableItems;
+        private boolean httpDebugTrace = false;
 
         private AgentsServiceConfiguration configuration;
         private Module agentModule;
@@ -211,11 +222,21 @@ public final class AgentWireMockRefreshTest {
         }
 
         /**
+         * Enables http debug trace printout
+         *
+         * @return This builder.
+         */
+        public Builder withHttpDebugTrace() {
+            this.httpDebugTrace = true;
+            return this;
+        }
+
+        /**
          * Add AAP file to be used.
          *
          * <p>Can be called multiple times to add several files.
          *
-         * @param items AAP file to be used.
+         * @param wireMockFilePath AAP file to be used.
          * @return This builder.
          */
         public Builder addAnotherWireMockFile(String wireMockFilePath) {
@@ -237,7 +258,9 @@ public final class AgentWireMockRefreshTest {
                     credentialFields,
                     callbackData,
                     agentModule,
-                    refreshableItems);
+                    refreshableItems,
+                    of(LoginCommand.class, RefreshCommand.class),
+                    httpDebugTrace);
         }
     }
 }

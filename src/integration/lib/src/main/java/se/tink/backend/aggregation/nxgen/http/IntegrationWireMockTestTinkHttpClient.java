@@ -190,7 +190,9 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
     }
 
     @Override
-    public void setDebugOutput(boolean debugOutput) {}
+    public void setDebugOutput(boolean debugOutput) {
+        tinkHttpClient.setDebugOutput(debugOutput);
+    }
 
     @Override
     public List<Cookie> getCookies() {

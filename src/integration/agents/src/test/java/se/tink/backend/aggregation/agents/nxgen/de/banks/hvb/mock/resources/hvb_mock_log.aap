@@ -1,0 +1,223 @@
+
+REQUEST 1
+POST https://my.hypovereinsbank.de:443/mfp/api/registration/v1/self
+Accept-Encoding: br, gzip, deflat
+User-Agent: HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+Accept-Language: en-SE;q=1,en-SE;q=1,en
+Connection: keep-alive
+Accept: */*
+Content-Type: application/json
+
+{"signedRegistrationData":{"payload":"eyJhcHBsaWNhdGlvbiI6eyJpZCI6ImRlLnVuaWNyZWRpdC5hcHB0YW4iLCJjbGllbnRQbGF0Zm9ybSI6ImlvcyIsInZlcnNpb24iOiI0LjEuMCJ9LCJkZXZpY2UiOnsiaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtMDAwMC0wMDAwMDAwMDAwMDAiLCJwbGF0Zm9ybSI6ImlvcyAxMi40LjMiLCJoYXJkd2FyZSI6ImlQaG9uZSJ9LCJhdHRyaWJ1dGVzIjp7InNka19wcm90b2NvbF92ZXJzaW9uIjoxfX0=","signature":"HHBCMvXDzD0fGnHl1UQrr1fKwINIq4_rysL6P1q32e8-aNU00ARiLWqYB8vBGMBXi6-4kM910pWrC1vkoTUHSw==","header":"eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJuIjoiQU1LY3A3RDZiSnFaNmtwYXdnUSt6dTkreEpFcTFkQ0NIbFQyTHpzZjJCYkpTSnZmVHdVR05MMWJ2NVZCZWFodHhPdkl1aFhyM3ZZMEUyRVpBa1JpWVZjPSIsImUiOiJBUUFCIn19"}}
+
+RESPONSE 1
+201
+Date: Fri, 10 Apr 2020 13:37:12 GMT
+X-OneAgent-JS-Injection: true
+Location: /mfp/api/registration/clients/98908de5-a160-423e-8c6b-68f5bc063e99
+Content-Type: application/json
+Content-Language: en-US
+Set-Cookie: TS01b5ad17=016c098834cd55d5145973a350ae87379eb9f80358e05a2acf43960138e806d068314af9d2358fd5ef0bc0116c8047a6e56eb9c349; Path=/
+Set-Cookie: dtCookie=1$DB11E08253FDC2647FF3A9DC714FBA90; Path=/; Domain=.hypovereinsbank.de
+Set-Cookie: TS013412b2=01ea7e53bf75901feff82f70637dcbe35dee6c685cdfa3f12affc70d682ab2d2704d7289fff5c8ce6d3adc2b34c4b2e6cb806280698f165cef92327bd17b4f1d7c7d3f84e1; Path=/; Secure; HTTPOnly
+Set-Cookie: TS01a21db0=01ea7e53bf4deded75794b17fc529c416ac94dcd05dfa3f12affc70d682ab2d2704d7289ff3e5b1229f22dca07b852391f2cf96d21cef2db26bb489b2e7f33cfd4b06961d7; path=/; domain=.hypovereinsbank.de; HTTPonly; Secure
+Via: 1.1 my.hypovereinsbank.de
+Vary: User-Agent
+Strict-Transport-Security: max-age=15768000
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Keep-Alive: timeout=15, max=5000
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{"server_version":"8.0.2020031301"}
+
+REQUEST 2
+POST https://my.hypovereinsbank.de:443/mfp/api/preauth/v1/preauthorize
+Accept-Encoding: br, gzip, deflat
+User-Agent: HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+Accept-Language: en-SE;q=1,en-SE;q=1,en
+Connection: keep-alive
+Accept: text/javascript, text/html, application/xml, text/xml, */*
+Content-Type: application/json
+x-wl-app-version: 4.1.0
+AvantiPIN: pass
+AvantiSec: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+{"scope":"RegisteredClient UCAuthenticatedUser","challengeResponse":{"UCUserAvantiLoginSC":{"uid":"1122334455","pin":"pass","checkType":"login","ip":"127.0.0.1","ipMsite":"127.0.0.1","platform":"Avanti","wlVersion":"4.1.0","environment":"HV","applicationSessionId":"00000000","httpAccept":"*","httpAcceptEncoding":"*","httpAcceptLanguage":"*","httpReferrer":"*","userAgent":"Mozilla","operatingSystem":"ios","osVersion":"12.4.3"}},"client_id":"98908de5-a160-423e-8c6b-68f5bc063e99"}
+
+RESPONSE 2
+200
+Date: Fri, 10 Apr 2020 13:37:12 GMT
+X-OneAgent-JS-Injection: true
+Content-Type: application/json
+Content-Language: en-US
+Via: 1.1 my.hypovereinsbank.de
+Vary: User-Agent
+Strict-Transport-Security: max-age=15768000
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Keep-Alive: timeout=15, max=4999
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{"successes":{"UCUserAvantiLoginSC":{"user":{"id":null,"displayName":null,"authenticatedAt":1586525832914,"authenticatedBy":"UCUserAvantiLoginSC","attributes":{"country":"DE","sessionId":"e961428c-c95e-454a-ab41-29e685356ca1"}}},"clockSynchronization":{"serverTimeStamp":1586525832914}}}
+
+REQUEST 3
+GET https://my.hypovereinsbank.de:443/mfp/api/az/v1/authorization?scope=RegisteredClient+UCAuthenticatedUser&response_type=code&redirect_uri=https%3A%2F%2Fmfpredirecturi&client_id=98908de5-a160-423e-8c6b-68f5bc063e99
+Accept-Encoding: br, gzip, deflat
+User-Agent: HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+Accept-Language: en-SE;q=1,en-SE;q=1,en
+Connection: keep-alive
+Accept: text/javascript, text/html, application/xml, text/xml, */*
+Content-Type: application/json
+x-wl-app-version: 4.1.0
+
+RESPONSE 3
+302
+Date: Fri, 10 Apr 2020 13:37:13 GMT
+X-OneAgent-JS-Injection: true
+Location: https://mfpredirecturi?code=-3149947677866121204
+Content-Length: 0
+Content-Language: en-US
+Via: 1.1 my.hypovereinsbank.de
+Vary: User-Agent
+Strict-Transport-Security: max-age=15768000
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Keep-Alive: timeout=15, max=4998
+Connection: Keep-Alive
+
+REQUEST 4
+POST https://my.hypovereinsbank.de:443/mfp/api/az/v1/token
+Accept-Encoding: br, gzip, deflat
+User-Agent: HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+Accept-Language: en-SE;q=1,en-SE;q=1,en
+Connection: keep-alive
+Accept: */*
+Content-Type: application/x-www-form-urlencoded
+
+client_assertion=eyJhbGciOiJSUzI1NiIsImp3ayI6eyJraWQiOiI5ODkwOGRlNS1hMTYwLTQyM2UtOGM2Yi02OGY1YmMwNjNlOTkiLCJrdHkiOiJSU0EiLCJuIjoiQU1LY3A3RDZiSnFaNmtwYXdnUSt6dTkreEpFcTFkQ0NIbFQyTHpzZjJCYkpTSnZmVHdVR05MMWJ2NVZCZWFodHhPdkl1aFhyM3ZZMEUyRVpBa1JpWVZjPSIsImUiOiJBUUFCIn19.eyJpc3MiOiJkZS51bmljcmVkaXQuYXBwdGFuJGlvcyQ0LjEuMCIsImF1ZCI6IihudWxsKWF6L3YxL3Rva2VuIiwiaWF0Ijo3MDI4NjQwMDAwMDAsImV4cCI6NzAyODY0MzAwMDAwLCJqdGkiOiItMzE0OTk0NzY3Nzg2NjEyMTIwNCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSJ9.eyH96PSUcQaeJhr-Xr1O2qxRdzN320JJPQ4y9eDtQTX_hZzXCtfkzILP9uRsTXJ7S_op_4gX9spTr9-cuXqgvA%3D%3D&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&code=-3149947677866121204&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fmfpredirecturi
+
+RESPONSE 4
+200
+Date: Fri, 10 Apr 2020 13:37:13 GMT
+X-OneAgent-JS-Injection: true
+Content-Type: application/json
+Content-Language: en-US
+Via: 1.1 my.hypovereinsbank.de
+Vary: User-Agent
+Strict-Transport-Security: max-age=15768000
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Keep-Alive: timeout=15, max=4997
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{"access_token":"eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJlIjoiQVFBQiIsImtpZCI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsIm4iOiJBTTBEZDd4QWR2NkgteWdMN3I4cUNMZEUtM0kya2s0NXpnWnREZF9xczhmdm5ZZmRpcVRTVjRfMnQ2T0dHOENWNUNlNDFQTXBJd21MNDEwWDlJWm52aHhvWWlGY01TYU9lSXFvZS1ySkEwdVp1dzJySGhYWjNXVkNlS2V6UlZjQ09Zc1FOLW1RSzBtZno1XzNvLWV2MFVZd1hrU093QkJsMUVocUl3VkR3T2llZzJKTUdsMEVYc1BaZmtOWkktSFU0b01paS1Uck5MelJXa01tTHZtMDloTDV6b3NVTkExNXZlQ0twaDJXcG1TbTJTNjFuRGhIN2dMRW95bURuVEVqUFk1QW9oMmluSS0zNlJHWVZNVVViTzQ2Q3JOVVl1SW9iT2lYbEx6QklodUlDcGZWZHhUX3g3c3RLWDVDOUJmTVRCNEdrT0hQNWNVdjdOejFkRGhJUHU4PSJ9fQ.eyJpc3MiOiJjb20uaWJtLm1mcCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsImF1ZCI6ImNvbS5pYm0ubWZwIiwiZXhwIjoxNTg2NTI3NjMyOTE0LCJzY29wZSI6IlJlZ2lzdGVyZWRDbGllbnQgVUNBdXRoZW50aWNhdGVkVXNlciJ9.Jh5_V1bTH0NvLtsSRF5hmPirMRGHMKA1o_4U2xtkbM01QNFoRwRp8G7fjL5_c8iOqWkZr0UK9eQREB93JWuZubJxcQqwVoU-ZcIuB-TL6d60fuaPRShNlvwxK3EpASOWk-8lnmUB1eDakaqiBaKOq6-XDTdCjsBqovHw3gEealoZc2RRQRW7lE9W_JYx8Va7k7ol3edctHd7HHWYEGU_OJYgk5kWS1uM6LJOKAlBoAIQ-LCn0EmuaJsMg9nR_gf_cJwiaM4hAKrvbq1VSmBiarQJ6LC_u_ASFbEwFBpzGJuSDZbZD65IId_0w34FQyxKFOjlmloo1CRgP7HlT-qUFw","token_type":"Bearer","expires_in":1799,"scope":"RegisteredClient UCAuthenticatedUser"}
+
+REQUEST 5
+POST https://my.hypovereinsbank.de:443/mfp/api/adapters/UC_MBX_GL_BE_FACADE_NJ/accounts_fetchAllAccounts
+Accept-Encoding: br, gzip, deflat
+User-Agent: HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+Accept-Language: en-SE;q=1,en-SE;q=1,en
+Connection: keep-alive
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJlIjoiQVFBQiIsImtpZCI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsIm4iOiJBTTBEZDd4QWR2NkgteWdMN3I4cUNMZEUtM0kya2s0NXpnWnREZF9xczhmdm5ZZmRpcVRTVjRfMnQ2T0dHOENWNUNlNDFQTXBJd21MNDEwWDlJWm52aHhvWWlGY01TYU9lSXFvZS1ySkEwdVp1dzJySGhYWjNXVkNlS2V6UlZjQ09Zc1FOLW1RSzBtZno1XzNvLWV2MFVZd1hrU093QkJsMUVocUl3VkR3T2llZzJKTUdsMEVYc1BaZmtOWkktSFU0b01paS1Uck5MelJXa01tTHZtMDloTDV6b3NVTkExNXZlQ0twaDJXcG1TbTJTNjFuRGhIN2dMRW95bURuVEVqUFk1QW9oMmluSS0zNlJHWVZNVVViTzQ2Q3JOVVl1SW9iT2lYbEx6QklodUlDcGZWZHhUX3g3c3RLWDVDOUJmTVRCNEdrT0hQNWNVdjdOejFkRGhJUHU4PSJ9fQ.eyJpc3MiOiJjb20uaWJtLm1mcCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsImF1ZCI6ImNvbS5pYm0ubWZwIiwiZXhwIjoxNTg2NTI3NjMyOTE0LCJzY29wZSI6IlJlZ2lzdGVyZWRDbGllbnQgVUNBdXRoZW50aWNhdGVkVXNlciJ9.Jh5_V1bTH0NvLtsSRF5hmPirMRGHMKA1o_4U2xtkbM01QNFoRwRp8G7fjL5_c8iOqWkZr0UK9eQREB93JWuZubJxcQqwVoU-ZcIuB-TL6d60fuaPRShNlvwxK3EpASOWk-8lnmUB1eDakaqiBaKOq6-XDTdCjsBqovHw3gEealoZc2RRQRW7lE9W_JYx8Va7k7ol3edctHd7HHWYEGU_OJYgk5kWS1uM6LJOKAlBoAIQ-LCn0EmuaJsMg9nR_gf_cJwiaM4hAKrvbq1VSmBiarQJ6LC_u_ASFbEwFBpzGJuSDZbZD65IId_0w34FQyxKFOjlmloo1CRgP7HlT-qUFw
+Content-Type: application/x-www-form-urlencoded
+
+params=%5B%7B%22platform%22%3A%22iPhone%22%2C%22osVersion%22%3A%2212.4.3%22%2C%22appVersion%22%3A%224.1.0%22%2C%22reb%22%3A%221122334455%22%7D%5D
+
+RESPONSE 5
+200
+Date: Fri, 10 Apr 2020 13:37:13 GMT
+X-OneAgent-JS-Injection: true
+Vary: Accept-Encoding,User-Agent
+Content-Type: application/json
+Content-Language: en-US
+Via: 1.1 my.hypovereinsbank.de
+Strict-Transport-Security: max-age=15768000
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Keep-Alive: timeout=15, max=4996
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{"userdata":{"ndg":"413671128","surname":"","fiscalCode":"","name":""},"isSuccessful":true,"response":{"configurationMobile":[{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"\"[ { \\\"AppVersion\\\":\\\"ALL\\\",\\\"Title\\\":\\\"Endlich ist es soweit!\\\",\\\"Message\\\":\\\"Unsere neue App ist da und erstrahlt in neuem Glanz. \\\\nAb sofort noch intuitiver, moderner und schneller.\\\" }, { \\\"AppVersion\\\":\\\"2.60.06\\\",\\\"Title\\\":\\\"Novità della versione $AppVersion\\\",\\\"Message\\\":\\\"Sul tuo Msite potrai gestire:\\\\n- Widget Profit and Loss \\\\n- Ripeti un pagamento frequente\\\" },{ \\\"AppVersion\\\":\\\"2.60.07\\\",\\\"Title\\\":\\\"Novità della versione $AppVersion\\\",\\\"Message\\\":\\\"Sul tuo Msite potrai gestire: \\\\n- Temporary Cards \\\\n- Budget\\\" }]\"","userId":"","key":"WHATS_NEW_TC","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"\"ALL\"","userId":"","key":"BE.RET.REB.ACTIVE","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"\"ALL\"","userId":"","key":"BE.PRI.REB.ACTIVE","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"\"ALL\"","userId":"","key":"BE.IMP.REB.ACTIVE","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"\"\"","userId":"","key":"app.config.iosDecimalKeyboard","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"showShuffleKeyboard\": false}","userId":"","key":"app.config.shuffleKeyboard","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"enableModularity\": true}","userId":"","key":"app.config.modularity","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"enableCardsRequests\": true}","userId":"","key":"app.config.requests.cards","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"priipsDisabled\": false, \"mifidiiDisabled\":false}","userId":"","key":"app.config.trading","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"link\": \"https://www.hypovereinsbank.de/konto\"}","userId":"","key":"app.config.apriconto","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"enablePasswordCard\": true}","userId":"","key":"app.config.passwordCard","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"ratingDays\": 7}","userId":"","key":"app.config.ratingDays","enabled":false},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"helpNotFoundUrl\": \"https://unicredit.validazione.usinet.it/content/dam/ucpublic/it/UAT/New-App-Mobile-Banking_Dove_v14.pdf \"}","userId":"","key":"app.config.helpNotFoundUrl","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"enableCommercialEngagement\": true}","userId":"","key":"app.config.requests.commeng","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"enableMapellumMSite\": true}","userId":"","key":"app.config.mapellumMSite","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"link\": \"https://www.unicredit.it/it/altrilink/recupero_credenziali_mobile.html\"}","userId":"","key":"app.config.accessProblem","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"enableAccountAggregation\": true}","userId":"","key":"app.config.accountAggregation","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"enableFastActivationQR\": true}","userId":"","key":"app.config.fastActivationQR","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"\"{ \\\"Rules\\\": { }, \\\"Message\\\":\\\"\\\",\\\"Status\\\": \\\"enabled\\\", \\\"Value\\\": \\\"{\\\\\"messageList\\\\\": [{ \\\\\"title\\\\\": \\\\\"Avviso\\\\\", \\\\\"text\\\\\": \\\\\"Informiamo che dalle ore 20:00 di sabato 18 maggio alle ore 11:00 di domenica 19 maggio, i servizi di Online Banking (internet e mobile) e l\\u2019accesso al servizio, potrebbero subire delle temporanee indisponibilit\\u00E0 per programmati interventi manutentivi.\\r\\n\\r\\nCi scusiamo per il disagio\\\\\" }]}\\\" } \"","userId":"","key":"app.config.loginComunication","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":{},"userId":"","key":"app.config.courtesyMessage","enabled":false},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"ratingDays\": 7}","userId":"","key":"app.config.test","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"enableFullMobile\": true}","userId":"","key":"app.config.fullMobile","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"{\"enableMultiLanguage\": true}","userId":"","key":"app.config.multiLanguage","enabled":true},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":{},"userId":"","key":"app.config.bancomatPay","enabled":false},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":{},"userId":"","key":"app.config.inviaDenaro","enabled":false},{"lockInfo":"","enviroment":"","id":"","type":"CONF_MANAGER","value":"\"[ { \\\"Message\\\":\\\"\\\" } ]\"","userId":"","key":"provisioning.tc.prod","enabled":true}],"accounts":[{"ndgRapporto":"413671128","type":"2","branch":"0460","supportedFunction":[],"dcaId":{"messageBoxNotMandatoryCount":"0","id":"18499587","type":"83"},"balance":0.81,"nickname":"HVB Checking Account Name","productTypeDescription":"Kontokorrentkonto","currency":"EUR","id":"00000000000000","pan":"","shortCode":"1","tower":"C0","pkgAccount":"3219661490","technicalForm":"","tipoLegame":"","ibanInfo":{"branchCode":"0460","bankCode":"","bankOfGroup":"","bankDesc":"","iban":"DE26760200700000000000","accountNumber":"00000000000000","checkDigit":"","tag25":"","ibanPrettyPrint":"DE26760200700000000000"},"manager":"","acronym":"","pfmId":"","entGimbIdList":[{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"MN_PFM_MOBILE"},{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"MN_INVESTIMENTI_MOBILE"},{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"AL_COMMENG_MOBILE"},{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"MN_BUDGET_MOBILE"},{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"HP_W_POG_MOBILE"},{"extraConfig":5,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getMovements","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":10,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.getPayments","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":10,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.getPayments","message":"","gimbId":"PY_ARCHIVIO_BONIFICI"},{"extraConfig":11,"balance":"","serviceStatus":"VISIBLE","description":"??????","message":"","gimbId":"TRANSFER_ABRUF"},{"extraConfig":12,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.getPayments","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":13,"balance":"","serviceStatus":"VISIBLE","description":"?????","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":14,"balance":"","serviceStatus":"VISIBLE","description":"StandingOrderService.getSepaStandingOrders","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":15,"balance":"","serviceStatus":"VISIBLE","description":"StandingOrderService.createStandingOrder, StandingOrderService.updateStandingOrder, StandingOrderService.deleteStandingOrder","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":15,"balance":"","serviceStatus":"VISIBLE","description":"StandingOrderService.createStandingOrder, StandingOrderService.updateStandingOrder, StandingOrderService.deleteStandingOrder","message":"","gimbId":"STANDING_ORDER"},{"extraConfig":15,"balance":"","serviceStatus":"VISIBLE","description":"StandingOrderService.createStandingOrder, StandingOrderService.updateStandingOrder, StandingOrderService.deleteStandingOrder","message":"","gimbId":"STANDING_ORDER_LIST"},{"extraConfig":16,"balance":"","serviceStatus":"VISIBLE","description":"?????","message":"","gimbId":"CHECK_ORDER"},{"extraConfig":19,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getRelationshipManager","message":"","gimbId":"RELATIONSHIP_MANAGER"},{"extraConfig":30,"balance":"","serviceStatus":"VISIBLE","description":"DirectDebitService.refundDirectDebit","message":"","gimbId":"REFUND_DIRECT_DEBIT"},{"extraConfig":32,"balance":"","serviceStatus":"VISIBLE","description":"SavingService.getSavingTransfers","message":"","gimbId":"SAVING_LIST"},{"extraConfig":33,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.createPayment","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":33,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.createPayment","message":"","gimbId":"PY_BONIFICO_SEPA_MOBILE"},{"extraConfig":33,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.createPayment","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":33,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.createPayment","message":"","gimbId":"PY_BONIFICO_IP_MOBILE"},{"extraConfig":34,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.getPayments","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":34,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.getPayments","message":"","gimbId":"PY_ARCHIVIO_BONIFICI"},{"extraConfig":35,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.getPayments","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":35,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.getPayments","message":"","gimbId":"PY_ARCHIVIO_BONIFICI"},{"extraConfig":36,"balance":"","serviceStatus":"VISIBLE","description":"DirectDebitService.getDirectDebits","message":"","gimbId":"DIRECT_DEBIT_LIST"},{"extraConfig":0,"balance":"","serviceStatus":"VISIBLE","description":"","message":"","gimbId":"CH_FIRST_TUTORIAL_MOBILE"},{"extraConfig":0,"balance":"","serviceStatus":"NOT_VISIBLE","description":"","message":"","gimbId":"CH_MESSAGGI_MOBILE"},{"extraConfig":0,"balance":"","serviceStatus":"VISIBLE","description":"","message":"","gimbId":"CH_ADVISOR"},{"extraConfig":33,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.createPayment","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":33,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.createPayment","message":"","gimbId":"PY_BONIFICO_SEPA_MOBILE"},{"extraConfig":33,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.createPayment","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":33,"balance":"","serviceStatus":"VISIBLE","description":"PaymentService.createPayment","message":"","gimbId":"PY_BONIFICO_IP_MOBILE"},{"extraConfig":31,"balance":"","serviceStatus":"VISIBLE","description":"SavingService.createSavingTransfer","message":"","gimbId":"PY_GIROCONTO_MOBILE"},{"extraConfig":31,"balance":"","serviceStatus":"VISIBLE","description":"SavingService.createSavingTransfer","message":"","gimbId":"MN_CONTI_MOBILE"}],"oldContractType":"RT","ndgType":"PF","keyA":"","ndg":"413671128","descr":" ","mbsVers":"","balanceDate":"1992-05-10T15:37:13","loginInfo":{"descr":"","holderName":"Holder Name","manager":"","holderSurname":"Surname","sex":"","type":"","branch":{"descr":"","address":"","municipality":"","id":""}},"authority":"E","accountDisabled":"false","accountDebt":"","checkSerchResult":"NO","bic":"HYVEDEMM460"},{"ndgRapporto":"413671128","type":"6","branch":"0460","supportedFunction":[],"dcaId":{"messageBoxNotMandatoryCount":"0","id":"18499587","type":"83"},"balance":0,"nickname":"HVB Savings Account Name","productTypeDescription":"Sparkonto","currency":"EUR","id":"27312276","pan":"","shortCode":"1","tower":"C0","pkgAccount":"3219661490","technicalForm":"","tipoLegame":"","ibanInfo":{"branchCode":"0460","bankCode":"","bankOfGroup":"","bankDesc":"","iban":"DE26760200700000000001","accountNumber":"27312276","checkDigit":"","tag25":"","ibanPrettyPrint":"DE26760200700000000001"},"manager":"","acronym":"","pfmId":"","entGimbIdList":[{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"MN_PFM_MOBILE"},{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"MN_INVESTIMENTI_MOBILE"},{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"AL_COMMENG_MOBILE"},{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"MN_BUDGET_MOBILE"},{"extraConfig":3,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getCurrentBalanceForBankAccount","message":"","gimbId":"HP_W_POG_MOBILE"},{"extraConfig":5,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getMovements","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":19,"balance":"","serviceStatus":"VISIBLE","description":"AccountService.getRelationshipManager","message":"","gimbId":"RELATIONSHIP_MANAGER"},{"extraConfig":31,"balance":"","serviceStatus":"VISIBLE","description":"SavingService.createSavingTransfer","message":"","gimbId":"PY_GIROCONTO_MOBILE"},{"extraConfig":31,"balance":"","serviceStatus":"VISIBLE","description":"SavingService.createSavingTransfer","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":32,"balance":"","serviceStatus":"VISIBLE","description":"SavingService.getSavingTransfers","message":"","gimbId":"SAVING_LIST"},{"extraConfig":0,"balance":"","serviceStatus":"VISIBLE","description":"","message":"","gimbId":"CH_FIRST_TUTORIAL_MOBILE"},{"extraConfig":0,"balance":"","serviceStatus":"NOT_VISIBLE","description":"","message":"","gimbId":"CH_MESSAGGI_MOBILE"},{"extraConfig":0,"balance":"","serviceStatus":"VISIBLE","description":"","message":"","gimbId":"CH_ADVISOR"},{"extraConfig":31,"balance":"","serviceStatus":"VISIBLE","description":"SavingService.createSavingTransfer","message":"","gimbId":"PY_GIROCONTO_MOBILE"},{"extraConfig":31,"balance":"","serviceStatus":"VISIBLE","description":"SavingService.createSavingTransfer","message":"","gimbId":"MN_CONTI_MOBILE"}],"oldContractType":"RT","ndgType":"PF","keyA":"","ndg":"413671128","descr":" ","mbsVers":"","balanceDate":"1992-05-10T15:37:13","loginInfo":{"descr":"","holderName":"Holder Name","manager":"","holderSurname":"Surname","sex":"","type":"","branch":{"descr":"","address":"","municipality":"","id":""}},"authority":"E","accountDisabled":"false","accountDebt":"","checkSerchResult":"NO","bic":"HYVEDEMM460"}],"entGimbIdEnhList":[{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"AL_ONBOARDING_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"AL_APRICONTO_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"AL_MTOKEN_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"AL_ATM_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"AL_IVR_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"AL_COMMENG_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"AL_CATALOGO_PRODOTTI_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"AL_PREL_SMART_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CH_ATTIVITA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"NOT_VISIBLE","message":"","gimbId":"CH_MESSAGGI_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CH_ADVISOR"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CH_MPIN_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CH_PIN_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CH_DISATTIVA_APP_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CH_PUSH_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CH_DOL_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CH_FIRST_TUTORIAL_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"NOT_VISIBLE","message":"","gimbId":"CH_FIRST_TUTORIAL_WHATSNEW_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"HP_W_POG_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"HP_INAPP_PROVISIONING_MOBILE_APPLE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_BONIFICO_ESTERO_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_BPAY_SEND_MONEY"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_BANCOMAT_PAY_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_RATEIZZA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"MN_CARTE_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_PIANI_RATEALI_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_CAMBIA_DATA_ADDEBITO_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_PREPAYED_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_DEBIT_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_CREDITCARD_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_CAMBIA_SALDO_VS_REV_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_BLOCCO_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_PROBLEMI_CARTA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_SOSPENDI_CARTA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_ATTIVAZIONE_CARTA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_ADDENDUM_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_DUPLICATO_CARTA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CA_VISUALIZZAPIN_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_RICARICA_PREPAGATA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_RICARICA_CELLULARE_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"MN_CONTI_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"MN_BUDGET_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_BONIFICO_SEPA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_GIROCONTO_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_CBILL_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_BOL_PREMARCATI_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_BOL_BIANCO_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_MAVRAPREP_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_EQUITALIA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_F24_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_BONIFICO_IP_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"MN_PFM_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CR_CAMBIO_REB_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"MN_MUTUI_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"MN_INVESTIMENTI_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"IV_COMPRAVENDITA_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"IV_ORDINI_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"IV_RICERCA_TITOLI_MOBILE"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"PY_ARCHIVIO_BONIFICI"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"MOVEMENTS"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"TRANSFER_ABRUF"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"OPEN_PAYMENT_LIST"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"OPEN_PAYMENT"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"STANDING_ORDER_LIST"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"STANDING_ORDER"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CHECK_ORDER"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"RELATIONSHIP_MANAGER"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"REFUND_DIRECT_DEBIT"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"CREATE_SAVING_TRANSFER"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"SAVING_LIST"},{"extraConfig":"","balance":"","serviceStatus":"VISIBLE","message":"","gimbId":"DIRECT_DEBIT_LIST"}]}}
+
+REQUEST 6
+POST https://my.hypovereinsbank.de:443/mfp/api/adapters/UC_MBX_GL_BE_FACADE_NJ/accounts_requestCurrentAccountTransactionList
+Accept-Encoding: br, gzip, deflat
+User-Agent: HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+Accept-Language: en-SE;q=1,en-SE;q=1,en
+Connection: keep-alive
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJlIjoiQVFBQiIsImtpZCI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsIm4iOiJBTTBEZDd4QWR2NkgteWdMN3I4cUNMZEUtM0kya2s0NXpnWnREZF9xczhmdm5ZZmRpcVRTVjRfMnQ2T0dHOENWNUNlNDFQTXBJd21MNDEwWDlJWm52aHhvWWlGY01TYU9lSXFvZS1ySkEwdVp1dzJySGhYWjNXVkNlS2V6UlZjQ09Zc1FOLW1RSzBtZno1XzNvLWV2MFVZd1hrU093QkJsMUVocUl3VkR3T2llZzJKTUdsMEVYc1BaZmtOWkktSFU0b01paS1Uck5MelJXa01tTHZtMDloTDV6b3NVTkExNXZlQ0twaDJXcG1TbTJTNjFuRGhIN2dMRW95bURuVEVqUFk1QW9oMmluSS0zNlJHWVZNVVViTzQ2Q3JOVVl1SW9iT2lYbEx6QklodUlDcGZWZHhUX3g3c3RLWDVDOUJmTVRCNEdrT0hQNWNVdjdOejFkRGhJUHU4PSJ9fQ.eyJpc3MiOiJjb20uaWJtLm1mcCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsImF1ZCI6ImNvbS5pYm0ubWZwIiwiZXhwIjoxNTg2NTI3NjMyOTE0LCJzY29wZSI6IlJlZ2lzdGVyZWRDbGllbnQgVUNBdXRoZW50aWNhdGVkVXNlciJ9.Jh5_V1bTH0NvLtsSRF5hmPirMRGHMKA1o_4U2xtkbM01QNFoRwRp8G7fjL5_c8iOqWkZr0UK9eQREB93JWuZubJxcQqwVoU-ZcIuB-TL6d60fuaPRShNlvwxK3EpASOWk-8lnmUB1eDakaqiBaKOq6-XDTdCjsBqovHw3gEealoZc2RRQRW7lE9W_JYx8Va7k7ol3edctHd7HHWYEGU_OJYgk5kWS1uM6LJOKAlBoAIQ-LCn0EmuaJsMg9nR_gf_cJwiaM4hAKrvbq1VSmBiarQJ6LC_u_ASFbEwFBpzGJuSDZbZD65IId_0w34FQyxKFOjlmloo1CRgP7HlT-qUFw
+Content-Type: application/x-www-form-urlencoded
+
+params=%5B%7B%22accountNumber%22%3A%2200000000000000%22%2C%22branchNumber%22%3A%220460%22%2C%22bookingDateFrom%22%3A%221991-04-10%22%2C%22bookingDateTo%22%3A%221992-04-10%22%2C%22correlationId%22%3A%22test1%22%2C%22callCounter%22%3A0%2C%22reb%22%3A%221122334455%22%2C%22isSearch%22%3Afalse%7D%5D
+
+RESPONSE 6
+200
+Date: Fri, 10 Apr 2020 13:37:14 GMT
+X-OneAgent-JS-Injection: true
+Content-Type: application/json
+Content-Language: en-US
+Via: 1.1 my.hypovereinsbank.de
+Vary: User-Agent
+Strict-Transport-Security: max-age=15768000
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Keep-Alive: timeout=15, max=4995
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{"response":{"paginationData":{"extractedMov":"0","flag":"0","routineNum":"0","year":"0","valueDate":"0","prog":"0","availableBalance":"0","salconEig":"0","salconEur":"0","movDate":"0","fsladi":"0","branchAtt":"0","finalBalance":"0","initialBalance":"0","endGg":"0","endMm":"0","dependence":"0","value":"0","timestamp":"0"},"transactionList":[{"itms":[{"date":"1992-05-31","bookDate":"1992-05-01","accountingTransactionReason":{"name":"dacsdca","description":"description test","type":"1"},"accordionData":["DESCRIPTION_2_1","DESCRIPTION_2_2","DESCRIPTION_2_3"],"progressiveBadge":"","accountingEffectType":"","causFunction":"","internalNoteDescription":"","description":"","valueDate":"1992-05-31","type":"","procedureKey":"","pfmTransaction":{"transactionId":"","categoryId":"","rootCategoryId":""},"reference":"KEINE BELEG INFORMATIONEN,","typology":"ABSCHLUSS","badge":"99968","internalNoteId":"","exchangeRate":"","causAbi":"","causNass":"","postingEntryAmount":{"amount":"-0.95","currency":"EUR"}}],"date":"1992-05-01"},{"itms":[{"date":"1992-06-29","bookDate":"1992-06-29","accountingTransactionReason":{"name":"dacsdca","description":"description test","type":"1"},"accordionData":["DESCRIPTION_1_1","DESCRIPTION_1_2","DESCRIPTION_1_3"],"progressiveBadge":"","accountingEffectType":"","causFunction":"","internalNoteDescription":"","description":"","valueDate":"1992-06-29","type":"","procedureKey":"","pfmTransaction":{"transactionId":"","categoryId":"","rootCategoryId":""},"reference":"Tobias Surname","typology":"SEPA-GUTSCHRIFT","badge":"99968","internalNoteId":"","exchangeRate":"","causAbi":"","causNass":"","postingEntryAmount":{"amount":"2","currency":"EUR"}}],"date":"1992-06-29"}],"hasMoreData":"false","transactionCount":2,"callCounter":5,"accountData":{"actualBalanceDate":"1992-05-10T15:37:13","actualBalance":"0.81","accountType":"2","availableBalanceDate":"1992-05-10","iban":"DE26760200700000000000","currency":"EUR","accountNumber":"00000000000000","branch":"0460","bic":"HYVEDEMM460","availableBalance":"0.81"}}}
+
+
+REQUEST 7
+POST https://my.hypovereinsbank.de:443/mfp/api/adapters/UC_MBX_GL_BE_FACADE_NJ/accounts_requestCurrentAccountTransactionList
+Accept-Encoding: br, gzip, deflat
+User-Agent: HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00),HVB Banking/4.1.0 (iPhone; iOS 12.4.3; Scale/2.00)/WLNativeAPI/8.0.0.00.2016-01-24T11:48:54Z
+Accept-Language: en-SE;q=1,en-SE;q=1,en
+Connection: keep-alive
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImp3ayI6eyJrdHkiOiJSU0EiLCJlIjoiQVFBQiIsImtpZCI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsIm4iOiJBTTBEZDd4QWR2NkgteWdMN3I4cUNMZEUtM0kya2s0NXpnWnREZF9xczhmdm5ZZmRpcVRTVjRfMnQ2T0dHOENWNUNlNDFQTXBJd21MNDEwWDlJWm52aHhvWWlGY01TYU9lSXFvZS1ySkEwdVp1dzJySGhYWjNXVkNlS2V6UlZjQ09Zc1FOLW1RSzBtZno1XzNvLWV2MFVZd1hrU093QkJsMUVocUl3VkR3T2llZzJKTUdsMEVYc1BaZmtOWkktSFU0b01paS1Uck5MelJXa01tTHZtMDloTDV6b3NVTkExNXZlQ0twaDJXcG1TbTJTNjFuRGhIN2dMRW95bURuVEVqUFk1QW9oMmluSS0zNlJHWVZNVVViTzQ2Q3JOVVl1SW9iT2lYbEx6QklodUlDcGZWZHhUX3g3c3RLWDVDOUJmTVRCNEdrT0hQNWNVdjdOejFkRGhJUHU4PSJ9fQ.eyJpc3MiOiJjb20uaWJtLm1mcCIsInN1YiI6Ijk4OTA4ZGU1LWExNjAtNDIzZS04YzZiLTY4ZjViYzA2M2U5OSIsImF1ZCI6ImNvbS5pYm0ubWZwIiwiZXhwIjoxNTg2NTI3NjMyOTE0LCJzY29wZSI6IlJlZ2lzdGVyZWRDbGllbnQgVUNBdXRoZW50aWNhdGVkVXNlciJ9.Jh5_V1bTH0NvLtsSRF5hmPirMRGHMKA1o_4U2xtkbM01QNFoRwRp8G7fjL5_c8iOqWkZr0UK9eQREB93JWuZubJxcQqwVoU-ZcIuB-TL6d60fuaPRShNlvwxK3EpASOWk-8lnmUB1eDakaqiBaKOq6-XDTdCjsBqovHw3gEealoZc2RRQRW7lE9W_JYx8Va7k7ol3edctHd7HHWYEGU_OJYgk5kWS1uM6LJOKAlBoAIQ-LCn0EmuaJsMg9nR_gf_cJwiaM4hAKrvbq1VSmBiarQJ6LC_u_ASFbEwFBpzGJuSDZbZD65IId_0w34FQyxKFOjlmloo1CRgP7HlT-qUFw
+Content-Type: application/x-www-form-urlencoded
+
+params=%5B%7B%22accountNumber%22%3A%2227312276%22%2C%22branchNumber%22%3A%220460%22%2C%22bookingDateFrom%22%3A%221991-04-10%22%2C%22bookingDateTo%22%3A%221992-04-10%22%2C%22correlationId%22%3A%22test1%22%2C%22callCounter%22%3A0%2C%22reb%22%3A%221122334455%22%2C%22isSearch%22%3Afalse%7D%5D
+
+RESPONSE 7
+200
+Date: Fri, 10 Apr 2020 13:37:16 GMT
+X-OneAgent-JS-Injection: true
+Content-Type: application/json
+Content-Language: en-US
+Via: 1.1 my.hypovereinsbank.de
+Vary: User-Agent
+Strict-Transport-Security: max-age=15768000
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:;img-src 'self' data:;
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Keep-Alive: timeout=15, max=4994
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+
+{"response":{"paginationData":{"extractedMov":"0","flag":"0","routineNum":"0","year":"0","valueDate":"0","prog":"0","availableBalance":"0","salconEig":"0","salconEur":"0","movDate":"0","fsladi":"0","branchAtt":"0","finalBalance":"0","initialBalance":"0","endGg":"0","endMm":"0","dependence":"0","value":"0","timestamp":"0"},"transactionList":[],"hasMoreData":"false","transactionCount":0,"callCounter":5,"accountData":{"actualBalanceDate":"1992-05-10T15:37:13","actualBalance":"N.V.","accountType":"6","availableBalanceDate":"1992-05-10","iban":"DE26760200700000000001","currency":"EUR","accountNumber":"27312276","branch":"0460","bic":"HYVEDEMM460","availableBalance":"0.00"}}}

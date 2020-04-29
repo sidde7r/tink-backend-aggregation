@@ -15,6 +15,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.Transaction
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.UserDataCall;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.UserDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.UserDataMapper;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -22,11 +25,21 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistration {
 
+    void registerExternalDependencies(
+            TinkHttpClient tinkHttpClient,
+            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
+            AgentComponentProvider componentProvider) {
+
+        registerExternalDependencies(tinkHttpClient, sessionStorage, persistentStorage);
+        registerBean(RandomValueGenerator.class, componentProvider.getRandomValueGenerator());
+        registerBean(LocalDateTimeSource.class, componentProvider.getLocalDateTimeSource());
+    }
+
     @Override
     public void registerInternalModuleDependencies() {
         registerBean(DataEncoder.class, new DataEncoder());
-        registerBean(ConfigurationProvider.class, configurationProvider());
-        registerBean(new DateTimeProvider());
+        registerBean(new ConfigurationProvider(getBean(RandomValueGenerator.class)));
         registerBean(
                 new HVBStorage(getBean(SessionStorage.class), getBean(PersistentStorage.class)));
         registerBean(
@@ -51,7 +64,7 @@ public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistr
                         getBean(HVBStorage.class),
                         getBean(ConfigurationProvider.class),
                         getBean(DataEncoder.class),
-                        getBean(DateTimeProvider.class),
+                        getBean(LocalDateTimeSource.class),
                         getBean(RegistrationCall.class),
                         getBean(PreAuthorizationCall.class),
                         getBean(AuthorizationCall.class),
@@ -86,7 +99,7 @@ public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistr
                 new TransactionsFetcher(
                         getBean(HVBStorage.class),
                         getBean(ConfigurationProvider.class),
-                        getBean(DateTimeProvider.class),
+                        getBean(LocalDateTimeSource.class),
                         getBean(TransactionsCall.class),
                         getBean(TransactionsMapper.class)));
 
@@ -97,9 +110,5 @@ public class HVBModuleDependenciesRegistration extends ModuleDependenciesRegistr
                         getBean(HVBStorage.class),
                         getBean(UserDataCall.class),
                         getBean(UserDataMapper.class)));
-    }
-
-    protected ConfigurationProvider configurationProvider() {
-        return new ConfigurationProvider();
     }
 }
