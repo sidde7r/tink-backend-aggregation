@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetc
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class SpaceTransactionEntitiy {
@@ -17,7 +17,7 @@ public class SpaceTransactionEntitiy {
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
-                .setAmount(new Amount(currency, amount))
+                .setAmount(ExactCurrencyAmount.of(amount, currency))
                 .setDate(new Date(time))
                 .setDescription(displayText)
                 .build();

@@ -5,7 +5,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -67,7 +67,7 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(new Amount(currency.toUpperCase(), getAmount()))
+                .setAmount(ExactCurrencyAmount.of(getAmount(), currency.toUpperCase()))
                 .setDate(new Date(startedDate))
                 .setDescription(description)
                 .build();

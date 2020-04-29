@@ -36,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAcco
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class OtmlResponseConverter {
@@ -325,7 +324,8 @@ public class OtmlResponseConverter {
             throw new IllegalStateException(String.format("Unable to parse %s", movementDate), e);
         }
 
-        Amount amount = new Amount(amountCurrency, Double.valueOf(amountValue));
+        ExactCurrencyAmount amount =
+                ExactCurrencyAmount.of(Double.valueOf(amountValue), amountCurrency);
 
         return Transaction.builder()
                 .setAmount(amount)

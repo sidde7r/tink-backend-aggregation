@@ -6,7 +6,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -46,9 +46,9 @@ public class TransactionEntity {
                 .build();
     }
 
-    private Amount getAmount() {
-        return new Amount(
-                transactionAmount.getCurrency(), Double.parseDouble(transactionAmount.getAmount()));
+    private ExactCurrencyAmount getAmount() {
+        return ExactCurrencyAmount.of(
+                Double.parseDouble(transactionAmount.getAmount()), transactionAmount.getCurrency());
     }
 
     public String getResourceId() {

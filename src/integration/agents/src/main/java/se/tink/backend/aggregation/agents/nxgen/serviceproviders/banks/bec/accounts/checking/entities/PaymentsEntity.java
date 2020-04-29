@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PaymentsEntity {
@@ -29,8 +29,8 @@ public class PaymentsEntity {
     @JsonIgnore
     public UpcomingTransaction toTinkUpcomingTransaction() {
         return UpcomingTransaction.builder()
-                .setDate(this.date)
-                .setAmount(new Amount(this.currency, this.amount))
+                .setDate(date)
+                .setAmount(ExactCurrencyAmount.of(amount, currency))
                 .setDescription(getDescription())
                 .build();
     }

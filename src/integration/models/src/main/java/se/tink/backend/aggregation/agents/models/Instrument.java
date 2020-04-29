@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.util.Optional;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,12 +28,6 @@ public class Instrument {
     private String ticker;
     private Type type;
     private String rawType;
-
-    @Deprecated
-    @JsonIgnore
-    private static Double getAmountValue(Amount amount) {
-        return Optional.ofNullable(amount).map(Amount::getValue).orElse(null);
-    }
 
     @JsonIgnore
     private static Double getAmountValueFromExactAmount(ExactCurrencyAmount amount) {

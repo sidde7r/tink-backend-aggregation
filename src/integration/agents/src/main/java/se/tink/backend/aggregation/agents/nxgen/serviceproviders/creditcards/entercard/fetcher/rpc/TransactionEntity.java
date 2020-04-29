@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @SuppressWarnings("unused")
 @JsonObject
@@ -31,7 +31,7 @@ public class TransactionEntity {
     private boolean disputable;
 
     public Transaction toTinkTransaction() {
-        Amount amount = new Amount(billingCurrency, billingAmount);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of(billingAmount, billingCurrency);
         boolean isPending = TransactionType.AUTHORIZATION.equalsIgnoreCase(type);
         ZonedDateTime dateTime =
                 ZonedDateTime.parse(transactionDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);

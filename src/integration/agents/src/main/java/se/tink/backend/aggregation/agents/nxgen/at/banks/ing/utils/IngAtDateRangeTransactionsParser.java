@@ -9,7 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngAtDateRangeTransactionsParser {
     private Document ajaxDoc;
@@ -48,7 +48,7 @@ public class IngAtDateRangeTransactionsParser {
                             .replace(",", ".");
             final Transaction transaction =
                     new Transaction.Builder()
-                            .setAmount(new Amount("EUR", Double.parseDouble(amount)))
+                            .setAmount(ExactCurrencyAmount.of(amount, "EUR"))
                             .setDate(dateParser.parse(date))
                             .setDescription(description)
                             .build();

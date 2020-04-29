@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.e
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.GetAccountStatementItemsResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.entities.OK;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class GetAccountStatementItemsResponse {
     private Envelope envelope;
@@ -52,7 +52,7 @@ public final class GetAccountStatementItemsResponse {
         if (currency.isPresent() && balance.isPresent() && date.isPresent()) {
             return Optional.of(
                     Transaction.builder()
-                            .setAmount(new Amount(currency.get(), balance.get()))
+                            .setAmount(ExactCurrencyAmount.of(balance.get(), currency.get()))
                             .setDate(date.get())
                             .setDescription(description)
                             .build());

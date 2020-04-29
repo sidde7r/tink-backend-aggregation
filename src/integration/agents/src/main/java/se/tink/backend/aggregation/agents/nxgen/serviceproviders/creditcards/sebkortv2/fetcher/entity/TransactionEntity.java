@@ -6,7 +6,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -160,7 +160,7 @@ public class TransactionEntity {
 
     @JsonIgnore
     private CreditCardTransaction toTinkTransaction(boolean isPending) {
-        Amount amount = new Amount(billingCurrencyCode, -billingAmount);
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of(-billingAmount, billingCurrencyCode);
 
         return CreditCardTransaction.builder()
                 .setCreditCard(CreditCard.create(nameOnCard, maskedCardNumber))
