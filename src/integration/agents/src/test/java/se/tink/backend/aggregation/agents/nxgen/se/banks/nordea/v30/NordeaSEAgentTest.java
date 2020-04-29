@@ -21,7 +21,7 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaSEAgentTest {
     private AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("se", "se-nordea-bankid")
+            new AgentIntegrationTest.Builder("se", "nordea-bankid")
                     .loadCredentialsBefore(false)
                     .saveCredentialsAfter(false)
                     .doLogout(true);
