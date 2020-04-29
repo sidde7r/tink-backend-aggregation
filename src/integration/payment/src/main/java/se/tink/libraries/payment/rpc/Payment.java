@@ -96,6 +96,7 @@ public class Payment {
         return debtor;
     }
 
+    @Deprecated
     public Amount getAmount() {
         if (exactCurrencyAmount == null) {
             log.warn("exactCurrencyAmount shouldn't be null");

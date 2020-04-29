@@ -10,11 +10,12 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.OutputEnti
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public final class GetAccountsResponse {
@@ -41,25 +42,53 @@ public final class GetAccountsResponse {
 
         final Supplier<TransactionalAccount> checkingAccount =
                 () ->
-                        CheckingAccount.builder()
-                                .setUniqueIdentifier(iban)
-                                .setAccountNumber(accountNumber)
-                                .setBalance(new Amount(accountEntity.getCurrency(), balance))
-                                .setAlias(accountEntity.getTypeDescription())
-                                .addAccountIdentifier(new IbanIdentifier(iban))
+                        TransactionalAccount.nxBuilder()
+                                .withType(TransactionalAccountType.CHECKING)
+                                .withInferredAccountFlags()
+                                .withBalance(
+                                        BalanceModule.builder()
+                                                .withBalance(
+                                                        ExactCurrencyAmount.of(
+                                                                balance,
+                                                                accountEntity.getCurrency()))
+                                                .build())
+                                .withId(
+                                        IdModule.builder()
+                                                .withUniqueIdentifier(iban)
+                                                .withAccountNumber(accountNumber)
+                                                .withAccountName(accountEntity.getTypeDescription())
+                                                .addIdentifier(
+                                                        AccountIdentifier.create(
+                                                                AccountIdentifier.Type.IBAN, iban))
+                                                .build())
                                 .addHolderName(accountEntity.getTitularName())
-                                .build();
+                                .build()
+                                .orElseThrow(IllegalStateException::new);
 
         final Supplier<TransactionalAccount> savingsAccount =
                 () ->
-                        SavingsAccount.builder()
-                                .setUniqueIdentifier(iban)
-                                .setAccountNumber(accountNumber)
-                                .setBalance(new Amount(accountEntity.getCurrency(), balance))
-                                .setAlias(accountEntity.getTypeDescription())
-                                .addAccountIdentifier(new IbanIdentifier(iban))
+                        TransactionalAccount.nxBuilder()
+                                .withType(TransactionalAccountType.SAVINGS)
+                                .withInferredAccountFlags()
+                                .withBalance(
+                                        BalanceModule.builder()
+                                                .withBalance(
+                                                        ExactCurrencyAmount.of(
+                                                                balance,
+                                                                accountEntity.getCurrency()))
+                                                .build())
+                                .withId(
+                                        IdModule.builder()
+                                                .withUniqueIdentifier(iban)
+                                                .withAccountNumber(accountNumber)
+                                                .withAccountName(accountEntity.getTypeDescription())
+                                                .addIdentifier(
+                                                        AccountIdentifier.create(
+                                                                AccountIdentifier.Type.IBAN, iban))
+                                                .build())
                                 .addHolderName(accountEntity.getTitularName())
-                                .build();
+                                .build()
+                                .orElseThrow(IllegalStateException::new);
 
         final TypeMapper<Supplier<TransactionalAccount>> accountTypeMapper =
                 TypeMapper.<Supplier<TransactionalAccount>>builder()
