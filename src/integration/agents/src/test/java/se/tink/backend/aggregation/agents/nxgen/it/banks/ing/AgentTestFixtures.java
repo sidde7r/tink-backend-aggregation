@@ -11,6 +11,8 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.framework.AgentTestServerClient;
+import se.tink.backend.aggregation.agents.framework.AgentTestServerSupplementalRequester;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
@@ -57,6 +59,9 @@ class AgentTestFixtures {
                 new NewAgentTestContext(
                         givenCredentialsRequest.getUser(),
                         givenCredentialsRequest.getCredentials(),
+                        new AgentTestServerSupplementalRequester(
+                                givenCredentialsRequest.getCredentials(),
+                                AgentTestServerClient.getInstance()),
                         TRANSACTIONS_TO_PRINT,
                         null,
                         clusterId,
