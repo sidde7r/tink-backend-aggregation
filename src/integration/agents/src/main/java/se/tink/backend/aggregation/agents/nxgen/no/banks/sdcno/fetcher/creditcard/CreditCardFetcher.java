@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditcard;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collection;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoApiClient;
@@ -26,15 +24,9 @@ public class CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return bankClient.fetchCreditCards().stream()
-                .map(this::mapToCardEntityObject)
                 .filter(this::filterCreditCards)
                 .map(this::toTinkCreditCard)
                 .collect(Collectors.toList());
-    }
-
-    private CardEntity mapToCardEntityObject(Map<String, String> jsonObject) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.convertValue(jsonObject, CardEntity.class);
     }
 
     private CreditCardAccount toTinkCreditCard(CardEntity card) {

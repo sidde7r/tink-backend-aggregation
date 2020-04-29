@@ -5,12 +5,15 @@ import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.Sdc
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.QueryParams.ACCOUNT_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.QueryParams.BANKREGNR;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditcard.entity.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.creditcard.entity.CreditCardTransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcAgreement;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsRequest;
@@ -102,9 +105,17 @@ public class SdcNoApiClient {
                 .header(Headers.X_SDC_LOCALE, Headers.LOCALE_EN);
     }
 
-    public List<Map<String, String>> fetchCreditCards() {
-        return client.request(new URL(agentConfig.getIndividualBaseURL() + CREDIT_CARD_PATH))
-                .get(List.class);
+    public List<CardEntity> fetchCreditCards() {
+        List<Map<String, String>> creditCards =
+                client.request(new URL(agentConfig.getIndividualBaseURL() + CREDIT_CARD_PATH))
+                        .get(List.class);
+
+        return creditCards.stream().map(this::mapToCardEntityObject).collect(Collectors.toList());
+    }
+
+    private CardEntity mapToCardEntityObject(Map<String, String> jsonObject) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.convertValue(jsonObject, CardEntity.class);
     }
 
     public CreditCardTransactionsEntity fetchCreditCardTransactions(String apiIdentifier) {
