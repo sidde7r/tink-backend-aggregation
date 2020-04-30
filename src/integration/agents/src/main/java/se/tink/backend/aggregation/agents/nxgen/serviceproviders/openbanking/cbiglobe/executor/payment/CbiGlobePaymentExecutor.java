@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.InstructedAmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
@@ -156,20 +157,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
                         handleUnsignedPayment(paymentMultiStepRequest, createPaymentResponse);
                 break;
             case RJCT: // cancelled case
-                if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_FAILED
-                        .equalsIgnoreCase(psuAuthenticationStatus)) {
-                    logger.error(
-                            "PSU Authentication failed, psuAuthenticationStatus={}",
-                            psuAuthenticationStatus);
-                    throw new PaymentAuthenticationException(
-                            "Payment authentication failed.", new PaymentRejectedException());
-                } else {
-                    logger.error(
-                            "Payment rejected by ASPSP: psuAuthenticationStatus={} , scaStatus={}",
-                            psuAuthenticationStatus,
-                            scaStatus);
-                    throw new PaymentRejectedException();
-                }
+                return handleReject(scaStatus, psuAuthenticationStatus);
             default:
                 logger.error(
                         "Payment failed. Invalid Payment status returned by CBI Globe cbiGlobePaymentStatus={}",
@@ -182,12 +170,52 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         return paymentMultiStepResponse;
     }
 
+    private PaymentMultiStepResponse handleReject(String scaStatus, String psuAuthenticationStatus)
+            throws PaymentAuthenticationException, PaymentRejectedException {
+        if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_FAILED.equalsIgnoreCase(
+                psuAuthenticationStatus)) {
+            logger.error(
+                    "PSU Authentication failed, psuAuthenticationStatus={}",
+                    psuAuthenticationStatus);
+            throw new PaymentAuthenticationException(
+                    "Payment authentication failed.", new PaymentRejectedException());
+        } else {
+            logger.error(
+                    "Payment rejected by ASPSP: psuAuthenticationStatus={} , scaStatus={}",
+                    psuAuthenticationStatus,
+                    scaStatus);
+            throw new PaymentRejectedException();
+        }
+    }
+
     private PaymentMultiStepResponse handleUnsignedPayment(
             PaymentMultiStepRequest paymentMultiStepRequest,
             CreatePaymentResponse createPaymentResponse) {
 
-        String psuAuthenticationStatus = createPaymentResponse.getPsuAuthenticationStatus();
+        LinksEntity links = createPaymentResponse.getLinks();
+        if (links == null) {
+            return handleEmptyLinksInResponse(paymentMultiStepRequest, createPaymentResponse);
+        } else {
+            return handleRedirectURLs(paymentMultiStepRequest, createPaymentResponse);
+        }
+    }
 
+    private PaymentMultiStepResponse handleEmptyLinksInResponse(
+            PaymentMultiStepRequest paymentMultiStepRequest,
+            CreatePaymentResponse createPaymentResponse) {
+        sessionStorage.put(StorageKeys.LINK, null);
+        return new PaymentMultiStepResponse(
+                createPaymentResponse.toTinkPaymentResponse(
+                        paymentMultiStepRequest.getPayment().getUniqueId(),
+                        paymentMultiStepRequest.getPayment().getType()),
+                CbiGlobeConstants.PaymentStep.IN_PROGRESS,
+                new ArrayList<>());
+    }
+
+    private PaymentMultiStepResponse handleRedirectURLs(
+            PaymentMultiStepRequest paymentMultiStepRequest,
+            CreatePaymentResponse createPaymentResponse) {
+        String psuAuthenticationStatus = createPaymentResponse.getPsuAuthenticationStatus();
         if (CbiGlobeConstants.PSUAuthenticationStatus.IDENTIFICATION_REQUIRED.equalsIgnoreCase(
                         psuAuthenticationStatus)
                 || CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATION_REQUIRED
@@ -202,6 +230,13 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         } else if (createPaymentResponse.getLinks().getScaRedirect() != null) {
             sessionStorage.put(
                     StorageKeys.LINK, createPaymentResponse.getLinks().getScaRedirect().getHref());
+        } else if (createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect() != null) {
+            sessionStorage.put(
+                    StorageKeys.LINK,
+                    createPaymentResponse
+                            .getLinks()
+                            .getUpdatePsuAuthenticationRedirect()
+                            .getHref());
         }
         return new PaymentMultiStepResponse(
                 createPaymentResponse.toTinkPaymentResponse(
@@ -231,18 +266,24 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             CreatePaymentResponse createPaymentResponse, PaymentType paymentType) {
 
         String redirectURL = null;
-        if (createPaymentResponse.getLinks().getScaRedirect() != null) {
-            redirectURL = createPaymentResponse.getLinks().getScaRedirect().getHref();
+        if (createPaymentResponse.getLinks() != null) {
+            if (createPaymentResponse.getLinks().getScaRedirect() != null) {
+                redirectURL = createPaymentResponse.getLinks().getScaRedirect().getHref();
 
-        } else if (createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect() != null) {
-            redirectURL =
-                    createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect().getHref();
-        }
+            } else if (createPaymentResponse.getLinks().getUpdatePsuAuthenticationRedirect()
+                    != null) {
+                redirectURL =
+                        createPaymentResponse
+                                .getLinks()
+                                .getUpdatePsuAuthenticationRedirect()
+                                .getHref();
+            }
 
-        // redirect URl from Bank should be null for intermediate states, If
-        // not null then it may be bug on CBI globe
-        if (redirectURL != null) {
-            logger.warn("IntermediatePaymentStates redirectURl was NOT null, check logs");
+            // redirect URl from Bank should be null for intermediate states, If
+            // not null then it may be bug on CBI globe
+            if (redirectURL != null) {
+                logger.warn("IntermediatePaymentStates redirectURl was NOT null, check logs");
+            }
         }
         sessionStorage.put(
                 StorageKeys.LINK,
