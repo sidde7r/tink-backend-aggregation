@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.banks.danskebank.v2.util;
 import java.text.ParseException;
 import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
@@ -59,7 +58,8 @@ public class DanskeBankDateUtilTest {
                 danskeBankDateUtil.getTransferDateForBgPg(
                         null, fixedClock("2020-03-19T03:30:00.00Z"));
         Assert.assertNotNull(transferDate);
-        Assert.assertEquals("Now", transferDate);
+        final long expected = Date.from(Instant.parse("2020-03-19T03:30:00.00Z")).getTime();
+        Assert.assertEquals(formateDateForBGPG(expected), transferDate);
     }
 
     @Test
@@ -81,7 +81,8 @@ public class DanskeBankDateUtilTest {
                 danskeBankDateUtil.getTransferDateForBgPg(
                         null, fixedClock("2020-03-19T20:30:00.00Z"));
         Assert.assertNotNull(transferDate);
-        Assert.assertEquals("20200320", transferDate);
+        final long expected = Date.from(Instant.parse("2020-03-20T20:30:00.00Z")).getTime();
+        Assert.assertEquals(formateDateForBGPG(expected), transferDate);
     }
 
     @Test
@@ -106,48 +107,37 @@ public class DanskeBankDateUtilTest {
         Assert.assertNotNull(transferDate);
         // The date returned from the DateUtil should be monday 23 because it's the immediately next
         // business day (friday 20 is already past cut-off time and 21 and 22 are weekend days)
-        Assert.assertEquals("20200323", (transferDate));
+
+        final long expected = Date.from(Instant.parse("2020-03-23T20:30:00.00Z")).getTime();
+
+        Assert.assertEquals(formateDateForBGPG(expected), transferDate);
     }
 
     @Test
-    public void testTransferExecutionDateIsNotChangedWhenExplictlySetForInternalTransfer()
-            throws ParseException {
-        Date anyDate =
-                Date.from(
-                        LocalDate.of(2020, 06, 11)
-                                .atStartOfDay()
-                                .atZone(DEFAULT_ZONE_ID)
-                                .toInstant());
-        String transferDate = danskeBankDateUtil.getTransferDateForInternalTransfer(anyDate);
-        Date parsedDate = THREAD_SAFE_DATE_FORMAT.parse(transferDate);
-        Assert.assertEquals(anyDate, parsedDate);
-    }
-
-    @Test
-    public void testTransferExecutionDateIsNotChangedWhenExplictlySetForExternalTransfer()
-            throws ParseException {
-        Date anyDate =
-                Date.from(
-                        LocalDate.of(2020, 06, 11)
-                                .atStartOfDay()
-                                .atZone(DEFAULT_ZONE_ID)
-                                .toInstant());
+    public void testTransferExecutionDateIsNotChangedWhenExplictlySetForInternalTransfer() {
+        Date anyDate = Date.from(Instant.parse("2020-06-11T00:00:00.00Z"));
         String transferDate = danskeBankDateUtil.getTransferDateForExternalTransfer(anyDate);
-        Date parsedDate = THREAD_SAFE_DATE_FORMAT.parse(transferDate);
-        Assert.assertEquals(anyDate, parsedDate);
+        Assert.assertEquals("20200611", transferDate);
+    }
+
+    @Test
+    public void testTransferExecutionDateIsNotChangedWhenExplictlySetForExternalTransfer() {
+        Date anyDate = Date.from(Instant.parse("2020-06-11T00:00:00.00Z"));
+        String transferDate = danskeBankDateUtil.getTransferDateForExternalTransfer(anyDate);
+        Assert.assertEquals("20200611", transferDate);
     }
 
     @Test
     public void testTransferExecutionDateIsNotChangedWhenExplictlySetForBgPg()
             throws ParseException {
-        Date anyDate =
-                Date.from(
-                        LocalDate.of(2020, 06, 11)
-                                .atStartOfDay()
-                                .atZone(DEFAULT_ZONE_ID)
-                                .toInstant());
-        String transferDate = danskeBankDateUtil.getTransferDateForBgPg(anyDate);
-        Date parsedDate = THREAD_SAFE_DATE_FORMAT.parse(transferDate);
-        Assert.assertEquals(anyDate, parsedDate);
+        String transferDate =
+                danskeBankDateUtil.getTransferDateForBgPg(
+                        Date.from(Instant.parse("2020-06-11T00:00:00.00Z")));
+        final long expected = Date.from(Instant.parse("2020-06-11T00:00:00.00Z")).getTime();
+        Assert.assertEquals(formateDateForBGPG(expected), transferDate);
+    }
+
+    private String formateDateForBGPG(long longDate) {
+        return "\\/Date(" + longDate + "+0200)\\/";
     }
 }

@@ -46,7 +46,7 @@ public class DanskeBankDateUtil {
     }
 
     public String getTransferDateForBgPg(Date date) {
-        return getTransferDate(date, BGPG_CUTOFF_HOUR, BGPG_CUTOFF_MINUTE);
+        return formateDateForBGPG(date);
     }
 
     public String getTransferDateForBgPg(Date date, Clock now) {
@@ -54,7 +54,7 @@ public class DanskeBankDateUtil {
         // payments
         // but according to new info, it accepts same day's transfers, if they are done before 10:00
         dateHelper.setClock(now);
-        return getTransferDate(date, BGPG_CUTOFF_HOUR, BGPG_CUTOFF_MINUTE);
+        return formateDateForBGPG(date);
     }
 
     private String getTransferDate(Date date, int cutoffHour, int cutoffMinute) {
@@ -79,5 +79,14 @@ public class DanskeBankDateUtil {
         return localDate.isEqual(LocalDate.now(dateHelper.getClock()))
                 ? TODAY_AS_TRANSFER_DATE
                 : localDate.format(DateTimeFormatter.BASIC_ISO_DATE);
+    }
+
+    private String formateDateForBGPG(Date date) {
+        return "\\/Date("
+                + dateHelper
+                        .getProvidedDateOrBestPossibleDate(
+                                date, BGPG_CUTOFF_HOUR, BGPG_CUTOFF_MINUTE)
+                        .getTime()
+                + "+0200)\\/";
     }
 }
