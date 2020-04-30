@@ -31,6 +31,7 @@ import se.tink.libraries.payment.rpc.Payment;
 public final class AgentWireMockPaymentTest {
 
     private final CompositeAgentTest compositeAgentTest;
+    private final WireMockTestServer server;
 
     private AgentWireMockPaymentTest(
             MarketCode marketCode,
@@ -44,7 +45,7 @@ public final class AgentWireMockPaymentTest {
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace) {
 
-        final WireMockTestServer server =
+        server =
                 new WireMockTestServer(
                         ImmutableSet.of(
                                 new AapFileParser(
@@ -73,7 +74,14 @@ public final class AgentWireMockPaymentTest {
      * @throws Exception May throw any exception that the agent throws.
      */
     public void executePayment() throws Exception {
-        compositeAgentTest.execute();
+        try {
+            compositeAgentTest.execute();
+        } catch (Exception e) {
+            if (server.hadEncounteredAnError()) {
+                throw new RuntimeException(server.createErrorLogForFailedRequest());
+            }
+            throw e;
+        }
     }
 
     /**
