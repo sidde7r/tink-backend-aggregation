@@ -26,7 +26,7 @@ public class BankIdIframeSSAuthenticationController {
     private static final By AUTHENTICATION_INPUT_XPATH =
             By.xpath("//form//input[@type='password'][@maxlength]");
 
-    private static final int WAIT_RENDER_MILLIS = 1000;
+    private static final int WAIT_RENDER_MILLIS = 2000;
 
     public BankIdIframeSSAuthenticationController(
             IframeInitializer iframeInitializer, WebDriver driver, WebDriverHelper driverHelper) {
@@ -42,8 +42,8 @@ public class BankIdIframeSSAuthenticationController {
             getListAuthenticationMethods(driver);
             chooseBankIdMobil(driver);
         }
+        webDriverHelper.sleep(WAIT_RENDER_MILLIS);
         webDriverHelper.submitForm(driver, FORM_XPATH);
-
         waitForUserInteractionAndSendBankIdPassword(driver, password);
     }
 
@@ -76,7 +76,7 @@ public class BankIdIframeSSAuthenticationController {
     }
 
     private WebElement waitForUserInteraction(WebDriver driver) throws LoginException {
-        for (int i = 0; i < 90; i++, webDriverHelper.sleep(WAIT_RENDER_MILLIS * i)) {
+        for (int i = 0; i < 90; i++, webDriverHelper.sleep(WAIT_RENDER_MILLIS)) {
             webDriverHelper.switchToIframe(driver);
             Optional<WebElement> webElement =
                     driver.findElements(PASSWORD_INPUT_XPATH).stream()

@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -81,18 +80,14 @@ public class WebDriverHelper {
         }
     }
 
-    public Stream<WebElement> waitForElements(WebDriver driver, By by) {
+    public Optional<WebElement> waitForElement(WebDriver driver, By by) {
         for (int i = 0; i < 5; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
             List<WebElement> elements = driver.findElements(by);
             if (!elements.isEmpty()) {
-                return elements.stream().filter(WebElement::isDisplayed);
+                return elements.stream().filter(WebElement::isDisplayed).findFirst();
             }
         }
-        return Stream.empty();
-    }
-
-    public Optional<WebElement> waitForElement(WebDriver driver, By by) {
-        return waitForElements(driver, by).findFirst();
+        return Optional.empty();
     }
 
     public Optional<String> waitForElementWithAttribute(
@@ -112,44 +107,27 @@ public class WebDriverHelper {
 
     public void switchToIframe(WebDriver driver) {
         driver.switchTo().defaultContent();
-        Optional<WebElement> iframeElement = waitForElement(driver, IFRAME_TAG);
-        if (!iframeElement.isPresent()) {
-            throw new HtmlElementNotFoundException("Can't find iframe element");
-        }
-        iframeElement.ifPresent(iframe -> driver.switchTo().frame(iframe));
+        WebElement iframeElement = getElement(driver, IFRAME_TAG);
+        driver.switchTo().frame(iframeElement);
     }
 
     public void sendInputValue(WebElement element, String value) {
-        for (int i = 0; i < 10; i++, sleep(WAIT_FOR_RENDER_MILLIS)) {
-            try {
-                element.sendKeys(value);
-                break;
-            } catch (StaleElementReferenceException exception) {
-                // NOOP, try again.
-                // This can handle if the element is not ready for input yet.
-            }
+        if (!checkIfElementEnabledIfNotWait(element)) {
+            throw new ScreenScrapingException(
+                    String.format("Element %s is not interactable", element.toString()));
         }
+        element.sendKeys(value);
     }
 
-    public void setInputValue(WebDriver driver, By by, String value) {
-        WebElement element = getElement(driver, by);
-
-        sendInputValue(element, value);
-    }
-
-    public boolean submitForm(WebDriver driver, By by) {
-        // It can happen that the element goes stale (i.e. the page has reloaded) between
-        // waitForElement() and submit().
+    public void submitForm(WebDriver driver, By by) {
         for (int i = 0; i < 10; i++) {
             try {
-                // Can be the form itself or an element in the form, e.g. the submit button.
                 getElement(driver, by).submit();
-                return true;
+                break;
             } catch (StaleElementReferenceException exception) {
                 // NOOP; try again.
             }
         }
-        return false;
     }
 
     public WebElement getElement(WebDriver driver, By by) {
@@ -175,6 +153,7 @@ public class WebDriverHelper {
                     return true;
                 }
             } catch (StaleElementReferenceException e) {
+                // NOOP; try again.
             }
         }
         return false;
