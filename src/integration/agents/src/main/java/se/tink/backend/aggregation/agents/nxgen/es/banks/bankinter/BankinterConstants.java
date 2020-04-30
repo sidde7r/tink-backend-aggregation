@@ -68,6 +68,7 @@ public final class BankinterConstants {
         public static final String TRUE = "true";
         public static final String JSF_EXECUTE_ALL = "@all";
         public static final String LOAN_TRANSACTIONS_ID = "prestaForm:linkMasPagos";
+        public static final String SUBMIT = "_SUBMIT";
     }
 
     public static class InstallmentStatus {
