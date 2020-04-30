@@ -49,10 +49,13 @@ public class AccountResponse extends HtmlResponse {
         return accountName;
     }
 
-    protected AccountIdentifier getAccountIdentifier() {
+    protected AccountIdentifier getAccountIdentifier(Document accountDetails) {
         final String ibanString =
-                evaluateXPath("//div[@id='js-copy-md']//div[@class='cuenta']", String.class)
-                        .replaceAll("\\s", "");
+                evaluateXPath(
+                                accountDetails,
+                                "//dt[text()='Cuenta']/following-sibling::dd",
+                                String.class)
+                        .replaceAll("[\\s\\u202F\\u00A0]", "");
         AccountIdentifier identifier = AccountIdentifier.create(Type.IBAN, ibanString);
         identifier.setName(getAccountName());
         if (!identifier.isValid()) {
@@ -72,8 +75,7 @@ public class AccountResponse extends HtmlResponse {
         return parseAmount(balanceString);
     }
 
-    protected List<String> getHolderNames(JsfUpdateResponse accountInfo) {
-        final Document accountDetails = accountInfo.getUpdateDocument(JsfPart.ACCOUNT_DETAILS);
+    protected List<String> getHolderNames(Document accountDetails) {
         final NodeList holderNames =
                 evaluateXPath(
                         accountDetails,
@@ -88,7 +90,8 @@ public class AccountResponse extends HtmlResponse {
 
     public Optional<TransactionalAccount> toTinkAccount(
             String accountLink, JsfUpdateResponse accountInfo) {
-        final AccountIdentifier accountIdentifier = getAccountIdentifier();
+        final Document accountDetails = accountInfo.getUpdateDocument(JsfPart.ACCOUNT_DETAILS);
+        final AccountIdentifier accountIdentifier = getAccountIdentifier(accountDetails);
         TransactionalBuildStep builder =
                 TransactionalAccount.nxBuilder()
                         .withTypeAndFlagsFrom(ACCOUNT_TYPE_MAPPER, getAccountType(accountLink))
@@ -102,7 +105,7 @@ public class AccountResponse extends HtmlResponse {
                                         .build())
                         .setApiIdentifier(accountLink);
 
-        final List<String> holderNames = getHolderNames(accountInfo);
+        final List<String> holderNames = getHolderNames(accountDetails);
         for (String name : holderNames) {
             builder = builder.addHolderName(name);
         }
