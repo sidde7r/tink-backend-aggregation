@@ -346,8 +346,23 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 paymentController.create(
                         PaymentRequest.of(
                                 transferRequest.getTransfer(), transferRequest.isSkipRefresh()));
+
+        log.info(
+                String.format(
+                        "Credentials contain - status: %s before first signing",
+                        credentials.getStatus()));
+
         PaymentMultiStepResponse signPaymentMultiStepResponse =
                 paymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
+
+        log.info(
+                String.format(
+                        "Credentials contain - status: %s after first signing",
+                        credentials.getStatus()));
+        log.info(
+                String.format(
+                        "Payment step is - %s after first signing",
+                        signPaymentMultiStepResponse.getStep()));
 
         Map<String, String> map;
         List<Field> fields;
@@ -370,6 +385,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             nextStep = signPaymentMultiStepResponse.getStep();
             payment = signPaymentMultiStepResponse.getPayment();
             storage = signPaymentMultiStepResponse.getStorage();
+
+            log.info(String.format("Next step - %s", signPaymentMultiStepResponse.getStep()));
+            log.info(String.format("Credentials contain - status: %s", credentials.getStatus()));
         }
     }
 
