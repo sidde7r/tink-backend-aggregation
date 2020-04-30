@@ -18,7 +18,8 @@ public class TransactionsResponse extends JsfUpdateResponse {
     private final Document navigation;
     private final Document transactions;
     private NodeList transactionRows;
-    private static final Pattern JSF_SOURCE_PATTERN = Pattern.compile(".*source:'([^']+)'.*");
+    private static final Pattern JSF_SOURCE_PATTERN = Pattern.compile("\\bsource:'([^']+)'");
+    private static final Pattern JSF_FORM_ID_PATTERN = Pattern.compile("\\bformId:'([^']+)'");
     private static final Logger LOG = LoggerFactory.getLogger(TransactionsResponse.class);
 
     public TransactionsResponse(String body) {
@@ -27,23 +28,30 @@ public class TransactionsResponse extends JsfUpdateResponse {
         this.transactions = getUpdateDocument(JsfPart.TRANSACTIONS);
     }
 
-    private String getPreviousMonthJsfSource() {
-        // first script contains link to previous month
-        // there's always a link, even if there are no more transactions
-        final String script = evaluateXPath(navigation, "//script[1]/comment()", String.class);
+    private String getPaginationFormId(String script) {
+        final Matcher matcher = JSF_FORM_ID_PATTERN.matcher(script);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            throw new IllegalStateException("Did not find form ID for previous transactions page.");
+        }
+    }
+
+    private String getPreviousMonthJsfSource(String script) {
         final Matcher matcher = JSF_SOURCE_PATTERN.matcher(script);
         if (matcher.find()) {
             return matcher.group(1);
         } else {
-            throw new IllegalStateException("Did not find link for previous transactions page.");
+            throw new IllegalStateException("Did not find source for previous transactions page.");
         }
     }
 
     public PaginationKey getNextKey(long consecutiveEmptyReplies) {
-        final String source = getPreviousMonthJsfSource();
-        if (source == null) {
-            return null;
-        }
+        // first script contains link to previous month
+        // there's always a link, even if there are no more transactions
+        final String script = evaluateXPath(navigation, "//script[1]/comment()", String.class);
+        final String formId = getPaginationFormId(script);
+        final String source = getPreviousMonthJsfSource(script);
 
         final long newConsecutiveEmptyReplies;
         if (getTransactionRows().getLength() == 0) {
@@ -52,7 +60,7 @@ public class TransactionsResponse extends JsfUpdateResponse {
             newConsecutiveEmptyReplies = 0;
         }
 
-        return new PaginationKey(source, getViewState(), newConsecutiveEmptyReplies);
+        return new PaginationKey(formId, source, getViewState(), newConsecutiveEmptyReplies);
     }
 
     private Transaction rowToTransaction(Node row) {

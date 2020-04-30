@@ -103,9 +103,13 @@ public final class BankinterApiClient {
     }
 
     public <T extends JsfUpdateResponse> T fetchJsfUpdate(
-            String url, String source, String viewState, Class<T> responseClass, String... render) {
+            String url,
+            String submitKey,
+            String source,
+            String viewState,
+            Class<T> responseClass,
+            String... render) {
         final Form.Builder formBuilder = Form.builder();
-        final String submitKey = (source.split(":")[0]) + "_SUBMIT";
         formBuilder.put(submitKey, "1");
         formBuilder.put(FormKeys.JSF_VIEWSTATE, viewState);
         formBuilder.put(FormKeys.JSF_PARTIAL_AJAX, FormValues.TRUE);
@@ -135,7 +139,7 @@ public final class BankinterApiClient {
     }
 
     public JsfUpdateResponse fetchJsfUpdate(
-            String url, String source, String viewState, String... render) {
-        return fetchJsfUpdate(url, source, viewState, JsfUpdateResponse.class, render);
+            String url, String submitKey, String source, String viewState, String... render) {
+        return fetchJsfUpdate(url, submitKey, source, viewState, JsfUpdateResponse.class, render);
     }
 }

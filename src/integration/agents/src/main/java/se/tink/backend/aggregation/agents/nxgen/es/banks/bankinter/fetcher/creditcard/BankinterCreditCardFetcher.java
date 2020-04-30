@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.creditcard.entities.PaginationKey;
@@ -52,8 +53,11 @@ public class BankinterCreditCardFetcher
             key = cardResponse.getFirstPaginationKey();
         }
 
+        final String submitKey = key.getSource().split(":")[0] + FormValues.SUBMIT;
+
         return apiClient.fetchJsfUpdate(
                 Urls.CREDIT_CARD,
+                submitKey,
                 key.getSource(),
                 key.getViewState(),
                 TransactionsResponse.class,

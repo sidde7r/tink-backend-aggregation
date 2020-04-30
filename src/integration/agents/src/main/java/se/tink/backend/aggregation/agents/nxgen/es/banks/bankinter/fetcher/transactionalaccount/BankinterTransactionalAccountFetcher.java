@@ -36,11 +36,15 @@ public class BankinterTransactionalAccountFetcher
         return globalPosition.getAccountLinks().stream()
                 .map(
                         accountLink -> {
-                            AccountResponse accountResponse = apiClient.fetchAccount(accountLink);
+                            final AccountResponse accountResponse =
+                                    apiClient.fetchAccount(accountLink);
+                            final String jsfSource = accountResponse.getAccountInfoJsfSource();
+                            final String submitKey = jsfSource.split(":")[0] + FormValues.SUBMIT;
                             JsfUpdateResponse accountInfoResponse =
                                     apiClient.fetchJsfUpdate(
                                             Urls.ACCOUNT,
-                                            accountResponse.getAccountInfoJsfSource(),
+                                            submitKey,
+                                            jsfSource,
                                             accountResponse.getViewState(FormValues.ACCOUNT_HEADER),
                                             JsfPart.ACCOUNT_DETAILS);
                             return accountResponse.toTinkAccount(accountLink, accountInfoResponse);
@@ -60,6 +64,7 @@ public class BankinterTransactionalAccountFetcher
         }
         return apiClient.fetchJsfUpdate(
                 Urls.ACCOUNT,
+                nextKey.getFormId() + FormValues.SUBMIT,
                 nextKey.getSource(),
                 nextKey.getViewState(),
                 TransactionsResponse.class,

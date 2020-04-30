@@ -5,16 +5,23 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PaginationKey {
+    @JsonProperty private String formId;
     @JsonProperty private String source;
     @JsonProperty private String viewState;
     @JsonProperty private long consecutiveEmptyReplies;
 
     public PaginationKey() {}
 
-    public PaginationKey(String source, String viewState, long consecutiveEmptyReplies) {
+    public PaginationKey(
+            String formId, String source, String viewState, long consecutiveEmptyReplies) {
+        this.formId = formId;
         this.source = source;
         this.viewState = viewState;
         this.consecutiveEmptyReplies = consecutiveEmptyReplies;
+    }
+
+    public String getFormId() {
+        return formId;
     }
 
     public String getSource() {
