@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.InstructedAmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.enums.CbiGlobePaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
@@ -192,12 +191,9 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             PaymentMultiStepRequest paymentMultiStepRequest,
             CreatePaymentResponse createPaymentResponse) {
 
-        LinksEntity links = createPaymentResponse.getLinks();
-        if (links == null) {
-            return handleEmptyLinksInResponse(paymentMultiStepRequest, createPaymentResponse);
-        } else {
-            return handleRedirectURLs(paymentMultiStepRequest, createPaymentResponse);
-        }
+        return createPaymentResponse.getLinks() == null
+                ? handleEmptyLinksInResponse(paymentMultiStepRequest, createPaymentResponse)
+                : handleRedirectURLs(paymentMultiStepRequest, createPaymentResponse);
     }
 
     private PaymentMultiStepResponse handleEmptyLinksInResponse(
