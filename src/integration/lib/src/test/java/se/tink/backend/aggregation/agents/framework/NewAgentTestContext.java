@@ -29,6 +29,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -70,6 +71,7 @@ public final class NewAgentTestContext extends AgentContext {
     private final User user;
     private final Credentials credential;
     private final AgentTestServerClient agentTestServerClient;
+    private final SupplementalRequester supplementalRequester;
     private final Provider provider;
 
     // configuration
@@ -78,12 +80,14 @@ public final class NewAgentTestContext extends AgentContext {
     public NewAgentTestContext(
             User user,
             Credentials credential,
+            SupplementalRequester supplementalRequester,
             int transactionsToPrint,
             String appId,
             String clusterId,
             Provider provider) {
         this.user = user;
         this.credential = credential;
+        this.supplementalRequester = supplementalRequester;
         this.transactionsToPrint = transactionsToPrint;
         this.provider = provider;
         this.setClusterId(MoreObjects.firstNonNull(clusterId, TEST_CLUSTERID));
@@ -174,59 +178,17 @@ public final class NewAgentTestContext extends AgentContext {
     @Override
     public Optional<String> waitForSupplementalInformation(
             String key, long waitFor, TimeUnit unit) {
-        return Optional.ofNullable(
-                agentTestServerClient.waitForSupplementalInformation(key, waitFor, unit));
+        return supplementalRequester.waitForSupplementalInformation(key, waitFor, unit);
     }
 
     @Override
     public String requestSupplementalInformation(Credentials credentials, boolean wait) {
-        log.info(
-                "Requesting additional info from client. Status: {}, wait: {}",
-                credentials.getStatus(),
-                wait);
-
-        switch (credentials.getStatus()) {
-            case AWAITING_SUPPLEMENTAL_INFORMATION:
-                displaySupplementalInformation(credentials);
-
-                agentTestServerClient.initiateSupplementalInformation(
-                        credentials.getId(), credentials.getSupplementalInformation());
-
-                if (!wait) {
-                    // The agent is not interested in the result. This is the same logic as the
-                    // production code.
-                    return null;
-                }
-
-                Optional<String> supplementalInformation =
-                        waitForSupplementalInformation(credentials.getId(), 2, TimeUnit.MINUTES);
-
-                return supplementalInformation.orElse(null);
-            case AWAITING_MOBILE_BANKID_AUTHENTICATION:
-                // Do nothing as we cannot communicate to the app to open BankId.
-                return null;
-            case AWAITING_THIRD_PARTY_APP_AUTHENTICATION:
-                agentTestServerClient.openThirdPartyApp(credentials.getSupplementalInformation());
-                return null;
-            default:
-                Assert.fail(
-                        String.format(
-                                "Cannot handle credentials status: %s", credentials.getStatus()));
-                return null;
-        }
+        return supplementalRequester.requestSupplementalInformation(credentials, wait);
     }
 
     @Override
     public void openBankId(String autoStartToken, boolean wait) {
-        if (Strings.isNullOrEmpty(autoStartToken)) {
-            log.info(String.format("[CredentialsId:%s]: Open BankID", credential.getId()));
-        } else {
-            log.info(
-                    String.format(
-                            "[CredentialsId:%s]: Sending autoStartToken to test server: %s",
-                            credential.getId(), autoStartToken));
-            agentTestServerClient.sendBankIdAutoStartToken(autoStartToken);
-        }
+        supplementalRequester.openBankId(autoStartToken, wait);
     }
 
     @Override

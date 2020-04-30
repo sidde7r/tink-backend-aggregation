@@ -130,6 +130,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 new NewAgentTestContext(
                         user,
                         credential,
+                        new AgentTestServerSupplementalRequester(
+                                credential, AgentTestServerClient.getInstance()),
                         builder.getTransactionsToPrint(),
                         builder.getAppId(),
                         builder.getClusterId(),

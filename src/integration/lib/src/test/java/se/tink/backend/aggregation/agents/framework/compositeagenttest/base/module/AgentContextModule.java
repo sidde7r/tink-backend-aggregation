@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.controllers.utils.MockSupplementalRequester;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
@@ -127,7 +128,13 @@ public final class AgentContextModule extends AbstractModule {
             AgentConfigurationControllerable agentConfigurationControllerable) {
         NewAgentTestContext context =
                 new NewAgentTestContext(
-                        user, credential, 32, DEFAULT_APP_ID, "oxford-preprod", provider);
+                        user,
+                        credential,
+                        new MockSupplementalRequester(),
+                        32,
+                        DEFAULT_APP_ID,
+                        "oxford-preprod",
+                        provider);
         context.setAgentConfigurationController(agentConfigurationControllerable);
         return context;
     }
