@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentContextModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentWiremockTestContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -51,10 +51,19 @@ public final class AgentWireMockPaymentTest {
                                 new AapFileParser(
                                         new ResourceFileReader().read(wireMockFilePath))));
 
+        /*
+        TODO: For now null value for "supplementalInfoForCredentials" seem fine, let's wait
+        for other agents to see if this value should be injected at all or not
+         */
         final Set<Module> modules =
                 ImmutableSet.of(
-                        new AgentContextModule(
-                                marketCode, providerName, configuration, loginDetails),
+                        new AgentWiremockTestContextModule(
+                                marketCode,
+                                providerName,
+                                configuration,
+                                loginDetails,
+                                null,
+                                callbackData),
                         new RefreshRequestModule(RefreshableItem.REFRESHABLE_ITEMS_ALL),
                         new PaymentRequestModule(paymentList),
                         new AgentFactoryWireMockModule(

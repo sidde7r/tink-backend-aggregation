@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEnti
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentContextModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentWiremockTestContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.command.RefreshCommand;
@@ -62,8 +62,13 @@ public final class AgentWireMockRefreshTest {
 
         final Set<Module> modules =
                 ImmutableSet.of(
-                        new AgentContextModule(
-                                marketCode, providerName, configuration, loginDetails),
+                        new AgentWiremockTestContextModule(
+                                marketCode,
+                                providerName,
+                                configuration,
+                                loginDetails,
+                                null,
+                                callbackData),
                         new RefreshRequestModule(refreshableItems),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
