@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -18,7 +21,8 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SibsRedirectSignPaymentStrategy extends AbstractSibsSignPaymentStrategy {
-
+    private static final Logger log =
+            LoggerFactory.getLogger(SibsRedirectSignPaymentStrategy.class);
     protected final SibsRedirectCallbackHandler redirectCallbackHandler;
 
     private static final long SLEEP_TIME = 10L;
@@ -40,6 +44,10 @@ public class SibsRedirectSignPaymentStrategy extends AbstractSibsSignPaymentStra
             Payment payment)
             throws PaymentException {
         SibsTransactionStatus transactionStatus;
+        log.info(
+                "Start to Get Payment Status every {} Seconds for a total of {} times.",
+                SLEEP_TIME,
+                RETRY_ATTEMPTS);
         try {
             transactionStatus =
                     paymentStatusRetryer.call(
@@ -66,10 +74,12 @@ public class SibsRedirectSignPaymentStrategy extends AbstractSibsSignPaymentStra
                                         .getStorage()
                                         .get(Storage.PAYMENT_REDIRECT_URI)),
                         paymentMultiStepRequest.getStorage().get(Storage.STATE));
-
         if (!response.isPresent()) {
             throw new PaymentAuthorizationException(
                     "SCA time-out.", ThirdPartyAppError.TIMED_OUT.exception());
         }
+        log.info(
+                "Redirect Callback Response: {}",
+                Arrays.toString(response.get().entrySet().toArray()));
     }
 }
