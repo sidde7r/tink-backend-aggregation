@@ -3,13 +3,16 @@ package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremock
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
+import com.google.inject.multibindings.Multibinder;
+import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryImpl;
 import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommandSequence;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.provider.AgentProvider;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.HttpDebugTraceCommand;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
@@ -19,17 +22,20 @@ public final class AgentFactoryWireMockModule extends AbstractModule {
     private final FakeBankSocket fakeBankSocket;
     private final Map<String, String> callbackData;
     private final Module agentModule;
-    private final Class<? extends CompositeAgentTestCommandSequence> commandSequence;
+    private final List<Class<? extends CompositeAgentTestCommand>> commandSequence;
+    private final boolean httpDebugTrace;
 
     public AgentFactoryWireMockModule(
             FakeBankSocket fakeBankSocket,
             Map<String, String> callbackData,
             Module agentModule,
-            Class<? extends CompositeAgentTestCommandSequence> commandSequence) {
+            List<Class<? extends CompositeAgentTestCommand>> commandSequence,
+            boolean httpDebugTrace) {
         this.fakeBankSocket = fakeBankSocket;
         this.callbackData = callbackData;
         this.agentModule = agentModule;
         this.commandSequence = commandSequence;
+        this.httpDebugTrace = httpDebugTrace;
     }
 
     @Override
@@ -46,6 +52,22 @@ public final class AgentFactoryWireMockModule extends AbstractModule {
         bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
         bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
         bind(Agent.class).toProvider(AgentProvider.class).in(Scopes.SINGLETON);
-        bind(CompositeAgentTestCommandSequence.class).to(commandSequence).in(Scopes.SINGLETON);
+        bindCommandsInSequence();
+    }
+
+    private void bindCommandsInSequence() {
+        Multibinder<CompositeAgentTestCommand> commandBinder =
+                Multibinder.newSetBinder(binder(), CompositeAgentTestCommand.class);
+        commandSequence.forEach(commandClass -> bindCommand(commandBinder, commandClass));
+
+        if (httpDebugTrace) {
+            bindCommand(commandBinder, HttpDebugTraceCommand.class);
+        }
+    }
+
+    private void bindCommand(
+            Multibinder<CompositeAgentTestCommand> commandBinder,
+            Class<? extends CompositeAgentTestCommand> clazz) {
+        commandBinder.addBinding().to(clazz).in(Scopes.SINGLETON);
     }
 }

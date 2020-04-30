@@ -17,9 +17,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.ConfigurationProvider;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.DateTimeProvider;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBStorage;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.JwkHeader.Jwk;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
 import se.tink.backend.aggregation.nxgen.scaffold.SimpleExternalApiCall;
@@ -29,7 +29,7 @@ public final class HVBAuthenticator implements Authenticator {
     private final HVBStorage storage;
     private final ConfigurationProvider configurationProvider;
     private final DataEncoder dataEncoder;
-    private final DateTimeProvider dateTimeProvider;
+    private final LocalDateTimeSource localDateTimeSource;
 
     private final RegistrationCall registrationRequest;
     private final PreAuthorizationCall preAuthorizationRequest;
@@ -40,7 +40,7 @@ public final class HVBAuthenticator implements Authenticator {
             final HVBStorage storage,
             ConfigurationProvider configurationProvider,
             DataEncoder dataEncoder,
-            DateTimeProvider dateTimeProvider,
+            LocalDateTimeSource localDateTimeSource,
             RegistrationCall registrationRequest,
             PreAuthorizationCall preAuthorizationRequest,
             AuthorizationCall authorizationRequest,
@@ -48,7 +48,7 @@ public final class HVBAuthenticator implements Authenticator {
         this.configurationProvider = configurationProvider;
         this.storage = storage;
         this.dataEncoder = dataEncoder;
-        this.dateTimeProvider = dateTimeProvider;
+        this.localDateTimeSource = localDateTimeSource;
         this.registrationRequest = registrationRequest;
         this.preAuthorizationRequest = preAuthorizationRequest;
         this.authorizationRequest = authorizationRequest;
@@ -88,7 +88,7 @@ public final class HVBAuthenticator implements Authenticator {
     }
 
     private AuthenticationData prepareRegistrationData() {
-        KeyPair keyPair = configurationProvider.generateRsaKeyPair();
+        KeyPair keyPair = configurationProvider.getPredefinedRsaKeyPair();
         RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
         return AuthenticationData.forRegistration(
                 configurationProvider.generateDeviceId(), keyPair, prepareJwkHeader(rsaPrivateKey));
@@ -115,7 +115,7 @@ public final class HVBAuthenticator implements Authenticator {
 
     private AccessTokenResponse getAccessToken(AuthenticationData authenticationData, String code)
             throws LoginException {
-        enrichAuthorizationData(authenticationData, code, dateTimeProvider.getInstantNow());
+        enrichAuthorizationData(authenticationData, code, localDateTimeSource.getInstant());
         return executeCall(accessTokenCall, authenticationData, INCORRECT_CREDENTIALS);
     }
 

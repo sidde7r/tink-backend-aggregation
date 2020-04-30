@@ -1,17 +1,20 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.base;
 
 import com.google.inject.Inject;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 
 public final class CompositeAgentTest {
 
     private final NewAgentTestContext context;
-    private final CompositeAgentTestCommandSequence commandSequence;
+    private final Iterable<CompositeAgentTestCommand> commandSequence;
 
     @Inject
     private CompositeAgentTest(
-            NewAgentTestContext context, CompositeAgentTestCommandSequence commandSequence) {
+            NewAgentTestContext context, Set<CompositeAgentTestCommand> commandSequence) {
         this.context = context;
+        /* Guice guarantees that injected set has deterministic iteration order
+        which is consistent with the binding order. */
         this.commandSequence = commandSequence;
     }
 

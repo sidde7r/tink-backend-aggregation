@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment;
 
+import static com.google.common.collect.ImmutableList.of;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -10,9 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommandSequence;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
@@ -37,7 +41,8 @@ public final class AgentWireMockPaymentTest {
             Map<String, String> callbackData,
             Module agentModule,
             List<Payment> paymentList,
-            Class<? extends CompositeAgentTestCommandSequence> commandSequence) {
+            List<Class<? extends CompositeAgentTestCommand>> commandSequence,
+            boolean httpDebugTrace) {
 
         final WireMockTestServer server =
                 new WireMockTestServer(
@@ -55,7 +60,8 @@ public final class AgentWireMockPaymentTest {
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
                                 callbackData,
                                 agentModule,
-                                commandSequence));
+                                commandSequence,
+                                httpDebugTrace));
 
         Injector injector = Guice.createInjector(modules);
         compositeAgentTest = injector.getInstance(CompositeAgentTest.class);
@@ -90,6 +96,7 @@ public final class AgentWireMockPaymentTest {
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
         private final List<Payment> paymentList;
+        private boolean httpDebugTrace = false;
 
         private AgentsServiceConfiguration configuration;
         private Module agentModule;
@@ -173,6 +180,16 @@ public final class AgentWireMockPaymentTest {
         }
 
         /**
+         * Enables http debug trace printout
+         *
+         * @return This builder.
+         */
+        public Builder withHttpDebugTrace() {
+            this.httpDebugTrace = true;
+            return this;
+        }
+
+        /**
          * Builds payment test that does not attempt to login before executing payment.
          *
          * @return WireMock payment test.
@@ -188,7 +205,8 @@ public final class AgentWireMockPaymentTest {
                     callbackData,
                     agentModule,
                     paymentList,
-                    WireMockNoLoginPaymentCommandSequence.class);
+                    of(PaymentCommand.class),
+                    httpDebugTrace);
         }
 
         /**
@@ -207,7 +225,8 @@ public final class AgentWireMockPaymentTest {
                     callbackData,
                     agentModule,
                     paymentList,
-                    WireMockPaymentWithLoginCommandSequence.class);
+                    of(LoginCommand.class, PaymentCommand.class),
+                    httpDebugTrace);
         }
     }
 }

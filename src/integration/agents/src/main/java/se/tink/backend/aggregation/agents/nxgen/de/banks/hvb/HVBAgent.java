@@ -1,28 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.authenticator.HVBAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.AccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.TransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.UserDataFetcher;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistration;
 import se.tink.backend.aggregation.nxgen.scaffold.ModuleDependenciesRegistry;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class HVBAgent extends SubsequentGenerationAgent<HVBAuthenticator>
         implements RefreshCheckingAccountsExecutor,
@@ -32,19 +29,22 @@ public final class HVBAgent extends SubsequentGenerationAgent<HVBAuthenticator>
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final ModuleDependenciesRegistry dependencyRegistry;
 
-    public HVBAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
+    @Inject
+    public HVBAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
-        dependencyRegistry = initializeAgentDependencies(new HVBModuleDependenciesRegistration());
+        dependencyRegistry =
+                initializeAgentDependencies(
+                        new HVBModuleDependenciesRegistration(), componentProvider);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         setupHttpClient();
     }
 
     private ModuleDependenciesRegistry initializeAgentDependencies(
-            ModuleDependenciesRegistration moduleDependenciesRegistration) {
+            HVBModuleDependenciesRegistration moduleDependenciesRegistration,
+            AgentComponentProvider componentProvider) {
         moduleDependenciesRegistration.registerExternalDependencies(
-                client, sessionStorage, persistentStorage);
+                client, sessionStorage, persistentStorage, componentProvider);
         moduleDependenciesRegistration.registerInternalModuleDependencies();
         return moduleDependenciesRegistration.createModuleDependenciesRegistry();
     }
