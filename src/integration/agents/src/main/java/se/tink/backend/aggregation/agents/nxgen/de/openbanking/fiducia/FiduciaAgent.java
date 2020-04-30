@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -58,7 +58,7 @@ public final class FiduciaAgent extends NextGenerationAgent
                 FiduciaConstants.SIGNATURE_HEADER,
                 FiduciaConstants.HEADERS_TO_SIGN,
                 getClientConfiguration().getKeyId(),
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                         agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
                         getEidasIdentity()));

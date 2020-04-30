@@ -4,7 +4,7 @@ import java.security.PublicKey;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.RegisterAsPSD2ProviderRequest;
 
@@ -53,7 +53,7 @@ public final class ProductionEnvironment implements Environment {
                 new EidasIdentity(clusterId, appId, BunqRegisterCommand.class);
 
         byte[] signedClientPublicKeySignature =
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                                 proxyConfig.toInternalConfig(),
                                 QsealcAlg.EIDAS_RSA_SHA256,
                                 eidasIdentity,

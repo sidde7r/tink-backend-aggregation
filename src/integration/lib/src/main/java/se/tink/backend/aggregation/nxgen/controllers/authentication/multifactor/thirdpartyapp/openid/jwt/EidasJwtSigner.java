@@ -15,6 +15,7 @@ import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 
@@ -86,7 +87,7 @@ public class EidasJwtSigner implements JwtSigner {
         headerClaims.put("alg", algorithm.toString());
 
         QsealcSigner signer =
-                QsealcSigner.build(eidasProxyConfiguration, key.getAlg(), eidasIdentity);
+                QsealcSignerImpl.build(eidasProxyConfiguration, key.getAlg(), eidasIdentity);
 
         final String headerJson = mapToJson(headerClaims);
         final String payloadJson = mapToJson(payloadClaims);

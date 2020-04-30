@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.configuration.eidas.InternalEidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public final class JwtUtils {
@@ -25,7 +26,7 @@ public final class JwtUtils {
             ObjectMapper mapper = new ObjectMapper();
 
             QsealcSigner signer =
-                    QsealcSigner.build(
+                    QsealcSignerImpl.build(
                             eidasProxyConfiguration, QsealcAlg.EIDAS_RSA_SHA256, eidasIdentity);
 
             String jwtHeaderJson = mapper.writeValueAsString(jwtHeader);

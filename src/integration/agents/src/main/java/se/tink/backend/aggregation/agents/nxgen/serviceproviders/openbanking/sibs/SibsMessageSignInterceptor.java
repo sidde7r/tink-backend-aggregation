@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignIn
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 
@@ -115,7 +116,7 @@ public class SibsMessageSignInterceptor extends MessageSignInterceptor {
 
     private String signMessage(String toSignString) {
         QsealcSigner signer =
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                         eidasConf.toInternalConfig(), QsealcAlg.EIDAS_RSA_SHA256, eidasIdentity);
 
         return signer.getSignatureBase64(toSignString.getBytes());

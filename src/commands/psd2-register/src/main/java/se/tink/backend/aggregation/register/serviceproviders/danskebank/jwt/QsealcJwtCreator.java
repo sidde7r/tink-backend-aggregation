@@ -18,6 +18,7 @@ import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -103,7 +104,7 @@ public final class QsealcJwtCreator {
             }
 
             QsealcSigner signer =
-                    QsealcSigner.build(
+                    QsealcSignerImpl.build(
                             EidasProxyConfiguration.createLocal(EIDAS_PROXY_URL).toInternalConfig(),
                             QsealcAlg.EIDAS_PSS_SHA256,
                             new EidasIdentity(

@@ -34,7 +34,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public class RedsysUtils {
@@ -101,7 +101,7 @@ public class RedsysUtils {
             EidasProxyConfiguration proxyConfiguration,
             EidasIdentity eidasIdentity,
             String payload) {
-        return QsealcSigner.build(
+        return QsealcSignerImpl.build(
                         proxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
                         eidasIdentity)

@@ -13,6 +13,7 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 
 public class SignatureHeaderGeneratorTest {
     private static final String SIGNATURE_HEADER =
@@ -24,7 +25,7 @@ public class SignatureHeaderGeneratorTest {
 
     @BeforeClass
     public static void init() {
-        QsealcSigner signer = mock(QsealcSigner.class);
+        QsealcSigner signer = mock(QsealcSignerImpl.class);
         when(signer.getSignatureBase64(any())).thenReturn("abcdefghijklmnoprstuw");
 
         signatureGenerator =
