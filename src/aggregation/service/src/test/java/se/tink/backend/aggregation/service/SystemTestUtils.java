@@ -102,15 +102,15 @@ public class SystemTestUtils {
         return Optional.of(pushedData.get(endPoint));
     }
 
-    public static Optional<String> pollForFinalCredentialsUpdateStatusUntilFlowEnds(String url)
-            throws Exception {
+    public static Optional<String> pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+            String url, int retryAmount, int sleepDuration) throws Exception {
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < retryAmount; i++) {
             Optional<List<String>> updateCredentialsCallback =
                     fetchCallbacksForEndpoint(url, "updateCredentials");
 
             if (!updateCredentialsCallback.isPresent()) {
-                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+                Uninterruptibles.sleepUninterruptibly(sleepDuration, TimeUnit.SECONDS);
                 continue;
             }
 

@@ -89,7 +89,9 @@ public class SystemTest {
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         String.format(
                                 "http://%s:%d/data",
-                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
+                        50,
+                        1);
 
         // then
         Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
@@ -116,7 +118,9 @@ public class SystemTest {
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         String.format(
                                 "http://%s:%d/data",
-                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
+                        50,
+                        1);
 
         // then
         Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
@@ -246,7 +250,9 @@ public class SystemTest {
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         String.format(
                                 "http://%s:%d/data",
-                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
+                        50,
+                        1);
 
         List<JsonNode> credentialsCallbacks =
                 pollForAllCallbacksForAnEndpoint(
