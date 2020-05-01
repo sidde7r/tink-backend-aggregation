@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 
 public class EnterCardConstants {
 
+    public static final String CURRENCY = "SEK";
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     static final String SIGNICAT_ID = "sbid-mobil-2014:%s:sv";
 
