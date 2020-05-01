@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,8 +126,7 @@ public class SystemTestUtils {
             }
             return Optional.of(credentialsStatus);
         }
-
-        return Optional.empty();
+        throw new RuntimeException("Timeout for polling attempt");
     }
 
     public static List<JsonNode> pollForAllCallbacksForAnEndpoint(
@@ -146,8 +144,7 @@ public class SystemTestUtils {
             }
             Uninterruptibles.sleepUninterruptibly(sleepDuration, TimeUnit.SECONDS);
         }
-
-        return Collections.emptyList();
+        throw new RuntimeException("Timeout for polling attempt for " + endpoint);
     }
 
     private static List<JsonNode> convertToListOfJsonNodes(List<String> input) {
