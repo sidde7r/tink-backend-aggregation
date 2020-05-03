@@ -57,7 +57,9 @@ X-AXP-AppId: uk.co.americanexpress.amexservice
 X-AXP-AppVersion: 6.25.0
 X-AXP-Locale: en_GB
 x-axp-git-sha: 32e1a867b
-Cookie: agent-id=
+# Assertions on cookie header is disabled by the line below.
+# TODO: Include cookie headers for the assertions
+#Cookie: agent-id=
 
 {"cardArtRequest":[{"minimumWidth":"1260","tag":"big-image"}],"loginCredentials":{"userIdLogin":{"rememberMeFlag":true,"userId":"testuser","password":"testPassword"}}}
 
