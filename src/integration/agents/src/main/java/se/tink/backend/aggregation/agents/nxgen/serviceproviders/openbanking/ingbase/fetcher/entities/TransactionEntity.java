@@ -79,7 +79,7 @@ public class TransactionEntity {
                 .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
                         getCounterPartyName())
-                .setPayload(TransactionPayloadTypes.MESSAGE, remittanceInformationUnstructured)
+                .setPayload(TransactionPayloadTypes.MESSAGE, toTinkDescription())
                 .build();
     }
 
@@ -110,7 +110,7 @@ public class TransactionEntity {
                                 .findFirst()
                                 .map(TransactionAccountEntity::getIban)
                                 .orElse(""))
-                .replace("<br>", "\n");
+                .replace("|", "\n");
     }
 
     public String getRemittanceInformationUnstructured() {
