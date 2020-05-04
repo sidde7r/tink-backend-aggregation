@@ -25,7 +25,7 @@ public class IccreaAgentTest {
         usernamePasswordManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("it", "it-iccrea-oauth2")
+                new AgentIntegrationTest.Builder("it", "it-iccrea-no-08440-oauth2")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
