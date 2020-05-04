@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentContextModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentWiremockTestContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
@@ -31,6 +31,7 @@ import se.tink.libraries.payment.rpc.Payment;
 public final class AgentWireMockPaymentTest {
 
     private final CompositeAgentTest compositeAgentTest;
+    private final WireMockTestServer server;
 
     private AgentWireMockPaymentTest(
             MarketCode marketCode,
@@ -44,16 +45,25 @@ public final class AgentWireMockPaymentTest {
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace) {
 
-        final WireMockTestServer server =
+        server =
                 new WireMockTestServer(
                         ImmutableSet.of(
                                 new AapFileParser(
                                         new ResourceFileReader().read(wireMockFilePath))));
 
+        /*
+        TODO: For now null value for "supplementalInfoForCredentials" seem fine, let's wait
+        for other agents to see if this value should be injected at all or not
+         */
         final Set<Module> modules =
                 ImmutableSet.of(
-                        new AgentContextModule(
-                                marketCode, providerName, configuration, loginDetails),
+                        new AgentWiremockTestContextModule(
+                                marketCode,
+                                providerName,
+                                configuration,
+                                loginDetails,
+                                null,
+                                callbackData),
                         new RefreshRequestModule(RefreshableItem.REFRESHABLE_ITEMS_ALL),
                         new PaymentRequestModule(paymentList),
                         new AgentFactoryWireMockModule(
@@ -73,7 +83,14 @@ public final class AgentWireMockPaymentTest {
      * @throws Exception May throw any exception that the agent throws.
      */
     public void executePayment() throws Exception {
-        compositeAgentTest.execute();
+        try {
+            compositeAgentTest.execute();
+        } catch (Exception e) {
+            if (server.hadEncounteredAnError()) {
+                throw new RuntimeException(server.createErrorLogForFailedRequest());
+            }
+            throw e;
+        }
     }
 
     /**

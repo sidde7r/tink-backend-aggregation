@@ -12,6 +12,7 @@ import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.provider.SupplementalInformationControllerProvider;
@@ -28,7 +29,7 @@ import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
-public final class AgentContextModule extends AbstractModule {
+public final class AgentWiremockTestContextModule extends AbstractModule {
     private static final String DEFAULT_CREDENTIAL_ID = "cafebabecafebabecafebabecafebabe";
     private static final String DEFAULT_USER_ID = "deadbeefdeadbeefdeadbeefdeadbeef";
     private static final String DEFAULT_LOCALE = "sv_SE";
@@ -38,16 +39,22 @@ public final class AgentContextModule extends AbstractModule {
     private final String providerName;
     private final AgentsServiceConfiguration configuration;
     private final Map<String, String> loginDetails;
+    private final String supplementalInfoForCredentials;
+    private final Map<String, String> callbackData;
 
-    public AgentContextModule(
+    public AgentWiremockTestContextModule(
             MarketCode marketCode,
             String providerName,
             AgentsServiceConfiguration configuration,
-            Map<String, String> loginDetails) {
+            Map<String, String> loginDetails,
+            String supplementalInfoForCredentials,
+            Map<String, String> callbackData) {
         this.marketCode = marketCode;
         this.providerName = providerName;
         this.configuration = configuration;
         this.loginDetails = loginDetails;
+        this.supplementalInfoForCredentials = supplementalInfoForCredentials;
+        this.callbackData = callbackData;
     }
 
     @Override
@@ -59,6 +66,12 @@ public final class AgentContextModule extends AbstractModule {
         bind(SupplementalInformationController.class)
                 .toProvider(SupplementalInformationControllerProvider.class)
                 .in(Scopes.SINGLETON);
+    }
+
+    @Provides
+    @Singleton
+    private SupplementalRequester provideSupplementalRequester() {
+        return new MockSupplementalRequester(supplementalInfoForCredentials, callbackData);
     }
 
     @Provides
@@ -125,12 +138,13 @@ public final class AgentContextModule extends AbstractModule {
             User user,
             Credentials credential,
             Provider provider,
-            AgentConfigurationControllerable agentConfigurationControllerable) {
+            AgentConfigurationControllerable agentConfigurationControllerable,
+            SupplementalRequester supplementalRequester) {
         NewAgentTestContext context =
                 new NewAgentTestContext(
                         user,
                         credential,
-                        new MockSupplementalRequester(),
+                        supplementalRequester,
                         32,
                         DEFAULT_APP_ID,
                         "oxford-preprod",
