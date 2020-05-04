@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.creditcards.amex.v62;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
@@ -9,7 +8,6 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockr
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-@Ignore
 public class AmexV62UkMockServerWithContractFileAgentTest {
 
     private final String USERNAME = "testuser";
