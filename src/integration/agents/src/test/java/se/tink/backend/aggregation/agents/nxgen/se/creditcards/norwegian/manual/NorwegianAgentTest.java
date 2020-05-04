@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian;
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.norwegian.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
