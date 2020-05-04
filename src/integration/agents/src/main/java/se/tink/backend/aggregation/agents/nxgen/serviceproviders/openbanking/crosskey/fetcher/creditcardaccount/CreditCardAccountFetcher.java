@@ -51,10 +51,12 @@ public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccoun
                         .map(AccountDetailsEntity::getIdentification)
                         .orElse(accountEntity.getAccountId());
 
+        final String maskedCardNumber = accountDetails.get().getIdentification();
+
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(uniqueIdentifier)
+                                .withCardNumber(maskedCardNumber)
                                 .withBalance(
                                         ExactCurrencyAmount.of(
                                                 BigDecimal.valueOf(amount.getAmount()),
