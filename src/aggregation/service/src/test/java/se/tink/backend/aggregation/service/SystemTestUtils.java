@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,14 +103,14 @@ public class SystemTestUtils {
     }
 
     public static Optional<String> pollForFinalCredentialsUpdateStatusUntilFlowEnds(
-            String url, int retryAmount, int sleepDuration) throws Exception {
+            String url, int retryAmount, int sleepSeconds) throws Exception {
 
         for (int i = 0; i < retryAmount; i++) {
             Optional<List<String>> updateCredentialsCallback =
                     fetchCallbacksForEndpoint(url, "updateCredentials");
 
             if (!updateCredentialsCallback.isPresent()) {
-                Uninterruptibles.sleepUninterruptibly(sleepDuration, TimeUnit.SECONDS);
+                Uninterruptibles.sleepUninterruptibly(sleepSeconds, TimeUnit.SECONDS);
                 continue;
             }
 
