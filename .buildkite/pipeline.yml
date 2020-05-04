@@ -79,8 +79,6 @@ steps:
   - name: ':sa: Check Localisation'
     command: .buildkite/check-localisation.sh
     branches: '!master'
-    soft_fail:
-      - exit_status: 1
     timeout_in_minutes: 10
     agents:
       queue: default
