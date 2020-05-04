@@ -36,11 +36,6 @@ public final class DataTrackerEventProducerTest {
         }
 
         @Override
-        public EventAck postEvent(PostEventRequest request) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
         public ListenableFuture<EventAck> postEventAsync(PostEventRequest request) {
             throw new UnsupportedOperationException();
         }

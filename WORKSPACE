@@ -74,7 +74,7 @@ git_repository(
 
 git_repository(
     name = "com_tink_api_grpc",
-    commit = "cd00477de57c999b068159ed25e57aa7e283296e",
+    commit = "7dc6c36238abd5795f81ab35ac8b680133948cfe",
     remote = "git@github.com:tink-ab/tink-grpc.git",
     shallow_since = "1575523605 +0000",
 )
@@ -164,7 +164,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "e4ce4f979588da6b3e137c72fab424e05cbf1ad2",
+    commit = "9b3254bbf743d71be62dd8bce0e6130e531516e5",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1586908800 +0000",
 )
@@ -259,15 +259,12 @@ PROTOBUF_VERSION = "3.9.0"
 
 # Keep in mind the netty version compatibility table linked below when updating this
 # https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
-GRPC_JAVA_VERSION = "1.27.0"
+GRPC_JAVA_VERSION = "1.29.0"
+
+IO_NETTY_VERSION = "4.1.48.Final"
+IO_NETTY_BORINGSSL_VERSION = "2.0.30.Final"
 
 GRPC_JAVA_NANO_VERSION = "1.21.1"
-
-# Keep in mind the netty version compatibility table linked below when updating this
-# https://github.com/grpc/grpc-java/blob/master/SECURITY.md#netty
-NETTY_VERSION = "4.1.42.Final"
-
-NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION = "2.0.26.Final"
 
 ECLIPSE_JETTY_VERSION = "9.0.7.v20131107"
 
@@ -448,7 +445,14 @@ jvm_maven_import_external(
 jvm_maven_import_external(
     name = "io_grpc_grpc_protobuf_lite",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-protobuf-lite:%s" % GRPC_JAVA_VERSION,
-    artifact_sha256 = "aa9711aaba44b236f91e6a842bd8561af82c79e4984231d731d79ec4045e832a",
+    artifact_sha256 = "ae4bbcd9bf7ad4856660807d8cba7ef4ff428f0b615bf663ba308d9a76bcab3c",
+    server_urls = MAVEN_REPOS,
+)
+
+jvm_maven_import_external(
+    name = "io_grpc_grpc_context",
+    artifact = "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
+    artifact_sha256 = "41426f8fa5b5ff6e8cf5d6a7a6e7b1175350bc8c8e11f352e0622e00f99c4a02",
     server_urls = MAVEN_REPOS,
 )
 
@@ -462,29 +466,36 @@ jvm_maven_import_external(
 jvm_maven_import_external(
     name = "io_grpc_grpc_core",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-core:%s" % GRPC_JAVA_VERSION,
-    artifact_sha256 = "97714a12c1cfb5c547d8df7b0cc83a2fc36afff80ebcfb9d9b41a53c3f26789d",
+    artifact_sha256 = "d45e3ba310cf6a5d8170bcc500507977505614583c341d03c7d91658e49cf028",
     server_urls = MAVEN_REPOS,
 )
 
 jvm_maven_import_external(
     name = "io_grpc_grpc_api",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-api:%s" % GRPC_JAVA_VERSION,
-    artifact_sha256 = "793373a191aaf8a0b1b30ce009a9c481afa0e11d27d47363e7f6d47ad34568fa",
+    artifact_sha256 = "4837824acdd8d576d7d31a862e7391c38a1824cd2224daa68999377fdff9ae3f",
     server_urls = MAVEN_REPOS,
 )
 
 jvm_maven_import_external(
     name = "io_grpc_grpc_netty",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-netty:%s" % GRPC_JAVA_VERSION,
-    artifact_sha256 = "b0788eea0e6805a8021a2adfe51b0c4f3da4cdacb20aed0d16056c7221923c6e",
+    artifact_sha256 = "e959abda6b0cde0104a4a9398f867f15eefbad81ba64a2174eca1616767f9063",
     server_urls = MAVEN_REPOS,
 )
 
 jvm_maven_import_external(
     name = "io_grpc_grpc_services",  # Do not use, but do not remove
     artifact = "io.grpc:grpc-services:%s" % GRPC_JAVA_VERSION,
-    artifact_sha256 = "25ae47698cf0951ff6a86cd33b9ae0c53be48bb1220d7f3eefac513050f002d4",
+    artifact_sha256 = "6bea2f0ec35d3071a12fccc640ca7450f1cd2ce66574456e8deec21f79464681",
     server_urls = MAVEN_REPOS,
+)
+
+http_archive(
+    name = "grpc_ecosystem_grpc_gateway",
+    sha256 = "b14c0ad883933705bfaeffcc695f07bf1e435e7f27e5999d164eb22ced105b3d",
+    strip_prefix = "grpc-gateway-1.12.2",
+    url = "https://github.com/grpc-ecosystem/grpc-gateway/archive/v1.12.2.zip",
 )
 
 jvm_maven_import_external(
@@ -512,7 +523,7 @@ jvm_maven_import_external(
 
 http_archive(
     name = "io_grpc_grpc_java",
-    sha256 = "49a723e1aef022567a5e2c8d6395b908b431329530c1b8024b43eb9ca360fa1e",
+    sha256 = "446ad7a2e85bbd05406dbf95232c7c49ed90de83b3b60cb2048b0c4c9f254d29",
     strip_prefix = "grpc-java-%s" % GRPC_JAVA_VERSION,
     urls = [
         "https://github.com/grpc/grpc-java/archive/v%s.zip" % GRPC_JAVA_VERSION,
@@ -537,7 +548,7 @@ http_archive(
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@tink_backend//third_party/maven:deps.bzl", "maven_deps")
 
-maven_deps("@tink_backend//third_party/maven:maven_install.json")
+maven_deps("@tink_backend//third_party/maven:maven_install.json", IO_NETTY_VERSION, IO_NETTY_BORINGSSL_VERSION)
 
 load("@maven//:defs.bzl", "pinned_maven_install")
 
@@ -686,20 +697,20 @@ maven_install(
         "io.dropwizard:dropwizard-validation:0.7.1",
         "io.github.classgraph:classgraph:4.8.69",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
-        "io.netty:netty-buffer:%s" % NETTY_VERSION,
-        "io.netty:netty-codec-dns:%s" % NETTY_VERSION,
-        "io.netty:netty-codec-http2:%s" % NETTY_VERSION,
-        "io.netty:netty-codec-http:%s" % NETTY_VERSION,
-        "io.netty:netty-codec-socks:%s" % NETTY_VERSION,
-        "io.netty:netty-codec:%s" % NETTY_VERSION,
-        "io.netty:netty-common:%s" % NETTY_VERSION,
-        "io.netty:netty-dev-tools:%s" % NETTY_VERSION,
-        "io.netty:netty-handler-proxy:%s" % NETTY_VERSION,
-        "io.netty:netty-handler:%s" % NETTY_VERSION,
-        "io.netty:netty-resolver-dns:%s" % NETTY_VERSION,
-        "io.netty:netty-resolver:%s" % NETTY_VERSION,
-        "io.netty:netty-tcnative-boringssl-static:%s" % NETTY_TCNATIVE_BORINGSSL_STATIC_VERSION,
-        "io.netty:netty-transport:%s" % NETTY_VERSION,
+        "io.netty:netty-buffer:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-codec-dns:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-codec-http2:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-codec-http:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-codec-socks:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-codec:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-common:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-dev-tools:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-handler-proxy:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-handler:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-resolver-dns:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-resolver:%s" % IO_NETTY_VERSION,
+        "io.netty:netty-tcnative-boringssl-static:%s" % IO_NETTY_BORINGSSL_VERSION,
+        "io.netty:netty-transport:%s" % IO_NETTY_VERSION,
         "io.netty:netty:3.10.5.Final",
         "io.opencensus:opencensus-api:%s" % OPENCENSUS_VERSION,
         "io.perfmark:perfmark-api:0.17.0",
