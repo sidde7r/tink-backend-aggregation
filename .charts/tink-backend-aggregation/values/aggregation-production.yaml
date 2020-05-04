@@ -425,6 +425,10 @@ clients:
     aggregatorIdentifier: "Zimpler"
   uk-paypal-inc-production:
     aggregatorIdentifier: "PayPal Inc"
+  paypal-inc-testing:
+    aggregatorIdentifier: "PayPal Inc"
+  paypal-inc-production:
+    aggregatorIdentifier: "PayPal Inc"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
