@@ -2,19 +2,20 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetch
 
 import com.google.common.collect.Lists;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class DemobankTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>, TransactionKeyPaginator {
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionDatePaginator<TransactionalAccount> {
     private final DemobankApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -36,7 +37,8 @@ public class DemobankTransactionalAccountFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse getTransactionsFor(Account account, Object key) {
-        return apiClient.fetchTransactions(account.getApiIdentifier());
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        return apiClient.fetchTransactions(account.getApiIdentifier(), fromDate, toDate);
     }
 }

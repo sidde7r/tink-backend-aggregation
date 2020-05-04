@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams.ACCOUNT_ID;
 import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls.BASE_URL;
 
+import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.BasicAuthParams;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.StorageKeys;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class DemobankApiClient {
 
@@ -82,8 +84,18 @@ public class DemobankApiClient {
                 .toOAuth2Token();
     }
 
-    public FetchTransactionsResponse fetchTransactions(String accountId) {
-        final URL url = fetchBaseUrl().concat(Urls.TRANSACTIONS).parameter(ACCOUNT_ID, accountId);
+    public FetchTransactionsResponse fetchTransactions(
+            String accountId, Date fromDate, Date toDate) {
+        final URL url =
+                fetchBaseUrl()
+                        .concat(Urls.TRANSACTIONS)
+                        .parameter(ACCOUNT_ID, accountId)
+                        .queryParam(
+                                DemobankConstants.QueryParams.DATE_FROM,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                        .queryParam(
+                                DemobankConstants.QueryParams.DATE_TO,
+                                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate));
         return createRequestInSession(url, getOauth2TokenFromStorage())
                 .get(FetchTransactionsResponse.class);
     }
