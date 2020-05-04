@@ -116,8 +116,7 @@ public final class OpBankApiClient {
                 QsealcSignerImpl.build(
                         eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        configuration.getEidasQsealc());
+                        eidasIdentity);
         byte[] signatureBytes = signer.getSignature(jwt.getBytes(StandardCharsets.UTF_8));
         return Base64.getUrlEncoder().encodeToString(signatureBytes);
     }

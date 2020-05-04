@@ -9,13 +9,8 @@ import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 public class QsealcSignerProvider {
 
     public static QsealcSigner getQsealcSigner(
-            EidasProxyConfiguration eidasProxyConfig,
-            EidasIdentity eidasIdentity,
-            String certificateId) {
+            EidasProxyConfiguration eidasProxyConfig, EidasIdentity eidasIdentity) {
         return QsealcSignerImpl.build(
-                eidasProxyConfig.toInternalConfig(),
-                QsealcAlg.EIDAS_RSA_SHA256,
-                eidasIdentity,
-                certificateId);
+                eidasProxyConfig.toInternalConfig(), QsealcAlg.EIDAS_RSA_SHA256, eidasIdentity);
     }
 }

@@ -168,8 +168,7 @@ public final class RabobankRegisterCommand {
                 QsealcSignerImpl.build(
                         RabobankRegisterConstants.eidasProxyConf.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        certificateId);
+                        eidasIdentity);
 
         final JwsRequest body = JwsRequest.create(qsealcB64, jwsSigner, exp, email, organization);
 

@@ -78,8 +78,7 @@ public class BoursoramaSignatureHeaderGenerator {
         return QsealcSignerImpl.build(
                         eidasProxyConf.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        "Tink")
+                        eidasIdentity)
                 .getSignatureBase64(signatureEntity.getBytes());
     }
 }

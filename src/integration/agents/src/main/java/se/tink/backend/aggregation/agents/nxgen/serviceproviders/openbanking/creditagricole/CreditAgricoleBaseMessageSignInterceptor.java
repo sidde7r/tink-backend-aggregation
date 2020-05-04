@@ -102,10 +102,7 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
     private String signMessage(String toSignString) {
         QsealcSigner signer =
                 QsealcSignerImpl.build(
-                        eidasConf.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        configuration.getCertificateId());
+                        eidasConf.toInternalConfig(), QsealcAlg.EIDAS_RSA_SHA256, eidasIdentity);
         return signer.getSignatureBase64(toSignString.getBytes());
     }
 }

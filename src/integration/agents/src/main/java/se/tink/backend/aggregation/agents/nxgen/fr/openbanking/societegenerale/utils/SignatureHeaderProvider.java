@@ -65,8 +65,7 @@ public class SignatureHeaderProvider {
                 QsealcSignerImpl.build(
                                 configuration.toInternalConfig(),
                                 QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity,
-                                societeGeneraleConfiguration.getEidasQwac())
+                                eidasIdentity)
                         .getSignatureBase64(signatureString.getBytes()));
     }
 }

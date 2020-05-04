@@ -91,8 +91,7 @@ public final class LaBanquePostaleApiClient
         return QsealcSignerImpl.build(
                         eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        "Tink")
+                        eidasIdentity)
                 .getSignatureBase64(signatureEntity.toString().getBytes());
     }
 

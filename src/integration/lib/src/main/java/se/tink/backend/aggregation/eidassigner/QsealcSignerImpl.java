@@ -28,19 +28,16 @@ public class QsealcSignerImpl implements QsealcSigner {
     private final QsealcSignerHttpClient qsealcSignerHttpClient;
     private final QsealcAlg alg;
     private final String host;
-    private final String oldCertId;
     private final EidasIdentity eidasIdentity;
 
     private QsealcSignerImpl(
             QsealcSignerHttpClient qsealcSignerHttpClient,
             QsealcAlg alg,
             String host,
-            String oldCertId,
             EidasIdentity eidasIdentity) {
         this.qsealcSignerHttpClient = qsealcSignerHttpClient;
         this.alg = alg;
         this.host = host;
-        this.oldCertId = oldCertId;
         this.eidasIdentity = eidasIdentity;
     }
 
@@ -50,41 +47,13 @@ public class QsealcSignerImpl implements QsealcSigner {
      */
     public static QsealcSigner build(
             InternalEidasProxyConfiguration conf, QsealcAlg alg, EidasIdentity eidasIdentity) {
-        return build(conf, alg, eidasIdentity, null);
-    }
-
-    /**
-     * This builder should be used for 'legacy' agents in clusters where the ESS is not deployed yet
-     * and a certificate override must be provided. 'oldCertId' will override the cert chosen by
-     * 'appId'.
-     */
-    public static QsealcSigner build(
-            InternalEidasProxyConfiguration conf,
-            QsealcAlg alg,
-            EidasIdentity eidasIdentity,
-            String oldCertId) {
         try {
             log.info("Return a singleton httpclient");
             return new QsealcSignerImpl(
-                    QsealcSignerHttpClient.create(conf),
-                    alg,
-                    conf.getHost(),
-                    oldCertId,
-                    eidasIdentity);
+                    QsealcSignerHttpClient.create(conf), alg, conf.getHost(), eidasIdentity);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    @Deprecated
-    public static QsealcSigner build(
-            InternalEidasProxyConfiguration conf,
-            QsealcAlg alg,
-            String oldCertId,
-            String clusterId) {
-        StackTraceElement e = Thread.currentThread().getStackTrace()[2];
-        String requester = e.getClassName() + "." + e.getMethodName() + ":" + e.getLineNumber();
-        return build(conf, alg, new EidasIdentity(clusterId, "", requester), oldCertId);
     }
 
     private byte[] callSecretsService(byte[] signingData) {

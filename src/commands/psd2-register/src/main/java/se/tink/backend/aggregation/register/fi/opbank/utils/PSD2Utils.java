@@ -54,8 +54,7 @@ public final class PSD2Utils {
                 QsealcSignerImpl.build(
                         eidasProxyConf.toInternalConfig(),
                         QsealcAlg.EIDAS_JWS_PS256,
-                        eidasIdentity,
-                        certificateId);
+                        eidasIdentity);
 
         final String json = new Gson().toJson(jwsObject);
         final byte[] signatureBytes = signer.getSignature(json.getBytes(Charsets.UTF_8));

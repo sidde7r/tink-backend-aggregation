@@ -375,8 +375,7 @@ public final class SwedbankApiClient {
                 QsealcSignerImpl.build(
                         agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        HeaderValues.OLD_CERT_ID);
+                        eidasIdentity);
 
         String signedHeaders =
                 Arrays.stream(HeadersToSign.values())

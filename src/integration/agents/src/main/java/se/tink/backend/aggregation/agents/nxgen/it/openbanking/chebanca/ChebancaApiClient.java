@@ -174,9 +174,7 @@ public class ChebancaApiClient {
                         HeaderKeys.HEADERS_TO_SIGN,
                         chebancaConfig.getApplicationId(),
                         QsealcSignerProvider.getQsealcSigner(
-                                config.getEidasProxy(),
-                                eidasIdentity,
-                                chebancaConfig.getCertificateId())));
+                                config.getEidasProxy(), eidasIdentity)));
     }
 
     private OAuth2Token getTokenFromStorage() {

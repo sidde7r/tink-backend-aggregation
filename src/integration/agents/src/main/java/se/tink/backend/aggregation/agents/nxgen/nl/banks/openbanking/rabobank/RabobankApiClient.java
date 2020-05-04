@@ -283,8 +283,7 @@ public final class RabobankApiClient {
                 QsealcSignerImpl.build(
                                 eidasProxyConf.toInternalConfig(),
                                 QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity,
-                                certificateId)
+                                eidasIdentity)
                         .getSignature(signingString.getBytes());
 
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);

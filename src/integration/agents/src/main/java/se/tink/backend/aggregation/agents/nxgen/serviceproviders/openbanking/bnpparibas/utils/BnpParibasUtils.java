@@ -27,8 +27,7 @@ public class BnpParibasUtils {
                 QsealcSignerImpl.build(
                                 configuration.toInternalConfig(),
                                 QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity,
-                                bnpParibasConfiguration.getEidasQwac())
+                                eidasIdentity)
                         .getSignatureBase64("".getBytes()));
     }
 }

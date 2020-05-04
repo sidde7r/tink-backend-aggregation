@@ -56,8 +56,7 @@ public final class ProductionEnvironment implements Environment {
                 QsealcSignerImpl.build(
                                 proxyConfig.toInternalConfig(),
                                 QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity,
-                                certificateId)
+                                eidasIdentity)
                         .getSignature(clientPublicKeySignatureString.getBytes());
 
         return EncodingUtils.encodeAsBase64String(signedClientPublicKeySignature);
