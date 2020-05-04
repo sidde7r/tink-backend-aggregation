@@ -14,6 +14,17 @@ public class DemoFinancialInstitutionConstants {
         public static final String BASIC_AUTH_PASSWORD = "basic_auth_password";
     }
 
+    public static class DemoFinancialInstitutionLoginCredentials {
+        public static final String USER1_USERNAME = "199001011101";
+        public static final String USER1_PASSWORD = "1234";
+
+        public static final String USER2_USERNAME = "200001011101";
+        public static final String USER2_PASSWORD = "1234";
+
+        public static final String USER3_USERNAME = "191001011101";
+        public static final String USER3_PASSWORD = "1234";
+    }
+
     public static class Responses {
         public static final String SUCCESS_STRING = "SUCCESS";
     }
