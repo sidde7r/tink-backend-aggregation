@@ -16,11 +16,11 @@ public class AccountEntity {
     @JsonProperty("accountNumber")
     private String accountNumber;
 
-    @JsonProperty("availableBalanceCents")
-    private Integer availableBalanceCents;
+    @JsonProperty("availableBalance")
+    private BigDecimal availableBalance;
 
-    @JsonProperty("bookedBalanceCents")
-    private Integer bookedBalanceCents;
+    @JsonProperty("bookedBalance")
+    private BigDecimal bookedBalance;
 
     @JsonProperty("currency")
     private String currency;
@@ -34,7 +34,7 @@ public class AccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.SAVINGS)
+                .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
@@ -51,7 +51,7 @@ public class AccountEntity {
 
     @JsonIgnore
     private ExactCurrencyAmount getAvailableBalance() {
-        return ExactCurrencyAmount.of(BigDecimal.valueOf(bookedBalanceCents), currency);
+        return ExactCurrencyAmount.of(bookedBalance, currency);
     }
 
     public String getId() {
