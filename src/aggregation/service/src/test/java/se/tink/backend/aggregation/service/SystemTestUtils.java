@@ -127,7 +127,7 @@ public class SystemTestUtils {
             }
             return Optional.of(credentialsStatus);
         }
-        throw new RuntimeException("Timeout for polling attempt");
+        throw new TimeoutException("Timeout for polling attempt");
     }
 
     public static List<JsonNode> pollForAllCallbacksForAnEndpoint(
@@ -145,7 +145,7 @@ public class SystemTestUtils {
             }
             Uninterruptibles.sleepUninterruptibly(sleepDuration, TimeUnit.SECONDS);
         }
-        throw new RuntimeException("Timeout for polling attempt for " + endpoint);
+        throw new TimeoutException("Timeout for polling attempt for " + endpoint);
     }
 
     private static List<JsonNode> convertToListOfJsonNodes(List<String> input) {
