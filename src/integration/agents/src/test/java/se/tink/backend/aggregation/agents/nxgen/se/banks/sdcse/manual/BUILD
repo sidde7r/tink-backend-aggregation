@@ -1,8 +1,8 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "sdcse",
-    srcs = glob(["**/*.java"]),
+    name = "manual",
+    srcs = glob(["*.java"]),
     data = ["//:agent_test_data"],
     tags = [
         "external",
