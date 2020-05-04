@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.manual;
 
 import java.util.Calendar;
 import org.junit.AfterClass;
