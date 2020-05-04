@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.seb;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.seb.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;

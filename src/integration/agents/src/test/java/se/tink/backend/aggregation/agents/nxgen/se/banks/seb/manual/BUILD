@@ -1,8 +1,8 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "seb",
-    srcs = glob(["**/*.java"]),
+    name = "manual",
+    srcs = glob(["*.java"]),
     data = [
         "//data:aggregation_test",
         "//data:provider_configurations",
