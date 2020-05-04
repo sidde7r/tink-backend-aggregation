@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.contexts.CompositeAgentContext;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -34,5 +35,6 @@ public final class AgentRequestScopeModule extends AbstractModule {
         bind(AgentsServiceConfiguration.class).toInstance(configuration);
         bind(CompositeAgentContext.class).toInstance(agentContext);
         bind(SignatureKeyPair.class).toInstance(configuration.getSignatureKeyPair());
+        bind(EidasProxyConfiguration.class).toInstance(configuration.getEidasProxy());
     }
 }
