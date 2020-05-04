@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfigura
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtBodyEntity;
 import se.tink.backend.aggregation.nxgen.http.legacy.entities.JwtHeaderEntity;
@@ -384,7 +385,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                                                 : new byte[0]);
 
         QsealcSigner signer =
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                         eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_JWT_RSA_SHA256,
                         eidasIdentity);

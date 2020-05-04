@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -72,7 +73,7 @@ public class NorwegianAgent extends NextGenerationAgent implements RefreshChecki
     }
 
     private QsealcSigner getQsealcSigner(AgentsServiceConfiguration agentsServiceConfiguration) {
-        return QsealcSigner.build(
+        return QsealcSignerImpl.build(
                 agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
                 QsealcAlg.EIDAS_RSA_SHA256,
                 getEidasIdentity());

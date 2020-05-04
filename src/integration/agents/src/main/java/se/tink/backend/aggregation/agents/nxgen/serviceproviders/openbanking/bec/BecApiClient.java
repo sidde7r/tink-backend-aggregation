@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -229,7 +230,7 @@ public final class BecApiClient {
 
     private String generateSignatureHeader(Map<String, Object> headers) {
         QsealcSigner signer =
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                         config.getEidasProxy().toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
                         eidasIdentity);

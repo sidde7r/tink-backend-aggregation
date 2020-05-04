@@ -5,7 +5,7 @@ import java.util.Base64;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public class BoursoramaSignatureHeaderGenerator {
@@ -75,11 +75,10 @@ public class BoursoramaSignatureHeaderGenerator {
             EidasProxyConfiguration eidasProxyConf,
             EidasIdentity eidasIdentity) {
 
-        return QsealcSigner.build(
+        return QsealcSignerImpl.build(
                         eidasProxyConf.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        "Tink")
+                        eidasIdentity)
                 .getSignatureBase64(signatureEntity.getBytes());
     }
 }

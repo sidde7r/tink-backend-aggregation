@@ -49,7 +49,8 @@ public class AgentFactoryImpl implements AgentFactory {
         if (AgentFactoryUtils.hasInjectAnnotatedConstructor(agentClass)) {
 
             return create(
-                    agentClass, moduleLoader.getAgentModules(request, context, configuration));
+                    agentClass,
+                    moduleLoader.getAgentModules(agentClass, request, context, configuration));
         } else {
 
             // Backwards compatibility with non guice enabled agents.

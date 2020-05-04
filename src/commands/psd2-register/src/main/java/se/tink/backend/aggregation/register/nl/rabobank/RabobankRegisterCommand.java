@@ -19,6 +19,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -164,11 +165,10 @@ public final class RabobankRegisterCommand {
                 new EidasIdentity(clusterId, appId, RabobankRegisterCommand.class);
 
         QsealcSigner jwsSigner =
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                         RabobankRegisterConstants.eidasProxyConf.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        certificateId);
+                        eidasIdentity);
 
         final JwsRequest body = JwsRequest.create(qsealcB64, jwsSigner, exp, email, organization);
 

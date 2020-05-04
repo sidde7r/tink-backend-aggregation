@@ -1,0 +1,16 @@
+java_library(
+    name = "module",
+    srcs = glob(["*.java"]),
+    data = [
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/agentclass",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
+        "//third_party:com_google_inject_guice",
+    ],
+)

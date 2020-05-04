@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.libraries.healthcheckhandler.HealthCheck;
 import se.tink.backend.libraries.healthcheckhandler.NotHealthyException;
@@ -33,11 +34,10 @@ public class EidasProxySignerHealthCheck implements HealthCheck {
         }
         try {
             QsealcSigner signer =
-                    QsealcSigner.build(
+                    QsealcSignerImpl.build(
                             eidasProxyConfiguration.toInternalConfig(),
                             QsealcAlg.EIDAS_JWT_RSA_SHA256,
-                            new EidasIdentity("healthcheck", "healthcheck", "healthcheck"),
-                            "healthcheck");
+                            new EidasIdentity("healthcheck", "healthcheck", "healthcheck"));
             signer.getSignatureBase64(Base64.getEncoder().encode("healthcheck".getBytes()));
         } catch (Exception e) {
             if (!firstCheckPassed) {

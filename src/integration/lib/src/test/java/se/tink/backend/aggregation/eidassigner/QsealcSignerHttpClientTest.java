@@ -102,7 +102,7 @@ public class QsealcSignerHttpClientTest {
         assertThat(httpsStatusCode).isEqualTo(HttpStatus.SC_OK);
 
         QsealcSigner signer =
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                         configuration,
                         QsealcAlg.EIDAS_JWT_RSA_SHA256,
                         new EidasIdentity("", "", ""));

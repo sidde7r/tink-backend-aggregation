@@ -12,6 +12,7 @@ import net.minidev.json.JSONObject;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.register.fi.opbank.OPBankRegisterCommand;
 import se.tink.backend.aggregation.register.fi.opbank.OPBankRegisterConstants;
@@ -50,11 +51,10 @@ public final class PSD2Utils {
                 new EidasIdentity(clusterId, appId, OPBankRegisterCommand.class);
 
         QsealcSigner signer =
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                         eidasProxyConf.toInternalConfig(),
                         QsealcAlg.EIDAS_JWS_PS256,
-                        eidasIdentity,
-                        certificateId);
+                        eidasIdentity);
 
         final String json = new Gson().toJson(jwsObject);
         final byte[] signatureBytes = signer.getSignature(json.getBytes(Charsets.UTF_8));

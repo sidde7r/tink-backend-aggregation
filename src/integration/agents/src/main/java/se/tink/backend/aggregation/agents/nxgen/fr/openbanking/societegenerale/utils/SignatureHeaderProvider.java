@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.S
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 
 public class SignatureHeaderProvider {
@@ -62,11 +62,10 @@ public class SignatureHeaderProvider {
         return String.format(
                 "%s=\"%s\"",
                 SocieteGeneraleConstants.HeaderKeys.SIGNATURE,
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                                 configuration.toInternalConfig(),
                                 QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity,
-                                societeGeneraleConfiguration.getEidasQwac())
+                                eidasIdentity)
                         .getSignatureBase64(signatureString.getBytes()));
     }
 }

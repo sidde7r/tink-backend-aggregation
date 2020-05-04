@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rp
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -112,11 +113,10 @@ public final class OpBankApiClient {
 
     public String fetchSignature(String jwt) {
         QsealcSigner signer =
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                         eidasProxyConfiguration.toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        configuration.getEidasQsealc());
+                        eidasIdentity);
         byte[] signatureBytes = signer.getSignature(jwt.getBytes(StandardCharsets.UTF_8));
         return Base64.getUrlEncoder().encodeToString(signatureBytes);
     }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
+import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.AgentModuleFactory;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
@@ -43,23 +44,28 @@ public final class AgentWireMockModuleFactory implements AgentModuleFactory {
      */
     @Override
     public ImmutableSet<Module> getAgentModules(
+            Class<? extends Agent> agentClass,
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentConfiguration)
             throws ReflectiveOperationException {
 
         return ImmutableSet.of(
-                Modules.override(getProductionModules(request, context, agentConfiguration))
+                Modules.override(
+                                getProductionModules(
+                                        agentClass, request, context, agentConfiguration))
                         .with(getWireMockModules(request, context, agentConfiguration)));
     }
 
     private ImmutableSet<Module> getProductionModules(
+            Class<? extends Agent> agentClass,
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentConfiguration)
             throws ReflectiveOperationException {
 
-        return agentPackageModuleFactory.getAgentModules(request, context, agentConfiguration);
+        return agentPackageModuleFactory.getAgentModules(
+                agentClass, request, context, agentConfiguration);
     }
 
     private ImmutableSet<Module> getWireMockModules(

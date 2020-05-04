@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -371,11 +372,10 @@ public final class SwedbankApiClient {
 
     private String generateSignatureHeader(Map<String, Object> headers) {
         QsealcSigner signer =
-                QsealcSigner.build(
+                QsealcSignerImpl.build(
                         agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
                         QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity,
-                        HeaderValues.OLD_CERT_ID);
+                        eidasIdentity);
 
         String signedHeaders =
                 Arrays.stream(HeadersToSign.values())
