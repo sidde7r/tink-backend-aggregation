@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop;
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.manual;
 
 import org.junit.Before;
 import org.junit.Ignore;
