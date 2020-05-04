@@ -10,13 +10,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,15 +102,15 @@ public class SystemTestUtils {
         return Optional.of(pushedData.get(endPoint));
     }
 
-    public static Optional<String> pollForFinalCredentialsUpdateStatusUntilFlowEnds(String url)
-            throws Exception {
+    public static Optional<String> pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+            String url, int retryAmount, int sleepSeconds) throws Exception {
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < retryAmount; i++) {
             Optional<List<String>> updateCredentialsCallback =
                     fetchCallbacksForEndpoint(url, "updateCredentials");
 
             if (!updateCredentialsCallback.isPresent()) {
-                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+                Uninterruptibles.sleepUninterruptibly(sleepSeconds, TimeUnit.SECONDS);
                 continue;
             }
 
@@ -127,8 +127,7 @@ public class SystemTestUtils {
             }
             return Optional.of(credentialsStatus);
         }
-
-        return Optional.empty();
+        throw new TimeoutException("Timeout for polling attempt");
     }
 
     public static List<JsonNode> pollForAllCallbacksForAnEndpoint(
@@ -146,8 +145,7 @@ public class SystemTestUtils {
             }
             Uninterruptibles.sleepUninterruptibly(sleepDuration, TimeUnit.SECONDS);
         }
-
-        return Collections.emptyList();
+        throw new TimeoutException("Timeout for polling attempt for " + endpoint);
     }
 
     private static List<JsonNode> convertToListOfJsonNodes(List<String> input) {

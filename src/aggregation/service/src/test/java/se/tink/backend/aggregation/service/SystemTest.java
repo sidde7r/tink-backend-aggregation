@@ -89,7 +89,9 @@ public class SystemTest {
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         String.format(
                                 "http://%s:%d/data",
-                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
+                        50,
+                        1);
 
         // then
         Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
@@ -116,7 +118,9 @@ public class SystemTest {
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         String.format(
                                 "http://%s:%d/data",
-                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
+                        50,
+                        1);
 
         // then
         Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
@@ -151,20 +155,20 @@ public class SystemTest {
         List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
-                                aggregationControllerEndpoint, "updateAccount", 100, 1));
+                                aggregationControllerEndpoint, "updateAccount", 50, 1));
 
         List<Map<String, Object>> givenTransactions =
                 parseTransactions(
                         pollForAllCallbacksForAnEndpoint(
                                 aggregationControllerEndpoint,
                                 "updateTransactionsAsynchronously",
-                                100,
+                                50,
                                 1));
 
         Map<String, Object> givenIdentityData =
                 parseIdentityData(
                         pollForAllCallbacksForAnEndpoint(
-                                aggregationControllerEndpoint, "updateIdentity", 100, 1));
+                                aggregationControllerEndpoint, "updateIdentity", 50, 1));
 
         // then
         Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
@@ -207,14 +211,14 @@ public class SystemTest {
         List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
-                                aggregationControllerEndpoint, "updateAccount", 100, 1));
+                                aggregationControllerEndpoint, "updateAccount", 50, 1));
 
         List<Map<String, Object>> givenTransactions =
                 parseTransactions(
                         pollForAllCallbacksForAnEndpoint(
                                 aggregationControllerEndpoint,
                                 "updateTransactionsAsynchronously",
-                                100,
+                                50,
                                 1));
 
         // then
@@ -246,11 +250,13 @@ public class SystemTest {
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         String.format(
                                 "http://%s:%d/data",
-                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT));
+                                AGGREGATION_CONTROLLER_HOST, AGGREGATION_CONTROLLER_PORT),
+                        50,
+                        1);
 
         List<JsonNode> credentialsCallbacks =
                 pollForAllCallbacksForAnEndpoint(
-                        aggregationControllerEndpoint, "updateCredentials", 100, 1);
+                        aggregationControllerEndpoint, "updateCredentials", 50, 1);
         JsonNode lastCallbackForCredentials =
                 credentialsCallbacks.get(credentialsCallbacks.size() - 1);
 
