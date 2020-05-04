@@ -71,7 +71,9 @@ public class AmexTestFixtures {
                 + "    \"display_account_number\": \""
                 + accountNumber
                 + "\",\n"
-                + "    \"is_basic\": true\n"
+                + "    \"is_basic\": true,\n"
+                + "    \"supplementary_account_count\": \"0\","
+                + "     \"account_key\": \"123456\""
                 + "  },\n"
                 + "  \"holder\": {\n"
                 + "    \"profile\": {\n"
@@ -240,11 +242,10 @@ public class AmexTestFixtures {
                         + "  \"revoked_tokens\":[\n"
                         + "\""
                         + ACCESS_TOKEN_1
-                        + "\",\n"
+                        + "\"\n"
                         + "],\n"
                         + "  \"invalid_tokens\":[\n"
-                        + "\"\",\n"
-                        + "],\n"
+                        + "]\n"
                         + "}",
                 RevokeResponseDto.class);
     }
@@ -326,11 +327,11 @@ public class AmexTestFixtures {
                 + "        \"charge_date\": \"2016-08-10\",\n"
                 + "        \"post_date\": \"2016-08-10\",\n"
                 + "        \"statement_end_date\": \"2016-09-06\",\n"
-                + "        \"amount\": \"110.24\",\n"
+                + "        \"amount\": \"10\",\n"
                 + "        \"reference_number\": \"320162240910370230\",\n"
                 + "        \"type\": \"DEBIT\",\n"
                 + "        \"description\": \"NIGEL'S BAGEL EMPORIUM 194 0194\",\n"
-                + "        \"iso_alpha_currency_code\": \"USD\",\n"
+                + "        \"iso_alpha_currency_code\": \"GBP\",\n"
                 + "        \"display_account_number\": \"XXXX-XXXXXX-81004\",\n"
                 + "        \"first_name\": \"Nigel\",\n"
                 + "        \"last_name\": \"Smythe\",\n"
@@ -348,5 +349,9 @@ public class AmexTestFixtures {
                 + "      }\n"
                 + "    ]\n"
                 + "  }";
+    }
+
+    public static String createTransactionRangeErrorResponse() {
+        return "{\"code\":3027,\"message\":\"Request Validation Failed - Requested date range exceeds the supported limit\"}\n";
     }
 }

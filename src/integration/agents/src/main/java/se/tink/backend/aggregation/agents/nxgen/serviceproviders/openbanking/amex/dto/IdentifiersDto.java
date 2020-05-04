@@ -11,4 +11,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class IdentifiersDto {
 
     private String displayAccountNumber;
+
+    private String accountKey;
+
+    private boolean isBasic;
 }

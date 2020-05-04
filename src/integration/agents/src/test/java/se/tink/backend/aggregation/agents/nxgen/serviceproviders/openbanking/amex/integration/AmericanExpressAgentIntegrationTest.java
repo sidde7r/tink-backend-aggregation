@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.integration;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.matching;
@@ -25,12 +26,15 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createMultiTokenWithValidAccessToken;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createRefreshAccessTokenRequestBody;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createRetrieveAccessTokenRequestBody;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createTransactionRangeErrorResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.createTransactionsResponseJsonString;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestFixtures.getAuthorizeUrl;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestValidators.createAuthHeaderMatchingPattern;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestValidators.getAmexRequestIdMatchingRegex;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexTestValidators.getSupplementalKeyMatchingRegex;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -53,6 +57,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacMultiToken;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
@@ -148,7 +153,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
         // when
         final FetchAccountsResponse fetchAccountsResponse =
-                americanExpressAgent.fetchCheckingAccounts();
+                americanExpressAgent.fetchCreditCardAccounts();
 
         // then
         verifyFetchAccountsResponse(fetchAccountsResponse);
@@ -174,7 +179,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
         // when
         final FetchTransactionsResponse fetchTransactionsResponse =
-                americanExpressAgent.fetchCheckingTransactions();
+                americanExpressAgent.fetchCreditCardTransactions();
 
         // then
         verifyFetchTransactionsResponse(fetchTransactionsResponse);
@@ -197,7 +202,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
         recordFetchAccountsResponseAfterAccessTokenHadBeenRevoked(accessToken1, accessToken2);
 
         // when
-        final Throwable thrown = catchThrowable(americanExpressAgent::fetchCheckingAccounts);
+        final Throwable thrown = catchThrowable(americanExpressAgent::fetchCreditCardAccounts);
 
         // then
         assertThat(thrown)
@@ -417,6 +422,9 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
     private void recordFetchTransactionsResponse(String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
                 get(urlPathEqualTo("/servicing/v1/financials/transactions"))
+                        .withQueryParam(
+                                "end_date",
+                                containing(ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date())))
                         .withHeader(
                                 "Authorization",
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
@@ -430,6 +438,9 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
         wireMockRule.stubFor(
                 get(urlPathEqualTo("/servicing/v1/financials/transactions"))
+                        .withQueryParam(
+                                "end_date",
+                                containing(ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date())))
                         .withHeader(
                                 "Authorization",
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
@@ -440,6 +451,40 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                                         .withStatus(200)
                                         .withHeader("Content-Type", "application/json")
                                         .withBody(createTransactionsResponseJsonString())));
+
+        wireMockRule.stubFor(
+                get(urlPathEqualTo("/servicing/v1/financials/transactions"))
+                        .withQueryParam(
+                                "end_date",
+                                containing(
+                                        LocalDate.now().minusMonths(3).toString().substring(0, 7)))
+                        .withHeader(
+                                "Authorization",
+                                matching(createAuthHeaderMatchingPattern(accessToken1)))
+                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
+                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(400)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody(createTransactionRangeErrorResponse())));
+
+        wireMockRule.stubFor(
+                get(urlPathEqualTo("/servicing/v1/financials/transactions"))
+                        .withQueryParam(
+                                "end_date",
+                                containing(
+                                        LocalDate.now().minusMonths(3).toString().substring(0, 7)))
+                        .withHeader(
+                                "Authorization",
+                                matching(createAuthHeaderMatchingPattern(accessToken2)))
+                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
+                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(400)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody(createTransactionRangeErrorResponse())));
     }
 
     private void recordFetchAccountsResponseAfterAccessTokenHadBeenRevoked(

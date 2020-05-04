@@ -57,7 +57,7 @@ public final class AmericanExpressDualAgentTest {
                         .addCredentialField(
                                 Field.Key.PASSWORD,
                                 credentialHelper.get(UsernamePasswordArgumentEnum.PASSWORD))
-                        .loadCredentialsBefore(false)
+                        .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true)
                         .doLogout(true)
                         .expectLoggedIn(false);
