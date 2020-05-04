@@ -19,7 +19,7 @@ public class TransactionEntity {
     private String description;
 
     @JsonProperty("amount")
-    private Integer amount;
+    private BigDecimal amount;
 
     @JsonProperty("pending")
     private Boolean pending;
@@ -38,6 +38,6 @@ public class TransactionEntity {
     }
 
     public ExactCurrencyAmount exactCurrencyAmount() {
-        return ExactCurrencyAmount.of(BigDecimal.valueOf(amount), currency);
+        return ExactCurrencyAmount.of(amount, currency);
     }
 }
