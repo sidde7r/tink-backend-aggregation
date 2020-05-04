@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.business.nordea;
+package se.tink.backend.aggregation.agents.nxgen.se.business.handelsbanken.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class NordeaSEAgentTest {
+public class HandelsbankenSEAgentTest {
 
     private final ArgumentManager<SsnArgumentEnum> manager =
             new ArgumentManager<>(SsnArgumentEnum.values());
@@ -26,14 +26,13 @@ public class NordeaSEAgentTest {
 
     @Test
     public void test() throws Exception {
-        new AgentIntegrationTest.Builder("se", "nordea-business-bankid")
+        new AgentIntegrationTest.Builder("se", "se-handelsbankenbusiness-bankid")
                 .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
                 .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                 .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
-                .addRefreshableItems(RefreshableItem.SAVING_ACCOUNTS)
-                .addRefreshableItems(RefreshableItem.SAVING_TRANSACTIONS)
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()
                 .testRefresh();
     }
