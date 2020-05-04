@@ -48,7 +48,8 @@ public class CommerzbankPhotoTanAuthenticatorTest {
     private static final String USERNAME = "sampel username";
     private static final String PASSWORD = "sample password";
     private static final String PROCESS_CONTEXT_ID = "process context id";
-    private static final String ENTITY_STATUS = "OK";
+    private static final String APPROVAL_STATUS_OK = "OK";
+    private static final String APPROVAL_STATUS_FAIL = "FAIL";
     private static final String APP_ID = "init app registration id";
 
     private CommerzbankPhotoTanAuthenticator authenticator;
@@ -78,12 +79,13 @@ public class CommerzbankPhotoTanAuthenticatorTest {
 
         given(apiClient.initScaFlow()).willReturn(getInitScaResponse(ScaMethod.PUSH_PHOTO_TAN));
 
-        given(apiClient.approveSca(PROCESS_CONTEXT_ID)).willReturn(getApprovalResponse());
+        given(apiClient.approveSca(PROCESS_CONTEXT_ID))
+                .willReturn(getApprovalResponse(APPROVAL_STATUS_OK));
         given(apiClient.initAppRegistration()).willReturn(APP_ID);
     }
 
     @Test
-    public void getType() {
+    public void authenticatorShouldBePasswordTyped() {
         // given
 
         // when
@@ -248,6 +250,27 @@ public class CommerzbankPhotoTanAuthenticatorTest {
     }
 
     @Test
+    public void
+            authenticationShouldThrowIncorrectChallengeResponseExceptionWhenFailedToApproveSca3Times() {
+        // given
+        int numOfAttempts = 3;
+        authenticator =
+                new CommerzbankPhotoTanAuthenticator(
+                        persistentStorage, apiClient, supplementalRequester, 10, numOfAttempts);
+        // and
+        given(apiClient.approveSca(PROCESS_CONTEXT_ID))
+                .willReturn(getApprovalResponse(APPROVAL_STATUS_FAIL));
+
+        // when
+        Throwable t = catchThrowable(() -> authenticator.authenticate(credentials));
+
+        // then
+        assertThat(t)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CHALLENGE_RESPONSE");
+    }
+
+    @Test
     public void authenticateShouldRequestSupplementalInformationAndPinDeviceWhenSucceed()
             throws AuthenticationException, AuthorizationException {
         // given
@@ -297,11 +320,8 @@ public class CommerzbankPhotoTanAuthenticatorTest {
                 new MetaDataEntity(PROCESS_CONTEXT_ID));
     }
 
-    private ApprovalResponse getApprovalResponse() {
+    private ApprovalResponse getApprovalResponse(String approvalStatus) {
         return new ApprovalResponse(
-                new ResultEntity<>(
-                        new StatusEntity(
-                                null, CommerzbankPhotoTanAuthenticatorTest.ENTITY_STATUS, null),
-                        null));
+                new ResultEntity<>(new StatusEntity(null, approvalStatus, null), null));
     }
 }
