@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex;
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
