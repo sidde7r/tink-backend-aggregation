@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken.bankid;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
