@@ -1,16 +1,16 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSETestConfig.AMOUNT;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSETestConfig.ERROR_MESSAGE;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSETestConfig.E_APPROVAL_ID;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSETestConfig.E_INVOICE_DESTINATION_ACCOUNT;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSETestConfig.E_INVOICE_MESSAGE;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSETestConfig.SOURCE_ACCOUNT;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSETestConfig.S_NO;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual.HandelsbankenSETestConfig.AMOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual.HandelsbankenSETestConfig.ERROR_MESSAGE;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual.HandelsbankenSETestConfig.E_APPROVAL_ID;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual.HandelsbankenSETestConfig.E_INVOICE_DESTINATION_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual.HandelsbankenSETestConfig.E_INVOICE_MESSAGE;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual.HandelsbankenSETestConfig.SOURCE_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual.HandelsbankenSETestConfig.S_NO;
 
 import java.util.Collections;
 import java.util.HashMap;

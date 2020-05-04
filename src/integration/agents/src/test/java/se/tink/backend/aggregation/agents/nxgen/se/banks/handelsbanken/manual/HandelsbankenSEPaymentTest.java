@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
