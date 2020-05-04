@@ -1,12 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.parsing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.ApprovalResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.CompleteAppRegistrationResponse;
@@ -16,123 +12,167 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticat
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.PrepareApprovalResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.authenticator.rpc.SendTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.entities.ErrorEntity;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ResponseParsingTest {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     @Test
-    public void successfulManualLogin() throws IOException {
+    public void successfulManualLogin() {
+        // given
         String loginResponseString =
                 "{\"error\":null,\"metaData\":null,\"result\":{\"data\":{\"biometricKillSwitchesActive\":[],\"challenge\":null,\"firstName\":\"Kalle\",\"loginStatus\":\"TAN_REQUESTED\",\"sessionToken\":null,\"surname\":\"Kula\",\"userIdHash\":\"asdf\",\"userid\":\"12345678\"}}}";
 
-        LoginResponse loginResponse = MAPPER.readValue(loginResponseString, LoginResponse.class);
+        // when
+        LoginResponse loginResponse =
+                SerializationUtils.deserializeFromString(loginResponseString, LoginResponse.class);
 
-        assertNull(loginResponse.getError());
-        assertEquals(loginResponse.getLoginInfoEntity().getLoginStatus(), "TAN_REQUESTED");
+        // then
+        assertThat(loginResponse.getError()).isNull();
+        assertThat(loginResponse.getLoginInfoEntity().getLoginStatus()).isEqualTo("TAN_REQUESTED");
     }
 
     @Test
-    public void unsuccessfulManualLogin() throws IOException {
+    public void unsuccessfulManualLogin() {
+        // given
         String loginResponseString =
                 "{\"error\":{\"cancelling\":true,\"errors\":[{\"messageId\":\"login.pin.error.10205\"}]},\"metaData\":{\"globalRequestId\":null,\"processContextId\":null},\"result\":null}";
 
-        LoginResponse loginResponse = MAPPER.readValue(loginResponseString, LoginResponse.class);
+        // when
+        LoginResponse loginResponse =
+                SerializationUtils.deserializeFromString(loginResponseString, LoginResponse.class);
 
-        assertNotNull(loginResponse.getError());
+        // then
+        assertThat(loginResponse.getError()).isNotNull();
     }
 
     @Test
-    public void successfulInitScaResponse() throws IOException {
+    public void successfulInitScaResponse() {
+        // given
         String initScaResponseString =
-                "{\"error\":null,\"metaData\":{\"globalRequestId\":\"asdf\",\"processContextId\":\"UUID\"},\"result\":{\"data\":{\"availableApprovalMethods\":[\"APP2APP_PHOTO_TAN\",\"PHOTO_TAN\"],\"salutationName\":\"Kula\",\"salutationTitle\":\"Herrn \"},\"hints\":[]}}";
+                "{\"error\":null,\"metaData\":{\"globalRequestId\":\"asdf\",\"processContextId\":\"UUID\"},\"result\":{\"data\":{\"availableApprovalMethods\":[\"APP2APP_PHOTO_TAN\",\"PUSH_PHOTO_TAN\"],\"salutationName\":\"Kula\",\"salutationTitle\":\"Herrn \"},\"hints\":[]}}";
 
+        // when
         InitScaResponse initScaResponse =
-                MAPPER.readValue(initScaResponseString, InitScaResponse.class);
+                SerializationUtils.deserializeFromString(
+                        initScaResponseString, InitScaResponse.class);
 
-        assertTrue(initScaResponse.getInitScaEntity().isPushPhotoTanAvailable());
+        // then
+        assertThat(initScaResponse.getInitScaEntity().isPushPhotoTanAvailable()).isTrue();
     }
 
     @Test
-    public void successfulPrepareApprovalResponse() throws IOException {
+    public void successfulPrepareApprovalResponse() {
+        // given
         String prepareApprovalResponseString =
                 "{\"error\":null,\"metaData\":{\"globalRequestId\":null,\"processContextId\":\"UUID\"},\"result\":{\"data\":{\"approvalMethod\":\"PHOTO_TAN\",\"imageBase64\":\"The QR code image\",\"mobileNumber\":null,\"serverChallenge\":null},\"hints\":[]}}";
 
+        // when
         PrepareApprovalResponse prepareApprovalResponse =
-                MAPPER.readValue(prepareApprovalResponseString, PrepareApprovalResponse.class);
+                SerializationUtils.deserializeFromString(
+                        prepareApprovalResponseString, PrepareApprovalResponse.class);
 
-        assertEquals(
-                prepareApprovalResponse.getPrepareApprovalEntity().getImageBase64(),
-                "The QR code image");
+        // then
+        assertThat(prepareApprovalResponse.getPrepareApprovalEntity().getImageBase64())
+                .isEqualTo("The QR code image");
     }
 
     @Test
-    public void successfulApproveResponse() throws IOException {
+    public void successfulApproveResponse() {
+        // given
         String approvalResponseString =
                 "{\"error\":null,\"metaData\":{\"globalRequestId\":null,\"processContextId\":\"UUID\"},\"result\":{\"data\":{\"approval\":\"OK\"},\"hints\":[]}}";
 
+        // when
         ApprovalResponse approvalResponse =
-                MAPPER.readValue(approvalResponseString, ApprovalResponse.class);
+                SerializationUtils.deserializeFromString(
+                        approvalResponseString, ApprovalResponse.class);
 
-        assertTrue(approvalResponse.getStatusEntity().isApprovalOk());
+        // then
+        assertThat(approvalResponse.getStatusEntity().isApprovalOk()).isTrue();
     }
 
     @Test
-    public void successfulFinishApproveResponse() throws IOException {
+    public void successfulFinishApproveResponse() {
+        // given
         String finishApprovalResponseString =
                 "{\"error\":null,\"metaData\":{\"globalRequestId\":null,\"processContextId\":null},\"result\":{\"data\":{\"loginStatus\":\"OK\"},\"hints\":[]}}";
 
+        // when
         FinaliseApprovalResponse finaliseApprovalResponse =
-                MAPPER.readValue(finishApprovalResponseString, FinaliseApprovalResponse.class);
+                SerializationUtils.deserializeFromString(
+                        finishApprovalResponseString, FinaliseApprovalResponse.class);
 
-        assertTrue(finaliseApprovalResponse.getStatusEntity().isLoginStatusOk());
+        // then
+        assertThat(finaliseApprovalResponse.getStatusEntity().isLoginStatusOk()).isTrue();
     }
 
     @Test
-    public void successfulInitAppRegistrationResponse() throws IOException {
+    public void successfulInitAppRegistrationResponse() {
+        // given
         String initAppRegistrationResponseString =
                 "{\"error\":null,\"result\":{\"items\":[{\"appId\":\"appID as UUID\"}],\"metaData\":null}}";
 
+        // when
         InitAppRegistrationResponse initAppRegistrationResponse =
-                MAPPER.readValue(
+                SerializationUtils.deserializeFromString(
                         initAppRegistrationResponseString, InitAppRegistrationResponse.class);
 
-        assertEquals(initAppRegistrationResponse.getAppId(), "appID as UUID");
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void assertThatMoreThanOneAppIdListElementFails() throws IOException {
-        String initAppRegistrationResponseString =
-                "{\"error\":null,\"result\":{\"items\":[{\"appId\":\"appID as UUID\"},{\"someUnknownElement\":\"What is this even.\"}],\"metaData\":null}}";
-
-        InitAppRegistrationResponse initAppRegistrationResponse =
-                MAPPER.readValue(
-                        initAppRegistrationResponseString, InitAppRegistrationResponse.class);
-
-        initAppRegistrationResponse.getAppId();
+        // then
+        assertThat(initAppRegistrationResponse.getAppId()).isEqualTo("appID as UUID");
     }
 
     @Test
-    public void successfulCompleteAppRegistrationResponse() throws IOException {
+    public void assertThatMoreThanOneAppIdListElementFails() {
+        // given
+        String initAppRegistrationResponseString =
+                "{\"error\":null,\"result\":{\"items\":[{\"appId\":\"appID as UUID\"},{\"someUnknownElement\":\"What is this even.\"}],\"metaData\":null}}";
+        // and
+        InitAppRegistrationResponse initAppRegistrationResponse =
+                SerializationUtils.deserializeFromString(
+                        initAppRegistrationResponseString, InitAppRegistrationResponse.class);
+
+        // when
+        Throwable t = catchThrowable(initAppRegistrationResponse::getAppId);
+
+        // then
+        assertThat(t)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Could not get appId which is required for registration.");
+    }
+
+    @Test
+    public void successfulCompleteAppRegistrationResponse() {
+        // given
         String completeAppRegistrationResponseString =
                 "{\"error\":null,\"result\":{\"items\":[{\"appId\":\"appID as UUID\",\"appRegistrationData\":{\"profileJsonSettings\":null}}],\"metaData\":null}}";
-
+        // and
         CompleteAppRegistrationResponse completeAppRegistrationResponse =
-                MAPPER.readValue(
+                SerializationUtils.deserializeFromString(
                         completeAppRegistrationResponseString,
                         CompleteAppRegistrationResponse.class);
 
-        assertNull(completeAppRegistrationResponse.getError());
+        // when
+        ErrorEntity result = completeAppRegistrationResponse.getError();
+
+        // then
+        assertThat(result).isNull();
     }
 
     @Test
-    public void successfulSendTwoFactorTokenResponse() throws IOException {
+    public void successfulSendTwoFactorTokenResponse() {
+        // given
         String sendtwoFactorTokenResponseString =
                 "{\"error\":null,\"metaData\":{\"globalRequestId\":null,\"processContextId\":null},\"result\":{\"data\":{\"status\":\"OK\"},\"hints\":[]}}";
-
+        // and
         SendTokenResponse sendTokenResponse =
-                MAPPER.readValue(sendtwoFactorTokenResponseString, SendTokenResponse.class);
+                SerializationUtils.deserializeFromString(
+                        sendtwoFactorTokenResponseString, SendTokenResponse.class);
 
-        assertTrue(sendTokenResponse.getStatusEntity().isStatusOk());
+        // when
+        boolean result = sendTokenResponse.getStatusEntity().isStatusOk();
+
+        // then
+        assertThat(result).isTrue();
     }
 }
