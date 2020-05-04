@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ak
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -100,6 +101,22 @@ public class AktiaOtpCodeExchangerTest {
 
         // then
         assertThat(returnedStatus).isEqualTo(ExchangeOtpCodeStatus.OTHER_ERROR);
+        verify(otpDataStorageMock, never()).storeInfo(any(OtpInfoDto.class));
+    }
+
+    @Test
+    public void shouldReturnStatusForIncorrectOtpCodeFormat() {
+        // given
+        final String incorrectOtpCode = "12345";
+
+        // when
+        final ExchangeOtpCodeStatus returnedStatus =
+                otpCodeExchanger.exchangeCode(incorrectOtpCode);
+
+        // then
+        assertThat(returnedStatus).isEqualTo(ExchangeOtpCodeStatus.WRONG_OTP_CODE);
+
+        verify(aktiaApiClientMock, never()).authenticateWithOtp(anyString());
         verify(otpDataStorageMock, never()).storeInfo(any(OtpInfoDto.class));
     }
 }

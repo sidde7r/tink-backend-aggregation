@@ -37,7 +37,7 @@ public class AktiaTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchAccount() {
+    public void shouldFetchAccounts() {
         // given
         final AccountsSummaryResponse accountsSummaryResponse =
                 createSuccessfulAccountsSummaryResponse();
@@ -54,6 +54,25 @@ public class AktiaTransactionalAccountFetcherTest {
 
         // then
         assertThat(resultAccounts).containsExactly(transactionalAccountMock);
+    }
+
+    @Test
+    public void shouldFetchEmptyAccountsList() {
+        // given
+        final AccountsSummaryResponse accountsSummaryResponse =
+                createSuccessfulAccountsSummaryResponse();
+        when(aktiaApiClientMock.getAccountsSummary()).thenReturn(accountsSummaryResponse);
+
+        when(transactionalAccountConverterMock.toTransactionalAccount(
+                        any(AccountSummaryItemDto.class)))
+                .thenReturn(Optional.empty());
+
+        // when
+        final Collection<TransactionalAccount> resultAccounts =
+                transactionalAccountFetcher.fetchAccounts();
+
+        // then
+        assertThat(resultAccounts).isEmpty();
     }
 
     @Test

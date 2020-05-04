@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.apiclient.response;
 
-import lombok.Value;
+import lombok.Data;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.apiclient.dto.response.OpenAmErrorResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.apiclient.dto.response.TransactionsAndLockedEventsResponseDto;
 
-@Value
+@Data
 public class TransactionsAndLockedEventsResponse {
 
     private final boolean successful;

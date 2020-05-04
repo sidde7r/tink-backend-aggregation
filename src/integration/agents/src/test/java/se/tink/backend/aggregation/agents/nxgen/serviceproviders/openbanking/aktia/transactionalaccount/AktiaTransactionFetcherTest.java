@@ -2,20 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ak
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.AktiaTestFixtures.ACCOUNT_ID;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.AktiaTestFixtures.AMOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.AktiaTestFixtures.CONTINUATION_KEY;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.AktiaTestFixtures.TRANSACTION_MESSAGE;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.AktiaTestFixtures.createPaginatorResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.AktiaTestFixtures.createTransactionsAndLockedEventsResponseForError;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.AktiaTestFixtures.createTransactionsAndLockedEventsResponseWithContinuationKey;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.AktiaTestFixtures.getTransactionalAccount;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.apiclient.AktiaApiClient;
@@ -25,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.akt
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class AktiaTransactionFetcherTest {
 
@@ -45,35 +37,33 @@ public class AktiaTransactionFetcherTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldGetTransactionsFor() {
         // given
-        final TransactionsAndLockedEventsResponse transactionsAndLockedEventsResponse =
-                createTransactionsAndLockedEventsResponseWithContinuationKey();
-        when(aktiaApiClientMock.getTransactionsAndLockedEvents(ACCOUNT_ID, CONTINUATION_KEY))
-                .thenReturn(transactionsAndLockedEventsResponse);
-
         final TransactionalAccount transactionalAccount = getTransactionalAccount();
+        final TransactionKeyPaginatorResponse<String> expectedResult =
+                mock(TransactionKeyPaginatorResponse.class);
 
-        final TransactionKeyPaginatorResponse<String> paginatorResponse = createPaginatorResponse();
-        when(transactionalAccountConverterMock.toPaginatorResponse(
-                        any(TransactionsAndLockedEventsResponseDto.class)))
-                .thenReturn(paginatorResponse);
+        final TransactionsAndLockedEventsResponseDto dto =
+                mock(TransactionsAndLockedEventsResponseDto.class);
+
+        final TransactionsAndLockedEventsResponse response =
+                mock(TransactionsAndLockedEventsResponse.class);
+
+        when(response.isSuccessful()).thenReturn(true);
+        when(response.getTransactionsAndLockedEventsResponseDto()).thenReturn(dto);
+
+        when(aktiaApiClientMock.getTransactionsAndLockedEvents(ACCOUNT_ID, CONTINUATION_KEY))
+                .thenReturn(response);
+
+        when(transactionalAccountConverterMock.toPaginatorResponse(dto)).thenReturn(expectedResult);
 
         // when
-        final PaginatorResponse response =
+        final PaginatorResponse result =
                 transactionFetcher.getTransactionsFor(transactionalAccount, CONTINUATION_KEY);
 
         // then
-        assertThat(response).isNotNull();
-        assertThat(response.getTinkTransactions()).hasSize(1);
-        final Transaction resultTransaction =
-                new ArrayList<>(response.getTinkTransactions()).get(0);
-
-        assertThat(resultTransaction.isPending()).isFalse();
-        assertThat(resultTransaction.getExactAmount().getCurrencyCode()).isEqualTo("EUR");
-        assertThat(resultTransaction.getExactAmount().getExactValue())
-                .isEqualTo(new BigDecimal(AMOUNT));
-        assertThat(resultTransaction.getDescription()).isEqualTo(TRANSACTION_MESSAGE);
+        assertThat(result).isEqualTo(expectedResult);
     }
 
     @Test

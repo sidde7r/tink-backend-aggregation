@@ -17,7 +17,7 @@ public class CheckIfAccessTokenIsValidStep implements AuthenticationStep {
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        final AccessTokenStatus accessTokenStatus = accessTokenRetriever.getAccessTokenStatus();
+        final AccessTokenStatus accessTokenStatus = accessTokenRetriever.getStatusFromStorage();
 
         if (accessTokenStatus == AccessTokenStatus.VALID) {
             return AuthenticationStepResponse.authenticationSucceeded();

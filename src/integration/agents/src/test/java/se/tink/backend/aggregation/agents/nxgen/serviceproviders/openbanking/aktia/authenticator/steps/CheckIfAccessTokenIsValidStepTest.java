@@ -33,7 +33,7 @@ public class CheckIfAccessTokenIsValidStepTest {
         // given
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
 
-        when(accessTokenRetrieverMock.getAccessTokenStatus()).thenReturn(AccessTokenStatus.VALID);
+        when(accessTokenRetrieverMock.getStatusFromStorage()).thenReturn(AccessTokenStatus.VALID);
 
         // when
         final AuthenticationStepResponse returnedResponse =
@@ -51,7 +51,7 @@ public class CheckIfAccessTokenIsValidStepTest {
         // given
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
 
-        when(accessTokenRetrieverMock.getAccessTokenStatus()).thenReturn(AccessTokenStatus.EXPIRED);
+        when(accessTokenRetrieverMock.getStatusFromStorage()).thenReturn(AccessTokenStatus.EXPIRED);
 
         // when
         final AuthenticationStepResponse returnedResponse =
@@ -69,7 +69,7 @@ public class CheckIfAccessTokenIsValidStepTest {
         // given
         final AuthenticationRequest authenticationRequest = createAuthenticationRequest();
 
-        when(accessTokenRetrieverMock.getAccessTokenStatus())
+        when(accessTokenRetrieverMock.getStatusFromStorage())
                 .thenReturn(AccessTokenStatus.NOT_PRESENT);
 
         // when

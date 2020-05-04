@@ -23,7 +23,7 @@ public class LoginStep implements AuthenticationStep {
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
 
-        accessTokenRetriever.retrieveAndStoreAccessToken(request);
+        accessTokenRetriever.getFromRequestAndStore(request);
 
         final GetLoginDetailsStatus loginDetailsStatus = loginDetailsFetcher.getLoginDetails();
 

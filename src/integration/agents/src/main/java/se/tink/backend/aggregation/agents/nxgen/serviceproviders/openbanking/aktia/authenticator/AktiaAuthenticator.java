@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ak
 
 import java.util.Arrays;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.authenticator.steps.AuthorizeWithOtpStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.authenticator.steps.CheckIfAccessTokenIsValidStep;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.aktia.authenticator.steps.CheckOtpResponseStep;
@@ -15,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-@RequiredArgsConstructor
 public class AktiaAuthenticator extends StatelessProgressiveAuthenticator {
 
     private final List<AuthenticationStep> authenticationSteps;

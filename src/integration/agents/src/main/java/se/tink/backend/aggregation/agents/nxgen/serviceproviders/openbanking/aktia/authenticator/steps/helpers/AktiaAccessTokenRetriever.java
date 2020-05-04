@@ -16,14 +16,14 @@ public class AktiaAccessTokenRetriever {
     final AktiaApiClient aktiaApiClient;
     final OAuth2TokenStorage tokenStorage;
 
-    public AccessTokenStatus getAccessTokenStatus() {
+    public AccessTokenStatus getStatusFromStorage() {
         return tokenStorage
                 .getToken()
                 .map(AktiaAccessTokenRetriever::getTokenStatus)
                 .orElse(AccessTokenStatus.NOT_PRESENT);
     }
 
-    public void retrieveAndStoreAccessToken(AuthenticationRequest request) {
+    public void getFromRequestAndStore(AuthenticationRequest request) {
         final Credentials credentials = request.getCredentials();
         final String username = credentials.getField(Field.Key.USERNAME);
         final String password = credentials.getField(Field.Key.PASSWORD);

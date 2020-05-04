@@ -13,9 +13,6 @@ junit_test(
         "//data:aggregation_test",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//third_party:asm_asm",
-    ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/aktia",
         "//src/integration/amount",

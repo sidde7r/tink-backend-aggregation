@@ -51,7 +51,7 @@ public class AktiaAccessTokenRetrieverTest {
         when(tokenStorageMock.getToken()).thenReturn(Optional.of(oAuth2Token));
 
         // when
-        final AccessTokenStatus returnedStatus = accessTokenRetriever.getAccessTokenStatus();
+        final AccessTokenStatus returnedStatus = accessTokenRetriever.getStatusFromStorage();
 
         // then
         assertThat(returnedStatus).isEqualTo(AccessTokenStatus.VALID);
@@ -65,7 +65,7 @@ public class AktiaAccessTokenRetrieverTest {
         when(tokenStorageMock.getToken()).thenReturn(Optional.of(oAuth2Token));
 
         // when
-        final AccessTokenStatus returnedStatus = accessTokenRetriever.getAccessTokenStatus();
+        final AccessTokenStatus returnedStatus = accessTokenRetriever.getStatusFromStorage();
 
         // then
         assertThat(returnedStatus).isEqualTo(AccessTokenStatus.EXPIRED);
@@ -77,7 +77,7 @@ public class AktiaAccessTokenRetrieverTest {
         when(tokenStorageMock.getToken()).thenReturn(Optional.empty());
 
         // when
-        final AccessTokenStatus returnedStatus = accessTokenRetriever.getAccessTokenStatus();
+        final AccessTokenStatus returnedStatus = accessTokenRetriever.getStatusFromStorage();
 
         // then
         assertThat(returnedStatus).isEqualTo(AccessTokenStatus.NOT_PRESENT);
@@ -91,9 +91,7 @@ public class AktiaAccessTokenRetrieverTest {
         // when
         final Throwable thrown =
                 catchThrowable(
-                        () ->
-                                accessTokenRetriever.retrieveAndStoreAccessToken(
-                                        authenticationRequest));
+                        () -> accessTokenRetriever.getFromRequestAndStore(authenticationRequest));
 
         // then
         assertThat(thrown).isNull();
