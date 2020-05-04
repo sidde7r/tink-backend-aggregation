@@ -24,6 +24,9 @@ public class TransactionEntity {
     @JsonProperty("pending")
     private Boolean pending;
 
+    @JsonProperty("currency")
+    private String currency;
+
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
@@ -35,6 +38,6 @@ public class TransactionEntity {
     }
 
     public ExactCurrencyAmount exactCurrencyAmount() {
-        return ExactCurrencyAmount.of(BigDecimal.valueOf(amount), "GBP");
+        return ExactCurrencyAmount.of(BigDecimal.valueOf(amount), currency);
     }
 }
