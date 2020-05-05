@@ -274,14 +274,7 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
-        /*
-           TODO: When we want this correlationID to be consistent among the whole chain
-           (which covers the whole Tink system), instead of us creating a UUID here, we would
-           probably want to fetch it from RefreshInformationRequest object and put it in
-           AgentWorkerCommandContext object. The same thing repeats in other places in this class
-        */
-
-        final String correlationId = UUIDUtils.generateUUID();
+        final String correlationId = generateOrGetCorrelationId(request.getRefreshId());
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
@@ -902,7 +895,7 @@ public class AgentWorkerOperationFactory {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
-        final String correlationId = UUIDUtils.generateUUID();
+        final String correlationId = generateOrGetCorrelationId(request.getRefreshId());
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
@@ -1020,7 +1013,7 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
-        final String correlationId = UUIDUtils.generateUUID();
+        final String correlationId = generateOrGetCorrelationId(request.getRefreshId());
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
@@ -1229,5 +1222,12 @@ public class AgentWorkerOperationFactory {
         log.debug("Created migration operation chain for credential");
         return new AgentWorkerOperation(
                 agentWorkerOperationState, metricsName, request, commands, context);
+    }
+
+    private static String generateOrGetCorrelationId(String correlationId) {
+        if (correlationId == null) {
+            return UUIDUtils.generateUUID();
+        }
+        return correlationId;
     }
 }
