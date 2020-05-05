@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.manual;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
