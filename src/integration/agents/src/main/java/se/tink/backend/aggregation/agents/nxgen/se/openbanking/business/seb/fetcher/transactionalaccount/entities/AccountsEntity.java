@@ -75,7 +75,7 @@ public class AccountsEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(bban)
                                 .withAccountNumber(bban)
-                                .withAccountName(name)
+                                .withAccountName(getOwnerName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifier.Type.SE, bban, ownerName))
