@@ -9,6 +9,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
+import java.util.Optional;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,8 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
+import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
@@ -48,6 +51,7 @@ public final class AgentWorkerOperationFactoryTest {
     private static final String CLUSTER_ID = "my-cluster";
     private static final String PROVIDER_NAME = "myprovider";
     private static final String MARKET = "mymarket";
+    private static final Optional<String> CORRELATION_ID = Optional.of("correlation-id");
 
     private AgentWorkerOperationFactory factory;
     private ClientInfo clientInfo;
@@ -105,6 +109,55 @@ public final class AgentWorkerOperationFactoryTest {
 
         // then
         assertThat(operation.getContext().getClusterId()).isEqualTo(CLUSTER_ID);
+    }
+
+    @Test
+    public void createdRefreshOperationShouldContainCorrelationIdFromRequest() {
+        // given
+        RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
+        when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getType()).thenReturn(credentialsRequestType);
+        when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID.get());
+
+        // when
+        AgentWorkerOperation operation = factory.createOperationRefresh(refreshRequest, clientInfo);
+
+        // then
+        assertThat(operation.getContext().getRefreshId()).isEqualTo(CORRELATION_ID);
+    }
+
+    @Test
+    public void createdConfigureWhiteListShouldContainCorrelationIdFromRequest() {
+        // given
+        ConfigureWhitelistInformationRequest refreshRequest =
+                mock(ConfigureWhitelistInformationRequest.class);
+        when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getType()).thenReturn(credentialsRequestType);
+        when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID.get());
+
+        // when
+        AgentWorkerOperation operation =
+                factory.createOperationConfigureWhitelist(refreshRequest, clientInfo);
+
+        // then
+        assertThat(operation.getContext().getRefreshId()).isEqualTo(CORRELATION_ID);
+    }
+
+    @Test
+    public void createdWhitelistRefreshShouldContainCorrelationIdFromRequest() {
+        // given
+        RefreshWhitelistInformationRequest refreshRequest =
+                mock(RefreshWhitelistInformationRequest.class);
+        when(refreshRequest.getProvider()).thenReturn(provider);
+        when(refreshRequest.getType()).thenReturn(credentialsRequestType);
+        when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID.get());
+
+        // when
+        AgentWorkerOperation operation =
+                factory.createOperationWhitelistRefresh(refreshRequest, clientInfo);
+
+        // then
+        assertThat(operation.getContext().getRefreshId()).isEqualTo(CORRELATION_ID);
     }
 
     private static class TestModule extends AbstractModule {
