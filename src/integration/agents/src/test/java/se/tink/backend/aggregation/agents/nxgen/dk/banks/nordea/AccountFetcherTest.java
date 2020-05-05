@@ -38,7 +38,7 @@ public class AccountFetcherTest {
         assertThat(account1.get().getExactBalance().getExactValue())
                 .isEqualByComparingTo(new BigDecimal("91844.66"));
         assertThat(account1.get().getAccountNumber()).isEqualTo("DK4520007418529630");
-        assertThat(account1.get().getIdModule().getUniqueId().equals("7418529630"));
+        assertThat(account1.get().getIdModule().getUniqueId()).isEqualTo("7418529630");
     }
 
     @Test

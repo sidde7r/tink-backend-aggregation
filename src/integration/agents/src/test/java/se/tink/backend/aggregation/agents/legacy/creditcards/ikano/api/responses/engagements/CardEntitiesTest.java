@@ -20,7 +20,7 @@ public class CardEntitiesTest {
         Assertions.assertThat(cards.size()).isEqualTo(3);
 
         for (CardEntity card : cards) {
-            Assertions.assertThat(card.isOfType(CardType.PREEM));
+            Assertions.assertThat(card.isOfType(CardType.PREEM)).isTrue();
         }
     }
 

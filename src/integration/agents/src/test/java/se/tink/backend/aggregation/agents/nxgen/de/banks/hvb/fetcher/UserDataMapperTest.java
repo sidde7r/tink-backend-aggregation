@@ -35,7 +35,7 @@ public class UserDataMapperTest {
         // then
         assertThat(identityData.getFullName()).isEqualTo(GIVEN_FULL_NAME);
         assertThat(identityData.getDateOfBirth())
-                .isEqualByComparingTo(EXPECTED_DATE_OF_BIRTH_IN_20TH_CENTURY);
+                .isEqualTo(EXPECTED_DATE_OF_BIRTH_IN_20TH_CENTURY.toString());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class UserDataMapperTest {
         // then
         assertThat(identityData.getFullName()).isEqualTo(GIVEN_FULL_NAME);
         assertThat(identityData.getDateOfBirth())
-                .isEqualByComparingTo(EXPECTED_DATE_OF_BIRTH_IN_21ST_CENTURY);
+                .isEqualTo(EXPECTED_DATE_OF_BIRTH_IN_21ST_CENTURY.toString());
     }
 
     @Test
