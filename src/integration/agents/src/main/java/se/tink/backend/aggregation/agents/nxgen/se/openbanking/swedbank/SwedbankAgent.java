@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /** This agent is not ready for production. Its for test and documentation of the flow. */
-public final class SwedbankAgent extends NextGenerationAgent
+public class SwedbankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final SwedbankApiClient apiClient;
@@ -68,17 +68,19 @@ public final class SwedbankAgent extends NextGenerationAgent
         SwedbankAuthenticationController swedbankAuthenticationController =
                 new SwedbankAuthenticationController(
                         persistentStorage,
-                        supplementalInformationHelper,
+                        supplementalRequester,
                         authenticator,
                         credentials,
-                        strongAuthenticationState,
                         transactionFetcher);
 
         return new AutoAuthenticationController(
                 request,
                 context,
-                new ThirdPartyAppAuthenticationController<>(
-                        swedbankAuthenticationController, supplementalInformationHelper),
+                new BankIdAuthenticationController<>(
+                        supplementalRequester,
+                        swedbankAuthenticationController,
+                        persistentStorage,
+                        credentials),
                 swedbankAuthenticationController);
     }
 

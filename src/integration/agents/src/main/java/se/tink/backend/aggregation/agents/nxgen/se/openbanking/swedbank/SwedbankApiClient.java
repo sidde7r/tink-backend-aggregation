@@ -22,7 +22,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entity.consent.ConsentAllAccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.AuthenticationStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entities.consent.ConsentAllAccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.RefreshTokenRequest;
@@ -49,6 +52,7 @@ import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -96,7 +100,7 @@ public final class SwedbankApiClient {
 
     private OAuth2Token getTokenFromSession() {
         return persistentStorage
-                .get(SwedbankConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                .get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
@@ -127,6 +131,8 @@ public final class SwedbankApiClient {
         if (accounts == null) {
             accounts =
                     createRequestInSessionWithConsent(SwedbankConstants.Urls.ACCOUNTS)
+                            .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
+                            .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
                             .get(FetchAccountResponse.class);
         }
         return accounts;
@@ -153,18 +159,14 @@ public final class SwedbankApiClient {
     }
 
     public URL getAuthorizeUrl(String state) {
-
         HttpResponse response =
-                createRequest(SwedbankConstants.Urls.AUTHORIZE)
+                createRequest(SwedbankConstants.Urls.AUTHORIZATION)
                         .queryParam(
                                 SwedbankConstants.QueryKeys.CLIENT_ID,
                                 getConfiguration().getClientId())
                         .queryParam(
                                 SwedbankConstants.QueryKeys.RESPONSE_TYPE,
                                 SwedbankConstants.QueryValues.RESPONSE_TYPE_CODE)
-                        .queryParam(
-                                SwedbankConstants.QueryKeys.SCOPE,
-                                SwedbankConstants.QueryValues.SCOPE_PSD2)
                         .queryParam(SwedbankConstants.QueryKeys.REDIRECT_URI, getRedirectUrl())
                         .queryParam(SwedbankConstants.QueryKeys.STATE, state)
                         .get(HttpResponse.class);
@@ -172,9 +174,26 @@ public final class SwedbankApiClient {
         return new URL(response.getHeaders().getFirst(HttpHeaders.LOCATION));
     }
 
+    public AuthenticationResponse authenticate(String ssn) {
+        final AuthorizeRequest authorizeRequest =
+                new AuthorizeRequest(configuration.getClientId(), getRedirectUrl());
+
+        return createRequest(SwedbankConstants.Urls.AUTHORIZATION)
+                .header(HeaderKeys.PSU_ID, ssn)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .post(AuthenticationResponse.class, authorizeRequest);
+    }
+
+    public AuthenticationStatusResponse collectAuthStatus(String ssn, String path) {
+        return createRequest(new URL(Urls.BASE + path))
+                .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
+                .header(HeaderKeys.PSU_ID, ssn)
+                .get(AuthenticationStatusResponse.class);
+    }
+
     public ConsentRequest createConsentRequest() {
         return new ConsentRequest<>(
-                SwedbankConstants.BodyParameter.RECURRING_INDICATOR,
+                false,
                 LocalDateTime.now()
                         .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
                         .toString(),
@@ -185,7 +204,7 @@ public final class SwedbankApiClient {
 
     public ConsentRequest createConsentRequest(List<String> list) {
         return new ConsentRequest<>(
-                SwedbankConstants.BodyParameter.RECURRING_INDICATOR,
+                true,
                 LocalDateTime.now()
                         .plusDays(SwedbankConstants.TimeValues.CONSENT_DURATION_IN_DAYS)
                         .toString(),
@@ -201,8 +220,10 @@ public final class SwedbankApiClient {
      */
     public ConsentResponse getConsentAccountDetails(List<String> list) {
         return createRequestInSession(SwedbankConstants.Urls.CONSENTS)
+                .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                 .post(ConsentResponse.class, createConsentRequest(list));
     }
@@ -215,6 +236,9 @@ public final class SwedbankApiClient {
      */
     public ConsentResponse getConsentAllAccounts() {
         return createRequestInSession(SwedbankConstants.Urls.CONSENTS)
+                .queryParam(QueryKeys.APP_ID, getConfiguration().getClientId())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
                 .type(MediaType.APPLICATION_JSON)
                 .post(ConsentResponse.class, createConsentRequest());
     }

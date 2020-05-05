@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entity.LinksEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
