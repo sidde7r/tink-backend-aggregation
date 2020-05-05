@@ -14,6 +14,9 @@ public class ResultInfoMessage {
                     .put("PCB03G0", "Transfer validation: The user does not have enough money")
                     .put("PCB03K1", "Transfer validation: The destination account is not correct")
                     .put(
+                            "PCB03E3",
+                            "Transfer validation: Exact same payment already exist. Please sign it in your bank's app before creating a new payment")
+                    .put(
                             "PCB0464",
                             "Transfer validation: The user lacks permission for this action")
                     .put(
