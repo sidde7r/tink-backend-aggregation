@@ -2073,8 +2073,6 @@ public class SEBApiAgent extends AbstractAgent
      * sign this transfer + all other transfers in the outbox when executing.
      */
     private void executeExternalTransfer(Transfer transfer) throws Exception {
-        ensureNoUnsignedTransfers();
-
         SebTransferRequestEntity externalTransfer;
         if (isBgOrPg(transfer)) {
             GiroMessageValidator.ValidationResult validationResult =
