@@ -5,7 +5,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PfmTransactionsEntity {
@@ -29,8 +29,8 @@ public class PfmTransactionsEntity {
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
-                .setAmount(new Amount(amount.getCurrency(), amount.getValue()))
-                .setDate((date))
+                .setAmount(ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency()))
+                .setDate(date)
                 .setDescription(cleanTransactionDescription(text))
                 .setPending(uncleared)
                 .build();
