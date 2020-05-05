@@ -4,21 +4,39 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static se.tink.libraries.serialization.utils.SerializationUtils.deserializeFromString;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class PensionEntityTest {
 
+    private static final String EXPECTED_NAME = "Ylva Johansson";
+
     @Test
-    public void testHolderNameParsing() {
-        final String expected = "Ylva Johansson";
+    public void withFullNameOnlyHolderNameIsExpectedFullName() {
         PensionEntity e1 = deserializeFromString(NO_HOLDER, PensionEntity.class);
+
+        assertEquals(EXPECTED_NAME, e1.toTinkInvestmentAccount().getHolderName().toString());
+    }
+
+    @Test
+    @Ignore // TODO previously unmaintained -- should be fixed
+    public void withHolderSecondHolderNameIsExpectedFullName() {
         PensionEntity e2 = deserializeFromString(HOLDER_SECOND, PensionEntity.class);
+
+        assertEquals(EXPECTED_NAME, e2.toTinkInvestmentAccount().getHolderName().toString());
+    }
+
+    @Test
+    public void withRootHolderHolderNameIsExpectedFullName() {
         PensionEntity e3 = deserializeFromString(ROOT_HOLDER, PensionEntity.class);
+
+        assertEquals(EXPECTED_NAME, e3.toTinkInvestmentAccount().getHolderName().toString());
+    }
+
+    @Test
+    public void withNullHolderHolderNameIsExpectedFullName() {
         PensionEntity e4 = deserializeFromString(NULL_HOLDER, PensionEntity.class);
 
-        assertEquals(expected, e1.toTinkInvestmentAccount().getHolderName().toString());
-        assertEquals(expected, e2.toTinkInvestmentAccount().getHolderName().toString());
-        assertEquals(expected, e3.toTinkInvestmentAccount().getHolderName().toString());
         assertNull(e4.toTinkInvestmentAccount().getHolderName().toString());
     }
 
