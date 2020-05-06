@@ -15,7 +15,8 @@ public class BpmAgent extends CbiGlobeAgent {
 
     @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
-        return new BpmApiClient(client, persistentStorage, requestManual, temporaryStorage);
+        return new BpmApiClient(
+                client, persistentStorage, sessionStorage, requestManual, temporaryStorage);
     }
 
     @Override
