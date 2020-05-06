@@ -188,14 +188,10 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
     }
 
     private void signTransfer(Optional<URL> url, PaymentSignRequest paymentSignRequest) {
-
         TransferSignResponse transferSignResponse =
                 url.map(requestUrl -> client.signTransfer(requestUrl, paymentSignRequest))
                         .orElseThrow(() -> paymentFailedException(PAYMENT_CREATE_FAILED));
-
-        if (!transferSignResponse.getErrors().isEmpty()) {
-            throw paymentFailedException(PAYMENT_CREATE_FAILED);
-        }
+        transferSignResponse.validateResponse(exceptionResolver);
 
         confirmTransfer(transferSignResponse, null);
     }
