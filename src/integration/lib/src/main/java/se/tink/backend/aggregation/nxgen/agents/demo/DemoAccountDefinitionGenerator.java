@@ -59,37 +59,26 @@ public class DemoAccountDefinitionGenerator {
                 + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 3));
     }
 
-    private static String generateAccountNumbersIT(
-            String userDeterministicKey, String deterministicKey) {
+    private static String generateAccountNumbersIT(String userDeterministicKey) {
         String number = getAccountNumber(userDeterministicKey);
-        String code = getCode(deterministicKey);
         Iban iban =
                 new Iban.Builder()
                         .countryCode(CountryCode.IT)
                         .nationalCheckDigit("X")
-                        .branchCode(code)
+                        .branchCode("11101")
                         .accountNumber(number)
-                        .bankCode(code)
+                        .bankCode("05428")
                         .build();
         // IT 18 X 8930 8930 00000202985435
         // IT 21 X 70723 70723 00000 202985435
         return iban.toString();
     }
 
-    private static String getCode(String deterministicKey) {
-        if (deterministicKey.length() < 4) {
-            return Strings.padStart(deterministicKey, 4, '0');
-        } else {
-            return deterministicKey.substring(
-                    deterministicKey.length() - 4, deterministicKey.length());
-        }
-    }
-
     private static String getAccountNumber(String userDeterministicKey) {
-        if (userDeterministicKey.length() < 14) {
-            return Strings.padStart(userDeterministicKey, 14, '0');
+        if (userDeterministicKey.length() < 12) {
+            return Strings.padStart(userDeterministicKey, 12, '0');
         } else {
-            return userDeterministicKey.substring(14);
+            return userDeterministicKey.substring(12);
         }
     }
 
@@ -108,7 +97,7 @@ public class DemoAccountDefinitionGenerator {
                 if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
-                    return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                    return generateAccountNumbersIT(userDeterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }
@@ -157,7 +146,7 @@ public class DemoAccountDefinitionGenerator {
                 if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
-                    return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                    return generateAccountNumbersIT(userDeterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }
@@ -219,7 +208,7 @@ public class DemoAccountDefinitionGenerator {
                 if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
-                    return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                    return generateAccountNumbersIT(userDeterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }
@@ -280,7 +269,7 @@ public class DemoAccountDefinitionGenerator {
                 if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
                 } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
-                    return generateAccountNumbersIT(userDeterministicKey, deterministicKey);
+                    return generateAccountNumbersIT(userDeterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
                 }
