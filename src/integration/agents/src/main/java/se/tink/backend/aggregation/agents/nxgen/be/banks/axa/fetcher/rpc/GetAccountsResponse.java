@@ -38,7 +38,6 @@ public final class GetAccountsResponse {
         final double balance = Double.parseDouble(accountEntity.getBalance());
         final String displayIban = accountEntity.getAccountNumber();
         final String iban = displayIban.replaceAll(" ", "");
-        final String accountNumber = iban.substring(4); // Removes leading "BE03"
 
         final Supplier<TransactionalAccount> checkingAccount =
                 () ->
@@ -55,7 +54,7 @@ public final class GetAccountsResponse {
                                 .withId(
                                         IdModule.builder()
                                                 .withUniqueIdentifier(iban)
-                                                .withAccountNumber(accountNumber)
+                                                .withAccountNumber(iban)
                                                 .withAccountName(accountEntity.getTypeDescription())
                                                 .addIdentifier(
                                                         AccountIdentifier.create(
@@ -80,7 +79,7 @@ public final class GetAccountsResponse {
                                 .withId(
                                         IdModule.builder()
                                                 .withUniqueIdentifier(iban)
-                                                .withAccountNumber(accountNumber)
+                                                .withAccountNumber(iban)
                                                 .withAccountName(accountEntity.getTypeDescription())
                                                 .addIdentifier(
                                                         AccountIdentifier.create(
