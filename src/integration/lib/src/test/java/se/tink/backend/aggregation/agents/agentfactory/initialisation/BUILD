@@ -1,4 +1,4 @@
-load("//tools/bzl:junit.bzl", "junit_test")
+load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 
 junit_test(
     name = "initialisation",
@@ -67,6 +67,7 @@ junit_test(
         "//third_party:io_dropwizard_dropwizard_client",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_dropwizard_dropwizard_logging",
         "//third_party:io_grpc_grpc_protobuf_lite",
         "//third_party:io_vavr",
         "//third_party:junit_junit",
