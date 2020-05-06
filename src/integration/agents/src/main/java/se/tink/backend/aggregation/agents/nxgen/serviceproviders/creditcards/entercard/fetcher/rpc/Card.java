@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-@SuppressWarnings("unused")
 @JsonObject
 public class Card {
 
@@ -16,4 +15,16 @@ public class Card {
     private boolean canChangePin;
     private boolean isCardCreatedRecently;
     private boolean isCardReplacementAllowed;
+
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
+
+    public String getMaskedNr() {
+        return maskedNr;
+    }
+
+    public boolean isPrimary() {
+        return isPrimary;
+    }
 }

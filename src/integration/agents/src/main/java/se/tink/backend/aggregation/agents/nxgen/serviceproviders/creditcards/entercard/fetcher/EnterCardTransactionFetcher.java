@@ -15,6 +15,6 @@ public class EnterCardTransactionFetcher implements TransactionPagePaginator<Cre
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        return apiClient.fetchTransactions(account.getAccountNumber(), page, 50);
+        return apiClient.fetchTransactions(account.getApiIdentifier(), page, 50);
     }
 }
