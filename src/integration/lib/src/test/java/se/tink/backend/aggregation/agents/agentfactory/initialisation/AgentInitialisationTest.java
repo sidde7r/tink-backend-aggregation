@@ -242,12 +242,38 @@ public class AgentInitialisationTest {
         return new ManualAuthenticateRequest(user, provider, credentials, true);
     }
 
+    @BeforeClass
+    public static void prepareForTest() {
+        // given
+        try {
+            configuration = readConfiguration("etc/test.yml");
+            providerConfigurationsForEnabledProviders =
+                    getProviderConfigurationsForEnabledProviders(
+                            "external/tink_backend/src/provider_configuration/data/seeding");
+
+            providerConfigurationsForEnabledProviders.sort(
+                    (p1, p2) -> p1.getName().compareTo(p2.getName()));
+
+            guiceModulesToUse = getGuiceModulesToUse();
+            user = MAPPER.readValue(USER_OBJECT_TEMPLATE, User.class);
+
+            hostConfiguration = mock(HostConfiguration.class);
+            when(hostConfiguration.getClusterId()).thenReturn(TEST_CLUSTER_ID);
+
+            injector = Guice.createInjector(guiceModulesToUse);
+            agentFactory = injector.getInstance(AgentFactory.class);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public AgentWorkerCommandContext createContext(CredentialsRequest credentialsRequest) {
 
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         credentialsRequest,
-                        new MetricRegistry(),
+                        mock(MetricRegistry.class),
                         mock(CuratorFramework.class),
                         configuration.getAgentsServiceConfiguration(),
                         getAggregatorForTesting(),
@@ -273,32 +299,6 @@ public class AgentInitialisationTest {
 
         context.setLogMasker(new FakeLogMasker());
         return context;
-    }
-
-    @BeforeClass
-    public static void prepareForTest() {
-        // given
-        try {
-            configuration = readConfiguration("etc/test.yml");
-            providerConfigurationsForEnabledProviders =
-                    getProviderConfigurationsForEnabledProviders(
-                            "external/tink_backend/src/provider_configuration/data/seeding/");
-
-            providerConfigurationsForEnabledProviders.sort(
-                    (p1, p2) -> p1.getName().compareTo(p2.getName()));
-
-            guiceModulesToUse = getGuiceModulesToUse();
-            user = MAPPER.readValue(USER_OBJECT_TEMPLATE, User.class);
-
-            hostConfiguration = mock(HostConfiguration.class);
-            when(hostConfiguration.getClusterId()).thenReturn(TEST_CLUSTER_ID);
-
-            injector = Guice.createInjector(guiceModulesToUse);
-            agentFactory = injector.getInstance(AgentFactory.class);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void initialiseAgent(Provider provider) {
