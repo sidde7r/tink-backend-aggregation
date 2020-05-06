@@ -50,9 +50,9 @@ public abstract class SebBaseAgent extends NextGenerationAgent
             AgentComponentProvider agentComponentProvider, SebBaseConfiguration sebConfiguration) {
         super(agentComponentProvider);
         apiClient = new SebApiClient(client, sebConfiguration);
+        sebSessionStorage = new SebSessionStorage(sessionStorage);
         transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController(sebConfiguration);
-        sebSessionStorage = new SebSessionStorage(sessionStorage);
         creditCardRefreshController = constructCreditCardRefreshController(sebConfiguration);
         loanRefreshController = constructLoanRefreshController(sebConfiguration);
         investmentFetcher = constructInvestmentRefreshController(sebConfiguration);
