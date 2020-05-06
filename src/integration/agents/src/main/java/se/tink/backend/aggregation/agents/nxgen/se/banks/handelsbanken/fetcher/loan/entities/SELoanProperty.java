@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 import java.text.ParseException;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Loans;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -17,15 +17,15 @@ public class SELoanProperty {
     private String value;
 
     public boolean isTermsOfChange() {
-        return hasLabel(HandelsbankenSEConstants.Loans.TERMS_OF_CHANGE);
+        return hasLabel(Loans.TERMS_OF_CHANGE);
     }
 
     public boolean isAmortization() {
-        return hasLabel(HandelsbankenSEConstants.Loans.AMORTIZATION);
+        return hasLabel(Loans.AMORTIZATION);
     }
 
     public boolean isMultipleApplicants() {
-        return hasLabel(HandelsbankenSEConstants.Loans.MULTIPLE_APPLICANTS);
+        return hasLabel(Loans.MULTIPLE_APPLICANTS);
     }
 
     private boolean hasLabel(String text) {
@@ -49,14 +49,14 @@ public class SELoanProperty {
         if (value == null) {
             throw new IllegalStateException("Was not able to return amortization because of null");
         }
-        if (HandelsbankenSEConstants.Loans.NO_AMORTIZATION.equalsIgnoreCase(value)) {
+        if (Loans.NO_AMORTIZATION.equalsIgnoreCase(value)) {
             return 0.0;
         }
         return AgentParsingUtils.parseAmount(value);
     }
 
     public boolean asMultipleApplicantValue() {
-        boolean isJa = HandelsbankenSEConstants.Loans.YES.equalsIgnoreCase(value);
+        boolean isJa = Loans.YES.equalsIgnoreCase(value);
         if (!isJa) {
             LOGGER.warn(String.format("Other value than \"ja\" found: %s", value));
         }
