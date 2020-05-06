@@ -86,8 +86,8 @@ public class EnterCardApiClient {
                 .get(AccountResponse.class);
     }
 
-    public TransactionResponse fetchTransactions(String accountNumber, int page, int perPage) {
-        return client.request(config.getTransactionsUrl(accountNumber))
+    public TransactionResponse fetchTransactions(String accountId, int page, int perPage) {
+        return client.request(config.getTransactionsUrl(accountId))
                 .queryParam(QueryKey.PAGE, Integer.toString(page))
                 .queryParam(QueryKey.PER_PAGE, Integer.toString(perPage))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, HeaderValue.ACCEPT_LANGUAGE)
