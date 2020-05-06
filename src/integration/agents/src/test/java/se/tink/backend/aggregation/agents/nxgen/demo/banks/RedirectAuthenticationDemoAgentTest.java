@@ -86,6 +86,21 @@ public class RedirectAuthenticationDemoAgentTest {
     }
 
     @Test
+    public void testAISFR() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("fr", "fr-test-open-banking-redirect")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .setFinancialInstitutionId("f58e31ebaf625c15a9601aa4deac83d0")
+                        .setAppId("tink")
+                        .setClusterId("local-development")
+                        .setRedirectUrl("https://127.0.0.1:7357/api/v1/thirdparty/callback");
+
+        builder.build().testRefresh();
+    }
+
+    @Test
     public void testPaymentIT() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("it", "it-test-open-banking-redirect")

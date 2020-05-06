@@ -64,7 +64,7 @@ public class BoursoramaTransactionalAccountFetcherTest {
         List<TransactionalAccount> accounts = new ArrayList<>(accountFetcher.fetchAccounts());
 
         // then
-        assertThat(accounts.size()).isEqualTo(1).as("Credit and Debit cards are skipped");
+        assertThat(accounts.size()).isEqualTo(1);
         assertAccountEquals(
                 accounts.get(0),
                 "FR4810096000504122942551L38",
@@ -96,8 +96,7 @@ public class BoursoramaTransactionalAccountFetcherTest {
         Throwable thrown = catchThrowable(accountFetcher::fetchAccounts);
         Assertions.assertThat(thrown)
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("3B9F0FCF487ECF9FCDC4CBAFDD0A2E6D")
-                .as("exception contains account id, for which balance is unavailable");
+                .hasMessageContaining("3B9F0FCF487ECF9FCDC4CBAFDD0A2E6D");
     }
 
     @Test
@@ -126,10 +125,8 @@ public class BoursoramaTransactionalAccountFetcherTest {
         ArrayList<Transaction> transactions =
                 new ArrayList<>(paginatorResponse.getTinkTransactions());
 
-        assertThat(transactions.size()).isEqualTo(3).as("All transactionas are mapped");
-        assertThat(transactions.get(1).getDate())
-                .isEqualToIgnoringHours("2018-06-26")
-                .as("booking date is mapped as transaction date");
+        assertThat(transactions.size()).isEqualTo(3);
+        assertThat(transactions.get(1).getDate()).isEqualToIgnoringHours("2018-06-26");
         assertThat(transactions.get(0).getDescription()).contains("PRLV SEPA SFR   ");
 
         assertThat(transactions.get(0).getExactAmount().getDoubleValue()).isEqualTo(-10.0);

@@ -762,7 +762,7 @@ maven_install(
         "org.apache.pdfbox:fontbox:2.0.6",
         "org.apache.pdfbox:pdfbox:2.0.6",
         "org.aspectj:aspectjrt:1.8.2",
-        "org.assertj:assertj-core:2.2.0",
+        "org.assertj:assertj-core:3.8.0",
         "org.bitbucket.b_c:jose4j:0.6.5",
         "org.bouncycastle:bcpkix-jdk15on:1.59",
         "org.bouncycastle:bcprov-jdk15on:1.59",

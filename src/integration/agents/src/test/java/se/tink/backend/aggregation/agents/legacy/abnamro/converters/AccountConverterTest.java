@@ -20,7 +20,7 @@ public class AccountConverterTest {
 
         List<Account> accounts = new AccountConverter().convert(Lists.newArrayList(pfmContract));
 
-        assertThat(!accounts.isEmpty());
+        assertThat(accounts).isNotEmpty();
         assertThat(accounts.size()).isEqualTo(1);
 
         Account account = accounts.get(0);
