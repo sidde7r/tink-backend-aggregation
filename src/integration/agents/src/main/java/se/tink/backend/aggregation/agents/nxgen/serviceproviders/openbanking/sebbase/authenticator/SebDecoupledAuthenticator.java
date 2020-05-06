@@ -59,6 +59,11 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
         switch (response.getStatus().toLowerCase()) {
             case PollResponses.COMPLETE:
+                if (Strings.nullToEmpty(response.getHintCode())
+                        .equalsIgnoreCase(PollResponses.UNKNOWN_BANK_ID)) {
+                    return BankIdStatus.FAILED_UNKNOWN;
+                }
+
                 startAuthorization();
                 return BankIdStatus.DONE;
             case PollResponses.PENDING:
