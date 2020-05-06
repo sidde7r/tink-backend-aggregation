@@ -19,7 +19,7 @@ public class ItDemoAccountGeneratorTest {
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
         System.out.println(savingsAccount.getAccountId());
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT18X8930893000000202985435");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT19X0542811101000202985435");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
                         AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
@@ -36,7 +36,7 @@ public class ItDemoAccountGeneratorTest {
                         testUserName, testProvider);
         System.out.println(transactionAccount.getAccountId());
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT20X0723072300000202985435");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT19X0542811101000202985435");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
                         AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
