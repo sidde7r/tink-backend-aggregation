@@ -24,7 +24,7 @@ public class EnterCardAccountFetcher implements AccountFetcher<CreditCardAccount
                         accountId ->
                                 apiClient
                                         .fetchCardAccount(accountId)
-                                        .toCreditCardAccount(response.getUser(), accountId))
+                                        .toCreditCardAccount(accountId))
                 .collect(Collectors.toList());
     }
 }

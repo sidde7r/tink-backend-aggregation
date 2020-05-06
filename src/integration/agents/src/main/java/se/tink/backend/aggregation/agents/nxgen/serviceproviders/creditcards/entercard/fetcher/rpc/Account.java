@@ -27,7 +27,7 @@ public class Account {
     private String defaultPayableAmount;
     private String kid;
 
-    public CreditCardAccount toCreditCardAccount(User user, String accountId) {
+    public CreditCardAccount toCreditCardAccount(String accountId) {
 
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
