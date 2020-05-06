@@ -167,6 +167,7 @@ public class HandelsbankenSEConstants {
         public static final String AMORTIZATION = "amortering";
         public static final String MULTIPLE_APPLICANTS = "fler låntagare finns";
         public static final String NO_AMORTIZATION = "amorteringsfritt";
+        public static final String NO_AMORTIZATION_2 = "läs mer och ansök";
         public static final String YES = "ja";
         public static final LogTag LOG_TAG = LogTag.from("se_handelsbanken_loans");
     }

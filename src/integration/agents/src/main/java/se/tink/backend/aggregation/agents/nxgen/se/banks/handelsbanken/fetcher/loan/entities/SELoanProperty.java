@@ -21,7 +21,7 @@ public class SELoanProperty {
     }
 
     public boolean isAmortization() {
-        return hasLabel(Loans.AMORTIZATION);
+        return hasLabel(Loans.AMORTIZATION) && !Loans.NO_AMORTIZATION_2.equalsIgnoreCase(value);
     }
 
     public boolean isMultipleApplicants() {
