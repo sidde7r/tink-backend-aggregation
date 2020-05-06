@@ -1,21 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.hsbc.HsbcConstants.Urls.V313;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 
 public class HsbcV313Agent extends UkOpenBankingBaseAgent {
 
     private static final UkOpenBankingAisConfig aisConfig;
+    private final UkOpenBankingPisConfig pisConfig;
     private final LocalDateTimeSource localDateTimeSource;
 
     static {
@@ -34,6 +40,7 @@ public class HsbcV313Agent extends UkOpenBankingBaseAgent {
     @Inject
     public HsbcV313Agent(AgentComponentProvider componentProvider, JwtSigner jwtSigner) {
         super(componentProvider, jwtSigner, aisConfig, false);
+        pisConfig = new UkOpenBankingV31PisConfiguration(HsbcConstants.Urls.V313.PIS_API_URL);
         this.localDateTimeSource = componentProvider.getLocalDateTimeSource();
     }
 
@@ -45,5 +52,21 @@ public class HsbcV313Agent extends UkOpenBankingBaseAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return super.constructAuthenticator(aisConfig);
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        UKOpenbankingV31Executor paymentExecutor =
+                new UKOpenbankingV31Executor(
+                        pisConfig,
+                        softwareStatement,
+                        providerConfiguration,
+                        apiClient,
+                        supplementalInformationHelper,
+                        credentials,
+                        strongAuthenticationState,
+                        randomValueGenerator,
+                        aisConfig.getAppToAppURL());
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }
