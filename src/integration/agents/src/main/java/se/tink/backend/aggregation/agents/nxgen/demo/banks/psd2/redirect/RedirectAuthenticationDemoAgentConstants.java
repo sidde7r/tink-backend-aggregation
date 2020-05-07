@@ -9,6 +9,11 @@ public class RedirectAuthenticationDemoAgentConstants {
             "it-test-open-banking-redirect-failed";
     public static final String IT_DEMO_PROVIDER_CANCEL_CASE =
             "it-test-open-banking-redirect-cancelled";
+    public static final String FR_DEMO_PROVIDER_SUCCESS_CASE = "fr-test-open-banking-redirect";
+    public static final String FR_DEMO_PROVIDER_FAILURE_CASE =
+            "fr-test-open-banking-redirect-failed";
+    public static final String FR_DEMO_PROVIDER_CANCEL_CASE =
+            "fr-test-open-banking-redirect-cancelled";
     public static final String UK_DEMO_PROVIDER_SUCCESS_CASE = "uk-test-open-banking-redirect";
     public static final String UK_DEMO_PROVIDER_FAILURE_CASE =
             "uk-test-open-banking-redirect-failed";
