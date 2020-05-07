@@ -164,7 +164,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "9b3254bbf743d71be62dd8bce0e6130e531516e5",
+    commit = "cd4dd0446f687c4f97455817092cbaca6cb56c7a",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1586908800 +0000",
 )
@@ -695,7 +695,7 @@ maven_install(
         "io.dropwizard:dropwizard-servlets:0.7.1",
         "io.dropwizard:dropwizard-util:0.7.1",
         "io.dropwizard:dropwizard-validation:0.7.1",
-        "io.github.classgraph:classgraph:4.8.69",
+        "io.github.classgraph:classgraph:4.8.78",
         "io.grpc:grpc-context:%s" % GRPC_JAVA_VERSION,
         "io.netty:netty-buffer:%s" % IO_NETTY_VERSION,
         "io.netty:netty-codec-dns:%s" % IO_NETTY_VERSION,

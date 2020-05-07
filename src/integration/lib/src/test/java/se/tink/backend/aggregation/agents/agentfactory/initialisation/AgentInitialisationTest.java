@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.agentfactory.initialisation;
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.api.AggregatorInfo.getAggregatorForTesting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
@@ -19,6 +19,7 @@ import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.setup.Environment;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +33,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import org.apache.curator.framework.CuratorFramework;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -42,15 +42,13 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
-import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
+import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationModuleFactory;
 import se.tink.backend.aggregation.configuration.guice.modules.FakeCryptoConfigurationsRepository;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
-import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
-import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
@@ -59,7 +57,6 @@ import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
-import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
@@ -98,16 +95,6 @@ public class AgentInitialisationTest {
     private static HostConfiguration hostConfiguration;
     private static Injector injector;
     private static AgentFactory agentFactory;
-
-    // These agents are reading secrets from k8s and this is not supported by this test
-    private static ImmutableSet<String> ignoredK8SAgents =
-            ImmutableSet.of(
-                    "banks.se.collector.CollectorAgent",
-                    "nxgen.dk.banks.jyske.JyskeNemidAgent",
-                    "nxgen.dk.banks.jyske.JyskeKeyCardAgent",
-                    "nxgen.se.openbanking.nordnet.NordnetAgent",
-                    "nxgen.serviceproviders.banks.revolut.RevolutAgent",
-                    "nxgen.es.openbanking.bbva.BbvaAgent");
 
     // These agents are temporarily ignored because these agents fail in the test
     // these agents will be investigated further
@@ -242,39 +229,6 @@ public class AgentInitialisationTest {
         return new ManualAuthenticateRequest(user, provider, credentials, true);
     }
 
-    public AgentWorkerCommandContext createContext(CredentialsRequest credentialsRequest) {
-
-        AgentWorkerCommandContext context =
-                new AgentWorkerCommandContext(
-                        credentialsRequest,
-                        new MetricRegistry(),
-                        mock(CuratorFramework.class),
-                        configuration.getAgentsServiceConfiguration(),
-                        getAggregatorForTesting(),
-                        mock(SupplementalInformationController.class),
-                        mock(ProviderSessionCacheController.class),
-                        ControllerWrapper.of(
-                                mock(AggregationControllerAggregationClient.class),
-                                hostConfiguration),
-                        TEST_CLUSTER_ID,
-                        "tink",
-                        "dummyCorrelationId");
-
-        AgentConfigurationControllerable agentConfigurationController =
-                new AgentConfigurationController(
-                        mock(TppSecretsServiceClient.class),
-                        configuration.getAgentsServiceConfiguration().getIntegrations(),
-                        credentialsRequest.getProvider(),
-                        context.getAppId(),
-                        "clusterIdForSecretsService",
-                        credentialsRequest.getCallbackUri());
-
-        context.setAgentConfigurationController(agentConfigurationController);
-
-        context.setLogMasker(new FakeLogMasker());
-        return context;
-    }
-
     @BeforeClass
     public static void prepareForTest() {
         // given
@@ -282,7 +236,7 @@ public class AgentInitialisationTest {
             configuration = readConfiguration("etc/test.yml");
             providerConfigurationsForEnabledProviders =
                     getProviderConfigurationsForEnabledProviders(
-                            "external/tink_backend/src/provider_configuration/data/seeding/");
+                            "external/tink_backend/src/provider_configuration/data/seeding");
 
             providerConfigurationsForEnabledProviders.sort(
                     (p1, p2) -> p1.getName().compareTo(p2.getName()));
@@ -301,11 +255,40 @@ public class AgentInitialisationTest {
         }
     }
 
+    public AgentContext createContext(CredentialsRequest credentialsRequest) {
+
+        AgentContext context = mock(AgentContext.class);
+        doReturn(TEST_CLUSTER_ID).when(context).getClusterId();
+        doReturn("tink").when(context).getAppId();
+        doReturn(mock(MetricRegistry.class)).when(context).getMetricRegistry();
+        doReturn(false).when(context).isTestContext();
+        doReturn(false).when(context).isWaitingOnConnectorTransactions();
+        doReturn(mock(AggregatorInfo.class)).when(context).getAggregatorInfo();
+        doReturn(new HashMap<>()).when(context).getTransactionCountByEnabledAccount();
+        doReturn(new ByteArrayOutputStream()).when(context).getLogOutputStream();
+
+        // Not easily mockable since we need the implementation of getAgentConfiguration ->
+        // getAgentConfigurationDev (and the parameter for these methods comes from Agent)
+        AgentConfigurationControllerable agentConfigurationController =
+                new AgentConfigurationController(
+                        mock(TppSecretsServiceClient.class),
+                        configuration.getAgentsServiceConfiguration().getIntegrations(),
+                        credentialsRequest.getProvider(),
+                        context.getAppId(),
+                        "clusterIdForSecretsService",
+                        credentialsRequest.getCallbackUri());
+
+        doReturn(agentConfigurationController).when(context).getAgentConfigurationController();
+        doReturn(new FakeLogMasker()).when(context).getLogMasker();
+
+        return context;
+    }
+
     private void initialiseAgent(Provider provider) {
         try {
             // given
             CredentialsRequest credentialsRequest = createCredentialsRequest(provider);
-            AgentWorkerCommandContext context = createContext(credentialsRequest);
+            AgentContext context = createContext(credentialsRequest);
 
             // when
             Agent agent = agentFactory.create(credentialsRequest, context);
@@ -329,7 +312,6 @@ public class AgentInitialisationTest {
                         .entrySet()
                         .stream()
                         .map(entry -> entry.getValue().get(0))
-                        .filter(provider -> !ignoredK8SAgents.contains(provider.getClassName()))
                         .filter(
                                 provider ->
                                         !temporarilyIgnoredAgents.contains(provider.getClassName()))

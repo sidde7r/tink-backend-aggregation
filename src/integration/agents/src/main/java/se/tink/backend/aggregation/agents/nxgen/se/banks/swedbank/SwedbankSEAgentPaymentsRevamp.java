@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank;
 
+import com.google.inject.Inject;
 import java.time.ZoneId;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -15,6 +16,7 @@ public class SwedbankSEAgentPaymentsRevamp extends SwedbankAbstractAgentPayments
         implements RefreshLoanAccountsExecutor {
     private final LoanRefreshController loanRefreshController;
 
+    @Inject
     public SwedbankSEAgentPaymentsRevamp(AgentComponentProvider componentProvider) {
         super(
                 componentProvider,

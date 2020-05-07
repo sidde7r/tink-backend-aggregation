@@ -1,4 +1,4 @@
-load("//tools/bzl:junit.bzl", "junit_test")
+load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 
 junit_test(
     name = "aggregation",
@@ -8,5 +8,8 @@ junit_test(
         # Intentionally drag in transitive dependency closure of aggregation service to classpath
         "//src/aggregation/service",
     ],
-    deps = [],
+    deps = [
+        "//third_party:commons_io_commons_io",
+        "//third_party:org_assertj_assertj_core",
+    ],
 )

@@ -1,4 +1,4 @@
-load("//tools/bzl:junit.bzl", "junit_test")
+load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 
 junit_test(
     name = "initialisation",
@@ -20,21 +20,18 @@ junit_test(
     runtime_deps = [
     ],
     deps = [
-        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
-        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/iface",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/repositories",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/context",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
@@ -70,6 +67,7 @@ junit_test(
         "//third_party:io_dropwizard_dropwizard_client",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_dropwizard_dropwizard_logging",
         "//third_party:io_grpc_grpc_protobuf_lite",
         "//third_party:io_vavr",
         "//third_party:junit_junit",
