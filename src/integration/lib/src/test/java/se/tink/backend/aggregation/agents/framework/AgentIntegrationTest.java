@@ -857,7 +857,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 .build();
     }
 
-    public void testGenericPaymentItalia(List<Payment> paymentList) throws Exception {
+    public void testGenericPaymentForRedirect(List<Payment> paymentList) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();

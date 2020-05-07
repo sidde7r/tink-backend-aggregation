@@ -19,11 +19,14 @@ public class RedirectAuthenticationDemoAgentTest {
     private final String DESTINATION_IDENTIFIER = "1434567891234";
     private final String SOURCE_ACCOUNT_NAME = "ha";
 
-    private final String SOURCE_ACCOUNT =
+    private final String ITALY_SOURCE_ACCOUNT =
             "IT52X0300203280728575573739"; // from ais flow, checking account
-    private final String DESTINATION_ACCOUNT =
+    private final String ITALY_DESTINATION_ACCOUNT =
             "IT53X0300203280882749129712"; // from ais flow, savings account
-
+    private final String FRANCE_SOURCE_ACCOUNT =
+            "FR9496449644000017699358020"; // from ais flow, checking account
+    private final String FRANCE_DESTINATION_ACCOUNT =
+            "FR9179997999000017699358020"; // from ais flow, savings account
     private static final String EXPIRED_TIME_IN_SECOND = "60";
 
     @Test
@@ -110,22 +113,41 @@ public class RedirectAuthenticationDemoAgentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
-        builder.build().testGenericPaymentItalia(createListMockedDomesticPayment(1));
+        builder.build()
+                .testGenericPaymentForRedirect(
+                        createListMockedDomesticPayment(
+                                1, ITALY_DESTINATION_ACCOUNT, ITALY_SOURCE_ACCOUNT));
         // todo: Remove once we have the assumptions tested
         // builder.build().testGenericPaymentItalia(DESTINATION_ACCOUNT);
     }
 
-    private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
+    @Test
+    public void testPaymentFR() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("fr", "fr-test-open-banking-redirect")
+                        .expectLoggedIn(false)
+                        .setFinancialInstitutionId("dummy")
+                        .setAppId("dummy")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
+
+        builder.build()
+                .testGenericPaymentForRedirect(
+                        createListMockedDomesticPayment(
+                                1, FRANCE_DESTINATION_ACCOUNT, FRANCE_SOURCE_ACCOUNT));
+    }
+
+    private List<Payment> createListMockedDomesticPayment(
+            int numberOfMockedPayments, String DESTINATION_ACCOUNT, String SOURCE_ACCOUNT) {
         List<Payment> listOfMockedPayments = new ArrayList<>();
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor =
                     new Creditor(
                             AccountIdentifier.create(
-                                    AccountIdentifier.Type.SEPA_EUR, DESTINATION_ACCOUNT));
+                                    AccountIdentifier.Type.IBAN, DESTINATION_ACCOUNT));
             Debtor debtor =
                     new Debtor(
-                            AccountIdentifier.create(
-                                    AccountIdentifier.Type.SEPA_EUR, SOURCE_ACCOUNT));
+                            AccountIdentifier.create(AccountIdentifier.Type.IBAN, SOURCE_ACCOUNT));
 
             Amount amount = Amount.inEUR(1.0);
             LocalDate executionDate = LocalDate.now();
