@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetch
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -31,10 +32,13 @@ public class AccountEntity {
     @JsonProperty("id")
     private String id;
 
+    @JsonProperty("accountType")
+    private String accountType;
+
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
+                .withType(getAccountType())
                 .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getAvailableBalance()))
                 .withId(
@@ -54,6 +58,14 @@ public class AccountEntity {
         return ExactCurrencyAmount.of(bookedBalance, currency);
     }
 
+    @JsonIgnore
+    private TransactionalAccountType getAccountType() {
+        if (AccountTypes.CHECKING.equalsIgnoreCase(accountType)) {
+            return TransactionalAccountType.CHECKING;
+        } else return TransactionalAccountType.SAVINGS;
+    }
+
+    @JsonIgnore
     public String getId() {
         return id;
     }

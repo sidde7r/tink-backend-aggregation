@@ -44,6 +44,11 @@ public class DemobankConstants {
         public static final String OXFORD_STAGING = "oxford-staging";
     }
 
+    public static class AccountTypes {
+        public static final String CHECKING = "CHECKING";
+        public static final String SAVINGS = "SAVINGS";
+    }
+
     public static class ClusterSpecificCallbacks {
 
         public static final String OXFORD_STAGING_CALLBACK =
