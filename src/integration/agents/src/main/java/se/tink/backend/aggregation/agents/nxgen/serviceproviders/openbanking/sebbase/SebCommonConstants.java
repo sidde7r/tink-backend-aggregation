@@ -116,5 +116,7 @@ public class SebCommonConstants {
     public static class HttpClient {
         public static final int MAX_RETRIES = 5;
         public static final int RETRY_SLEEP_MILLISECONDS = 2000;
+        public static final int NO_RESPONSE_MAX_RETRIES = 3;
+        public static final int NO_RESPONSE_SLEEP_MILLISECONDS = 1000;
     }
 }
