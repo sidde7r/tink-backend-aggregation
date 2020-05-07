@@ -26,7 +26,7 @@ public class DemobankConstants {
     }
 
     public static class BasicAuthParams {
-        public static final String CLIENT_ID = "client";
+        public static final String CLIENT_ID = "aggregation";
         public static final String CLIENT_SECRET = "password";
     }
 
