@@ -483,47 +483,32 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId);
 
+        String operationName;
+        List<AgentWorkerCommand> commands;
+
         if (request.isSkipRefresh()) {
-            return createOperationExecuteTransferWithoutRefresh(
-                    request, clientInfo, context, controllerWrapper);
+            operationName = "execute-transfer-without-refresh";
+            commands =
+                    createTransferWithoutRefreshBaseCommands(
+                            clientInfo, request, context, operationName, controllerWrapper);
+
         } else {
-            return createOperationExecuteTransferWithRefresh(
-                    request, clientInfo, context, controllerWrapper);
+
+            operationName = "execute-transfer-with-refresh";
+            commands =
+                    createTransferBaseCommands(
+                            clientInfo, request, context, operationName, controllerWrapper);
+            if (!request.getUser().getFlags().contains(FeatureFlags.ANONYMOUS)) {
+                commands.addAll(
+                        createRefreshAccountsCommands(
+                                request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+                commands.add(new SelectAccountsToAggregateCommand(context, request));
+                commands.addAll(
+                        createOrderedRefreshableItemsCommands(
+                                request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+            }
         }
-    }
 
-    private AgentWorkerOperation createOperationExecuteTransferWithRefresh(
-            TransferRequest request,
-            ClientInfo clientInfo,
-            AgentWorkerCommandContext context,
-            ControllerWrapper controllerWrapper) {
-
-        String operationName = "execute-transfer-with-refresh";
-        List<AgentWorkerCommand> commands =
-                createTransferBaseCommands(
-                        clientInfo, request, context, operationName, controllerWrapper);
-        if (!request.getUser().getFlags().contains(FeatureFlags.ANONYMOUS)) {
-            commands.addAll(
-                    createRefreshAccountsCommands(
-                            request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
-            commands.add(new SelectAccountsToAggregateCommand(context, request));
-            commands.addAll(
-                    createOrderedRefreshableItemsCommands(
-                            request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
-        }
-        return new AgentWorkerOperation(
-                agentWorkerOperationState, operationName, request, commands, context);
-    }
-
-    private AgentWorkerOperation createOperationExecuteTransferWithoutRefresh(
-            TransferRequest request,
-            ClientInfo clientInfo,
-            AgentWorkerCommandContext context,
-            ControllerWrapper controllerWrapper) {
-        String operationName = "execute-transfer-without-refresh";
-        List<AgentWorkerCommand> commands =
-                createTransferWithoutRefreshBaseCommands(
-                        clientInfo, request, context, operationName, controllerWrapper);
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationName, request, commands, context);
     }
