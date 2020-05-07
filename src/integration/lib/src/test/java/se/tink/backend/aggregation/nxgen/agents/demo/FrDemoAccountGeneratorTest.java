@@ -21,7 +21,7 @@ public class FrDemoAccountGeneratorTest {
         DemoSavingsAccount savingsAccount =
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("FR2230713071000013668465660");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("FR6720041010050008697430710");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
                         AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
@@ -39,7 +39,7 @@ public class FrDemoAccountGeneratorTest {
                 DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                         testUserName, testProvider);
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("FR3645724572000013668465660");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("FR4820041010050014391645720");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
                         AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
