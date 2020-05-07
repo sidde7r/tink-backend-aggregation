@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.ClientConfig;
 import java.util.concurrent.TimeUnit;
@@ -259,28 +260,39 @@ public class AggregationControllerAggregationClientImpl
             try {
                 return operation.execute();
             } catch (UniformInterfaceException e) {
-                String errorMessage = e.getMessage();
-                int statusCode = Integer.parseInt(errorMessage.split(":")[1].trim());
+                ClientResponse response = e.getResponse();
+                int statusCode = response.getStatus();
+
+                String errorMessage;
+                try {
+                    errorMessage = response.getEntity(String.class);
+                } catch (Exception exception) {
+                    errorMessage = e.getMessage();
+                }
+
                 if (!ERROR_CODES_FOR_RETRY.contains(statusCode)) {
                     log.warn(
-                            "Error during the operation {} and stopping (error message: {})",
+                            "Error during the operation {} and stopping (client response status: {}, error message: {})",
                             name,
+                            statusCode,
                             errorMessage);
                     throw e;
                 }
                 if (i == MAXIMUM_RETRY_ATTEMPT) {
                     log.error(
-                            "Tried the operation {} for {} times and stopping (error message: {})",
+                            "Tried the operation {} for {} times and stopping (client response status: {}, error message: {})",
                             name,
                             MAXIMUM_RETRY_ATTEMPT,
+                            statusCode,
                             errorMessage);
                     throw e;
                 } else {
                     log.warn(
-                            "Error during attempt {}/{} for operation {}, will try again (error message: {})",
+                            "Error during attempt {}/{} for operation {}, will try again (client response status: {}, error message: {})",
                             i,
                             MAXIMUM_RETRY_ATTEMPT,
                             name,
+                            statusCode,
                             errorMessage);
                 }
                 Uninterruptibles.sleepUninterruptibly(
