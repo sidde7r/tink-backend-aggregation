@@ -81,6 +81,7 @@ import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.FeatureFlags;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -486,7 +487,8 @@ public class AgentWorkerOperationFactory {
         String operationName;
         List<AgentWorkerCommand> commands;
 
-        if (request.isSkipRefresh()) {
+        // TODO: PAY2-409 - Check if UK provider works with LoginCommand and fix
+        if (isUKOBProvider(request.getProvider())) {
             operationName = "execute-transfer-without-refresh";
             commands =
                     createTransferWithoutRefreshBaseCommands(
@@ -494,11 +496,17 @@ public class AgentWorkerOperationFactory {
 
         } else {
 
-            operationName = "execute-transfer-with-refresh";
+            boolean shouldRefresh =
+                    !request.getUser().getFlags().contains(FeatureFlags.ANONYMOUS)
+                            || !request.isSkipRefresh();
+            operationName =
+                    shouldRefresh
+                            ? "execute-transfer-with-refresh"
+                            : "execute-transfer-without-refresh";
             commands =
                     createTransferBaseCommands(
                             clientInfo, request, context, operationName, controllerWrapper);
-            if (!request.getUser().getFlags().contains(FeatureFlags.ANONYMOUS)) {
+            if (shouldRefresh) {
                 commands.addAll(
                         createRefreshAccountsCommands(
                                 request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
@@ -511,6 +519,10 @@ public class AgentWorkerOperationFactory {
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationName, request, commands, context);
+    }
+
+    private boolean isUKOBProvider(Provider provider) {
+        return provider.getMarket().equals(MarketCode.GB.toString()) && provider.isOpenBanking();
     }
 
     public AgentWorkerOperation createOperationExecuteWhitelistedTransfer(
