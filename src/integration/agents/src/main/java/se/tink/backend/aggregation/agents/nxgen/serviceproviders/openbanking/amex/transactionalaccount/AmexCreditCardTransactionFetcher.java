@@ -77,22 +77,24 @@ public class AmexCreditCardTransactionFetcher
                                                 .contains(account.getAccountNumber()))
                         .collect(Collectors.toList());
 
-        return new TransactionResponseFormatted(transactions.size(), transactions);
+        return new TransactionResponseFormatted(transactions);
     }
 
     /* Get the stored transactions from sessionStorage or return an empty list.
      */
-    private List getStoredTransactions(Date fromDate, Date toDate) {
+    private List<TransactionsResponseDto> getStoredTransactions(Date fromDate, Date toDate) {
         List storedTransactions =
                 sessionStorage
                         .get(
                                 AmericanExpressUtils.createAndGetStorageString(fromDate, toDate),
                                 List.class)
                         .orElse(Collections.emptyList());
-        if (storedTransactions.isEmpty()) return Collections.emptyList();
-        else
+        if (storedTransactions.isEmpty()) {
+            return Collections.emptyList();
+        } else {
             return objectMapper.convertValue(
                     storedTransactions, new TypeReference<List<TransactionsResponseDto>>() {});
+        }
     }
 
     private HmacToken getHmacTokenForAccountId(String accountId) {

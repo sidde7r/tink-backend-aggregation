@@ -53,9 +53,9 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
 
     private List<CreditCardAccount> fetchSubAccounts(
             Map<HmacToken, AccountsResponseDto> accountsByToken) {
-        return accountsByToken.entrySet().stream()
-                .filter(entry -> isAccountActive(entry.getValue()))
-                .map(entry -> entry.getValue())
+
+        return accountsByToken.values().stream()
+                .filter(AmexCreditCardFetcher::isAccountActive)
                 .filter(AccountsResponseDto::haveSupplementaryAccounts)
                 .map(AccountsResponseDto::toSubCreditCardAccount)
                 .findFirst()
@@ -98,7 +98,6 @@ public class AmexCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
                 new HmacAccountIds(
                         accountsByToken.entrySet().stream()
                                 .map(this::mapTokenToAccountAndSubAccount)
-                                .filter(Objects::nonNull)
                                 .collect(Collectors.toSet())
                                 .stream()
                                 .flatMap(e -> e.entrySet().stream())
