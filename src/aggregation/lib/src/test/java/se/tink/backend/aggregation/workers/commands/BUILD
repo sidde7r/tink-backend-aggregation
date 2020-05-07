@@ -28,6 +28,7 @@ junit_test(
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
+        "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
