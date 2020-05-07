@@ -83,9 +83,12 @@ public final class VersionConflictTest {
                         String anyConflictingLib =
                                 newlyIntroducedVersionConflicts.iterator().next();
                         Set<String> versions = conflictingInfos.get(anyConflictingLib).versions;
+                        Set<String> paths = conflictingInfos.get(anyConflictingLib).paths;
                         return String.format(
-                                "There are conflicting versions of the library \"%s\" on the classpath: (%s)",
-                                anyConflictingLib, String.join(", ", versions));
+                                "There are conflicting versions of the library \"%s\" on the classpath: (%s) originating from: %s",
+                                anyConflictingLib,
+                                String.join(", ", versions),
+                                String.join(", ", paths));
                     }
                 };
 
@@ -115,6 +118,7 @@ public final class VersionConflictTest {
         private String baseName;
         private String version;
         private String nameWithoutVersion;
+        private String path;
 
         private static Optional<JarEntry> pathToEntry(final String jarPath) {
             if (!jarPath.contains("v1/http")) {
@@ -125,6 +129,7 @@ public final class VersionConflictTest {
             final List<String> parts = Arrays.asList(jarPath.split("/"));
             entry.version = parts.get(parts.size() - 2);
             entry.nameWithoutVersion = entry.baseName.replace("-" + entry.version, "");
+            entry.path = jarPath;
             return Optional.of(entry);
         }
     }
@@ -133,10 +138,12 @@ public final class VersionConflictTest {
 
         private String name;
         private Set<String> versions;
+        private Set<String> paths;
 
-        private ConflictInfo(String name, Set<String> versions) {
+        private ConflictInfo(String name, Set<String> versions, Set<String> paths) {
             this.name = name;
             this.versions = versions;
+            this.paths = paths;
         }
 
         private static ConflictInfo from(final String name, final Set<JarEntry> entries) {
@@ -145,7 +152,12 @@ public final class VersionConflictTest {
                             .filter(e -> Objects.equals(e.nameWithoutVersion, name))
                             .map(e -> e.version)
                             .collect(Collectors.toSet());
-            return new ConflictInfo(name, versions);
+            final Set<String> paths =
+                    entries.stream()
+                            .filter(e -> Objects.equals(e.nameWithoutVersion, name))
+                            .map(e -> e.path)
+                            .collect(Collectors.toSet());
+            return new ConflictInfo(name, versions, paths);
         }
     }
 }
