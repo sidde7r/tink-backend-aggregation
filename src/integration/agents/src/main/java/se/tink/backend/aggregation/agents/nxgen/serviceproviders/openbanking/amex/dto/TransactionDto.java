@@ -7,7 +7,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.Data;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -44,4 +46,21 @@ public class TransactionDto {
     private String embossedName;
 
     private ExtendedDetailsDto extendedDetails;
+
+    public Transaction toTinkTransaction() {
+        return Transaction.builder()
+                .setDate(getChargeDate())
+                .setAmount(convertTransactionEntityToExactCurrencyAmount())
+                .setDescription(description.replaceAll("\\s{2,}", " ")) // to remove whitespaces
+                .setPending(checkIfPending())
+                .build();
+    }
+
+    private boolean checkIfPending() {
+        return postDate == null && referenceNumber == null;
+    }
+
+    private ExactCurrencyAmount convertTransactionEntityToExactCurrencyAmount() {
+        return new ExactCurrencyAmount(amount, isoAlphaCurrencyCode).negate();
+    }
 }

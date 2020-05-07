@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 
 public class DemobankConstants {
     public static class Urls {
-        public static final String BASE_URL = "http://192.168.64.12:30788";
+        public static final String BASE_URL = "https://demobank.production.global.tink.se";
         public static final String LOGIN = "/api/login";
         public static final String OAUTH_TOKEN = "/oauth/token";
         public static final String OAUTH_AUTHORIZE = "/oauth/authorize";
@@ -42,6 +42,11 @@ public class DemobankConstants {
     public static class ClusterIds {
         public static final String OXFORD_PREPROD = "oxford-preprod";
         public static final String OXFORD_STAGING = "oxford-staging";
+    }
+
+    public static class AccountTypes {
+        public static final String CHECKING = "CHECKING";
+        public static final String SAVINGS = "SAVINGS";
     }
 
     public static class ClusterSpecificCallbacks {

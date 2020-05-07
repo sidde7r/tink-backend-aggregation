@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.apiclient;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,6 +28,8 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +37,9 @@ import javax.ws.rs.core.HttpHeaders;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexGrantType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexHttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.AccountsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.BalanceDto;
@@ -52,6 +55,8 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmexApiClientTest {
 
@@ -85,12 +90,15 @@ public class AmexApiClientTest {
 
         httpClientMock = mock(TinkHttpClient.class);
 
+        SessionStorage sessionStorage = mock(SessionStorage.class);
+
         amexApiClient =
                 new AmexApiClient(
                         amexConfigurationMock,
                         httpClientMock,
                         amexMacGeneratorMock,
-                        new ObjectMapper());
+                        new ObjectMapper(),
+                        sessionStorage);
     }
 
     @Test
@@ -237,24 +245,27 @@ public class AmexApiClientTest {
                         .convertValue(
                                 expectedResponseMap,
                                 new TypeReference<List<TransactionsResponseDto>>() {});
+
         final HmacToken hmacToken = createHmacToken();
 
-        setUpHttpClientMockForApi(url, expectedResponseMap);
+        setUpHttpClientMockForApiTransactions(url, expectedResponseMap);
 
         // when
         final List<TransactionsResponseDto> actualResponse =
-                amexApiClient.fetchTransactions(hmacToken);
+                amexApiClient.fetchTransactions(hmacToken, new Date(), new Date());
 
         // then
-        assertThat(actualResponse).containsExactlyElementsOf(expectedResponse);
+        assertThat(actualResponse.stream().findFirst().get())
+                .isEqualTo(expectedResponse.stream().findFirst().get());
     }
 
     private RequestBuilder setUpHttpClientMockForAuth(String urlString, Object response) {
         final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
 
-        when(requestBuilderMock.header(AmexHttpHeaders.X_AMEX_API_KEY, CLIENT_ID))
+        when(requestBuilderMock.header(AmericanExpressConstants.Headers.X_AMEX_API_KEY, CLIENT_ID))
                 .thenReturn(requestBuilderMock);
-        when(requestBuilderMock.header(AmexHttpHeaders.AUTHENTICATION, AUTH_MAC_VALUE))
+        when(requestBuilderMock.header(
+                        AmericanExpressConstants.Headers.AUTHENTICATION, AUTH_MAC_VALUE))
                 .thenReturn(requestBuilderMock);
         when(requestBuilderMock.post(any())).thenReturn(response);
 
@@ -268,16 +279,64 @@ public class AmexApiClientTest {
 
         when(requestBuilderMock.header(anyString(), anyString())).thenReturn(requestBuilderMock);
 
-        when(requestBuilderMock.header(AmexHttpHeaders.X_AMEX_API_KEY, CLIENT_ID))
+        when(requestBuilderMock.header(AmericanExpressConstants.Headers.X_AMEX_API_KEY, CLIENT_ID))
                 .thenReturn(requestBuilderMock);
         when(requestBuilderMock.header(HttpHeaders.AUTHORIZATION, DATA_MAC_VALUE))
                 .thenReturn(requestBuilderMock);
         when(requestBuilderMock.header(
-                        eq(AmexHttpHeaders.X_AMEX_REQUEST_ID),
+                        eq(AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID),
                         matches(getAmexRequestIdMatchingRegex())))
                 .thenReturn(requestBuilderMock);
         when(requestBuilderMock.get(any())).thenReturn(response);
 
         when(httpClientMock.request(new URL(urlString))).thenReturn(requestBuilderMock);
+    }
+
+    private void setUpHttpClientMockForApiTransactions(String urlString, Object response) {
+        final RequestBuilder requestBuilderMock = mock(RequestBuilder.class);
+
+        when(requestBuilderMock.header(anyString(), anyString())).thenReturn(requestBuilderMock);
+
+        when(requestBuilderMock.header(AmericanExpressConstants.Headers.X_AMEX_API_KEY, CLIENT_ID))
+                .thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(HttpHeaders.AUTHORIZATION, DATA_MAC_VALUE))
+                .thenReturn(requestBuilderMock);
+        when(requestBuilderMock.header(
+                        eq(AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID),
+                        matches(getAmexRequestIdMatchingRegex())))
+                .thenReturn(requestBuilderMock);
+        when(requestBuilderMock.get(any())).thenReturn(response);
+
+        when(httpClientMock.request(
+                        new URL(urlString)
+                                .queryParam(
+                                        "start_date",
+                                        LocalDate.parse(
+                                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                                                                new Date()))
+                                                .minusDays(90)
+                                                .toString())
+                                .queryParam(
+                                        "end_date",
+                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
+                                .queryParam("limit", "1000")
+                                .queryParam("status", "posted")))
+                .thenReturn(requestBuilderMock);
+
+        when(httpClientMock.request(
+                        new URL(urlString)
+                                .queryParam(
+                                        "start_date",
+                                        LocalDate.parse(
+                                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                                                                new Date()))
+                                                .minusDays(90)
+                                                .toString())
+                                .queryParam(
+                                        "end_date",
+                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
+                                .queryParam("limit", "1000")
+                                .queryParam("status", "pending")))
+                .thenReturn(requestBuilderMock);
     }
 }

@@ -55,6 +55,7 @@ junit_test(
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
         "//src/integration/user:rpc",
         "//src/libraries/account_identifier",
+        "//src/libraries/date",
         "//src/libraries/metrics:core",
         "//src/libraries/metrics:counters",
         "//src/libraries/metrics:histograms",

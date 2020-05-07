@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.apiclient;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.token.TokenResponseDto;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.AccessTokenProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;

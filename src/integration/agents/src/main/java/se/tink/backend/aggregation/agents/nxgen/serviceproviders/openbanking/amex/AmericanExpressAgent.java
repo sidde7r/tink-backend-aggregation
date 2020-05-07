@@ -7,16 +7,14 @@ import lombok.Getter;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.apiclient.AmexAccessTokenProvider;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.apiclient.AmexApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.apiclient.AmexThirdPartyAppRequestParamsProvider;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator.AmexAccessTokenProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.authenticator.AmexThirdPartyAppRequestParamsProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.AmexMacGenerator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.MacSignatureCreator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.AmexTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.AmexTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.AmexCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.AmexCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.converter.AmexTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -33,16 +31,19 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2based.steps.ThirdPartyAppAuthenticationStepCreator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 
 public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
-        implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
+        implements RefreshCreditCardAccountsExecutor {
 
     private final AmexApiClient amexApiClient;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final CreditCardRefreshController creditCardRefreshController;
+    private final ObjectMapper objectMapper;
 
     @VisibleForTesting @Getter private final HmacMultiTokenStorage hmacMultiTokenStorage;
 
@@ -59,39 +60,25 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
         this.hmacMultiTokenStorage =
                 new HmacMultiTokenStorage(this.persistentStorage, this.sessionStorage);
 
+        this.objectMapper = new ObjectMapper();
+
         this.amexApiClient =
                 new AmexApiClient(
-                        amexConfiguration, this.client, amexMacGenerator, new ObjectMapper());
+                        amexConfiguration,
+                        this.client,
+                        amexMacGenerator,
+                        this.objectMapper,
+                        this.sessionStorage);
 
         this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
 
-        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.creditCardRefreshController = constructCreditCardController();
     }
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         client.setEidasProxy(configuration.getEidasProxy());
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCheckingAccounts() {
-        return transactionalAccountRefreshController.fetchCheckingAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCheckingTransactions() {
-        return transactionalAccountRefreshController.fetchCheckingTransactions();
-    }
-
-    @Override
-    public FetchAccountsResponse fetchSavingsAccounts() {
-        return transactionalAccountRefreshController.fetchSavingsAccounts();
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchSavingsTransactions() {
-        return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
     @Override
@@ -134,24 +121,35 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
         return getAgentConfigurationController().getAgentConfiguration(AmexConfiguration.class);
     }
 
-    private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    private CreditCardRefreshController constructCreditCardController() {
         final HmacAccountIdStorage hmacAccountIdStorage = new HmacAccountIdStorage(sessionStorage);
 
         final AmexTransactionalAccountConverter amexTransactionalAccountConverter =
                 new AmexTransactionalAccountConverter();
 
-        final AmexTransactionalAccountFetcher accountFetcher =
-                new AmexTransactionalAccountFetcher(
-                        amexApiClient,
-                        hmacMultiTokenStorage,
-                        hmacAccountIdStorage,
-                        amexTransactionalAccountConverter);
+        return new CreditCardRefreshController(
+                metricRefreshController,
+                updateController,
+                new AmexCreditCardFetcher(
+                        amexApiClient, hmacMultiTokenStorage, hmacAccountIdStorage),
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(
+                                new AmexCreditCardTransactionFetcher(
+                                        amexApiClient,
+                                        hmacAccountIdStorage,
+                                        amexTransactionalAccountConverter,
+                                        sessionStorage,
+                                        this.objectMapper))));
+    }
 
-        final AmexTransactionFetcher transactionFetcher =
-                new AmexTransactionFetcher(
-                        amexApiClient, hmacAccountIdStorage, amexTransactionalAccountConverter);
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
 
-        return new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, accountFetcher, transactionFetcher);
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 }

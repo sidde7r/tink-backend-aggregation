@@ -10,5 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Data
 public class DigitalInfoDto {
 
+    private String productDesc;
+
     private String digitalAssetUrl;
 }

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.apiclient.AmexApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.TransactionsResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.converter.AmexTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
@@ -23,11 +23,11 @@ public class AmexTransactionFetcher implements TransactionFetcher<TransactionalA
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
         final HmacToken hmacToken = getHmacTokenForAccountId(account.getAccountNumber());
-        final List<TransactionsResponseDto> transactionsResponseList =
-                amexApiClient.fetchTransactions(hmacToken);
+        final List<TransactionsResponseDto> transactionsResponse =
+                amexApiClient.fetchTransactions(hmacToken, null, null);
 
         return amexTransactionalAccountConverter.convertResponseToAggregationTransactions(
-                transactionsResponseList);
+                transactionsResponse);
     }
 
     private HmacToken getHmacTokenForAccountId(String accountId) {
