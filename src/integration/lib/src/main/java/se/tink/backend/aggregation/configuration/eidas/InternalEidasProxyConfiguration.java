@@ -23,6 +23,9 @@ public class InternalEidasProxyConfiguration {
     private final String environment;
     private final boolean localEidasDev;
 
+    // For lazy one-time initialization
+    private static Certificate localEidasDevCertificate = null;
+
     public InternalEidasProxyConfiguration(
             String host,
             String caPath,
@@ -52,14 +55,26 @@ public class InternalEidasProxyConfiguration {
         final Certificate certificate;
         if (caPath != null) {
             certificate = Pem.parseCertificate(Files.toByteArray(new File(caPath)));
-
         } else if (localEidasDev) {
+            /* If running in local development mode, we want to load development certificate one
+            time into the class. This is needed because loading the same certificate too many times
+            causes error when running tests in parallel */
+            if (this.localEidasDevCertificate == null) {
+                try {
+                    localEidasDevCertificate =
+                            Pem.parseCertificate(
+                                    Files.toByteArray(
+                                            new File(
+                                                    "data/eidas_dev_certificates/aggregation-staging-ca.pem")));
+                } catch (CertificateException | IOException e) {
+                    throw new IllegalStateException(
+                            "Could not load eIDAS development certificate, please ensure that the file "
+                                    + "have data/eidas_dev_certificates/aggregation-staging-ca.pem exists",
+                            e);
+                }
+            }
             // Running in local development, we can trust aggregation staging
-            certificate =
-                    Pem.parseCertificate(
-                            Files.toByteArray(
-                                    new File(
-                                            "data/eidas_dev_certificates/aggregation-staging-ca.pem")));
+            certificate = localEidasDevCertificate;
         } else {
             throw new IllegalStateException("Trusted CA for eiDAS proxy not configured");
         }
