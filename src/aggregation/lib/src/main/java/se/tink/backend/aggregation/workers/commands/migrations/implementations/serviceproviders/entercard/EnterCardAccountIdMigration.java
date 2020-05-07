@@ -9,12 +9,12 @@ public class EnterCardAccountIdMigration extends AgentVersionMigration {
 
     @Override
     public boolean shouldChangeRequest(CredentialsRequest request) {
-        return request.getAccounts().stream().anyMatch(account -> shouldChangeBankId(account));
+        return request.getAccounts().stream().allMatch(account -> shouldChangeBankId(account));
     }
 
     @Override
     public boolean shouldMigrateData(CredentialsRequest request) {
-        return request.getAccounts().stream().anyMatch(account -> shouldChangeBankId(account));
+        return request.getAccounts().stream().allMatch(account -> shouldChangeBankId(account));
     }
 
     @Override
