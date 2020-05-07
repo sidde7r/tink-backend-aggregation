@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,12 +21,12 @@ public class ItDemoAccountGeneratorTest {
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
         System.out.println(savingsAccount.getAccountId());
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT19X0542811101000202985435");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT12X0542811101000700088930");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
                         AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
         Assert.assertEquals("Savings Account Tink", savingsAccount.getAccountName());
-        Assert.assertTrue(savingsAccount.getIdentifiers().contains(expectedIdentifier));
+        assertThat(savingsAccount.getIdentifiers()).contains(expectedIdentifier);
 
         Assert.assertEquals(42577.92, savingsAccount.getAccountBalance(), 0.0001);
     }
@@ -36,13 +38,12 @@ public class ItDemoAccountGeneratorTest {
                         testUserName, testProvider);
         System.out.println(transactionAccount.getAccountId());
 
-        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT19X0542811101000202985435");
+        IbanIdentifier expectedRecipientAccount = new IbanIdentifier("IT04X0542811101001285970723");
         AccountIdentifier expectedIdentifier =
                 AccountIdentifier.create(
                         AccountIdentifier.Type.IBAN, expectedRecipientAccount.getIban());
         Assert.assertEquals("Checking Account Tink", transactionAccount.getAccountName());
-        Assert.assertTrue(transactionAccount.getIdentifiers().contains(expectedIdentifier));
-
+        assertThat(transactionAccount.getIdentifiers()).contains(expectedIdentifier);
         Assert.assertEquals(686.0, transactionAccount.getBalance(), 0.0001);
     }
 

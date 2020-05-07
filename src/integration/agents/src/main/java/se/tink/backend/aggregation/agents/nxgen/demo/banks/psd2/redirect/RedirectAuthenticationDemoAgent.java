@@ -11,19 +11,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.CreditCard;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.IdentityData;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.InvestmentAccounts;
@@ -267,57 +263,62 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public List<DemoTransactionAccount> getTransactionAccounts() {
+        List<DemoTransactionAccount> accounts = new ArrayList<>();
+        accounts.add(
+                DemoAccountDefinitionGenerator.getDemoTransactionalAccountWithZeroBalance(
+                        USERNAME, this.provider));
+        accounts.add(
+                DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                        USERNAME, this.provider, 0));
+        accounts.add(
+                DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                        USERNAME, this.provider, 1));
+
         if (this.provider.matches(DemoConstants.MARKET_REGEX.UK_PROVIDERS_REGEX)) {
             if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
-            return Lists.newArrayList(
-                    DemoAccountDefinitionGenerator.getDemoTransactionalAccountWithZeroBalance(
-                            USERNAME, this.provider),
-                    DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                            USERNAME, this.provider, 0),
-                    DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                            USERNAME, this.provider, 1),
-                    new DemoTransactionAccount() {
-                        @Override
-                        public String getAccountId() {
-                            return StaticAccountUK.ACCOUNT_ID;
-                        }
-
-                        @Override
-                        public String getAccountName() {
-                            return StaticAccountUK.ACCOUNT_NAME;
-                        }
-
-                        @Override
-                        public double getBalance() {
-                            return StaticAccountUK.BALANCE;
-                        }
-
-                        @Override
-                        public Optional<Double> getAvailableBalance() {
-                            return Optional.of(StaticAccountUK.AVAILABLE_BALANCE);
-                        }
-
-                        @Override
-                        public Optional<Double> getCreditLimit() {
-                            return Optional.of(StaticAccountUK.CREDIT_LIMIT);
-                        }
-
-                        @Override
-                        public List<AccountIdentifier> getIdentifiers() {
-                            return Lists.newArrayList(
-                                    AccountIdentifier.create(
-                                            AccountIdentifier.Type.SORT_CODE,
-                                            getAccountId(),
-                                            StaticAccountUK.ACCOUNT_IDENTIFIERS));
-                        }
-                    });
-        } else {
-            return Lists.newArrayList(
-                    DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                            USERNAME, this.provider));
+            accounts.add(getUkDemoAccount());
         }
+        return accounts;
+    }
+
+    private DemoTransactionAccount getUkDemoAccount() {
+        return new DemoTransactionAccount() {
+            @Override
+            public String getAccountId() {
+                return StaticAccountUK.ACCOUNT_ID;
+            }
+
+            @Override
+            public String getAccountName() {
+                return StaticAccountUK.ACCOUNT_NAME;
+            }
+
+            @Override
+            public double getBalance() {
+                return StaticAccountUK.BALANCE;
+            }
+
+            @Override
+            public Optional<Double> getAvailableBalance() {
+                return Optional.of(StaticAccountUK.AVAILABLE_BALANCE);
+            }
+
+            @Override
+            public Optional<Double> getCreditLimit() {
+                return Optional.of(StaticAccountUK.CREDIT_LIMIT);
+            }
+
+            @Override
+            public List<AccountIdentifier> getIdentifiers() {
+                return Lists.newArrayList(
+                        AccountIdentifier.create(
+                                AccountIdentifier.Type.SORT_CODE,
+                                getAccountId(),
+                                StaticAccountUK.ACCOUNT_IDENTIFIERS));
+            }
+        };
     }
 
     @Override
@@ -380,30 +381,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
-        Map<Account, List<TransferDestinationPattern>> transferDestinations = new HashMap<>();
-        for (Account account : accounts) {
-            if (account.getType() == AccountTypes.CHECKING
-                    || account.getType() == AccountTypes.SAVINGS) {
-                List<TransferDestinationPattern> destinations = new ArrayList<>();
-                destinations.add(
-                        TransferDestinationPattern.createForMultiMatch(
-                                AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
-                destinations.add(
-                        TransferDestinationPattern.createForMultiMatch(
-                                AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL));
-                destinations.add(
-                        TransferDestinationPattern.createForMultiMatch(
-                                AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
-                destinations.add(
-                        TransferDestinationPattern.createForMultiMatch(
-                                AccountIdentifier.Type.IBAN, TransferDestinationPattern.ALL));
-                destinations.add(
-                        TransferDestinationPattern.createForMultiMatch(
-                                AccountIdentifier.Type.SEPA_EUR, TransferDestinationPattern.ALL));
-                transferDestinations.put(account, destinations);
-            }
-        }
-
-        return new FetchTransferDestinationsResponse(transferDestinations);
+        return new FetchTransferDestinationsResponse(
+                DemoAccountDefinitionGenerator.generateTransferDestinations(accounts));
     }
 }

@@ -89,6 +89,19 @@ public class RedirectAuthenticationDemoAgentTest {
     }
 
     @Test
+    public void testAisUk() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("uk", "uk-test-open-banking-redirect")
+                        .expectLoggedIn(false)
+                        .setFinancialInstitutionId("dummy")
+                        .setAppId("dummy")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
+
+        builder.build().testRefresh();
+    }
+
+    @Test
     public void testAISFR() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("fr", "fr-test-open-banking-redirect")
