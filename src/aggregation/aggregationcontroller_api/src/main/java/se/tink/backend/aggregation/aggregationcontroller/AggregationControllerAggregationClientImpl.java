@@ -262,6 +262,10 @@ public class AggregationControllerAggregationClientImpl
                 String errorMessage = e.getMessage();
                 int statusCode = Integer.parseInt(errorMessage.split(":")[1].trim());
                 if (!ERROR_CODES_FOR_RETRY.contains(statusCode)) {
+                    log.warn(
+                            "Error during the operation {} and stopping (error message: {})",
+                            name,
+                            errorMessage);
                     throw e;
                 }
                 if (i == MAXIMUM_RETRY_ATTEMPT) {
@@ -283,6 +287,10 @@ public class AggregationControllerAggregationClientImpl
                         WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS * i, TimeUnit.MILLISECONDS);
             }
         }
+
+        log.warn(
+                "Error during the operation {} and stopping (error message: Unreachable code)",
+                name);
         throw new IllegalStateException("Unreachable code");
     }
 }
