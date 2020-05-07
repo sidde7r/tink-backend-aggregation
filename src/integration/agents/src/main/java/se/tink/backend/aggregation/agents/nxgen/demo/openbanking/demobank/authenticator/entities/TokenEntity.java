@@ -16,6 +16,9 @@ public class TokenEntity {
     @JsonProperty("expires_in")
     private Integer expiresIn;
 
+    @JsonProperty("refresh_expires_in")
+    private Integer refreshExpiresIn;
+
     @JsonProperty("scope")
     private String scope;
 
@@ -51,6 +54,7 @@ public class TokenEntity {
     }
 
     public OAuth2Token toOAuth2Token() {
-        return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn);
+        return OAuth2Token.create(
+                tokenType, accessToken, refreshToken, expiresIn, refreshExpiresIn);
     }
 }
