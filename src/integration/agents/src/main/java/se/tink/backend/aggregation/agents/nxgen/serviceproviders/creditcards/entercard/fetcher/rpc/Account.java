@@ -44,7 +44,7 @@ public class Account {
                 .withInferredAccountFlags()
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(accountId)
+                                .withUniqueIdentifier(getKid())
                                 .withAccountNumber(getPrimaryCard().getMaskedNr())
                                 .withAccountName(getPrimaryCard().getCardHolderName())
                                 .addIdentifier(
