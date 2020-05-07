@@ -129,7 +129,6 @@ java_library(
         "@selenium//:org_seleniumhq_selenium_selenium_firefox_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "@selenium//:org_seleniumhq_selenium_selenium_remote_driver",
-        "@tink_backend//src/agents-platform/agents-platform-agents-framework",
     ],
 )
 
