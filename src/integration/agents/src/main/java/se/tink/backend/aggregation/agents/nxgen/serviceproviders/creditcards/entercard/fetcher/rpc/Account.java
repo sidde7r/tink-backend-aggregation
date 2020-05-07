@@ -57,7 +57,11 @@ public class Account {
     }
 
     private Card getPrimaryCard() {
-        return cards.stream().filter(Objects::nonNull).filter(Card::isPrimary).findFirst().get();
+        return cards.stream()
+                .filter(Objects::nonNull)
+                .filter(card -> card.isPrimary() == true)
+                .findFirst()
+                .orElse(cards.stream().findFirst().get());
     }
 
     public String getKid() {
