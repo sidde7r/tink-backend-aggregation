@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-03-19 10:19+0000\n"
-"PO-Revision-Date: 2020-03-19 10:19+0000\n"
+"POT-Creation-Date: 2020-05-07 09:39+0000\n"
+"PO-Revision-Date: 2020-05-07 09:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -10,9 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "The transfer amount, less than 1 SEK is not supported."
-msgstr "Överföringsbelopp på mindre än 1 kr stöds inte."
 
 msgid "Verification code"
 msgstr "Verifikationskod"
@@ -293,6 +290,9 @@ msgstr "Meddelandet är inte giltigt"
 
 msgid "Invalid source account"
 msgstr "Från-kontot är inte giltigt"
+
+msgid "Could not retrieve source accounts"
+msgstr "Kunde inte hämta avsändarkonton"
 
 msgid "Could not find source account"
 msgstr "Kunde inte hitta frånkonto"
@@ -795,3 +795,6 @@ msgstr "Överföringen nekades av banken"
 
 msgid "Source and destination account must not be the same."
 msgstr "Avsändarkonto och mottagarkonto kan inte vara samma."
+
+msgid "The transfer amount, less than 1 SEK is not supported."
+msgstr "Överföringsbelopp på mindre än 1 kr stöds inte."
