@@ -7,6 +7,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +41,26 @@ import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 
 /** Deterministic account generator based on user-name and provider */
 public class DemoAccountDefinitionGenerator {
+    private static final Map<Type, Class<? extends AccountIdentifier>> identifiersForType;
+
+    static {
+        Map<Type, Class<? extends AccountIdentifier>> map = new HashMap<>();
+        map.put(Type.IBAN, IbanIdentifier.class);
+        map.put(Type.BBAN, BbanIdentifier.class);
+        map.put(Type.BE, BelgianIdentifier.class);
+        map.put(Type.SE, SwedishIdentifier.class);
+        map.put(Type.SORT_CODE, SortCodeIdentifier.class);
+        map.put(Type.SE_BG, BankGiroIdentifier.class);
+        map.put(Type.SE_PG, PlusGiroIdentifier.class);
+        map.put(Type.PT_BPI, PortugalBancoBpiIdentifier.class);
+        map.put(Type.SE_SHB_INTERNAL, SwedishSHBInternalIdentifier.class);
+        map.put(Type.SEPA_EUR, SepaEurIdentifier.class);
+        map.put(Type.DE, GermanIdentifier.class);
+        map.put(Type.DK, DanishIdentifier.class);
+        map.put(Type.NO, NorwegianIdentifier.class);
+        map.put(Type.FI, FinnishIdentifier.class);
+        identifiersForType = Collections.unmodifiableMap(map);
+    }
 
     private static String createDeterministicKey(String combination) {
         return Integer.toString(Math.abs(combination.hashCode()));
@@ -409,36 +430,10 @@ public class DemoAccountDefinitionGenerator {
     }
 
     private static Class<? extends AccountIdentifier> getClassForType(Type type) {
-        if (Type.IBAN.equals(type)) {
-            return IbanIdentifier.class;
-        } else if (Type.BBAN.equals(type)) {
-            return BbanIdentifier.class;
-        } else if (Type.BE.equals(type)) {
-            return BelgianIdentifier.class;
-        } else if (Type.SE.equals(type)) {
-            return SwedishIdentifier.class;
-        } else if (Type.SORT_CODE.equals(type)) {
-            return SortCodeIdentifier.class;
-        } else if (Type.SE_BG.equals(type)) {
-            return BankGiroIdentifier.class;
-        } else if (Type.SE_PG.equals(type)) {
-            return PlusGiroIdentifier.class;
-        } else if (Type.PT_BPI.equals(type)) {
-            return PortugalBancoBpiIdentifier.class;
-        } else if (Type.SE_SHB_INTERNAL.equals(type)) {
-            return SwedishSHBInternalIdentifier.class;
-        } else if (Type.SEPA_EUR.equals(type)) {
-            return SepaEurIdentifier.class;
-        } else if (Type.DE.equals(type)) {
-            return GermanIdentifier.class;
-        } else if (Type.DK.equals(type)) {
-            return DanishIdentifier.class;
-        } else if (Type.NO.equals(type)) {
-            return NorwegianIdentifier.class;
-        } else if (Type.FI.equals(type)) {
-            return FinnishIdentifier.class;
-        } else {
+        Class<? extends AccountIdentifier> clazz = identifiersForType.get(type);
+        if (clazz == null) {
             throw new IllegalArgumentException("Unknown identifier.");
         }
+        return clazz;
     }
 }
