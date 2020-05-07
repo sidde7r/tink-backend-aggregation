@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -20,6 +20,22 @@ import org.assertj.core.description.Description;
 import org.junit.Test;
 
 public final class VersionConflictTest {
+
+    // These are tolerated for now because they are hard to resolve
+    private final ImmutableSet<String> toleratedConflicts =
+            ImmutableSet.of(
+                    "commons-codec",
+                    "reflections",
+                    "commons-logging",
+                    "stax2-api",
+                    "jetty-server",
+                    "asm",
+                    "commons-lang3",
+                    "jetty-io",
+                    "jetty-util",
+                    "jetty-http",
+                    "httpclient",
+                    "httpcore");
 
     /**
      * If this test is failing for you, that likely means that you made some changes that introduced
@@ -55,22 +71,6 @@ public final class VersionConflictTest {
                 allConflictInfos.entrySet().stream()
                         .filter(c -> c.getValue().versions.size() >= 2)
                         .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-
-        // These are tolerated for now because they are hard to resolve
-        Collection<String> toleratedConflicts =
-                Arrays.asList(
-                        "commons-codec",
-                        "reflections",
-                        "commons-logging",
-                        "stax2-api",
-                        "jetty-server",
-                        "asm",
-                        "commons-lang3",
-                        "jetty-io",
-                        "jetty-util",
-                        "jetty-http",
-                        "httpclient",
-                        "httpcore");
 
         Set<String> newlyIntroducedVersionConflicts = conflictingInfos.keySet();
         newlyIntroducedVersionConflicts.removeAll(toleratedConflicts);
