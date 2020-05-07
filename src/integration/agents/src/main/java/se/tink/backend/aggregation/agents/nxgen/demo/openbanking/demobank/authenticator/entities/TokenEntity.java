@@ -19,6 +19,9 @@ public class TokenEntity {
     @JsonProperty("scope")
     private String scope;
 
+    @JsonProperty("jti")
+    private String jti;
+
     public String getToken() {
         return accessToken;
     }
@@ -41,6 +44,10 @@ public class TokenEntity {
 
     public String getScope() {
         return scope;
+    }
+
+    public String getJti() {
+        return jti;
     }
 
     public OAuth2Token toOAuth2Token() {
