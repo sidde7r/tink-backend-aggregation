@@ -11,12 +11,22 @@ import java.util.Set;
 
 public final class PackageModuleLoader {
 
+    /*
+       This method is synchronised because we observed some problematic behaviour if we call this
+       code block by multiple threads. In such case, sometimes the scan method cannot detect anything
+       To reproduce the issue, remove "synchronized" keyword and run AgentInitialisationTest.java
+       where initialiseAgent method are run in parallel (you might need to run it multiple times
+       to observe the issue)
+    */
+    private synchronized ScanResult getScanResult(final String packagePath) {
+        return new ClassGraph().enableClassInfo().whitelistPackages(packagePath).scan();
+    }
+
     public Set<Module> getModulesInPackage(final String packagePath)
             throws ReflectiveOperationException {
 
         final Collection<Class<Module>> moduleClasses;
-        try (final ScanResult scanResult =
-                new ClassGraph().enableClassInfo().whitelistPackages(packagePath).scan()) {
+        try (final ScanResult scanResult = getScanResult(packagePath)) {
             final ClassInfoList classInfoList =
                     scanResult
                             .getClassesImplementing(Module.class.getName())
