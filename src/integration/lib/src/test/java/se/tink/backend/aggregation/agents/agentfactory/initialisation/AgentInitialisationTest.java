@@ -96,16 +96,6 @@ public class AgentInitialisationTest {
     private static Injector injector;
     private static AgentFactory agentFactory;
 
-    // These agents are reading secrets from k8s and this is not supported by this test
-    private static ImmutableSet<String> ignoredK8SAgents =
-            ImmutableSet.of(
-                    "banks.se.collector.CollectorAgent",
-                    "nxgen.dk.banks.jyske.JyskeNemidAgent",
-                    "nxgen.dk.banks.jyske.JyskeKeyCardAgent",
-                    "nxgen.se.openbanking.nordnet.NordnetAgent",
-                    "nxgen.serviceproviders.banks.revolut.RevolutAgent",
-                    "nxgen.es.openbanking.bbva.BbvaAgent");
-
     // These agents are temporarily ignored because these agents fail in the test
     // these agents will be investigated further
     private static ImmutableSet<String> temporarilyIgnoredAgents =
@@ -322,7 +312,6 @@ public class AgentInitialisationTest {
                         .entrySet()
                         .stream()
                         .map(entry -> entry.getValue().get(0))
-                        .filter(provider -> !ignoredK8SAgents.contains(provider.getClassName()))
                         .filter(
                                 provider ->
                                         !temporarilyIgnoredAgents.contains(provider.getClassName()))

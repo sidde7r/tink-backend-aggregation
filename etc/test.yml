@@ -2710,6 +2710,11 @@ agentsServiceConfiguration:
         baseUrl: https://sandbox-api.jyskebank.dk
         clientId: PSDSE-FINA-44059
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    jyskebank-dk:
+      tink:
+        productNemIdPublicKeyB64: dummyNemId
+        aesPadding: dummyPadding
+        mobileServicePublicKeyB64: dummyPublicKey
     kbc:
       tink:
         clientId: PSDSE-FINA-44059
