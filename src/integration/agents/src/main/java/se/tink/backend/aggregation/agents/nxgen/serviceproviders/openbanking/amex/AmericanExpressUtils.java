@@ -8,6 +8,10 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmericanExpressUtils {
 
+    private AmericanExpressUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String createAndGetStorageString(Date fromDate, Date toDate) {
         return String.format(
                 "transactions?%s=%s&%s=%s",

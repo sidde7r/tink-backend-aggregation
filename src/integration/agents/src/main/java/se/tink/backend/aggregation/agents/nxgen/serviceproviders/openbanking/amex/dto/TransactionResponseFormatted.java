@@ -9,13 +9,9 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionResponseFormatted implements PaginatorResponse {
 
-    private Integer totalTransactionCount;
-
     private List<TransactionDto> transactions;
 
-    public TransactionResponseFormatted(
-            Integer totalTransactionCount, List<TransactionDto> transactions) {
-        this.totalTransactionCount = totalTransactionCount;
+    public TransactionResponseFormatted(List<TransactionDto> transactions) {
         this.transactions = transactions;
     }
 

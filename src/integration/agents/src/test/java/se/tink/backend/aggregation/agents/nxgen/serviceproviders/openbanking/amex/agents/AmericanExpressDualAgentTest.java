@@ -16,10 +16,6 @@ public final class AmericanExpressDualAgentTest {
 
         private final boolean optional;
 
-        Arg(boolean optional) {
-            this.optional = optional;
-        }
-
         Arg() {
             this.optional = false;
         }

@@ -30,11 +30,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIds;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -52,17 +49,13 @@ public class AmexTransactionFetcherTest {
 
     private AmexTransactionalAccountConverter amexTransactionalAccountConverterMock;
 
-    private SessionStorage sessionStorage;
-
-    private ObjectMapper objectMapper;
-
     @Before
     public void setUp() {
         amexApiClientMock = mock(AmexApiClient.class);
         hmacAccountIdStorageMock = mock(HmacAccountIdStorage.class);
         amexTransactionalAccountConverterMock = mock(AmexTransactionalAccountConverter.class);
-        sessionStorage = mock(SessionStorage.class);
-        objectMapper = mock(ObjectMapper.class);
+        SessionStorage sessionStorage = mock(SessionStorage.class);
+        ObjectMapper objectMapper = mock(ObjectMapper.class);
 
         amexTransactionFetcher =
                 new AmexCreditCardTransactionFetcher(
@@ -146,22 +139,6 @@ public class AmexTransactionFetcherTest {
                                         new IbanIdentifier(ACCOUNT_NUMBER_1.replace("-", "")))
                                 .build())
                 .build();
-    }
-
-    private static TransactionalAccount getTransactionalAccount() {
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(createExactCurrencyAmount()))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(ACCOUNT_NUMBER_1)
-                                .withAccountNumber(ACCOUNT_NUMBER_1)
-                                .withAccountName("account")
-                                .addIdentifier(new IbanIdentifier(ACCOUNT_NUMBER_1))
-                                .build())
-                .build()
-                .orElse(null);
     }
 
     private static List<AggregationTransaction> createTransactions() {

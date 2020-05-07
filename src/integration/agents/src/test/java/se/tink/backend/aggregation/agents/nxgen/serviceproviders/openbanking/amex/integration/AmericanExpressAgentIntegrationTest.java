@@ -41,11 +41,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementInformationRequester;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
@@ -222,7 +225,8 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
         verifyThirdPartyAppCallIsTheNextAuthStep(intermediateAuthResponse);
 
         wireMockRule.verify(
-                0, postRequestedFor(urlPathEqualTo("/apiplatform/v1/oauth/token/refresh/mac")));
+                0,
+                postRequestedFor(urlPathEqualTo(AmericanExpressConstants.Urls.REFRESH_TOKEN_PATH)));
     }
 
     private void verifyThirdPartyAppCallIsTheNextAuthStep(
@@ -260,7 +264,9 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
         assertThat(finalResponse.getStepIdentifier().isPresent()).isFalse();
         assertThat(finalResponse.getSupplementInformationRequester()).isNull();
 
-        wireMockRule.verify(postRequestedFor(urlPathEqualTo("/apiplatform/v2/oauth/token/mac")));
+        wireMockRule.verify(
+                postRequestedFor(
+                        urlPathEqualTo(AmericanExpressConstants.Urls.RETRIEVE_TOKEN_PATH)));
 
         final Optional<HmacMultiToken> maybeHmacMultiToken = hmacMultiTokenStorage.getToken();
         assertThat(maybeHmacMultiToken.isPresent()).isTrue();
@@ -275,7 +281,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
     private void verifyRefreshTokenFollowedInitialStep() {
         wireMockRule.verify(
-                postRequestedFor(urlPathEqualTo("/apiplatform/v1/oauth/token/refresh/mac")));
+                postRequestedFor(urlPathEqualTo(AmericanExpressConstants.Urls.REFRESH_TOKEN_PATH)));
     }
 
     private void verifyFetchAccountsResponse(FetchAccountsResponse fetchAccountsResponse) {
@@ -289,35 +295,45 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
     private void recordRetrieveAccessTokenResponse(String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
-                post(urlPathEqualTo("/apiplatform/v2/oauth/token/mac"))
+                post(urlPathEqualTo(AmericanExpressConstants.Urls.RETRIEVE_TOKEN_PATH))
                         .withHeader(
-                                "Authentication",
+                                AmericanExpressConstants.Headers.AUTHENTICATION,
                                 matching(createAuthHeaderMatchingPattern(CLIENT_ID)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded"))
-                        .withHeader("Accept-Encoding", equalTo("gzip,deflate"))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                HttpHeaders.CONTENT_TYPE,
+                                equalTo(MediaType.APPLICATION_FORM_URLENCODED))
+                        .withHeader(HttpHeaders.ACCEPT_ENCODING, equalTo("gzip,deflate"))
                         .withRequestBody(equalTo(createRetrieveAccessTokenRequestBody(AUTH_CODE_1)))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(
                                                 createAccessTokenResponseJsonString(
                                                         accessToken1))));
 
         wireMockRule.stubFor(
-                post(urlPathEqualTo("/apiplatform/v2/oauth/token/mac"))
+                post(urlPathEqualTo(AmericanExpressConstants.Urls.RETRIEVE_TOKEN_PATH))
                         .withHeader(
-                                "Authentication",
+                                AmericanExpressConstants.Headers.AUTHENTICATION,
                                 matching(createAuthHeaderMatchingPattern(CLIENT_ID)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded"))
-                        .withHeader("Accept-Encoding", equalTo("gzip,deflate"))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                HttpHeaders.CONTENT_TYPE,
+                                equalTo(MediaType.APPLICATION_FORM_URLENCODED))
+                        .withHeader(HttpHeaders.ACCEPT_ENCODING, equalTo("gzip,deflate"))
                         .withRequestBody(equalTo(createRetrieveAccessTokenRequestBody(AUTH_CODE_2)))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(
                                                 createAccessTokenResponseJsonString(
                                                         accessToken2))));
@@ -325,67 +341,87 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
     private void recordRefreshTokenResponseForExpiredRefreshToken() {
         wireMockRule.stubFor(
-                post(urlPathEqualTo("/apiplatform/v1/oauth/token/refresh/mac"))
+                post(urlPathEqualTo(AmericanExpressConstants.Urls.REFRESH_TOKEN_PATH))
                         .withHeader(
-                                "Authentication",
+                                AmericanExpressConstants.Headers.AUTHENTICATION,
                                 matching(createAuthHeaderMatchingPattern(CLIENT_ID)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded"))
-                        .withHeader("Accept-Encoding", equalTo("gzip,deflate"))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                HttpHeaders.CONTENT_TYPE,
+                                equalTo(MediaType.APPLICATION_FORM_URLENCODED))
+                        .withHeader(HttpHeaders.ACCEPT_ENCODING, equalTo("gzip,deflate"))
                         .withRequestBody(
                                 equalTo(createRefreshAccessTokenRequestBody(VALID_REFRESH_TOKEN)))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(
                                                 createAccessTokenResponseJsonString(
                                                         ACCESS_TOKEN_2))));
 
         wireMockRule.stubFor(
-                post(urlPathEqualTo("/apiplatform/v1/oauth/token/refresh/mac"))
+                post(urlPathEqualTo(AmericanExpressConstants.Urls.REFRESH_TOKEN_PATH))
                         .withHeader(
-                                "Authentication",
+                                AmericanExpressConstants.Headers.AUTHENTICATION,
                                 matching(createAuthHeaderMatchingPattern(CLIENT_ID)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded"))
-                        .withHeader("Accept-Encoding", equalTo("gzip,deflate"))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                HttpHeaders.CONTENT_TYPE,
+                                equalTo(MediaType.APPLICATION_FORM_URLENCODED))
+                        .withHeader(HttpHeaders.ACCEPT_ENCODING, equalTo("gzip,deflate"))
                         .withRequestBody(
                                 equalTo(createRefreshAccessTokenRequestBody(EXPIRED_REFRESH_TOKEN)))
                         .willReturn(
                                 aResponse()
                                         .withStatus(401)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(createAccessTokenRevokedErrorResponse())));
     }
 
     private void recordFetchAccountsResponse(String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/member/accounts"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_ACCOUNTS))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(
                                                 createAccountsResponseJsonString(
                                                         ACCOUNT_NUMBER_1))));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/member/accounts"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_ACCOUNTS))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(
                                                 createAccountsResponseJsonString(
                                                         ACCOUNT_NUMBER_2))));
@@ -393,128 +429,168 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
     private void recordFetchBalancesResponse(String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/financials/balances"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_BALANCES))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(createBalancesResponseJsonString())));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/financials/balances"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_BALANCES))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(createBalancesResponseJsonString())));
     }
 
     private void recordFetchTransactionsResponse(String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/financials/transactions"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
                         .withQueryParam(
-                                "end_date",
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                                 containing(ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date())))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(createTransactionsResponseJsonString())));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/financials/transactions"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
                         .withQueryParam(
-                                "end_date",
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                                 containing(ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date())))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(createTransactionsResponseJsonString())));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/financials/transactions"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
                         .withQueryParam(
-                                "end_date",
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                                 containing(
                                         LocalDate.now().minusMonths(3).toString().substring(0, 7)))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(400)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(createTransactionRangeErrorResponse())));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/financials/transactions"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
                         .withQueryParam(
-                                "end_date",
+                                AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                                 containing(
                                         LocalDate.now().minusMonths(3).toString().substring(0, 7)))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(400)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(createTransactionRangeErrorResponse())));
     }
 
     private void recordFetchAccountsResponseAfterAccessTokenHadBeenRevoked(
             String accessToken1, String accessToken2) {
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/member/accounts"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_ACCOUNTS))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(
                                                 createAccountsResponseJsonString(
                                                         ACCOUNT_NUMBER_1))));
 
         wireMockRule.stubFor(
-                get(urlPathEqualTo("/servicing/v1/member/accounts"))
+                get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_ACCOUNTS))
                         .withHeader(
-                                "Authorization",
+                                HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
-                        .withHeader("x-amex-api-key", equalTo(CLIENT_ID))
-                        .withHeader("x-amex-request-id", matching(getAmexRequestIdMatchingRegex()))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_API_KEY, equalTo(CLIENT_ID))
+                        .withHeader(
+                                AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
+                                matching(getAmexRequestIdMatchingRegex()))
                         .willReturn(
                                 aResponse()
                                         .withStatus(401)
-                                        .withHeader("Content-Type", "application/json")
+                                        .withHeader(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                MediaType.APPLICATION_JSON)
                                         .withBody(createAccessTokenRevokedErrorResponse())));
     }
 

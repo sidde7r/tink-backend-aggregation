@@ -2,16 +2,25 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 public class AmericanExpressConstants {
 
+    private AmericanExpressConstants() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static class ErrorMessages {
+        private ErrorMessages() {}
+
         public static final String DATE_OUT_OF_RANGE =
                 "Request Validation Failed - Requested date range exceeds the supported limit";
     }
 
     public static class ErrorCodes {
+        private ErrorCodes() {}
+
         public static final int DATE_OUT_OF_RANGE = 3027;
     }
 
     public static class Headers {
+        private Headers() {}
 
         public static final String X_AMEX_API_KEY = "x-amex-api-key";
         public static final String X_AMEX_REQUEST_ID = "x-amex-request-id";
@@ -19,6 +28,8 @@ public class AmericanExpressConstants {
     }
 
     public static class QueryParams {
+        private QueryParams() {}
+
         public static final String QUERY_PARAM_START_DATE = "start_date";
         public static final String QUERY_PARAM_END_DATE = "end_date";
         public static final String QUERY_PARAM_LIMIT = "limit";
@@ -30,6 +41,8 @@ public class AmericanExpressConstants {
     }
 
     public static class QueryValues {
+        private QueryValues() {}
+
         public static final int TRANSACTION_TO_FETCH = 1000;
         public static final String SCOPE_LIST_FOR_AUTHORIZE =
                 "MEMBER_ACCT_INFO,FINS_STP_DTLS,FINS_BAL_INFO,FINS_TXN_INFO";
@@ -40,6 +53,8 @@ public class AmericanExpressConstants {
     }
 
     public static class Urls {
+        private Urls() {}
+
         public static final String RETRIEVE_TOKEN_PATH = "/apiplatform/v2/oauth/token/mac";
         public static final String REFRESH_TOKEN_PATH = "/apiplatform/v1/oauth/token/refresh/mac";
         public static final String REVOKE_TOKEN_PATH = "/apiplatform/v2/oauth/token_revocation/mac";

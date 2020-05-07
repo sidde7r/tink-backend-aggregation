@@ -71,8 +71,6 @@ public class AmexApiClientTest {
 
     private TinkHttpClient httpClientMock;
 
-    private SessionStorage sessionStorage;
-
     @Before
     public void setUp() {
         final AmexConfiguration amexConfigurationMock = mock(AmexConfiguration.class);
@@ -92,7 +90,7 @@ public class AmexApiClientTest {
 
         httpClientMock = mock(TinkHttpClient.class);
 
-        sessionStorage = mock(SessionStorage.class);
+        SessionStorage sessionStorage = mock(SessionStorage.class);
 
         amexApiClient =
                 new AmexApiClient(
