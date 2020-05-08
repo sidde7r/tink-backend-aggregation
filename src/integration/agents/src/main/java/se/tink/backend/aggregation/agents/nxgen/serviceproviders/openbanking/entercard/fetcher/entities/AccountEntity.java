@@ -73,13 +73,13 @@ public class AccountEntity {
                 .withPaymentAccountFlag()
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getCardNumber())
+                                .withUniqueIdentifier(accountNumber)
                                 .withAccountNumber(accountNumber)
                                 .withAccountName(productName)
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 AccountIdentifier.Type.PAYMENT_CARD_NUMBER,
-                                                getCardNumber()))
+                                                accountNumber))
                                 .setProductName(productName)
                                 .build())
                 .addHolderName(getName())
