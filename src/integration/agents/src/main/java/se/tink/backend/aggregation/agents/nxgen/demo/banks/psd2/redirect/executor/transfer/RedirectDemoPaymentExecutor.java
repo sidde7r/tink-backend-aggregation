@@ -181,14 +181,14 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
             case RedirectAuthenticationDemoAgentConstants.FR_DEMO_PROVIDER_SUCCESS_CASE:
                 break;
 
-            case RedirectAuthenticationDemoAgentConstants.IT_DEMO_PROVIDER_FAILURE_CASE:
-            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_FAILURE_CASE:
-            case RedirectAuthenticationDemoAgentConstants.FR_DEMO_PROVIDER_FAILURE_CASE:
+            case RedirectAuthenticationDemoAgentConstants.IT_DEMO_PROVIDER_PAYMENT_FAILURE_CASE:
+            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_PAYMENT_FAILURE_CASE:
+            case RedirectAuthenticationDemoAgentConstants.FR_DEMO_PROVIDER_PAYMENT_FAILURE_CASE:
                 throw RedirectAuthenticationDemoAgentConstants.FAILED_CASE_EXCEPTION;
 
-            case RedirectAuthenticationDemoAgentConstants.IT_DEMO_PROVIDER_CANCEL_CASE:
-            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_CANCEL_CASE:
-            case RedirectAuthenticationDemoAgentConstants.FR_DEMO_PROVIDER_CANCEL_CASE:
+            case RedirectAuthenticationDemoAgentConstants.IT_DEMO_PROVIDER_PAYMENT_CANCEL_CASE:
+            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_PAYMENT_CANCEL_CASE:
+            case RedirectAuthenticationDemoAgentConstants.FR_DEMO_PROVIDER_PAYMENT_CANCEL_CASE:
                 throw RedirectAuthenticationDemoAgentConstants.CANCELLED_CASE_EXCEPTION;
         }
 
