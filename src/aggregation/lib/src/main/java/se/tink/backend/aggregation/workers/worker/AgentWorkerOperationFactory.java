@@ -81,6 +81,7 @@ import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.FeatureFlags;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -483,49 +484,45 @@ public class AgentWorkerOperationFactory {
                         clientInfo.getAppId(),
                         correlationId);
 
-        if (request.isSkipRefresh()) {
-            return createOperationExecuteTransferWithoutRefresh(
-                    request, clientInfo, context, controllerWrapper);
+        String operationName;
+        List<AgentWorkerCommand> commands;
+
+        // TODO: PAY2-409 - Check if UK provider works with LoginCommand and fix
+        if (isUKOBProvider(request.getProvider())) {
+            operationName = "execute-transfer-without-refresh";
+            commands =
+                    createTransferWithoutRefreshBaseCommands(
+                            clientInfo, request, context, operationName, controllerWrapper);
+
         } else {
-            return createOperationExecuteTransferWithRefresh(
-                    request, clientInfo, context, controllerWrapper);
-        }
-    }
 
-    private AgentWorkerOperation createOperationExecuteTransferWithRefresh(
-            TransferRequest request,
-            ClientInfo clientInfo,
-            AgentWorkerCommandContext context,
-            ControllerWrapper controllerWrapper) {
-
-        String operationName = "execute-transfer-with-refresh";
-        List<AgentWorkerCommand> commands =
-                createTransferBaseCommands(
-                        clientInfo, request, context, operationName, controllerWrapper);
-        if (!request.getUser().getFlags().contains(FeatureFlags.ANONYMOUS)) {
-            commands.addAll(
-                    createRefreshAccountsCommands(
-                            request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
-            commands.add(new SelectAccountsToAggregateCommand(context, request));
-            commands.addAll(
-                    createOrderedRefreshableItemsCommands(
-                            request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+            boolean shouldRefresh =
+                    !request.getUser().getFlags().contains(FeatureFlags.ANONYMOUS)
+                            || !request.isSkipRefresh();
+            operationName =
+                    shouldRefresh
+                            ? "execute-transfer-with-refresh"
+                            : "execute-transfer-without-refresh";
+            commands =
+                    createTransferBaseCommands(
+                            clientInfo, request, context, operationName, controllerWrapper);
+            if (shouldRefresh) {
+                commands.addAll(
+                        createRefreshAccountsCommands(
+                                request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+                commands.add(new SelectAccountsToAggregateCommand(context, request));
+                commands.addAll(
+                        createOrderedRefreshableItemsCommands(
+                                request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
+            }
         }
+
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationName, request, commands, context);
     }
 
-    private AgentWorkerOperation createOperationExecuteTransferWithoutRefresh(
-            TransferRequest request,
-            ClientInfo clientInfo,
-            AgentWorkerCommandContext context,
-            ControllerWrapper controllerWrapper) {
-        String operationName = "execute-transfer-without-refresh";
-        List<AgentWorkerCommand> commands =
-                createTransferWithoutRefreshBaseCommands(
-                        clientInfo, request, context, operationName, controllerWrapper);
-        return new AgentWorkerOperation(
-                agentWorkerOperationState, operationName, request, commands, context);
+    private boolean isUKOBProvider(Provider provider) {
+        return provider.getMarket().equals(MarketCode.GB.toString()) && provider.isOpenBanking();
     }
 
     public AgentWorkerOperation createOperationExecuteWhitelistedTransfer(
