@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.annotations.AgentConfigParam;
-import se.tink.backend.aggregation.annotations.PrioritizedClientConfiguration;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
@@ -181,32 +180,12 @@ public class ClientConfigurationMetaInfoHandler {
                         .collect(Collectors.toSet());
 
         if (clientConfigurationClassForAgentSet.size() > 1) {
-            // Try to narrow it down looking for the optional annotation
-            // @PrioritizedClientConfiguration
-            Set<Class<? extends ClientConfiguration>>
-                    prioritizedClientConfiguratitonClassForAgentSet =
-                            clientConfigurationClassForAgentSet.stream()
-                                    .filter(this::isPrioritizedClientConfiguration)
-                                    .collect(Collectors.toSet());
-            if (prioritizedClientConfiguratitonClassForAgentSet.size() == 1) {
-                clientConfigurationClassForAgentSet =
-                        prioritizedClientConfiguratitonClassForAgentSet;
-            } else {
-                throw new IllegalStateException(
-                        "Found more than one class implementing ClientConfiguration: "
-                                + clientConfigurationClassForAgentSet);
-            }
+            throw new IllegalStateException(
+                    "Found more than one class implementing ClientConfiguration: "
+                            + clientConfigurationClassForAgentSet);
         }
 
         return clientConfigurationClassForAgentSet.stream().findAny();
-    }
-
-    private boolean isPrioritizedClientConfiguration(Class<? extends ClientConfiguration> clazz) {
-        List<Annotation> annotations = Arrays.asList(clazz.getDeclaredAnnotations());
-        return annotations.stream()
-                        .filter(annotation -> annotation instanceof PrioritizedClientConfiguration)
-                        .count()
-                == 1;
     }
 
     private boolean isFieldSecret(Field field) {
