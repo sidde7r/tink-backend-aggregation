@@ -33,6 +33,7 @@ public class RedirectAuthenticationDemoAgentConstants {
             "uk-test-open-banking-redirect-temporary-error";
     public static final String UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE =
             "uk-test-open-banking-redirect-no-accounts-returned";
+    public static final String DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING = ".*-saving-and-checking";
     public static final String DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX =
             ".*-configurable-session-expiry";
     public static final String UK_DEMO_PROVIDER_PAYMENT_FAILURE_CASE =
