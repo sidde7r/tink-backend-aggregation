@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD_CALLBACK;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_STAGING;
@@ -184,7 +185,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public DemoInvestmentAccount getInvestmentAccounts() {
-        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)
+                || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING)) {
             return null;
         }
         return new DemoInvestmentAccount() {
@@ -215,7 +217,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public DemoLoanAccount getDemoLoanAccounts() {
-        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)
+                || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING)) {
             return null;
         }
         return new DemoLoanAccount() {
@@ -323,7 +326,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public List<DemoCreditCardAccount> getCreditCardAccounts() {
-        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)
+                || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING)) {
             return Collections.EMPTY_LIST;
         }
         return Collections.singletonList(
