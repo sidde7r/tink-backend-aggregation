@@ -112,6 +112,51 @@ public class OpenIdApiClient {
         return cachedProviderKeys;
     }
 
+    private TokenRequestForm createTokenRequestFormWithoutScope(String grantType) {
+        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
+        TokenRequestForm requestForm =
+                new TokenRequestForm()
+                        .withGrantType(grantType)
+                        .withRedirectUri(softwareStatement.getRedirectUri());
+
+        OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD authMethod =
+                wellknownConfiguration
+                        .getPreferredTokenEndpointAuthMethod(
+                                OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Preferred token endpoint auth method not found."));
+
+        ClientInfo clientInfo = providerConfiguration.getClientInfo();
+        switch (authMethod) {
+            case client_secret_post:
+                requestForm.withClientSecretPost(
+                        clientInfo.getClientId(), clientInfo.getClientSecret());
+                break;
+
+            case private_key_jwt:
+                requestForm.withPrivateKeyJwt(signer, wellknownConfiguration, clientInfo);
+                break;
+
+            case client_secret_basic:
+                // Add to header.
+                break;
+
+            case tls_client_auth:
+                // Do nothing. We authenticate using client certificate.
+                requestForm.withClientId(clientInfo.getClientId());
+                break;
+
+            default:
+                throw new IllegalStateException(
+                        String.format(
+                                "Not yet implemented auth method: %s", authMethod.toString()));
+        }
+
+        return requestForm;
+    }
+
     private TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
 
@@ -231,9 +276,9 @@ public class OpenIdApiClient {
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }
 
-    public OAuth2Token exchangeAccessCode(String code, ClientMode scope) {
+    public OAuth2Token exchangeAccessCode(String code) {
         TokenRequestForm postData =
-                createTokenRequestForm("authorization_code", scope).withCode(code);
+                createTokenRequestFormWithoutScope("authorization_code").withCode(code);
 
         return createTokenRequest().body(postData).post(TokenResponse.class).toAccessToken();
     }

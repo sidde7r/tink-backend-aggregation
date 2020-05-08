@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
@@ -12,6 +13,7 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
+@Ignore
 public class HSBCAgentTest {
     private final String SOURCE_IDENTIFIER = "";
     private final String DESTINATION_IDENTIFIER = "";
@@ -19,10 +21,10 @@ public class HSBCAgentTest {
     @Test
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("uk", "uk-hsbc-oauth2")
-                .loadCredentialsBefore(false)
+                .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
                 .expectLoggedIn(false)
-                .setFinancialInstitutionId("6cd6d369ba8e4d72b1a7d26dabe509a3")
+                .setFinancialInstitutionId("hsbc")
                 .setAppId("tink")
                 .build()
                 .testRefresh();

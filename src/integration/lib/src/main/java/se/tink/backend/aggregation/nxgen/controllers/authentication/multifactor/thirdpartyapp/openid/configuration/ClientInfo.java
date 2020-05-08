@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration;
 
-import java.time.Instant;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -8,25 +8,27 @@ public class ClientInfo {
 
     private String clientId;
     private String clientSecret;
-    private long clientIdIssuedAt;
-    private long clientSecretExpiresAt;
+    private String tokenEndpointAuthSigningAlg;
     private String tokenEndpointAuthMethod;
 
     public String getTokenEndpointAuthMethod() {
         return tokenEndpointAuthMethod;
     }
 
-    public ClientInfo() {}
-
     public ClientInfo(String clientId, String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
     }
 
-    public ClientInfo(String clientId, String clientSecret, String tokenEndpointAuthMethod) {
+    public ClientInfo(
+            String clientId,
+            String clientSecret,
+            String tokenEndpointAuthMethod,
+            String tokenEndpointAuthSigningAlg) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
+        this.tokenEndpointAuthSigningAlg = tokenEndpointAuthSigningAlg;
     }
 
     public String getClientId() {
@@ -37,12 +39,7 @@ public class ClientInfo {
         return clientSecret;
     }
 
-    // TODO: No usage of clientIdIssuedAt and clientSecretExpiresAt, should be removed...
-    public Instant getClientIdIssuedAt() {
-        return Instant.ofEpochMilli(clientIdIssuedAt);
-    }
-
-    public Instant getClientSecretExpiresAt() {
-        return Instant.ofEpochMilli(clientSecretExpiresAt);
+    public Optional<String> getTokenEndpointAuthSigningAlg() {
+        return Optional.ofNullable(tokenEndpointAuthSigningAlg);
     }
 }

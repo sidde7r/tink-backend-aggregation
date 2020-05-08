@@ -293,8 +293,7 @@ public class OpenIdAuthenticationController
         //                .orElseThrow(() -> new IllegalStateException("callbackData did not contain
         // id_token."));
 
-        OAuth2Token oAuth2Token =
-                apiClient.exchangeAccessCode(code, authenticator.getClientCredentialScope());
+        OAuth2Token oAuth2Token = apiClient.exchangeAccessCode(code);
 
         if (!oAuth2Token.isValid()) {
             throw new IllegalStateException("Invalid access token.");
