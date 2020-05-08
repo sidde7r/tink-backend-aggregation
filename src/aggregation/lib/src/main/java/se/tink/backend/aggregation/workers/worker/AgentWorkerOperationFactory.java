@@ -488,7 +488,7 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands;
 
         // TODO: PAY2-409 - Check if UK provider works with LoginCommand and fix
-        if (isUKOBProvider(request.getProvider())) {
+        if (isUKOBProvider(request.getProvider()) || isFrenchTestProvider(request.getProvider())) {
             operationName = "execute-transfer-without-refresh";
             commands =
                     createTransferWithoutRefreshBaseCommands(
@@ -523,6 +523,11 @@ public class AgentWorkerOperationFactory {
 
     private boolean isUKOBProvider(Provider provider) {
         return provider.getMarket().equals(MarketCode.GB.toString()) && provider.isOpenBanking();
+    }
+
+    private boolean isFrenchTestProvider(Provider provider) {
+        return provider.getMarket().equals(MarketCode.FR.toString())
+                && provider.getType().isTestProvider();
     }
 
     public AgentWorkerOperation createOperationExecuteWhitelistedTransfer(
