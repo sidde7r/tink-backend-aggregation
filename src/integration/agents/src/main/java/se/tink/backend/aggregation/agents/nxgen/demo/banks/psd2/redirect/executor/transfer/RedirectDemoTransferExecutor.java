@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer;
 
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_CANCEL_CASE;
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_FAILURE_CASE;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_PAYMENT_CANCEL_CASE;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_PAYMENT_FAILURE_CASE;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_SUCCESS_CASE;
 
 import java.util.Optional;
@@ -60,7 +60,7 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
             // be sent in request
 
             // not need to throw exception for success case
-        } else if (UK_DEMO_PROVIDER_FAILURE_CASE.equals(providerName)) { // FAILED case
+        } else if (UK_DEMO_PROVIDER_PAYMENT_FAILURE_CASE.equals(providerName)) { // FAILED case
 
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(
@@ -68,7 +68,7 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
                     .setMessage(
                             "The transfer amount is larger than what is available on the account (test)")
                     .build();
-        } else if (UK_DEMO_PROVIDER_CANCEL_CASE.equals(providerName)) { // CANCELLED case
+        } else if (UK_DEMO_PROVIDER_PAYMENT_CANCEL_CASE.equals(providerName)) { // CANCELLED case
 
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage("Cancel on payment signing (test)")

@@ -9,11 +9,21 @@ public class RedirectAuthenticationDemoAgentConstants {
             "it-test-open-banking-redirect-failed";
     public static final String IT_DEMO_PROVIDER_CANCEL_CASE =
             "it-test-open-banking-redirect-cancelled";
+    public static final String IT_DEMO_PROVIDER_PAYMENT_FAILURE_CASE =
+            "it-test-open-banking-redirect-payment-failed";
+    public static final String IT_DEMO_PROVIDER_PAYMENT_CANCEL_CASE =
+            "it-test-open-banking-redirect-payment-cancelled";
+
     public static final String FR_DEMO_PROVIDER_SUCCESS_CASE = "fr-test-open-banking-redirect";
     public static final String FR_DEMO_PROVIDER_FAILURE_CASE =
             "fr-test-open-banking-redirect-failed";
     public static final String FR_DEMO_PROVIDER_CANCEL_CASE =
             "fr-test-open-banking-redirect-cancelled";
+    public static final String FR_DEMO_PROVIDER_PAYMENT_FAILURE_CASE =
+            "fr-test-open-banking-redirect-payment-failed";
+    public static final String FR_DEMO_PROVIDER_PAYMENT_CANCEL_CASE =
+            "fr-test-open-banking-redirect-payment-cancelled";
+
     public static final String UK_DEMO_PROVIDER_SUCCESS_CASE = "uk-test-open-banking-redirect";
     public static final String UK_DEMO_PROVIDER_FAILURE_CASE =
             "uk-test-open-banking-redirect-failed";
@@ -25,6 +35,10 @@ public class RedirectAuthenticationDemoAgentConstants {
             "uk-test-open-banking-redirect-no-accounts-returned";
     public static final String DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX =
             ".*-configurable-session-expiry";
+    public static final String UK_DEMO_PROVIDER_PAYMENT_FAILURE_CASE =
+            "uk-test-open-banking-redirect-payment-failed";
+    public static final String UK_DEMO_PROVIDER_PAYMENT_CANCEL_CASE =
+            "uk-test-open-banking-redirect-payment-cancelled";
 
     public static final String OXFORD_PREPROD = "oxford-preprod";
     public static final String OXFORD_PREPROD_CALLBACK =
