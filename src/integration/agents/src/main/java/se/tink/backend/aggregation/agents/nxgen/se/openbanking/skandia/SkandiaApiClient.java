@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.FormValues;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaCo
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authenticator.rpc.TokenResponse;
@@ -24,6 +26,7 @@ import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfigura
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -93,16 +96,25 @@ public final class SkandiaApiClient {
                 .toTinkToken();
     }
 
-    public OAuth2Token refreshToken(String refreshToken) {
+    public OAuth2Token refreshToken(String refreshToken) throws SessionException {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
 
         RefreshTokenRequest requestBody =
                 new RefreshTokenRequest(refreshToken, clientId, clientSecret);
-        return client.request(Urls.TOKEN)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(TokenResponse.class, requestBody.toData())
-                .toTinkToken();
+
+        try {
+            return client.request(Urls.TOKEN)
+                    .type(MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(TokenResponse.class, requestBody.toData())
+                    .toTinkToken();
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == 400
+                    && e.getResponse().getBody(ErrorResponse.class).isInvalidGrant()) {
+                throw new SessionException(SessionError.SESSION_EXPIRED, e);
+            }
+            throw e;
+        }
     }
 
     private OAuth2Token getTokenFromStorage() {
