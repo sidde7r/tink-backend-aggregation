@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING_REGEX;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD_CALLBACK;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_STAGING;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_STAGING_CALLBACK;
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE;
 
 import com.google.common.collect.Lists;
 import java.time.LocalDate;
@@ -185,8 +185,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public DemoInvestmentAccount getInvestmentAccounts() {
-        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)
-                || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING)) {
+        if (this.provider.matches(DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX)
+                || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING_REGEX)) {
             return null;
         }
         return new DemoInvestmentAccount() {
@@ -209,7 +209,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public DemoSavingsAccount getDemoSavingsAccounts() {
-        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+        if (this.provider.matches(DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX)) {
             return null;
         }
         return DemoAccountDefinitionGenerator.getDemoSavingsAccounts(USERNAME, this.provider);
@@ -217,8 +217,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public DemoLoanAccount getDemoLoanAccounts() {
-        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)
-                || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING)) {
+        if (this.provider.matches(DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX)
+                || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING_REGEX)) {
             return null;
         }
         return new DemoLoanAccount() {
@@ -278,7 +278,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                         USERNAME, this.provider, 1));
 
         if (this.provider.matches(DemoConstants.MARKET_REGEX.UK_PROVIDERS_REGEX)) {
-            if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)) {
+            if (this.provider.matches(DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX)) {
                 return Collections.emptyList();
             }
             accounts.add(getUkDemoAccount());
@@ -326,8 +326,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
 
     @Override
     public List<DemoCreditCardAccount> getCreditCardAccounts() {
-        if (this.provider.equals(UK_DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE)
-                || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING)) {
+        if (this.provider.matches(DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX)
+                || this.provider.matches(DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING_REGEX)) {
             return Collections.EMPTY_LIST;
         }
         return Collections.singletonList(

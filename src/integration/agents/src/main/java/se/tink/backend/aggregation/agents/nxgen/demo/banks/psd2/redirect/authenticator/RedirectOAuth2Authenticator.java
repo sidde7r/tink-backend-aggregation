@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_CANCEL_CASE_REGEX;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_CONFIGURABLE_SESSION_CASE_REGEX;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_FAILURE_CASE_REGEX;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_TEMPORARY_ERROR_CASE_REGEX;
 
 import com.google.common.base.Strings;
 import java.util.Base64;
@@ -12,7 +15,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -59,15 +61,12 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
             throw BankServiceError.CONSENT_REVOKED.exception("No code present.");
         }
 
-        switch (providerName) {
-            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_FAILURE_CASE:
-                throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
-            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_CANCEL_CASE:
-                throw ThirdPartyAppError.CANCELLED.exception();
-            case RedirectAuthenticationDemoAgentConstants.UK_DEMO_PROVIDER_TEMPORARY_ERROR_CASE:
-                throw BankServiceError.BANK_SIDE_FAILURE.exception();
-            default:
-                break;
+        if (providerName.matches(DEMO_PROVIDER_FAILURE_CASE_REGEX)) {
+            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
+        } else if (providerName.matches(DEMO_PROVIDER_CANCEL_CASE_REGEX)) {
+            throw ThirdPartyAppError.CANCELLED.exception();
+        } else if (providerName.matches(DEMO_PROVIDER_TEMPORARY_ERROR_CASE_REGEX)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
 
         long accessExpiresInSeconds = THIRTY_DAYS_IN_SECONDS;
