@@ -113,6 +113,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
     }
 
     private void sendInitializationRequests() {
+        apiClient.fetchSaneIdCookie();
         String initVersion = persistentStorage.getOrDefault(Tags.INIT_VERSION, "-1");
         InitializationResponse response =
                 apiClient.initialization(

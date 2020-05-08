@@ -5,6 +5,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.cookie.Cookie;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.ConstantValueHeaders;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationResponse;
@@ -104,6 +107,21 @@ public class AmericanExpressV62ApiClient {
                 .header(
                         AmericanExpressV62Constants.Headers.AUTHORIZATION,
                         sessionStorage.get(AmericanExpressV62Constants.Tags.AUTHORIZATION));
+    }
+
+    // Purpose of this api call is to retrieve a cookie named "SaneId"
+    public void fetchSaneIdCookie() {
+        client.request(AmericanExpressV62Constants.BASE_API + Urls.SANE_ID)
+                .queryParam(QueryKeys.FACE, QueryValues.FACE_VALUE)
+                .queryParam(QueryKeys.CLIENT_TYPE, QueryValues.CLIENT_TYPE_VALUE)
+                .queryParam(QueryKeys.PAGE, QueryValues.PAGE_VALUE)
+                .queryParam(QueryKeys.VERSION, QueryValues.VERSION_VALUE)
+                .header(ConstantValueHeaders.AUTHORITY)
+                .header(ConstantValueHeaders.USER_AGENT)
+                .header(ConstantValueHeaders.ACCEPT_TEXT)
+                .header(ConstantValueHeaders.ACCEPT_LANGUAGE)
+                .header(ConstantValueHeaders.ACCEPT_ENCODING)
+                .get(String.class);
     }
 
     public InitializationResponse initialization(InitializationRequest request) {

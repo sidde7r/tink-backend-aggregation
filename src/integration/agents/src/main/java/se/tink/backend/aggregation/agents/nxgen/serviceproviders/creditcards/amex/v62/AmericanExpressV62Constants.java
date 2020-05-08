@@ -22,8 +22,12 @@ public final class AmericanExpressV62Constants {
         MANUFACTURER("x-axp-manufacturer", "Apple"),
         TIMEZONE_OFFSET("X-AXP-TimeZoneOffset", "3600000"),
         TIMEZONE_NAME("x-axp-device-timezone-name", "Europe/Stockholm"),
-        ACCEPT_ENCODING("accept-encoding", "br, gzip, deflate"),
-        ACCEPT_LANGUAGE("accept-language", "en-us");
+        ACCEPT_TEXT("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"),
+        ACCEPT_ENCODING("accept-encoding", "gzip, deflate, br"),
+        ACCEPT_LANGUAGE("accept-language", "en-us"),
+        USER_AGENT(
+                "user-agent",
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148");
 
         private final String headerName;
         private final String headerValue;
@@ -53,6 +57,7 @@ public final class AmericanExpressV62Constants {
         public static final String TIMELINE = "/mobileone/msl/services/timeline/v1/timelineDetail";
         public static final String INITIALIZATION =
                 "/mobileone/msl/services/accountservicing/v1/initialization";
+        public static final String SANE_ID = "/mobileone/msl/services/app/passthrough";
     }
 
     public static final class Tags {
@@ -105,6 +110,20 @@ public final class AmericanExpressV62Constants {
         public static final String LOGON_FAIL_CONTENT_ERROR = "LOGON1012";
         public static final String BANKSIDE_TEMPORARY_ERROR = "CDSVC1000";
         public static final String UNSUPPORTED_MARKET = "UNSUPPORTED_MARKET";
+    }
+
+    public static final class QueryKeys {
+        public static final String PAGE = "page";
+        public static final String FACE = "Face";
+        public static final String VERSION = "version";
+        public static final String CLIENT_TYPE = "clientType";
+    }
+
+    public static final class QueryValues {
+        public static final String PAGE_VALUE = "eula";
+        public static final String FACE_VALUE = "sv_SE";
+        public static final String VERSION_VALUE = "23da90ada6b32378654c7c1a88c0e2a808ab3cb3";
+        public static final String CLIENT_TYPE_VALUE = "iPhone";
     }
 
     public static class Fetcher {
