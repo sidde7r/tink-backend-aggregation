@@ -1,34 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils;
 
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
+@RequiredArgsConstructor
 public class SignatureHeaderProvider {
 
-    public String buildSignatureHeader(
-            EidasProxyConfiguration configuration,
-            EidasIdentity eidasIdentity,
-            String authorizationCode,
-            String requestId,
-            SocieteGeneraleConfiguration societeGeneraleConfiguration) {
+    private final QsealcSigner qsealcSigner;
+    private final SocieteGeneraleConfiguration societeGeneraleConfiguration;
+
+    public String buildSignatureHeader(String authorizationCode, String requestId) {
         return String.format(
                 "%s, %s, %s, %s",
-                getKeyId(societeGeneraleConfiguration),
+                getKeyId(),
                 SocieteGeneraleSignatureUtils.getAlgorithm(),
                 getHeaders(),
-                getSignature(
-                        configuration,
-                        eidasIdentity,
-                        authorizationCode,
-                        requestId,
-                        societeGeneraleConfiguration));
+                getSignature(authorizationCode, requestId));
     }
 
-    private String getKeyId(SocieteGeneraleConfiguration societeGeneraleConfiguration) {
+    private String getKeyId() {
         return String.format(
                 "%s=\"%s\"",
                 SocieteGeneraleConstants.SignatureKeys.KEY_ID,
@@ -43,12 +35,7 @@ public class SignatureHeaderProvider {
                 SocieteGeneraleConstants.HeaderKeys.X_REQUEST_ID);
     }
 
-    private String getSignature(
-            EidasProxyConfiguration configuration,
-            EidasIdentity eidasIdentity,
-            String authorizationCode,
-            String requestId,
-            SocieteGeneraleConfiguration societeGeneraleConfiguration) {
+    private String getSignature(String authorizationCode, String requestId) {
 
         String signatureString =
                 String.format(
@@ -62,10 +49,6 @@ public class SignatureHeaderProvider {
         return String.format(
                 "%s=\"%s\"",
                 SocieteGeneraleConstants.HeaderKeys.SIGNATURE,
-                QsealcSignerImpl.build(
-                                configuration.toInternalConfig(),
-                                QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity)
-                        .getSignatureBase64(signatureString.getBytes()));
+                qsealcSigner.getSignatureBase64(signatureString.getBytes()));
     }
 }
