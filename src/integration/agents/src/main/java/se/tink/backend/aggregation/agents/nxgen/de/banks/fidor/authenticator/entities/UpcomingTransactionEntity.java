@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class UpcomingTransactionEntity {
@@ -67,7 +67,7 @@ public class UpcomingTransactionEntity {
         return UpcomingTransaction.builder()
                 .setDescription(details.getMerchantName())
                 .setDate(expiresAt)
-                .setAmount(new Amount(currency, amount))
+                .setAmount(ExactCurrencyAmount.of(amount, currency))
                 .build();
     }
 }

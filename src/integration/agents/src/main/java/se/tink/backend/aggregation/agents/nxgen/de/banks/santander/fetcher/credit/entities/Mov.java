@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class Mov {
@@ -90,15 +91,11 @@ public class Mov {
         }
     }
 
-    private se.tink.libraries.amount.Amount getAmount() {
-        return new se.tink.libraries.amount.Amount(amount.getdIVISA(), amount.getiMPORTE());
-    }
-
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDescription(getDescription())
                 .setDate(getDate())
-                .setAmount(getAmount())
+                .setAmount(ExactCurrencyAmount.of(amount.getiMPORTE(), amount.getdIVISA()))
                 .build();
     }
 }

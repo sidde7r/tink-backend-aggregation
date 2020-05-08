@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -22,13 +22,14 @@ public class CreatePaymentResponse {
     private String transactionStatus;
 
     @JsonIgnore
-    public PaymentResponse toTinkPayment(Creditor creditor, Debtor debtor, Amount amount) {
+    public PaymentResponse toTinkPayment(
+            Creditor creditor, Debtor debtor, ExactCurrencyAmount amount) {
         Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(creditor)
                         .withDebtor(debtor)
-                        .withAmount(amount)
-                        .withCurrency(amount.getCurrency())
+                        .withExactCurrencyAmount(amount)
+                        .withCurrency(amount.getCurrencyCode())
                         .withUniqueId(paymentId)
                         .withStatus(
                                 FiduciaConstants.PAYMENT_STATUS_MAPPER
