@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.security.Security;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkobRootCertificate;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdApiClient;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -87,7 +88,7 @@ public class UkobRegisterCommand {
             httpClient.disableSslVerification();
         } else {
             httpClient.trustRootCaCertificate(
-                    configuration.getRootCAData(), configuration.getRootCAPassword());
+                    UkobRootCertificate.ukobRootCaJks, UkobRootCertificate.ukobRootCaJksPassword);
         }
 
         configuration

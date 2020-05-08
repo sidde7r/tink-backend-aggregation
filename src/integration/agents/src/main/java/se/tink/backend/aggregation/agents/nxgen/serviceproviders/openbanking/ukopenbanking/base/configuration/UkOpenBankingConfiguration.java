@@ -30,12 +30,10 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     @JsonProperty @Secret private String softwareId;
     @JsonProperty @Secret private String transportKey;
     @JsonProperty @Secret private String transportKeyId;
-    @JsonProperty @Secret private String rootCAData;
     @JsonProperty @Secret private String tokenEndpointAuthMethod;
     @JsonProperty @SensitiveSecret private String clientSecret;
     @JsonProperty @SensitiveSecret private String transportKeyPassword;
     @JsonProperty @SensitiveSecret private String signingKeyPassword;
-    @JsonProperty @SensitiveSecret private String rootCAPassword;
 
     public String getOrganizationId() {
         return organizationId;
@@ -69,11 +67,6 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
         return transportKeyId;
     }
 
-    @Override
-    public byte[] getRootCAData() {
-        return EncodingUtils.decodeBase64String(rootCAData);
-    }
-
     public String getClientSecret() {
         return clientSecret;
     }
@@ -84,11 +77,6 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
 
     public String getSigningKeyPassword() {
         return signingKeyPassword;
-    }
-
-    @Override
-    public String getRootCAPassword() {
-        return rootCAPassword;
     }
 
     @Override

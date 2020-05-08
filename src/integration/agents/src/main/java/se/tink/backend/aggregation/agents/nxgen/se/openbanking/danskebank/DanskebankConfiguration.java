@@ -22,16 +22,6 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     @JsonProperty @Secret private String softwareId;
 
     @Override
-    public byte[] getRootCAData() {
-        return new byte[0];
-    }
-
-    @Override
-    public String getRootCAPassword() {
-        return null;
-    }
-
-    @Override
     public ProviderConfiguration getProviderConfiguration() {
         Preconditions.checkState(!Strings.isNullOrEmpty(clientId), "ClientId is null or empty.");
         return new ProviderConfiguration(organizationId, new ClientInfo(clientId, ""));

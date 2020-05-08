@@ -111,8 +111,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             client.disableSslVerification();
         } else {
             client.trustRootCaCertificate(
-                    ukOpenBankingConfiguration.getRootCAData(),
-                    ukOpenBankingConfiguration.getRootCAPassword());
+                    UkobRootCertificate.ukobRootCaJks, UkobRootCertificate.ukobRootCaJksPassword);
         }
 
         ukOpenBankingConfiguration

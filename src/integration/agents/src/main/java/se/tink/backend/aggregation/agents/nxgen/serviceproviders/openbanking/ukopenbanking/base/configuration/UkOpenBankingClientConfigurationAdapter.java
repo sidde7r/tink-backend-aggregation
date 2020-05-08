@@ -9,10 +9,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 public interface UkOpenBankingClientConfigurationAdapter extends ClientConfiguration {
 
-    byte[] getRootCAData();
-
-    String getRootCAPassword();
-
     ProviderConfiguration getProviderConfiguration();
 
     SoftwareStatementAssertion getSoftwareStatementAssertion();
