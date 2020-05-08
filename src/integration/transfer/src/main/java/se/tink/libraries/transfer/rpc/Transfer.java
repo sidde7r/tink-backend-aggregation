@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.MessageType;
@@ -149,6 +150,18 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
             this.amount = amount.toBigDecimal();
             this.oldAmount = amount.getValue();
             this.currency = amount.getCurrency();
+        }
+    }
+
+    public void setAmount(ExactCurrencyAmount amount) {
+        if (amount == null) {
+            this.amount = null;
+            this.oldAmount = null;
+            this.currency = null;
+        } else {
+            this.amount = amount.getExactValue();
+            this.oldAmount = amount.getDoubleValue();
+            this.currency = amount.getCurrencyCode();
         }
     }
 

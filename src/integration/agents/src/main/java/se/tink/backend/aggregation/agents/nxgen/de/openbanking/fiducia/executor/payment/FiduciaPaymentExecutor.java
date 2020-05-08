@@ -49,6 +49,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -89,6 +90,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
         Creditor creditor = payment.getCreditor();
         Debtor debtor = payment.getDebtor();
         Amount amount = payment.getAmount();
+        ExactCurrencyAmount amount1 = payment.getExactCurrencyAmount();
 
         // Backwards compatibility patch: some agents would break if the dueDate was null, so we
         // defaulted it. This behaviour is no longer true for agents that properly implement the
@@ -151,7 +153,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
         CreatePaymentResponse createPaymentResponse =
                 apiClient.createPayment(body, psuId, digest, certificate, signature, reqId, date);
 
-        return createPaymentResponse.toTinkPayment(creditor, debtor, amount);
+        return createPaymentResponse.toTinkPayment(creditor, debtor, amount1);
     }
 
     @Override

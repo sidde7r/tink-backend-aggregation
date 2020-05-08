@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -80,7 +80,7 @@ public class TransactionEntity {
                 Transaction.builder()
                         .setDescription(getTinkFormattedDescription(description.trim()))
                         .setAmount(
-                                new Amount(this.amounts.getExecuted().getCurrency(), this.amount))
+                                ExactCurrencyAmount.of(amount, amounts.getExecuted().getCurrency()))
                         .setDate(accountingDate)
                         .setPending(reserved);
 
