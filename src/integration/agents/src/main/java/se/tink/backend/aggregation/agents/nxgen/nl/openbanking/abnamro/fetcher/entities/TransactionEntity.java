@@ -35,7 +35,7 @@ public class TransactionEntity {
                         counterPartyAccountNumber)
                 .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL, counterPartyName)
-                .setPayload(TransactionPayloadTypes.MUTATION_CODE, mutationCode)
+                .setPayload(TransactionPayloadTypes.DETAILS, mutationCode)
                 .build();
     }
 }
