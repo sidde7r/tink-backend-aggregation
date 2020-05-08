@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.workers.worker;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.common.base.Predicate;
@@ -25,6 +29,7 @@ import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
@@ -44,7 +49,9 @@ import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.provider.ProviderDto;
 
 public final class AgentWorkerOperationFactoryTest {
 
@@ -141,6 +148,81 @@ public final class AgentWorkerOperationFactoryTest {
 
         // then
         assertThat(operation.getContext().getRefreshId()).isEqualTo(CORRELATION_ID);
+    }
+
+    @Test
+    public void commandsForRefreshAreRunWhenSkipRefreshFlagIsFalse() {
+        // Arrange
+        TransferRequest request = mock(TransferRequest.class);
+        AgentWorkerOperationFactory factorySpy = spy(this.factory);
+        String appId = "mockedAppId";
+        when(clientInfo.getAppId()).thenReturn(appId);
+        when(request.getProvider()).thenReturn(provider);
+        when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+
+        // Act
+        factorySpy.createOperationExecuteTransfer(request, clientInfo);
+
+        // Assert
+        verify(factorySpy, times(1)).createRefreshAccountsCommands(any(), any(), any());
+    }
+
+    @Test
+    public void commandsForRefreshAreSkippedWhenSkipRefreshFlagIsTrue() {
+        // Arrange
+        TransferRequest request = mock(TransferRequest.class);
+        AgentWorkerOperationFactory factorySpy = spy(this.factory);
+        String appId = "mockedAppId";
+        when(clientInfo.getAppId()).thenReturn(appId);
+        when(request.getProvider()).thenReturn(provider);
+        when(request.isSkipRefresh()).thenReturn(true);
+        when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+
+        // Act
+        factorySpy.createOperationExecuteTransfer(request, clientInfo);
+
+        // Assert
+        verify(factorySpy, times(0)).createRefreshAccountsCommands(any(), any(), any());
+    }
+
+    @Test
+    public void commandsWithoutLoginStepAreRunWhenProviderIsUKOB() {
+        // Arrange
+        TransferRequest request = mock(TransferRequest.class);
+        AgentWorkerOperationFactory factorySpy = spy(this.factory);
+        String appId = "mockedAppId";
+        when(clientInfo.getAppId()).thenReturn(appId);
+        when(request.getProvider()).thenReturn(provider);
+        when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(provider.getMarket()).thenReturn(MarketCode.GB.toString());
+        when(provider.isOpenBanking()).thenReturn(true);
+
+        // Act
+        factorySpy.createOperationExecuteTransfer(request, clientInfo);
+
+        // Assert
+        verify(factorySpy, times(1))
+                .createTransferWithoutRefreshBaseCommands(any(), any(), any(), any(), any());
+    }
+
+    @Test
+    public void commandsWithoutLoginStepAreRunWhenProviderIsFrenchTestProvider() {
+        // Arrange
+        TransferRequest request = mock(TransferRequest.class);
+        AgentWorkerOperationFactory factorySpy = spy(this.factory);
+        String appId = "mockedAppId";
+        when(clientInfo.getAppId()).thenReturn(appId);
+        when(request.getProvider()).thenReturn(provider);
+        when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
+        when(provider.getMarket()).thenReturn(MarketCode.FR.toString());
+        when(provider.getType()).thenReturn(ProviderDto.ProviderTypes.TEST);
+
+        // Act
+        factorySpy.createOperationExecuteTransfer(request, clientInfo);
+
+        // Assert
+        verify(factorySpy, times(1))
+                .createTransferWithoutRefreshBaseCommands(any(), any(), any(), any(), any());
     }
 
     @Test
