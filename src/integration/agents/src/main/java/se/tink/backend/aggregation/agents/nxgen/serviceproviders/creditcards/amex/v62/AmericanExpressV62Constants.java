@@ -14,6 +14,7 @@ public final class AmericanExpressV62Constants {
     public static final String NUMBER_REGEX = "[^0-9,.]";
 
     public enum ConstantValueHeaders implements HeaderEnum {
+        AUTHORITY(":authority", "global.americanexpress.com"),
         CHARSET("Charset", "UTF-8"),
         CLIENT_TYPE("X-AXP-ClientType", "iPhone"),
         DEVICE_MODEL("X-AXP-DeviceModel", "iPhone8.1"),
