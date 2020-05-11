@@ -24,8 +24,8 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
  *
  * <p>Johannes Elgh - 2020-05-07
  */
-public class ABNAmroSpecificCase extends AgentWorkerCommand {
-    private static final AggregationLogger log = new AggregationLogger(ABNAmroSpecificCase.class);
+public class AbnAmroSpecificCase extends AgentWorkerCommand {
+    private static final AggregationLogger log = new AggregationLogger(AbnAmroSpecificCase.class);
 
     private static class InternalAccountPayloadKeys {
         static final String SUBSCRIBED = "subscribed";
@@ -33,7 +33,7 @@ public class ABNAmroSpecificCase extends AgentWorkerCommand {
 
     private AgentWorkerCommandContext context;
 
-    public ABNAmroSpecificCase(AgentWorkerCommandContext context) {
+    public AbnAmroSpecificCase(AgentWorkerCommandContext context) {
         this.context = context;
     }
 
