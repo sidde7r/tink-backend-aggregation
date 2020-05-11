@@ -58,7 +58,7 @@ public final class CbiGlobeConstants {
         public static final String BALANCES =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/balances";
         public static final String TRANSACTIONS =
-                "/platform/enabler/psd2orchestrator/ais/2.3.2/accounts/{accountId}/transactions";
+                "/platform/enabler/psd2orchestrator/ais/2.4.0/accounts/{accountId}/transactions";
         public static final String CONSENTS_STATUS =
                 "/platform/enabler/psd2orchestrator/ais/2.3.2/consents/{consentId}";
         private static final String PAYMENT =
