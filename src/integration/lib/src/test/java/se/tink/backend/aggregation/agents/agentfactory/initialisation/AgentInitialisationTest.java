@@ -100,10 +100,7 @@ public class AgentInitialisationTest {
        These agents are temporarily ignored because these agents fail in the test,
        here are the reasons:
 
-       NordeaPartner??Agent: We need to create our own test JKS files otherwise we cannot cover them in test
-
-       PortalAgent and NettbankAgent: These are SDC agents under development. They exist in provider configurations
-       but there is no such agent yet. They will be enabled when we get agents
+       NordeaPartnerXXAgent: We need to create our own test JKS files otherwise we cannot cover them in test
     */
 
     private static ImmutableSet<String> temporarilyIgnoredAgents =
@@ -111,9 +108,7 @@ public class AgentInitialisationTest {
                     "nxgen.se.banks.nordea.partner.NordeaPartnerSeAgent",
                     "nxgen.dk.banks.nordeapartner.NordeaPartnerDkAgent",
                     "nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent",
-                    "nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent",
-                    "nxgen.no.banks.sdcno.agents.PortalAgent",
-                    "nxgen.no.banks.sdcno.agents.NettbankAgent");
+                    "nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent");
 
     private static AggregationServiceConfiguration readConfiguration(String filePath)
             throws IOException, ConfigurationException {
