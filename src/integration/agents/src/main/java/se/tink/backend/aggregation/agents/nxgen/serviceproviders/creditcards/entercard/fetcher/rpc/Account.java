@@ -27,26 +27,28 @@ public class Account {
     private String defaultPayableAmount;
     private String kid;
 
-    public CreditCardAccount toCreditCardAccount(String accountId) {
+    public CreditCardAccount toCreditCardAccount(User user, String accountId) {
+
+        final Card card = getPrimaryCard(user);
 
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(getPrimaryCard().getMaskedNr())
+                                .withCardNumber(card.getMaskedNr())
                                 .withBalance(
                                         ExactCurrencyAmount.of(
                                                 usedCredit, EnterCardConstants.CURRENCY))
                                 .withAvailableCredit(
                                         ExactCurrencyAmount.of(
                                                 openToBuy, EnterCardConstants.CURRENCY))
-                                .withCardAlias(getPrimaryCard().getCardHolderName())
+                                .withCardAlias(card.getCardHolderName())
                                 .build())
                 .withInferredAccountFlags()
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getKid())
-                                .withAccountNumber(getPrimaryCard().getMaskedNr())
-                                .withAccountName(getPrimaryCard().getCardHolderName())
+                                .withAccountNumber(card.getMaskedNr())
+                                .withAccountName(card.getCardHolderName())
                                 .addIdentifier(
                                         AccountIdentifier.create(
                                                 Type.PAYMENT_CARD_NUMBER, getKid()))
@@ -56,7 +58,10 @@ public class Account {
                 .build();
     }
 
-    private Card getPrimaryCard() {
+    private Card getPrimaryCard(User user) {
+        if (cards.isEmpty()) {
+            return new Card(user.getName(), "****-****-****-****");
+        }
         return cards.stream()
                 .filter(Objects::nonNull)
                 .filter(card -> card.isPrimary() == true)

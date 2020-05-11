@@ -16,6 +16,11 @@ public class Card {
     private boolean isCardCreatedRecently;
     private boolean isCardReplacementAllowed;
 
+    public Card(String cardHolderName, String maskedNr) {
+        this.cardHolderName = cardHolderName;
+        this.maskedNr = maskedNr;
+    }
+
     public String getCardHolderName() {
         return cardHolderName;
     }

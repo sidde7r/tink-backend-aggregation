@@ -9,11 +9,11 @@ public class AccountResponse {
 
     private Account account;
 
-    public CreditCardAccount toCreditCardAccount(String accountId) {
+    public CreditCardAccount toCreditCardAccount(User user, String accountId) {
         if (account == null) {
             throw new IllegalStateException("Account response without a card, should not happen.");
         }
 
-        return account.toCreditCardAccount(accountId);
+        return account.toCreditCardAccount(user, accountId);
     }
 }
