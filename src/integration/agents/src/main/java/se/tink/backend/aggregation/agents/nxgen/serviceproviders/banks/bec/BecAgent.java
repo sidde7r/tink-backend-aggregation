@@ -53,7 +53,7 @@ public class BecAgent extends SubsequentProgressiveGenerationAgent
         super(agentComponentProvider);
 
         BecSecurityHelper securityHelper =
-                BecSecurityHelper.getInstance(
+                new BecSecurityHelper(
                         new String(
                                 EncodingUtils.decodeBase64String(
                                         BecConstants.Crypto.SIGNING_CERTIFICATE_B64)),
