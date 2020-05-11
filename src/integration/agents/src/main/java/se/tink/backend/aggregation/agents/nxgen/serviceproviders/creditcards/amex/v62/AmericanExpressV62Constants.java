@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
 
-public final class AmericanExpressV62Constants {
+public class AmericanExpressV62Constants {
 
     private AmericanExpressV62Constants() {
         throw new AssertionError();
@@ -50,7 +50,7 @@ public final class AmericanExpressV62Constants {
         }
     }
 
-    public static final class Urls {
+    public static class Urls {
         public static final String LOG_ON =
                 "/mobileone/msl/services/accountservicing/v1/loginsummary";
         public static final String TRANSACTION =
@@ -61,7 +61,7 @@ public final class AmericanExpressV62Constants {
         public static final String SANE_ID = "/mobileone/msl/services/app/passthrough";
     }
 
-    public static final class Tags {
+    public static class Tags {
         public static final String SESSION_ID = "sessionId";
         public static final String HARDWARE_ID = "hardwareId";
         public static final String CARD_LIST = "cardList";
@@ -78,7 +78,7 @@ public final class AmericanExpressV62Constants {
         public static final String INIT_VERSION = "initVersion";
     }
 
-    public static final class Headers {
+    public static class Headers {
         public static final String LOCALE = "X-AXP-Locale";
         public static final String SESSION = "x-axp-amexsession";
         public static final String CUPCAKE = "x-axp-blueboxvalues";
@@ -95,16 +95,17 @@ public final class AmericanExpressV62Constants {
         public static final String AUTHORIZATION = "authorization";
     }
 
-    public static final class HeadersValue {
+    public static class HeadersValue {
         public static final String UNAVAILABLE = "UNAVAILABLE";
     }
 
-    public static final class RequestValue {
+    public static class RequestValue {
+        public static final String TRUE = "true";
         public static final String TIME_ZONE = "GMT+1";
         public static final String TIME_ZONE_OFFSET = "7200000";
     }
 
-    public static final class ReportingCode {
+    public static class ReportingCode {
         public static final String LOGON_FAIL_FIRST_ATTEMPT = "LOGON1001";
         public static final String LOGON_FAIL_SECOND_ATTEMPT = "LOGON1002";
         public static final String LOGON_FAIL_ACCOUNT_BLOCKED = "LOGON1003";
@@ -113,14 +114,14 @@ public final class AmericanExpressV62Constants {
         public static final String UNSUPPORTED_MARKET = "UNSUPPORTED_MARKET";
     }
 
-    public static final class QueryKeys {
+    public static class QueryKeys {
         public static final String PAGE = "page";
         public static final String FACE = "Face";
         public static final String VERSION = "version";
         public static final String CLIENT_TYPE = "clientType";
     }
 
-    public static final class QueryValues {
+    public static class QueryValues {
         public static final String PAGE_VALUE = "eula";
         public static final String FACE_VALUE = "sv_SE";
         public static final String VERSION_VALUE = "23da90ada6b32378654c7c1a88c0e2a808ab3cb3";
@@ -137,7 +138,7 @@ public final class AmericanExpressV62Constants {
         public static final String ALL_SUB_ACCOUNTS = "allSubAccounts";
     }
 
-    public static final class StatusCode {
+    public static class StatusCode {
         public static final String INCORRECT = "incorrect";
         public static final String SECOND_ATTEMPT = "secondAttempt";
         public static final String REVOKED = "revoked";
