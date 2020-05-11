@@ -19,6 +19,11 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
+
+    private static final String FIELD_PSU_ID = "psu-id";
+    private static final String FIELD_TPP_SESSION_ID = "tpp-session-id";
+    private static final String FIELD_MESSAGE = "message";
+
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SparebankAuthenticator authenticator;
     private final StrongAuthenticationState strongAuthenticationState;
@@ -45,31 +50,32 @@ public class SparebankController implements AutoAuthenticator, ThirdPartyAppAuth
 
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) {
+        Optional<Map<String, String>> maybeSupplementalInformation =
+                this.supplementalInformationHelper.waitForSupplementalInformation(
+                        strongAuthenticationState.getSupplementalKey(),
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES);
 
-        Map<String, String> supplementalInformation =
-                this.supplementalInformationHelper
-                        .waitForSupplementalInformation(
-                                strongAuthenticationState.getSupplementalKey(),
-                                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                                TimeUnit.MINUTES)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "No supplemental info found in api response"));
-
-        Optional<String> psuId =
-                Optional.ofNullable(supplementalInformation.getOrDefault("psu-id", null));
-
-        Optional<String> tppSessionId =
-                Optional.ofNullable(supplementalInformation.getOrDefault("tpp-session-id", null));
-
-        if (psuId.isPresent() && tppSessionId.isPresent()) {
-            authenticator.setUpPsuAndSession(psuId.get(), tppSessionId.get());
-            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+        if (maybeSupplementalInformation.isPresent()) {
+            Map<String, String> supplementalInformation = maybeSupplementalInformation.get();
+            if (supplementalInfoContainsRequiredFields(supplementalInformation)) {
+                authenticator.setUpPsuAndSession(
+                        supplementalInformation.get(FIELD_PSU_ID),
+                        supplementalInformation.get(FIELD_TPP_SESSION_ID));
+                return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+            } else {
+                errorMessage = supplementalInformation.get(FIELD_MESSAGE);
+                return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.CANCELLED);
+            }
         } else {
-            errorMessage = supplementalInformation.getOrDefault("message", null);
-            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.CANCELLED);
+            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT);
         }
+    }
+
+    private boolean supplementalInfoContainsRequiredFields(
+            Map<String, String> supplementalInformation) {
+        return supplementalInformation.containsKey(FIELD_PSU_ID)
+                && supplementalInformation.containsKey(FIELD_TPP_SESSION_ID);
     }
 
     @Override
