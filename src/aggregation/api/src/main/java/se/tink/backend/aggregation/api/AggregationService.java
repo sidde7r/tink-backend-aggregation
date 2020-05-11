@@ -95,14 +95,14 @@ public interface AggregationService {
 
     @POST
     @Path("transfer")
-    @TeamOwnership(Team.AGGREGATION)
+    @TeamOwnership(Team.PAYMENTS)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     void transfer(TransferRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
     @Path("transfer/whitelist")
-    @TeamOwnership(Team.AGGREGATION)
+    @TeamOwnership(Team.PAYMENTS)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     void whitelistedTransfer(
