@@ -22,7 +22,10 @@ public class TransferEntity {
     private String toAccountName;
 
     @JsonIgnore
-    public boolean hasPendingStatus() {
-        return SBABConstants.TransferStatus.PENDING.equalsIgnoreCase(transferStatus);
+    public boolean hasSuccessStatus() {
+        return SBABConstants.TransferStatus.PENDING.equalsIgnoreCase(transferStatus)
+                || SBABConstants.TransferStatus.COMPLETE.equalsIgnoreCase(transferStatus)
+                || (futureTransfer
+                        && SBABConstants.TransferStatus.UNKNOWN.equalsIgnoreCase(transferStatus));
     }
 }
