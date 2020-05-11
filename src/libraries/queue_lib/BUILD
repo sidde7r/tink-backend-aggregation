@@ -4,6 +4,7 @@ java_library(
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//third_party:io_dropwizard_dropwizard_lifecycle",
         "@aggregation//:com_google_guava_guava",
     ],
 )

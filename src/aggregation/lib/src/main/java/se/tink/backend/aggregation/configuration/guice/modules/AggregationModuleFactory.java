@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.integration.agent_data_availability_tracker.module.AgentDataAvailabilityTrackerModule;
 import se.tink.libraries.discovery.CoordinationModule;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClientModule;
+import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.tracing.generic.configuration.GenericTracingModule;
 import se.tink.libraries.tracing.lib.configuration.TracingModule;
 
@@ -39,9 +40,7 @@ public class AggregationModuleFactory {
                                 configuration
                                         .getAgentsServiceConfiguration()
                                         .getAgentDataAvailabilityTrackerConfiguration()))
-                .add(
-                        new QueueModule(
-                                configuration.getSqsQueueConfiguration(), environment.lifecycle()))
+                .add(new QueueModule(configuration.getSqsQueueConfiguration()))
                 .add(
                         new EventProducerServiceClientModule(
                                 configuration

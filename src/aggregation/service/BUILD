@@ -24,6 +24,7 @@ java_library(
         "//src/integration/tpp_secrets_service/client",
         "//src/libraries/draining",
         "//src/libraries/dropwizard_utils",
+        "//src/libraries/queue_lib",
         "//third_party:com_codahale_metrics_metrics_healthchecks",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_configuration",
