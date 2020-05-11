@@ -28,10 +28,17 @@ public class DemobankAgent extends NextGenerationAgent
 
     protected final DemobankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final String callbackUri;
 
     @Inject
     public DemobankAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
+        this.callbackUri = getCallbackUri();
+        apiClient = new DemobankApiClient(client, sessionStorage, callbackUri);
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+    }
+
+    private String getCallbackUri() {
         String callbackUri = request.getCallbackUri();
         if (callbackUri == null) {
             switch (context.getClusterId()) {
@@ -45,8 +52,7 @@ public class DemobankAgent extends NextGenerationAgent
                     callbackUri = ClusterSpecificCallbacks.OXFORD_PROD_CALLBACK;
             }
         }
-        apiClient = new DemobankApiClient(client, sessionStorage, callbackUri);
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        return callbackUri;
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
@@ -77,7 +83,8 @@ public class DemobankAgent extends NextGenerationAgent
                     new DemobankPasswordAuthenticator(apiClient));
         } else {
             DemobankRedirectAuthenticator demobankRedirectAuthenticator =
-                    new DemobankRedirectAuthenticator(apiClient, persistentStorage, credentials);
+                    new DemobankRedirectAuthenticator(
+                            apiClient, persistentStorage, credentials, callbackUri);
 
             final OAuth2AuthenticationController controller =
                     new OAuth2AuthenticationController(

@@ -20,14 +20,17 @@ public class DemobankRedirectAuthenticator implements OAuth2Authenticator {
     private final DemobankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
+    private final String callbackUri;
 
     public DemobankRedirectAuthenticator(
             DemobankApiClient apiClient,
             PersistentStorage persistentStorage,
-            Credentials credentials) {
+            Credentials credentials,
+            String callbackUri) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
+        this.callbackUri = callbackUri;
     }
 
     @Override
@@ -36,6 +39,7 @@ public class DemobankRedirectAuthenticator implements OAuth2Authenticator {
                 .concat(Urls.OAUTH_AUTHORIZE)
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParamsValues.RESPONSE_TYPE)
                 .queryParam(QueryParams.CLIENT_ID, QueryParamsValues.CLIENT_ID)
+                .queryParam(QueryParams.REDIRECT_URI, callbackUri)
                 .queryParam(QueryParams.STATE, state);
     }
 
