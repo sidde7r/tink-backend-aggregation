@@ -86,11 +86,8 @@ public class InterContainerJerseyClientFactory {
             // accepts certificates signed by our CA. It's worth pointing out that we still ignore
             // host checking of the
             // cert because our discovery is IP based.
-            try {
-
+            try (InputStream in = new FileInputStream(DEFAULT_INTER_CONTAINER_TRUSTSTORE_PATH); ) {
                 KeyStore localTrustStore = KeyStore.getInstance("JKS");
-
-                InputStream in = new FileInputStream(DEFAULT_INTER_CONTAINER_TRUSTSTORE_PATH);
                 localTrustStore.load(
                         in, DEFAULT_INTER_CONTAINER_TRUSTSTORE_PASSPHRACE.toCharArray());
 

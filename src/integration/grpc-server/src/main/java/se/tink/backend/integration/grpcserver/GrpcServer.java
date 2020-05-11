@@ -47,7 +47,9 @@ public class GrpcServer {
     }
 
     public void useTransportSecurity(File certChain, File privateKey) throws IOException {
-        serverBuilder.useTransportSecurity(new FileInputStream(certChain), ensurePkcs8(privateKey));
+        try (FileInputStream certChainInputStream = new FileInputStream(certChain)) {
+            serverBuilder.useTransportSecurity(certChainInputStream, ensurePkcs8(privateKey));
+        }
     }
 
     /**
