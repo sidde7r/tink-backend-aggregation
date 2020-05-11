@@ -77,11 +77,12 @@ public class SocieteGeneraleAgent extends NextGenerationAgent
 
     private void checkDeviceId() {
 
-        String deviceId = persistentStorage.get(SocieteGeneraleConstants.StorageKey.DEVICE_ID);
+        String storedDeviceId =
+                persistentStorage.get(SocieteGeneraleConstants.StorageKey.DEVICE_ID);
 
-        if (deviceId == null) {
-            deviceId = UUIDUtils.generateUUID();
-            persistentStorage.put(SocieteGeneraleConstants.StorageKey.DEVICE_ID, deviceId);
+        if (storedDeviceId == null) {
+            persistentStorage.put(
+                    SocieteGeneraleConstants.StorageKey.DEVICE_ID, UUIDUtils.generateUUID());
         }
     }
 }

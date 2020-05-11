@@ -43,13 +43,12 @@ public class SocieteGeneraleAuthenticator implements Authenticator {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
 
-        Optional<LoginGridData> gridResponse = apiClient.getLoginGrid();
+        LoginGridData gridData =
+                apiClient
+                        .getLoginGrid()
+                        .orElseThrow(
+                                LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE::exception);
 
-        if (!gridResponse.isPresent()) {
-            throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception();
-        }
-
-        LoginGridData gridData = gridResponse.get();
         List<Integer> oneTimePad = gridData.getOneTimePad();
         String crypto = gridData.getCrypto();
 
