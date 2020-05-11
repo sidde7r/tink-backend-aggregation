@@ -18,14 +18,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SdcNoBaseAgent extends NextGenerationAgent
+public class SdcNoAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
     protected final SdcNoConfiguration configuration;
     protected final SdcNoApiClient bankClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SdcNoBaseAgent(
+    public SdcNoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
