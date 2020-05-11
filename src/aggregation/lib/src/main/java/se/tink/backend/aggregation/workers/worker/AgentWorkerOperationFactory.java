@@ -82,7 +82,6 @@ import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.MigrateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -505,9 +504,7 @@ public class AgentWorkerOperationFactory {
 
         } else {
 
-            boolean shouldRefresh =
-                    !request.getUser().getFlags().contains(FeatureFlags.ANONYMOUS)
-                            || !request.isSkipRefresh();
+            boolean shouldRefresh = !request.isSkipRefresh();
             operationName =
                     shouldRefresh
                             ? "execute-transfer-with-refresh"
@@ -643,7 +640,7 @@ public class AgentWorkerOperationFactory {
                         context, request, createCommandMetricState(request)));
     }
 
-    private List<AgentWorkerCommand> createTransferWithoutRefreshBaseCommands(
+    List<AgentWorkerCommand> createTransferWithoutRefreshBaseCommands(
             ClientInfo clientInfo,
             TransferRequest request,
             AgentWorkerCommandContext context,
@@ -866,7 +863,7 @@ public class AgentWorkerOperationFactory {
     }
 
     // for each account type,
-    private List<AgentWorkerCommand> createRefreshAccountsCommands(
+    List<AgentWorkerCommand> createRefreshAccountsCommands(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
             Set<RefreshableItem> itemsToRefresh) {
