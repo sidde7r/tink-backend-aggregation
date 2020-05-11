@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pa
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AmountEntity {
@@ -33,8 +33,9 @@ public class AmountEntity {
                 .build();
     }
 
-    public Amount toTinkAmount() {
-        return new Amount(currency, Double.valueOf(value));
+    @JsonIgnore
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(value, currency);
     }
 
     public static class Builder {

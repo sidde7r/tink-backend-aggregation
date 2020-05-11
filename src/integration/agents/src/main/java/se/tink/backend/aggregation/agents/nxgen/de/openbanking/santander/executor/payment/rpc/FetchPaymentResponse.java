@@ -45,7 +45,7 @@ public class FetchPaymentResponse {
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
                         .withDebtor(debtorAccount.toTinkDebtor())
-                        .withAmount(instructedAmount.toAmount())
+                        .withExactCurrencyAmount(instructedAmount.toAmount())
                         .withExecutionDate(
                                 DateFormat.convertToLocalDateViaInstant(requestedExecutionDate))
                         .withExecutionDate(

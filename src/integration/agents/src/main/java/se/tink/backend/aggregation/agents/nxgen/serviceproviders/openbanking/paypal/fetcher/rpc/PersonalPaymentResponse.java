@@ -62,7 +62,7 @@ public class PersonalPaymentResponse {
                 new Builder()
                         .withUniqueId(id)
                         .withCurrency(amount.getCurrency())
-                        .withAmount(amount.toTinkAmount())
+                        .withExactCurrencyAmount(amount.toTinkAmount())
                         .withDebtor(payee.toTinkDebtor())
                         .withStatus(PayPalPaymentStatus.mapToTinkPaymentStatus(payPalPaymentStatus))
                         .withType(PaymentType.INTERNATIONAL)
