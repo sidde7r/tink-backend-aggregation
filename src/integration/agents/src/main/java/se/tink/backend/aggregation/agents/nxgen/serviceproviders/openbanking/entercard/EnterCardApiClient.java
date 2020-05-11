@@ -152,7 +152,7 @@ public final class EnterCardApiClient {
             RefreshTokenRequest request =
                     new RefreshTokenRequest(
                             QueryValues.SCOPE,
-                            QueryValues.GRANT_TYPE,
+                            QueryValues.REFRESH_TOKEN,
                             refreshToken,
                             clientId,
                             clientSecret);

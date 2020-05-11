@@ -46,5 +46,7 @@ public class EnterCardAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public void useAccessToken(OAuth2Token accessToken) {}
+    public void useAccessToken(OAuth2Token accessToken) {
+        apiClient.setTokenToStorage(accessToken);
+    }
 }
