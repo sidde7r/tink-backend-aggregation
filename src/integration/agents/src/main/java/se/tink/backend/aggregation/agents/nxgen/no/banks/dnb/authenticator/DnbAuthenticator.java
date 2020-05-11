@@ -23,6 +23,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 public class DnbAuthenticator implements BankIdAuthenticatorNO {
     private final DnbApiClient apiClient;
     private URI bankIdReferer;
+    private static final String LOCATION = "Location";
     private static final Pattern BANKID_ERROR_PATTERN = Pattern.compile("feilkode c.{3}");
 
     public DnbAuthenticator(DnbApiClient apiClient) {
@@ -38,7 +39,7 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         // From this request we'll get a location that contains the encrypted uid
         HttpResponse startMobileResponse = apiClient.postStartMobile(nationalId);
 
-        bankIdReferer = startMobileResponse.getLocation();
+        bankIdReferer = extractLocationFromStartMobileResponse(startMobileResponse);
         verifyStartMobileResponse(startMobileResponse);
 
         apiClient.initiateSession(bankIdReferer);
@@ -61,6 +62,14 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         }
 
         return collectChallengeResponse.getMessage().getApplicationData();
+    }
+
+    private URI extractLocationFromStartMobileResponse(HttpResponse startMobileResponse) {
+        // Sometimes the Location header looks like:
+        // Location: https://m.dnb.no, m.dnb.no/segp/appo/logon/main..
+        // Which just doesn't compute
+        return URI.create(
+                startMobileResponse.getHeaders().getFirst(LOCATION).replace("m.dnb.no, ", ""));
     }
 
     private void handleBankIdError(
