@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +28,14 @@ public class BankEntity {
         return bankId;
     }
 
-    public PrivateProfileEntity getProfile() {
+    @JsonIgnore
+    public PrivateProfileEntity getProfile(String orgNumber) {
         if (businessProfiles.isEmpty()) {
             return privateProfile;
         }
-        return businessProfiles.get(0);
+        return businessProfiles.stream()
+                .filter(profile -> profile.getCustomerNumber().equals(orgNumber))
+                .findAny()
+                .orElseThrow(IllegalStateException::new);
     }
 }
