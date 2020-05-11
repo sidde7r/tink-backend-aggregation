@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provi
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.RequestResponseParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
+import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
@@ -45,7 +46,7 @@ public final class AgentWireMockRefreshTest {
             AgentsServiceConfiguration configuration,
             Map<String, String> loginDetails,
             Map<String, String> callbackData,
-            Module agentModule,
+            TestModule agentTestModule,
             Set<RefreshableItem> refreshableItems,
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace) {
@@ -73,7 +74,7 @@ public final class AgentWireMockRefreshTest {
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
                                 callbackData,
-                                agentModule,
+                                agentTestModule,
                                 commandSequence,
                                 httpDebugTrace));
 
@@ -145,7 +146,7 @@ public final class AgentWireMockRefreshTest {
         private boolean httpDebugTrace = false;
 
         private AgentsServiceConfiguration configuration;
-        private Module agentModule;
+        private TestModule agentTestModule;
 
         private Builder(MarketCode market, String providerName, String wireMockFilePath) {
             this.market = market;
@@ -207,8 +208,8 @@ public final class AgentWireMockRefreshTest {
          * @param module Guice module to bind.
          * @return This builder.
          */
-        public Builder withAgentModule(Module module) {
-            this.agentModule = module;
+        public Builder withAgentModule(TestModule module) {
+            this.agentTestModule = module;
             return this;
         }
 
@@ -262,7 +263,7 @@ public final class AgentWireMockRefreshTest {
                     configuration,
                     credentialFields,
                     callbackData,
-                    agentModule,
+                    agentTestModule,
                     refreshableItems,
                     of(LoginCommand.class, RefreshCommand.class),
                     httpDebugTrace);

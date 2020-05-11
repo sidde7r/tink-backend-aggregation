@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.ResourceFileReader;
+import se.tink.backend.aggregation.agents.module.loader.TestModule;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
@@ -40,7 +41,7 @@ public final class AgentWireMockPaymentTest {
             AgentsServiceConfiguration configuration,
             Map<String, String> loginDetails,
             Map<String, String> callbackData,
-            Module agentModule,
+            TestModule agentModule,
             List<Payment> paymentList,
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace) {
@@ -116,7 +117,7 @@ public final class AgentWireMockPaymentTest {
         private boolean httpDebugTrace = false;
 
         private AgentsServiceConfiguration configuration;
-        private Module agentModule;
+        private TestModule agentTestModule;
 
         private Builder(MarketCode market, String providerName, String wireMockFilePath) {
             this.market = market;
@@ -178,8 +179,8 @@ public final class AgentWireMockPaymentTest {
          * @param module Guice module to bind.
          * @return This builder.
          */
-        public Builder withAgentModule(Module module) {
-            this.agentModule = module;
+        public Builder withAgentModule(TestModule module) {
+            this.agentTestModule = module;
             return this;
         }
 
@@ -220,7 +221,7 @@ public final class AgentWireMockPaymentTest {
                     configuration,
                     credentialFields,
                     callbackData,
-                    agentModule,
+                    agentTestModule,
                     paymentList,
                     of(PaymentCommand.class),
                     httpDebugTrace);
@@ -240,7 +241,7 @@ public final class AgentWireMockPaymentTest {
                     configuration,
                     credentialFields,
                     callbackData,
-                    agentModule,
+                    agentTestModule,
                     paymentList,
                     of(LoginCommand.class, PaymentCommand.class),
                     httpDebugTrace);

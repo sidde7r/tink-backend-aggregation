@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.module.loader;
 
 import com.google.inject.Module;
 import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -27,16 +26,16 @@ public final class PackageModuleLoader {
 
         final Collection<Class<Module>> moduleClasses;
         try (final ScanResult scanResult = getScanResult(packagePath)) {
-            final ClassInfoList classInfoList =
+            moduleClasses =
                     scanResult
                             .getClassesImplementing(Module.class.getName())
-                            .filter(c -> !c.isAbstract());
-            moduleClasses = classInfoList.loadClasses(Module.class);
+                            .loadClasses(Module.class);
         }
 
         Set<Module> moduleSet = new HashSet<>();
         for (Class<? extends Module> moduleClass : moduleClasses) {
-            if (!Modifier.isAbstract(moduleClass.getModifiers())) {
+            if (!Modifier.isAbstract(moduleClass.getModifiers())
+                    && !TestModule.class.isAssignableFrom(moduleClass)) {
 
                 try {
                     moduleSet.add(moduleClass.getConstructor().newInstance());
