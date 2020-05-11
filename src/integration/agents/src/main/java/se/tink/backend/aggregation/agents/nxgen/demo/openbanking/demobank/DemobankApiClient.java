@@ -5,7 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank
 
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.BasicAuthParams;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.OAuth2Params;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
@@ -37,7 +37,7 @@ public class DemobankApiClient {
     public OAuth2Token getToken(String code) {
         return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .addBasicAuth(BasicAuthParams.CLIENT_ID, BasicAuthParams.CLIENT_SECRET)
+                .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
                 .post(TokenEntity.class, new RedirectLoginRequest(code, callbackUri).toData())
                 .toOAuth2Token();
     }
@@ -49,7 +49,7 @@ public class DemobankApiClient {
     public OAuth2Token refreshToken(String refreshToken) {
         return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .addBasicAuth(BasicAuthParams.CLIENT_ID, BasicAuthParams.CLIENT_SECRET)
+                .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
                 .post(TokenEntity.class, new RedirectRefreshTokenRequest(refreshToken).toData())
                 .toOAuth2Token();
     }
@@ -79,7 +79,7 @@ public class DemobankApiClient {
 
         return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .addBasicAuth(BasicAuthParams.CLIENT_ID, BasicAuthParams.CLIENT_SECRET)
+                .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
                 .post(TokenEntity.class, new PasswordLoginRequest(username, password).toData())
                 .toOAuth2Token();
     }
