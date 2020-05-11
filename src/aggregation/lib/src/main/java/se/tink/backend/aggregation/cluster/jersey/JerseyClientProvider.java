@@ -54,12 +54,21 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
 
         logger.info("The apiKey: {} & appId: {} while fetching from header param.", apiKey, appId);
 
-        if (!Strings.isNullOrEmpty(apiKey)) {
-            return getClientInfoUsingApiKey(apiKey, appId);
-        }
-
         String name = request.getHeaderValue(CLUSTER_NAME_HEADER);
         String environment = request.getHeaderValue(CLUSTER_ENVIRONMENT_HEADER);
+        ClusterId clusterId = ClusterId.of(name, environment);
+
+        if (!Strings.isNullOrEmpty(apiKey)) {
+            ClientInfo clientInfoUsingApiKey = getClientInfoUsingApiKey(apiKey, appId);
+            if (!clientInfoUsingApiKey.getClusterId().equalsIgnoreCase(clusterId.getId())) {
+                logger.error(
+                        "The apiKey: {} & appId: {} has inconsistent clusterid configured in database.",
+                        apiKey,
+                        appId);
+            }
+            return clientInfoUsingApiKey;
+        }
+
         logger.error("Received a missing api key for {} {}.", name, environment);
         throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
