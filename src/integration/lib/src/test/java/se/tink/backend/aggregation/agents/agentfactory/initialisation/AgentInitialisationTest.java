@@ -142,7 +142,10 @@ public class AgentInitialisationTest {
 
     private static Stream<Provider> mapProviders(ProviderConfig config) {
         return config.getProviders().stream()
-                .filter(provider -> ProviderStatuses.ENABLED.equals(provider.getStatus()))
+                .filter(
+                        provider ->
+                                ProviderStatuses.ENABLED.equals(provider.getStatus())
+                                        || ProviderStatuses.OBSOLETE.equals(provider.getStatus()))
                 .peek(
                         provider -> {
                             provider.setMarket(config.getMarket());
