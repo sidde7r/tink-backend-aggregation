@@ -42,7 +42,7 @@ public class EnterCardAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        return null;
+        return apiClient.refreshToken(refreshToken);
     }
 
     @Override
