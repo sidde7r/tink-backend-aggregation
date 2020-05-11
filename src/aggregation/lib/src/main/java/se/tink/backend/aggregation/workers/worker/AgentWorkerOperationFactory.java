@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
-import se.tink.backend.aggregation.workers.commands.ABNAmroSpecificCase;
+import se.tink.backend.aggregation.workers.commands.AbnAmroSpecificCase;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
@@ -245,7 +245,7 @@ public class AgentWorkerOperationFactory {
             // Johannes Elgh - 2020-05-07
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
-                commands.add(new ABNAmroSpecificCase(context));
+                commands.add(new AbnAmroSpecificCase(context));
             }
 
             commands.add(
@@ -1196,7 +1196,7 @@ public class AgentWorkerOperationFactory {
             // Johannes Elgh - 2020-05-07
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
-                commands.add(new ABNAmroSpecificCase(context));
+                commands.add(new AbnAmroSpecificCase(context));
             }
 
             commands.add(
