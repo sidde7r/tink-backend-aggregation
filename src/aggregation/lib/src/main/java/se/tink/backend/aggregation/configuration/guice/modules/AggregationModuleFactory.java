@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
@@ -10,6 +11,7 @@ import se.tink.libraries.event_producer_service_client.grpc.EventProducerService
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.tracing.generic.configuration.GenericTracingModule;
 import se.tink.libraries.tracing.lib.configuration.TracingModule;
+import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class AggregationModuleFactory {
 
@@ -35,12 +37,12 @@ public class AggregationModuleFactory {
                 .add(new AggregationConfigurationModule(configuration))
                 .add(new AggregationHealthChecksModule(configuration))
                 .add(new AggregationModule(configuration, environment.jersey()))
+                .add(getQueueModule(configuration.getSqsQueueConfiguration()))
                 .add(
                         new AgentDataAvailabilityTrackerModule(
                                 configuration
                                         .getAgentsServiceConfiguration()
                                         .getAgentDataAvailabilityTrackerConfiguration()))
-                .add(new QueueModule(configuration.getSqsQueueConfiguration()))
                 .add(
                         new EventProducerServiceClientModule(
                                 configuration
@@ -49,6 +51,10 @@ public class AggregationModuleFactory {
                 // TODO: Switch to TracingModuleFactory once we've solved cross-cluster jaeger setup
                 .add(new TracingModule())
                 .add(new GenericTracingModule());
+    }
+
+    private static AbstractModule getQueueModule(SqsQueueConfiguration sqsQueueConfiguration) {
+        return sqsQueueConfiguration.isEnabled() ? new SqsQueueModule() : new FakeQueueModule();
     }
 
     private static ImmutableList.Builder<Module> buildForDevelopment(

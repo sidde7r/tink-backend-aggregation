@@ -105,7 +105,9 @@ import se.tink.libraries.metrics.prometheus.PrometheusExportServer;
 import se.tink.libraries.metrics.registry.MeterFactory;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.other.HeapDumpGauge;
+import se.tink.libraries.queue.QueueConsumer;
 import se.tink.libraries.queue.QueueProducer;
+import se.tink.libraries.queue.sqs.FakeConsumer;
 import se.tink.libraries.queue.sqs.FakeHandler;
 import se.tink.libraries.queue.sqs.FakeProducer;
 import se.tink.libraries.queue.sqs.QueueMessageAction;
@@ -270,7 +272,8 @@ public class AggregationDecoupledModule extends AbstractModule {
                 .to(AgentDataAvailabilityTrackerClientMockImpl.class)
                 .in(Scopes.SINGLETON);
 
-        // QueueModule
+        // FakeQueueModule
+        bind(QueueConsumer.class).to(FakeConsumer.class).in(Scopes.SINGLETON);
         bind(QueueProducer.class).to(FakeProducer.class).in(Scopes.SINGLETON);
         bind(QueueMessageAction.class).to(FakeHandler.class).in(Scopes.SINGLETON);
 
