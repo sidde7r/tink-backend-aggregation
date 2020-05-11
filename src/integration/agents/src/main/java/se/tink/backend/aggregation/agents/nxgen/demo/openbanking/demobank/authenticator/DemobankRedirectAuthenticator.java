@@ -39,8 +39,8 @@ public class DemobankRedirectAuthenticator implements OAuth2Authenticator {
                 .concat(Urls.OAUTH_AUTHORIZE)
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParamsValues.RESPONSE_TYPE)
                 .queryParam(QueryParams.CLIENT_ID, QueryParamsValues.CLIENT_ID)
-                .queryParam(QueryParams.REDIRECT_URI, callbackUri)
-                .queryParam(QueryParams.STATE, state);
+                .queryParam(QueryParams.STATE, state)
+                .queryParam(QueryParams.REDIRECT_URI, callbackUri);
     }
 
     @Override
