@@ -225,24 +225,7 @@ public class AgentWorkerOperationFactory {
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
 
-            // This is a special command that will only do something for nl-abnamro provider. This
-            // provider is a special provider that is only used by ABN Amro themselves to
-            // authenticate the user in GRIP app,  using ABN Amro's Internet Banking app.
-            // Not having this command causes us to throw away Transactions in the ABN
-            // Amro-specific (legacy) Connector. Once ABN Amro has migrated away from the
-            // old Connector, and use the generic one, this command can be removed.
-            // See this thread for more information:
-            // https://tink.slack.com/archives/CB12SB8DV/p1588672355268300
-            //
-            // This command needs to be after SendAccountsToUpdateServiceAgentWorkerCommand as
-            // SendAccountsToUpdateServiceAgentWorkerCommand has side effects on the AgentContext
-            // The result of this command did exist previously in the AbnAmroAgent but was
-            // accidentally remove in commit 04a559c27a4731c117372228eda95dcf211f1024.
-            // Now it is not possible to put it in the Agent anymore as the flow looks
-            // different now and as stated before, this needs to happen after accounts have
-            // been send to UpdateService.
-            //
-            // Johannes Elgh - 2020-05-07
+            /** Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
@@ -1176,24 +1159,7 @@ public class AgentWorkerOperationFactory {
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
 
-            // This is a special command that will only do something for nl-abnamro provider. This
-            // provider is a special provider that is only used by ABN Amro themselves to
-            // authenticate the user in GRIP app,  using ABN Amro's Internet Banking app.
-            // Not having this command causes us to throw away Transactions in the ABN
-            // Amro-specific (legacy) Connector. Once ABN Amro has migrated away from the
-            // old Connector, and use the generic one, this command can be removed.
-            // See this thread for more information:
-            // https://tink.slack.com/archives/CB12SB8DV/p1588672355268300
-            //
-            // This command needs to be after SendAccountsToUpdateServiceAgentWorkerCommand as
-            // SendAccountsToUpdateServiceAgentWorkerCommand has side effects on the AgentContext
-            // The result of this command did exist previously in the AbnAmroAgent but was
-            // accidentally remove in commit 04a559c27a4731c117372228eda95dcf211f1024.
-            // Now it is not possible to put it in the Agent anymore as the flow looks
-            // different now and as stated before, this needs to happen after accounts have
-            // been send to UpdateService.
-            //
-            // Johannes Elgh - 2020-05-07
+            /** Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
                 commands.add(new AbnAmroSpecificCase(context));
