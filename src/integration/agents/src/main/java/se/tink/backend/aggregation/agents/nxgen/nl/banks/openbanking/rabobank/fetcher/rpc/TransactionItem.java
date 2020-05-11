@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionItem {
@@ -178,7 +178,7 @@ public class TransactionItem {
         this.mandateId = mandateId;
     }
 
-    public Amount getTransactionAmount() {
+    public ExactCurrencyAmount getTransactionAmount() {
         return transactionAmount.getAmount();
     }
 

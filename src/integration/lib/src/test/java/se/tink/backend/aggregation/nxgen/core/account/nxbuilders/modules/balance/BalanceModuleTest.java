@@ -17,7 +17,7 @@ public class BalanceModuleTest {
 
         // Test successful build
         assertEquals(257.90, balance.getExactBalance().getDoubleValue(), 0);
-        assertFalse(balance.getExactAvaliableCredit().isPresent());
+        assertFalse(balance.getExactAvailableCredit().isPresent());
         assertFalse(balance.getInterestRate().isPresent());
     }
 

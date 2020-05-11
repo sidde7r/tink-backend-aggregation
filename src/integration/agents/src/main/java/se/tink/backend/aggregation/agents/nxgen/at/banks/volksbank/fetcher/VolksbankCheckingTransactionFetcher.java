@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
 
 public class VolksbankCheckingTransactionFetcher
@@ -58,12 +58,11 @@ public class VolksbankCheckingTransactionFetcher
             Transaction transaction =
                     Transaction.builder()
                             .setAmount(
-                                    new Amount(
-                                            matcher.group(VolksbankConstants.REGEX_GROUP.CURRENCY),
+                                    ExactCurrencyAmount.of(
                                             StringUtils.parseAmount(
                                                     matcher.group(
-                                                            VolksbankConstants.REGEX_GROUP
-                                                                    .AMOUNT))))
+                                                            VolksbankConstants.REGEX_GROUP.AMOUNT)),
+                                            matcher.group(VolksbankConstants.REGEX_GROUP.CURRENCY)))
                             .setDate(
                                     matcher.group(VolksbankConstants.REGEX_GROUP.DATE),
                                     DATE_FORMATTER)

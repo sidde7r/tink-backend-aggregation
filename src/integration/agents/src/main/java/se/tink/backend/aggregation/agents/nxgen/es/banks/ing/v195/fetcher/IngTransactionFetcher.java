@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class IngTransactionFetcher implements TransactionMonthPaginator {
 
@@ -59,8 +59,8 @@ public class IngTransactionFetcher implements TransactionMonthPaginator {
         Transaction.Builder builder = new Transaction.Builder();
 
         builder.setAmount(
-                        new Amount(
-                                account.getExactBalance().getCurrencyCode(), element.getAmount()))
+                        ExactCurrencyAmount.of(
+                                element.getAmount(), account.getExactBalance().getCurrencyCode()))
                 .setDate(LocalDate.parse(element.getEffectiveDate(), IngUtils.DATE_FORMATTER))
                 .setDescription(element.getDescription())
                 .setPending(false);

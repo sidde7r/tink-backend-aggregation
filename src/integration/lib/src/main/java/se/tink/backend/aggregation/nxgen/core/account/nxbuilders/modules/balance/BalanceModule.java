@@ -45,7 +45,7 @@ public final class BalanceModule {
                 .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()));
     }
 
-    public Optional<ExactCurrencyAmount> getExactAvaliableCredit() {
+    public Optional<ExactCurrencyAmount> getExactAvailableCredit() {
         return Optional.ofNullable(this.exactAvailableCredit);
     }
 
@@ -69,16 +69,6 @@ public final class BalanceModule {
         public BalanceBuilderStep setInterestRate(double interestRate) {
             Preconditions.checkArgument(interestRate >= 0, "Interest rate must not be negative.");
             this.interestRate = interestRate;
-            return this;
-        }
-
-        @Deprecated
-        @Override
-        public BalanceBuilderStep setAvailableCredit(@Nonnull Amount availableCredit) {
-            Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
-            this.exactAvailableCredit =
-                    ExactCurrencyAmount.of(
-                            availableCredit.toBigDecimal(), availableCredit.getCurrency());
             return this;
         }
 

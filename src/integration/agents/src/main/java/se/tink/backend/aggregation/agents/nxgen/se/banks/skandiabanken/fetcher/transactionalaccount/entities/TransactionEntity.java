@@ -11,7 +11,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -57,7 +57,7 @@ public class TransactionEntity {
     @JsonIgnore
     public Transaction toTinkTransaction(boolean isPending) {
         return Transaction.builder()
-                .setAmount(new Amount(SkandiaBankenConstants.CURRENCY, amount))
+                .setAmount(ExactCurrencyAmount.of(amount, SkandiaBankenConstants.CURRENCY))
                 .setDate(getDate())
                 .setDescription(getNote())
                 .setPending(isPending)

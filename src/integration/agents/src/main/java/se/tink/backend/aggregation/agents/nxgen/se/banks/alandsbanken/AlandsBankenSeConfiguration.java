@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
@@ -83,7 +82,8 @@ public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
     @Override
     public Transaction parseTinkTransaction(CrossKeyTransaction transaction) {
         return Transaction.builder()
-                .setAmount(new Amount(transaction.getCurrency(), transaction.getAmount()))
+                .setAmount(
+                        ExactCurrencyAmount.of(transaction.getAmount(), transaction.getCurrency()))
                 .setDescription(createDescription(transaction))
                 .setDate(transaction.getDueDate())
                 .build();

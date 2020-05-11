@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionAmountEntity {
@@ -18,8 +18,8 @@ public class TransactionAmountEntity {
     private String valueDate;
 
     @JsonIgnore
-    public Amount getTinkAmount() {
-        return new Amount(currency, amount);
+    public ExactCurrencyAmount getTinkAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
     }
 
     public String getCurrency() {

@@ -60,7 +60,7 @@ public abstract class Account {
         this(
                 builder,
                 balanceModule.getExactBalance(),
-                balanceModule.getExactAvaliableCredit().orElse(null));
+                balanceModule.getExactAvailableCredit().orElse(null));
         this.exactAvailableBalance = balanceModule.getExactAvailableBalance();
         this.exactCreditLimit = balanceModule.getExactCreditLimit();
     }

@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
@@ -93,8 +93,8 @@ public class UpcomingPaymentEntity {
     }
 
     @JsonIgnore
-    private Amount getAmount() {
-        return Amount.inSEK(amount).negate();
+    private ExactCurrencyAmount getAmount() {
+        return ExactCurrencyAmount.inSEK(amount).negate();
     }
 
     @JsonIgnore
