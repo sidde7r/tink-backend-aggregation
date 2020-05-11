@@ -107,7 +107,7 @@ public class SBABTransferExecutor {
     private void confirmTransfer(TransferRequest finaliseTransferRequest) {
         TransferEntity confirmedTransfer = transferClient.confirmTransfer(finaliseTransferRequest);
 
-        if (!confirmedTransfer.hasPendingStatus()) {
+        if (!confirmedTransfer.hasSuccessStatus()) {
 
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(catalog.getString(EndUserMessage.TRANSFER_CONFIRM_FAILED))

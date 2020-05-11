@@ -22,6 +22,8 @@ public class SBABConstants {
 
     public static class TransferStatus {
         public static final String PENDING = "PENDING";
+        public static final String COMPLETE = "COMPLETE";
+        public static final String UNKNOWN = "UNKNOWN";
     }
 
     public static class ErrorCode {
