@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.tran
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionsResponse implements PaginatorResponse {
@@ -36,10 +36,10 @@ public class TransactionsResponse implements PaginatorResponse {
                 continue;
             }
 
-            final Amount balance =
-                    new Amount(
-                            transaction.getBalance().getCurrency(),
-                            transaction.getBalance().getAmount());
+            final ExactCurrencyAmount balance =
+                    ExactCurrencyAmount.of(
+                            transaction.getBalance().getAmount(),
+                            transaction.getBalance().getCurrency());
 
             final Transaction t =
                     Transaction.builder()

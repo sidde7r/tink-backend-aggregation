@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 /*
@@ -30,7 +30,7 @@ public class PurchaseHistoryGenerator {
     private final List<GeneratePurchaseBase> generatePurchaseBase;
     private final Random randomGenerator;
     private final DemoFileHandler demoFileHandler;
-    private static final int AVEREAGE_PURCHASES_PER_DAY = 3;
+    private static final int AVERAGE_PURCHASES_PER_DAY = 3;
 
     // TODO: Should be persisted between refreshes. Store on disk is not an alternative
     public PurchaseHistoryGenerator(String basePath) {
@@ -42,7 +42,7 @@ public class PurchaseHistoryGenerator {
     private double randomisePurchase(GeneratePurchaseBase base, String currency) {
         double finalPrice = 0;
         for (Double price : base.getItemPrices()) {
-            finalPrice += (randomGenerator.nextInt(AVEREAGE_PURCHASES_PER_DAY) + 1) * -price;
+            finalPrice += (randomGenerator.nextInt(AVERAGE_PURCHASES_PER_DAY) + 1) * -price;
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
@@ -57,14 +57,14 @@ public class PurchaseHistoryGenerator {
         return Transaction.builder()
                 .setPending(false)
                 .setDescription(base.getCompany())
-                .setAmount(new Amount(currency, finalPrice))
+                .setAmount(ExactCurrencyAmount.of(finalPrice, currency))
                 .setDate(dateCursor)
                 .build();
     }
 
     private Collection<Transaction> generateOneDayOfTransactions(
             LocalDate dateCursor, String currency) {
-        ArrayList<Transaction> transactions = new ArrayList();
+        List<Transaction> transactions = new ArrayList<>();
         // Between one and 4 purchases per day.
         for (int i = 0; i < randomGenerator.nextInt(3) + 1; i++) {
             GeneratePurchaseBase base =
@@ -78,7 +78,7 @@ public class PurchaseHistoryGenerator {
     public PaginatorResponse generateTransactions(Date from, Date to, String currency) {
         LocalDate start = from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate end = to.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        ArrayList<Transaction> transactions = new ArrayList();
+        List<Transaction> transactions = new ArrayList<>();
 
         if (Duration.between(end.atStartOfDay(), start.atStartOfDay()).toDays() == 0
                 || Duration.between(end.atStartOfDay(), start.atStartOfDay()).toDays() == 1) {
@@ -92,35 +92,30 @@ public class PurchaseHistoryGenerator {
             transactions.addAll(generateOneDayOfTransactions(dateCursor, currency));
         }
 
-        transactions.addAll(addMontlyRecurringCost(from, to, "Netflix", -9.99));
-        transactions.addAll(addMontlyRecurringCost(from, to, "Spotify", -9.99));
-        transactions.addAll(addMontlyRecurringCost(from, to, "Gym Membership", -45.99));
-        transactions.addAll(addMontlyRecurringCost(from, to, "Test Transfer Erste Bank", -100));
-        transactions.addAll(addMontlyRecurringCost(from, to, "Test Transfer Easy Bank", -50));
-        transactions.addAll(addMontlyRecurringCost(from, to, "Salary", 3500));
+        transactions.addAll(addMonthlyRecurringCost(from, to, "Netflix", -9.99));
+        transactions.addAll(addMonthlyRecurringCost(from, to, "Spotify", -9.99));
+        transactions.addAll(addMonthlyRecurringCost(from, to, "Gym Membership", -45.99));
+        transactions.addAll(addMonthlyRecurringCost(from, to, "Test Transfer Erste Bank", -100));
+        transactions.addAll(addMonthlyRecurringCost(from, to, "Test Transfer Easy Bank", -50));
+        transactions.addAll(addMonthlyRecurringCost(from, to, "Salary", 3500));
 
         return PaginatorResponseImpl.create(transactions, false);
     }
 
-    private List<Transaction> addMontlyRecurringCost(
+    private List<Transaction> addMonthlyRecurringCost(
             Date from, Date to, String name, double amount) {
         String currency = "EUR";
         int numberOfMonths = (int) DateUtils.getNumberOfMonthsBetween(from, to);
-        List<Transaction> transactions =
-                IntStream.range(0, numberOfMonths)
-                        .mapToObj(
-                                i ->
-                                        Transaction.builder()
-                                                .setAmount(new Amount(currency, amount))
-                                                .setPending(false)
-                                                .setDescription(name)
-                                                .setDate(
-                                                        DateUtils.addMonths(
-                                                                DateUtils.getToday(), -i))
-                                                .build())
-                        .collect(toList());
-
-        return transactions;
+        return IntStream.range(0, numberOfMonths)
+                .mapToObj(
+                        i ->
+                                Transaction.builder()
+                                        .setAmount(ExactCurrencyAmount.of(amount, currency))
+                                        .setPending(false)
+                                        .setDescription(name)
+                                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -i))
+                                        .build())
+                .collect(toList());
     }
 
     // TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the
@@ -134,12 +129,12 @@ public class PurchaseHistoryGenerator {
                                 i ->
                                         Transaction.builder()
                                                 .setAmount(
-                                                        new Amount(
-                                                                account.getExactBalance()
-                                                                        .getCurrencyCode(),
+                                                        ExactCurrencyAmount.of(
                                                                 account.getExactBalance()
                                                                                 .getDoubleValue()
-                                                                        / 36))
+                                                                        / 36,
+                                                                account.getExactBalance()
+                                                                        .getCurrencyCode()))
                                                 .setPending(false)
                                                 .setDescription("monthly savings")
                                                 .setDate(

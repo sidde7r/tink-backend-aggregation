@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.RaiffeisenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PendingEntity {
@@ -106,9 +106,9 @@ public class PendingEntity {
         return true;
     }
 
-    private Amount toTinkAmount() {
-        return new Amount(
-                transactionAmount.getCurrency(), transactionAmount.getAmount(isNegative()));
+    private ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(
+                transactionAmount.getAmount(isNegative()), transactionAmount.getCurrency());
     }
 
     private Date toTinkDate() {

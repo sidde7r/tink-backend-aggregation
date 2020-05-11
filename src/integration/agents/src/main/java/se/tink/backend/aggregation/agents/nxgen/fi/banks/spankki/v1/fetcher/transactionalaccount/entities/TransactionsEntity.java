@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionsEntity {
@@ -31,7 +31,7 @@ public class TransactionsEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(new Amount(currency, amount))
+                .setAmount(ExactCurrencyAmount.of(amount, currency))
                 .setDate(bookingDate)
                 .setDescription(recieverName)
                 .build();

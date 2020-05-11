@@ -6,7 +6,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
@@ -38,7 +38,7 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(new Amount(NordeaFIConstants.CURRENCY, amount))
+                .setAmount(ExactCurrencyAmount.of(amount, NordeaFIConstants.CURRENCY))
                 .setPending(!booked)
                 .setDescription(String.format("%s", title))
                 .setDate(getDate())

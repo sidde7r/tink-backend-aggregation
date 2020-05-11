@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
@@ -53,14 +52,14 @@ public class PurchaseHistoryGenerator {
         return Transaction.builder()
                 .setPending(false)
                 .setDescription(base.getCompany())
-                .setAmount(new Amount(currency, finalPrice))
+                .setAmount(ExactCurrencyAmount.of(finalPrice, currency))
                 .setDate(dateCursor)
                 .build();
     }
 
     private Collection<Transaction> generateOneDayOfTransactions(
             LocalDate dateCursor, String currency) {
-        ArrayList<Transaction> transactions = new ArrayList();
+        List<Transaction> transactions = new ArrayList<>();
         // Between one and 4 purchases per day.
         for (int i = 0; i < randomGenerator.nextInt(3) + 1; i++) {
             GeneratePurchaseBase base =
@@ -74,7 +73,7 @@ public class PurchaseHistoryGenerator {
     public PaginatorResponse generateTransactions(Date from, Date to, String currency) {
         LocalDate start = from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate end = to.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        ArrayList<Transaction> transactions = new ArrayList();
+        List<Transaction> transactions = new ArrayList<>();
 
         if (Duration.between(end.atStartOfDay(), start.atStartOfDay()).toDays() == 0
                 || Duration.between(end.atStartOfDay(), start.atStartOfDay()).toDays() == 1) {
@@ -107,12 +106,12 @@ public class PurchaseHistoryGenerator {
                                 i ->
                                         Transaction.builder()
                                                 .setAmount(
-                                                        new Amount(
-                                                                account.getExactBalance()
-                                                                        .getCurrencyCode(),
+                                                        ExactCurrencyAmount.of(
                                                                 account.getExactBalance()
                                                                                 .getDoubleValue()
-                                                                        / 36))
+                                                                        / 36,
+                                                                account.getExactBalance()
+                                                                        .getCurrencyCode()))
                                                 .setPending(false)
                                                 .setDescription("monthly savings")
                                                 .setDate(

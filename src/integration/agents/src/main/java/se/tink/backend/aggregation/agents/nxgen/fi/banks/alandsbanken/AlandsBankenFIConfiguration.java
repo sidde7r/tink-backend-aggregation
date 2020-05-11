@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.FiIdentityData;
@@ -77,7 +76,8 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
     public Transaction parseTinkTransaction(CrossKeyTransaction transaction) {
         logIncomingTransaction(transaction);
         return Transaction.builder()
-                .setAmount(new Amount(transaction.getCurrency(), transaction.getAmount()))
+                .setAmount(
+                        ExactCurrencyAmount.of(transaction.getAmount(), transaction.getCurrency()))
                 .setDescription(createDescription(transaction))
                 .setDate(transaction.getBookingDate())
                 .build();
