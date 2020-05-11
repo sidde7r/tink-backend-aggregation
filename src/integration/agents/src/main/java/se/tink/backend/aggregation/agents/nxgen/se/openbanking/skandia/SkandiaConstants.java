@@ -25,6 +25,10 @@ public final class SkandiaConstants {
         public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
+    public static class ErrorCodes {
+        public static final String INVALID_GRANT = "invalid_grant";
+    }
+
     public static class Urls {
         public static final String BASE_OAUTH = "https://fsts.skandia.se/as";
         public static final String BASE_URL = "https://apis.skandia.se/open-banking/core-bank";
