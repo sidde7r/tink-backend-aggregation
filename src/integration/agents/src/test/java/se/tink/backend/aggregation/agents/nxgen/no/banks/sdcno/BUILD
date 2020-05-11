@@ -4,7 +4,7 @@ junit_test(
     name = "sdc-unit-tests",
     srcs = glob(
         ["**/*.java"],
-        exclude = ["SdcNoAgentTest.java"],
+        exclude = ["agents/*"],
     ),
     visibility = ["//visibility:public"],
     deps = [
@@ -29,7 +29,7 @@ junit_test(
 
 junit_test(
     name = "sdc-agent-runner",
-    srcs = glob(["SdcNoAgentTest.java"]),
+    srcs = glob(["agents/*"]),
     data = [
         "//data:aggregation_test",
         "//data:cryptography_test",

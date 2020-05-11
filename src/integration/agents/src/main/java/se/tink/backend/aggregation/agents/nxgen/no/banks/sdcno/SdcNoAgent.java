@@ -8,6 +8,9 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.authenticator.SdcNoBankIdSSAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.config.SdcNoConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.account.SdcNoAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.account.SdcNoTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.account.SdcNoTransactionParser;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -17,8 +20,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SdcNoAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
-    private final SdcNoConfiguration configuration;
-    private final SdcNoApiClient bankClient;
+    protected final SdcNoConfiguration configuration;
+    protected final SdcNoApiClient bankClient;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.fetcher.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
