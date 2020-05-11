@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.workers.commands.ABNAmroSpecificCase;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
@@ -222,6 +224,30 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
+
+            // This is a special command that will only do something for nl-abnamro provider. This
+            // provider is a special provider that is only used by ABN Amro themselves to
+            // authenticate the user in GRIP app,  using ABN Amro's Internet Banking app.
+            // Not having this command causes us to throw away Transactions in the ABN
+            // Amro-specific (legacy) Connector. Once ABN Amro has migrated away from the
+            // old Connector, and use the generic one, this command can be removed.
+            // See this thread for more information:
+            // https://tink.slack.com/archives/CB12SB8DV/p1588672355268300
+            //
+            // This command needs to be after SendAccountsToUpdateServiceAgentWorkerCommand as
+            // SendAccountsToUpdateServiceAgentWorkerCommand has side effects on the AgentContext
+            // The result of this command did exist previously in the AbnAmroAgent but was
+            // accidentally remove in commit 04a559c27a4731c117372228eda95dcf211f1024.
+            // Now it is not possible to put it in the Agent anymore as the flow looks
+            // different now and as stated before, this needs to happen after accounts have
+            // been send to UpdateService.
+            //
+            // Johannes Elgh - 2020-05-07
+            if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
+                    && Objects.equals("nl-abnamro", request.getProvider().getName())) {
+                commands.add(new ABNAmroSpecificCase(context));
+            }
+
             commands.add(
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
@@ -1149,6 +1175,30 @@ public class AgentWorkerOperationFactory {
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
+
+            // This is a special command that will only do something for nl-abnamro provider. This
+            // provider is a special provider that is only used by ABN Amro themselves to
+            // authenticate the user in GRIP app,  using ABN Amro's Internet Banking app.
+            // Not having this command causes us to throw away Transactions in the ABN
+            // Amro-specific (legacy) Connector. Once ABN Amro has migrated away from the
+            // old Connector, and use the generic one, this command can be removed.
+            // See this thread for more information:
+            // https://tink.slack.com/archives/CB12SB8DV/p1588672355268300
+            //
+            // This command needs to be after SendAccountsToUpdateServiceAgentWorkerCommand as
+            // SendAccountsToUpdateServiceAgentWorkerCommand has side effects on the AgentContext
+            // The result of this command did exist previously in the AbnAmroAgent but was
+            // accidentally remove in commit 04a559c27a4731c117372228eda95dcf211f1024.
+            // Now it is not possible to put it in the Agent anymore as the flow looks
+            // different now and as stated before, this needs to happen after accounts have
+            // been send to UpdateService.
+            //
+            // Johannes Elgh - 2020-05-07
+            if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
+                    && Objects.equals("nl-abnamro", request.getProvider().getName())) {
+                commands.add(new ABNAmroSpecificCase(context));
+            }
+
             commands.add(
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
                             context,
