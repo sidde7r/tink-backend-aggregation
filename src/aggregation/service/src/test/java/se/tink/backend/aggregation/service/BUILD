@@ -4,8 +4,7 @@ junit_test(
     name = "service",
     srcs = glob(["*.java"]),
     data = [
-        "//data/agents/uk/amex",
-        "//data/agents/uk/barclays",
+        "//data:agents",
     ],
     tags = [
         "external",
