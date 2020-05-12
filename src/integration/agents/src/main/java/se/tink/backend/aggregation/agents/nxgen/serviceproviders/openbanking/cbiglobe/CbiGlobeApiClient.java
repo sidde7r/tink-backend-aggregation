@@ -55,21 +55,6 @@ public class CbiGlobeApiClient {
     public CbiGlobeApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            boolean requestManual,
-            TemporaryStorage temporaryStorage,
-            InstrumentType instrumentType) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.sessionStorage =
-                null; // todo - few Agent dont dont pass sessionStorage. Fix this in other PR
-        this.requestManual = requestManual;
-        this.temporaryStorage = temporaryStorage;
-        this.instrumentType = instrumentType;
-    }
-
-    public CbiGlobeApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage,
