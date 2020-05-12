@@ -6,6 +6,7 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//third_party:com_codahale_metrics_metrics_healthchecks",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_jersey",

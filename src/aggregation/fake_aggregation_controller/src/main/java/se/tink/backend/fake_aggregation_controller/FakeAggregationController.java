@@ -1,5 +1,6 @@
 package se.tink.backend.fake_aggregation_controller;
 
+import com.codahale.metrics.health.HealthCheck;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
@@ -45,7 +46,18 @@ public class FakeAggregationController extends Application<Configuration> {
     public void initialize(Bootstrap<Configuration> b) {}
 
     @Override
-    public void run(Configuration c, Environment e) throws Exception {
+    public void run(Configuration c, Environment e) {
+        // Add a dummy health check to avoid an annoying warning on startup.
+        e.healthChecks()
+                .register(
+                        "cache",
+                        new HealthCheck() {
+                            @Override
+                            protected Result check() {
+                                return Result.healthy();
+                            }
+                        });
+
         e.jersey().register(new DataController());
         e.jersey().register(new ResetController());
         e.jersey().register(new PingController());
