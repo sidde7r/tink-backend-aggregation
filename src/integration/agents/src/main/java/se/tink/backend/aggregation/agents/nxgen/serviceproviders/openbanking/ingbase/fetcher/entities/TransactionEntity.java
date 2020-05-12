@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Stream;
+import org.apache.commons.lang.StringUtils;
+import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -44,8 +46,6 @@ public class TransactionEntity {
 
     private Transaction toTinkTransaction(boolean isPending) {
 
-        final String description = toTinkDescription();
-
         Date executionDate = null;
         if (!Strings.isNullOrEmpty(executionDateTime)) {
             try {
@@ -70,7 +70,7 @@ public class TransactionEntity {
 
         return Transaction.builder()
                 .setPending(isPending)
-                .setDescription(description)
+                .setDescription(toTinkDescription())
                 .setAmount(transactionAmount.toAmount())
                 .setDate(date)
                 .setPayload(TransactionPayloadTypes.DETAILS, transactionType)
@@ -79,7 +79,7 @@ public class TransactionEntity {
                 .setPayload(
                         TransactionPayloadTypes.TRANSFER_ACCOUNT_NAME_EXTERNAL,
                         getCounterPartyName())
-                .setPayload(TransactionPayloadTypes.MESSAGE, toTinkDescription())
+                .setPayload(TransactionPayloadTypes.MESSAGE, getRemittanceInformationUnstructured())
                 .build();
     }
 
@@ -101,19 +101,26 @@ public class TransactionEntity {
     }
 
     public String toTinkDescription() {
-        return Stream.of(remittanceInformationUnstructured, creditorName, debtorName)
-                .filter(Objects::nonNull)
+
+        return Stream.of(getRemittanceInformationUnstructured(), creditorName, debtorName)
+                .filter(StringUtils::isNotBlank)
                 .findFirst()
                 .orElse(
                         Stream.of(creditorAccount, debtorAccount)
                                 .filter(Objects::nonNull)
                                 .findFirst()
                                 .map(TransactionAccountEntity::getIban)
-                                .orElse(""))
-                .replace("|", "\n");
+                                .orElse(""));
+    }
+
+    @VisibleForTesting
+    public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
+        this.remittanceInformationUnstructured = remittanceInformationUnstructured;
     }
 
     public String getRemittanceInformationUnstructured() {
-        return remittanceInformationUnstructured;
+        return remittanceInformationUnstructured == null
+                ? ""
+                : remittanceInformationUnstructured.replace("<br>", "\n");
     }
 }
