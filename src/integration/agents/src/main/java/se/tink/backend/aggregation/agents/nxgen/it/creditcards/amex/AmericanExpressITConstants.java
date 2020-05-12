@@ -11,9 +11,9 @@ public final class AmericanExpressITConstants {
 
     public static class HeaderValues {
         public static final String APP_ID = "it.co.americanexpress.amexservice";
-        public static final String USER_AGENT = "Amex%20IT/12 CFNetwork/978.0.7 Darwin/18.7.0";
+        public static final String USER_AGENT = "Amex%20IT/24 CFNetwork/1121.2.2 Darwin/19.3.0";
         public static final String LOCALE = "it_IT";
-        public static final String APP_VERSION = "6.24.0";
+        public static final String APP_VERSION = "6.30.0";
         public static final String GIT_SHA = "3c9712664";
     }
 }

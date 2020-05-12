@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import java.util.Date;
 import java.util.UUID;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.ConstantValueHeaders;
@@ -26,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmericanExpressV62ApiClient {
 
@@ -49,11 +49,15 @@ public class AmericanExpressV62ApiClient {
     }
 
     protected RequestBuilder createRequest(String uri) {
-        URL url = new URL(AmericanExpressV62Constants.BASE_API + uri);
-        RequestBuilder requestBuilder =
+        final URL url = new URL(AmericanExpressV62Constants.BASE_API + uri);
+        final String date =
+                ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITHOUT_TIMEZONE.format(new Date());
+
+        final RequestBuilder requestBuilder =
                 client.request(url)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .type(MediaType.APPLICATION_JSON)
+                        .header(ConstantValueHeaders.ACCEPT_JSON)
+                        .header(ConstantValueHeaders.CONTENT_TYPE_JSON)
+                        .header(ConstantValueHeaders.AUTHORITY)
                         .header(ConstantValueHeaders.CLIENT_TYPE)
                         .header(ConstantValueHeaders.CHARSET)
                         .header(ConstantValueHeaders.DEVICE_MODEL)
@@ -64,7 +68,7 @@ public class AmericanExpressV62ApiClient {
                         .header(ConstantValueHeaders.TIMEZONE_OFFSET)
                         .header(ConstantValueHeaders.ACCEPT_ENCODING)
                         .header(ConstantValueHeaders.ACCEPT_LANGUAGE)
-                        .header(HttpHeaders.USER_AGENT, config.getUserAgent())
+                        .header(Headers.USER_AGENT, config.getUserAgent())
                         .header(Headers.REQUEST_ID, UUID.randomUUID().toString().toUpperCase())
                         .header(
                                 Headers.INSTALLATION_ID,
@@ -77,7 +81,8 @@ public class AmericanExpressV62ApiClient {
                                         Tags.PUBLIC_GUID, HeadersValue.UNAVAILABLE))
                         .header(Headers.APP_ID, config.getAppId())
                         .header(Headers.APP_VERSION, config.getAppVersion())
-                        .header(Headers.LOCALE, config.getLocale());
+                        .header(Headers.LOCALE, config.getLocale())
+                        .header(Headers.DEVICE_TIME, date);
 
         if (config.getGitSha() != null) {
             requestBuilder.header(Headers.GIT_SHA, config.getGitSha());
