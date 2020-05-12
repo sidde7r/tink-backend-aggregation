@@ -14,6 +14,8 @@ public class DemobankAgentRedirectAuthenticationTest {
                 new AgentIntegrationTest.Builder("uk", "uk-demobank-open-banking-redirect")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
+                        .setRedirectUrl(
+                                "https://127.0.0.1:7357/api/v1/credentials/third-party/callback")
                         .expectLoggedIn(false);
     }
 
