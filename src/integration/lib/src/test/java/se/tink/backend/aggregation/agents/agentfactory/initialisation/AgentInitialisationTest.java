@@ -83,7 +83,7 @@ public class AgentInitialisationTest {
     private static final String TEST_CLUSTER_ID = "testCluster-DummyId";
 
     private static final String CREDENTIALS_OBJECT_TEMPLATE =
-            "{\"debugUntil\":695260800,\"providerLatency\":0,\"id\":\"refresh-test\",\"nextUpdate\":null,\"fields\":{},\"payload\":\"\",\"providerName\":\"%s\",\"sessionExpiryDate\":null,\"status\":\"CREATED\",\"statusPayload\":\"CREATED\",\"statusPrompt\":\"\",\"statusUpdated\":\"695260800\",\"supplementalInformation\":\"\",\"type\":\"PASSWORD\",\"updated\":\"695260800\",\"userId\":\"userId\",\"dataVersion\":1}";
+            "{\"fields\":{\"username\":\"username\"},\"debugUntil\":695260800,\"providerLatency\":0,\"id\":\"refresh-test\",\"nextUpdate\":null,\"payload\":\"\",\"providerName\":\"%s\",\"sessionExpiryDate\":null,\"status\":\"CREATED\",\"statusPayload\":\"CREATED\",\"statusPrompt\":\"\",\"statusUpdated\":\"695260800\",\"supplementalInformation\":\"\",\"type\":\"PASSWORD\",\"updated\":\"695260800\",\"userId\":\"userId\",\"dataVersion\":1}";
 
     private static final String USER_OBJECT_TEMPLATE =
             "{\"flags\": [], \"flagsSerialized\": \"[]\", \"id\": \"userId\", \"profile\": {\"locale\": \"en_US\"}, \"username\": \"username\", \"debugUntil\": 695260800 }";
@@ -96,28 +96,19 @@ public class AgentInitialisationTest {
     private static Injector injector;
     private static AgentFactory agentFactory;
 
-    // These agents are temporarily ignored because these agents fail in the test
-    // these agents will be investigated further
+    /*
+       These agents are temporarily ignored because these agents fail in the test,
+       here are the reasons:
+
+       NordeaPartnerXXAgent: We need to create our own test JKS files otherwise we cannot cover them in test
+    */
+
     private static ImmutableSet<String> temporarilyIgnoredAgents =
             ImmutableSet.of(
-                    "nxgen.it.openbanking.bancasella.BancaSellaAgent",
-                    "nxgen.nl.openbanking.knab.KnabAgent",
-                    "nxgen.de.openbanking.fiducia.FiduciaAgent",
-                    "nxgen.serviceproviders.openbanking.redsys.RedsysAgent",
-                    "nxgen.de.banks.fints.FinTsAgent",
-                    "nxgen.de.openbanking.fidor.FidorAgent",
-                    "nxgen.nl.banks.openbanking.rabobank.RabobankAgent",
-                    "banks.danskebank.v2.DanskeBankV2Agent",
-                    "abnamro.AbnAmroAgent",
-                    "nxgen.se.openbanking.alandsbanken.AlandsbankenAgent",
-                    "nxgen.serviceproviders.banks.n26.N26Agent",
-                    "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent",
-                    "nxgen.dk.openbanking.sebkort.eurocard.EurocardDKAgent",
                     "nxgen.se.banks.nordea.partner.NordeaPartnerSeAgent",
                     "nxgen.dk.banks.nordeapartner.NordeaPartnerDkAgent",
                     "nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent",
-                    "nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent",
-                    "nxgen.de.openbanking.postbank.PostbankAgent");
+                    "nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent");
 
     private static AggregationServiceConfiguration readConfiguration(String filePath)
             throws IOException, ConfigurationException {
@@ -146,7 +137,10 @@ public class AgentInitialisationTest {
 
     private static Stream<Provider> mapProviders(ProviderConfig config) {
         return config.getProviders().stream()
-                .filter(provider -> ProviderStatuses.ENABLED.equals(provider.getStatus()))
+                .filter(
+                        provider ->
+                                ProviderStatuses.ENABLED.equals(provider.getStatus())
+                                        || ProviderStatuses.OBSOLETE.equals(provider.getStatus()))
                 .peek(
                         provider -> {
                             provider.setMarket(config.getMarket());
@@ -225,6 +219,10 @@ public class AgentInitialisationTest {
                 MAPPER.readValue(
                         String.format(CREDENTIALS_OBJECT_TEMPLATE, provider.getName()),
                         Credentials.class);
+
+        // This is to populate serializedFields field of Credentials object (which is normally done
+        // by Main)
+        credentials.setFields(credentials.getFields());
 
         return new ManualAuthenticateRequest(user, provider, credentials, true);
     }
