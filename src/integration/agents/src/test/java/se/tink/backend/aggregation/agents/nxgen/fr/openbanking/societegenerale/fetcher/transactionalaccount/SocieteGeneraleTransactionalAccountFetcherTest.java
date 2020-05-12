@@ -16,47 +16,34 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.entities.AccountsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SocieteGeneraleTransactionalAccountFetcherTest {
 
     private SocieteGeneraleApiClient apiClient;
-    private SocieteGeneraleConfiguration configuration;
     private SessionStorage sessionStorage;
     private SignatureHeaderProvider signatureHeaderProvider;
-    private EndUserIdentityResponse user;
     private AccountsResponse accountsResponse;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private EidasIdentity eidasIdentity;
-    String signature = "signature";
-    String token = "token";
-    String connectedPsu = "connectedPsu";
 
     @Before
     public void init() {
         apiClient = mock(SocieteGeneraleApiClient.class);
-        configuration = mock(SocieteGeneraleConfiguration.class);
         sessionStorage = mock(SessionStorage.class);
         signatureHeaderProvider = mock(SignatureHeaderProvider.class);
-        user = mock(EndUserIdentityResponse.class);
+        final EndUserIdentityResponse user = mock(EndUserIdentityResponse.class);
         accountsResponse = mock(AccountsResponse.class);
-        eidasProxyConfiguration = mock(EidasProxyConfiguration.class);
-        eidasIdentity = mock(EidasIdentity.class);
 
-        when(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.TOKEN)).thenReturn(token);
-        when(signatureHeaderProvider.buildSignatureHeader(
-                        any(), any(), anyString(), anyString(), any()))
-                .thenReturn(signature);
+        when(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.TOKEN)).thenReturn("token");
+
+        when(signatureHeaderProvider.buildSignatureHeader(anyString(), anyString()))
+                .thenReturn("signature");
         when(apiClient.getEndUserIdentity(anyString(), anyString())).thenReturn(user);
-        when(user.getConnectedPsu()).thenReturn(connectedPsu);
+        when(user.getConnectedPsu()).thenReturn("connectedPsu");
     }
 
     @Test
@@ -75,12 +62,7 @@ public class SocieteGeneraleTransactionalAccountFetcherTest {
 
         SocieteGeneraleTransactionalAccountFetcher societeGeneraleTransactionalAccountFetcher =
                 new SocieteGeneraleTransactionalAccountFetcher(
-                        apiClient,
-                        configuration,
-                        sessionStorage,
-                        signatureHeaderProvider,
-                        eidasProxyConfiguration,
-                        eidasIdentity);
+                        apiClient, sessionStorage, signatureHeaderProvider);
 
         // when
         Collection<TransactionalAccount> accounts =
@@ -98,12 +80,7 @@ public class SocieteGeneraleTransactionalAccountFetcherTest {
         when(apiClient.fetchAccounts(anyString(), anyString())).thenReturn(null);
         SocieteGeneraleTransactionalAccountFetcher societeGeneraleTransactionalAccountFetcher =
                 new SocieteGeneraleTransactionalAccountFetcher(
-                        apiClient,
-                        configuration,
-                        sessionStorage,
-                        signatureHeaderProvider,
-                        eidasProxyConfiguration,
-                        eidasIdentity);
+                        apiClient, sessionStorage, signatureHeaderProvider);
 
         // when
         Collection<TransactionalAccount> accounts =

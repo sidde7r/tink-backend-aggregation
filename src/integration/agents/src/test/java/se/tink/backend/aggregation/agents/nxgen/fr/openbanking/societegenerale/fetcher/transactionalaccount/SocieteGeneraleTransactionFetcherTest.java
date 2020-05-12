@@ -10,11 +10,8 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -26,8 +23,7 @@ public class SocieteGeneraleTransactionFetcherTest {
     public void shouldGetTransactions() {
         // given
         SocieteGeneraleApiClient apiClient = mock(SocieteGeneraleApiClient.class);
-        SocieteGeneraleConfiguration societeGeneraleConfiguration =
-                mock(SocieteGeneraleConfiguration.class);
+
         SessionStorage sessionStorage = mock(SessionStorage.class);
         SignatureHeaderProvider signatureHeaderProvider = mock(SignatureHeaderProvider.class);
         TransactionalAccount account = mock(TransactionalAccount.class);
@@ -36,11 +32,8 @@ public class SocieteGeneraleTransactionFetcherTest {
         String token = "token";
         String apiIdentifier = "apiIdentifier";
         TransactionsResponse transactionsResponse = mock(TransactionsResponse.class);
-        EidasProxyConfiguration eidasProxyConfiguration = mock(EidasProxyConfiguration.class);
-        EidasIdentity eidasIdentity = mock(EidasIdentity.class);
 
-        when(signatureHeaderProvider.buildSignatureHeader(
-                        any(), any(), anyString(), anyString(), any()))
+        when(signatureHeaderProvider.buildSignatureHeader(anyString(), anyString()))
                 .thenReturn(signature);
         when(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.TOKEN)).thenReturn(token);
         when(account.getApiIdentifier()).thenReturn(apiIdentifier);
@@ -49,12 +42,7 @@ public class SocieteGeneraleTransactionFetcherTest {
 
         SocieteGeneraleTransactionFetcher societeGeneraleTransactionFetcher =
                 new SocieteGeneraleTransactionFetcher(
-                        apiClient,
-                        societeGeneraleConfiguration,
-                        sessionStorage,
-                        signatureHeaderProvider,
-                        eidasProxyConfiguration,
-                        eidasIdentity);
+                        apiClient, sessionStorage, signatureHeaderProvider);
 
         // when
         TransactionKeyPaginatorResponse<URL> response =
