@@ -20,6 +20,7 @@ public class BPSondrioAgent extends CbiGlobeAgent {
 
     @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
-        return new BPSondrioApiClient(client, persistentStorage, requestManual, temporaryStorage);
+        return new BPSondrioApiClient(
+                client, persistentStorage, sessionStorage, requestManual, temporaryStorage);
     }
 }
