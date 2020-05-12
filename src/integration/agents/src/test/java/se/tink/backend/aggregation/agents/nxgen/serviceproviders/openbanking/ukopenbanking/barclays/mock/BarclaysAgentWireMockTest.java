@@ -43,6 +43,7 @@ public class BarclaysAgentWireMockTest {
                                 MarketCode.UK, "uk-barclays-oauth2", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
+                        .withAgentModule(new BarclaysWireMockTestModule())
                         .build();
 
         final AgentContractEntity expected =

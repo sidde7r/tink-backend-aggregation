@@ -23,7 +23,7 @@ public final class AgentPackageModuleLoaderTest {
     }
 
     @Test
-    public void ensureAllModulesInNestedPackageStructureAreLoaded()
+    public void ensureAllModulesInNestedPackageStructureAreLoadedAndTestModuleIsIgnored()
             throws ReflectiveOperationException {
 
         final String correctNestedModules = "correctnestedmodules";
