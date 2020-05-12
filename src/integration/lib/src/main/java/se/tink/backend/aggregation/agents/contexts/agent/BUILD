@@ -2,6 +2,9 @@ java_library(
     name = "agent",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//po:i18n",
+    ],
     deps = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
