@@ -1,10 +1,6 @@
 java_library(
     name = "utils",
     srcs = glob(["*.java"]),
-    data = [
-        "//data/agents/uk/amex",
-        "//data/agents/uk/barclays",
-    ],
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:org_apache_httpcomponents_httpclient",
