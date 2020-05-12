@@ -56,9 +56,12 @@ public final class SessionController {
     public boolean isLoggedIn() {
         try {
             sessionHandler.keepAlive();
+            log.info("isLoggedIn returning true");
             return true;
         } catch (SessionException e) {
+            log.info("SessionException in isLoggedIn", e.getUserMessage().get());
             Preconditions.checkState(Objects.equals(e.getError(), SessionError.SESSION_EXPIRED), e);
+            log.info("isLoggedIn returning false");
             return false;
         }
     }

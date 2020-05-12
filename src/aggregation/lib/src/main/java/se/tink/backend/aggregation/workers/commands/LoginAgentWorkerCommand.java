@@ -141,15 +141,19 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             } else {
                 Optional<Boolean> loggedIn = isLoggedIn();
                 if (!loggedIn.isPresent()) {
+                    log.info("isLoggedIn not present");
                     result = AgentWorkerCommandResult.ABORT;
                 } else if (loggedIn.get()) {
+                    log.info("isLoggedIn: continuing");
                     result = AgentWorkerCommandResult.CONTINUE;
                 } else if (!acquireLock()) {
                     // If this is a BankID credentials, we need to take a lock around the login
                     // method.
+                    log.info("could not acquire lock");
                     result = AgentWorkerCommandResult.ABORT;
                     emitLoginResultEvent(LoginResult.COULD_NOT_ACQUIRE_LOCK_FOR_BANKID_LOGIN);
                 } else {
+                    log.info("We're not logged in. Going to login.");
                     result = login();
                 }
             }
@@ -197,6 +201,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private Optional<Boolean> isLoggedIn() throws Exception {
         if (!(agent instanceof PersistentLogin)) {
+            log.info("agent is not instanceof PersistentLogin");
             return Optional.of(Boolean.FALSE);
         }
 
@@ -224,7 +229,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             } else {
                 timeAgentIsLoggedIn = System.nanoTime() - beforeIsLoggedIn;
                 action.completed();
-                log.debug("We're not logged in. Clear Session and Login in again.");
+                log.info("We're not logged in. Clear Session and Login in again.");
                 persistentAgent.clearLoginSession();
             }
         } catch (BankServiceException e) {
