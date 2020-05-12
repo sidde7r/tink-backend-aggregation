@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 @JsonObject
-@SuppressWarnings("unused")
 public class AccountResponse {
 
     private Account account;
