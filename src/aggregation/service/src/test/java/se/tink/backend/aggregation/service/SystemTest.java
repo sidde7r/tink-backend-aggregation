@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.service;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static se.tink.backend.aggregation.service.SystemTestUtils.makeGetRequest;
-import static se.tink.backend.aggregation.service.SystemTestUtils.makePostRequest;
-import static se.tink.backend.aggregation.service.SystemTestUtils.parseAccounts;
-import static se.tink.backend.aggregation.service.SystemTestUtils.parseIdentityData;
-import static se.tink.backend.aggregation.service.SystemTestUtils.parseTransactions;
-import static se.tink.backend.aggregation.service.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
-import static se.tink.backend.aggregation.service.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
-import static se.tink.backend.aggregation.service.SystemTestUtils.readRequestBodyFromFile;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makeGetRequest;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makePostRequest;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseAccounts;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseIdentityData;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTransactions;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.readRequestBodyFromFile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
