@@ -11,6 +11,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@SuppressWarnings("unused")
 @JsonObject
 public class Account {
 

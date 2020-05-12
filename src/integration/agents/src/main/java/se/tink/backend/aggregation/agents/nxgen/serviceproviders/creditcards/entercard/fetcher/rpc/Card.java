@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@SuppressWarnings("unused")
 @JsonObject
 public class Card {
 
