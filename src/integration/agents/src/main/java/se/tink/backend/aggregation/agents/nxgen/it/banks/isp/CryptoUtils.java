@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class CryptoUtils {
     private static final int IV_LENGTH = 16;
+    private static final Random RANDOM = new Random();
 
     private CryptoUtils() {}
 
@@ -20,8 +21,7 @@ public class CryptoUtils {
     public static String encryptRequest(String body) {
         byte[] key = IspConstants.Crypto.BODY_ENCRYPTION_KEY.getBytes();
         byte[] iv = new byte[IV_LENGTH];
-        Random random = new Random();
-        random.nextBytes(iv);
+        RANDOM.nextBytes(iv);
         byte[] bytes = AES.encryptCbcPkcs7(key, iv, body.getBytes());
         return EncodingUtils.encodeAsBase64String(Arrays.concatenate(iv, bytes));
     }

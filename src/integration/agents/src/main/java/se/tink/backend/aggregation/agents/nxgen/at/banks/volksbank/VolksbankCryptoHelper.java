@@ -5,6 +5,7 @@ import java.util.Random;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import org.apache.commons.codec.binary.Hex;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 public final class VolksbankCryptoHelper {
 
     private static final int PUSH_TOKEN_LENGTH = 32;
+    private static final Random RANDOM = new Random();
 
     // jsSHA: https://github.com/Caligatio/jsSHA/blob/master/src/sha1.js
     private static final String js =
@@ -380,10 +382,8 @@ public final class VolksbankCryptoHelper {
     }
 
     static String generateRandomHex() {
-        Random random = new Random();
         byte[] randBytes = new byte[PUSH_TOKEN_LENGTH];
-        random.nextBytes(randBytes);
-
+        RANDOM.nextBytes(randBytes);
         return Hex.encodeHexString(randBytes).toUpperCase();
     }
 
@@ -410,7 +410,7 @@ public final class VolksbankCryptoHelper {
 
             Invocable inv = (Invocable) engine;
             return (String) inv.invokeFunction(VolksbankConstants.Crypto.OTP_ALGO, secret);
-        } catch (Exception e) {
+        } catch (NoSuchMethodException | ScriptException e) {
             throw new IllegalStateException("javascript parsing failed", e);
         }
     }

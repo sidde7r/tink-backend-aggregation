@@ -20,7 +20,7 @@ import org.junit.Test;
 import se.tink.libraries.executor.ExecutorServiceUtils;
 
 public class ListenableThreadPoolSubmitterTest {
-
+    private static final Random RANDOM = new Random();
     private final ThreadFactory THREAD_FACTORY = new ThreadFactoryBuilder().build();
 
     @Test
@@ -98,12 +98,11 @@ public class ListenableThreadPoolSubmitterTest {
 
         final ArrayList<ListenableFuture> futures = Lists.newArrayList();
 
-        final Random random = new Random();
         for (int i = 0; i < 100000; i++) {
             final ListenableFuture future =
                     workerExecutor.execute(
                             () -> {
-                                if (random.nextInt(1) > 0) {
+                                if (RANDOM.nextInt(1) > 0) {
                                     throw new RuntimeException("Expected.");
                                 }
                             });
@@ -133,7 +132,6 @@ public class ListenableThreadPoolSubmitterTest {
 
         final ArrayList<ListenableFuture> futures = Lists.newArrayList();
 
-        final Random random = new Random();
         for (int i = 0; i < 100000; i++) {
             final ListenableFuture future =
                     workerExecutor.execute(
@@ -142,7 +140,7 @@ public class ListenableThreadPoolSubmitterTest {
                             });
             future.addListener(
                     () -> {
-                        if (random.nextInt(1) > 0) {
+                        if (RANDOM.nextInt(1) > 0) {
                             throw new RuntimeException("Expected.");
                         }
                     },

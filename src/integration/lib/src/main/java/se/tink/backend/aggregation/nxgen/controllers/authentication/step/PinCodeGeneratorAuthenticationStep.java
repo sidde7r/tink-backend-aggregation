@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 public class PinCodeGeneratorAuthenticationStep extends AbstractAuthenticationStep {
 
     private static final int DEFAULT_LENGTH = 4;
+    private static final Random RAND = new Random();
     private final int length;
     private final CallbackProcessorSingleData callbackProcessor;
 
@@ -26,10 +27,9 @@ public class PinCodeGeneratorAuthenticationStep extends AbstractAuthenticationSt
     @Override
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        Random random = new Random();
         StringBuilder pin = new StringBuilder();
         for (int i = 1; i <= length; i++) {
-            pin.append(random.nextInt(10));
+            pin.append(RAND.nextInt(10));
         }
         callbackProcessor.process(pin.toString());
         return AuthenticationStepResponse.executeNextStep();
