@@ -24,7 +24,8 @@ public class NexiAgent extends CbiGlobeAgent {
 
     @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
-        return new NexiApiClient(client, persistentStorage, requestManual, temporaryStorage);
+        return new NexiApiClient(
+                client, persistentStorage, sessionStorage, requestManual, temporaryStorage);
     }
 
     @Override

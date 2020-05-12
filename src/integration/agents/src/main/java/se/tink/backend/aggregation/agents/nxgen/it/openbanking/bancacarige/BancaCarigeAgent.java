@@ -19,6 +19,7 @@ public class BancaCarigeAgent extends CbiGlobeAgent {
 
     @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
-        return new BancaCarigeApiClient(client, persistentStorage, requestManual, temporaryStorage);
+        return new BancaCarigeApiClient(
+                client, persistentStorage, sessionStorage, requestManual, temporaryStorage);
     }
 }

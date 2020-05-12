@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class BancoPostaApiClient extends CbiGlobeApiClient {
@@ -15,9 +16,16 @@ public class BancoPostaApiClient extends CbiGlobeApiClient {
     public BancoPostaApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage) {
-        super(client, persistentStorage, requestManual, temporaryStorage, InstrumentType.ACCOUNTS);
+        super(
+                client,
+                persistentStorage,
+                sessionStorage,
+                requestManual,
+                temporaryStorage,
+                InstrumentType.ACCOUNTS);
     }
 
     @Override

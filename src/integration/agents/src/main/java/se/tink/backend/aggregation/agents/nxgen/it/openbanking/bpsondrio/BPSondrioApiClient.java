@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class BPSondrioApiClient extends CbiGlobeApiClient {
@@ -14,9 +15,16 @@ public class BPSondrioApiClient extends CbiGlobeApiClient {
     public BPSondrioApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage) {
-        super(client, persistentStorage, requestManual, temporaryStorage, InstrumentType.ACCOUNTS);
+        super(
+                client,
+                persistentStorage,
+                sessionStorage,
+                requestManual,
+                temporaryStorage,
+                InstrumentType.ACCOUNTS);
     }
 
     @Override
