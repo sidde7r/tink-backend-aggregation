@@ -18,6 +18,8 @@ public class Card {
     private boolean isCardCreatedRecently;
     private boolean isCardReplacementAllowed;
 
+    public Card() {}
+
     @JsonIgnore
     public Card(String cardHolderName, String maskedNr) {
         this.cardHolderName = cardHolderName;
