@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.TimeUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -11,26 +12,30 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class Xs2aDevelopersConstants {
 
+    public static final List<String> CHECKING_ACCOUNT_KEYS =
+            ImmutableList.of(
+                    "SAC",
+                    "CACC",
+                    "CASH",
+                    "start2bank zichtrekening",
+                    "0-Euro-Konto Vorteil",
+                    "b.compact account",
+                    "Current Account",
+                    "Girokonto");
+
+    public static final List<String> SAVING_ACCOUNT_KEYS =
+            ImmutableList.of("SAV", "Tagesgeldkonto", "SVGS", "ONDP");
+
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
                     .put(
                             AccountTypes.CHECKING,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
-                            "SAC",
-                            "CACC",
-                            "CASH",
-                            "start2bank zichtrekening",
-                            "0-Euro-Konto Vorteil",
-                            "b.compact account",
-                            "Current Account",
-                            "Girokonto")
+                            CHECKING_ACCOUNT_KEYS.toArray(new String[0]))
                     .put(
                             AccountTypes.SAVINGS,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
-                            "SAV",
-                            "Tagesgeldkonto",
-                            "SVGS",
-                            "ONDP")
+                            SAVING_ACCOUNT_KEYS.toArray(new String[0]))
                     .build();
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
@@ -60,16 +65,12 @@ public final class Xs2aDevelopersConstants {
         public static final String TOKEN = "/berlingroup/v1/token";
         public static final String GET_ACCOUNTS = "/berlingroup/v1/accounts";
         public static final String GET_BALANCES = "/berlingroup/v1/accounts/{accountId}/balances";
-        public static final String GET_AUTHORISATION =
-                "/berlingroup/v1/consents/{accountId}/authorisations";
         public static final String GET_TRANSACTIONS =
                 "/berlingroup/v1/accounts/{accountId}/transactions";
         public static final String CREATE_PAYMENT =
                 "/berlingroup/v1/payments/sepa-credit-transfers";
         public static final String GET_PAYMENT =
                 "/berlingroup/v1/payments/sepa-credit-transfers/{paymentId}";
-        public static final String START_PAYMENT_AUTHORISATION =
-                "/berlingroup/v1/payments/sepa-credit-transfers/{paymentId}/authorisations";
     }
 
     public static class StorageKeys {
@@ -89,7 +90,6 @@ public final class Xs2aDevelopersConstants {
         public static final String SCOPE = "scope";
         public static final String CODE_CHALLENGE = "code_challenge";
         public static final String RESPONSE_TYPE = "response_type";
-        public static final String CODE_CHALLENGE_TYPE = "code_challenge_type";
         public static final String CODE_CHALLENGE_TYPE_M = "code_challenge_method";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
@@ -111,7 +111,6 @@ public final class Xs2aDevelopersConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String PSU_IP_ADDRESS = "PSU-IP-ADDRESS";
         public static final String X_REQUEST_ID = "X-Request-ID";
-        public static final String X_TINK_DEBUG = "X-Tink-Debug";
     }
 
     public static class FormKeys {
@@ -131,9 +130,7 @@ public final class Xs2aDevelopersConstants {
         public static final Boolean FALSE = false;
         public static final int FREQUENCY_PER_DAY = 4;
         public static final Boolean TRUE = true;
-
         public static final String VALID_UNTIL = TimeUtils.getDate();
-
         public static final String EUR = "EUR";
         public static final String ALL_ACCOUNTS = "allAccounts";
     }
@@ -153,7 +150,6 @@ public final class Xs2aDevelopersConstants {
         public static final int ERROR_CODE_MAX_ACCESS_EXCEEDED = 429;
         public static final int ERROR_CODE_SERVICE_UNAVAILABLE = 503;
         public static final String HREF = "href";
-        public static final int ERROR_CODE_INTERNAL_SERVER = 500;
         public static final int ERROR_CODE_CONSENT_INVALID = 401;
         public static final int DEFAULT_AMOUNT_TO_FETCH = 15;
         public static final int DEFAULT_CONSECUTIVE_EMPTY_PAGES_LIMIT = 4;

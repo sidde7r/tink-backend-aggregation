@@ -32,7 +32,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -173,16 +172,5 @@ public class Xs2aDevelopersApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .header(HeaderKeys.AUTHORIZATION, getPisTokenFromStorage().getAccessToken())
                 .get(GetPaymentResponse.class);
-    }
-
-    public void startPaymentAuthorisation(String paymentId) {
-        createRequest(
-                        new URL(
-                                        configuration.getBaseUrl()
-                                                + ApiServices.START_PAYMENT_AUTHORISATION)
-                                .parameter(IdTags.PAYMENT_ID, paymentId))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.AUTHORIZATION, getPisTokenFromStorage().getAccessToken())
-                .get(HttpResponse.class);
     }
 }
