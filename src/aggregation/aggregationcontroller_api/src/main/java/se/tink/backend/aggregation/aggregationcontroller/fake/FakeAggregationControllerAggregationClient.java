@@ -17,6 +17,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
@@ -39,6 +41,9 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public class FakeAggregationControllerAggregationClient
         implements AggregationControllerAggregationClient {
 
+    private final Logger log =
+            LoggerFactory.getLogger(FakeAggregationControllerAggregationClient.class);
+
     private final InetSocketAddress socket;
     private final ObjectMapper mapper;
 
@@ -46,6 +51,8 @@ public class FakeAggregationControllerAggregationClient
     private FakeAggregationControllerAggregationClient(
             @FakeAggregationControllerSocket final InetSocketAddress socket) {
         this.socket = socket;
+
+        log.info("Aggregation controller client will use: {}", socket);
 
         mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
