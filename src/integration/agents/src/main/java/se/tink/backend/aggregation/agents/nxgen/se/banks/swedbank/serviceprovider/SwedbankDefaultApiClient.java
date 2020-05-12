@@ -16,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -83,6 +84,7 @@ public class SwedbankDefaultApiClient {
     private final AgentComponentProvider componentProvider;
     // only use cached menu items for a profile
     private BankProfileHandler bankProfileHandler;
+    private final String organizationNumber;
 
     protected SwedbankDefaultApiClient(
             TinkHttpClient client,
@@ -95,6 +97,13 @@ public class SwedbankDefaultApiClient {
         this.username = username;
         this.swedbankStorage = swedbankStorage;
         this.componentProvider = componentProvider;
+        this.organizationNumber =
+                Optional.ofNullable(
+                                componentProvider
+                                        .getCredentialsRequest()
+                                        .getCredentials()
+                                        .getField(Key.CORPORATE_ID))
+                        .orElse("");
         ensureAuthorizationHeaderIsSet();
     }
 
@@ -599,7 +608,12 @@ public class SwedbankDefaultApiClient {
     private BankProfile activateProfile(BankProfile bankProfile) {
 
         Map<String, MenuItemLinkEntity> profileMenuItems =
-                fetchProfile(bankProfile.getBank().getProfile().getLinks().getNextOrThrow());
+                fetchProfile(
+                        bankProfile
+                                .getBank()
+                                .getProfile(organizationNumber)
+                                .getLinks()
+                                .getNextOrThrow());
 
         getBankProfileHandler().setActiveBankProfile(bankProfile);
 
@@ -613,7 +627,7 @@ public class SwedbankDefaultApiClient {
         for (BankEntity bank : profileResponse.getBanks()) {
             // fetch all profile details
             Map<String, MenuItemLinkEntity> menuItems =
-                    fetchProfile(bank.getProfile().getLinks().getNextOrThrow());
+                    fetchProfile(bank.getProfile(organizationNumber).getLinks().getNextOrThrow());
             bankProfileHandler.setMenuItems(menuItems);
             EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
             PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();

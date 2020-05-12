@@ -31,12 +31,12 @@ public class ProfileResponse {
     }
 
     @JsonIgnore
-    public LinkEntity getNext(String bankId) {
+    public LinkEntity getNext(String bankId, String orgNumber) {
         List<BankEntity> bankList =
                 Optional.ofNullable(banks).orElseThrow(IllegalStateException::new);
         return bankList.stream()
                 .filter(SwedbankBasePredicates.filterBankId(bankId))
-                .map(BankEntity::getProfile)
+                .map(be -> be.getProfile(orgNumber))
                 .map(PrivateProfileEntity::getLinks)
                 .map(LinksEntity::getNext)
                 .filter(Objects::nonNull)
