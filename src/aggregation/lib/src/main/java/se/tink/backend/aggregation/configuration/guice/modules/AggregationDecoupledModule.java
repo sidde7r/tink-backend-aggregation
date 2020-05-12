@@ -297,7 +297,8 @@ public class AggregationDecoupledModule extends AbstractModule {
                 configuration
                         .getDevelopmentConfiguration()
                         .getAggregationControllerClientConfiguration();
-        return new InetSocketAddress(config.getHost(), config.getPort());
+        final String[] tokens = config.getSocket().split(":");
+        return new InetSocketAddress(tokens[0], Integer.parseInt(tokens[1]));
     }
 
     @Provides

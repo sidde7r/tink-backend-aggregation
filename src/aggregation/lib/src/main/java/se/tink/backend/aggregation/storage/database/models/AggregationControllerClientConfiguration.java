@@ -2,14 +2,10 @@ package se.tink.backend.aggregation.storage.database.models;
 
 public final class AggregationControllerClientConfiguration {
 
-    private String host;
-    private int port;
+    // "<Host>:<Port>"
+    private String socket;
 
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
+    public String getSocket() {
+        return socket;
     }
 }

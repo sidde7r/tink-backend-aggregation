@@ -14,6 +14,8 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.worker.AgentWorker;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsServiceClient;
+import se.tink.io.dropwizard.configuration.EnvironmentVariableSubstitutor;
+import se.tink.io.dropwizard.configuration.SubstitutingSourceProvider;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
@@ -28,6 +30,12 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
     public void initialize(Bootstrap<AggregationServiceConfiguration> bootstrap) {
         DropwizardObjectMapperConfigurator.doNotFailOnUnknownProperties(bootstrap);
         bootstrap.addCommand(new AddClientConfigurationsCommand());
+
+        // Enables us to use environment variables in the yaml config
+        bootstrap.setConfigurationSourceProvider(
+                new SubstitutingSourceProvider(
+                        bootstrap.getConfigurationSourceProvider(),
+                        new EnvironmentVariableSubstitutor()));
     }
 
     @Override

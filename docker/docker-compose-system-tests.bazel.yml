@@ -51,6 +51,7 @@ services:
       - GOOGLE_CLOUD_ACCOUNT_JSON
       - CODECOV_TOKEN
       - USER=root
+      - AGGREGATION_CONTROLLER_SOCKET=fake_aggregation_controller:8080
     ports:
       - "9095:9095"
     expose:
