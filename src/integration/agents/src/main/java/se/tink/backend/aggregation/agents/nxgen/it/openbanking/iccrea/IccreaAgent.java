@@ -25,7 +25,8 @@ public class IccreaAgent extends CbiGlobeAgent {
 
     @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
-        return new IccreaApiClient(client, persistentStorage, requestManual, temporaryStorage);
+        return new IccreaApiClient(
+                client, persistentStorage, sessionStorage, requestManual, temporaryStorage);
     }
 
     @Override
