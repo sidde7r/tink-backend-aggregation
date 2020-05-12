@@ -43,6 +43,14 @@ public class HandelsbankenSessionHandler implements SessionHandler {
                         .applicationEntryPoint()
                         .map(client::keepAlive)
                         .orElseThrow(HandelsbankenSessionHandler::sessionException);
+
+        LOGGER.info(
+                String.format(
+                        "isAlive: %s, autostartToken:%s, errorMessage=%s",
+                        keepAlive.isAlive(),
+                        keepAlive.getAutoStartToken(),
+                        keepAlive.createErrorMessage()));
+
         if (!keepAlive.isAlive()) {
             sessionStorage.removeApplicationEntryPoint();
             persistentStorage.removeAuthorizeResponse();
@@ -58,6 +66,13 @@ public class HandelsbankenSessionHandler implements SessionHandler {
         persistentStorage
                 .getAuthorizeResponse()
                 .orElseThrow(HandelsbankenSessionHandler::sessionException);
+        if (persistentStorage.getAuthorizeResponse().isPresent()) {
+            LOGGER.info(
+                    String.format(
+                            "validateUserIsLoggedIno: %s",
+                            persistentStorage.getAuthorizeResponse().get().getAutoStartToken()));
+        }
+        ;
     }
 
     private static SessionException sessionException() {
