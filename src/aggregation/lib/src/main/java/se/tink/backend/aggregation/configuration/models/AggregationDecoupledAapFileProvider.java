@@ -17,8 +17,7 @@ public class AggregationDecoupledAapFileProvider implements AapFileProvider {
         providerToAapFile = new HashMap<>();
         providerToAapFile.put(
                 "uk-americanexpress-password",
-                ImmutableSet.of(
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap"));
+                ImmutableSet.of("data/agents/uk/amex/refresh-traffic.aap"));
         providerToAapFile.put(
                 "uk-barclays-oauth2",
                 ImmutableSet.of(
