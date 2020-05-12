@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.service;
+package se.tink.backend.aggregation.service.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

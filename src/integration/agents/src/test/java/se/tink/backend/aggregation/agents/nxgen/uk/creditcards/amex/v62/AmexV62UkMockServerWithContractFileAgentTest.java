@@ -20,7 +20,7 @@ public class AmexV62UkMockServerWithContractFileAgentTest {
                 AgentWireMockRefreshTest.builder(
                                 MarketCode.UK,
                                 "uk-americanexpress-password",
-                                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/amex-refresh-traffic.aap")
+                                "data/agents/uk/amex/refresh-traffic.aap")
                         .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)
                         .addCredentialField(Key.PASSWORD.getFieldKey(), PASSWORD)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
@@ -29,8 +29,7 @@ public class AmexV62UkMockServerWithContractFileAgentTest {
 
         final AgentContractEntity expected =
                 new AgentContractEntitiesJsonFileParser()
-                        .parseContractOnBasisOfFile(
-                                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/uk/creditcards/amex/v62/resources/agent-contract.json");
+                        .parseContractOnBasisOfFile("data/agents/uk/amex/agent-contract.json");
 
         // when
         agentWireMockRefreshTest.executeRefresh();

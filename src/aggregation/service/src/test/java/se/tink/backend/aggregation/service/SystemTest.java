@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.service;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static se.tink.backend.aggregation.service.SystemTestUtils.makeGetRequest;
-import static se.tink.backend.aggregation.service.SystemTestUtils.makePostRequest;
-import static se.tink.backend.aggregation.service.SystemTestUtils.parseAccounts;
-import static se.tink.backend.aggregation.service.SystemTestUtils.parseIdentityData;
-import static se.tink.backend.aggregation.service.SystemTestUtils.parseTransactions;
-import static se.tink.backend.aggregation.service.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
-import static se.tink.backend.aggregation.service.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
-import static se.tink.backend.aggregation.service.SystemTestUtils.readRequestBodyFromFile;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makeGetRequest;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.makePostRequest;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseAccounts;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseIdentityData;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTransactions;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.readRequestBodyFromFile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,7 +75,7 @@ public class SystemTest {
         // given
         String requestBodyForAuthenticateEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body_for_amex.json");
+                        "data/agents/uk/amex/system_test_authenticate_request_body.json");
 
         // when
         ResponseEntity<String> authenticateEndpointCallResult =
@@ -104,7 +104,7 @@ public class SystemTest {
         // given
         String requestBodyForAuthenticateEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body_for_barclays.json");
+                        "data/agents/uk/barclays/system_test_authenticate_request_body.json");
 
         // when
         ResponseEntity<String> authenticateEndpointCallResult =
@@ -133,7 +133,7 @@ public class SystemTest {
         // given
         AgentContractEntity expectedBankEntities =
                 contractParser.parseContractOnBasisOfFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities_for_amex.json");
+                        "data/agents/uk/amex/system_test_refresh_request_expected_entities.json");
 
         List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
         List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
@@ -142,7 +142,7 @@ public class SystemTest {
 
         String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body_for_amex.json");
+                        "data/agents/uk/amex/system_test_refresh_request_body.json");
 
         // when
         ResponseEntity<String> refreshEndpointCallResult =
@@ -189,7 +189,7 @@ public class SystemTest {
         // given
         AgentContractEntity expectedBankEntities =
                 contractParser.parseContractOnBasisOfFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities_for_barclays.json");
+                        "data/agents/uk/barclays/system_test_refresh_request_expected_entities.json");
 
         List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
         List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
@@ -198,7 +198,7 @@ public class SystemTest {
 
         String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body_for_barclays.json");
+                        "data/agents/uk/barclays/system_test_refresh_request_body.json");
 
         // when
         ResponseEntity<String> refreshEndpointCallResult =
@@ -236,7 +236,7 @@ public class SystemTest {
         // given
         String requestBodyForTransferEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/transfer_request_body_for_barclays.json");
+                        "data/agents/uk/barclays/system_test_transfer_request_body.json");
 
         // when
         ResponseEntity<String> transferEndpointCallResult =
