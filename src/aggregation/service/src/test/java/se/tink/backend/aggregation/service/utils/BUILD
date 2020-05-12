@@ -3,7 +3,7 @@ java_library(
     srcs = glob(["*.java"]),
     data = [
         "//data/agents/uk/amex",
-        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources",
+        "//data/agents/uk/barclays",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [

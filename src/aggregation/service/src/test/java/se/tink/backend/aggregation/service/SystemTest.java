@@ -104,7 +104,7 @@ public class SystemTest {
         // given
         String requestBodyForAuthenticateEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/authenticate_request_body_for_barclays.json");
+                        "data/agents/uk/barclays/system_test_authenticate_request_body.json");
 
         // when
         ResponseEntity<String> authenticateEndpointCallResult =
@@ -189,7 +189,7 @@ public class SystemTest {
         // given
         AgentContractEntity expectedBankEntities =
                 contractParser.parseContractOnBasisOfFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_expected_entities_for_barclays.json");
+                        "data/agents/uk/barclays/system_test_refresh_request_expected_entities.json");
 
         List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
         List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
@@ -198,7 +198,7 @@ public class SystemTest {
 
         String requestBodyForRefreshEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/refresh_request_body_for_barclays.json");
+                        "data/agents/uk/barclays/system_test_refresh_request_body.json");
 
         // when
         ResponseEntity<String> refreshEndpointCallResult =
@@ -236,7 +236,7 @@ public class SystemTest {
         // given
         String requestBodyForTransferEndpoint =
                 readRequestBodyFromFile(
-                        "src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources/transfer_request_body_for_barclays.json");
+                        "data/agents/uk/barclays/system_test_transfer_request_body.json");
 
         // when
         ResponseEntity<String> transferEndpointCallResult =

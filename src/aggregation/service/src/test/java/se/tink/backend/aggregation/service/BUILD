@@ -5,7 +5,7 @@ junit_test(
     srcs = glob(["*.java"]),
     data = [
         "//data/agents/uk/amex",
-        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources",
+        "//data/agents/uk/barclays",
     ],
     tags = [
         "external",

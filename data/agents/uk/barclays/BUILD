@@ -1,5 +1,5 @@
 filegroup(
-    name = "resources",
+    name = "barclays",
     srcs = glob(
         include = ["*"],
         exclude = [
