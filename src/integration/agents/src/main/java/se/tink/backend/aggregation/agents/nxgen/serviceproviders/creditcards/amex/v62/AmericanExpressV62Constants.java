@@ -138,7 +138,7 @@ public class AmericanExpressV62Constants {
         public static final int DEFAULT_MAX_BILLING_INDEX = 5;
     }
 
-    public class Storage {
+    public static class Storage {
         public static final String ALL_SUB_ACCOUNTS = "allSubAccounts";
     }
 
