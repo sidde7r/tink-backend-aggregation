@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount;
 
 import java.util.Date;
+import org.apache.commons.lang.time.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.SkandiaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
@@ -19,14 +20,24 @@ public class SkandiaTransactionFetcher implements TransactionDatePaginator<Trans
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        // there is no "both" booking status
+
+        Date currentDate = new Date();
+
         GetTransactionsResponse transactions =
                 apiClient.getTransactions(
-                        account.getApiIdentifier(), fromDate, toDate, QueryValues.PENDING);
+                        account.getApiIdentifier(),
+                        currentDate,
+                        getPendingToDate(currentDate),
+                        QueryValues.PENDING);
         GetTransactionsResponse bookedTransactions =
                 apiClient.getTransactions(
                         account.getApiIdentifier(), fromDate, toDate, QueryValues.BOOKED);
         transactions.setBooked(bookedTransactions.getBooked());
         return transactions;
+    }
+
+    // Get 3 months date ahead from current for pending transaction
+    private Date getPendingToDate(Date date) {
+        return DateUtils.addMonths(date, 3);
     }
 }
