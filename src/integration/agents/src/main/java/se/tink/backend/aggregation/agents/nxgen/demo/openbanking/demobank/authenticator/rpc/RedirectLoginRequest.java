@@ -15,9 +15,9 @@ public class RedirectLoginRequest {
 
     public String toData() {
         return Form.builder()
-                .put("code", code)
-                .put("redirectUri", redirectUri)
                 .put("grant_type", grantType)
+                .put("code", code)
+                .put("redirect_uri", redirectUri)
                 .build()
                 .serialize();
     }
