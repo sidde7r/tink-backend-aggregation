@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class NexiApiClient extends CbiGlobeApiClient {
@@ -11,11 +12,13 @@ public class NexiApiClient extends CbiGlobeApiClient {
     public NexiApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             boolean requestManual,
             TemporaryStorage temporaryStorage) {
         super(
                 client,
                 persistentStorage,
+                sessionStorage,
                 requestManual,
                 temporaryStorage,
                 InstrumentType.CARDS_ACCOUNTS);
