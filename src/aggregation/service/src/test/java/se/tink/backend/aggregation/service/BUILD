@@ -4,6 +4,7 @@ junit_test(
     name = "service",
     srcs = glob(["*.java"]),
     data = [
+        "//data/agents/uk/amex",
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources",
     ],
     tags = [

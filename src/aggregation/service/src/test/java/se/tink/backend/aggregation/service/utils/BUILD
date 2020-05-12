@@ -2,6 +2,7 @@ java_library(
     name = "utils",
     srcs = glob(["*.java"]),
     data = [
+        "//data/agents/uk/amex",
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources",
     ],
     visibility = ["//visibility:public"],
