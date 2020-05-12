@@ -40,7 +40,11 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType())
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(getAvailableBalance()))
+                .withBalance(
+                        BalanceModule.builder()
+                                .withBalance(getBalance())
+                                .setAvailableBalance(getAvailableBalance())
+                                .build())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountNumber)
@@ -55,6 +59,11 @@ public class AccountEntity {
 
     @JsonIgnore
     private ExactCurrencyAmount getAvailableBalance() {
+        return ExactCurrencyAmount.of(availableBalance, currency);
+    }
+
+    @JsonIgnore
+    private ExactCurrencyAmount getBalance() {
         return ExactCurrencyAmount.of(bookedBalance, currency);
     }
 
