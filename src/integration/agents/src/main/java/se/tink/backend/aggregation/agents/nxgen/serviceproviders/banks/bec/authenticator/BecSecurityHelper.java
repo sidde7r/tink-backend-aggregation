@@ -23,25 +23,12 @@ import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
 public final class BecSecurityHelper {
 
-    private static BecSecurityHelper instance;
     private final PublicKey publicKey;
     private final byte[] symmetricKey;
 
-    private BecSecurityHelper(String signingCertificate, String publicKeySalt) {
+    public BecSecurityHelper(String signingCertificate, String publicKeySalt) {
         publicKey = calculatePublicKey(signingCertificate, publicKeySalt);
         symmetricKey = generateSymmetricKey();
-    }
-
-    public static BecSecurityHelper getInstance(String signingCertificate, String publicKeySalt) {
-        // Ugly but works
-        if (instance == null) {
-            synchronized (BecSecurityHelper.class) {
-                if (instance == null) {
-                    instance = new BecSecurityHelper(signingCertificate, publicKeySalt);
-                }
-            }
-        }
-        return instance;
     }
 
     private PublicKey calculatePublicKey(String signingCertificate, String publicKeySalt) {
