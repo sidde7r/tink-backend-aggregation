@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy.UpperCamelCaseStrat
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.libraries.amount.Amount;
 
 @JsonObject
 @JsonNaming(UpperCamelCaseStrategy.class)
@@ -35,10 +34,5 @@ public class InstructedAmountEntity {
 
     public String getCurrency() {
         return currency;
-    }
-
-    @JsonIgnore
-    public Amount toTinkAmount() {
-        return new Amount(currency, Double.valueOf(amount));
     }
 }
