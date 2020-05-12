@@ -21,6 +21,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, PasswordAuthenticator {
     private static final AggregationLogger log =
             new AggregationLogger(NextGenerationDemoAuthenticator.class);
+    private static final Random RANDOM = new Random();
+
     private final Credentials credentials;
     private final boolean successfulAuthentication;
     private int attempt = 0;
@@ -61,10 +63,9 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
             int leftLimit = 48; // numeral '0'
             int rightLimit = 101; // letter 'e'
             int targetStringLength = 32;
-            Random random = new Random();
             // Autostart token example: 8dce0218-9cc2-0263-3904-aec17576ec3a
             String generatedString =
-                    random.ints(leftLimit, rightLimit + 1)
+                    RANDOM.ints(leftLimit, rightLimit + 1)
                             .filter(i -> (i <= 57 || i >= 97))
                             .limit(targetStringLength)
                             .collect(
@@ -73,7 +74,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
                                     StringBuilder::append)
                             .toString()
                             .replaceAll("(.{8})(.{4})(.{4})(.{4})", "$1-$2-$3-$4-");
-            return Optional.ofNullable(generatedString);
+            return Optional.of(generatedString);
         }
         return Optional.empty();
     }

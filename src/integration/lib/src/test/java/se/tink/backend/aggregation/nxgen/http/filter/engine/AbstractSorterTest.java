@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import junit.framework.TestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 public class AbstractSorterTest {
 
+    private static final Random RANDOM = new Random();
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     protected void checkOrder(List sorted, List<Class> expected) {
@@ -37,11 +37,10 @@ public class AbstractSorterTest {
 
     protected <T> List<T> createRandomOrderShuffledList(List<T> toShuffle) {
         List<T> result = new ArrayList<>();
-        List<T> tmp = toShuffle.stream().collect(Collectors.toList());
+        List<T> tmp = new ArrayList<>(toShuffle);
 
         while (!tmp.isEmpty()) {
-            Random rand = new Random();
-            T elem = tmp.remove(rand.nextInt(tmp.size()));
+            T elem = tmp.remove(RANDOM.nextInt(tmp.size()));
             result.add(elem);
         }
 

@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Quer
 
 public class BbvaUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(BbvaUtils.class);
+    private static final Random RANDOM = new Random();
 
     /**
      * Splits a URI string and gets the pagination key
@@ -56,9 +57,8 @@ public class BbvaUtils {
      */
     public static String generateRandomHex() {
         final int RANDOM_HEX_LENGTH = 64;
-        final Random random = new Random();
         final byte[] randBytes = new byte[RANDOM_HEX_LENGTH];
-        random.nextBytes(randBytes);
+        RANDOM.nextBytes(randBytes);
 
         return Hex.encodeHexString(randBytes).toUpperCase();
     }
