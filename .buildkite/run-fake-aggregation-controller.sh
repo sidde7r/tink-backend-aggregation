@@ -18,6 +18,6 @@ LOGFILE="/cache/fake_aggregation_controller-$commit.log"
     --test_output=streamed \
     --curses=no \
     -- \
-    //src/aggregation/service/src/test/java/se/tink/backend/aggregation/aggregationcontroller:fake_aggregationcontroller_bin \
+    //src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller:bin \
     2>&1 | tee "$LOGFILE"
 #    &> "$LOGFILE"

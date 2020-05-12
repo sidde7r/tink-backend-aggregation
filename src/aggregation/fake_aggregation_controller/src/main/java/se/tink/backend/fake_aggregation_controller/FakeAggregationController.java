@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.aggregationcontroller;
+package se.tink.backend.fake_aggregation_controller;
 
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;

@@ -176,7 +176,7 @@ command(
     arguments = [
         "--debug_mode",
     ],
-    command = "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/aggregationcontroller:fake_aggregationcontroller_bin",
+    command = "//src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller:bin",
 )
 
 multirun(
