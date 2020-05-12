@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -16,6 +17,7 @@ public class Card {
     private boolean isCardCreatedRecently;
     private boolean isCardReplacementAllowed;
 
+    @JsonIgnore
     public Card(String cardHolderName, String maskedNr) {
         this.cardHolderName = cardHolderName;
         this.maskedNr = maskedNr;
