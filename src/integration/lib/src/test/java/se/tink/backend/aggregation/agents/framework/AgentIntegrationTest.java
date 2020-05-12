@@ -753,9 +753,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         Agent agent = createAgent(credentialsRequest);
 
         try {
-            if (isLoginRequiredForPIS()) {
-                login(agent, credentialsRequest);
-            }
+            login(agent, credentialsRequest);
+
             if (agent instanceof PaymentControllerable) {
                 doGenericPaymentBankTransfer(agent, paymentList);
             } else {
@@ -784,9 +783,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         Agent agent = createAgent(credentialsRequest);
 
         try {
-            if (isLoginRequiredForPIS()) {
-                login(agent, credentialsRequest);
-            }
             if (agent instanceof PaymentControllerable) {
                 doTinkLinkPaymentBankTransfer(agent, paymentList);
             } else {
@@ -806,16 +802,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         context.printCollectedData();
-    }
-
-    private boolean isLoginRequiredForPIS() {
-        switch (provider.getName()) {
-            case "it-unicredit-oauth2":
-            case "it-isp-oauth2":
-                return false;
-            default:
-                return true;
-        }
     }
 
     private List<Payment> createItalianPayments(List<Account> accounts, String desinationAccount) {

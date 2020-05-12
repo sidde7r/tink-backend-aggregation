@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-05-07 09:39+0000\n"
-"PO-Revision-Date: 2020-05-07 09:39+0000\n"
+"POT-Creation-Date: 2020-05-12 10:54+0000\n"
+"PO-Revision-Date: 2020-05-12 10:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -278,6 +278,9 @@ msgstr "Mottagarkontot är inte giltigt"
 
 msgid "The payment date is not a business day"
 msgstr "Betalningsdatumet är inte en bankdag"
+
+msgid "The payment date is too soon or not a business day"
+msgstr "Betalningsdatumet ligger för nära i tiden eller är inte en arbetsdag"
 
 msgid "The destination message is not valid"
 msgstr "Meddelandet till mottagaren är ogiltigt"
