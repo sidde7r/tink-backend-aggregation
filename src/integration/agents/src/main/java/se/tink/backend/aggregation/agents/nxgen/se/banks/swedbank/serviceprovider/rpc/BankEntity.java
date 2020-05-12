@@ -34,7 +34,11 @@ public class BankEntity {
             return privateProfile;
         }
         return businessProfiles.stream()
-                .filter(profile -> profile.getCustomerNumber().equals(orgNumber))
+                .filter(
+                        profile ->
+                                profile.getCustomerNumber().contains(orgNumber)
+                                        || profile.getCustomerNumber()
+                                                .contains(orgNumber.replace("-", "")))
                 .findAny()
                 .orElseThrow(IllegalStateException::new);
     }
