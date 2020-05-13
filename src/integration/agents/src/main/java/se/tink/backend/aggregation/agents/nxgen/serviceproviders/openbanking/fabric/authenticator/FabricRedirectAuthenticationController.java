@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -63,7 +62,7 @@ public class FabricRedirectAuthenticationController
 
     @SuppressWarnings("Duplicates")
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl = this.authenticator.buildAuthorizeUrl(this.strongAuthenticationState);
+        URL authorizeUrl = authenticator.buildAuthorizeUrl(strongAuthenticationState);
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
         Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());
@@ -80,17 +79,15 @@ public class FabricRedirectAuthenticationController
 
     @Override
     public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException {
-        Map<String, String> callbackData =
-                this.supplementalInformationHelper
-                        .waitForSupplementalInformation(
-                                strongAuthenticationStateSupplementalKey,
-                                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                                TimeUnit.MINUTES)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "No supplemental info found in api response"));
-        this.handleErrors(callbackData);
+        Optional<Map<String, String>> maybeCallbackData =
+                supplementalInformationHelper.waitForSupplementalInformation(
+                        strongAuthenticationStateSupplementalKey,
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES);
+        if (!maybeCallbackData.isPresent()) {
+            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT);
+        }
+        handleErrors(maybeCallbackData.get());
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
@@ -100,14 +97,12 @@ public class FabricRedirectAuthenticationController
     }
 
     private Optional<String> getCallbackElement(Map<String, String> callbackData, String key) {
-        String value = callbackData.getOrDefault(key, null);
-        return Strings.isNullOrEmpty(value) ? Optional.empty() : Optional.of(value);
+        return Optional.ofNullable(callbackData.get(key)).filter(x -> !x.isEmpty());
     }
 
     private void handleErrors(Map<String, String> callbackData) throws AuthenticationException {
-        Optional<String> error = this.getCallbackElement(callbackData, "error");
-        Optional<String> errorDescription =
-                this.getCallbackElement(callbackData, "error_description");
+        Optional<String> error = getCallbackElement(callbackData, "error");
+        Optional<String> errorDescription = getCallbackElement(callbackData, "error_description");
         if (!error.isPresent()) {
             logger.info("Callback success.");
         } else {
