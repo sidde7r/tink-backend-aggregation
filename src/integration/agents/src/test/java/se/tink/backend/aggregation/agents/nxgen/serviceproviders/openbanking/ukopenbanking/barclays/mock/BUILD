@@ -4,10 +4,10 @@ junit_test(
     name = "mock",
     srcs = glob(["*.java"]),
     data = [
+        "//data:agents",
         "//data:aggregation_test",
         "//data:provider_configurations",
         "//etc:development",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources",
     ],
     resources = [
         "//src/integration/agents/src/main/resources:config-templates",

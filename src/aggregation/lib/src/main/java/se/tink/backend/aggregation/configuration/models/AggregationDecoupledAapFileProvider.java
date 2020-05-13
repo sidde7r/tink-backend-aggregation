@@ -21,8 +21,8 @@ public class AggregationDecoupledAapFileProvider implements AapFileProvider {
         providerToAapFile.put(
                 "uk-barclays-oauth2",
                 ImmutableSet.of(
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_mock_log.aap",
-                        "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_payment_mock_log.aap"));
+                        "data/agents/uk/barclays/mock_log.aap",
+                        "data/agents/uk/barclays/payment_mock_log.aap"));
     }
 
     @Override

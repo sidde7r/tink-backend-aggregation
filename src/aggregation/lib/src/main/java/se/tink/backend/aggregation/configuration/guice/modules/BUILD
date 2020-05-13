@@ -1,9 +1,6 @@
 java_library(
     name = "modules",
     srcs = glob(["**/*.java"]),
-    data = [
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",

@@ -23,17 +23,14 @@ public class BarclaysAgentWireMockTest {
     private final String SOURCE_IDENTIFIER = "2314701111111";
     private final String DESTINATION_IDENTIFIER = "04000469430924";
 
-    private final String CONFIGURATION_PATH =
-            "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/configuration.yml";
+    private static final String CONFIGURATION_PATH = "data/agents/uk/barclays/configuration.yml";
 
     @Test
     public void test() throws Exception {
 
         // given
-        final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_mock_log.aap";
-        final String contractFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/agent-contract.json";
+        final String wireMockFilePath = "data/agents/uk/barclays/mock_log.aap";
+        final String contractFilePath = "data/agents/uk/barclays/agent-contract.json";
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
@@ -61,8 +58,7 @@ public class BarclaysAgentWireMockTest {
     public void testPayment() throws Exception {
 
         // given
-        final String wireMockFilePath =
-                "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/ukopenbanking/barclays/mock/resources/barclays_payment_mock_log.aap";
+        final String wireMockFilePath = "data/agents/uk/barclays/payment_mock_log.aap";
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
