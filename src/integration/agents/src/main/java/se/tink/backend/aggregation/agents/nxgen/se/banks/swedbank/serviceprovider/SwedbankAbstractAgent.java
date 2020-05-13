@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankBaseHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.filters.SwedbankServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.interfaces.SwedbankApiClientProvider;
+import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -75,7 +76,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     private EInvoiceRefreshController eInvoiceRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
-    private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final boolean isBankId;
@@ -112,11 +113,15 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                         updateController,
                         new SwedbankDefaultLoanFetcher(apiClient));
 
-        transferDestinationRefreshController = constructTransferDestinationRefreshController();
-
         creditCardRefreshController = constructCreditCardRefreshController();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+    }
+
+    @Override
+    public void setConfiguration(final AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -240,13 +245,13 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 new SwedbankDefaultTransferDestinationFetcher(
                         apiClient,
                         sessionStorage,
-                        this.configuration.isFeatureEnabled(FeatureFlag.CHECK_EXTENDED_BANK_ID)));
+                        configuration.isFeatureEnabled(FeatureFlag.CHECK_EXTENDED_BANK_ID)));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
         return new SwedbankDefaultSessionHandler(
-                apiClient, this.configuration.isFeatureEnabled(FeatureFlag.CHECK_KEEP_ALIVE));
+                apiClient, configuration.isFeatureEnabled(FeatureFlag.CHECK_KEEP_ALIVE));
     }
 
     @Override

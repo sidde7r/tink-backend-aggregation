@@ -66,7 +66,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     private EInvoiceRefreshController eInvoiceRefreshController;
     private final InvestmentRefreshController investmentRefreshController;
     private final LoanRefreshController loanRefreshController;
-    private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private TransferDestinationRefreshController transferDestinationRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final boolean isBankId;
@@ -218,11 +218,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
                 metricRefreshController,
-                new SwedbankDefaultTransferDestinationFetcher(
-                        apiClient,
-                        sessionStorage,
-                        agentsServiceConfiguration.isFeatureEnabled(
-                                FeatureFlag.CHECK_EXTENDED_BANK_ID)));
+                new SwedbankDefaultTransferDestinationFetcher(apiClient, sessionStorage, false));
     }
 
     @Override
