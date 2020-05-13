@@ -277,6 +277,64 @@ public class TestcontainersSystemTest {
         Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
     }
 
+    @Test
+    public void getRefreshShouldUploadEntitiesForBarclays() throws Exception {
+        // given
+        String aggregationHost = aggregationContainer.getContainerIpAddress();
+        int aggregationPort = aggregationContainer.getMappedPort(Aggregation.HTTP_PORT);
+
+        String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
+        int aggregationControllerPort =
+                aggregationControllerContainer.getMappedPort(AggregationController.HTTP_PORT);
+
+        String aggregationControllerEndpoint =
+                String.format(
+                        "http://%s:%d/data", aggregationControllerHost, aggregationControllerPort);
+
+        AgentContractEntitiesJsonFileParser contractParser =
+                new AgentContractEntitiesJsonFileParser();
+        AgentContractEntity expectedBankEntities =
+                contractParser.parseContractOnBasisOfFile(
+                        "data/agents/uk/barclays/system_test_refresh_request_expected_entities.json");
+
+        List<Map<String, Object>> expectedTransactions = expectedBankEntities.getTransactions();
+        List<Map<String, Object>> expectedAccounts = expectedBankEntities.getAccounts();
+
+        String requestBodyForRefreshEndpoint =
+                readRequestBodyFromFile(
+                        "data/agents/uk/barclays/system_test_refresh_request_body.json");
+
+        // when
+        ResponseEntity<String> refreshEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/refresh",
+                                aggregationHost, aggregationPort),
+                        requestBodyForRefreshEndpoint);
+
+        List<?> givenAccounts =
+                parseAccounts(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint, "updateAccount", 50, 1));
+
+        List<Map<String, Object>> givenTransactions =
+                parseTransactions(
+                        pollForAllCallbacksForAnEndpoint(
+                                aggregationControllerEndpoint,
+                                "updateTransactionsAsynchronously",
+                                50,
+                                1));
+
+        // then
+        Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedTransactions, givenTransactions));
+        Assert.assertTrue(
+                AgentContractEntitiesAsserts.areListsMatchingVerbose(
+                        expectedAccounts, givenAccounts));
+    }
+
     @After
     public void teardown() throws IOException {
         try {
