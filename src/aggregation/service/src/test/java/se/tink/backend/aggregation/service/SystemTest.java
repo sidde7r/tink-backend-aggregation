@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.service.systemtest;
+package se.tink.backend.aggregation.service;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;

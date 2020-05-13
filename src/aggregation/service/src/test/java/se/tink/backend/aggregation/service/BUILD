@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "systemtest",
+    name = "service",
     srcs = glob(["*.java"]),
     data = [
         "//data:agents",
