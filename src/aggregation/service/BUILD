@@ -120,7 +120,6 @@ container_image(
         ":data_tar",
         ":cryptography_tar",
         ":config_tar",
-        ":agent_data_tar",
     ],
     visibility = ["//visibility:public"],
     workdir = "/usr/share/tink-backend-aggregation",
@@ -170,17 +169,6 @@ pkg_tar(
     srcs = [":development-decoupled.yaml"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
-    tags = ["manual"],
-    visibility = ["//docker:__pkg__"],
-)
-
-pkg_tar(
-    name = "agent_data_tar",
-    srcs = [
-        "//data:agents",
-    ],
-    mode = "0444",
-    package_dir = "/usr/share/tink-backend-aggregation/data/agents/uk/amex",
     tags = ["manual"],
     visibility = ["//docker:__pkg__"],
 )
