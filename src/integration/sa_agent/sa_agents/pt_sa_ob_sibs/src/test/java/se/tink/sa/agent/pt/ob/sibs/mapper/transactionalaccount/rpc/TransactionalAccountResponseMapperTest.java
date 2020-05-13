@@ -1,8 +1,10 @@
 package se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.HashMap;
 import java.util.Map;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -13,7 +15,11 @@ import se.tink.sa.agent.pt.ob.sibs.SibsMappingContextKeys;
 import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.entity.account.IdModuleMapper;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.entity.account.AccountEntity;
 import se.tink.sa.common.mapper.MappingContext;
-import se.tink.sa.services.fetch.account.*;
+import se.tink.sa.services.fetch.account.AccountFlag;
+import se.tink.sa.services.fetch.account.ExactCurrencyAmount;
+import se.tink.sa.services.fetch.account.IdModule;
+import se.tink.sa.services.fetch.account.TransactionalAccount;
+import se.tink.sa.services.fetch.account.TransactionalAccountType;
 
 public class TransactionalAccountResponseMapperTest {
 
@@ -49,14 +55,14 @@ public class TransactionalAccountResponseMapperTest {
         TransactionalAccount result =
                 transactionalAccountResponseMapper.map(source, mappingContext);
 
-        TestCase.assertTrue(result != null);
-        TestCase.assertEquals(TransactionalAccountType.CHECKING, result.getType());
-        TestCase.assertNotNull(result.getFlagsList());
-        TestCase.assertEquals(1, result.getFlagsCount());
-        TestCase.assertEquals(AccountFlag.PSD2_PAYMENT_ACCOUNT, result.getFlagsList().get(0));
+        assertNotNull(result);
+        assertEquals(TransactionalAccountType.CHECKING, result.getType());
+        assertNotNull(result.getFlagsList());
+        assertEquals(1, result.getFlagsCount());
+        assertEquals(AccountFlag.PSD2_PAYMENT_ACCOUNT, result.getFlagsList().get(0));
 
-        TestCase.assertNotNull(result.getBalanceModule());
-        TestCase.assertEquals(MOCK_ID, result.getApiId());
+        assertNotNull(result.getBalanceModule());
+        assertEquals(MOCK_ID, result.getApiId());
     }
 
     private AccountEntity prepareAccountEntityMock() {

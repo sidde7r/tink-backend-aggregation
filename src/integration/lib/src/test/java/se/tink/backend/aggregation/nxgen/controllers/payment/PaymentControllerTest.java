@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;

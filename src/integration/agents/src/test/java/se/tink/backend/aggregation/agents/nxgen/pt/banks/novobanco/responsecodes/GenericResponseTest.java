@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.responsecodes;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.pt.banks.novobanco.rpc.GenericResponse;

@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.nxgen.http.filter.engine;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import junit.framework.TestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
@@ -29,7 +30,7 @@ public class AbstractSorterTest {
                 if (!it.hasNext()) {
                     log.error("Expected: {}", expected);
                     log.error("Given: {}", sorted);
-                    TestCase.assertTrue("List is not sorted as expected.", false);
+                    fail("List is not sorted as expected");
                 }
             }
         }

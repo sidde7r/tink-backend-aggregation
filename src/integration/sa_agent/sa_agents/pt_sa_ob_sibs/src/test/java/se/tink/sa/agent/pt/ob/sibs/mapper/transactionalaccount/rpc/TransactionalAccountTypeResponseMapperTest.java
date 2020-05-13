@@ -1,6 +1,8 @@
 package se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.sa.common.mapper.MappingContext;
@@ -26,7 +28,7 @@ public class TransactionalAccountTypeResponseMapperTest {
         TransactionalAccountType type =
                 transactionalAccountTypeResponseMapper.map(source, mappingContext);
 
-        TestCase.assertNotNull(type);
-        TestCase.assertEquals(TransactionalAccountType.CHECKING, type);
+        assertNotNull(type);
+        assertEquals(TransactionalAccountType.CHECKING, type);
     }
 }
