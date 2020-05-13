@@ -8,6 +8,7 @@ import io.dropwizard.setup.Environment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -101,11 +102,12 @@ public class FakeAggregationController extends Application<Configuration> {
         @POST
         @Consumes(MediaType.APPLICATION_JSON)
         public Response putData(Map<String, String> data) {
-            for (String key : data.keySet()) {
+            for (final Entry<String, String> entry : data.entrySet()) {
+                final String key = entry.getKey();
                 if (!callbacksForControllerEndpoints.containsKey(key)) {
                     callbacksForControllerEndpoints.put(key, new ArrayList<>());
                 }
-                callbacksForControllerEndpoints.get(key).add(data.get(key));
+                callbacksForControllerEndpoints.get(key).add(entry.getValue());
             }
 
             if (debugMode) {
