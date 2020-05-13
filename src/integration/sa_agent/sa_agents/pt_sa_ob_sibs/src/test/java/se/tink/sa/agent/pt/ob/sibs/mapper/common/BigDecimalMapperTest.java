@@ -1,6 +1,8 @@
 package se.tink.sa.agent.pt.ob.sibs.mapper.common;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.sa.services.common.BigDecimal;
@@ -20,9 +22,9 @@ public class BigDecimalMapperTest {
     public void testBigDecimalMapper() {
 
         BigDecimal value = bigDecimalMapper.map(AMOUNT);
-        TestCase.assertNotNull(value);
+        assertNotNull(value);
 
-        TestCase.assertEquals(123456789L, value.getUnscaledValue());
-        TestCase.assertEquals(5, value.getScale());
+        assertEquals(123456789L, value.getUnscaledValue());
+        assertEquals(5, value.getScale());
     }
 }

@@ -1,6 +1,8 @@
 package se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Before;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -19,7 +21,7 @@ public abstract class AbstractResponseMapperTest<T> {
     @Mock protected RequestToResponseCommonMapper requestToResponseCommonMapper;
 
     @Before
-    protected void init() {
+    public void init() {
         rc = RequestCommon.newBuilder().build();
         mappingContext =
                 MappingContext.newInstance().put(SibsMappingContextKeys.REQUEST_COMMON, rc);
@@ -29,15 +31,15 @@ public abstract class AbstractResponseMapperTest<T> {
                 .thenReturn(rsc);
     }
 
-    protected void verifyCommonMock(T response) {
-        TestCase.assertTrue(response != null);
+    void verifyCommonMock(T response) {
+        assertNotNull(response);
         ArgumentCaptor<RequestCommon> argumentCaptorRequestCommon =
                 ArgumentCaptor.forClass(RequestCommon.class);
         ArgumentCaptor<MappingContext> argumentCaptorMappingContext =
                 ArgumentCaptor.forClass(MappingContext.class);
         Mockito.verify(requestToResponseCommonMapper, Mockito.times(1))
                 .map(argumentCaptorRequestCommon.capture(), argumentCaptorMappingContext.capture());
-        TestCase.assertEquals(rc, argumentCaptorRequestCommon.getValue());
-        TestCase.assertEquals(mappingContext, argumentCaptorMappingContext.getValue());
+        assertEquals(rc, argumentCaptorRequestCommon.getValue());
+        assertEquals(mappingContext, argumentCaptorMappingContext.getValue());
     }
 }

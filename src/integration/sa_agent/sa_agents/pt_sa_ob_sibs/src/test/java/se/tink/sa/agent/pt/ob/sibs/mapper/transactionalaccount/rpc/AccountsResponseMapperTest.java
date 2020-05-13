@@ -1,11 +1,17 @@
 package se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.entity.account.AccountEntity;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.AccountsResponse;
 import se.tink.sa.common.mapper.MappingContext;
@@ -34,7 +40,7 @@ public class AccountsResponseMapperTest extends AbstractResponseMapperTest<Accou
 
         FetchAccountsResponse result = accountsResponseMapper.map(source, mappingContext);
 
-        TestCase.assertTrue(result != null);
+        assertNotNull(result);
 
         // verify business mappings
         ArgumentCaptor<AccountEntity> argumentCaptorAccount =
@@ -46,15 +52,15 @@ public class AccountsResponseMapperTest extends AbstractResponseMapperTest<Accou
                         argumentCaptorAccount.capture(),
                         argumentCaptorMappingContextForAccounts.capture());
 
-        TestCase.assertEquals(5, result.getAccountList().size());
+        assertEquals(5, result.getAccountList().size());
 
-        TestCase.assertEquals(5, argumentCaptorAccount.getAllValues().size());
-        TestCase.assertEquals(5, argumentCaptorMappingContextForAccounts.getAllValues().size());
+        assertEquals(5, argumentCaptorAccount.getAllValues().size());
+        assertEquals(5, argumentCaptorMappingContextForAccounts.getAllValues().size());
 
         for (int i = 0; i < 5; i++) {
-            TestCase.assertEquals(
+            assertEquals(
                     mappingContext, argumentCaptorMappingContextForAccounts.getAllValues().get(i));
-            TestCase.assertEquals(
+            assertEquals(
                     source.getAccountList().get(i).getId(),
                     argumentCaptorAccount.getAllValues().get(i).getId());
         }

@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.util;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
@@ -25,19 +23,16 @@ public class CustomAsserts {
             String apiIdentifier,
             String holderName,
             String transactionLink) {
-        assertEquals(accountType, account.getType());
-        assertEquals(balance, account.getExactBalance());
-        assertTrue(
-                "Unique identifier does not match!",
-                account.isUniqueIdentifierEqual(uniqueIdentifier));
-        assertEquals(accountNumber, account.getAccountNumber());
-        assertEquals(accountName, account.getName());
+        assertThat(account.getType()).isEqualTo(accountType);
+        assertThat(account.getExactBalance()).isEqualTo(balance);
+        assertThat(account.isUniqueIdentifierEqual(uniqueIdentifier)).isTrue();
+        assertThat(account.getAccountNumber()).isEqualTo(accountNumber);
+        assertThat(account.getName()).isEqualTo(accountName);
         assertThat(account.getIdentifiers())
                 .containsOnly(new IbanIdentifier(iban), new NorwegianIdentifier(bban));
-        assertEquals(apiIdentifier, account.getApiIdentifier());
-        assertEquals(holderName, account.getHolderName().toString());
-        assertEquals(
-                transactionLink,
-                account.getFromTemporaryStorage(SparebankConstants.StorageKeys.TRANSACTIONS_URL));
+        assertThat(account.getApiIdentifier()).isEqualTo(apiIdentifier);
+        assertThat(account.getHolderName().toString()).isEqualTo(holderName);
+        assertThat(account.getFromTemporaryStorage(SparebankConstants.StorageKeys.TRANSACTIONS_URL))
+                .isEqualTo(transactionLink);
     }
 }

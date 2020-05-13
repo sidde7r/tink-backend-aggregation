@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.authenticator;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

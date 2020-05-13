@@ -1,6 +1,8 @@
 package se.tink.sa.agent.pt.ob.sibs.mapper.common;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -13,8 +15,6 @@ public class IbanAccountIdentifierMapperTest {
 
     private IbanAccountIdentifierMapper ibanAccountIdentifierMapper;
 
-    private AccountEntity source;
-
     @Before
     public void init() {
         ibanAccountIdentifierMapper = new IbanAccountIdentifierMapper();
@@ -22,15 +22,14 @@ public class IbanAccountIdentifierMapperTest {
 
     @Test
     public void testIbanAccountIdentifierMapper() {
-        source = Mockito.mock(AccountEntity.class);
+        AccountEntity source = Mockito.mock(AccountEntity.class);
         Mockito.when(source.getIban()).thenReturn(MOCK_IBAN);
 
         AccountIdentifier result = ibanAccountIdentifierMapper.map(source);
 
-        TestCase.assertNotNull(result);
-        TestCase.assertNotNull(result.getAccountIdentifierTypeBasedFieldsList());
-        TestCase.assertEquals(1, result.getAccountIdentifierTypeBasedFieldsCount());
-        TestCase.assertEquals(
-                MOCK_IBAN, result.getAccountIdentifierTypeBasedFieldsList().get(0).getValue());
+        assertNotNull(result);
+        assertNotNull(result.getAccountIdentifierTypeBasedFieldsList());
+        assertEquals(1, result.getAccountIdentifierTypeBasedFieldsCount());
+        assertEquals(MOCK_IBAN, result.getAccountIdentifierTypeBasedFieldsList().get(0).getValue());
     }
 }

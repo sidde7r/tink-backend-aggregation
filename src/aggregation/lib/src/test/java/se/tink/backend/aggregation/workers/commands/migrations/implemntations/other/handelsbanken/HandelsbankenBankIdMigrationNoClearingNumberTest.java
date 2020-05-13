@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.workers.commands.migrations.implemntations.other.handelsbanken;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -121,12 +121,6 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
     }
 
     @Test
-    public void changeRequest() {
-        // For this agent we do not change the request as it uses the same agent
-        // so no test
-    }
-
-    @Test
     public void migrateData() {
         this.accountList.add(this.oldFormat);
 
@@ -137,7 +131,7 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
 
         verify(wrapper).updateAccountMetaData(this.oldFormat.getId(), this.newFormat.getBankId());
 
-        assertEquals(request.getAccounts().size(), 1);
+        assertEquals(1, request.getAccounts().size());
         assertEquals(
                 request.getAccounts().get(0).getAccountNumber(), this.newFormat.getAccountNumber());
         assertEquals(request.getAccounts().get(0).getBankId(), this.newFormat.getBankId());

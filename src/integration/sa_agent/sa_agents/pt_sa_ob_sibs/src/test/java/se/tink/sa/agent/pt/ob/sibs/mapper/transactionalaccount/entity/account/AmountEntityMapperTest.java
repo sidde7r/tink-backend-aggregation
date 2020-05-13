@@ -1,10 +1,15 @@
 package se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.entity.account;
 
-import static junit.framework.TestCase.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import se.tink.sa.agent.pt.ob.sibs.mapper.common.BigDecimalMapper;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.entity.account.AmountEntity;
 import se.tink.sa.common.mapper.MappingContext;

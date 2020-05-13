@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import junit.framework.Assert;
 import org.junit.Test;
 
 /** Unit tests for constructing policy objects and serializing them to JSON. */
@@ -465,10 +464,10 @@ public class PolicyTest {
         String ID_WITH_HYPHEN = "a-b-c-d-e-f-g";
         String ID_WITHOUT_HYPHEN = "abcdefg";
 
-        Assert.assertEquals(ID_WITHOUT_HYPHEN, new Principal(ID_WITH_HYPHEN).getId());
-        Assert.assertEquals(ID_WITHOUT_HYPHEN, new Principal("AWS", ID_WITH_HYPHEN).getId());
+        assertEquals(ID_WITHOUT_HYPHEN, new Principal(ID_WITH_HYPHEN).getId());
+        assertEquals(ID_WITHOUT_HYPHEN, new Principal("AWS", ID_WITH_HYPHEN).getId());
 
-        Assert.assertEquals(ID_WITH_HYPHEN, new Principal("Federated", ID_WITH_HYPHEN).getId());
-        Assert.assertEquals(ID_WITH_HYPHEN, new Principal("AWS", ID_WITH_HYPHEN, false).getId());
+        assertEquals(ID_WITH_HYPHEN, new Principal("Federated", ID_WITH_HYPHEN).getId());
+        assertEquals(ID_WITH_HYPHEN, new Principal("AWS", ID_WITH_HYPHEN, false).getId());
     }
 }

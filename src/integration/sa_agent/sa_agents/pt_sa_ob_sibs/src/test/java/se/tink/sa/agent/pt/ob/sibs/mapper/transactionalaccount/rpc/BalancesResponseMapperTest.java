@@ -1,11 +1,16 @@
 package se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.rpc;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import se.tink.sa.agent.pt.ob.sibs.mapper.transactionalaccount.entity.account.AmountEntityMapper;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.entity.account.AmountEntity;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.entity.account.BalanceEntity;
@@ -52,6 +57,6 @@ public class BalancesResponseMapperTest {
         Mockito.verify(amountEntityMapper, Mockito.times(1))
                 .map(argumentCaptor.capture(), argumentCaptorMappingContextForAccounts.capture());
 
-        TestCase.assertEquals(amountEntity, argumentCaptor.getValue());
+        assertEquals(amountEntity, argumentCaptor.getValue());
     }
 }

@@ -1,6 +1,6 @@
 package se.tink.sa.agent.pt.ob.sibs.rest.client;
 
-import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;

@@ -1,7 +1,7 @@
 package se.tink.sa.agent.pt.ob.sibs.rest.client;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;

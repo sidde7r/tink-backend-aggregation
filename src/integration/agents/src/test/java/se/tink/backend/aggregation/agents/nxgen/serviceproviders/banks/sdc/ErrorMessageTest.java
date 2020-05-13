@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -12,31 +12,31 @@ public class ErrorMessageTest {
             "X-SDC-ERROR-MESSAGE: Incorrect user ID or password.";
 
     @Test
-    public void userBlocked() throws Exception {
+    public void userBlocked() {
         assertTrue(SdcConstants.ErrorMessage.PASSWORD_BLOCKED.isBlocked(USER_BLOCKED_ERROR));
         assertTrue(SdcConstants.ErrorMessage.PASSWORD_BLOCKED.isLoginError(USER_BLOCKED_ERROR));
     }
 
     @Test
-    public void userNotBlocked() throws Exception {
+    public void userNotBlocked() {
         assertFalse(SdcConstants.ErrorMessage.PASSWORD_BLOCKED.isBlocked(""));
         assertFalse(SdcConstants.ErrorMessage.PASSWORD_BLOCKED.isLoginError(""));
     }
 
     @Test
-    public void wrongUserPassword() throws Exception {
+    public void wrongUserPassword() {
         assertTrue(SdcConstants.ErrorMessage.LOGIN_DENIED.isLoginError(WRONG_USER_PASSWORD_ERROR));
         assertFalse(SdcConstants.ErrorMessage.LOGIN_DENIED.isBlocked(WRONG_USER_PASSWORD_ERROR));
     }
 
     @Test
-    public void notWrongUserPassword() throws Exception {
+    public void notWrongUserPassword() {
         assertFalse(SdcConstants.ErrorMessage.LOGIN_DENIED.isLoginError(""));
         assertFalse(SdcConstants.ErrorMessage.LOGIN_DENIED.isBlocked(""));
     }
 
     @Test
-    public void incorrectUserPasswordLoginError() throws Exception {
+    public void incorrectUserPasswordLoginError() {
         assertFalse(
                 SdcConstants.ErrorMessage.LOGIN_DENIED.isLoginError(INCORRECT_USER_ID_PASSWORD));
         assertTrue(
@@ -48,7 +48,7 @@ public class ErrorMessageTest {
     }
 
     @Test
-    public void incorrectUserPasswordBlocked() throws Exception {
+    public void incorrectUserPasswordBlocked() {
         assertFalse(SdcConstants.ErrorMessage.LOGIN_DENIED.isBlocked(INCORRECT_USER_ID_PASSWORD));
         assertFalse(
                 SdcConstants.ErrorMessage.INCORRECT_USER_PASSWORD.isBlocked(
