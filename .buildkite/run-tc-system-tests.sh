@@ -17,7 +17,7 @@ set -x
     --curses=yes \
     --color=yes \
     -- \
-    //src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/testcontainers
+    //src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/systemtest
 
 OUTCOME=$?
 .buildkite/upload-test-files.sh
