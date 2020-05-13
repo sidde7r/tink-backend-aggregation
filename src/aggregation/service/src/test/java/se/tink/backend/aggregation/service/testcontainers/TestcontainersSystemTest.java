@@ -47,7 +47,7 @@ import se.tink.backend.aggregation.service.utils.SystemTestUtils;
 @RunWith(SpringRunner.class)
 public class TestcontainersSystemTest {
 
-    private static class Aggregation {
+    private static class AggregationDecoupled {
         private static final String BASE = "src/aggregation/service";
         private static final String REPOSITORY = "bazel/" + BASE;
         private static final String TAG = "aggregation_decoupled_image";
@@ -87,19 +87,21 @@ public class TestcontainersSystemTest {
     private static GenericContainer setupAggregationContainer(DockerClient client, Network network)
             throws FileNotFoundException {
         InputStream aggregationTarStream =
-                new BufferedInputStream(new FileInputStream(Aggregation.TAR));
+                new BufferedInputStream(new FileInputStream(AggregationDecoupled.TAR));
         client.loadImageCmd(aggregationTarStream).exec();
 
         ImageFromDockerfile aggregationImage =
                 new ImageFromDockerfile()
-                        .withDockerfileFromBuilder(builder -> builder.from(Aggregation.IMAGE));
+                        .withDockerfileFromBuilder(
+                                builder -> builder.from(AggregationDecoupled.IMAGE));
 
         final String acSocket = AggregationController.NETWORK_ALIAS + ":8080";
 
         return new GenericContainer(aggregationImage)
-                .waitingFor(Wait.forHttp("/aggregation/ping").forPort(Aggregation.HTTP_PORT))
+                .waitingFor(
+                        Wait.forHttp("/aggregation/ping").forPort(AggregationDecoupled.HTTP_PORT))
                 .withEnv("AGGREGATION_CONTROLLER_SOCKET", acSocket)
-                .withExposedPorts(Aggregation.HTTP_PORT)
+                .withExposedPorts(AggregationDecoupled.HTTP_PORT)
                 .withNetwork(network)
                 .withLogConsumer(new Slf4jLogConsumer(log));
     }
@@ -126,7 +128,7 @@ public class TestcontainersSystemTest {
     public void whenPingedRespondWithPong() {
         // given
         String aggregationHost = aggregationContainer.getContainerIpAddress();
-        int aggregationPort = aggregationContainer.getMappedPort(Aggregation.HTTP_PORT);
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
         String url =
                 String.format("http://%s:%d/aggregation/ping", aggregationHost, aggregationPort);
         TestRestTemplate testRestTemplate = new TestRestTemplate();
@@ -146,7 +148,7 @@ public class TestcontainersSystemTest {
                 SystemTestUtils.readRequestBodyFromFile(
                         "data/agents/uk/amex/system_test_authenticate_request_body.json");
         String aggregationHost = aggregationContainer.getContainerIpAddress();
-        int aggregationPort = aggregationContainer.getMappedPort(Aggregation.HTTP_PORT);
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
         String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
@@ -193,7 +195,7 @@ public class TestcontainersSystemTest {
                         "data/agents/uk/amex/system_test_refresh_request_body.json");
 
         String aggregationHost = aggregationContainer.getContainerIpAddress();
-        int aggregationPort = aggregationContainer.getMappedPort(Aggregation.HTTP_PORT);
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
         String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
@@ -250,7 +252,7 @@ public class TestcontainersSystemTest {
                 readRequestBodyFromFile(
                         "data/agents/uk/barclays/system_test_authenticate_request_body.json");
         String aggregationHost = aggregationContainer.getContainerIpAddress();
-        int aggregationPort = aggregationContainer.getMappedPort(Aggregation.HTTP_PORT);
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
         String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
@@ -282,7 +284,7 @@ public class TestcontainersSystemTest {
     public void getRefreshShouldUploadEntitiesForBarclays() throws Exception {
         // given
         String aggregationHost = aggregationContainer.getContainerIpAddress();
-        int aggregationPort = aggregationContainer.getMappedPort(Aggregation.HTTP_PORT);
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
         String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
@@ -340,7 +342,7 @@ public class TestcontainersSystemTest {
     public void getTransferShouldExecuteAPaymentForBarclays() throws Exception {
         // given
         String aggregationHost = aggregationContainer.getContainerIpAddress();
-        int aggregationPort = aggregationContainer.getMappedPort(Aggregation.HTTP_PORT);
+        int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
         String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
@@ -389,7 +391,7 @@ public class TestcontainersSystemTest {
             aggregationControllerContainer.stop();
 
             // Just if we don't want to leave any traces behind
-            client.removeImageCmd(Aggregation.IMAGE).exec();
+            client.removeImageCmd(AggregationDecoupled.IMAGE).exec();
             client.removeImageCmd(AggregationController.IMAGE).exec();
         } finally {
             client.close();
