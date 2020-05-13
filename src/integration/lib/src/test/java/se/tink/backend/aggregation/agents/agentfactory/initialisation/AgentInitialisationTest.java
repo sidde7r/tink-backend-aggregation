@@ -35,8 +35,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
@@ -64,8 +62,6 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.user.rpc.User;
 
 public class AgentInitialisationTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(AgentInitialisationTest.class);
 
     private static final Validator VALIDATOR =
             Validation.buildDefaultValidatorFactory().getValidator();
@@ -282,6 +278,31 @@ public class AgentInitialisationTest {
         return context;
     }
 
+    private void handleException(Exception e, Provider provider) {
+        String errorMessagePrefix =
+                "Agent "
+                        + provider.getClassName()
+                        + " could not be instantiated for provider "
+                        + provider.getName();
+        if (e instanceof com.google.inject.ConfigurationException) {
+            throw new RuntimeException(
+                    errorMessagePrefix
+                            + " due to missing Guice module. \nPlease ensure that there is a Guice "
+                            + "module class with name AgentModule that extends AbstractModule and "
+                            + "located in module folder in classpath of the agent",
+                    e);
+        } else if (e instanceof ClassNotFoundException) {
+            throw new RuntimeException(
+                    errorMessagePrefix
+                            + " due to ClassNotFound exception. \nPlease ensure the followings: \n"
+                            + "1) Necessary runtime dep is included in src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/BUILD\n"
+                            + "2) The className in provider configuration (which is in tink-backend) does not have any typo",
+                    e);
+        } else {
+            throw new RuntimeException(errorMessagePrefix, e);
+        }
+    }
+
     private void initialiseAgent(Provider provider) {
         try {
             // given
@@ -291,12 +312,7 @@ public class AgentInitialisationTest {
             // when
             Agent agent = agentFactory.create(credentialsRequest, context);
         } catch (Exception e) {
-            logger.error(
-                    "Agent "
-                            + provider.getClassName()
-                            + " could not be instantiated for provider "
-                            + provider.getName());
-            throw new RuntimeException(e);
+            handleException(e, provider);
         }
     }
 
