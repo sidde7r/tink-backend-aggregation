@@ -242,6 +242,41 @@ public class TestcontainersSystemTest {
                         Collections.singletonList(givenIdentityData)));
     }
 
+    @Test
+    public void getAuthenticateForBarclaysShouldSetCredentialsStatusUpdated() throws Exception {
+        // given
+        String requestBodyForAuthenticateEndpoint =
+                readRequestBodyFromFile(
+                        "data/agents/uk/barclays/system_test_authenticate_request_body.json");
+        String aggregationHost = aggregationContainer.getContainerIpAddress();
+        int aggregationPort = aggregationContainer.getMappedPort(Aggregation.HTTP_PORT);
+
+        String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
+        int aggregationControllerPort =
+                aggregationControllerContainer.getMappedPort(AggregationController.HTTP_PORT);
+
+        // when
+        ResponseEntity<String> authenticateEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/authenticate",
+                                aggregationHost, aggregationPort),
+                        requestBodyForAuthenticateEndpoint);
+
+        Optional<String> finalStatusForCredentials =
+                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+                        String.format(
+                                "http://%s:%d/data",
+                                aggregationControllerHost, aggregationControllerPort),
+                        50,
+                        1);
+
+        // then
+        Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
+        Assert.assertTrue(finalStatusForCredentials.isPresent());
+        Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
+    }
+
     @After
     public void teardown() throws IOException {
         try {
