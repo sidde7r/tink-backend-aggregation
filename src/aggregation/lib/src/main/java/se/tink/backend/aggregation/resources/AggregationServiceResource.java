@@ -368,9 +368,11 @@ public class AggregationServiceResource implements AggregationService {
         }
         // This is the case there are two open banking provider share the same FIID, same secrets.
         // E.g. one private provider and one business provider
-        return filteredProviders.stream().map(ProviderConfiguration::getFinancialInstitutionName)
-                .distinct()
-                .limit(2)
-                .count() == 1;
+        return filteredProviders.stream()
+                        .map(ProviderConfiguration::getFinancialInstitutionName)
+                        .distinct()
+                        .limit(2)
+                        .count()
+                == 1;
     }
 }
