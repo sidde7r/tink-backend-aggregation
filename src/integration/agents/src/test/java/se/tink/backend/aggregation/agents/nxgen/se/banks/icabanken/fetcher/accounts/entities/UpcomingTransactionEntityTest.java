@@ -8,7 +8,7 @@ import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -167,7 +167,7 @@ public class UpcomingTransactionEntityTest {
 
         AccountIdentifier identifier = new BankGiroIdentifier("730-8596");
 
-        t.setAmount(Amount.inSEK(1.0));
+        t.setAmount(ExactCurrencyAmount.inSEK(1.0));
         t.setDueDate(new Date());
         t.setSource(new SwedishIdentifier("92714943462"));
         t.setDestination(identifier);
@@ -193,7 +193,7 @@ public class UpcomingTransactionEntityTest {
 
         AccountIdentifier identifier = new BankGiroIdentifier("730-8596");
 
-        t.setAmount(Amount.inSEK(1.0));
+        t.setAmount(ExactCurrencyAmount.inSEK(1.0));
         t.setDueDate(new Date());
         t.setSource(new SwedishIdentifier("92714943462"));
         t.setDestination(identifier);

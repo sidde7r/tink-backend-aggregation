@@ -7,6 +7,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -28,7 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.parse
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SdcNoTransactionFetcherTest {
@@ -120,7 +121,7 @@ public class SdcNoTransactionFetcherTest {
 
     private Transaction transaction() {
         return Transaction.builder()
-                .setAmount(new Amount())
+                .setAmount(new ExactCurrencyAmount(BigDecimal.ZERO, "EUR"))
                 .setDate(dateSupplier.get())
                 .setDescription("sample transaction")
                 .build();

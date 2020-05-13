@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.entities.payments.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.parsers.TransactionParser;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class NordeaNoTransactionParser implements TransactionParser {
     private static final Splitter CLEANUP_SPLITTER =
@@ -24,8 +24,8 @@ public class NordeaNoTransactionParser implements TransactionParser {
 
     @Override
     @VisibleForTesting
-    public Amount getAmount(TransactionEntity te) {
-        return Amount.inNOK(te.getTransactionAmount());
+    public ExactCurrencyAmount getAmount(TransactionEntity te) {
+        return ExactCurrencyAmount.inNOK(te.getTransactionAmount());
     }
 
     @Override
@@ -53,8 +53,8 @@ public class NordeaNoTransactionParser implements TransactionParser {
 
     @Override
     @VisibleForTesting
-    public Amount getAmount(PaymentEntity pe) {
-        return Amount.inNOK(-AgentParsingUtils.parseAmount(pe.getAmount()));
+    public ExactCurrencyAmount getAmount(PaymentEntity pe) {
+        return ExactCurrencyAmount.inNOK(-AgentParsingUtils.parseAmount(pe.getAmount()));
     }
 
     @Override
