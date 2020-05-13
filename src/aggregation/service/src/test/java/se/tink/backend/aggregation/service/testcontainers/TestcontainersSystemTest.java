@@ -150,12 +150,6 @@ public class TestcontainersSystemTest {
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
-        String aggregationControllerHost =
-                fakeAggregationControllerContainer.getContainerIpAddress();
-        int aggregationControllerPort =
-                fakeAggregationControllerContainer.getMappedPort(
-                        FakeAggregationController.HTTP_PORT);
-
         // when
         ResponseEntity<String> authenticateEndpointCallResult =
                 makePostRequest(
@@ -166,11 +160,7 @@ public class TestcontainersSystemTest {
 
         Optional<String> finalStatusForCredentials =
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
-                        String.format(
-                                "http://%s:%d/data",
-                                aggregationControllerHost, aggregationControllerPort),
-                        50,
-                        1);
+                        fakeAggregationControllerEndpoint(), 50, 1);
 
         // then
         Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
@@ -199,16 +189,6 @@ public class TestcontainersSystemTest {
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
-        String aggregationControllerHost =
-                fakeAggregationControllerContainer.getContainerIpAddress();
-        int aggregationControllerPort =
-                fakeAggregationControllerContainer.getMappedPort(
-                        FakeAggregationController.HTTP_PORT);
-
-        String aggregationControllerEndpoint =
-                String.format(
-                        "http://%s:%d/data", aggregationControllerHost, aggregationControllerPort);
-
         // when
         ResponseEntity<String> refreshEndpointCallResult =
                 makePostRequest(
@@ -220,12 +200,12 @@ public class TestcontainersSystemTest {
         List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
-                                aggregationControllerEndpoint, "updateAccount", 50, 1));
+                                fakeAggregationControllerEndpoint(), "updateAccount", 50, 1));
 
         List<Map<String, Object>> givenTransactions =
                 parseTransactions(
                         pollForAllCallbacksForAnEndpoint(
-                                aggregationControllerEndpoint,
+                                fakeAggregationControllerEndpoint(),
                                 "updateTransactionsAsynchronously",
                                 50,
                                 1));
@@ -233,7 +213,7 @@ public class TestcontainersSystemTest {
         Map<String, Object> givenIdentityData =
                 parseIdentityData(
                         pollForAllCallbacksForAnEndpoint(
-                                aggregationControllerEndpoint, "updateIdentity", 50, 1));
+                                fakeAggregationControllerEndpoint(), "updateIdentity", 50, 1));
 
         // then
         Assert.assertEquals(204, refreshEndpointCallResult.getStatusCodeValue());
@@ -258,12 +238,6 @@ public class TestcontainersSystemTest {
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
-        String aggregationControllerHost =
-                fakeAggregationControllerContainer.getContainerIpAddress();
-        int aggregationControllerPort =
-                fakeAggregationControllerContainer.getMappedPort(
-                        FakeAggregationController.HTTP_PORT);
-
         // when
         ResponseEntity<String> authenticateEndpointCallResult =
                 makePostRequest(
@@ -274,11 +248,7 @@ public class TestcontainersSystemTest {
 
         Optional<String> finalStatusForCredentials =
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
-                        String.format(
-                                "http://%s:%d/data",
-                                aggregationControllerHost, aggregationControllerPort),
-                        50,
-                        1);
+                        fakeAggregationControllerEndpoint(), 50, 1);
 
         // then
         Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
@@ -291,16 +261,6 @@ public class TestcontainersSystemTest {
         // given
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
-
-        String aggregationControllerHost =
-                fakeAggregationControllerContainer.getContainerIpAddress();
-        int aggregationControllerPort =
-                fakeAggregationControllerContainer.getMappedPort(
-                        FakeAggregationController.HTTP_PORT);
-
-        String aggregationControllerEndpoint =
-                String.format(
-                        "http://%s:%d/data", aggregationControllerHost, aggregationControllerPort);
 
         AgentContractEntitiesJsonFileParser contractParser =
                 new AgentContractEntitiesJsonFileParser();
@@ -326,12 +286,12 @@ public class TestcontainersSystemTest {
         List<?> givenAccounts =
                 parseAccounts(
                         pollForAllCallbacksForAnEndpoint(
-                                aggregationControllerEndpoint, "updateAccount", 50, 1));
+                                fakeAggregationControllerEndpoint(), "updateAccount", 50, 1));
 
         List<Map<String, Object>> givenTransactions =
                 parseTransactions(
                         pollForAllCallbacksForAnEndpoint(
-                                aggregationControllerEndpoint,
+                                fakeAggregationControllerEndpoint(),
                                 "updateTransactionsAsynchronously",
                                 50,
                                 1));
@@ -352,15 +312,6 @@ public class TestcontainersSystemTest {
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
-        String aggregationControllerHost =
-                fakeAggregationControllerContainer.getContainerIpAddress();
-        int aggregationControllerPort =
-                fakeAggregationControllerContainer.getMappedPort(
-                        FakeAggregationController.HTTP_PORT);
-        String aggregationControllerEndpoint =
-                String.format(
-                        "http://%s:%d/data", aggregationControllerHost, aggregationControllerPort);
-
         String requestBodyForTransferEndpoint =
                 readRequestBodyFromFile(
                         "data/agents/uk/barclays/system_test_transfer_request_body.json");
@@ -375,15 +326,11 @@ public class TestcontainersSystemTest {
 
         Optional<String> finalStatusForCredentials =
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
-                        String.format(
-                                "http://%s:%d/data",
-                                aggregationControllerHost, aggregationControllerPort),
-                        50,
-                        1);
+                        fakeAggregationControllerEndpoint(), 50, 1);
 
         List<JsonNode> credentialsCallbacks =
                 pollForAllCallbacksForAnEndpoint(
-                        aggregationControllerEndpoint, "updateCredentials", 50, 1);
+                        fakeAggregationControllerEndpoint(), "updateCredentials", 50, 1);
         JsonNode lastCallbackForCredentials =
                 credentialsCallbacks.get(credentialsCallbacks.size() - 1);
 
@@ -392,6 +339,14 @@ public class TestcontainersSystemTest {
         Assert.assertTrue(finalStatusForCredentials.isPresent());
         Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
         Assert.assertEquals("TRANSFER", lastCallbackForCredentials.get("requestType").asText());
+    }
+
+    private String fakeAggregationControllerEndpoint() {
+        final String host = fakeAggregationControllerContainer.getContainerIpAddress();
+        final int port =
+                fakeAggregationControllerContainer.getMappedPort(
+                        FakeAggregationController.HTTP_PORT);
+        return String.format("http://%s:%d/data", host, port);
     }
 
     @After
