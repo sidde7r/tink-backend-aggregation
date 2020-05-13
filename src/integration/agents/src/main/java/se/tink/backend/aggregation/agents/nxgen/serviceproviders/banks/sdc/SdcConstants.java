@@ -216,14 +216,11 @@ public class SdcConstants {
             return this.tinkAccountType;
         }
 
-        public static AccountType fromProductType(String productType) {
-            for (AccountType accountType : AccountType.values()) {
-                if (productType.equalsIgnoreCase(accountType.productType)) {
-                    return accountType;
-                }
-            }
-
-            return AccountType.UNKNOWN;
+        public static AccountType fromProductType(final String productType) {
+            return Arrays.stream(AccountType.values())
+                    .filter(accountType -> accountType.productType.equalsIgnoreCase(productType))
+                    .findFirst()
+                    .orElse(AccountType.UNKNOWN);
         }
     }
 
