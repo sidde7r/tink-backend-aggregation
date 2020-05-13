@@ -1,7 +1,6 @@
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 load("//tools/bzl:template_file.bzl", "templated_file")
-load("@com_github_atlassian_bazel_tools//multirun:def.bzl", "command", "multirun")
 
 java_library(
     name = "service",
@@ -171,30 +170,4 @@ pkg_tar(
     package_dir = "/usr/share/tink-backend-aggregation",
     tags = ["manual"],
     visibility = ["//docker:__pkg__"],
-)
-
-command(
-    name = "run_aggregation_decoupled",
-    arguments = [
-        "server",
-        "src/aggregation/service/decoupled_config.out",
-    ],
-    command = "//src/aggregation/service:bin_decoupled",
-)
-
-command(
-    name = "run_fake_aggregation_controller",
-    arguments = [
-        "--debug_mode",
-    ],
-    command = "//src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller:bin",
-)
-
-multirun(
-    name = "run_aggregation_decoupled_and_external_deps",
-    commands = [
-        ":run_fake_aggregation_controller",
-        ":run_aggregation_decoupled",
-    ],
-    parallel = True,
 )
