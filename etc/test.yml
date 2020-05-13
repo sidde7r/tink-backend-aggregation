@@ -18,6 +18,7 @@ agentsServiceConfiguration:
     esProxy: false
     swedbankKeepAlive: true
     resetSuplementalInformation: false
+    swedbankExtendedBankId: true
   abnAmro:
     ignoreCreditCardErrors: false
     trustStore:
