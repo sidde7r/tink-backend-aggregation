@@ -35,20 +35,17 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new Xs2aDevelopersApiClient(client, persistentStorage);
+        Xs2aDevelopersConfiguration xs2aDevelopersConfiguration = getClientConfiguration();
+        apiClient =
+                new Xs2aDevelopersApiClient(client, persistentStorage, xs2aDevelopersConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        Xs2aDevelopersConfiguration xs2aDevelopersConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(xs2aDevelopersConfiguration);
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
-
-    protected abstract String getIntegrationName();
 
     private Xs2aDevelopersConfiguration getClientConfiguration() {
         return getAgentConfigurationController()

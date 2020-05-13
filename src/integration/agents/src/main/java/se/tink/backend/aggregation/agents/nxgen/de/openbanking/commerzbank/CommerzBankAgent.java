@@ -11,9 +11,4 @@ public final class CommerzBankAgent extends Xs2aDevelopersTransactionalAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return CommerzBankConstants.INTEGRATION_NAME;
-    }
 }

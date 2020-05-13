@@ -18,11 +18,6 @@ public final class ComdirectAgent extends Xs2aDevelopersAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return ComdirectConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected Authenticator constructAuthenticator() {
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(

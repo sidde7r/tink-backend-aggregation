@@ -15,16 +15,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class EuropabankAgent extends Xs2aDevelopersTransactionalAgent {
 
-    private static final String INTEGRATION_NAME = "europabank";
-
     public EuropabankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getIntegrationName() {
-        return INTEGRATION_NAME;
     }
 
     @Override
