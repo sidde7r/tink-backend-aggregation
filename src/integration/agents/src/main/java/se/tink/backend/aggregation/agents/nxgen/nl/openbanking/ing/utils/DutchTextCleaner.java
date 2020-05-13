@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 public class DutchTextCleaner {
 
@@ -30,27 +31,25 @@ public class DutchTextCleaner {
                     "voor",
                     "periode",
                     "t/m",
-                    "kaartnummer");
+                    "kaartnummer",
+                    "doorlopende",
+                    "incasso");
 
     public String clean(String description) {
 
-        StringBuilder cleanString = new StringBuilder();
-        if (description.contains("<br>")) {
-            description = description.replaceAll("<br>", " | ");
-        } else if (description.contains("\\n")) {
-            description = description.replaceAll("\\n", " | ");
-        }
+        List<String> descriptions = new ArrayList<>();
 
-        if (description.contains("|")) {
-            String[] split = description.split("\\|");
-            for (String str : split) {
-                String removedStr = removeUnNeededText(str.toLowerCase());
-                if (!removedStr.isEmpty()) {
-                    cleanString = cleanString.append(removedStr).append(" | ");
-                }
+        if (!description.contains("\n")) {
+            return description;
+        }
+        String[] split = description.split("\n");
+        for (String str : split) {
+            String removedStr = removeUnNeededText(str.toLowerCase());
+            if (!removedStr.isEmpty()) {
+                descriptions.add(removedStr);
             }
         }
-        return StringUtils.chop(cleanString.toString().trim()).trim();
+        return WordUtils.capitalizeFully(StringUtils.join(descriptions, " ").trim());
     }
 
     private static String removeUnNeededText(final String text) {
@@ -74,6 +73,7 @@ public class DutchTextCleaner {
                             .map(s -> s.replaceAll("naam:", "")) // removed word "naam:"
                             .collect(Collectors.toList());
         }
-        return String.join(" ", cleanString);
+
+        return String.join(" ", cleanString.stream().distinct().collect(Collectors.toList()));
     }
 }
