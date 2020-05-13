@@ -16,8 +16,7 @@ public final class FiduciaConstants {
                     HeaderKeys.DIGEST,
                     HeaderKeys.X_REQUEST_ID,
                     HeaderKeys.PSU_ID,
-                    "psu-corporate-id",
-                    HeaderKeys.TPP_REDIRECT_URI);
+                    "psu-corporate-id");
 
     public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
             TypeMapper.<PaymentStatus>builder()

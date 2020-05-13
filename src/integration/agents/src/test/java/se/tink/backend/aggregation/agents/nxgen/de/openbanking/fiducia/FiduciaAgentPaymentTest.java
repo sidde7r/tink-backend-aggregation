@@ -42,7 +42,7 @@ public class FiduciaAgentPaymentTest {
         ibanManager.before();
 
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("de", "de-raiffeisenbank-munchen-sud-ob")
+                new AgentIntegrationTest.Builder("de", "de-vrbank-raiba-muc-sued-ob")
                         .addCredentialField(
                                 CredentialKeys.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
                         .addCredentialField(

@@ -1,0 +1,13 @@
+agentsServiceConfiguration:
+  integrations:
+    bd692d10011b4811aa1f43d387422978:
+      tink:
+        redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
+        certificate: "dummy_tpp_signature"
+        certificatePath: "path"
+        keyId: "dummy_key"
+        keyPath: "path"
+        tppId: "dummy_tpp_id"
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

@@ -171,6 +171,10 @@ public class WireMockTestServer {
             return WireMock.post(urlPattern);
         }
 
+        if ("put".equalsIgnoreCase(method)) {
+            return WireMock.put(urlPattern);
+        }
+
         throw new RuntimeException(
                 "The following HTTP method cannot be handled by the test framework : " + method);
     }
