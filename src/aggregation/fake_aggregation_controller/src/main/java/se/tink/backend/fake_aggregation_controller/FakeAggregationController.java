@@ -43,7 +43,9 @@ public class FakeAggregationController extends Application<Configuration> {
     }
 
     @Override
-    public void initialize(Bootstrap<Configuration> b) {}
+    public void initialize(Bootstrap<Configuration> b) {
+        // noop
+    }
 
     @Override
     public void run(Configuration c, Environment e) {
