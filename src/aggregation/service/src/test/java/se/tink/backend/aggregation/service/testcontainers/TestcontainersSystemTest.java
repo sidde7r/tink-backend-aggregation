@@ -10,6 +10,7 @@ import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForA
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.readRequestBodyFromFile;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dockerjava.api.DockerClient;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -333,6 +334,52 @@ public class TestcontainersSystemTest {
         Assert.assertTrue(
                 AgentContractEntitiesAsserts.areListsMatchingVerbose(
                         expectedAccounts, givenAccounts));
+    }
+
+    @Test
+    public void getTransferShouldExecuteAPaymentForBarclays() throws Exception {
+        // given
+        String aggregationHost = aggregationContainer.getContainerIpAddress();
+        int aggregationPort = aggregationContainer.getMappedPort(Aggregation.HTTP_PORT);
+
+        String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
+        int aggregationControllerPort =
+                aggregationControllerContainer.getMappedPort(AggregationController.HTTP_PORT);
+        String aggregationControllerEndpoint =
+                String.format(
+                        "http://%s:%d/data", aggregationControllerHost, aggregationControllerPort);
+
+        String requestBodyForTransferEndpoint =
+                readRequestBodyFromFile(
+                        "data/agents/uk/barclays/system_test_transfer_request_body.json");
+
+        // when
+        ResponseEntity<String> transferEndpointCallResult =
+                makePostRequest(
+                        String.format(
+                                "http://%s:%d/aggregation/transfer",
+                                aggregationHost, aggregationPort),
+                        requestBodyForTransferEndpoint);
+
+        Optional<String> finalStatusForCredentials =
+                pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+                        String.format(
+                                "http://%s:%d/data",
+                                aggregationControllerHost, aggregationControllerPort),
+                        50,
+                        1);
+
+        List<JsonNode> credentialsCallbacks =
+                pollForAllCallbacksForAnEndpoint(
+                        aggregationControllerEndpoint, "updateCredentials", 50, 1);
+        JsonNode lastCallbackForCredentials =
+                credentialsCallbacks.get(credentialsCallbacks.size() - 1);
+
+        // then
+        Assert.assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
+        Assert.assertTrue(finalStatusForCredentials.isPresent());
+        Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
+        Assert.assertEquals("TRANSFER", lastCallbackForCredentials.get("requestType").asText());
     }
 
     @After
