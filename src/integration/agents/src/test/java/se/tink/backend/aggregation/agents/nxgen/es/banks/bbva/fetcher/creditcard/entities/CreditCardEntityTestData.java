@@ -1,12 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities;
 
-import se.tink.libraries.amount.Amount;
-
 public class CreditCardEntityTestData {
-    private static Double balance = 111.11;
-    public static Amount AMOUNT = new Amount("EUR", balance);
 
-    public static String CREDIT_CARD_TRANSACTION =
+    static String CREDIT_CARD_TRANSACTION =
             "{\n"
                     + "      \"id\": \"111111111111_111111_111111_11111111111111111111111adadad11111111111111111111111111111111111_AA\",\n"
                     + "      \"operationKey\": \"123123****2314   123123123123123123\",\n"

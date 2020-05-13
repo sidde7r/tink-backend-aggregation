@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject
@@ -67,15 +68,15 @@ public class TransactionEntity extends AbstractTransactionEntity {
             return Optional.empty();
         }
 
-        Amount amount = new Amount(this.currency, AgentParsingUtils.parseAmount(this.amount));
+        double parsedAmount = AgentParsingUtils.parseAmount(amount);
 
-        if (amount.isEmpty()) {
+        if (Strings.isNullOrEmpty(currency) || !Double.isFinite(parsedAmount)) {
             return Optional.empty();
         }
 
         Transaction.Builder transactionBuilder =
                 Transaction.builder()
-                        .setAmount(amount)
+                        .setAmount(ExactCurrencyAmount.of(parsedAmount, currency))
                         .setDate(this.date)
                         .setDescription(SwedbankBaseConstants.Description.clean(this.description));
 
