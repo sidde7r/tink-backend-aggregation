@@ -45,7 +45,7 @@ import se.tink.backend.aggregation.service.utils.SystemTestUtils;
 /** These tests assume that the Docker daemon is running. */
 @Slf4j
 @RunWith(SpringRunner.class)
-public class TestcontainersSystemTest {
+public class SystemTest {
 
     private static class AggregationDecoupled {
         private static final String BASE = "src/aggregation/service";
