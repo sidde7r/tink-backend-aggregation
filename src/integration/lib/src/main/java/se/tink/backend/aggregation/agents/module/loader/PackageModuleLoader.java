@@ -1,52 +1,29 @@
 package se.tink.backend.aggregation.agents.module.loader;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ScanResult;
-import java.lang.reflect.Modifier;
-import java.util.Collection;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
 public final class PackageModuleLoader {
 
-    /*
-       This method is synchronised because we observed some problematic behaviour if we call this
-       code block by multiple threads. In such case, sometimes the scan method cannot detect anything
-       To reproduce the issue, remove "synchronized" keyword and run AgentInitialisationTest.java
-       where initialiseAgent method are run in parallel (you might need to run it multiple times
-       to observe the issue)
-    */
-    private synchronized ScanResult getScanResult(final String packagePath) {
-        return new ClassGraph().enableClassInfo().whitelistPackages(packagePath).scan();
-    }
+    public Set<Module> getModulesInPackage(final String packagePath) {
+        Set<Module> result = new HashSet<>();
 
-    public Set<Module> getModulesInPackage(final String packagePath)
-            throws ReflectiveOperationException {
-
-        final Collection<Class<Module>> moduleClasses;
-        try (final ScanResult scanResult = getScanResult(packagePath)) {
-            moduleClasses =
-                    scanResult
-                            .getClassesImplementing(Module.class.getName())
-                            .loadClasses(Module.class);
+        try {
+            String modulePath = packagePath + ".module.AgentModule";
+            Class<AbstractModule> classDefinition =
+                    (Class<AbstractModule>) Class.forName(modulePath);
+            Module module = classDefinition.getDeclaredConstructor().newInstance();
+            result.add(module);
+        } catch (ClassNotFoundException
+                | IllegalAccessException
+                | InstantiationException
+                | NoSuchMethodException
+                | InvocationTargetException e) {
+            // NOOP (it is normal not to find any module, not all agents use a custom module)
         }
-
-        Set<Module> moduleSet = new HashSet<>();
-        for (Class<? extends Module> moduleClass : moduleClasses) {
-            if (!Modifier.isAbstract(moduleClass.getModifiers())
-                    && !TestModule.class.isAssignableFrom(moduleClass)) {
-
-                try {
-                    moduleSet.add(moduleClass.getConstructor().newInstance());
-                } catch (NoSuchMethodException e) {
-                    throw new NoSuchMethodException(
-                            String.format(
-                                    "Could not find default constructor in module <%s>",
-                                    moduleClass));
-                }
-            }
-        }
-        return moduleSet;
+        return result;
     }
 }

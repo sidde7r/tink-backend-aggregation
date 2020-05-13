@@ -7,6 +7,5 @@ java_library(
     deps = [
         "//third_party:com_google_inject_guice",
         "//third_party:org_reflections_reflections",
-        "@aggregation//:io_github_classgraph_classgraph",
     ],
 )

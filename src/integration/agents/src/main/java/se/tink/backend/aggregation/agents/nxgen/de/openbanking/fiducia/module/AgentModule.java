@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModule;
 
-public final class FiduciaAgentModule extends AbstractModule {
+public final class AgentModule extends AbstractModule {
 
     @Override
     protected void configure() {
