@@ -21,11 +21,15 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
     private final SwedbankDefaultApiClient apiClient;
     private final SessionStorage sessionStorage;
     private Boolean hasExtendedBankId;
+    private final boolean checkExtendedBankId;
 
     public SwedbankDefaultTransferDestinationFetcher(
-            SwedbankDefaultApiClient apiClient, SessionStorage sessionStorage) {
+            SwedbankDefaultApiClient apiClient,
+            SessionStorage sessionStorage,
+            boolean checkExtendedBankId) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.checkExtendedBankId = checkExtendedBankId;
     }
 
     @Override
@@ -58,16 +62,15 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
                         .setDestinationAccounts(paymentDestinationAccounts)
                         .setTinkAccounts(accounts);
 
-        // TODO: Re-add condition to check for extend bankID before adding generic pattern
-        // TODO: when payments confirm that they have sorted out details on their side
         // Only users with extended bankID can make transfers to new recipients. Therefore only
         // adding the generic pattern for users with extended bankID. Already saved recipients
         // are added explicitly when we set destination accounts.
-
-        transferDestinationPatternBuilder.addMultiMatchPattern(
-                AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL);
-        transferDestinationPatternBuilder.addMultiMatchPattern(
-                AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL);
+        if (checkExtendedBankId && hasExtendedBankId) {
+            transferDestinationPatternBuilder.addMultiMatchPattern(
+                    AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL);
+            transferDestinationPatternBuilder.addMultiMatchPattern(
+                    AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL);
+        }
 
         return transferDestinationPatternBuilder.build();
     }
@@ -91,14 +94,13 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
                         .setDestinationAccounts(transferDestinationAccounts)
                         .setTinkAccounts(accounts);
 
-        // TODO: Re-add condition to check for extend bankID before adding generic pattern
-        // TODO: when payments confirm that they have sorted out details on their side
         // Only users with extended bankID can make transfers to new recipients. Therefore only
         // adding the generic pattern for users with extended bankID. Already saved recipients
         // are added explicitly when we set destination accounts.
-
-        transferDestinationPatternBuilder.addMultiMatchPattern(
-                AccountIdentifier.Type.SE, TransferDestinationPattern.ALL);
+        if (checkExtendedBankId && hasExtendedBankId) {
+            transferDestinationPatternBuilder.addMultiMatchPattern(
+                    AccountIdentifier.Type.SE, TransferDestinationPattern.ALL);
+        }
 
         return transferDestinationPatternBuilder.build();
     }
