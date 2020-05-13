@@ -2,6 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.at.creditcards.amex.v62;
 
 public final class AmericanExpressV62ATConstants {
 
+    public static final String MARKET = "AT";
+    public static final String PROVIDER_NAME = "at-americanexpress-password";
+    public static final String INIT_VERSION =
+            "6670e0b7b9d4e22eae63b37055e058115c179a7aE3_PRODbbd1552d-41b6-4f83-8026-872e6a72797a";
+
     private AmericanExpressV62ATConstants() {
         throw new AssertionError();
     }

@@ -8,6 +8,8 @@ public final class AmericanExpressITConstants {
 
     public static final String MARKET = "IT";
     public static final String PROVIDER_NAME = "it-americanexpress-password";
+    public static final String INIT_VERSION =
+            "5b8c4af07fde7ab550636ac3cc9a42344dfb6100E3_PRODbbd1552d-41b6-4f83-8026-872e6a72797a";
 
     public static class HeaderValues {
         public static final String APP_ID = "it.co.americanexpress.amexservice";

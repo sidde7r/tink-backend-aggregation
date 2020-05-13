@@ -44,6 +44,11 @@ public class AmericanExpressV62SEConfiguration implements AmericanExpressV62Conf
     }
 
     @Override
+    public String getInitVersion() {
+        return AmericanExpressV62SEConstants.INIT_VERSION;
+    }
+
+    @Override
     public String getUserAgent() {
         return AmericanExpressV62SEConstants.HeaderValues.USER_AGENT;
     }

@@ -21,6 +21,11 @@ public class AmericanExpressITConfiguration implements AmericanExpressV62Configu
     }
 
     @Override
+    public String getInitVersion() {
+        return AmericanExpressITConstants.INIT_VERSION;
+    }
+
+    @Override
     public String getUserAgent() {
         return AmericanExpressITConstants.HeaderValues.USER_AGENT;
     }

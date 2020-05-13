@@ -13,6 +13,11 @@ public class AmericanExpressDEConfiguration implements AmericanExpressV62Configu
     }
 
     @Override
+    public String getInitVersion() {
+        return AmericanExpressDEConstants.INIT_VERSION;
+    }
+
+    @Override
     public String getUserAgent() {
         return AmericanExpressDEConstants.HeaderValues.USER_AGENT;
     }

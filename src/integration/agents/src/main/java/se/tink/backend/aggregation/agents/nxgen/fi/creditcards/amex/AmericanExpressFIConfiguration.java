@@ -20,6 +20,11 @@ public class AmericanExpressFIConfiguration implements AmericanExpressV62Configu
     }
 
     @Override
+    public String getInitVersion() {
+        return AmericanExpressFIConstants.INIT_VERSION;
+    }
+
+    @Override
     public String getUserAgent() {
         return AmericanExpressFIConstants.HeaderValues.USER_AGENT;
     }

@@ -2,6 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v62;
 
 public final class AmericanExpressV62SEConstants {
 
+    public static final String MARKET = "SE";
+    public static final String PROVIDER_NAME = "se-americanexpress-password";
+    public static final String INIT_VERSION =
+            "726b052bcadfae880a9e1b3b29b0adbd0226124cE3_PRODbbd1552d-41b6-4f83-8026-872e6a72797a";
+
     private AmericanExpressV62SEConstants() {
         throw new AssertionError();
     }

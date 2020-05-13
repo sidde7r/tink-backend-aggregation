@@ -114,7 +114,12 @@ public class AmericanExpressV62ApiClient {
                 .get(String.class);
     }
 
-    public InitializationResponse initialization(InitializationRequest request) {
+    public InitializationResponse initialization() {
+        final String initVersion =
+                persistentStorage.getOrDefault(Tags.INIT_VERSION, config.getInitVersion());
+        final InitializationRequest request =
+                InitializationRequest.createAccountServicingRequest(initVersion);
+
         return createRequest(Urls.INITIALIZATION)
                 .header(Headers.REQUEST_SEQUENCE, 0)
                 .post(InitializationResponse.class, request);

@@ -14,6 +14,8 @@ public interface AmericanExpressV62Configuration extends ClientConfiguration {
 
     String getAppId();
 
+    String getInitVersion();
+
     String getUserAgent();
     // == Credit Card Account ==
 

@@ -4,6 +4,8 @@ public final class AmericanExpressBEConstants {
 
     public static final String MARKET = "BE";
     public static final String PROVIDER_NAME = "be-americanexpress-password";
+    public static final String INIT_VERSION =
+            "319a43f648e1d7af12f06e78ef9340e443885037E3_PRODbbd1552d-41b6-4f83-8026-872e6a72797a";
 
     private AmericanExpressBEConstants() {
         throw new AssertionError();

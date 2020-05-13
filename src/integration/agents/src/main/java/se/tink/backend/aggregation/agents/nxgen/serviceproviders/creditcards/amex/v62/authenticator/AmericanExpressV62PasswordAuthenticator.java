@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
@@ -114,10 +113,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
 
     private void sendInitializationRequests() {
         apiClient.fetchSaneIdCookie();
-        String initVersion = persistentStorage.getOrDefault(Tags.INIT_VERSION, "-1");
-        InitializationResponse response =
-                apiClient.initialization(
-                        InitializationRequest.createAccountServicingRequest(initVersion));
+        InitializationResponse response = apiClient.initialization();
         if (response.getInitialization().getStatus().equals(0)) {
             persistentStorage.put(Tags.INIT_VERSION, response.getInitialization().getVersion());
         }
