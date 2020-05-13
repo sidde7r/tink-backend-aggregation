@@ -7,15 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class AxaAgent extends Xs2aDevelopersTransactionalAgent {
 
-    public static final String INTEGRATION_NAME = "axa";
-
     public AxaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getIntegrationName() {
-        return INTEGRATION_NAME;
     }
 }

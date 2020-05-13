@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.CONSENT_ID;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues.SCOPE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.OAUTH_TOKEN;
 
 import org.junit.Before;
@@ -19,24 +19,19 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Xs2aDevelopersAuthenticatorTest {
-
     private static final String CLIENT_ID = "CLIENT_ID";
     private static final String BASE_URL = "BASE_URL";
     private static final String STATE = "STATE";
-    private static final String AIS_CONSENT_ID = "AIS:CONSENT_ID";
+    private static final String CONSENT_ID = "CONSENT_ID";
+    private static final String AIS_CONSENT_ID = SCOPE + CONSENT_ID;
     private static final String SCA_OAUTH = "SCA_OAUTH";
     private static final String API_CLIENT_AUTHORIZE_URL = "API_CLIENT_AUTHORIZE_URL";
-    private static final String CONSENT_ID = "CONSENT_ID";
     private static final String CODE = "CODE";
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     private static final String TOKEN_TYPE = "TOKEN_TYPE";
     private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     private static final long EXPIRES_IN = 1L;
-
-    private Xs2aDevelopersApiClient apiClient;
-    private Xs2aDevelopersAuthenticator authenticator;
-    private Xs2aDevelopersConfiguration configuration;
-    private GetTokenResponse GET_TOKEN_RESPONSE =
+    private static final GetTokenResponse GET_TOKEN_RESPONSE =
             SerializationUtils.deserializeFromString(
                     "{\"access_token\" : \""
                             + ACCESS_TOKEN
@@ -48,7 +43,7 @@ public class Xs2aDevelopersAuthenticatorTest {
                             + TOKEN_TYPE
                             + "\"}",
                     GetTokenResponse.class);
-    private PostConsentResponse POST_CONSENT_RESPONSE =
+    private static final PostConsentResponse POST_CONSENT_RESPONSE =
             SerializationUtils.deserializeFromString(
                     "{\"consentId\" : \""
                             + CONSENT_ID
@@ -56,6 +51,10 @@ public class Xs2aDevelopersAuthenticatorTest {
                             + SCA_OAUTH
                             + "\"} }",
                     PostConsentResponse.class);
+
+    private Xs2aDevelopersApiClient apiClient;
+    private Xs2aDevelopersAuthenticator authenticator;
+    private Xs2aDevelopersConfiguration configuration;
     private PersistentStorage storage;
 
     @Before

@@ -4,12 +4,10 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.CryptoUtils.getCodeVerifier;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryKeys;
@@ -42,21 +40,16 @@ public class Xs2aDevelopersApiClient {
     private final PersistentStorage persistentStorage;
     private Xs2aDevelopersConfiguration configuration;
 
-    public Xs2aDevelopersApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public Xs2aDevelopersApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            Xs2aDevelopersConfiguration configuration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-    }
-
-    protected Xs2aDevelopersConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    protected void setConfiguration(Xs2aDevelopersConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    protected RequestBuilder createRequest(URL url) {
+    private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON);
@@ -67,7 +60,7 @@ public class Xs2aDevelopersApiClient {
         return createRequest(url).addBearerToken(authToken);
     }
 
-    protected RequestBuilder createFetchingRequest(URL url) {
+    private RequestBuilder createFetchingRequest(URL url) {
         return createRequestInSession(url)
                 .header(HeaderKeys.CONSENT_ID, getConsentIdFromStorage())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());

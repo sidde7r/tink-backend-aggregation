@@ -15,16 +15,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class KeytradeBankAgent extends Xs2aDevelopersTransactionalAgent {
 
-    private static final String INTEGRATION_NAME = "keytradebank";
-
     public KeytradeBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getIntegrationName() {
-        return INTEGRATION_NAME;
     }
 
     @Override
