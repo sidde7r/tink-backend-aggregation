@@ -69,7 +69,7 @@ public class TestcontainersSystemTest {
 
     private DockerClient client;
     @Rule public GenericContainer aggregationContainer;
-    @Rule public GenericContainer aggregationControllerContainer;
+    @Rule public GenericContainer fakeAggregationControllerContainer;
 
     @Before
     public void setup() throws FileNotFoundException {
@@ -77,8 +77,8 @@ public class TestcontainersSystemTest {
 
         Network network = Network.newNetwork();
 
-        aggregationControllerContainer = setupAggregationControllerContainer(client, network);
-        aggregationControllerContainer.start();
+        fakeAggregationControllerContainer = setupAggregationControllerContainer(client, network);
+        fakeAggregationControllerContainer.start();
 
         aggregationContainer = setupAggregationContainer(client, network);
         aggregationContainer.start();
@@ -150,9 +150,11 @@ public class TestcontainersSystemTest {
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
-        String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
+        String aggregationControllerHost =
+                fakeAggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
-                aggregationControllerContainer.getMappedPort(FakeAggregationController.HTTP_PORT);
+                fakeAggregationControllerContainer.getMappedPort(
+                        FakeAggregationController.HTTP_PORT);
 
         // when
         ResponseEntity<String> authenticateEndpointCallResult =
@@ -197,9 +199,11 @@ public class TestcontainersSystemTest {
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
-        String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
+        String aggregationControllerHost =
+                fakeAggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
-                aggregationControllerContainer.getMappedPort(FakeAggregationController.HTTP_PORT);
+                fakeAggregationControllerContainer.getMappedPort(
+                        FakeAggregationController.HTTP_PORT);
 
         String aggregationControllerEndpoint =
                 String.format(
@@ -254,9 +258,11 @@ public class TestcontainersSystemTest {
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
-        String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
+        String aggregationControllerHost =
+                fakeAggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
-                aggregationControllerContainer.getMappedPort(FakeAggregationController.HTTP_PORT);
+                fakeAggregationControllerContainer.getMappedPort(
+                        FakeAggregationController.HTTP_PORT);
 
         // when
         ResponseEntity<String> authenticateEndpointCallResult =
@@ -286,9 +292,11 @@ public class TestcontainersSystemTest {
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
-        String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
+        String aggregationControllerHost =
+                fakeAggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
-                aggregationControllerContainer.getMappedPort(FakeAggregationController.HTTP_PORT);
+                fakeAggregationControllerContainer.getMappedPort(
+                        FakeAggregationController.HTTP_PORT);
 
         String aggregationControllerEndpoint =
                 String.format(
@@ -344,9 +352,11 @@ public class TestcontainersSystemTest {
         String aggregationHost = aggregationContainer.getContainerIpAddress();
         int aggregationPort = aggregationContainer.getMappedPort(AggregationDecoupled.HTTP_PORT);
 
-        String aggregationControllerHost = aggregationControllerContainer.getContainerIpAddress();
+        String aggregationControllerHost =
+                fakeAggregationControllerContainer.getContainerIpAddress();
         int aggregationControllerPort =
-                aggregationControllerContainer.getMappedPort(FakeAggregationController.HTTP_PORT);
+                fakeAggregationControllerContainer.getMappedPort(
+                        FakeAggregationController.HTTP_PORT);
         String aggregationControllerEndpoint =
                 String.format(
                         "http://%s:%d/data", aggregationControllerHost, aggregationControllerPort);
@@ -388,7 +398,7 @@ public class TestcontainersSystemTest {
     public void teardown() throws IOException {
         try {
             aggregationContainer.stop();
-            aggregationControllerContainer.stop();
+            fakeAggregationControllerContainer.stop();
 
             // Just if we don't want to leave any traces behind
             client.removeImageCmd(AggregationDecoupled.IMAGE).exec();
