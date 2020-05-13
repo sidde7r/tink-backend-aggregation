@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
@@ -32,19 +30,6 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
         this.configuration = configuration;
     }
 
-    public Xs2aDevelopersConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
-    public PersistentStorage getPersistentStorage() {
-        return persistentStorage;
-    }
-
-    public Xs2aDevelopersApiClient getApiClient() {
-        return apiClient;
-    }
-
     @Override
     public URL buildAuthorizeUrl(String state) {
         AccessEntity accessEntity = new AccessEntity(FormValues.ALL_ACCOUNTS);
@@ -60,7 +45,7 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
         persistentStorage.put(StorageKeys.CONSENT_ID, postConsentResponse.getConsentId());
         return apiClient.buildAuthorizeUrl(
                 state,
-                QueryValues.SCOPE + persistentStorage.get(StorageKeys.CONSENT_ID),
+                QueryValues.SCOPE + postConsentResponse.getConsentId(),
                 postConsentResponse.getLinks().getScaOAuth());
     }
 
