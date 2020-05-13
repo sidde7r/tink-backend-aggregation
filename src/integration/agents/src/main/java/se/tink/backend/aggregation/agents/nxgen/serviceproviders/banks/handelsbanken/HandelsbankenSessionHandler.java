@@ -4,6 +4,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.KeepAliveResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
@@ -38,6 +39,8 @@ public class HandelsbankenSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         validateUserIsLoggedIn();
 
+        LOGGER.info("in keep Alive: going to call HandelsbankenApiClient->keepAlive");
+
         KeepAliveResponse keepAlive =
                 sessionStorage
                         .applicationEntryPoint()
@@ -63,16 +66,15 @@ public class HandelsbankenSessionHandler implements SessionHandler {
     }
 
     private void validateUserIsLoggedIn() throws SessionException {
-        persistentStorage
-                .getAuthorizeResponse()
-                .orElseThrow(HandelsbankenSessionHandler::sessionException);
-        if (persistentStorage.getAuthorizeResponse().isPresent()) {
+        AuthorizeResponse authorizeResponse =
+                persistentStorage
+                        .getAuthorizeResponse()
+                        .orElseThrow(HandelsbankenSessionHandler::sessionException);
+        if (authorizeResponse != null) {
             LOGGER.info(
                     String.format(
-                            "validateUserIsLoggedIno: %s",
-                            persistentStorage.getAuthorizeResponse().get().getAutoStartToken()));
+                            "validateUserIsLoggedIn: %s", authorizeResponse.getAutoStartToken()));
         }
-        ;
     }
 
     private static SessionException sessionException() {

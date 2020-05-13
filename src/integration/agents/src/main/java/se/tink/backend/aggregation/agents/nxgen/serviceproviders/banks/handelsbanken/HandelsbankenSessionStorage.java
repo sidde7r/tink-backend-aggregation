@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardsResponse;
@@ -10,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class HandelsbankenSessionStorage {
     private final SessionStorage sessionStorage;
     private final HandelsbankenConfiguration configuration;
+    private static final Logger log = LoggerFactory.getLogger(HandelsbankenApiClient.class);
 
     public HandelsbankenSessionStorage(HandelsbankenConfiguration configuration) {
         this.sessionStorage = new SessionStorage();
@@ -21,16 +24,19 @@ public class HandelsbankenSessionStorage {
     }
 
     public void persist(ApplicationEntryPointResponse applicationEntryPoint) {
+        log.info("going to persist applicationEntryPoint");
         persist(HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT, applicationEntryPoint);
     }
 
     public Optional<ApplicationEntryPointResponse> applicationEntryPoint() {
+        log.info("going to retrieve applicationEntryPoint");
         return retrieve(
                 HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT,
                 ApplicationEntryPointResponse.class);
     }
 
     public void removeApplicationEntryPoint() {
+        log.info("going to remove applicationEntryPoint");
         remove(HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT);
     }
 
@@ -56,14 +62,23 @@ public class HandelsbankenSessionStorage {
     }
 
     private <T> Optional<T> retrieve(String key, Class<T> valueType) {
-        return this.sessionStorage.get(key, valueType);
+        Optional<T> value = this.sessionStorage.get(key, valueType);
+        if (value.isPresent()) {
+            log.info("in retrieve key: {}, valueType: {}, value: {}", key, valueType, value.get());
+        } else {
+            log.info("in retrieve key: {}, valueType: {}, no value", key, valueType);
+        }
+
+        return value;
     }
 
     private void persist(String key, Object value) {
+        log.info("in persist key: {}, value: {}, no value", key, value);
         this.sessionStorage.put(key, value);
     }
 
     private void remove(String key) {
+        log.info("removing key: {} ", key);
         this.sessionStorage.remove(key);
     }
 }
