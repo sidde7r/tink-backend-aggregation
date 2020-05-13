@@ -44,8 +44,7 @@ developmentConfiguration:
     base64encodedkey: 'QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE='
 
   aggregationControllerClientConfiguration:
-    host: fake_aggregation_controller
-    port: 8080
+    socket: "${AGGREGATION_CONTROLLER_SOCKET:-localhost:8080}"
 
 database:
   driverClass: com.mysql.jdbc.Driver

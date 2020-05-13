@@ -83,15 +83,16 @@ steps:
     agents:
       queue: default
 
-  - plugins:
+  - name: ':junit: System Test'
+    branches: '!master'
+    command: .buildkite/run-system-tests.sh
+    timeout_in_minutes: 15
+    agents:
+      queue: default
+    plugins:
       docker-compose#v3.0.3:
         run: app
         config: docker/docker-compose-system-tests.bazel.yml
-    branches: '!master'
-    name: ':junit: System tests'
-    timeout_in_minutes: 10
-    agents:
-      queue: default
 
   - name: ':male-detective: run detect-secrets on new commits'
     command: "/bin/sh /opt/detect-secrets"

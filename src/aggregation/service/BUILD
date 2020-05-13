@@ -1,7 +1,6 @@
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 load("//tools/bzl:template_file.bzl", "templated_file")
-load("@com_github_atlassian_bazel_tools//multirun:def.bzl", "command", "multirun")
 
 java_library(
     name = "service",
@@ -27,7 +26,10 @@ java_library(
         "//src/libraries/dropwizard_utils",
         "//third_party:com_codahale_metrics_metrics_healthchecks",
         "//third_party:com_google_inject_guice",
+        "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:org_slf4j_slf4j_api",
+        "//third_party/dropwizard",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_netflix_governator_governator",
     ],
@@ -115,6 +117,7 @@ container_image(
     tars = [
         ":bin_tar",
         ":data_tar",
+        ":cryptography_tar",
         ":config_tar",
     ],
     visibility = ["//visibility:public"],
@@ -142,6 +145,16 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cryptography_tar",
+    srcs = ["//data:cryptography_all_files"],
+    mode = "0444",
+    package_dir = "/usr/share/tink-backend-aggregation/data",
+    strip_prefix = "/data",
+    tags = ["manual"],
+    visibility = ["//docker:__pkg__"],
+)
+
+pkg_tar(
     name = "bin_tar",
     srcs = [":bin_deploy"],
     mode = "0444",
@@ -157,30 +170,4 @@ pkg_tar(
     package_dir = "/usr/share/tink-backend-aggregation",
     tags = ["manual"],
     visibility = ["//docker:__pkg__"],
-)
-
-command(
-    name = "run_aggregation_decoupled",
-    arguments = [
-        "server",
-        "src/aggregation/service/decoupled_config.out",
-    ],
-    command = "//src/aggregation/service:bin_decoupled",
-)
-
-command(
-    name = "run_fake_aggregation_controller",
-    arguments = [
-        "--debug_mode",
-    ],
-    command = "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/aggregationcontroller:fake_aggregationcontroller_bin",
-)
-
-multirun(
-    name = "run_aggregation_decoupled_and_external_deps",
-    commands = [
-        ":run_fake_aggregation_controller",
-        ":run_aggregation_decoupled",
-    ],
-    parallel = True,
 )
