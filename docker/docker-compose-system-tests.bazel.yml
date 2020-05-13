@@ -1,7 +1,6 @@
 version: '2.1'
 services:
   app:
-    command: .buildkite/run-system-tests.sh
     image: "gcr.io/tink-containers/bazel:3.0.0"
     working_dir: /tink-backend
     volumes:
