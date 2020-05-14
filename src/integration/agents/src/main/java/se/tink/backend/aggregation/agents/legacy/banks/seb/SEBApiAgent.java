@@ -941,10 +941,6 @@ public class SEBApiAgent extends AbstractAgent
             }
 
             SebResponse sebResponse = response.getEntity(SebResponse.class);
-            if (sebResponse == null) {
-                return Collections.emptyList();
-            }
-
             return sebResponse.getAccountEntities();
         } finally {
             response.close();
