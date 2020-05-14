@@ -7,5 +7,6 @@ java_library(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
+        "@aggregation//:com_google_guava_guava",
     ],
 )

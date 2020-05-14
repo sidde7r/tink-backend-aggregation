@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.p
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.ZoneId;
+import java.util.Collection;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -50,7 +51,12 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-        apiClient = new NordeaPartnerApiClient(client, sessionStorage, credentials);
+        apiClient =
+                new NordeaPartnerApiClient(
+                        client,
+                        sessionStorage,
+                        credentials,
+                        getApiLocale(request.getUser().getLocale()));
         client.registerJacksonModule(new JavaTimeModule());
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
@@ -170,5 +176,16 @@ public abstract class NordeaPartnerAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionPagePaginationController<>(fetcher, 1)));
+    }
+
+    protected abstract Collection<String> getSupportedLocales();
+
+    private String getApiLocale(String userLocale) {
+        final String userLanguage = userLocale.split("_")[0];
+        return getSupportedLocales().stream()
+                .filter(locale -> locale.startsWith(userLanguage))
+                .findFirst()
+                // all agents support "en-<MARKET>" language
+                .orElseGet(() -> getApiLocale("en"));
     }
 }

@@ -41,10 +41,6 @@ public class NordeaPartnerConstants {
         public static final String END_DATE = "end_date";
     }
 
-    public class HeaderValues {
-        public static final String ACCEPT_LANGUAGE = "en-SE";
-    }
-
     public class Jwt {
         public static final String ISSUER = "Tink";
         public static final String JWT_CONTENT_TYPE = "JWT";

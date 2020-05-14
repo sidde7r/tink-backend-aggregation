@@ -9,5 +9,6 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/libraries/account_identifier",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
