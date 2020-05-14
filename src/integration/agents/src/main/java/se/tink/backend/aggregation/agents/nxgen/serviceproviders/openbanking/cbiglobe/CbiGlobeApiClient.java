@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.UpdateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.CbiGlobeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.configuration.InstrumentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.exception.NoAccountsException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -174,7 +176,13 @@ public class CbiGlobeApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        return createAccountsRequestWithConsent().get(GetAccountsResponse.class);
+        GetAccountsResponse getAccountsResponse =
+                createAccountsRequestWithConsent().get(GetAccountsResponse.class);
+        if (CollectionUtils.isEmpty(getAccountsResponse.getAccounts())) {
+            throw new NoAccountsException("There are no bank accounts!");
+        }
+
+        return getAccountsResponse;
     }
 
     public GetBalancesResponse getBalances(String resourceId) {
