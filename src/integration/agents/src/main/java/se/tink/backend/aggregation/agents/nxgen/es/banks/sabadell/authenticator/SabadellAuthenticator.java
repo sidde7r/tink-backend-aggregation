@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.KeyValueEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SabadellSessionData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SecurityInputEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -55,7 +54,10 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
     private void login(String username, String password) throws LoginException {
         final String csid = getCSID();
         final SessionResponse response = apiClient.initiateSession(username, password, csid, null);
-        storeSessionResponse(response);
+        SabadellSessionData sessionData = fetchSessionData();
+        sessionData.setSessionResponse(response);
+        sessionData.setCredentials(username, password);
+        storeSessionData(sessionData);
     }
 
     private AuthenticationStepResponse checkSCA() {
@@ -70,11 +72,9 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
         }
     }
 
-    private AuthenticationStepResponse processOtp(String otp, Credentials credentials)
-            throws LoginException {
+    private AuthenticationStepResponse processOtp(String otp) throws LoginException {
+        SabadellSessionData sessionData = fetchSessionData();
         final SessionResponse initResponse = getStoredSessionResponse();
-        final String username = credentials.getField(Field.Key.USERNAME);
-        final String password = credentials.getField(Field.Key.PASSWORD);
         final String csid = getCSID();
         final String keyboardKey =
                 initResponse.getUser().getSecurityOutput().getFloatingKeyboard().getKey();
@@ -88,9 +88,10 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
 
         LOG.info("SCA: entering OTP");
         final SessionResponse response =
-                apiClient.initiateSession(username, password, csid, securityInput);
-
-        storeSessionResponse(response);
+                apiClient.initiateSession(
+                        sessionData.getUsername(), sessionData.getPassword(), csid, securityInput);
+        sessionData.setSessionResponse(response);
+        storeSessionData(sessionData);
         return AuthenticationStepResponse.executeNextStep();
     }
 
@@ -103,8 +104,14 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
                                         "Init response not found in session storage."));
     }
 
-    private void storeSessionResponse(SessionResponse response) {
-        sessionStorage.put(Storage.SESSION_KEY, response);
+    private void storeSessionData(SabadellSessionData sessionData) {
+        sessionStorage.put(Storage.SESSION_KEY, sessionData);
+    }
+
+    private SabadellSessionData fetchSessionData() {
+        return sessionStorage
+                .get(Storage.SESSION_KEY, SabadellSessionData.class)
+                .orElse(new SabadellSessionData());
     }
 
     private String getCSID() {

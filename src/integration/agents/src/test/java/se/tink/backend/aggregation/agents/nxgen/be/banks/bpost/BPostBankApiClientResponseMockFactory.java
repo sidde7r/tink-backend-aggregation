@@ -42,6 +42,16 @@ public class BPostBankApiClientResponseMockFactory {
                 .thenReturn(responseDTO);
     }
 
+    public static void mockRegistrationAuthorizeWithIncorrectChallengeCode(
+            BPostBankApiClient apiClientMock) throws AuthenticationException {
+        RegistrationResponseDTO responseDTO = Mockito.mock(RegistrationResponseDTO.class);
+        Mockito.when(responseDTO.isErrorChallengeResponseIncorrect()).thenReturn(true);
+        Mockito.when(
+                        apiClientMock.registrationAuthorize(
+                                Mockito.any(), Mockito.eq(CHALLENGE_SING_CODE)))
+                .thenReturn(responseDTO);
+    }
+
     public static void mockRegistrationExecute(BPostBankApiClient apiClientMock)
             throws AuthenticationException {
         RegistrationResponseDTO responseDTO = Mockito.mock(RegistrationResponseDTO.class);

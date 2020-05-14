@@ -146,8 +146,32 @@ public class BPostBankAuthenticatorTest {
         // then
         Assert.assertTrue(response.getStepIdentifier().isPresent());
         Assert.assertEquals(
-                BPostBankSigningAuthenticationStep.class.getName(),
-                response.getStepIdentifier().get());
+                BPostBankSigningAuthenticationStep.STEP_ID, response.getStepIdentifier().get());
+    }
+
+    @Test
+    public void shouldRepeatSignWhenPreviousChallengeResponseCodeWasIncorrect()
+            throws AuthenticationException, AuthorizationException {
+        // given
+        BPostBankAuthContext authContext = new BPostBankAuthContext();
+        BPostBankApiClientResponseMockFactory.mockRegistrationInit(apiClient);
+        BPostBankApiClientResponseMockFactory.mockRegistrationAuthorizeWithIncorrectChallengeCode(
+                apiClient);
+        authContext.initRegistration(apiClient.registrationInit(authContext), credentials);
+        BPostBankAuthenticator objectUnderTest =
+                new BPostBankAuthenticator(apiClient, authContext, credentialsRequest);
+        Map<String, String> userInputs = new HashMap<>();
+        userInputs.put(Field.Key.SIGN_CODE_INPUT.getFieldKey(), "12341234");
+        // when
+        SteppableAuthenticationResponse response =
+                objectUnderTest.processAuthentication(
+                        SteppableAuthenticationRequest.subsequentRequest(
+                                BPostBankSigningAuthenticationStep.STEP_ID,
+                                new AuthenticationRequest(credentials).withUserInputs(userInputs)));
+        // then
+        Assert.assertTrue(response.getStepIdentifier().isPresent());
+        Assert.assertEquals(
+                BPostBankSigningAuthenticationStep.STEP_ID, response.getStepIdentifier().get());
     }
 
     @Test
