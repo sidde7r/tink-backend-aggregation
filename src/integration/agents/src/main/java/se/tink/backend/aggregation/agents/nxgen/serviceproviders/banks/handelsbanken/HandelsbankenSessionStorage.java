@@ -23,6 +23,12 @@ public class HandelsbankenSessionStorage {
         this(sessionStorage.configuration);
     }
 
+    public HandelsbankenSessionStorage(
+            HandelsbankenConfiguration handelsbankenConfiguration, SessionStorage sessionStorage) {
+        this.sessionStorage = sessionStorage;
+        this.configuration = handelsbankenConfiguration;
+    }
+
     public void persist(ApplicationEntryPointResponse applicationEntryPoint) {
         log.info("going to persist applicationEntryPoint");
         persist(HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT, applicationEntryPoint);
