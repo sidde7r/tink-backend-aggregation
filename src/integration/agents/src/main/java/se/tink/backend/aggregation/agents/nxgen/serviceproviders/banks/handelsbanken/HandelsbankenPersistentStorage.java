@@ -135,7 +135,7 @@ public class HandelsbankenPersistentStorage {
     }
 
     public void persist(AuthorizeResponse authorize) {
-        log.info("going to persist AUTHORIZE_END_POINT");
+        log.info("going to persist AUTHORIZE_END_POINT: {}", authorize);
         persist(HandelsbankenConstants.Storage.AUTHORIZE_END_POINT, authorize);
     }
 
@@ -149,7 +149,7 @@ public class HandelsbankenPersistentStorage {
                         HandelsbankenConstants.Storage.AUTHORIZE_END_POINT,
                         AuthorizeResponse.class);
         if (deserialize.isPresent()) {
-            log.info("AuthorizeResponse: {}", deserialize.get().getAutoStartToken());
+            log.info("AuthorizeResponse: {}", deserialize.get());
         } else {
             log.info("AuthorizeResponse: is not present");
         }
