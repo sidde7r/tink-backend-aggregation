@@ -40,7 +40,7 @@ public class DemobankAgent extends NextGenerationAgent
 
     private String getCallbackUri() {
         String callbackUri = request.getCallbackUri();
-        if (callbackUri == null) {
+        if (callbackUri == null || callbackUri.trim().length() == 0) {
             switch (context.getClusterId()) {
                 case ClusterIds.OXFORD_STAGING:
                     callbackUri = ClusterSpecificCallbacks.OXFORD_STAGING_CALLBACK;
