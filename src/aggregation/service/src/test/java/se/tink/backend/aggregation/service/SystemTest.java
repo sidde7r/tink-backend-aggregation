@@ -9,6 +9,7 @@ import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTra
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.readRequestBodyFromFile;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.resetFakeAggregationController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.dockerjava.api.DockerClient;
@@ -22,10 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -67,12 +68,12 @@ public class SystemTest {
         private static final String NETWORK_ALIAS = "fakeaggregationcontroller";
     }
 
-    private DockerClient client;
-    @Rule public GenericContainer aggregationContainer;
-    @Rule public GenericContainer fakeAggregationControllerContainer;
+    private static GenericContainer aggregationContainer;
+    private static GenericContainer fakeAggregationControllerContainer;
+    private static DockerClient client;
 
-    @Before
-    public void setup() throws FileNotFoundException {
+    @BeforeClass
+    public static void setUp() throws FileNotFoundException {
         client = DockerClientFactory.instance().client();
 
         Network network = Network.newNetwork();
@@ -82,6 +83,20 @@ public class SystemTest {
 
         aggregationContainer = setupAggregationContainer(client, network);
         aggregationContainer.start();
+    }
+
+    @AfterClass
+    public static void tearDown() throws IOException {
+        try {
+            aggregationContainer.stop();
+            fakeAggregationControllerContainer.stop();
+
+            // Just if we don't want to leave any traces behind
+            client.removeImageCmd(AggregationDecoupled.IMAGE).exec();
+            client.removeImageCmd(FakeAggregationController.IMAGE).exec();
+        } finally {
+            client.close();
+        }
     }
 
     private static GenericContainer setupAggregationContainer(DockerClient client, Network network)
@@ -349,17 +364,16 @@ public class SystemTest {
         return String.format("http://%s:%d/data", host, port);
     }
 
-    @After
-    public void teardown() throws IOException {
-        try {
-            aggregationContainer.stop();
-            fakeAggregationControllerContainer.stop();
+    @Before
+    public void reset() throws Exception {
+        resetFakeAggregationController(fakeAggregationControllerResetEndpoint());
+    }
 
-            // Just if we don't want to leave any traces behind
-            client.removeImageCmd(AggregationDecoupled.IMAGE).exec();
-            client.removeImageCmd(FakeAggregationController.IMAGE).exec();
-        } finally {
-            client.close();
-        }
+    private String fakeAggregationControllerResetEndpoint() {
+        final String host = fakeAggregationControllerContainer.getContainerIpAddress();
+        final int port =
+                fakeAggregationControllerContainer.getMappedPort(
+                        FakeAggregationController.HTTP_PORT);
+        return String.format("http://%s:%d/reset", host, port);
     }
 }
