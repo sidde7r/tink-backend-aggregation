@@ -81,6 +81,11 @@ public class SystemTestUtils {
         return response;
     }
 
+    public static void resetFakeAggregationController(String url) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        makeGetRequest(url, headers);
+    }
+
     public static Optional<List<String>> fetchCallbacksForEndpoint(String url, String endPoint)
             throws Exception {
         HttpHeaders headers = new HttpHeaders();
