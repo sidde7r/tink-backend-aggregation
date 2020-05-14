@@ -74,6 +74,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
 
                 persistentStorage.persist(authorize);
                 sessionStorage.persist(applicationEntryPoint);
+                client.keepAlive(applicationEntryPoint);
                 break;
             case WAITING:
                 lastWaitingResult = authenticate.getResult();

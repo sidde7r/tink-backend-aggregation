@@ -71,9 +71,7 @@ public class HandelsbankenSessionHandler implements SessionHandler {
                         .getAuthorizeResponse()
                         .orElseThrow(HandelsbankenSessionHandler::sessionException);
         if (authorizeResponse != null) {
-            LOGGER.info(
-                    String.format(
-                            "validateUserIsLoggedIn: %s", authorizeResponse.getAutoStartToken()));
+            LOGGER.info(String.format("validateUserIsLoggedIn: %s", authorizeResponse));
         }
     }
 
