@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Link;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Mandate;
@@ -45,7 +43,6 @@ public abstract class BaseResponse {
     private int initialSleepTime;
 
     private int status;
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseResponse.class);
 
     @JsonProperty("_links")
     public Map<String, Link> getLinks() {
@@ -65,23 +62,15 @@ public abstract class BaseResponse {
         Map<String, Link> linkMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         linkMap.putAll(
                 linksList.stream().collect(Collectors.toMap(Link::getRel, Function.identity())));
-        linkMap.forEach((str, link) -> LOGGER.info("findLink: {}: {}", str, link));
         return linkMap;
     }
 
     protected URL findLink(Linkable linkable) {
-        LOGGER.info("findLink: {}", linkable.getName());
-        URL url =
-                searchLink(linkable)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                getLinks() + " does not contain expected url"));
-        if (url != null) {
-            LOGGER.info("findLink: {}, url: {}", linkable.getName(), url.get());
-        }
-
-        return url;
+        return searchLink(linkable)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        getLinks() + " does not contain expected url"));
     }
 
     protected Optional<URL> searchLink(Linkable linkable) {

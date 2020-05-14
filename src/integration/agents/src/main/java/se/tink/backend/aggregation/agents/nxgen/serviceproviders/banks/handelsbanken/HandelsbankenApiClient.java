@@ -103,11 +103,8 @@ public abstract class HandelsbankenApiClient {
         try {
             // it's 'only' a ping so Handelsbanken doesn't return anything when alive but returns
             // XML if not...
-            LOGGER.info("keepAlive: going to get link");
             HttpResponse httpResponse =
                     createRequest(applicationEntryPoint.toKeepAlive()).get(HttpResponse.class);
-
-            LOGGER.info("httpResponse hasBody: {}", httpResponse.hasBody());
 
             if (httpResponse.hasBody()) {
                 long stop = System.nanoTime();
