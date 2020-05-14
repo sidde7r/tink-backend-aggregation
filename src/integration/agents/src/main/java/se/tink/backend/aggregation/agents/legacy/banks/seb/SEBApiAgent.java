@@ -941,10 +941,6 @@ public class SEBApiAgent extends AbstractAgent
             }
 
             SebResponse sebResponse = response.getEntity(SebResponse.class);
-            if (sebResponse == null) {
-                return Collections.emptyList();
-            }
-
             return sebResponse.getAccountEntities();
         } finally {
             response.close();
@@ -967,7 +963,13 @@ public class SEBApiAgent extends AbstractAgent
                 || !response.getType().isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
             return false;
         }
-        return true;
+
+        SebResponse sebResponse = response.getEntity(SebResponse.class);
+        if (sebResponse == null) {
+            return false;
+        }
+
+        return sebResponse.isValid();
     }
 
     // Since we're updating investment accounts separately we don't want to update them when
