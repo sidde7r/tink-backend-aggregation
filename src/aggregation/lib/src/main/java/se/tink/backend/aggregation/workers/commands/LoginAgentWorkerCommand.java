@@ -187,8 +187,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                             credentials.getStatusPayload()));
             log.info(
                     String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
-
-            credentials.setSupplementalInformation(null);
             statusUpdater.updateStatus(CredentialsStatus.UPDATING);
         }
 
