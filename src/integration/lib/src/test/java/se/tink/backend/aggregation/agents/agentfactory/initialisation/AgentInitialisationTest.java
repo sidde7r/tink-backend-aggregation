@@ -287,9 +287,10 @@ public class AgentInitialisationTest {
         if (e instanceof com.google.inject.ConfigurationException) {
             throw new RuntimeException(
                     errorMessagePrefix
-                            + " due to missing Guice module. \nPlease ensure that there is a Guice "
-                            + "module class with name AgentModule that extends AbstractModule and "
-                            + "located in module folder in classpath of the agent",
+                            + " probably due to missing guice dependency.\n"
+                            + "Make sure that you add any additional modules to your agent via the "
+                            + "@AgentDependencyModules annotation, and that these modules bind any "
+                            + "dependency your agent may have.",
                     e);
         } else if (e instanceof ClassNotFoundException) {
             throw new RuntimeException(

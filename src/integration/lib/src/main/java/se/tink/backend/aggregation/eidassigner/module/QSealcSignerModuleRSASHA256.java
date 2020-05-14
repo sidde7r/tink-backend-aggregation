@@ -1,10 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.module;
+package se.tink.backend.aggregation.eidassigner.module;
 
 import com.google.inject.AbstractModule;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModule;
 
-public final class AgentModule extends AbstractModule {
+public final class QSealcSignerModuleRSASHA256 extends AbstractModule {
 
     @Override
     protected void configure() {
