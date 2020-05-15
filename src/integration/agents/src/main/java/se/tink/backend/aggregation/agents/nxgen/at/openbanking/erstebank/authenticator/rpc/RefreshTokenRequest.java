@@ -13,13 +13,11 @@ public class RefreshTokenRequest extends RefreshTokenBaseRequest {
     }
 
     public Map<String, String> toData() {
-        return new HashMap<String, String>() {
-            {
-                put(QueryKeys.CLIENT_ID, clientId);
-                put(QueryKeys.CLIENT_SECRET, clientSecret);
-                put(QueryKeys.GRANT_TYPE, grantType);
-                put(QueryKeys.REFRESH_TOKEN, token);
-            }
-        };
+        Map<String, String> data = new HashMap<>();
+        data.put(QueryKeys.CLIENT_ID, clientId);
+        data.put(QueryKeys.CLIENT_SECRET, clientSecret);
+        data.put(QueryKeys.GRANT_TYPE, grantType);
+        data.put(QueryKeys.REFRESH_TOKEN, token);
+        return data;
     }
 }
