@@ -10,12 +10,23 @@ public class ClientInfo {
     private String clientSecret;
     private long clientIdIssuedAt;
     private long clientSecretExpiresAt;
+    private String tokenEndpointAuthMethod;
+
+    public String getTokenEndpointAuthMethod() {
+        return tokenEndpointAuthMethod;
+    }
 
     public ClientInfo() {}
 
     public ClientInfo(String clientId, String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+    }
+
+    public ClientInfo(String clientId, String clientSecret, String tokenEndpointAuthMethod) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
     }
 
     public String getClientId() {
