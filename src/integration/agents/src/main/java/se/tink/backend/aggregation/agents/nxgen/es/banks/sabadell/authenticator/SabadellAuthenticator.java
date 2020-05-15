@@ -96,12 +96,7 @@ public class SabadellAuthenticator extends StatelessProgressiveAuthenticator {
     }
 
     private SessionResponse getStoredSessionResponse() {
-        return sessionStorage
-                .get(Storage.SESSION_KEY, SessionResponse.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Init response not found in session storage."));
+        return fetchSessionData().getSessionResponse();
     }
 
     private void storeSessionData(SabadellSessionData sessionData) {
