@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class HandelsbankenBaseTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -26,15 +26,15 @@ public class HandelsbankenBaseTransactionalAccountFetcher
 
     private final HandelsbankenBaseApiClient apiClient;
     private HandelsbankenBaseAccountConverter converter;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
 
     private static final Logger logger =
             LoggerFactory.getLogger(HandelsbankenBaseTransactionalAccountFetcher.class);
 
     public HandelsbankenBaseTransactionalAccountFetcher(
-            HandelsbankenBaseApiClient apiClient, SessionStorage sessionStorage) {
+            HandelsbankenBaseApiClient apiClient, PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     public void setConverter(HandelsbankenBaseAccountConverter converter) {
@@ -93,7 +93,7 @@ public class HandelsbankenBaseTransactionalAccountFetcher
     }
 
     private Optional<Date> getMaxDateFromSession() {
-        return sessionStorage.get(
+        return persistentStorage.get(
                 HandelsbankenBaseConstants.StorageKeys.MAX_FETCH_PERIOD_MONTHS, Date.class);
     }
 }

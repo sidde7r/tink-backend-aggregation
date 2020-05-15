@@ -37,12 +37,12 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
 
     @Override
     protected Date setMaxPeriodTransactions() {
-        Date date = new Date();
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.MONTH, -HandelsbankenGBConstants.MAX_FETCH_PERIOD_MONTHS);
-        sessionStorage.put(HandelsbankenBaseConstants.StorageKeys.MAX_FETCH_PERIOD_MONTHS, date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -HandelsbankenGBConstants.MAX_FETCH_PERIOD_MONTHS);
+        persistentStorage.put(
+                HandelsbankenBaseConstants.StorageKeys.MAX_FETCH_PERIOD_MONTHS, calendar.getTime());
 
-        return date;
+        return calendar.getTime();
     }
 
     @Override
