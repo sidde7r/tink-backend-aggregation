@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class TimeUtils {
 
+    private TimeUtils() {}
+
     public static String getDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
