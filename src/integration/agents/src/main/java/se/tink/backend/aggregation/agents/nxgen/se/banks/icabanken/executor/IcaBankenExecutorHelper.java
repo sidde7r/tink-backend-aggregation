@@ -131,7 +131,8 @@ public class IcaBankenExecutorHelper {
             } else {
                 constructAndThrowCancelledTransferExecutionExceptionWithMessage(
                         IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_MESSAGE,
-                        IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_END_USER_MESSAGE);
+                        TransferExecutionException.EndUserMessage
+                                .COULD_NOT_SAVE_NEW_RECIPIENT_MESSAGE);
             }
         } catch (HttpResponseException e) {
             handelHttpExceptionResponse(e.getResponse());
@@ -496,16 +497,17 @@ public class IcaBankenExecutorHelper {
                                     IcaBankenConstants.Transfers.ERROR_SAVING_RECIPIENT)) {
                 constructAndThrowCancelledTransferExecutionExceptionWithMessage(
                         IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_MESSAGE,
-                        IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_END_USER_MESSAGE);
+                        TransferExecutionException.EndUserMessage
+                                .COULD_NOT_SAVE_NEW_RECIPIENT_MESSAGE);
             }
         }
     }
 
     private void constructAndThrowCancelledTransferExecutionExceptionWithMessage(
-            String message, String endUserMessage) {
+            String message, TransferExecutionException.EndUserMessage endUserMessage) {
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(statusUpdater.getCatalog().getString(message))
-                .setEndUserMessage(endUserMessage)
+                .setMessage((message))
+                .setEndUserMessage(statusUpdater.getCatalog().getString(endUserMessage))
                 .build();
     }
 }

@@ -221,7 +221,10 @@ public class TransferExecutionException extends RuntimeException {
         MISSING_MESSAGE_TYPE(new LocalizableKey("Missing message type")),
         INVALID_STRUCTURED_MESSAGE(new LocalizableKey("The entered structured message is invalid")),
         END_USER_WRONG_PAYMENT_TYPE(
-                new LocalizableKey("This type of payment is unavailable for you"));
+                new LocalizableKey("This type of payment is unavailable for you")),
+        COULD_NOT_SAVE_NEW_RECIPIENT_MESSAGE(
+                new LocalizableKey(
+                        "Could not save new recipient, check that the information is correct"));
 
         private final LocalizableKey key;
 

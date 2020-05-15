@@ -167,8 +167,6 @@ public class IcaBankenConstants {
                 "No original transfer on payload to compare with.";
         public static final String NO_RECIPIENT_NAME = "Could not get recipient name from user";
         public static final String NO_SAVE_NEW_RECIPIENT_MESSAGE = "Could not save new recipient";
-        public static final String NO_SAVE_NEW_RECIPIENT_END_USER_MESSAGE =
-                "Check that the information is correct";
         public static final String EINVOICE_MODIFIED_IN_BANK_APP =
                 "The e-invoice has been changed in the bank app,"
                         + " user have to refresh so that we update according to most recent data";
