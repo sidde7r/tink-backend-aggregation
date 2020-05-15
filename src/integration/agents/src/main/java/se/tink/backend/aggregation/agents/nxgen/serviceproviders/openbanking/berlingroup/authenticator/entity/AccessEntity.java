@@ -11,9 +11,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AccessEntity {
 
-    protected List<IbanEntity> accounts = new ArrayList<>();
-    protected List<IbanEntity> transactions = new ArrayList<>();
-    protected List<IbanEntity> balances = new ArrayList<>();
+    protected List<IbanEntity> accounts;
+    protected List<IbanEntity> transactions;
+    protected List<IbanEntity> balances;
     protected String allPsd2;
 
     @JsonIgnore
@@ -40,17 +40,12 @@ public class AccessEntity {
 
         public AccessEntity.Builder withTransactions(List<String> transactions) {
             this.transactions =
-                    transactions.stream()
-                            .map(iban -> new IbanEntity(iban))
-                            .collect(Collectors.toList());
+                    transactions.stream().map(IbanEntity::new).collect(Collectors.toList());
             return this;
         }
 
         public AccessEntity.Builder withBalances(List<String> balances) {
-            this.balances =
-                    balances.stream()
-                            .map(iban -> new IbanEntity(iban))
-                            .collect(Collectors.toList());
+            this.balances = balances.stream().map(IbanEntity::new).collect(Collectors.toList());
             return this;
         }
 

@@ -12,6 +12,7 @@ public class AuthorizationEntity {
         this.signature = signature;
     }
 
+    @Override
     public String toString() {
         return BerlinGroupConstants.Signature.KEY_ID_NAME
                 + "\""
