@@ -25,7 +25,7 @@ X-Aggregator: Tink Testing
 
 grant_type=client_credentials&scope=accounts&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_secret=DUMMY_SECRET
 
-RESPONSE 2
+RESPONSE 2 SET STATE_REFRESH
 200
 Content-Type: application/json;charset=utf-8
 Transfer-Encoding: chunked
@@ -72,13 +72,13 @@ Set-Cookie: 09cc08b965e567968f2b5dc4f6ea9dcf=040df567185881b6f1e10fa88782ca0b;pa
 
 {"Data":{"Permissions":["ReadAccountsDetail","ReadBalances","ReadBeneficiariesDetail","ReadDirectDebits","ReadStandingOrdersDetail","ReadTransactionsCredits","ReadTransactionsDebits","ReadTransactionsDetail","ReadParty"],"ConsentId":"BARCLAYS-A-10000002326251","Status":"AwaitingAuthorisation","CreationDateTime":"2020-01-30T12:43:26.000Z","StatusUpdateDateTime":"2020-01-30T12:43:26.000Z"},"Risk":{},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/aisp/account-access-consents"},"Meta":{}}
 
-REQUEST 4
+REQUEST 4 MATCH STATE_REFRESH
 POST https://token.tiaa.barclays.com/as/token.oauth2
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 X-Aggregator: Tink Testing
 
-grant_type=authorization_code&scope=accounts&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_secret=DUMMY_SECRET&code=DUMMY_AUTH_CODE
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_secret=DUMMY_SECRET&code=DUMMY_AUTH_CODE
 
 RESPONSE 4
 200

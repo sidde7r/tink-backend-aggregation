@@ -27,7 +27,7 @@ X-Aggregator: Tink Testing
 
 grant_type=client_credentials&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_secret=DUMMY_SECRET
 
-RESPONSE 2
+RESPONSE 2 SET STATE_PAYMENT
 200
 Content-Type: application/json;charset=utf-8
 Transfer-Encoding: chunked
@@ -68,13 +68,13 @@ x-fapi-interaction-id: 00000000-0000-4000-0000-000000000000
 
 {"Data":{"ConsentId":"BARCLAYS-P-10000000245531","CreationDateTime":"2020-03-04T14:34:37Z","Status":"AwaitingAuthorisation","StatusUpdateDateTime":"2020-03-04T14:34:37Z","Initiation":{"InstructionIdentification":"b900555d03124056b54930e1c53c9cac","EndToEndIdentification":"b900555d03124056b54930e1c53c9ca","InstructedAmount":{"Amount":"1.00","Currency":"GBP"},"CreditorAccount":{"SchemeName":"UK.OBIE.SortCodeAccountNumber","Identification":"04000469430924","Name":"Ritesh Tink"},"RemittanceInformation":{"Unstructured":"b900555d03124056b54930e1c53c9cac","Reference":"UK Demo"}}},"Risk":{},"Links":{"Self":"https://telesto.api.barclays/open-banking/v3.1/pisp/domestic-payment-consents"},"Meta":{}}
 
-REQUEST 4
+REQUEST 4 MATCH STATE_PAYMENT
 POST https://token.tiaa.barclays.com/as/token.oauth2
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 X-Aggregator: Tink Testing
 
-grant_type=authorization_code&scope=payments&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_secret=DUMMY_SECRET&code=DUMMY_AUTH_CODE
+grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapi.tink.se%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_ID&client_secret=DUMMY_SECRET&code=DUMMY_AUTH_CODE
 
 RESPONSE 4
 200
