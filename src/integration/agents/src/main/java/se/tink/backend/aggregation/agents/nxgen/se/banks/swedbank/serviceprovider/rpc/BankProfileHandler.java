@@ -9,6 +9,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
@@ -58,12 +59,15 @@ public class BankProfileHandler {
     }
 
     @JsonIgnore
-    public void throwIfNotAuthorizedForRegisterAction(SwedbankBaseConstants.MenuItemKey menuItemKey)
+    public void throwIfNotAuthorizedForRegisterAction(
+            SwedbankBaseConstants.MenuItemKey menuItemKey, Catalog catalog)
             throws TransferExecutionException {
         if (!isAuthorizedForAction(menuItemKey)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
-                            SwedbankBaseConstants.UserMessage.STRONGER_AUTHENTICATION_NEEDED)
+                            catalog.getString(
+                                    SwedbankBaseConstants.UserMessage
+                                            .STRONGER_AUTHENTICATION_NEEDED))
                     .setMessage(SwedbankBaseConstants.ErrorMessage.NEEDS_EXTENDED_USE)
                     .build();
         }

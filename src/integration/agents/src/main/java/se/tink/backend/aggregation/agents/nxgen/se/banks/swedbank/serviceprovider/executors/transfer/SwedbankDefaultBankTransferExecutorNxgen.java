@@ -177,7 +177,7 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
 
         BankProfileHandler handler = swedbankStorage.getBankProfileHandler();
         handler.throwIfNotAuthorizedForRegisterAction(
-                SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT);
+                SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT, catalog);
 
         SwedishIdentifier destination = identifier.to(SwedishIdentifier.class);
 
