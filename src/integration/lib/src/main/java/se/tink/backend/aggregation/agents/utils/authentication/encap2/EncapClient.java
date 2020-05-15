@@ -59,9 +59,7 @@ public class EncapClient {
     public DeviceRegistrationResponse registerDevice(String username, String activationCode) {
         storage.seedStorage(username);
 
-        if (!soapCreateAuthenticatedSession(username)) {
-            throw new IllegalStateException("Could not create an authenticated session.");
-        }
+        soapCreateAuthenticatedSession(username);
 
         String activationSessionId =
                 soapGetActivationSessionId(username, activationCode)
@@ -106,9 +104,7 @@ public class EncapClient {
         }
 
         String username = storage.getUsername();
-        if (!soapCreateAuthenticatedSession(username)) {
-            throw new IllegalStateException("Could not create an authenticated session.");
-        }
+        soapCreateAuthenticatedSession(username);
 
         String identificationMessage = messageUtils.buildIdentificationMessage(authenticationId);
         IdentificationResponse identificationResponse =
@@ -203,16 +199,13 @@ public class EncapClient {
         storage.setSigningKeyPhrase(signingKeyPhrase);
     }
 
-    private boolean soapCreateAuthenticatedSession(String username) {
+    private void soapCreateAuthenticatedSession(String username) {
         String dataToSend = soapUtils.buildAuthenticationSessionCreateV1Body(username);
 
-        String response =
-                postSoapMessage(
-                        EncapConstants.Urls.AUTHENTICATION_SESSION_CREATE,
-                        EncapConstants.HttpHeaders.AUTHENTICATION_SESSION_CREATE,
-                        dataToSend);
-
-        return true;
+        postSoapMessage(
+                EncapConstants.Urls.AUTHENTICATION_SESSION_CREATE,
+                EncapConstants.HttpHeaders.AUTHENTICATION_SESSION_CREATE,
+                dataToSend);
     }
 
     private String soapActivateDevice(
