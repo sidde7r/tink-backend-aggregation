@@ -94,7 +94,7 @@ public class BpceGroupTransactionFetcherTest {
         final String accountNo = "7613807008043001965409135";
         final String iban = "FR" + accountNo;
         final ExactCurrencyAmount exactCurrencyAmount =
-                new ExactCurrencyAmount(new BigDecimal(10.0), "EUR");
+                new ExactCurrencyAmount(BigDecimal.valueOf(10.0), "EUR");
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)

@@ -130,7 +130,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
         }
 
         BankProfileHandler handler = swedbankStorage.getBankProfileHandler();
-        handler.throwIfNotAuthorizedForRegisterAction(MenuItemKey.REGISTER_PAYEE);
+        handler.throwIfNotAuthorizedForRegisterAction(MenuItemKey.REGISTER_PAYEE, catalog);
         RegisterPayeeRequest registerPayeeRequest =
                 RegisterPayeeRequest.create(
                         accountIdentifier, transferHelper.getDestinationName(transfer));

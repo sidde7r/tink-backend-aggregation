@@ -359,10 +359,10 @@ public class NordeaLoanFetcherTest {
         LoanAccount loanAccount = loanAccountOptional.get();
         Assert.assertEquals(new Double(1.47 / 100), loanAccount.getInterestRate());
         Assert.assertEquals(
-                ExactCurrencyAmount.of(new BigDecimal(1583282.0).negate(), "SEK"),
+                ExactCurrencyAmount.of(BigDecimal.valueOf(1583282.0).negate(), "SEK"),
                 loanAccount.getExactBalance());
         Assert.assertEquals(
-                ExactCurrencyAmount.of(new BigDecimal(95468.0), "SEK"),
+                ExactCurrencyAmount.of(BigDecimal.valueOf(95468.0), "SEK"),
                 loanAccount.getDetails().getExactAmortized());
         Assert.assertEquals(
                 new Amount("SEK", 1678750.0).negate(),
@@ -379,10 +379,10 @@ public class NordeaLoanFetcherTest {
         Assert.assertEquals(new Double(1.740 / 100), loanAccount.getInterestRate());
 
         Assert.assertEquals(
-                ExactCurrencyAmount.of(new BigDecimal(79611.0).negate(), "SEK"),
+                ExactCurrencyAmount.of(BigDecimal.valueOf(79611.0).negate(), "SEK"),
                 loanAccount.getExactBalance());
         Assert.assertEquals(
-                ExactCurrencyAmount.of(new BigDecimal(65205.0), "SEK"),
+                ExactCurrencyAmount.of(BigDecimal.valueOf(65205.0), "SEK"),
                 loanAccount.getDetails().getExactAmortized());
         Assert.assertEquals(
                 new Amount("SEK", 144816.0).negate(), loanAccount.getDetails().getInitialBalance());
@@ -398,10 +398,10 @@ public class NordeaLoanFetcherTest {
         loanAccount = loanAccountOptional.get();
         Assert.assertEquals(new Double(2.090 / 100), loanAccount.getInterestRate());
         Assert.assertEquals(
-                ExactCurrencyAmount.of(new BigDecimal(312348.0).negate(), "SEK"),
+                ExactCurrencyAmount.of(BigDecimal.valueOf(312348.0).negate(), "SEK"),
                 loanAccount.getExactBalance());
         Assert.assertEquals(
-                ExactCurrencyAmount.of(new BigDecimal(112652.0), "SEK"),
+                ExactCurrencyAmount.of(BigDecimal.valueOf(112652.0), "SEK"),
                 loanAccount.getDetails().getExactAmortized());
         Assert.assertEquals(
                 new Amount("SEK", 425000.0).negate(), loanAccount.getDetails().getInitialBalance());
@@ -425,10 +425,10 @@ public class NordeaLoanFetcherTest {
         LoanAccount loanAccount = loanAccountOptional.get();
         Assert.assertEquals(new Double(0.500 / 100), loanAccount.getInterestRate());
         Assert.assertEquals(
-                ExactCurrencyAmount.of(new BigDecimal(1345973.00).negate(), "SEK"),
+                ExactCurrencyAmount.of(BigDecimal.valueOf(1345973.00).negate(), "SEK"),
                 loanAccount.getExactBalance());
         Assert.assertEquals(
-                ExactCurrencyAmount.of(new BigDecimal(279027.00), "SEK"),
+                ExactCurrencyAmount.of(BigDecimal.valueOf(279027.00), "SEK"),
                 loanAccount.getDetails().getExactAmortized());
         Assert.assertEquals(
                 ExactCurrencyAmount.inSEK(1625000.00).negate(),

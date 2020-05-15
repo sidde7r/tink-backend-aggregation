@@ -45,7 +45,7 @@ public class TransactionEntityTest {
         Transaction transaction = transactionEntity.toTinkTransaction();
 
         assertThat(transaction.getExactAmount())
-                .isEqualTo(new ExactCurrencyAmount(new BigDecimal(-30.0), "NOK"));
+                .isEqualTo(new ExactCurrencyAmount(BigDecimal.valueOf(-30.0), "NOK"));
         assertThat("SPOTIFY ADDRESS CITY").isEqualTo(transaction.getDescription());
         assertThat(DateUtils.flattenTime(DateUtils.parseDate("2018-01-26")))
                 .isEqualTo(transaction.getDate());

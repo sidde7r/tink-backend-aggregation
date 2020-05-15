@@ -61,7 +61,7 @@ public class MortgageEntityTest {
 
         LoanAccount loanAccount = mortgageEntity.toTinkLoan();
 
-        assertThat(new ExactCurrencyAmount(new BigDecimal(-1000000.00), "SEK"))
+        assertThat(new ExactCurrencyAmount(BigDecimal.valueOf(-1000000.00), "SEK"))
                 .isEqualTo(loanAccount.getExactBalance());
     }
 }

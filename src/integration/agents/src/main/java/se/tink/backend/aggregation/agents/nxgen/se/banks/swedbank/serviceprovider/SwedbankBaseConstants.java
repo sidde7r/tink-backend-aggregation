@@ -328,8 +328,9 @@ public class SwedbankBaseConstants {
     }
 
     public static class UserMessage {
-        public static final String STRONGER_AUTHENTICATION_NEEDED =
-                "In order to add new recipients you need to activate Mobile BankID for extended use. This is done in the Internet bank on the page BankID (found in the tab Tillval).";
+        public static final LocalizableKey STRONGER_AUTHENTICATION_NEEDED =
+                new LocalizableKey(
+                        "In order to add new recipients you need to activate Mobile BankID for extended use. You can find more information on how to extend your Mobile BankID in your Internet bank.");
         public static final LocalizableKey WRONG_BANK_SWEDBANK =
                 new LocalizableKey(
                         "You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) instead.");
