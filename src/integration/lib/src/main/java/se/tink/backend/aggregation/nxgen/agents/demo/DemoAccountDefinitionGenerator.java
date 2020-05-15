@@ -391,19 +391,6 @@ public class DemoAccountDefinitionGenerator {
 
     public static Map<Account, List<TransferDestinationPattern>> generateTransferDestinations(
             List<Account> accounts) {
-
-        Map<Account, List<TransferDestinationPattern>> result =
-                getTransferDestinations(accounts, Type.IBAN);
-        result.putAll(getTransferDestinations(accounts, Type.SEPA_EUR));
-        result.putAll(getTransferDestinations(accounts, Type.SE));
-        result.putAll(getTransferDestinations(accounts, Type.SORT_CODE));
-        result.putAll(getTransferDestinations(accounts, Type.SE_BG));
-        result.putAll(getTransferDestinations(accounts, Type.SE_PG));
-        return result;
-    }
-
-    private static Map<Account, List<TransferDestinationPattern>> getTransferDestinations(
-            List<Account> accounts, Type type) {
         List<GeneralAccountEntity> sourceAccounts =
                 accounts.stream()
                         .filter(
@@ -424,8 +411,12 @@ public class DemoAccountDefinitionGenerator {
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .setTinkAccounts(accounts)
-                .matchDestinationAccountsOn(type, getClassForType(type))
-                .addMultiMatchPattern(type, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(Type.IBAN, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(Type.SEPA_EUR, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(Type.SE, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(Type.SORT_CODE, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(Type.SE_BG, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(Type.SE_PG, TransferDestinationPattern.ALL)
                 .build();
     }
 
