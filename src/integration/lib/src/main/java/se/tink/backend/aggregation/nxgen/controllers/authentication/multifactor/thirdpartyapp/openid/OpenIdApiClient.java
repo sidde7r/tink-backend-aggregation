@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
+import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -9,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.ClientMode;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
@@ -128,16 +130,10 @@ public class OpenIdApiClient {
                         .withScope(scope)
                         .withRedirectUri(softwareStatement.getRedirectUri());
 
-        OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD authMethod =
-                wellknownConfiguration
-                        .getPreferredTokenEndpointAuthMethod(
-                                OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Preferred token endpoint auth method not found."));
-
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
+        TOKEN_ENDPOINT_AUTH_METHOD authMethod =
+                determineTokenEndpointAuthMethod(clientInfo, wellknownConfiguration);
+
         switch (authMethod) {
             case client_secret_post:
                 requestForm.withClientSecretPost(
@@ -177,14 +173,8 @@ public class OpenIdApiClient {
 
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
 
-        OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD authMethod =
-                wellknownConfiguration
-                        .getPreferredTokenEndpointAuthMethod(
-                                OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Preferred token endpoint auth method not found."));
+        TOKEN_ENDPOINT_AUTH_METHOD authMethod =
+                determineTokenEndpointAuthMethod(clientInfo, wellknownConfiguration);
 
         switch (authMethod) {
             case client_secret_basic:
@@ -211,6 +201,21 @@ public class OpenIdApiClient {
         }
 
         return requestBuilder;
+    }
+
+    private TOKEN_ENDPOINT_AUTH_METHOD determineTokenEndpointAuthMethod(
+            ClientInfo clientInfo, WellKnownResponse wellknownConfiguration) {
+
+        if (!Strings.isNullOrEmpty(clientInfo.getTokenEndpointAuthMethod())) {
+            return TOKEN_ENDPOINT_AUTH_METHOD.valueOf(clientInfo.getTokenEndpointAuthMethod());
+        }
+        return wellknownConfiguration
+                .getPreferredTokenEndpointAuthMethod(
+                        OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Preferred token endpoint auth method not found."));
     }
 
     public OAuth2Token requestClientCredentials(ClientMode scope) {

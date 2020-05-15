@@ -31,6 +31,7 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     @JsonProperty @Secret private String transportKey;
     @JsonProperty @Secret private String transportKeyId;
     @JsonProperty @Secret private String rootCAData;
+    @JsonProperty @Secret private String tokenEndpointAuthMethod;
     @JsonProperty @SensitiveSecret private String clientSecret;
     @JsonProperty @SensitiveSecret private String transportKeyPassword;
     @JsonProperty @SensitiveSecret private String signingKeyPassword;
@@ -92,7 +93,8 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
 
     @Override
     public ProviderConfiguration getProviderConfiguration() {
-        return new ProviderConfiguration(organizationId, new ClientInfo(clientId, clientSecret));
+        return new ProviderConfiguration(
+                organizationId, new ClientInfo(clientId, clientSecret, tokenEndpointAuthMethod));
     }
 
     @Override
