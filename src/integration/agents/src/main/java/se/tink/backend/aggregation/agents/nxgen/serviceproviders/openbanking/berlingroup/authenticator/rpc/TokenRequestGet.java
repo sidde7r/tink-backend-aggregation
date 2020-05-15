@@ -18,13 +18,11 @@ public class TokenRequestGet extends TokenBaseRequest {
     }
 
     public Map<String, String> toData() {
-        return new HashMap<String, String>() {
-            {
-                put(QueryKeys.CLIENT_ID, clientId);
-                put(QueryKeys.REDIRECT_URI, redirectUri);
-                put(QueryKeys.CODE, code);
-                put(QueryKeys.GRANT_TYPE, grantType);
-            }
-        };
+        Map<String, String> data = new HashMap<>();
+        data.put(QueryKeys.CLIENT_ID, clientId);
+        data.put(QueryKeys.REDIRECT_URI, redirectUri);
+        data.put(QueryKeys.CODE, code);
+        data.put(QueryKeys.GRANT_TYPE, grantType);
+        return data;
     }
 }

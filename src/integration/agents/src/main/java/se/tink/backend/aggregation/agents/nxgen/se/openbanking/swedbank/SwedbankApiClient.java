@@ -406,17 +406,17 @@ public final class SwedbankApiClient {
     private Map<String, Object> getHeaders(String requestId, String digest, Date date) {
         String redirectUrl = new URL(configuration.getRedirectUrl()).toString();
 
-        return new HashMap<String, Object>() {
-            {
-                put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
-                put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT));
-                put(HeaderKeys.X_REQUEST_ID, requestId);
-                put(HeaderKeys.DATE, getFormattedDate(date));
-                put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
-                put(HeaderKeys.DIGEST, digest);
-                put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, configuration.getQSealc());
-            }
-        };
+        Map<String, Object> headers = new HashMap<>();
+
+        headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT));
+        headers.put(HeaderKeys.X_REQUEST_ID, requestId);
+        headers.put(HeaderKeys.DATE, getFormattedDate(date));
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.DIGEST, digest);
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, configuration.getQSealc());
+
+        return headers;
     }
 
     private String getFormattedDate(Date date) {

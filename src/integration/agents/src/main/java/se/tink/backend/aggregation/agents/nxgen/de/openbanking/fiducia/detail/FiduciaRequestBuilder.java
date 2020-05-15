@@ -77,23 +77,17 @@ public class FiduciaRequestBuilder {
 
         String requestId = UUID.randomUUID().toString();
 
-        Map<String, Object> headers =
-                new HashMap<String, Object>() {
-                    {
-                        put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
-                        put(HeaderKeys.TPP_ID, fiduciaConfiguration.getTppId());
-                        put(
-                                HeaderKeys.DATE,
-                                ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
-                        put(HeaderKeys.X_REQUEST_ID, requestId);
-                        put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
-                        put(
-                                HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
-                                fiduciaConfiguration.getCertificate());
-                        put(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
-                        put(HeaderKeys.DIGEST, digest);
-                    }
-                };
+        Map<String, Object> headers = new HashMap<>();
+
+        headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.put(HeaderKeys.TPP_ID, fiduciaConfiguration.getTppId());
+        headers.put(
+                HeaderKeys.DATE, ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
+        headers.put(HeaderKeys.X_REQUEST_ID, requestId);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, fiduciaConfiguration.getCertificate());
+        headers.put(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
+        headers.put(HeaderKeys.DIGEST, digest);
 
         Optional.ofNullable(sessionStorage.get(StorageKeys.PSU_ID))
                 .ifPresent(psuId -> headers.put(HeaderKeys.PSU_ID, psuId));

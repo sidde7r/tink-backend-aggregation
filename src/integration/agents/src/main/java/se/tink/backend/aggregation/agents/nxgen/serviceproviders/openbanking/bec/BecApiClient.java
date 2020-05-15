@@ -77,21 +77,15 @@ public final class BecApiClient {
                         .queryParam(QueryKeys.STATE, state)
                         .toString();
 
-        Map<String, Object> headers =
-                new HashMap<String, Object>() {
-                    {
-                        put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
-                        put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
-                        put(HeaderKeys.PSU_IP, HeaderValues.PSU_IP);
-                        put(HeaderKeys.X_REQUEST_ID, requestId);
-                        put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
-                        put(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
-                        put(HeaderKeys.DIGEST, digest);
-                        put(
-                                HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
-                                becConfiguration.getQsealCertificate());
-                    }
-                };
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
+        headers.put(HeaderKeys.PSU_IP, HeaderValues.PSU_IP);
+        headers.put(HeaderKeys.X_REQUEST_ID, requestId);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.DIGEST, digest);
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, becConfiguration.getQsealCertificate());
 
         return headers;
     }
@@ -102,19 +96,13 @@ public final class BecApiClient {
                         .queryParam(QueryKeys.STATE, state)
                         .toString();
 
-        Map<String, Object> headers =
-                new HashMap<String, Object>() {
-                    {
-                        put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
-                        put(HeaderKeys.X_REQUEST_ID, requestId);
-                        put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
-                        put(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
-                        put(HeaderKeys.DIGEST, digest);
-                        put(
-                                HeaderKeys.TPP_SIGNATURE_CERTIFICATE,
-                                becConfiguration.getQsealCertificate());
-                    }
-                };
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.put(HeaderKeys.X_REQUEST_ID, requestId);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.DIGEST, digest);
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, becConfiguration.getQsealCertificate());
 
         return headers;
     }

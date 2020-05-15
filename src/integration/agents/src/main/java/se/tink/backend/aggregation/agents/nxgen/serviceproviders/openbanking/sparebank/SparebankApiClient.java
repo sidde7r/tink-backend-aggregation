@@ -171,20 +171,15 @@ public class SparebankApiClient {
                         .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE))
                         .toString();
 
-        Map<String, Object> headers =
-                new HashMap<String, Object>() {
-                    {
-                        put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
-                        put(HeaderKeys.TPP_ID, configuration.getTppId());
-                        put(
-                                HeaderKeys.DATE,
-                                ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
-                        put(HeaderKeys.X_REQUEST_ID, requestId);
-                        put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
-                        put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, configuration.getCertificate());
-                        put(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
-                    }
-                };
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
+        headers.put(HeaderKeys.TPP_ID, configuration.getTppId());
+        headers.put(
+                HeaderKeys.DATE, ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
+        headers.put(HeaderKeys.X_REQUEST_ID, requestId);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, configuration.getCertificate());
+        headers.put(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
 
         digest.ifPresent(digestString -> headers.put(HeaderKeys.DIGEST, digestString));
         getSessionId().ifPresent(sessionId -> headers.put(HeaderKeys.TPP_SESSION_ID, sessionId));

@@ -21,14 +21,12 @@ public class TokenRequest {
     }
 
     public Map<String, String> toData() {
-        return new HashMap<String, String>() {
-            {
-                put(SwedbankConstants.QueryKeys.CLIENT_ID, clientId);
-                put(SwedbankConstants.QueryKeys.CLIENT_SECRET, clientSecret);
-                put(SwedbankConstants.QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_CODE);
-                put(SwedbankConstants.QueryKeys.REDIRECT_URI, redirectUri);
-                put(SwedbankConstants.QueryKeys.CODE, code);
-            }
-        };
+        Map<String, String> data = new HashMap<>();
+        data.put(SwedbankConstants.QueryKeys.CLIENT_ID, clientId);
+        data.put(SwedbankConstants.QueryKeys.CLIENT_SECRET, clientSecret);
+        data.put(SwedbankConstants.QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_CODE);
+        data.put(SwedbankConstants.QueryKeys.REDIRECT_URI, redirectUri);
+        data.put(SwedbankConstants.QueryKeys.CODE, code);
+        return data;
     }
 }

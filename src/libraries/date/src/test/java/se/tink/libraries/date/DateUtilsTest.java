@@ -34,12 +34,9 @@ public class DateUtilsTest {
     public void setup() {
         TimeZone.setDefault(TimeZone.getTimeZone(TZ));
         DateTimeZone.setDefault(DateTimeZone.forID(TZ));
-        DateTimeConfig.setGlobalDefault(
-                new DateTimeConfig() {
-                    {
-                        setInputTimeZone(TimeZone.getTimeZone(TZ));
-                    }
-                });
+        DateTimeConfig dateTimeConfig = new DateTimeConfig();
+        dateTimeConfig.setInputTimeZone(TimeZone.getTimeZone(TZ));
+        DateTimeConfig.setGlobalDefault(dateTimeConfig);
     }
 
     @After
