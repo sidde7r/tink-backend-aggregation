@@ -39,7 +39,7 @@ public class SkandiaBankenAgentTest {
         manager.before();
 
         testBuilder =
-                new AgentIntegrationTest.Builder("se", "se-skandiabanken-bankid")
+                new AgentIntegrationTest.Builder("se", "skandiabanken-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.SSN))
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
