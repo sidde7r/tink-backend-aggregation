@@ -702,6 +702,12 @@ public class SEBApiAgent extends AbstractAgent
             subAccounts.addAll(creditCardNumbers);
 
             AccountUtils.setSubAccounts(account, subAccounts);
+
+            // Set account number to first card number
+            subAccounts.stream()
+                    .sorted()
+                    .findFirst()
+                    .ifPresent(cardNumber -> account.setAccountNumber(cardNumber));
         }
     }
 
