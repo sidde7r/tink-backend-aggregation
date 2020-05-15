@@ -32,6 +32,8 @@ public class CardEntity {
         tinkAccount.setBalance(this.calculateBalance());
         if (!Strings.isNullOrEmpty(cardNumber)) {
             tinkAccount.setAccountNumber(CreditCardMasker.maskCardNumber(cardNumber));
+        } else {
+            tinkAccount.setAccountNumber(agreementNumber);
         }
 
         return tinkAccount;
