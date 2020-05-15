@@ -26,7 +26,7 @@ public class HandelsbankenSEAgentTest {
 
     @Test
     public void test() throws Exception {
-        new AgentIntegrationTest.Builder("se", "se-handelsbankenbusiness-bankid")
+        new AgentIntegrationTest.Builder("se", "handelsbanken-business-bankid")
                 .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
