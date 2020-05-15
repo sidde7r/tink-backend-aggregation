@@ -77,6 +77,7 @@ public class ExecutorExceptionResolver {
             case "11041": //  "Payment exceeds the allowed maximum"
             case "6242": // "The payment date is too soon or not a business day"
             case "1014": // "The amount you entered is too large. exceed maximum amount per day"
+            case "1011": // "The amount you entered is too large. exceed maximum amount per day"
             case "1026": // "The payment date is too soon or not a business day"
                 return SignableOperationStatuses.CANCELLED;
             default:
