@@ -642,6 +642,12 @@ msgstr ""
 msgid "Could not get recipient name from user"
 msgstr ""
 
+msgid "Could not save new recipient"
+msgstr ""
+
+msgid "Check that the information is correct"
+msgstr ""
+
 msgid "N/A"
 msgstr ""
 

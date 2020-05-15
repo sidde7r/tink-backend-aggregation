@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.entities.ResponseStatusEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.TransferBankEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc.TransferRequest;
@@ -124,7 +125,17 @@ public class IcaBankenExecutorHelper {
             recipientEntity.setTransferBankId(fetchTransferBankIdFor(destination));
         }
 
-        apiClient.saveNewRecipient(recipientEntity);
+        try {
+            if (!Strings.isNullOrEmpty(recipientEntity.getName())) {
+                apiClient.saveNewRecipient(recipientEntity);
+            } else {
+                constructAndThrowCancelledTransferExecutionExceptionWithMessage(
+                        IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_MESSAGE,
+                        IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_END_USER_MESSAGE);
+            }
+        } catch (HttpResponseException e) {
+            handelHttpExceptionResponse(e.getResponse());
+        }
 
         return getRecipientEntity(destination, apiClient.fetchDestinationAccounts());
     }
@@ -178,14 +189,14 @@ public class IcaBankenExecutorHelper {
                 return destinationName;
             }
 
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage(
                             statusUpdater
                                     .getCatalog()
                                     .getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
                     .build();
         } catch (SupplementalInfoException e) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage(
                             statusUpdater
                                     .getCatalog()
@@ -474,5 +485,27 @@ public class IcaBankenExecutorHelper {
         }
 
         return message;
+    }
+
+    private void handelHttpExceptionResponse(HttpResponse response) {
+        if (response.getStatus() == HttpStatus.SC_CONFLICT) {
+            ResponseStatusEntity error = response.getBody(ResponseStatusEntity.class);
+            if (error.getCode() == IcaBankenConstants.Error.GENERIC_ERROR_CODE
+                    && error.getServerMessage()
+                            .equalsIgnoreCase(
+                                    IcaBankenConstants.Transfers.ERROR_SAVING_RECIPIENT)) {
+                constructAndThrowCancelledTransferExecutionExceptionWithMessage(
+                        IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_MESSAGE,
+                        IcaBankenConstants.LogMessage.NO_SAVE_NEW_RECIPIENT_END_USER_MESSAGE);
+            }
+        }
+    }
+
+    private void constructAndThrowCancelledTransferExecutionExceptionWithMessage(
+            String message, String endUserMessage) {
+        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(statusUpdater.getCatalog().getString(message))
+                .setEndUserMessage(endUserMessage)
+                .build();
     }
 }
