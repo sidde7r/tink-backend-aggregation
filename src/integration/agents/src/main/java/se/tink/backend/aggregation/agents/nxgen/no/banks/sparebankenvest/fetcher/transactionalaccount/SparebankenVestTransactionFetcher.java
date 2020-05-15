@@ -28,14 +28,12 @@ public class SparebankenVestTransactionFetcher
             new AggregationLogger(SparebankenVestTransactionFetcher.class);
 
     private final SparebankenVestApiClient apiClient;
-    private final Credentials credentials;
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private SparebankenVestTransactionFetcher(
             SparebankenVestApiClient apiClient, Credentials credentials) {
         this.apiClient = apiClient;
-        this.credentials = credentials;
     }
 
     public static SparebankenVestTransactionFetcher create(
@@ -45,8 +43,8 @@ public class SparebankenVestTransactionFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date from, Date to) {
-        String fromFormatted = DATE_FORMAT.format(from);
-        String toFormatted = DATE_FORMAT.format(to);
+        String fromFormatted = dateFormat.format(from);
+        String toFormatted = dateFormat.format(to);
 
         TransactionsListResponse transactionsList =
                 apiClient.fetchTransactions(account.getAccountNumber(), fromFormatted, toFormatted);

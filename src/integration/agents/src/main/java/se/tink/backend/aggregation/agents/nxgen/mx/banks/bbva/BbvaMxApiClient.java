@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 
 import com.google.common.base.Strings;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -31,6 +32,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class BbvaMxApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage storage;
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public BbvaMxApiClient(TinkHttpClient client, PersistentStorage storage) {
         this.client = client;
@@ -199,13 +202,9 @@ public class BbvaMxApiClient {
     public TransactionsResponse fetchTransactions(String accountId, Date fromDate, Date toDate) {
         String resource = String.format(BbvaMxConstants.URLS.TRANSACTIONS, accountId);
         return getGlomoRequest(resource, MediaType.APPLICATION_JSON)
-                .queryParam(
-                        BbvaMxConstants.QUERY.FROM_DATE,
-                        BbvaMxConstants.DATE.DATE_FORMAT.format(fromDate))
+                .queryParam(BbvaMxConstants.QUERY.FROM_DATE, dateFormat.format(fromDate))
                 .queryParam(BbvaMxConstants.QUERY.PAGE_SIZE, BbvaMxConstants.QUERY.PAGE_SIZE_VALUE)
-                .queryParam(
-                        BbvaMxConstants.QUERY.TO_DATE,
-                        BbvaMxConstants.DATE.DATE_FORMAT.format(toDate))
+                .queryParam(BbvaMxConstants.QUERY.TO_DATE, dateFormat.format(toDate))
                 .get(TransactionsResponse.class);
     }
 
@@ -213,13 +212,9 @@ public class BbvaMxApiClient {
             String accountId, Date fromDate, Date toDate) {
         String resource = String.format(BbvaMxConstants.URLS.CREDIT_TRANSACTIONS, accountId);
         return getGlomoRequest(resource, MediaType.APPLICATION_JSON)
-                .queryParam(
-                        BbvaMxConstants.QUERY.FROM_DATE,
-                        BbvaMxConstants.DATE.DATE_FORMAT.format(fromDate))
+                .queryParam(BbvaMxConstants.QUERY.FROM_DATE, dateFormat.format(fromDate))
                 .queryParam(BbvaMxConstants.QUERY.PAGE_SIZE, BbvaMxConstants.QUERY.PAGE_SIZE_VALUE)
-                .queryParam(
-                        BbvaMxConstants.QUERY.TO_DATE,
-                        BbvaMxConstants.DATE.DATE_FORMAT.format(toDate))
+                .queryParam(BbvaMxConstants.QUERY.TO_DATE, dateFormat.format(toDate))
                 .get(CreditTransactionsResponse.class);
     }
 

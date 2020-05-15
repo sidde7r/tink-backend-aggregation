@@ -2,13 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.ConsentParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Paths;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TransactionFetcherParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
@@ -26,6 +26,8 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class VolksbankApiClient {
+
+    private final SimpleDateFormat transactionDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private final TinkHttpClient client;
     private final VolksbankUrlFactory urlFactory;
@@ -45,10 +47,10 @@ public class VolksbankApiClient {
                 client.request(getTransactionsUrl(account))
                         .queryParam(
                                 TransactionFetcherParams.DATE_FROM,
-                                Transaction.TRANSACTION_DATE_FORMAT.format(fromDate))
+                                transactionDateFormat.format(fromDate))
                         .queryParam(
                                 TransactionFetcherParams.DATE_TO,
-                                Transaction.TRANSACTION_DATE_FORMAT.format(toDate))
+                                transactionDateFormat.format(toDate))
                         .queryParam(
                                 TransactionFetcherParams.BOOKING_STATUS,
                                 TransactionFetcherParams.BOOKING_STATUS_VALUE)

@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
 import com.google.common.base.Strings;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +29,8 @@ public class MovementsItem {
     private String operationId;
     private String currency;
     private static final AggregationLogger LOGGER = new AggregationLogger(MovementsItem.class);
+
+    private final DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
     public boolean isDetailPresent() {
         return detailPresent;
@@ -97,7 +101,7 @@ public class MovementsItem {
 
     private Date getDate() {
         try {
-            return FortisConstants.TRANSACTION_FORMAT.parse(executionDate);
+            return simpleDateFormat.parse(executionDate);
         } catch (ParseException e) {
             throw new IllegalStateException(
                     "Cannot parse amount in transaction: " + e.toString(), e);
@@ -108,7 +112,7 @@ public class MovementsItem {
         StringBuilder builder = new StringBuilder();
 
         if (!Strings.isNullOrEmpty(description1)) {
-            builder.append(description1 + " ");
+            builder.append(description1).append(" ");
         }
 
         if (!Strings.isNullOrEmpty(description2)) {
@@ -130,7 +134,7 @@ public class MovementsItem {
         try {
             toTinkTransaction();
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             LOGGER.errorExtraLong(
                     "Cannot parse transactions: ",
                     FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERROR,

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.en
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -27,10 +28,13 @@ public class DataItem {
 
     @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(DataItem.class);
 
+    @JsonIgnore
+    private final SimpleDateFormat transactionDateForamt =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
     private Date getDate() {
         try {
-            return BbvaMxConstants.DATE.TRANSACTION_DATE_FORAMT.parse(
-                    operationDate.substring(0, 23));
+            return transactionDateForamt.parse(operationDate.substring(0, 23));
         } catch (ParseException e) {
             logger.error("{} {}", BbvaMxConstants.LOGGING.DATE_PARSING_ERROR, e.toString(), e);
             throw new IllegalStateException("Date is invalid");
@@ -45,7 +49,7 @@ public class DataItem {
                             .setDate(getDate())
                             .setAmount(localAmount.toTinkAmount())
                             .build());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.error(
                     "{} {}",
                     BbvaMxConstants.LOGGING.CREDIT_TRANSACTION_PARSING_ERROR,

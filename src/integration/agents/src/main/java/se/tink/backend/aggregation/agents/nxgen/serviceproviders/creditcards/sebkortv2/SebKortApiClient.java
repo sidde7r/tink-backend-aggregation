@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.authenticator.rpc.AuthRequest;
@@ -25,6 +26,8 @@ public class SebKortApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final SebKortConfiguration config;
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ");
 
     public SebKortApiClient(
             TinkHttpClient client, SessionStorage sessionStorage, SebKortConfiguration config) {
@@ -118,12 +121,8 @@ public class SebKortApiClient {
             String cardAccountId, Date fromDate, Date toDate) {
         return createRequestInSession(SebKortConstants.Urls.SEBKORT_TRANSACTIONS)
                 .queryParam(SebKortConstants.QueryKey.CARD_ACCOUNT_ID, cardAccountId)
-                .queryParam(
-                        SebKortConstants.QueryKey.FROM_DATE,
-                        SebKortConstants.DATE_FORMAT.format(fromDate))
-                .queryParam(
-                        SebKortConstants.QueryKey.TO_DATE,
-                        SebKortConstants.DATE_FORMAT.format(toDate))
+                .queryParam(SebKortConstants.QueryKey.FROM_DATE, dateFormat.format(fromDate))
+                .queryParam(SebKortConstants.QueryKey.TO_DATE, dateFormat.format(toDate))
                 .get(TransactionsResponse.class);
     }
 

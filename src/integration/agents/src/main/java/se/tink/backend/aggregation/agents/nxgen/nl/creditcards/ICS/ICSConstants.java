@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
-import java.text.SimpleDateFormat;
 
 public class ICSConstants {
 
@@ -114,13 +113,6 @@ public class ICSConstants {
         public static final String STATE = "state";
         public static final String TOKEN = "token";
         public static final String ACCOUNT_ID = "accountId";
-    }
-
-    public static final class Date {
-        public static final SimpleDateFormat TRANSACTION_FORMAT =
-                new SimpleDateFormat("yyyy-MM-dd");
-        public static final SimpleDateFormat LAST_LOGGED_TIME_FORMAT =
-                new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss z");
     }
 
     public static class HttpClient {

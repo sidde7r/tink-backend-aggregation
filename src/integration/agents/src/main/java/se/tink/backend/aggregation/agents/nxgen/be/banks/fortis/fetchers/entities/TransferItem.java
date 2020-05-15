@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
 import com.google.common.base.Strings;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -27,6 +29,8 @@ public class TransferItem {
             communication;
     private static final AggregationLogger LOGGER = new AggregationLogger(TransferItem.class);
 
+    private final DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+
     private boolean isTransactionNegative() {
         return FortisConstants.NEGATIVE_TRANSACTION_TYPE.equalsIgnoreCase(amountType);
     }
@@ -49,7 +53,7 @@ public class TransferItem {
 
     private java.util.Date getDate() {
         try {
-            return FortisConstants.TRANSACTION_FORMAT.parse(executionDate);
+            return simpleDateFormat.parse(executionDate);
         } catch (ParseException e) {
             throw new IllegalStateException(
                     "Cannot parse amount in transaction: " + e.toString(), e);
@@ -60,15 +64,15 @@ public class TransferItem {
         StringBuilder builder = new StringBuilder();
 
         if (!Strings.isNullOrEmpty(transferType)) {
-            builder.append(transferType.trim() + " ");
+            builder.append(transferType.trim()).append(" ");
         }
 
         if (communication != null && !Strings.isNullOrEmpty(communication.getMessage())) {
-            builder.append(communication.getMessage().trim() + " ");
+            builder.append(communication.getMessage().trim()).append(" ");
         }
 
         if (beneficiary != null && !Strings.isNullOrEmpty(beneficiary.getName())) {
-            builder.append(beneficiary.getName().trim() + " ");
+            builder.append(beneficiary.getName().trim()).append(" ");
         }
 
         return builder.toString().trim();
@@ -78,7 +82,7 @@ public class TransferItem {
         try {
             toTinkTransaction();
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             LOGGER.errorExtraLong(
                     "Cannot parse transactions: ",
                     FortisConstants.LoggingTag.TRANSACTION_VALIDATION_ERROR,
