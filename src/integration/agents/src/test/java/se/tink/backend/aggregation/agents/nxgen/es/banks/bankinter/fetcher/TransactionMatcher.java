@@ -10,8 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class TransactionMatcher extends TypeSafeMatcher<Transaction> {
-    private static final SimpleDateFormat TRANSACTION_DATE_FORMATTER =
-            new SimpleDateFormat("dd/MM/yyyy");
+    private final SimpleDateFormat TRANSACTION_DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
     private final String dateString;
     private final String description;
