@@ -1,0 +1,253 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.*;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.*;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.*;
+import static se.tink.libraries.serialization.utils.SerializationUtils.*;
+
+import java.util.Date;
+import java.util.Optional;
+import javax.ws.rs.core.MediaType;
+import org.junit.Before;
+import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+
+public class Xs2aDevelopersApiClientTest {
+    private static final String BASE_URL = "BASE_URL";
+    private static final String JSON_MOCK = "{}";
+
+    private Xs2aDevelopersApiClient apiClient;
+    private TinkHttpClient tinkHttpClient;
+    private RequestBuilder requestBuilder;
+    private PersistentStorage storage;
+
+    @Before
+    public void init() {
+        Xs2aDevelopersConfiguration configuration = mock(Xs2aDevelopersConfiguration.class);
+        OAuth2Token oauth2Token =
+                OAuth2Token.create("TOKEN_TYPE", "ACCESS_TOKEN", "REFRESH_TOKEN", 1);
+        tinkHttpClient = mock(TinkHttpClient.class);
+        requestBuilder = mock(RequestBuilder.class);
+        storage = mock(PersistentStorage.class);
+
+        when(storage.get(StorageKeys.CONSENT_ID)).thenReturn("CONSENT_ID");
+        when(storage.get(OAUTH_TOKEN, OAuth2Token.class)).thenReturn(Optional.of(oauth2Token));
+        when(storage.get(PIS_TOKEN, OAuth2Token.class)).thenReturn(Optional.of(oauth2Token));
+
+        when(requestBuilder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(requestBuilder);
+        when(requestBuilder.type(MediaType.APPLICATION_JSON)).thenReturn(requestBuilder);
+        when(requestBuilder.addBearerToken(oauth2Token)).thenReturn(requestBuilder);
+        when(requestBuilder.header(anyString(), anyString())).thenReturn(requestBuilder);
+        when(requestBuilder.header(anyString(), any(Object.class))).thenReturn(requestBuilder);
+        when(requestBuilder.body(any(Object.class), anyString())).thenReturn(requestBuilder);
+        when(requestBuilder.body(any(Object.class))).thenReturn(requestBuilder);
+        when(requestBuilder.queryParam(anyString(), anyString())).thenReturn(requestBuilder);
+
+        when(configuration.getBaseUrl()).thenReturn(BASE_URL);
+        when(configuration.getClientId()).thenReturn("CLIENT_ID");
+        when(configuration.getRedirectUrl()).thenReturn("REDIRECT_URL");
+
+        apiClient = new Xs2aDevelopersApiClient(tinkHttpClient, storage, configuration);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldThrowIllegalStateExceptionWhenTokenDoesNotExistsInStorageDuringAis() {
+        when(storage.get(OAUTH_TOKEN, OAuth2Token.class)).thenReturn(Optional.empty());
+        apiClient.getAccounts();
+    }
+
+    @Test
+    public void shouldBuildAuthorizeUrl() {
+        URL result = apiClient.buildAuthorizeUrl("STATE", "SCOPE", "HREF");
+
+        assertThat(result.toString())
+                .contains(
+                        "HREF?state=STATE&redirect_uri=REDIRECT_URL&client_id=CLIENT_ID&scope=SCOPE");
+        assertThat(result.toString()).contains("response_type=code&code_challenge_method=S256");
+    }
+
+    @Test
+    public void shouldBuildAndExecuteGetAccountsRequest() {
+        // given
+        URL url = new URL(BASE_URL + GET_ACCOUNTS);
+        GetAccountsResponse getAccountsResponse =
+                deserializeFromString(
+                        "{\"accounts\" : [{\"iban\" : \"PL6\", \"resourceId\" : \"1\", \"name\" : \"NAME\", \"product\" : \"ACCOUNT_TYPE\"}]}",
+                        GetAccountsResponse.class);
+        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
+        when(requestBuilder.get(GetAccountsResponse.class)).thenReturn(getAccountsResponse);
+
+        // when
+        GetAccountsResponse result = apiClient.getAccounts();
+
+        // then
+        assertThat(result).isEqualTo(getAccountsResponse);
+        verify(tinkHttpClient).request(url);
+        verifyNoMoreInteractions(tinkHttpClient);
+    }
+
+    @Test
+    public void shouldBuildAndExecuteGetBalanceRequest() {
+        // given
+        URL url = new URL(BASE_URL + "/berlingroup/v1/accounts/1/balances");
+        GetBalanceResponse getBalanceResponse =
+                deserializeFromString(JSON_MOCK, GetBalanceResponse.class);
+        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
+        when(requestBuilder.get(GetBalanceResponse.class)).thenReturn(getBalanceResponse);
+        AccountEntity accountEntity = mock(AccountEntity.class);
+        when(accountEntity.getResourceId()).thenReturn("1");
+
+        // when
+        GetBalanceResponse result = apiClient.getBalance(accountEntity);
+
+        // then
+        assertThat(result).isEqualTo(getBalanceResponse);
+        verify(tinkHttpClient).request(url);
+        verifyNoMoreInteractions(tinkHttpClient);
+    }
+
+    @Test
+    public void shouldBuildAndExecuteGetTransactionsRequest() {
+        // given
+        URL url = new URL(BASE_URL + "/berlingroup/v1/accounts/1/transactions");
+        GetTransactionsResponse getTransactionsResponse =
+                deserializeFromString(JSON_MOCK, GetTransactionsResponse.class);
+        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
+        when(requestBuilder.get(GetTransactionsResponse.class)).thenReturn(getTransactionsResponse);
+        TransactionalAccount account = mock(TransactionalAccount.class);
+        when(account.getApiIdentifier()).thenReturn("1");
+
+        // when
+        GetTransactionsResponse result = apiClient.getTransactions(account, new Date(), new Date());
+
+        // then
+        assertThat(result).isEqualTo(getTransactionsResponse);
+        verify(tinkHttpClient).request(url);
+        verifyNoMoreInteractions(tinkHttpClient);
+    }
+
+    @Test
+    public void shouldBuildAndExecuteGetCreditTransactionsRequest() {
+        // given
+        URL url = new URL(BASE_URL + "/berlingroup/v1/accounts/1/transactions");
+        GetTransactionsResponse getTransactionsResponse =
+                deserializeFromString(JSON_MOCK, GetTransactionsResponse.class);
+        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
+        when(requestBuilder.get(GetTransactionsResponse.class)).thenReturn(getTransactionsResponse);
+        CreditCardAccount account = mock(CreditCardAccount.class);
+        when(account.getApiIdentifier()).thenReturn("1");
+
+        // when
+        GetTransactionsResponse result =
+                apiClient.getCreditTransactions(account, new Date(), new Date());
+
+        // then
+        assertThat(result).isEqualTo(getTransactionsResponse);
+        verify(tinkHttpClient).request(url);
+        verifyNoMoreInteractions(tinkHttpClient);
+    }
+
+    @Test
+    public void shouldBuildAndExecuteGetPaymentRequest() {
+        // given
+        URL url = new URL(BASE_URL + "/berlingroup/v1/payments/sepa-credit-transfers/1");
+        GetPaymentResponse getPaymentResponse =
+                deserializeFromString(JSON_MOCK, GetPaymentResponse.class);
+        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
+        when(requestBuilder.get(GetPaymentResponse.class)).thenReturn(getPaymentResponse);
+
+        // when
+        GetPaymentResponse result = apiClient.getPayment("1");
+
+        // then
+        assertThat(result).isEqualTo(getPaymentResponse);
+        verify(tinkHttpClient).request(url);
+        verifyNoMoreInteractions(tinkHttpClient);
+    }
+
+    @Test
+    public void shouldBuildAndExecuteGetTokenRequest() {
+        // given
+        URL url = new URL(BASE_URL + TOKEN);
+        GetTokenResponse getTokenResponse =
+                deserializeFromString(JSON_MOCK, GetTokenResponse.class);
+        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
+        when(requestBuilder.post(GetTokenResponse.class)).thenReturn(getTokenResponse);
+
+        // when
+        GetTokenResponse result =
+                apiClient.getToken(
+                        GetTokenForm.builder()
+                                .setClientId("clientId")
+                                .setGrantType("grantType")
+                                .build());
+
+        // then
+        assertThat(result).isEqualTo(getTokenResponse);
+        verify(tinkHttpClient).request(url);
+        verifyNoMoreInteractions(tinkHttpClient);
+    }
+
+    @Test
+    public void shouldBuildAndExecuteCreateConsentRequest() {
+        // given
+        URL url = new URL(BASE_URL + POST_CONSENT);
+        PostConsentResponse postConsentResponse =
+                deserializeFromString(JSON_MOCK, PostConsentResponse.class);
+        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
+        when(requestBuilder.post(PostConsentResponse.class)).thenReturn(postConsentResponse);
+        PostConsentBody postConsentBody = mock(PostConsentBody.class);
+
+        // when
+        PostConsentResponse result = apiClient.createConsent(postConsentBody);
+
+        // then
+        assertThat(result).isEqualTo(postConsentResponse);
+        verify(tinkHttpClient).request(url);
+        verifyNoMoreInteractions(tinkHttpClient);
+    }
+
+    @Test
+    public void shouldBuildAndExecuteCreatePaymentRequest() {
+        // given
+        URL url = new URL(BASE_URL + CREATE_PAYMENT);
+        CreatePaymentResponse createPaymentResponse =
+                deserializeFromString(JSON_MOCK, CreatePaymentResponse.class);
+        when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
+        when(requestBuilder.post(CreatePaymentResponse.class)).thenReturn(createPaymentResponse);
+        CreatePaymentRequest createPaymentRequest = mock(CreatePaymentRequest.class);
+
+        // when
+        CreatePaymentResponse result = apiClient.createPayment(createPaymentRequest);
+
+        // then
+        assertThat(result).isEqualTo(createPaymentResponse);
+        verify(tinkHttpClient).request(url);
+        verifyNoMoreInteractions(tinkHttpClient);
+    }
+}

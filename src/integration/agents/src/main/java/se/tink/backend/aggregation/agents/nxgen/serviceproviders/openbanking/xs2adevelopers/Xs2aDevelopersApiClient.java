@@ -56,7 +56,7 @@ public class Xs2aDevelopersApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        final OAuth2Token authToken = getTokenFromStorage();
+        final OAuth2Token authToken = getTokenFromStorage(StorageKeys.OAUTH_TOKEN);
         return createRequest(url).addBearerToken(authToken);
     }
 
@@ -70,16 +70,9 @@ public class Xs2aDevelopersApiClient {
         return persistentStorage.get(StorageKeys.CONSENT_ID);
     }
 
-    private OAuth2Token getTokenFromStorage() {
+    private OAuth2Token getTokenFromStorage(String key) {
         return persistentStorage
-                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
-    }
-
-    private OAuth2Token getPisTokenFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.PIS_TOKEN, OAuth2Token.class)
+                .get(key, OAuth2Token.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
@@ -162,8 +155,10 @@ public class Xs2aDevelopersApiClient {
         return createRequest(
                         new URL(configuration.getBaseUrl() + ApiServices.GET_PAYMENT)
                                 .parameter(IdTags.PAYMENT_ID, paymentId))
+                .header(
+                        HeaderKeys.AUTHORIZATION,
+                        getTokenFromStorage(StorageKeys.PIS_TOKEN).getAccessToken())
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.AUTHORIZATION, getPisTokenFromStorage().getAccessToken())
                 .get(GetPaymentResponse.class);
     }
 }

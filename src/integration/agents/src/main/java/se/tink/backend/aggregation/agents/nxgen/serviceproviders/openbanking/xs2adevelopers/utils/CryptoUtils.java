@@ -7,13 +7,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class CryptoUtils {
+
+    private CryptoUtils() {}
+
     public static String getCodeVerifier() {
         SecureRandom sr = new SecureRandom();
         byte[] code = new byte[32];
         sr.nextBytes(code);
-        String codeVerifier = Base64.encodeBase64URLSafeString(code);
-
-        return codeVerifier;
+        return Base64.encodeBase64URLSafeString(code);
     }
 
     public static String getCodeChallenge(String codeVerifier) {
