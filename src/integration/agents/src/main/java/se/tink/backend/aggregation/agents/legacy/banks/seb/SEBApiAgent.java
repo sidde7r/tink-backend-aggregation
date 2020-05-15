@@ -1874,7 +1874,8 @@ public class SEBApiAgent extends AbstractAgent
         if (accounts == null || accounts.isEmpty()) {
             failTransfer(
                     catalog.getString(
-                            TransferExecutionException.EndUserMessage.INVALID_SOURCE_NO_ENTITIES));
+                            TransferExecutionException.EndUserMessage.INVALID_SOURCE_NO_ENTITIES),
+                    "NoSourceAccountsFetchedCannotContinue");
         }
 
         Optional<AccountEntity> sourceAccount = GeneralUtils.find(transfer.getSource(), accounts);
@@ -2327,6 +2328,20 @@ public class SEBApiAgent extends AbstractAgent
 
     private void failTransfer(String message) throws TransferExecutionException {
         abortTransfer(SignableOperationStatuses.FAILED, message);
+    }
+
+    private void failTransfer(String message, String internalStatus)
+            throws TransferExecutionException {
+        abortTransfer(SignableOperationStatuses.FAILED, message, internalStatus);
+    }
+
+    private void abortTransfer(
+            SignableOperationStatuses failed, String message, String internalStatus) {
+        throw TransferExecutionException.builder(failed)
+                .setEndUserMessage(message)
+                .setMessage(String.format("Error when executing transfer: %s", message))
+                .setInternalStatus(internalStatus)
+                .build();
     }
 
     private void cancelTransfer(String message) throws TransferExecutionException {
