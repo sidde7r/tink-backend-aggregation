@@ -118,10 +118,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 context.updateSignableOperationStatus(
                         signableOperation,
                         SignableOperationStatuses.EXECUTED,
-                        operationStatusMessage.get());
+                        operationStatusMessage.get(),
+                        null);
             } else {
                 context.updateSignableOperationStatus(
-                        signableOperation, SignableOperationStatuses.EXECUTED, null);
+                        signableOperation, SignableOperationStatuses.EXECUTED, null, null);
             }
             return AgentWorkerCommandResult.CONTINUE;
 
@@ -142,7 +143,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             }
 
             context.updateSignableOperationStatus(
-                    signableOperation, e.getSignableOperationStatus(), e.getUserMessage());
+                    signableOperation,
+                    e.getSignableOperationStatus(),
+                    e.getUserMessage(),
+                    e.getInternalStatus());
 
             return AgentWorkerCommandResult.ABORT;
 
