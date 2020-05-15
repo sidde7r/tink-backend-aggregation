@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authent
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.rpc.LoginGridResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.exception.ResponseParseException;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.fetcher.transactionalaccount.entities.AccountsData;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.fetcher.transactionalaccount.entities.TransactionsData;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.fetcher.transactionalaccount.rpc.AccountsResponse;
@@ -47,7 +48,7 @@ public class SocieteGeneraleApiClient {
                 client.request(SocieteGeneraleConstants.Url.SBM_MOB_MOB_SBM_RLV_SNT_CPT)
                         .get(String.class);
 
-        return extractData(raw, AccountsResponse.class, AccountsData.class);
+        return extractData(raw, AccountsResponse.class);
     }
 
     public GenericResponse<?> getAuthInfo() {
@@ -63,7 +64,7 @@ public class SocieteGeneraleApiClient {
         String raw =
                 client.request(SocieteGeneraleConstants.Url.SEC_VK_GEN_CRYPTO).get(String.class);
 
-        return extractData(raw, LoginGridResponse.class, LoginGridData.class);
+        return extractData(raw, LoginGridResponse.class);
     }
 
     public byte[] getLoginNumPadImage(String crypto) {
@@ -102,7 +103,7 @@ public class SocieteGeneraleApiClient {
                                 Integer.toString(1 + (page * pageSize)))
                         .get(String.class);
 
-        return extractData(raw, TransactionsResponse.class, TransactionsData.class);
+        return extractData(raw, TransactionsResponse.class);
     }
 
     public Optional<AuthenticationData> postAuthentication(
@@ -119,44 +120,48 @@ public class SocieteGeneraleApiClient {
                         .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(String.class);
 
-        return extractData(raw, AuthenticationResponse.class, AuthenticationData.class);
+        return extractData(raw, AuthenticationResponse.class);
     }
 
     private <T> Optional<T> extractData(
-            String raw, Class<? extends GenericResponse<T>> wrapperClass, Class<T> valueType) {
+            String raw, Class<? extends GenericResponse<T>> wrapperClass) {
 
         T retVal = null;
 
+        if (!MAPPER.canDeserialize(MAPPER.constructType(GenericResponse.Any.class))) {
+            throw new ResponseParseException(
+                    SocieteGeneraleConstants.Logging.PARSE_FAILURE
+                            + " Failed to parse (or decrypt): "
+                            + raw);
+        }
+
         try {
 
-            GenericResponse.Any generic = MAPPER.readValue(raw, GenericResponse.Any.class);
+            GenericResponse.Any response = MAPPER.readValue(raw, GenericResponse.Any.class);
 
-            if (generic.isOk()) {
-
-                if (generic.isEncrypted()) {
-
-                    String encryptedDataAsString = generic.getData().toString();
-                    String decryptedStringToParse = decrypt(encryptedDataAsString);
-                    retVal = MAPPER.readValue(decryptedStringToParse, valueType);
-
-                } else {
-
-                    retVal = MAPPER.readValue(raw, wrapperClass).getData();
-                }
-
-            } else {
-
+            if (!response.isOk()) {
                 logger.error(
                         "{} Request NOK: {}", SocieteGeneraleConstants.Logging.REQUEST_NOT_OK, raw);
+                return Optional.empty();
             }
 
+            String parsableResponse = null;
+
+            if (response.isEncrypted()) {
+                String encryptedDataAsString = response.getData().toString();
+                parsableResponse = decrypt(encryptedDataAsString);
+            } else {
+                parsableResponse = raw;
+            }
+
+            retVal = MAPPER.readValue(parsableResponse, wrapperClass).getData();
+
         } catch (IOException e) {
-            logger.error(
-                    "{} Failed to parse (or decrypt): {}",
-                    SocieteGeneraleConstants.Logging.PARSE_FAILURE,
-                    raw,
+            throw new ResponseParseException(
+                    SocieteGeneraleConstants.Logging.PARSE_FAILURE
+                            + " Failed to parse (or decrypt): "
+                            + raw,
                     e);
-            throw new IllegalStateException(e);
         }
 
         return Optional.ofNullable(retVal);

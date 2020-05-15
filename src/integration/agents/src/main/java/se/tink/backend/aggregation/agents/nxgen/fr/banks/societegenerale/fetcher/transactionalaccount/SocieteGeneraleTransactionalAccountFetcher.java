@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.fetcher.transactionalaccount.entities.AccountEntity;
@@ -18,9 +17,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.account.AccountIdentifier;
 
 public class SocieteGeneraleTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -36,11 +38,11 @@ public class SocieteGeneraleTransactionalAccountFetcher
         this.apiClient = apiClient;
     }
 
-    private static AccountTypes toTinkAccountType(AccountEntity entity) {
+    private static Optional<TransactionalAccountType> toTinkAccountType(AccountEntity entity) {
 
         String productCode = entity.getProductCode();
 
-        Optional<AccountTypes> translated =
+        Optional<TransactionalAccountType> translated =
                 SocieteGeneraleConstants.AccountType.translate(productCode);
 
         if (!translated.isPresent()) {
@@ -50,32 +52,41 @@ public class SocieteGeneraleTransactionalAccountFetcher
                     productCode);
         }
 
-        return translated.orElse(AccountTypes.OTHER);
+        return translated;
     }
 
-    private static TransactionalAccount toTinkAccount(AccountEntity entity) {
+    private static Optional<TransactionalAccount> toTinkAccount(AccountEntity entity) {
 
-        AccountTypes accountType = toTinkAccountType(entity);
+        Optional<TransactionalAccountType> accountType = toTinkAccountType(entity);
 
-        TransactionalAccount.Builder<? extends Account, ?> builder =
-                TransactionalAccount.builder(accountType, entity.getNumber());
+        if (!accountType.isPresent()) {
+            return Optional.empty();
+        }
 
-        builder.setName(entity.getLabel());
-        builder.setAccountNumber(entity.getNumber());
-        builder.setBankIdentifier(entity.getTechnicalId());
-
-        builder.setExactBalance(entity.getBalance().toTinkAmount());
-
-        builder.putInTemporaryStorage(
-                SocieteGeneraleConstants.StorageKey.TECHNICAL_ID, entity.getTechnicalId());
-        builder.putInTemporaryStorage(
-                SocieteGeneraleConstants.StorageKey.TECHNICAL_CARD_ID, entity.getTechnicalCardId());
-
-        return builder.build();
+        return TransactionalAccount.nxBuilder()
+                .withType(accountType.get())
+                .withInferredAccountFlags()
+                .withBalance(BalanceModule.of(entity.getBalance().toTinkAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(entity.getNumber())
+                                .withAccountNumber(entity.getNumber())
+                                .withAccountName(entity.getLabel())
+                                .addIdentifier(
+                                        AccountIdentifier.create(
+                                                AccountIdentifier.Type.IBAN, entity.getNumber()))
+                                .build())
+                .setApiIdentifier(entity.getTechnicalId())
+                .putInTemporaryStorage(
+                        SocieteGeneraleConstants.StorageKey.TECHNICAL_ID, entity.getTechnicalId())
+                .putInTemporaryStorage(
+                        SocieteGeneraleConstants.StorageKey.TECHNICAL_CARD_ID,
+                        entity.getTechnicalCardId())
+                .build();
     }
 
     private static boolean isTransactionalAccount(AccountEntity entity) {
-        switch (toTinkAccountType(entity)) {
+        switch (toTinkAccountType(entity).orElse(TransactionalAccountType.OTHER)) {
             case CHECKING:
             case SAVINGS:
                 return true;
@@ -89,15 +100,20 @@ public class SocieteGeneraleTransactionalAccountFetcher
 
         Optional<AccountsData> response = apiClient.getAccounts();
 
-        if (response.isPresent()) {
-            return response.get()
-                    .getBenefits()
-                    .filter(SocieteGeneraleTransactionalAccountFetcher::isTransactionalAccount)
-                    .map(SocieteGeneraleTransactionalAccountFetcher::toTinkAccount)
-                    .collect(Collectors.toList());
-        } else {
-            return Collections.emptyList();
-        }
+        return response.map(
+                        accountsData ->
+                                accountsData
+                                        .getBenefits()
+                                        .filter(
+                                                SocieteGeneraleTransactionalAccountFetcher
+                                                        ::isTransactionalAccount)
+                                        .map(
+                                                SocieteGeneraleTransactionalAccountFetcher
+                                                        ::toTinkAccount)
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 
     @Override
@@ -113,12 +129,13 @@ public class SocieteGeneraleTransactionalAccountFetcher
                 apiClient.getTransactions(technicalId, technicalCardId, page, PAGE_SIZE);
 
         List<Transaction> transactions =
-                response.isPresent()
-                        ? response.get()
-                                .getTransactions()
-                                .map(TransactionEntity::toTinkTransaction)
-                                .collect(Collectors.toList())
-                        : Collections.emptyList();
+                response.map(
+                                transactionsData ->
+                                        transactionsData
+                                                .getTransactions()
+                                                .map(TransactionEntity::toTinkTransaction)
+                                                .collect(Collectors.toList()))
+                        .orElse(Collections.emptyList());
 
         return PaginatorResponseImpl.create(transactions, transactions.size() == PAGE_SIZE);
     }

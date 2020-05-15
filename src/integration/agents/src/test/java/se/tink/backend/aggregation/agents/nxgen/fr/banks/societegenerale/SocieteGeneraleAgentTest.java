@@ -1,15 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
 public class SocieteGeneraleAgentTest {
 
-    private final String USERNAME = ""; // 8 digits
-    private final String PASSWORD = ""; // 6 digits
+    private static final String USERNAME = ""; // 8 digits
+    private static final String PASSWORD = ""; // 6 digits
 
     @Test
     public void testLoginRefresh() throws Exception {

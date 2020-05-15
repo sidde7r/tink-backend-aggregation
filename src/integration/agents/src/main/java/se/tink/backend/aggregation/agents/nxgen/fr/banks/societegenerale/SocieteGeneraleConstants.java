@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SocieteGeneraleConstants {
@@ -27,21 +28,21 @@ public class SocieteGeneraleConstants {
     }
 
     public static class QueryParam {
-        public static final String CRYPTOGRAMME = "cryptogramme";
-        public static final String NIV_AUTHENT = "niv_authent";
-        public static final String MODE_CLAVIER = "modeClavier";
-        public static final String VK_VISUEL = "vk_visuel";
-        public static final String B_64_ID_PRESTA = "b64_idPresta";
-        public static final String B_64_NUMERO_CARTE = "b64_numeroCarte";
-        public static final String A_100_TIMESTAMPREF = "a100_timestampref";
-        public static final String N_15_NB_OCC = "n15_nbOcc";
-        public static final String N_15_RANG_OCC = "n15_rangOcc";
+        static final String CRYPTOGRAMME = "cryptogramme";
+        static final String NIV_AUTHENT = "niv_authent";
+        static final String MODE_CLAVIER = "modeClavier";
+        static final String VK_VISUEL = "vk_visuel";
+        static final String B_64_ID_PRESTA = "b64_idPresta";
+        static final String B_64_NUMERO_CARTE = "b64_numeroCarte";
+        static final String A_100_TIMESTAMPREF = "a100_timestampref";
+        static final String N_15_NB_OCC = "n15_nbOcc";
+        static final String N_15_RANG_OCC = "n15_rangOcc";
     }
 
     public static class Default {
-        public static final String AUTHENTIFIE = "AUTHENTIFIE";
+        static final String AUTHENTIFIE = "AUTHENTIFIE";
         public static final String ZERO = "0";
-        public static final String VK_WIDESCREEN = "vk_widescreen";
+        static final String VK_WIDESCREEN = "vk_widescreen";
         public static final String EMPTY = "";
         public static final String _300 = "300";
         public static final String AUTH = "auth";
@@ -51,13 +52,13 @@ public class SocieteGeneraleConstants {
 
         private static final String HOST = "https://app.secure.particuliers.societegenerale.mobi";
 
-        public static final URL SEC_VK_GEN_CRYPTO = new URL(HOST + "/sec/vk/gen_crypto.json");
-        public static final URL SEC_VK_GEN_UI = new URL(HOST + "/sec/vk/gen_ui");
-        public static final URL SEC_VK_AUTHENT = new URL(HOST + "/sec/vk/authent.json");
-        public static final URL GET_AUTH_INFO = new URL(HOST + "/getauthinfo.json");
-        public static final URL SBM_MOB_MOB_SBM_RLV_SNT_CPT =
+        static final URL SEC_VK_GEN_CRYPTO = new URL(HOST + "/sec/vk/gen_crypto.json");
+        static final URL SEC_VK_GEN_UI = new URL(HOST + "/sec/vk/gen_ui");
+        static final URL SEC_VK_AUTHENT = new URL(HOST + "/sec/vk/authent.json");
+        static final URL GET_AUTH_INFO = new URL(HOST + "/getauthinfo.json");
+        static final URL SBM_MOB_MOB_SBM_RLV_SNT_CPT =
                 new URL(HOST + "/sbm-mob/mob/sbm-rlv-snt-cpt.json");
-        public static final URL ABM_RESTIT_CAV_LISTE_OPERATIONS =
+        static final URL ABM_RESTIT_CAV_LISTE_OPERATIONS =
                 new URL(HOST + "/abm/restit/cav/listeOperations.json");
         public static final URL LOGOUT = new URL(HOST + "/logout.json");
     }
@@ -65,28 +66,27 @@ public class SocieteGeneraleConstants {
     public static class Logging {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE =
                 LogTag.from(PROVIDER_NAME + "-unknown-account-type");
-        public static final LogTag PARSE_FAILURE = LogTag.from(PROVIDER_NAME + "-parse-failure");
-        public static final LogTag REQUEST_NOT_OK = LogTag.from(PROVIDER_NAME + "-request-nok");
+        static final LogTag PARSE_FAILURE = LogTag.from(PROVIDER_NAME + "-parse-failure");
+        static final LogTag REQUEST_NOT_OK = LogTag.from(PROVIDER_NAME + "-request-nok");
     }
 
     public static class AccountType {
 
         /** SocGen product code -> Tink account type */
-        private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP =
-                ImmutableMap.<String, AccountTypes>builder()
-                        .put("050", AccountTypes.CHECKING)
+        private static final ImmutableMap<String, TransactionalAccountType> ACCOUNT_TYPES_MAP =
+                ImmutableMap.<String, TransactionalAccountType>builder()
+                        .put("050", TransactionalAccountType.CHECKING)
                         .build();
 
         /**
          * null/empty means the product code is unknown, and {@link AccountTypes#OTHER} means the
          * (known) product code should be disregarded (not mapped to any Tink object).
          */
-        public static Optional<AccountTypes> translate(String productCode) {
+        public static Optional<TransactionalAccountType> translate(String productCode) {
             if (Strings.isNullOrEmpty(productCode)) {
                 return Optional.empty();
             }
-            return Optional.ofNullable(
-                    ACCOUNT_TYPES_MAP.getOrDefault(productCode.toLowerCase(), null));
+            return Optional.ofNullable(ACCOUNT_TYPES_MAP.get(productCode.toLowerCase()));
         }
     }
 
