@@ -4,8 +4,7 @@ junit_test(
     name = "seb",
     srcs = glob(["*.java"]),
     data = [
-        "//data:aggregation_test",
-        "//etc:development",
+        "//:agent_test_data",
     ],
     tags = [
         "external",
