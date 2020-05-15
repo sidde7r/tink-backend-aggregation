@@ -49,7 +49,7 @@ public class CreditCardEntity {
     public CreditCardAccount toTinkAccount() {
         ExactCurrencyAmount balance =
                 new ExactCurrencyAmount(
-                        new BigDecimal(rawBalance).negate(), SebConstants.DEFAULT_CURRENCY);
+                        BigDecimal.valueOf(rawBalance).negate(), SebConstants.DEFAULT_CURRENCY);
         ExactCurrencyAmount availableCredit =
                 new ExactCurrencyAmount(new BigDecimal(creditLimit), SebConstants.DEFAULT_CURRENCY);
 

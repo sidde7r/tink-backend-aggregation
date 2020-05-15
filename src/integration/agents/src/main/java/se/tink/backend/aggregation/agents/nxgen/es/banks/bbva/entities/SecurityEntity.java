@@ -174,14 +174,14 @@ public class SecurityEntity {
 
     @JsonIgnore
     private Double getPrice() {
-        return new BigDecimal(totalAmount.getAmountAsDouble() / totalTitles)
+        return BigDecimal.valueOf(totalAmount.getAmountAsDouble() / totalTitles)
                 .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
     }
 
     @JsonIgnore
     private Double getAverageAcquisitionPrice(double acquisitionAmount) {
-        return new BigDecimal(acquisitionAmount / totalTitles)
+        return BigDecimal.valueOf(acquisitionAmount / totalTitles)
                 .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
     }

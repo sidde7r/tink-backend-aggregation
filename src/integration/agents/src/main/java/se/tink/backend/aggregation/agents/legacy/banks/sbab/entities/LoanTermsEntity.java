@@ -111,8 +111,8 @@ public class LoanTermsEntity {
     }
 
     public double getNormalizedInterestRate() {
-        BigDecimal interest = new BigDecimal(interestRate);
-        interest = interest.divide(new BigDecimal(100)).setScale(6, RoundingMode.HALF_UP);
+        BigDecimal interest = BigDecimal.valueOf(interestRate);
+        interest = interest.divide(BigDecimal.valueOf(100)).setScale(6, RoundingMode.HALF_UP);
         return interest.doubleValue();
     }
 

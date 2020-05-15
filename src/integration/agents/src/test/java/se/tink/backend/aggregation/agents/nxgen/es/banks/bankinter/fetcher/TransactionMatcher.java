@@ -13,9 +13,9 @@ public class TransactionMatcher extends TypeSafeMatcher<Transaction> {
     private static final SimpleDateFormat TRANSACTION_DATE_FORMATTER =
             new SimpleDateFormat("dd/MM/yyyy");
 
-    final String dateString;
-    final String description;
-    final double amountInEur;
+    private final String dateString;
+    private final String description;
+    private final double amountInEur;
 
     public TransactionMatcher(String date, String description, double eur) {
         this.dateString = date;
@@ -30,7 +30,7 @@ public class TransactionMatcher extends TypeSafeMatcher<Transaction> {
                         .getExactAmount()
                         .equals(
                                 new ExactCurrencyAmount(
-                                        new BigDecimal(amountInEur)
+                                        BigDecimal.valueOf(amountInEur)
                                                 .setScale(3, RoundingMode.HALF_DOWN),
                                         "EUR"))
                 && TRANSACTION_DATE_FORMATTER.format(transaction.getDate()).equals(dateString);
