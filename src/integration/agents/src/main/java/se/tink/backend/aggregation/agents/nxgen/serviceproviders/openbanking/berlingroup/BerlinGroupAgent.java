@@ -21,7 +21,6 @@ public abstract class BerlinGroupAgent<
                 TConfiguration extends BerlinGroupConfiguration>
         extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
-    private final String clientName;
     private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BerlinGroupAgent(
@@ -29,7 +28,6 @@ public abstract class BerlinGroupAgent<
             final AgentContext context,
             final AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-        clientName = request.getProvider().getPayload();
     }
 
     protected abstract TApiCliient getApiClient();
