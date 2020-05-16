@@ -11,20 +11,4 @@ public class InstructedAmount {
 
     @JsonProperty("sourceCurrency")
     private String sourceCurrency;
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(final double amount) {
-        this.amount = amount;
-    }
-
-    public String getSourceCurrency() {
-        return sourceCurrency;
-    }
-
-    public void setSourceCurrency(final String sourceCurrency) {
-        this.sourceCurrency = sourceCurrency;
-    }
 }

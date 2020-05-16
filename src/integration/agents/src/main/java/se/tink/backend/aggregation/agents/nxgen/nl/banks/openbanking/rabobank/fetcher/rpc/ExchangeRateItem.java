@@ -14,28 +14,4 @@ public class ExchangeRateItem {
 
     @JsonProperty("rateFrom")
     private String rateFrom;
-
-    public String getCurrencyTo() {
-        return currencyTo;
-    }
-
-    public void setCurrencyTo(final String currencyTo) {
-        this.currencyTo = currencyTo;
-    }
-
-    public String getCurrencyFrom() {
-        return currencyFrom;
-    }
-
-    public void setCurrencyFrom(final String currencyFrom) {
-        this.currencyFrom = currencyFrom;
-    }
-
-    public String getRateFrom() {
-        return rateFrom;
-    }
-
-    public void setRateFrom(final String rateFrom) {
-        this.rateFrom = rateFrom;
-    }
 }

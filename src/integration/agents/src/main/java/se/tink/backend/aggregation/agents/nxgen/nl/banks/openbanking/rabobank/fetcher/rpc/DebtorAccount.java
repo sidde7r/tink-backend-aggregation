@@ -16,15 +16,7 @@ public class DebtorAccount {
         return iban;
     }
 
-    public void setIban(final String iban) {
-        this.iban = iban;
-    }
-
     public String getCurrency() {
         return currency;
-    }
-
-    public void setCurrency(final String currency) {
-        this.currency = currency;
     }
 }

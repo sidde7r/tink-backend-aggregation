@@ -13,8 +13,4 @@ public class TransactionalAccountsResponse {
     public List<AccountsItem> getAccounts() {
         return accounts;
     }
-
-    public void setAccounts(final List<AccountsItem> accounts) {
-        this.accounts = accounts;
-    }
 }

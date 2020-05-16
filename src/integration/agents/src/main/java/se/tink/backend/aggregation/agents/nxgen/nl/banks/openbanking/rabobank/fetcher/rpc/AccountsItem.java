@@ -30,40 +30,8 @@ public class AccountsItem {
         return resourceId;
     }
 
-    public void setResourceId(final String resourceId) {
-        this.resourceId = resourceId;
-    }
-
-    public Links getLinks() {
-        return links;
-    }
-
-    public void setLinks(final Links links) {
-        this.links = links;
-    }
-
     public String getIban() {
         return iban;
-    }
-
-    public void setIban(final String iban) {
-        this.iban = iban;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(final String currency) {
-        this.currency = currency;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(final String status) {
-        this.status = status;
     }
 
     @JsonIgnore
