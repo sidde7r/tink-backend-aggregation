@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.f
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -235,11 +237,7 @@ public class TransactionItem {
     }
 
     public String getRemittanceInformationUnstructured() {
-        return remittanceInformationUnstructured;
-    }
-
-    public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
-        this.remittanceInformationUnstructured = remittanceInformationUnstructured;
+        return getFilteredRemittanceInformationUnstructured();
     }
 
     public String getInitiatingPartyName() {
@@ -266,5 +264,12 @@ public class TransactionItem {
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private String getFilteredRemittanceInformationUnstructured() {
+        if (Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
+            return StringUtils.EMPTY;
+        }
+        return remittanceInformationUnstructured.replaceAll("\\s{2,}", " ").trim();
     }
 }
