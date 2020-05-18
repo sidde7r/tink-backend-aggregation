@@ -18,6 +18,7 @@ public class TransferExecutionException extends RuntimeException {
         private Throwable exception;
         private String message;
         private SignableOperationStatuses status;
+        private String internalStatus;
 
         private Builder(SignableOperationStatuses status) {
             this.status = status;
@@ -37,6 +38,9 @@ public class TransferExecutionException extends RuntimeException {
             e.setSignableOperationStatus(status);
             if (endUserMessage != null) {
                 e.setUserMessage(endUserMessage);
+            }
+            if (internalStatus != null) {
+                e.setInternalStatus(internalStatus);
             }
             return e;
         }
@@ -61,6 +65,11 @@ public class TransferExecutionException extends RuntimeException {
             this.message = message;
             return this;
         }
+
+        public Builder setInternalStatus(String internalStatus) {
+            this.internalStatus = internalStatus;
+            return this;
+        }
     }
 
     private static final long serialVersionUID = 3654108329798528461L;
@@ -71,6 +80,7 @@ public class TransferExecutionException extends RuntimeException {
 
     private String endUserMessage;
     private SignableOperationStatuses status;
+    private String internalStatus;
 
     protected TransferExecutionException() {
         super();
@@ -102,6 +112,14 @@ public class TransferExecutionException extends RuntimeException {
 
     protected void setUserMessage(String userMessage) {
         this.endUserMessage = userMessage;
+    }
+
+    private void setInternalStatus(String internalStatus) {
+        this.internalStatus = internalStatus;
+    }
+
+    public String getInternalStatus() {
+        return internalStatus;
     }
 
     /**

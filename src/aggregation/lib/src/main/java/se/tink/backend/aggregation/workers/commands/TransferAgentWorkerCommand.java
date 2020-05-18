@@ -142,7 +142,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             }
 
             context.updateSignableOperationStatus(
-                    signableOperation, e.getSignableOperationStatus(), e.getUserMessage());
+                    signableOperation,
+                    e.getSignableOperationStatus(),
+                    e.getUserMessage(),
+                    e.getInternalStatus());
 
             return AgentWorkerCommandResult.ABORT;
 

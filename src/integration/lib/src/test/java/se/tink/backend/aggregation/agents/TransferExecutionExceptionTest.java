@@ -12,6 +12,7 @@ public class TransferExecutionExceptionTest {
     public static class Builder {
         private static final String TEST_EXCEPTION_MESSAGE = "Test exception message.";
         private static final String TEST_USER_MESSAGE = "Test user message.";
+        private static final String TEST_INTERNAL_STATUS = "Test internal status";
 
         @Test
         public void testBasicConstruction() {
@@ -66,6 +67,24 @@ public class TransferExecutionExceptionTest {
             Assert.assertEquals(SignableOperationStatuses.FAILED, e.getSignableOperationStatus());
             Assert.assertEquals(TEST_EXCEPTION_MESSAGE, e.getMessage());
             Assert.assertEquals(TEST_USER_MESSAGE, e.getUserMessage());
+            Assert.assertEquals(cause, e.getCause());
+        }
+
+        @Test
+        public void testConstructionWithMessageAndExceptionAndUserMessageAndInternalStatus() {
+            RuntimeException cause = new RuntimeException();
+            TransferExecutionException e =
+                    TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setException(cause)
+                            .setEndUserMessage(TEST_USER_MESSAGE)
+                            .setMessage(TEST_EXCEPTION_MESSAGE)
+                            .setInternalStatus(TEST_INTERNAL_STATUS)
+                            .build();
+
+            Assert.assertEquals(SignableOperationStatuses.FAILED, e.getSignableOperationStatus());
+            Assert.assertEquals(TEST_EXCEPTION_MESSAGE, e.getMessage());
+            Assert.assertEquals(TEST_USER_MESSAGE, e.getUserMessage());
+            Assert.assertEquals(TEST_INTERNAL_STATUS, e.getInternalStatus());
             Assert.assertEquals(cause, e.getCause());
         }
 

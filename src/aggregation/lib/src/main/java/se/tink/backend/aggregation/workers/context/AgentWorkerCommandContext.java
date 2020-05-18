@@ -332,6 +332,22 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         updateSignableOperation(signableOperation);
     }
 
+    public void updateSignableOperationStatus(
+            SignableOperation signableOperation,
+            SignableOperationStatuses status,
+            String statusMessage,
+            String internalStatus) {
+        signableOperation.setStatus(status);
+        signableOperation.setInternalStatus(internalStatus);
+        if (Optional.ofNullable(getCatalog()).isPresent() && statusMessage != null) {
+            signableOperation.setStatusMessage(getCatalog().getString(statusMessage));
+        } else {
+            signableOperation.setStatusMessage(statusMessage);
+        }
+
+        updateSignableOperation(signableOperation);
+    }
+
     public void processTransferDestinationPatterns() {
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc
                         .UpdateTransferDestinationPatternsRequest
