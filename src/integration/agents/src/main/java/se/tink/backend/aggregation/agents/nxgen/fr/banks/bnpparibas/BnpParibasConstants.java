@@ -44,6 +44,7 @@ public class BnpParibasConstants {
         public static final String POS_SELECT = "posSelect";
         public static final String VALUE_1 = "1";
         public static final String IDB64 = "idb64";
+        public static final String BRACKETS_HCE = "[HCE]";
         public static final String HCE = "HCE";
 
         public static final String USER_AGENT = "MesComptes/127 CFNetwork/889.9 Darwin/17.2.0";
