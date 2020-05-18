@@ -50,6 +50,7 @@ public class BbvaTransactionFetcher
         try {
             Thread.sleep(Fetchers.BACKOFF);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             LOGGER.debug("Woke up early", e);
         }
     }

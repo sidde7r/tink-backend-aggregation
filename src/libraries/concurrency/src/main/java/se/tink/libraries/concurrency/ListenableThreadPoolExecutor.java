@@ -55,7 +55,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
         private CountDownLatch started = new CountDownLatch(1);
 
         @Override
-        protected void run() throws Exception {
+        protected void run() {
             thread = Thread.currentThread();
 
             // Must be called after setting `thread` above to avoid getting an NPE in
@@ -84,6 +84,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
                 try {
                     item = queue.take();
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     // Deliberately left empty.
                 }
             }
@@ -116,11 +117,11 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
             thread.interrupt();
         }
 
-        public void awaitStarted() {
+        void awaitStarted() {
             try {
                 started.await();
             } catch (InterruptedException e) {
-                thread.currentThread().interrupt();
+                Thread.currentThread().interrupt();
             }
         }
     }
@@ -165,7 +166,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
     }
 
     @Override
-    protected void finalize() throws Throwable {
+    protected void finalize() {
         // Make sure that the background QueuePopper service can be garbage collected. Notice that,
         // a ThreadPoolExecutor
         // only will be garbage collected if `corePoolSize` is zero. See
@@ -219,10 +220,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
             timeout = 0;
         }
 
-        if (!threadPool.awaitTermination(timeout, unit)) {
-            return false;
-        }
-        return true;
+        return threadPool.awaitTermination(timeout, unit);
     }
 
     @Override

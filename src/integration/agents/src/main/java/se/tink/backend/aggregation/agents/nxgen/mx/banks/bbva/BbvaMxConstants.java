@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 
 import com.google.common.collect.ImmutableMap;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -25,11 +24,6 @@ public class BbvaMxConstants {
     public static final String APPLICATION_CODE_VERSION = "1.0";
     public static final String NEW_LINE = "\n";
     public static final String DELIMITER = "--";
-
-    public static class DATE {
-        public static final SimpleDateFormat TRANSACTION_DATE_FORAMT =
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    }
 
     public static class ERROR {
         public static final String NO_ACCOUNT_FOUND_CODE = "160";

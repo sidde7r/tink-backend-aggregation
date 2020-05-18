@@ -190,13 +190,13 @@ public class KbcOtpUtils {
         for (byte b : data) {
             dataList.add(b);
         }
-        KbcWhiteBoxAes kbcWhiteBoxAes =
-                (KbcWhiteBoxAes) Native.loadLibrary(LIBRARY_FILE_PATH, KbcWhiteBoxAes.class);
+        KbcWhiteBoxAes kbcWhiteBoxAes = Native.loadLibrary(LIBRARY_FILE_PATH, KbcWhiteBoxAes.class);
         logger.info("KbcOtpUtils: Reading library done");
         byte[] out = new byte[16];
         try {
             Thread.sleep(100); // Give logging some time to finish
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new IllegalStateException(e);
         }
         kbcWhiteBoxAes.kbc_wb_aes128_encrypt(data, out);

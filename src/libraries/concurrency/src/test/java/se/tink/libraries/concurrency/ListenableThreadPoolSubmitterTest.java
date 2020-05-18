@@ -47,6 +47,7 @@ public class ListenableThreadPoolSubmitterTest {
                                             Assert.assertTrue(
                                                     allowedToFinish.await(1, TimeUnit.MINUTES));
                                         } catch (InterruptedException e) {
+                                            Thread.currentThread().interrupt();
                                             e.printStackTrace();
                                         }
                                         return result;

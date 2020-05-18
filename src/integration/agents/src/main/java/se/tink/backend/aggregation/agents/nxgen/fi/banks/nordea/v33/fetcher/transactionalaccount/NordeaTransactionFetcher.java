@@ -64,6 +64,7 @@ public class NordeaTransactionFetcher
         try {
             Thread.sleep(TRANSACTION_FETCHER_BACKOFF);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             LOG.debug("Woke up early", e);
         }
     }

@@ -60,6 +60,7 @@ public class SpankkiTransactionFetcher implements TransactionPagePaginator<Trans
         try {
             Thread.sleep(TRANSACTION_FETCHER_BACKOFF);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             LOG.debug("Woke up early");
         }
     }
