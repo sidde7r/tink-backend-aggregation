@@ -7,17 +7,10 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BeoBankAgent extends CmcicAgent {
 
-    private static final String INTEGRATION_NAME = "beobank";
-
     public BeoBankAgent(
             CredentialsRequest request,
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration);
-    }
-
-    @Override
-    protected String getIntegrationName() {
-        return INTEGRATION_NAME;
     }
 }
