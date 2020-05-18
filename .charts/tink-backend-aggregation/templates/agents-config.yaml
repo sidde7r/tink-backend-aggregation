@@ -95,14 +95,8 @@ data:
         {{- if $featureFlagsConfig.beProxy }}
           beProxy: {{ $featureFlagsConfig.beProxy | default false }}
         {{- end }}
-        {{- if $featureFlagsConfig.swedbankKeepAlive }}
-          swedbankKeepAlive: {{ $featureFlagsConfig.swedbankKeepAlive | default false }}
-        {{- end }}
         {{- if $featureFlagsConfig.resetSuplementalInformation }}
           resetSuplementalInformation: {{ $featureFlagsConfig.resetSuplementalInformation | default false }}
-        {{- end }}
-        {{- if $featureFlagsConfig.swedbankExtendedBankId }}
-          swedbankExtendedBankId: {{ $featureFlagsConfig.swedbankExtendedBankId | default false }}
         {{- end }}
 
       integrations:

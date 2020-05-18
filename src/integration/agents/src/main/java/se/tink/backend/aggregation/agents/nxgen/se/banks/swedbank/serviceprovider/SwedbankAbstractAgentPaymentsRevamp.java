@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.FeatureFlag;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.einvoice.SwedbankDefaultApproveEInvoiceExecutor;
@@ -218,14 +217,12 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
                 metricRefreshController,
-                new SwedbankDefaultTransferDestinationFetcher(apiClient, sessionStorage, false));
+                new SwedbankDefaultTransferDestinationFetcher(apiClient, sessionStorage));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SwedbankDefaultSessionHandler(
-                apiClient,
-                agentsServiceConfiguration.isFeatureEnabled(FeatureFlag.CHECK_KEEP_ALIVE));
+        return new SwedbankDefaultSessionHandler(apiClient);
     }
 
     @Override

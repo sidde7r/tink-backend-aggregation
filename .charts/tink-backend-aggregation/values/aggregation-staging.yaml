@@ -70,9 +70,7 @@ sendDataTrackingEvents: true
 featureFlags:
   esProxy: true
   beProxy: true
-  swedbankKeepAlive: true
   resetSuplementalInformation: true
-  swedbankExtendedBankId: true
 
 providerConfigurationServiceConfiguration:
   enabled: true

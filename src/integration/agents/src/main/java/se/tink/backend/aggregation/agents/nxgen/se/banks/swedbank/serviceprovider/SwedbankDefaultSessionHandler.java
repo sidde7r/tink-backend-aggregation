@@ -16,12 +16,9 @@ public class SwedbankDefaultSessionHandler implements SessionHandler {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultSessionHandler.class);
 
     private final SwedbankDefaultApiClient apiClient;
-    private final boolean checkKeepAlive;
 
-    public SwedbankDefaultSessionHandler(
-            SwedbankDefaultApiClient apiClient, boolean checkKeepAlive) {
+    public SwedbankDefaultSessionHandler(SwedbankDefaultApiClient apiClient) {
         this.apiClient = apiClient;
-        this.checkKeepAlive = checkKeepAlive;
     }
 
     @Override
@@ -33,18 +30,16 @@ public class SwedbankDefaultSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        if (checkKeepAlive) {
-            try {
-                TouchResponse response = apiClient.touch();
-                if (response != null
-                        && !Strings.isNullOrEmpty(response.getBankId())
-                        && !Strings.isNullOrEmpty(response.getChosenProfile())) {
-                    completeAuthentication();
-                    return;
-                }
-            } catch (Exception ex) {
-                throw SessionError.SESSION_EXPIRED.exception();
+        try {
+            TouchResponse response = apiClient.touch();
+            if (response != null
+                    && !Strings.isNullOrEmpty(response.getBankId())
+                    && !Strings.isNullOrEmpty(response.getChosenProfile())) {
+                completeAuthentication();
+                return;
             }
+        } catch (Exception ex) {
+            throw SessionError.SESSION_EXPIRED.exception();
         }
 
         throw SessionError.SESSION_EXPIRED.exception();
