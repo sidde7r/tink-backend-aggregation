@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class EvaluationClientEntity {
-    @JsonProperty("indicateurStatutEvaluation")
-    private int statusIndicatorEvaluation;
+public class ServicesEntity {
+    @JsonProperty("elligibilite")
+    private int eligibilite;
 
-    public int getStatusIndicatorEvaluation() {
-        return statusIndicatorEvaluation;
-    }
+    private String code;
 }

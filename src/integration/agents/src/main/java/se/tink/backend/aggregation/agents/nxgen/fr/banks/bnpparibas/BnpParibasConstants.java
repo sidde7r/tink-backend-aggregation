@@ -5,17 +5,16 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class BnpParibasConstants {
 
     public static final class Urls {
-        public static final String HOST = "https://m-service.bnpparibas.net/";
+        static final String HOST = "https://m-service.bnpparibas.net/";
         public static final URL NUMPAD = new URL(HOST + "ident-mobile-wspl/rpc/grille.do");
         public static final URL LOGIN = new URL(HOST + "SEEA-pa01/devServer/seeaserver");
         public static final URL KEEP_ALIVE =
                 new URL(HOST + "authentforte-wspl/rpc/recupererStatut");
-        public static final URL USER_OVERVIEW =
-                new URL(HOST + "serviceinfosclient-wspl/rpc/InfosClient");
-        public static final URL ACCOUNT_DETAILS =
-                new URL(HOST + "SmcDiversPresentationWeb/EntryPointSmcDiversServlet");
+        public static final URL LIST_ACCOUNTS = new URL(HOST + "udc-wspl/rest/getlstcpt");
         public static final URL TRANSACTIONAL_ACCOUNT_TRANSACTIONS =
                 new URL(HOST + "rop-wspl/rest/releveOp");
+        public static final URL LIST_IBANS =
+                new URL(HOST + "virement-wspl/rest/initialisationVirement");
     }
 
     public static final class Storage {
@@ -61,16 +60,10 @@ public class BnpParibasConstants {
         public static final String PLATFORM = "iOS";
     }
 
-    public static final class QueryParams {
-        public static final String ACCOUNT_NUMBER = "numCompte";
-        public static final String MODE_APPEL = "modeAppel";
-        public static final String MODE_APPEL_0 = "0";
-        public static final String SERVICE = "service";
-        public static final String SERVICE_RIB = "detailRIB";
-    }
-
     public static final class AccountType {
-        public static final String CHECKING = "Compte de chèques";
+        public static final Integer CHECKING_ACCOUNT_GROUP_NUMBER = 1;
+        public static final Integer SAVINGS_ACCOUNT_GROUP_NUMBER = 2;
+        public static final Integer INVESTMENT_ACCOUNT_GROUP_NUMBER = 5;
     }
 
     public static final class TransactionalAccountTransactions {
@@ -78,13 +71,13 @@ public class BnpParibasConstants {
         public static final String PAST_OR_PENDING = "2";
     }
 
+    public static final class AccountIbanDetails {
+        public static final int MODE_BENEFICIAIRE_1 = 1;
+    }
+
     public static final class TransactionDescriptionFormatting {
         public static final String MERCHANT_NAME = "merchantName";
         public static final String REGEX =
                 String.format("^FACTURE CARTE DU [0-9]+ (?<%s>.*) CARTE [0-9X]+$", MERCHANT_NAME);
-    }
-
-    public static final class Tags {
-        public static final String UNKNOWN_ACCOUNT_TYPE = "fr_bnpparibas_unknown_account_type";
     }
 }
