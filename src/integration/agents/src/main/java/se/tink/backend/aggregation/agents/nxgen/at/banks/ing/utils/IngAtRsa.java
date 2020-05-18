@@ -8,82 +8,19 @@ public class IngAtRsa {
     private int e;
     private BigInteger n;
     private BigInteger d;
-    private BigInteger p;
-    private BigInteger q;
-    private BigInteger dmp1;
-    private BigInteger dmq1;
-    private BigInteger coeff;
     private boolean canEncrypt;
     private boolean canDecrypt;
 
-    public IngAtRsa(
-            final BigInteger N,
-            final int E,
-            final BigInteger D,
-            final BigInteger P,
-            final BigInteger Q,
-            final BigInteger Dmp1,
-            final BigInteger Dmq1,
-            final BigInteger Coeff) {
-        this.n = N;
+    private IngAtRsa(final BigInteger n, final int E, final BigInteger d) {
+        this.n = n;
         this.e = E;
-        this.d = D;
-        this.p = P;
-        this.q = Q;
-        this.dmp1 = Dmp1;
-        this.dmq1 = Dmq1;
-        this.coeff = Coeff;
-        this.canEncrypt = ((!(this.n == null)) && (!(this.e == 0)));
-        this.canDecrypt = (canEncrypt && (!((this.d == null))));
+        this.d = d;
+        this.canEncrypt = this.n != null && e != 0;
+        this.canDecrypt = canEncrypt && this.d != null;
     }
 
     public IngAtRsa(RSAPublicKeySpec rsaPublicKeySpec) {
-        this(
-                rsaPublicKeySpec.getModulus(),
-                rsaPublicKeySpec.getPublicExponent().intValue(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-    }
-
-    public static IngAtRsa parsePublicKey(final String n, final String e) {
-        return (new IngAtRsa(
-                new BigInteger(n, 16), Integer.parseInt(e), null, null, null, null, null, null));
-    }
-
-    public static IngAtRsa parsePrivateKey(
-            final String n,
-            final String e,
-            final String d,
-            final String p,
-            final String q,
-            final String Dmp1,
-            final String Dmq1,
-            final String Coeff) {
-        if (p == null || p.equals("")) {
-            return (new IngAtRsa(
-                    new BigInteger(n, 16),
-                    Integer.parseInt(e),
-                    new BigInteger(d, 16),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null));
-        }
-
-        return (new IngAtRsa(
-                new BigInteger(n, 16),
-                Integer.parseInt(e),
-                new BigInteger(d, 16),
-                new BigInteger(p, 16),
-                new BigInteger(q, 16),
-                new BigInteger(Dmp1),
-                new BigInteger(Dmq1),
-                new BigInteger(Coeff)));
+        this(rsaPublicKeySpec.getModulus(), rsaPublicKeySpec.getPublicExponent().intValue(), null);
     }
 
     private static byte[] pkcs1unpad(final BigInteger src, final int n) {
@@ -111,42 +48,10 @@ public class IngAtRsa {
     }
 
     private int getBlockSize() {
-        return (int) Math.floor((n.bitLength() + 7) / 8);
+        return (int) Math.floor((n.bitLength() + 7f) / 8);
     }
 
-    private int getBlockSizeBase(final int b) throws IllegalArgumentException {
-        int k = 0;
-        int adjustedBl = n.bitLength();
-        switch (b) {
-            case 2:
-                k = 1;
-                break;
-            case 4:
-                k = 2;
-                break;
-            case 16:
-                k = 4;
-                break;
-            case 64:
-                k = 6;
-                adjustedBl = (int) (12 * Math.floor((n.bitLength() + 11) / 12));
-                break;
-            case 256:
-                k = 8;
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid block size " + b);
-        }
-
-        return (int) (Math.floor(adjustedBl + k - 1) / k);
-    }
-
-    private void dispose() {
-        e = 0;
-        n = null;
-    }
-
-    public BigInteger doPublic(final BigInteger x) {
+    private BigInteger doPublic(final BigInteger x) {
         if (this.canEncrypt) {
             return x.modPow(new BigInteger(this.e + ""), this.n);
         }
@@ -154,7 +59,7 @@ public class IngAtRsa {
         return BigInteger.ZERO;
     }
 
-    public String encrypt(final String text) throws IllegalArgumentException {
+    public String encrypt(final String text) {
         final byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
         if (bytes.length > this.getBlockSize() - 11) {
             throw new IllegalArgumentException("The message is too big to be encrypted");
@@ -196,7 +101,7 @@ public class IngAtRsa {
         return bytes;
     }
 
-    public BigInteger doPrivate(final BigInteger x) {
+    private BigInteger doPrivate(final BigInteger x) {
         if (this.canDecrypt) {
             return x.modPow(this.d, this.n);
         }

@@ -56,6 +56,6 @@ public final class BunqConstants {
     }
 
     public static class Token {
-        public static final long ACCESS_TOKEN_EXPIRES_IN_SECONDS = 90 * 24 * 60 * 60;
+        public static final long ACCESS_TOKEN_EXPIRES_IN_SECONDS = 90 * 24 * 60 * 60L;
     }
 }

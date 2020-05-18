@@ -12,7 +12,6 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.rpc.SavingsAccountsResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -27,7 +26,6 @@ public class VolvoFinansTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
 
-    private final AggregationLogger log = new AggregationLogger(VolvoFinansApiClient.class);
     private final VolvoFinansApiClient apiClient;
 
     public VolvoFinansTransactionalAccountFetcher(VolvoFinansApiClient apiClient) {
@@ -64,7 +62,7 @@ public class VolvoFinansTransactionalAccountFetcher
         while (!localToDate.isBefore(localStartDate)) {
             /* set 'localFromDate' to first of month (or to 'localStartDate' if first of month is outside requested time period) */
             LocalDate localFromDate =
-                    max(localToDate.minusDays(localToDate.getDayOfMonth() - 1), localStartDate);
+                    max(localToDate.minusDays(localToDate.getDayOfMonth() - 1L), localStartDate);
             transactions.addAll(getTransactionsBatch(account, localFromDate, localToDate));
             localToDate = localFromDate.minusDays(1);
         }
@@ -90,7 +88,7 @@ public class VolvoFinansTransactionalAccountFetcher
 
             transactions.addAll(collected);
 
-            pagesLeft = !(collected.size() < limit);
+            pagesLeft = collected.size() >= limit;
             offset += limit;
         }
         return transactions;

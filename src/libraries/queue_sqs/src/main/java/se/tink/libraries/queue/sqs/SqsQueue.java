@@ -131,7 +131,7 @@ public class SqsQueue {
     }
 
     private static long calculateBackoffTime() {
-        return MINIMUM_SLEEP_TIME_IN_MILLISECONDS
+        return (long) MINIMUM_SLEEP_TIME_IN_MILLISECONDS
                 * BASE_2_ARRAY[ThreadLocalRandom.current().nextInt(BASE_2_ARRAY.length)];
     }
 

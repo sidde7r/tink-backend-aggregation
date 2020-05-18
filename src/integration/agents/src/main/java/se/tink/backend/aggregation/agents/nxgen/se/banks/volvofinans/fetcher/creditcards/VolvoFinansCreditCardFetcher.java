@@ -61,7 +61,7 @@ public class VolvoFinansCreditCardFetcher
         while (!localToDate.isBefore(localStartDate)) {
             /* set 'localFromDate' to first of month (or to 'localStartDate' if first of month is outside requested time period) */
             LocalDate localFromDate =
-                    max(localToDate.minusDays(localToDate.getDayOfMonth() - 1), localStartDate);
+                    max(localToDate.minusDays(localToDate.getDayOfMonth() - 1L), localStartDate);
             transactions.addAll(getTransactionsBatch(account, localFromDate, localToDate));
             localToDate = localFromDate.minusDays(1);
         }
@@ -89,7 +89,7 @@ public class VolvoFinansCreditCardFetcher
                             .collect(Collectors.toList());
             transactions.addAll(collected);
 
-            pagesLeft = !(collected.size() < limit);
+            pagesLeft = collected.size() >= limit;
             offset += limit;
         }
         return transactions;
