@@ -114,66 +114,19 @@ public class OpenIdApiClient {
 
     private TokenRequestForm createTokenRequestFormWithoutScope(String grantType) {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
+
         TokenRequestForm requestForm =
                 new TokenRequestForm()
                         .withGrantType(grantType)
                         .withRedirectUri(softwareStatement.getRedirectUri());
 
-        OpenIdConstants.TOKEN_ENDPOINT_AUTH_METHOD authMethod =
-                wellknownConfiguration
-                        .getPreferredTokenEndpointAuthMethod(
-                                OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Preferred token endpoint auth method not found."));
-
-        ClientInfo clientInfo = providerConfiguration.getClientInfo();
-        switch (authMethod) {
-            case client_secret_post:
-                requestForm.withClientSecretPost(
-                        clientInfo.getClientId(), clientInfo.getClientSecret());
-                break;
-
-            case private_key_jwt:
-                requestForm.withPrivateKeyJwt(signer, wellknownConfiguration, clientInfo);
-                break;
-
-            case client_secret_basic:
-                // Add to header.
-                break;
-
-            case tls_client_auth:
-                // Do nothing. We authenticate using client certificate.
-                requestForm.withClientId(clientInfo.getClientId());
-                break;
-
-            default:
-                throw new IllegalStateException(
-                        String.format(
-                                "Not yet implemented auth method: %s", authMethod.toString()));
-        }
+        handleFormAuthentication(requestForm, wellknownConfiguration);
 
         return requestForm;
     }
 
-    private TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
-        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
-
-        // Token request does not use OpenId scope
-        String scope =
-                wellknownConfiguration
-                        .verifyAndGetScopes(Collections.singletonList(mode.getValue()))
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Provider does not support the mandatory scopes."));
-
-        TokenRequestForm requestForm =
-                new TokenRequestForm()
-                        .withGrantType(grantType)
-                        .withScope(scope)
-                        .withRedirectUri(softwareStatement.getRedirectUri());
+    private void handleFormAuthentication(
+            TokenRequestForm requestForm, WellKnownResponse wellknownConfiguration) {
 
         ClientInfo clientInfo = providerConfiguration.getClientInfo();
         TOKEN_ENDPOINT_AUTH_METHOD authMethod =
@@ -203,6 +156,27 @@ public class OpenIdApiClient {
                         String.format(
                                 "Not yet implemented auth method: %s", authMethod.toString()));
         }
+    }
+
+    private TokenRequestForm createTokenRequestForm(String grantType, ClientMode mode) {
+        WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
+
+        // Token request does not use OpenId scope
+        String scope =
+                wellknownConfiguration
+                        .verifyAndGetScopes(Collections.singletonList(mode.getValue()))
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Provider does not support the mandatory scopes."));
+
+        TokenRequestForm requestForm =
+                new TokenRequestForm()
+                        .withGrantType(grantType)
+                        .withScope(scope)
+                        .withRedirectUri(softwareStatement.getRedirectUri());
+
+        handleFormAuthentication(requestForm, wellknownConfiguration);
 
         return requestForm;
     }
@@ -254,6 +228,7 @@ public class OpenIdApiClient {
         if (!Strings.isNullOrEmpty(clientInfo.getTokenEndpointAuthMethod())) {
             return TOKEN_ENDPOINT_AUTH_METHOD.valueOf(clientInfo.getTokenEndpointAuthMethod());
         }
+
         return wellknownConfiguration
                 .getPreferredTokenEndpointAuthMethod(
                         OpenIdConstants.PREFERRED_TOKEN_ENDPOINT_AUTH_METHODS)

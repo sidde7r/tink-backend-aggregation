@@ -25,7 +25,7 @@ public class ClientAssertion {
             return this;
         }
 
-        public String build(JwtSigner signer, String tokenEndpointAuthSigningAlg) {
+        public String build(JwtSigner signer, JwtSigner.Algorithm tokenEndpointAuthSigningAlg) {
             Preconditions.checkNotNull(
                     wellknownConfiguration, "WellknownConfiguration must be specified.");
             Preconditions.checkNotNull(clientInfo, "ClientInfo must be specified.");
@@ -47,7 +47,7 @@ public class ClientAssertion {
                     .withAudience(tokenEndpoint)
                     .withIssuedAt(issuedAt)
                     .withExpiresAt(expiresAt)
-                    .signAttached(JwtSigner.Algorithm.valueOf(tokenEndpointAuthSigningAlg), signer);
+                    .signAttached(tokenEndpointAuthSigningAlg, signer);
         }
     }
 
