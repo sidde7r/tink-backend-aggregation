@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.authenticator.MultiSupplementalAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.authenticator.MultiSupplementalManualAuthenticator;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoIdentityData;
@@ -25,7 +29,8 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
-public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
+public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent
+        implements RefreshTransferDestinationExecutor {
 
     public MultiSupplementalDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -193,5 +198,11 @@ public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
                 return LocalDate.of(1970, 1, 1);
             }
         };
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return new FetchTransferDestinationsResponse(
+                DemoAccountDefinitionGenerator.generateTransferDestinations(accounts));
     }
 }

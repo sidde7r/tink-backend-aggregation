@@ -6,7 +6,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -29,7 +32,8 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
-public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent {
+public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent
+        implements RefreshTransferDestinationExecutor {
     private static final int DAYS_UNTIL_SESSION_SHOULD_EXPIRE = 90;
     private final String username;
     private final String provider;
@@ -130,5 +134,11 @@ public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent {
                 return LocalDate.of(1970, 1, 1);
             }
         };
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return new FetchTransferDestinationsResponse(
+                DemoAccountDefinitionGenerator.generateTransferDestinations(accounts));
     }
 }
