@@ -1,3 +1,2 @@
 agentsServiceConfiguration:
   featureFlags:
-    swedbankKeepAlive: false

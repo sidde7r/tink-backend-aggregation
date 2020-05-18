@@ -403,8 +403,4 @@ public class SwedbankBaseConstants {
         public static final int FIRST_ATTEMPT = 1;
         public static final int MAX_RETRY_ATTEMPTS = 2;
     }
-
-    public static class FeatureFlag {
-        public static final String CHECK_KEEP_ALIVE = "swedbankKeepAlive";
-    }
 }
