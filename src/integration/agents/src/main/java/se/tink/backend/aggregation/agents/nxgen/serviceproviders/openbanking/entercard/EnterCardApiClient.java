@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator.rpc.AuthorizationCodeResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator.rpc.TokenResponse;
@@ -165,7 +167,8 @@ public final class EnterCardApiClient {
                     .toTinkToken();
 
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == 401) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
+                    && e.getResponse().getBody(ErrorResponse.class).isInvalidGrant()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             throw e;
