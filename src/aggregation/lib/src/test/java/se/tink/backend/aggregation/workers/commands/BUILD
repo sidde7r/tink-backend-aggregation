@@ -29,6 +29,7 @@ junit_test(
         "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
+        "//src/libraries/i18n",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",

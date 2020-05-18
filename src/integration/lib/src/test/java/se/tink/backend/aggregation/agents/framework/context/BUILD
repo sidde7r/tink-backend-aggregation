@@ -18,6 +18,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/integration/transfer:rpc",
+        "//src/libraries/i18n",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_code_findbugs_jsr305",

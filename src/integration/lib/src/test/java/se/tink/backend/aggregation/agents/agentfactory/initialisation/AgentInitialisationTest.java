@@ -101,6 +101,7 @@ public class AgentInitialisationTest {
 
     private static ImmutableSet<String> temporarilyIgnoredAgents =
             ImmutableSet.of(
+                    "nxgen.be.banks.bpost.BPostBank",
                     "nxgen.se.banks.nordea.partner.NordeaPartnerSeAgent",
                     "nxgen.dk.banks.nordeapartner.NordeaPartnerDkAgent",
                     "nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent",
