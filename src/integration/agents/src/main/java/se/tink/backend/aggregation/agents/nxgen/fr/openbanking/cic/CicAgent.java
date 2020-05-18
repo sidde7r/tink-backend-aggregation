@@ -12,9 +12,4 @@ public class CicAgent extends CmcicAgent {
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration);
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return CicConstants.INTEGRATION_NAME;
-    }
 }

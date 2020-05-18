@@ -1,18 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class CmcicConstants {
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
-                    .put(AccountTypes.SAVINGS, "some_string2_the_integratee_uses")
-                    .put(AccountTypes.CREDIT_CARD, "some_string3_the_integratee_uses")
-                    .ignoreKeys("some_string4_the_integratee_uses")
-                    .build();
 
     private CmcicConstants() {
         throw new AssertionError();
@@ -95,7 +85,6 @@ public final class CmcicConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String BENEFICIARY_NAME = "myMerchant";
         public static final String INSTRUCTION_ID = "MyInstrId";
-        public static final String PISP = "pisp";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String AUTHORIZATION_CODE = "authorization_code";

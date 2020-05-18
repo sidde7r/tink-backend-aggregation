@@ -61,8 +61,6 @@ public abstract class CmcicAgent extends NextGenerationAgent
         cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(apiClient);
     }
 
-    protected abstract String getIntegrationName();
-
     @Override
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(

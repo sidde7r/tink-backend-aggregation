@@ -12,9 +12,4 @@ public class TargoBankAgent extends CmcicAgent {
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration);
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return TargobankConstants.INTEGRATION_NAME;
-    }
 }

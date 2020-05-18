@@ -12,9 +12,4 @@ public class CreditMutuelAgent extends CmcicAgent {
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration);
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return CreditMutuelConstants.INTEGRATION_NAME;
-    }
 }

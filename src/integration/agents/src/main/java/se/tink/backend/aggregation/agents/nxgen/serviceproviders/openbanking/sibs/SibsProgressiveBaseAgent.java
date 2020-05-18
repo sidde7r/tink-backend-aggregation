@@ -88,8 +88,6 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         client.addFilter(new RateLimitErrorFilter());
     }
 
-    protected abstract String getIntegrationName();
-
     private SibsConfiguration getClientConfiguration() {
         return getAgentConfigurationController().getAgentConfiguration(SibsConfiguration.class);
     }
