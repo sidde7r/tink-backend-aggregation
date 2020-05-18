@@ -813,6 +813,8 @@ public class SEBApiAgent extends AbstractAgent
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
             throw BankServiceError.NO_BANK_SERVICE.exception(
                     response.getEntity(LoginErrorResponseEntity.class).getInfoText());
+        } else if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception("Internal Server Error");
         }
         final AuthenticationResponse authenticationResponse =
                 response.getEntity(AuthenticationResponse.class);
@@ -828,6 +830,12 @@ public class SEBApiAgent extends AbstractAgent
                             .type(MediaType.APPLICATION_JSON)
                             .header(CSRF_HEADER, csrfToken)
                             .get(ClientResponse.class);
+            if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
+                throw BankServiceError.NO_BANK_SERVICE.exception(
+                        response.getEntity(LoginErrorResponseEntity.class).getInfoText());
+            } else if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception("Internal Server Error");
+            }
             csrfToken = response.getHeaders().getFirst(CSRF_HEADER);
 
             final AuthenticationResponse authenticationResponse =
