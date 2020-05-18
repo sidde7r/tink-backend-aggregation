@@ -22,7 +22,7 @@ junit_test(
 junit_test(
     name = "kbc_unit_tests",
     srcs = glob(
-        ["*.java"],
+        ["**/*.java"],
         exclude = ["agents/**/*.java"],
     ),
     data = [
@@ -39,8 +39,10 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",

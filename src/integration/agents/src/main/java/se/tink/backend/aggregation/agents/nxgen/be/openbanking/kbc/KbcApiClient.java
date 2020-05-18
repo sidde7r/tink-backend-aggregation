@@ -44,7 +44,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-public final class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
+public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
     private static final Pattern IBAN_PATTERN = Pattern.compile("BE[0-9]{14}");
     private static final Logger logger = LoggerFactory.getLogger(KbcApiClient.class);
