@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -21,6 +23,7 @@ public final class EnterCardConstants {
     }
 
     public static class ErrorMessages {
+        public static final List<String> INVALID_TOKEN = ImmutableList.of("invalid_grant");
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
