@@ -16,7 +16,6 @@ agentsServiceConfiguration:
   featureFlags:
     beProxy: false
     esProxy: false
-    swedbankKeepAlive: true
     resetSuplementalInformation: false
   abnAmro:
     ignoreCreditCardErrors: false
