@@ -444,7 +444,6 @@ sendDataTrackingEvents: true
 featureFlags:
   esProxy: true
   beProxy: false
-  swedbankKeepAlive: true
   resetSuplementalInformation: false
 
 providerConfigurationServiceConfiguration:
