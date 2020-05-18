@@ -6,13 +6,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.entities.Payload;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.rpc.DuePaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.rpc.TransactionsListResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -24,21 +22,17 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 public class SparebankenVestTransactionFetcher
         implements TransactionDatePaginator<TransactionalAccount>,
                 UpcomingTransactionFetcher<TransactionalAccount> {
-    private static final AggregationLogger LOGGER =
-            new AggregationLogger(SparebankenVestTransactionFetcher.class);
 
     private final SparebankenVestApiClient apiClient;
 
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private SparebankenVestTransactionFetcher(
-            SparebankenVestApiClient apiClient, Credentials credentials) {
+    private SparebankenVestTransactionFetcher(SparebankenVestApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
-    public static SparebankenVestTransactionFetcher create(
-            SparebankenVestApiClient apiClient, Credentials credentials) {
-        return new SparebankenVestTransactionFetcher(apiClient, credentials);
+    public static SparebankenVestTransactionFetcher create(SparebankenVestApiClient apiClient) {
+        return new SparebankenVestTransactionFetcher(apiClient);
     }
 
     @Override
