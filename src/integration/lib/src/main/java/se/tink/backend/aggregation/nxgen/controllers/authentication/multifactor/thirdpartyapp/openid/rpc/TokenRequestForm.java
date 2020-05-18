@@ -34,15 +34,20 @@ public class TokenRequestForm extends AbstractForm {
     }
 
     public TokenRequestForm withPrivateKeyJwt(
-            JwtSigner signer, WellKnownResponse wellknownConfiguration, ClientInfo clientInfo) {
+            JwtSigner signer, WellKnownResponse wellKnownConfiguration, ClientInfo clientInfo) {
+
+        String tokenEndpointAuthSigningAlg =
+                clientInfo.getTokenEndpointAuthSigningAlg().orElse("RS256");
+
+        String clientAssertion =
+                ClientAssertion.create()
+                        .withWellknownConfiguration(wellKnownConfiguration)
+                        .withClientInfo(clientInfo)
+                        .build(signer, tokenEndpointAuthSigningAlg);
+
         this.put("client_id", clientInfo.getClientId());
         this.put("client_assertion_type", OpenIdConstants.CLIENT_ASSERTION_TYPE);
-        this.put(
-                "client_assertion",
-                ClientAssertion.create()
-                        .withWellknownConfiguration(wellknownConfiguration)
-                        .withClientInfo(clientInfo)
-                        .build(signer));
+        this.put("client_assertion", clientAssertion);
         return this;
     }
 

@@ -20,16 +20,7 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     @JsonProperty @Secret private String softwareStatementAssertion;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String softwareId;
-
-    @Override
-    public byte[] getRootCAData() {
-        return new byte[0];
-    }
-
-    @Override
-    public String getRootCAPassword() {
-        return null;
-    }
+    @JsonProperty @Secret private String tokenEndpointAuthSigningAlg;
 
     @Override
     public ProviderConfiguration getProviderConfiguration() {

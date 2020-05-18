@@ -25,7 +25,7 @@ public class ClientAssertion {
             return this;
         }
 
-        public String build(JwtSigner signer) {
+        public String build(JwtSigner signer, String tokenEndpointAuthSigningAlg) {
             Preconditions.checkNotNull(
                     wellknownConfiguration, "WellknownConfiguration must be specified.");
             Preconditions.checkNotNull(clientInfo, "ClientInfo must be specified.");
@@ -36,7 +36,7 @@ public class ClientAssertion {
             // Issued = Now, Expires = Now + 1h
             // Issued = Now, Expires = Now + 1h
             Instant issuedAt = Instant.now();
-            Instant expiresAt = issuedAt.plusSeconds(TimeUnit.HOURS.toSeconds(1));
+            Instant expiresAt = issuedAt.plusSeconds(TimeUnit.MINUTES.toSeconds(5));
 
             String jwtId = EncodingUtils.encodeAsBase64String(RandomUtils.secureRandom(16));
 
@@ -47,7 +47,7 @@ public class ClientAssertion {
                     .withAudience(tokenEndpoint)
                     .withIssuedAt(issuedAt)
                     .withExpiresAt(expiresAt)
-                    .signAttached(JwtSigner.Algorithm.RS256, signer);
+                    .signAttached(JwtSigner.Algorithm.valueOf(tokenEndpointAuthSigningAlg), signer);
         }
     }
 
