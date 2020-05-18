@@ -101,9 +101,6 @@ data:
         {{- if $featureFlagsConfig.resetSuplementalInformation }}
           resetSuplementalInformation: {{ $featureFlagsConfig.resetSuplementalInformation | default false }}
         {{- end }}
-        {{- if $featureFlagsConfig.swedbankExtendedBankId }}
-          swedbankExtendedBankId: {{ $featureFlagsConfig.swedbankExtendedBankId | default false }}
-        {{- end }}
 
       integrations:
         {{- if $agentsConfig.collectorSubscriptionKey }}
