@@ -446,7 +446,7 @@ featureFlags:
   beProxy: false
   swedbankKeepAlive: true
   resetSuplementalInformation: false
-  swedbankExtendedBankId: false
+  swedbankExtendedBankId: true
 
 providerConfigurationServiceConfiguration:
   enabled: true
