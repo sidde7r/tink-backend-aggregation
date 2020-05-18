@@ -19,7 +19,7 @@ public final class IngBaseConstants {
     public static class Transaction {
         // Time after authentication when full transaction history can be fetched (milliseconds).
         // Documentation says "immediately" after authentication. In practice, this is 1h.
-        public static final long FULL_HISTORY_MAX_AGE = 30 * 60 * 1000;
+        public static final long FULL_HISTORY_MAX_AGE = 30 * 60 * 1000L;
         public static final long DEFAULT_HISTORY_DAYS = 89;
     }
 

@@ -34,9 +34,8 @@ class IntegrationService {
             new IntegrationService(
                     ConfigurationUtils.getConfiguration(args[0], Configuration.class),
                     new SensitiveConfiguration());
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e);
+        } catch (RuntimeException e) {
+            logger.error("Unexpected error occured", e);
             System.exit(1);
         }
     }
@@ -54,18 +53,17 @@ class IntegrationService {
                                 new GrpcServerModule(),
                                 new IntegrationServiceModule(config, sensitiveConfiguration)));
         logger.debug("Starting Integration Service");
-        logger.debug("Built with Java " + System.getProperty("java.version"));
+        logger.debug("Built with Java {}", System.getProperty("java.version"));
 
         keepRunningLatch = new CountDownLatch(1);
-        start(config, sensitiveConfiguration);
+        start(config);
         Runtime.getRuntime().addShutdownHook(new Thread(keepRunningLatch::countDown));
         keepRunningLatch.await(); // released from above thread on sigterm
         logger.info("Received signal to stop. Initiating shutdown");
         stop();
     }
 
-    private void start(Configuration config, SensitiveConfiguration sensitiveConfiguration)
-            throws Exception {
+    private void start(Configuration config) throws Exception {
         logger.info("Starting Servers");
 
         // Start HTTP health check service
@@ -115,8 +113,8 @@ class IntegrationService {
         httpServer.stop(shutdownLatch);
         grpcServer.stop(shutdownLatch, duration, unit);
 
-        shutdownLatch.await(duration + 1, unit);
+        shutdownLatch.await(duration + 1L, unit);
 
-        logger.info("Shutdown took: " + sw.stop().elapsed(TimeUnit.MILLISECONDS) + "ms");
+        logger.info("Shutdown took: {} ms", sw.stop().elapsed(TimeUnit.MILLISECONDS));
     }
 }

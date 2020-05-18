@@ -7,8 +7,6 @@ import se.tink.backend.aggregation.register.fi.opbank.utils.PSD2Utils;
 public class SsaRequest {
 
     public static JSONObject create(final String ssa) {
-        final int iat = (int) Math.floor(System.currentTimeMillis() / 1000);
-        final int exp = (int) (System.currentTimeMillis() / 1000) + 6 * 60 * 60;
         final JSONObject ssaRequest = new JSONObject();
 
         ssaRequest.put("iat", PSD2Utils.generateCurrentTime());

@@ -46,7 +46,7 @@ public class BawagAgentPaymentTest {
             doReturn(Iban.random(CountryCode.AT).toString()).when(debtor).getAccountNumber();
 
             Amount amount = Amount.inEUR(new Random().nextInt(50000));
-            LocalDate executionDate = LocalDate.now().plusYears(i + 1);
+            LocalDate executionDate = LocalDate.now().plusYears(i + 1L);
             String currency = "EUR";
 
             listOfMockedPayments.add(
