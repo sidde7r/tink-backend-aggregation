@@ -100,10 +100,11 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                         transaction.getCreditorName(),
                         transaction.getRemittanceInformationUnstructured(),
                         transaction.getRemittanceInformationStructured(),
-                        transaction.getInitiatingPartyName())
+                        transaction.getInitiatingPartyName(),
+                        getCounterPartyAccount(transaction))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElseThrow(IllegalStateException::new);
+                .orElse("");
     }
 
     private static String getRemittanceInformation(final TransactionItem transaction) {

@@ -17,15 +17,7 @@ public class TransactionAmount {
         return ExactCurrencyAmount.of(amount, currency);
     }
 
-    public void setAmount(final double amount) {
-        this.amount = amount;
-    }
-
     public String getCurrency() {
         return currency;
-    }
-
-    public void setCurrency(final String currency) {
-        this.currency = currency;
     }
 }

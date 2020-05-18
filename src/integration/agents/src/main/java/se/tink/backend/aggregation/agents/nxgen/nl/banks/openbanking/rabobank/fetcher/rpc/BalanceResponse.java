@@ -15,22 +15,6 @@ public class BalanceResponse {
     @JsonProperty("account")
     private Account account;
 
-    public List<BalancesItem> getBalances() {
-        return balances;
-    }
-
-    public void setBalances(List<BalancesItem> balances) {
-        this.balances = balances;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
     @Override
     public String toString() {
         return "BalanceResponse{"
