@@ -27,7 +27,6 @@ public class BbvaMxConstants {
     public static final String DELIMITER = "--";
 
     public static class DATE {
-        public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
         public static final SimpleDateFormat TRANSACTION_DATE_FORAMT =
                 new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     }

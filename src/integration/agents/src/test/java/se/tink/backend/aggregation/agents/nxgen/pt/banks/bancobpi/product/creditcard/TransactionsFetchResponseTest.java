@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class TransactionsFetchResponseTest {
 
     private CreditCardAccount account;
-    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Before
     public void init() {
@@ -38,7 +38,7 @@ public class TransactionsFetchResponseTest {
                 new BigDecimal("-242.00"), transaction.getExactAmount().getExactValue());
         Assert.assertEquals("EUR", transaction.getExactAmount().getCurrencyCode());
         Assert.assertEquals("S/ENTREGA-PAGAMENTO", transaction.getDescription());
-        Assert.assertEquals("2019-12-17", DATE_FORMATTER.format(transaction.getDate()));
+        Assert.assertEquals("2019-12-17", dateFormat.format(transaction.getDate()));
     }
 
     @Test

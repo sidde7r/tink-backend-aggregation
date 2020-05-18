@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,9 @@ public class Mov {
 
     @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(Mov.class);
 
+    @JsonIgnore
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
     private String getDescription() {
         StringBuilder builder = new StringBuilder();
 
@@ -55,18 +59,18 @@ public class Mov {
         }
 
         if (!Strings.isNullOrEmpty(submitter)) {
-            builder.append(" " + submitter.trim());
+            builder.append(" ").append(submitter.trim());
         }
 
         if (!Strings.isNullOrEmpty(transactionTypeDescription)) {
-            builder.append(" " + transactionTypeDescription.trim());
+            builder.append(" ").append(transactionTypeDescription.trim());
         }
         return builder.toString().trim();
     }
 
     private Date getDate() {
         try {
-            return SantanderConstants.DATE.DATE_FORMAT.parse(date);
+            return simpleDateFormat.parse(date);
         } catch (ParseException e) {
             logger.error(
                     "{} cannot parse date: {}",
@@ -81,7 +85,7 @@ public class Mov {
         try {
             toTinkTransaction();
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.error(
                     "{} {}",
                     SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR,

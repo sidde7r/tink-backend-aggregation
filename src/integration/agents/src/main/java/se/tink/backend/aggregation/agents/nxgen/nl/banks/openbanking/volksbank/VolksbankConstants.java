@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
-import java.text.SimpleDateFormat;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
@@ -41,10 +40,6 @@ public class VolksbankConstants {
 
     public static class Transaction {
         public static final int DEFAULT_HISTORY_DAYS = -730;
-        public static final SimpleDateFormat TRANSACTION_DATE_FORMAT =
-                new SimpleDateFormat("yyyy-MM-dd");
-        public static final SimpleDateFormat ENTRY_REFERENCE_DATE_FORMAT =
-                new SimpleDateFormat("yyyyMMdd");
     }
 
     public static class TransactionFetcherParams {

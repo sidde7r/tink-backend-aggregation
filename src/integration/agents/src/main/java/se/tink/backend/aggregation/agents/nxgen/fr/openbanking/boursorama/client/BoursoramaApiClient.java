@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 
 public class BoursoramaApiClient {
 
-    private static final SimpleDateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat apiDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private final TinkHttpClient client;
     private final BoursoramaConfiguration configuration;
@@ -57,8 +57,8 @@ public class BoursoramaApiClient {
             String userHash, String resourceId, Date dateFrom, Date dateTo) {
 
         return baseAISRequest(Urls.TRANSACTIONS_TEMPLATE + resourceId, userHash)
-                .queryParam("dateFrom", API_DATE_FORMAT.format(dateFrom))
-                .queryParam("dateTo", API_DATE_FORMAT.format(dateTo))
+                .queryParam("dateFrom", apiDateFormat.format(dateFrom))
+                .queryParam("dateTo", apiDateFormat.format(dateTo))
                 .get(TransactionsResponse.class);
     }
 

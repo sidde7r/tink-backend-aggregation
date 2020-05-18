@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
@@ -60,6 +62,9 @@ public class TransactionEntity {
     @JsonProperty("MerchantDetails")
     private MerchantEntity merchantDetails;
 
+    @JsonIgnore
+    private final SimpleDateFormat transactionFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     private boolean isDebit() {
         return ICSConstants.Transaction.DEBIT.equalsIgnoreCase(creditDebitIndicator);
     }
@@ -78,7 +83,7 @@ public class TransactionEntity {
 
     private Date toTransactionDate() {
         try {
-            return ICSConstants.Date.TRANSACTION_FORMAT.parse(transactionDate);
+            return transactionFormat.parse(transactionDate);
         } catch (ParseException e) {
             throw new IllegalStateException("Cannot parse date!", e);
         }

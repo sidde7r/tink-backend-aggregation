@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transacti
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -28,10 +29,13 @@ public class DataItemEntity {
 
     @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(DataItemEntity.class);
 
+    @JsonIgnore
+    private final SimpleDateFormat transactionDateForamt =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
     private Date getDate() {
         try {
-            return BbvaMxConstants.DATE.TRANSACTION_DATE_FORAMT.parse(
-                    operationDate.substring(0, 23));
+            return transactionDateForamt.parse(operationDate.substring(0, 23));
         } catch (ParseException e) {
             logger.error("{} {}", BbvaMxConstants.LOGGING.DATE_PARSING_ERROR, e.toString(), e);
             throw new IllegalStateException("Date is invalid", e);
@@ -48,7 +52,7 @@ public class DataItemEntity {
 
         if (additionalInformation != null
                 && Strings.isNullOrEmpty(additionalInformation.getAdditionalData())) {
-            builder.append("" + additionalInformation.getAdditionalData().trim());
+            builder.append(additionalInformation.getAdditionalData().trim());
         }
 
         return builder.toString();
@@ -62,7 +66,7 @@ public class DataItemEntity {
                             .setDate(getDate())
                             .setDescription(getDescription())
                             .build());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.error(
                     "{} {}", BbvaMxConstants.LOGGING.TRANSACTION_PARSING_ERROR, e.toString(), e);
             return Optional.empty();

@@ -120,7 +120,7 @@ public class SparebankenVestAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         SparebankenVestTransactionFetcher transactionFetcher =
-                SparebankenVestTransactionFetcher.create(apiClient, credentials);
+                SparebankenVestTransactionFetcher.create(apiClient);
 
         TransactionFetcherController<TransactionalAccount> transactionFetcherController =
                 new TransactionFetcherController<>(

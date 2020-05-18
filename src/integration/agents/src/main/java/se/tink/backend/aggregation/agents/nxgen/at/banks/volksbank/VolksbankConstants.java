@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 public final class VolksbankConstants {
 
     public static final String BRACKET = "[]";
@@ -12,8 +8,6 @@ public final class VolksbankConstants {
     public static final String UTF_8 = "UTF-8";
     public static final String TRUE = "true";
     public static final String FALSE = "false";
-    public static final DateFormat DATEFORMAT =
-            new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzz)", Locale.US);
     public static final String USER_AGENT =
             "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Mobile/14E304 EBPMG";
     public static final String CREDENTIAL_USERNUMBER = "usernumber";

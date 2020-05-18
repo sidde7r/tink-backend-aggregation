@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,16 +45,13 @@ public final class VolksbankUtils {
     }
 
     public static boolean IsEntryReferenceFromAfterDate(String entryReferenceFrom, Date date) {
+        final SimpleDateFormat entryReferenceDateFormat = new SimpleDateFormat("yyyyMMdd");
         try {
-            if (VolksbankConstants.Transaction.ENTRY_REFERENCE_DATE_FORMAT
+            return entryReferenceDateFormat
                             .parse(entryReferenceFrom.substring(0, 8))
                             .compareTo(date)
-                    > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
+                    > 0;
+        } catch (RuntimeException | ParseException e) {
             log.warn("Unable to parse entryReferenceFrom to date: " + entryReferenceFrom);
             return true;
         }

@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RequestFactory {
 
-    private static final SimpleDateFormat DATE_FORMATTER =
+    private final SimpleDateFormat dateFormat =
             new SimpleDateFormat(CreditAgricoleBaseConstants.DateFormat.API_DATE_FORMAT);
 
     HttpRequest constructFetchTransactionRequest(
@@ -45,10 +45,9 @@ public class RequestFactory {
                 .parameter(IdTags.ACCOUNT_ID, id)
                 .queryParam(
                         CreditAgricoleBaseConstants.QueryKeys.DATE_FROM,
-                        DATE_FORMATTER.format(dateFrom))
+                        dateFormat.format(dateFrom))
                 .queryParam(
-                        CreditAgricoleBaseConstants.QueryKeys.DATE_TO,
-                        DATE_FORMATTER.format(dateTo));
+                        CreditAgricoleBaseConstants.QueryKeys.DATE_TO, dateFormat.format(dateTo));
     }
 
     private void addHeaders(

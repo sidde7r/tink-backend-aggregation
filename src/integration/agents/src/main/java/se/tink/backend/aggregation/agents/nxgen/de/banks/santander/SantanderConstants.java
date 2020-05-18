@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.santander;
 
-import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -80,9 +79,5 @@ public class SantanderConstants {
                 LogTag.from("SANTANDER_DATE_PARSING_ERROR");
         public static final LogTag SANTANDER_TRANSACTION_ERROR =
                 LogTag.from("SANTANDER_TRANSACTION_ERROR");
-    }
-
-    public static class DATE {
-        public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
     }
 }

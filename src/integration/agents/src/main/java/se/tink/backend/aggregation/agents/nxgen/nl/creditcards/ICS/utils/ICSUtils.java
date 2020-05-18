@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupRequest;
 
 public class ICSUtils {
@@ -50,6 +50,8 @@ public class ICSUtils {
     }
 
     public static String getLastLoggedTime(Date date) {
-        return ICSConstants.Date.LAST_LOGGED_TIME_FORMAT.format(date);
+        final SimpleDateFormat lastLoggedTimeFormat =
+                new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss z");
+        return lastLoggedTimeFormat.format(date);
     }
 }
