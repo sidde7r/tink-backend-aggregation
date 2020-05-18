@@ -72,7 +72,6 @@ featureFlags:
   beProxy: true
   swedbankKeepAlive: true
   resetSuplementalInformation: true
-  swedbankExtendedBankId: true
 
 providerConfigurationServiceConfiguration:
   enabled: true
