@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient;
 
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.Urls.AIS_BASE_URL;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.Urls.BASE_URL;
 
 import java.util.Base64;
@@ -11,11 +12,18 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.S
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.TransactionsResponse;
+<<<<<<< HEAD:src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/societegenerale/apiclient/SocieteGeneraleApiClient.java
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transfer.rpc.TrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
+=======
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+>>>>>>> ae93db0fa8... feat(Agent): Enable Payments for SG:src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/openbanking/societegenerale/SocieteGeneraleApiClient.java
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -60,7 +68,7 @@ public class SocieteGeneraleApiClient {
     }
 
     public TrustedBeneficiariesResponse getTrustedBeneficiaries(String path) {
-        return getTrustedBeneficiaries(new URL(BASE_URL + path));
+        return getTrustedBeneficiaries(new URL(AIS_BASE_URL + path));
     }
 
     private TrustedBeneficiariesResponse getTrustedBeneficiaries(URL url) {
@@ -93,6 +101,75 @@ public class SocieteGeneraleApiClient {
 
     private String createAuthorizationBearerHeaderValue() {
         return SocieteGeneraleConstants.HeaderValues.BEARER + " " + getToken();
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+
+        return createRequestInSession(SocieteGeneraleConstants.Urls.PAYMENTS_PATH)
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    private RequestBuilder createRequestInSession(URL url) {
+        final OAuth2Token authToken = getOauthTokenFromStorage();
+        String reqId = UUID.randomUUID().toString();
+        String signature =
+                signatureHeaderProvider.buildSignatureHeader(
+                        persistentStorage.get(SocieteGeneraleConstants.StorageKeys.OAUTH_TOKEN),
+                        reqId);
+
+        return client.request(url)
+                .header(
+                        SocieteGeneraleConstants.HeaderKeys.AUTHORIZATION,
+                        createAuthorizationBearerHeaderValue())
+                .header(SocieteGeneraleConstants.HeaderKeys.X_REQUEST_ID, reqId)
+                .header(SocieteGeneraleConstants.HeaderKeys.SIGNATURE, signature)
+                .header(SocieteGeneraleConstants.HeaderKeys.CLIENT_ID, configuration.getClientId())
+                .header(
+                        SocieteGeneraleConstants.HeaderKeys.CONTENT_TYPE,
+                        SocieteGeneraleConstants.HeaderValues.CONTENT_TYPE)
+                .accept(MediaType.APPLICATION_JSON);
+    }
+
+    public void fetchAccessToken() {
+        try {
+            if (!isTokenValid()) {
+                getAndSaveToken();
+            }
+        } catch (IllegalStateException e) {
+            String message = e.getMessage();
+            if (message.contains(
+                    SocieteGeneraleConstants.ErrorMessages.NO_ACCESS_TOKEN_IN_STORAGE)) {
+                getAndSaveToken();
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private void getAndSaveToken() {
+        TokenRequest request =
+                TokenRequest.builder()
+                        .setGrantType(SocieteGeneraleConstants.QueryValues.CLIENT_CREDENTIALS)
+                        .setRedirectUri(configuration.getRedirectUrl())
+                        .setScope(SocieteGeneraleConstants.QueryValues.PIS_SCOPE)
+                        .build();
+        TokenResponse getTokenResponse = exchangeAuthorizationCodeOrRefreshToken(request);
+        OAuth2Token token = getTokenResponse.toOauthToken();
+        persistentStorage.put(SocieteGeneraleConstants.StorageKeys.OAUTH_TOKEN, token);
+    }
+
+    private boolean isTokenValid() {
+        return getOauthTokenFromStorage().isValid();
+    }
+
+    private OAuth2Token getOauthTokenFromStorage() {
+        return persistentStorage
+                .get(SocieteGeneraleConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        SocieteGeneraleConstants.ErrorMessages
+                                                .NO_ACCESS_TOKEN_IN_STORAGE));
     }
 
     private String getAuthorizationString() {

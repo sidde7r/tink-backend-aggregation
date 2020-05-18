@@ -37,7 +37,7 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<URL
     @Override
     public URL nextKey() {
         return new URL(
-                SocieteGeneraleConstants.Urls.BASE_URL
+                SocieteGeneraleConstants.Urls.AIS_BASE_URL
                         + linksTransactionsEntity.getNextTransactionEntity().getHref());
     }
 }

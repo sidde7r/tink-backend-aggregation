@@ -5,10 +5,15 @@ import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class TokenRequest extends AbstractForm {
 
-    private TokenRequest(String redirect_uri, String grant_type, String code) {
+    private TokenRequest(String redirect_uri, String grant_type, String code, String scope) {
         put(SocieteGeneraleConstants.QueryKeys.REDIRECT_URI, redirect_uri);
         put(SocieteGeneraleConstants.QueryKeys.GRANT_TYPE, grant_type);
-        put(SocieteGeneraleConstants.QueryKeys.CODE, code);
+        if (code != null) {
+            put(SocieteGeneraleConstants.QueryKeys.CODE, code);
+        }
+        if (scope != null) {
+            put(SocieteGeneraleConstants.QueryKeys.SCOPE, scope);
+        }
     }
 
     private TokenRequest(String grant_type, String refreshToken) {
@@ -26,6 +31,7 @@ public class TokenRequest extends AbstractForm {
         private String grant_type;
         private String code;
         private String refreshToken;
+        private String scope;
 
         public Builder setGrantType(String grantType) {
             this.grant_type = grantType;
@@ -34,6 +40,11 @@ public class TokenRequest extends AbstractForm {
 
         public Builder setCode(String code) {
             this.code = code;
+            return this;
+        }
+
+        public Builder setScope(String scope) {
+            this.scope = scope;
             return this;
         }
 
@@ -48,7 +59,7 @@ public class TokenRequest extends AbstractForm {
         }
 
         public TokenRequest build() {
-            return new TokenRequest(this.redirect_uri, this.grant_type, this.code);
+            return new TokenRequest(this.redirect_uri, this.grant_type, this.code, this.scope);
         }
 
         public TokenRequest buildRefresh() {
