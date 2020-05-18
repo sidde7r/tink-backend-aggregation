@@ -1,4 +1,3 @@
 agentsServiceConfiguration:
   featureFlags:
     swedbankKeepAlive: false
-    swedbankExtendedBankId: false

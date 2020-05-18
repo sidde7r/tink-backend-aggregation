@@ -21,15 +21,11 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
     private final SwedbankDefaultApiClient apiClient;
     private final SessionStorage sessionStorage;
     private Boolean hasExtendedBankId;
-    private final boolean checkExtendedBankId;
 
     public SwedbankDefaultTransferDestinationFetcher(
-            SwedbankDefaultApiClient apiClient,
-            SessionStorage sessionStorage,
-            boolean checkExtendedBankId) {
+            SwedbankDefaultApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.checkExtendedBankId = checkExtendedBankId;
     }
 
     @Override
@@ -65,7 +61,7 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
         // Only users with extended bankID can make transfers to new recipients. Therefore only
         // adding the generic pattern for users with extended bankID. Already saved recipients
         // are added explicitly when we set destination accounts.
-        if (checkExtendedBankId && hasExtendedBankId) {
+        if (hasExtendedBankId) {
             transferDestinationPatternBuilder.addMultiMatchPattern(
                     AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL);
             transferDestinationPatternBuilder.addMultiMatchPattern(
@@ -97,7 +93,7 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
         // Only users with extended bankID can make transfers to new recipients. Therefore only
         // adding the generic pattern for users with extended bankID. Already saved recipients
         // are added explicitly when we set destination accounts.
-        if (checkExtendedBankId && hasExtendedBankId) {
+        if (hasExtendedBankId) {
             transferDestinationPatternBuilder.addMultiMatchPattern(
                     AccountIdentifier.Type.SE, TransferDestinationPattern.ALL);
         }

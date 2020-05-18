@@ -406,6 +406,5 @@ public class SwedbankBaseConstants {
 
     public static class FeatureFlag {
         public static final String CHECK_KEEP_ALIVE = "swedbankKeepAlive";
-        public static final String CHECK_EXTENDED_BANK_ID = "swedbankExtendedBankId";
     }
 }
