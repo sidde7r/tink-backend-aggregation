@@ -33,6 +33,9 @@ public class SubscriptionEntity {
     @JsonProperty("typeUtilisateur")
     private int userType;
 
+    @JsonProperty("idTelematiqueClient")
+    private String idTelematiqueClient;
+
     public String getBankCode() {
         return bankCode;
     }

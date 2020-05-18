@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.accounts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -22,6 +23,9 @@ public class UserOverviewDataEntity {
     private LoginInformationEntity loginInformation;
 
     private EnrolmentEntity enrolement;
+
+    @JsonProperty("contratsAssuranceVie")
+    private List<AccountEntity> contratsAssuranceVie;
 
     public SubscriptionEntity getSubscription() {
         return subscription;

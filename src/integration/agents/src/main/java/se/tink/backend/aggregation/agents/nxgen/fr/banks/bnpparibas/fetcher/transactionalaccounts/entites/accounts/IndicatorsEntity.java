@@ -26,8 +26,17 @@ public class IndicatorsEntity {
     @JsonProperty("indicAgregation")
     private boolean hasAggergation;
 
+    @JsonProperty("indicIncitation")
+    private boolean indicatesIncentive;
+
     @JsonProperty("indicVirInternational")
     private boolean allowsInternationalTransfers;
+
+    @JsonProperty("indicVirInstantane")
+    private boolean allowsInstantTransfers;
+
+    @JsonProperty("topGF")
+    private boolean topGf;
 
     public boolean isAgencyNet() {
         return isAgencyNet;
