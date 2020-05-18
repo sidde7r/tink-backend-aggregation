@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort;
 
-import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
@@ -9,8 +8,6 @@ import se.tink.libraries.account.enums.AccountFlag;
 
 public class SebKortConstants {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
-    public static final SimpleDateFormat DATE_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ");
     public static final String AUTHORIZATION_UUID =
             "ca4d47c0-e61f-30ad-b0c0-86d20f26d5eb"; // Required (and the same) for all SEB Kort
 

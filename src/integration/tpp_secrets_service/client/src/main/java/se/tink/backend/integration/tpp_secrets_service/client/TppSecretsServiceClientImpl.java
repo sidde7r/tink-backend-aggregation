@@ -83,6 +83,7 @@ public final class TppSecretsServiceClientImpl implements ManagedTppSecretsServi
                 try {
                     channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     log.warn(
                             "TppSecretsServiceClient channel was not able to shutdown gracefully.");
                 }

@@ -159,7 +159,7 @@ public class QsealcSignerHttpClient {
     private static class IdleConnectionMonitorThread extends Thread {
 
         private final PoolingHttpClientConnectionManager connMgr;
-        private volatile AtomicBoolean shutdown = new AtomicBoolean(false);
+        private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
         IdleConnectionMonitorThread(PoolingHttpClientConnectionManager connMgr) {
             super();
@@ -178,6 +178,7 @@ public class QsealcSignerHttpClient {
                     }
                 }
             } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
                 shutdown();
             }
         }

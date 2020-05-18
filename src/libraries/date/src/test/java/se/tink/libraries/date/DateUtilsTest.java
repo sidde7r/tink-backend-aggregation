@@ -23,8 +23,8 @@ import org.pojava.datetime.DateTimeConfig;
 @RunWith(JUnitParamsRunner.class)
 public class DateUtilsTest {
 
-    static final DateFormat DF8 = new SimpleDateFormat("yyyyMMdd");
-    static final DateFormat DF6 = new SimpleDateFormat("yyMMdd");
+    private final DateFormat df8 = new SimpleDateFormat("yyyyMMdd");
+    private final DateFormat df6 = new SimpleDateFormat("yyMMdd");
     private static final String TZ = "Europe/Stockholm";
     private DateTimeZone jodaDefault = DateTimeZone.getDefault();
     private DateTimeConfig pojaDefault = DateTimeConfig.getGlobalDefault();
@@ -84,8 +84,8 @@ public class DateUtilsTest {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, 3);
 
-        String date8 = DF8.format(cal.getTime());
-        String date6 = DF6.format(cal.getTime());
+        String date8 = df8.format(cal.getTime());
+        String date6 = df6.format(cal.getTime());
         String parsedDate8 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date8);
         String parsedDate6 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date6);
 
@@ -98,8 +98,8 @@ public class DateUtilsTest {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, -3);
 
-        String date8 = DF8.format(cal.getTime());
-        String date6 = DF6.format(cal.getTime());
+        String date8 = df8.format(cal.getTime());
+        String date6 = df6.format(cal.getTime());
         String parsedDate8 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date8);
         String parsedDate6 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date6);
 
@@ -118,8 +118,8 @@ public class DateUtilsTest {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 1);
 
-        String date8 = DF8.format(cal.getTime());
-        String date6 = DF6.format(cal.getTime());
+        String date8 = df8.format(cal.getTime());
+        String date6 = df6.format(cal.getTime());
         String parsedDate8 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date8);
         String parsedDate6 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date6);
 
@@ -132,8 +132,8 @@ public class DateUtilsTest {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
 
-        String date8 = DF8.format(cal.getTime());
-        String date6 = DF6.format(cal.getTime());
+        String date8 = df8.format(cal.getTime());
+        String date6 = df6.format(cal.getTime());
         String parsedDate8 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date8);
         String parsedDate6 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date6);
 

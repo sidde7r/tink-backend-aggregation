@@ -4,8 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.grpc.ManagedChannel;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
@@ -45,19 +43,15 @@ public class AgentDataAvailabilityTrackerClientTest {
         final int numClients = 10;
         latch = new CountDownLatch(numClients);
 
-        List<Thread> clients = new ArrayList<>();
-
         for (int i = 0; i < numClients; i++) {
             Thread client = new Thread(this::spamClientRunnable);
-            client.run();
-            clients.add(client);
+            client.start();
         }
 
         try {
             latch.await(120, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
             Assert.fail();
         }
 

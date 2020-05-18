@@ -54,7 +54,7 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
         private CountDownLatch started = new CountDownLatch(1);
 
         @Override
-        protected void run() throws Exception {
+        protected void run() {
             thread = Thread.currentThread();
 
             // Must be called after setting `thread` above to avoid getting an NPE in
@@ -83,6 +83,7 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
                 try {
                     item = queue.take();
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     // Deliberately left empty.
                 }
             }
@@ -115,17 +116,17 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
             thread.interrupt();
         }
 
-        public void awaitStarted() {
+        void awaitStarted() {
             try {
                 started.await();
             } catch (InterruptedException e) {
-                thread.currentThread().interrupt();
+                Thread.currentThread().interrupt();
             }
         }
     }
 
     @Override
-    protected void finalize() throws Throwable {
+    protected void finalize() {
         // Make sure that the background QueuePopper service can be garbage collected. Notice that,
         // a ThreadPoolExecutor
         // only will be garbage collected if `corePoolSize` is zero. See
@@ -199,10 +200,7 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
         } catch (TimeoutException e) {
             return false;
         }
-        if (!threadPool.awaitTermination(timeout, unit)) {
-            return false;
-        }
-        return true;
+        return threadPool.awaitTermination(timeout, unit);
     }
 
     @Override
@@ -214,7 +212,7 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
     @Override
     public <Q extends Callable<V>, V> ListenableFuture<V> submit(Q callable) {
         WrappedCallableListenableFutureTask<Q, V> future =
-                new WrappedCallableListenableFutureTask<Q, V>(callable);
+                new WrappedCallableListenableFutureTask<>(callable);
 
         // HACK: Workaround to map a type T's generic to method type V here. Since generics are
         // runtime this seem to

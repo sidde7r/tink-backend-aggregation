@@ -93,7 +93,7 @@ public class RetryableWebResource {
         // Something like 0+1+2+4+8=15 (five tries) seconds of sleeping and 14 seconds for actual
         // trying to connect
         // (total time).
-        protected static long MAX_TOTAL_TRY_TIME = TimeUnit.SECONDS.toNanos(30);
+        protected static final long MAX_TOTAL_TRY_TIME = TimeUnit.SECONDS.toNanos(30);
 
         public RetryFilter(
                 String serviceName, List<Candidate> candidates, Sleeper sleeper, Ticker ticker) {
@@ -218,7 +218,7 @@ public class RetryableWebResource {
                     try {
                         sleeper.sleep(sleepInterval);
                     } catch (InterruptedException e) {
-                        Thread.interrupted();
+                        Thread.currentThread().interrupt();
                         throw new RuntimeException(
                                 "Retry sleep was interrupted. Quitting retry loop.", e);
                     }

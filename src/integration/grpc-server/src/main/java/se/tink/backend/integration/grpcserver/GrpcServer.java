@@ -114,6 +114,7 @@ public class GrpcServer {
                         this.server.shutdown();
                         this.server.awaitTermination(duration, unit);
                     } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                         logger.warn(
                                 "gRPC server was not able to terminate within timeout and was not shutdown gracefully");
                     } finally {
