@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
 
+/** Don't forget to install libtesseract.so! */
 public class BnpParibasAgentTest {
     private final ArgumentManager<UsernamePasswordArgumentEnum> manager =
             new ArgumentManager<>(UsernamePasswordArgumentEnum.values());
