@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -20,7 +20,7 @@ public abstract class BerlinGroupBasePaymentResponse {
 
     Payment.Builder getBuildingPaymentResponse(
             Payment payment, BerlinGroupPaymentType paymentType) {
-        Amount amount = payment.getAmount();
+        ExactCurrencyAmount amount = payment.getExactCurrencyAmountFromField();
         Creditor creditor = payment.getCreditor();
         Debtor debtor = payment.getDebtor();
 
@@ -30,7 +30,7 @@ public abstract class BerlinGroupBasePaymentResponse {
                         BerlinGroupPaymentStatus.fromString(transactionStatus)
                                 .getTinkPaymentStatus())
                 .withCurrency(payment.getCurrency())
-                .withAmount(new Amount(amount.getCurrency(), amount.getValue()))
+                .withExactCurrencyAmount(amount)
                 .withCreditor(new Creditor(new IbanIdentifier(creditor.getAccountNumber())))
                 .withDebtor(new Debtor(new IbanIdentifier(debtor.getAccountNumber())));
     }
