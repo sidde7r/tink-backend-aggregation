@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoIdentityData;
@@ -24,7 +28,8 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
-public class BankIdDemoAgent extends NextGenerationDemoAgent {
+public class BankIdDemoAgent extends NextGenerationDemoAgent
+        implements RefreshTransferDestinationExecutor {
 
     private DemoBankIdAuthenticator authenticator;
 
@@ -185,5 +190,11 @@ public class BankIdDemoAgent extends NextGenerationDemoAgent {
                 return LocalDate.of(1970, 1, 1);
             }
         };
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return new FetchTransferDestinationsResponse(
+                DemoAccountDefinitionGenerator.generateTransferDestinations(accounts));
     }
 }
