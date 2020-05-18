@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.seb.utilities;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import org.joda.time.format.DateTimeFormat;
@@ -14,9 +17,15 @@ public class SEBDateUtilTest {
     // 13.35." // SEB's Web Internet Bank
     private static final int MIDDAY_HOUR = 13;
     private static final int MIDDAY_MINUTE = 25;
+    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
+
+    private Clock fixedClock(Calendar calendar) {
+        final Instant instant = calendar.toInstant();
+        return Clock.fixed(instant, DEFAULT_ZONE_ID);
+    }
 
     @Test
-    public void testSEBTransfersDatesAreAlwaysUnaltered() {
+    public void testTransfersDatesAreNotMovedForInternalTransfers_when_notSet() {
         Calendar cal = Calendar.getInstance();
         cal.set(2014, Calendar.APRIL, 3, 0, 0, 0);
 
@@ -26,8 +35,9 @@ public class SEBDateUtilTest {
                 cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
 
                 Date now = cal.getTime();
+                SEBDateUtil.setClock(fixedClock(cal));
 
-                String transferDate = SEBDateUtil.getTransferDate(now, true);
+                String transferDate = SEBDateUtil.getTransferDate(null, true);
 
                 final DateTimeFormatter pattern = DateTimeFormat.forPattern("YYYY-MM-dd");
                 Assert.assertEquals(pattern.print(now.getTime()), transferDate);
@@ -50,118 +60,118 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransferDateForExternalOnSaturdayBeforeMidday() {
+    public void testTransferDateIsMovedToNextBusinessDay_when_SaturdayBeforeMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 13, 10, 0, 0);
 
+        SEBDateUtil.setClock(fixedClock(cal));
+
         Assert.assertEquals(Calendar.SATURDAY, cal.get(Calendar.DAY_OF_WEEK));
         assertTimeOfDayIsBeforeMidday(cal);
-
-        Date now = cal.getTime();
 
         cal.add(Calendar.DAY_OF_YEAR, 2);
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
 
-        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(null, false));
     }
 
     @Test
-    public void testTransferDateForExternalOnSaturdayAfterMidday() {
+    public void testTransferDateIsMovedToNextBusinessDay_when_SaturdayAfterMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 13, 15, 0, 0);
 
+        SEBDateUtil.setClock(fixedClock(cal));
+
         Assert.assertEquals(Calendar.SATURDAY, cal.get(Calendar.DAY_OF_WEEK));
         assertTimeOfDayIsAfterMidday(cal);
-
-        Date now = cal.getTime();
 
         cal.add(Calendar.DAY_OF_YEAR, 2);
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
 
-        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(null, false));
     }
 
     @Test
-    public void testTransferDateForExternalOnSundayBeforeMidday() {
+    public void testTransferDateIsMovedToNextBusinessDay_when_SundayBeforeMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 14, 10, 0, 0);
 
+        SEBDateUtil.setClock(fixedClock(cal));
+
         Assert.assertEquals(Calendar.SUNDAY, cal.get(Calendar.DAY_OF_WEEK));
         assertTimeOfDayIsBeforeMidday(cal);
-
-        Date now = cal.getTime();
 
         cal.add(Calendar.DAY_OF_YEAR, 1);
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
 
-        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(null, false));
     }
 
     @Test
-    public void testTransferDateForExternalOnSundayAfterMidday() {
+    public void testTransferDateIsMovedToNextBusinessDay_when_SundayAfterMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 14, 15, 0, 0);
 
+        SEBDateUtil.setClock(fixedClock(cal));
+
         Assert.assertEquals(Calendar.SUNDAY, cal.get(Calendar.DAY_OF_WEEK));
         assertTimeOfDayIsAfterMidday(cal);
-
-        Date now = cal.getTime();
 
         cal.add(Calendar.DAY_OF_YEAR, 1);
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
 
-        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(null, false));
     }
 
     @Test
-    public void testTransferDateForExternalOnMondayBeforeMidday() {
+    public void testTransferDateIsNotMovedToNextBusinessDay_when_MondayBeforeMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 15, 11, 0, 0);
 
+        SEBDateUtil.setClock(fixedClock(cal));
+
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
         assertTimeOfDayIsBeforeMidday(cal);
 
-        Date now = cal.getTime();
-
-        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(now, false));
+        Assert.assertEquals("2016-02-15", SEBDateUtil.getTransferDate(null, false));
     }
 
     @Test
-    public void testTransferDateForExternalOnMondayAfterMidday() {
+    public void testTransferDateIsMovedToNextBusinessDay_when_MondayAfterMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 15, 15, 0, 0);
 
+        SEBDateUtil.setClock(fixedClock(cal));
+
         Assert.assertEquals(Calendar.MONDAY, cal.get(Calendar.DAY_OF_WEEK));
         assertTimeOfDayIsAfterMidday(cal);
 
-        Date now = cal.getTime();
-
-        Assert.assertEquals("2016-02-16", SEBDateUtil.getTransferDate(now, false));
+        Assert.assertEquals("2016-02-16", SEBDateUtil.getTransferDate(null, false));
     }
 
     @Test
-    public void testTransferDateForExternalOnFridayBeforeMidday() {
+    public void testTransferDateIsNotMovedToNextBusinessDay_when_FridayBeforeMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.MARCH, 11, 11, 0, 0);
+
+        SEBDateUtil.setClock(fixedClock(cal));
 
         Assert.assertEquals(Calendar.FRIDAY, cal.get(Calendar.DAY_OF_WEEK));
         assertTimeOfDayIsBeforeMidday(cal);
 
-        Date now = cal.getTime();
-
-        Assert.assertEquals("2016-03-11", SEBDateUtil.getTransferDate(now, false));
+        Assert.assertEquals("2016-03-11", SEBDateUtil.getTransferDate(null, false));
     }
 
     @Test
-    public void testTransferDateForExternalOnFridayAfterMidday() {
+    public void testTransferDateIsMovedToNextBusinessDay_when_FridayAfterMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.MARCH, 11, 15, 0, 0);
+
+        SEBDateUtil.setClock(fixedClock(cal));
 
         Assert.assertEquals(Calendar.FRIDAY, cal.get(Calendar.DAY_OF_WEEK));
         assertTimeOfDayIsAfterMidday(cal);
 
-        Date now = cal.getTime();
-
-        Assert.assertEquals("2016-03-14", SEBDateUtil.getTransferDate(now, false));
+        Assert.assertEquals("2016-03-14", SEBDateUtil.getTransferDate(null, false));
     }
 }
