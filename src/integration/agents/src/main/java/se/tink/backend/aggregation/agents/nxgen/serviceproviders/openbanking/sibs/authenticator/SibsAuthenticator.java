@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.*;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
@@ -70,7 +71,7 @@ public class SibsAuthenticator extends StatelessProgressiveAuthenticator {
         try {
             return !userState.isManualAuthenticationInProgress()
                     && consentManager.getStatus().isAcceptedStatus();
-        } catch (SessionException e) {
+        } catch (SessionException | BankServiceException e) {
             return false;
         }
     }
