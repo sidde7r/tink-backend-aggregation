@@ -16,6 +16,5 @@ public final class AmericanExpressESConstants {
         public static final String USER_AGENT = "Amex%20ES/6 CFNetwork/1121.2.2 Darwin/19.3.0";
         public static final String LOCALE = "es_ES";
         public static final String APP_VERSION = "6.29.0";
-        public static final String GIT_SHA = "d525be9b8";
     }
 }

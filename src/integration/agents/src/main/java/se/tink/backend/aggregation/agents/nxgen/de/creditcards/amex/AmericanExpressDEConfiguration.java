@@ -52,11 +52,6 @@ public class AmericanExpressDEConfiguration implements AmericanExpressV62Configu
     }
 
     @Override
-    public String getGitSha() {
-        return AmericanExpressDEConstants.HeaderValues.GIT_SHA;
-    }
-
-    @Override
     public String getAppVersion() {
         return AmericanExpressDEConstants.HeaderValues.APP_VERSION;
     }

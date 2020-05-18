@@ -53,10 +53,6 @@ public class AmericanExpressESConfiguration implements AmericanExpressV62Configu
         return request;
     }
 
-    public String getGitSha() {
-        return AmericanExpressESConstants.HeaderValues.GIT_SHA;
-    }
-
     @Override
     public String getAppVersion() {
         return AmericanExpressESConstants.HeaderValues.APP_VERSION;

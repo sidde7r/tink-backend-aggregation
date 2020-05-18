@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Utils;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -53,42 +58,66 @@ public class AmericanExpressV62ApiClient {
         final String date =
                 ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITHOUT_TIMEZONE.format(new Date());
 
-        final RequestBuilder requestBuilder =
-                client.request(url)
-                        .header(ConstantValueHeaders.ACCEPT_JSON)
-                        .header(ConstantValueHeaders.CONTENT_TYPE_JSON)
-                        .header(ConstantValueHeaders.AUTHORITY)
-                        .header(ConstantValueHeaders.CLIENT_TYPE)
-                        .header(ConstantValueHeaders.CHARSET)
-                        .header(ConstantValueHeaders.DEVICE_MODEL)
-                        .header(ConstantValueHeaders.DEVICE_OS)
-                        .header(ConstantValueHeaders.OS_VERSION)
-                        .header(ConstantValueHeaders.MANUFACTURER)
-                        .header(ConstantValueHeaders.TIMEZONE_NAME)
-                        .header(ConstantValueHeaders.TIMEZONE_OFFSET)
-                        .header(ConstantValueHeaders.ACCEPT_ENCODING)
-                        .header(ConstantValueHeaders.ACCEPT_LANGUAGE)
-                        .header(Headers.USER_AGENT, config.getUserAgent())
-                        .header(Headers.REQUEST_ID, UUID.randomUUID().toString().toUpperCase())
-                        .header(
-                                Headers.INSTALLATION_ID,
-                                persistentStorage.get(Tags.INSTALLATION_ID))
-                        .header(Headers.HARDWARE_ID, persistentStorage.get(Tags.HARDWARE_ID))
-                        .header(Headers.PROCESS_ID, persistentStorage.get(Tags.PROCESS_ID))
-                        .header(
-                                Headers.PUBLIC_GUID,
-                                persistentStorage.getOrDefault(
-                                        Tags.PUBLIC_GUID, HeadersValue.UNAVAILABLE))
-                        .header(Headers.APP_ID, config.getAppId())
-                        .header(Headers.APP_VERSION, config.getAppVersion())
-                        .header(Headers.LOCALE, config.getLocale())
-                        .header(Headers.DEVICE_TIME, date);
+        return client.request(url)
+                .header(ConstantValueHeaders.ACCEPT_JSON)
+                .header(ConstantValueHeaders.CONTENT_TYPE_JSON)
+                .header(ConstantValueHeaders.AUTHORITY)
+                .header(ConstantValueHeaders.CLIENT_TYPE)
+                .header(ConstantValueHeaders.CHARSET)
+                .header(ConstantValueHeaders.DEVICE_MODEL)
+                .header(ConstantValueHeaders.DEVICE_OS)
+                .header(ConstantValueHeaders.OS_VERSION)
+                .header(ConstantValueHeaders.MANUFACTURER)
+                .header(ConstantValueHeaders.TIMEZONE_NAME)
+                .header(ConstantValueHeaders.TIMEZONE_OFFSET)
+                .header(ConstantValueHeaders.ACCEPT_ENCODING)
+                .header(ConstantValueHeaders.ACCEPT_LANGUAGE)
+                .header(Headers.USER_AGENT, config.getUserAgent())
+                .header(Headers.REQUEST_ID, UUID.randomUUID().toString().toUpperCase())
+                .header(Headers.INSTALLATION_ID, persistentStorage.get(Tags.INSTALLATION_ID))
+                .header(Headers.HARDWARE_ID, persistentStorage.get(Tags.HARDWARE_ID))
+                .header(Headers.PROCESS_ID, persistentStorage.get(Tags.PROCESS_ID))
+                .header(
+                        Headers.PUBLIC_GUID,
+                        persistentStorage.getOrDefault(Tags.PUBLIC_GUID, HeadersValue.UNAVAILABLE))
+                .header(Headers.APP_ID, config.getAppId())
+                .header(Headers.APP_VERSION, config.getAppVersion())
+                .header(Headers.LOCALE, config.getLocale())
+                .header(Headers.DEVICE_TIME, date)
+                .header(Headers.GIT_SHA, calculateGitSha());
+    }
 
-        if (config.getGitSha() != null) {
-            requestBuilder.header(Headers.GIT_SHA, config.getGitSha());
+    private String calculateGitSha() {
+        if ("6.29.0".equalsIgnoreCase(config.getAppVersion())) {
+            return calculateGitSha(HeadersValue.START_DATE_V29, HeadersValue.COMMIT_HASH_V29);
+        } else if ("6.30.0".equalsIgnoreCase(config.getAppVersion())) {
+            return calculateGitSha(HeadersValue.START_DATE_V30, HeadersValue.COMMIT_HASH_V30);
         }
+        throw new IllegalStateException("Undefined app version");
+    }
 
-        return requestBuilder;
+    private String calculateGitSha(String startDate, String commitHash) {
+        final int salt = calculateHashSalt(startDate);
+        final String data = String.format("%s|%s|%d", config.getAppId(), commitHash, salt);
+        return Hash.sha256AsHex(data.getBytes()).substring(0, 9);
+    }
+
+    // The hash salt is equal to the total hours from start date divided by 11 rounded down.
+    private int calculateHashSalt(String startDateAsString) {
+        final SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+        Date start;
+        try {
+            start = format.parse(startDateAsString);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid date format", e);
+        }
+        final Date now = new Date();
+        assert start != null;
+        final BigDecimal diff =
+                BigDecimal.valueOf(now.getTime()).subtract(BigDecimal.valueOf(start.getTime()));
+        final BigDecimal diffHours =
+                diff.divide(BigDecimal.valueOf(60 * 60 * 1000), RoundingMode.FLOOR);
+        return diffHours.divideToIntegralValue(BigDecimal.valueOf(11)).intValue();
     }
 
     protected RequestBuilder createRequestInSession(String uri) {

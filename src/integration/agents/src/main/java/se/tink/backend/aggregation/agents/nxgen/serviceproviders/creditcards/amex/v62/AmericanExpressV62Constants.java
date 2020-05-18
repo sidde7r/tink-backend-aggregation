@@ -101,6 +101,10 @@ public class AmericanExpressV62Constants {
 
     public static class HeadersValue {
         public static final String UNAVAILABLE = "UNAVAILABLE";
+        public static final String COMMIT_HASH_V29 = "f44e82ae68b";
+        public static final String COMMIT_HASH_V30 = "bb326a4ecd7";
+        public static final String START_DATE_V29 = "19/12/31 00:00:00";
+        public static final String START_DATE_V30 = "20/01/01 00:00:00";
     }
 
     public static class RequestValue {

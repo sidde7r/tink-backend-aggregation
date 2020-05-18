@@ -52,10 +52,6 @@ public class AmericanExpressFIConfiguration implements AmericanExpressV62Configu
         return request;
     }
 
-    public String getGitSha() {
-        return null;
-    }
-
     @Override
     public String getAppVersion() {
         return AmericanExpressFIConstants.HeaderValues.APP_VERSION;

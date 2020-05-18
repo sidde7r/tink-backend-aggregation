@@ -5,11 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public interface AmericanExpressV62Configuration extends ClientConfiguration {
-
-    default String getGitSha() {
-        return null;
-    }
-
     String getLocale();
 
     String getAppId();

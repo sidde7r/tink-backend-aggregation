@@ -16,6 +16,5 @@ public final class AmericanExpressV62ATConstants {
         public static final String USER_AGENT = "Amex%20AT/24 CFNetwork/1121.2.2 Darwin/19.3.0";
         public static final String LOCALE = "de_AT";
         public static final String APP_VERSION = "6.30.0";
-        public static final String GIT_SHA = "1d0500091";
     }
 }
