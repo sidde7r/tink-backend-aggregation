@@ -35,6 +35,7 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
+        "//src/libraries/i18n",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
@@ -42,6 +43,5 @@ java_library(
         "//third_party:org_bouncycastle_bcprov_jdk15on",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_slf4j_slf4j_api",
-        "@tink_backend//src/libraries/i18n",
     ],
 )

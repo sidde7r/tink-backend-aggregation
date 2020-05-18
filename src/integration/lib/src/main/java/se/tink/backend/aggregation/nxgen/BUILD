@@ -20,6 +20,7 @@ java_library(
         "//src/integration/user:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
+        "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_google_guava_guava",
