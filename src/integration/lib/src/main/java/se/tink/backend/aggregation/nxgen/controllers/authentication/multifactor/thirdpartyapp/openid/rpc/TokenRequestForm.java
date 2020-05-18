@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc;
 
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.ClientAssertion;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner.Algorithm;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 
 public class TokenRequestForm extends AbstractForm {
@@ -36,14 +38,18 @@ public class TokenRequestForm extends AbstractForm {
     public TokenRequestForm withPrivateKeyJwt(
             JwtSigner signer, WellKnownResponse wellKnownConfiguration, ClientInfo clientInfo) {
 
-        String tokenEndpointAuthSigningAlg =
-                clientInfo.getTokenEndpointAuthSigningAlg().orElse("RS256");
+        JwtSigner.Algorithm signingAlg;
+        if (Strings.isNullOrEmpty(clientInfo.getTokenEndpointAuthSigningAlg())) {
+            signingAlg = Algorithm.RS256;
+        } else {
+            signingAlg = JwtSigner.Algorithm.valueOf(clientInfo.getTokenEndpointAuthSigningAlg());
+        }
 
         String clientAssertion =
                 ClientAssertion.create()
                         .withWellknownConfiguration(wellKnownConfiguration)
                         .withClientInfo(clientInfo)
-                        .build(signer, tokenEndpointAuthSigningAlg);
+                        .build(signer, signingAlg);
 
         this.put("client_id", clientInfo.getClientId());
         this.put("client_assertion_type", OpenIdConstants.CLIENT_ASSERTION_TYPE);

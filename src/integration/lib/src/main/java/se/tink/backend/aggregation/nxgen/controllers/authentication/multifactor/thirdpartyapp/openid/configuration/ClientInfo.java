@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -13,6 +12,10 @@ public class ClientInfo {
 
     public String getTokenEndpointAuthMethod() {
         return tokenEndpointAuthMethod;
+    }
+
+    public String getTokenEndpointAuthSigningAlg() {
+        return tokenEndpointAuthSigningAlg;
     }
 
     public ClientInfo(String clientId, String clientSecret) {
@@ -37,9 +40,5 @@ public class ClientInfo {
 
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    public Optional<String> getTokenEndpointAuthSigningAlg() {
-        return Optional.ofNullable(tokenEndpointAuthSigningAlg);
     }
 }
