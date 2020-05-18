@@ -42,7 +42,9 @@ public class SebApiClient {
     public AuthenticationResponse initiateBankId() {
         return AuthenticationResponse.fromHttpResponse(
                 httpClient
-                        .request(Urls.AUTHENTICATE)
+                        .request(
+                                SebConstants.Urls.getUrl(
+                                        sebConfiguration.getBaseUrl(), Urls.AUTHENTICATE))
                         .header(HeaderKeys.X_SEB_UUID, sebUUID)
                         .accept(MediaType.APPLICATION_JSON)
                         .type(MediaType.APPLICATION_JSON)
@@ -52,7 +54,9 @@ public class SebApiClient {
     public AuthenticationResponse collectBankId(final String csrfToken) {
         return AuthenticationResponse.fromHttpResponse(
                 httpClient
-                        .request(Urls.AUTHENTICATE)
+                        .request(
+                                SebConstants.Urls.getUrl(
+                                        sebConfiguration.getBaseUrl(), Urls.AUTHENTICATE))
                         .header(HeaderKeys.X_SEB_UUID, sebUUID)
                         .header(HeaderKeys.X_SEB_CSRF, csrfToken)
                         .get(HttpResponse.class));
