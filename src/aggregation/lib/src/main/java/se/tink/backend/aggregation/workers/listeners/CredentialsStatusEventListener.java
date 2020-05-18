@@ -28,24 +28,19 @@ public class CredentialsStatusEventListener implements AgentEventListener {
                 context.updateSignableOperationStatus(
                         signableOperation,
                         SignableOperationStatuses.CANCELLED,
-                        credentials.getStatusPayload(),
-                        null);
+                        credentials.getStatusPayload());
                 break;
             case TEMPORARY_ERROR:
                 context.updateSignableOperationStatus(
                         signableOperation,
                         SignableOperationStatuses.FAILED,
-                        credentials.getStatusPayload(),
-                        null);
+                        credentials.getStatusPayload());
                 break;
             case AWAITING_THIRD_PARTY_APP_AUTHENTICATION:
             case AWAITING_MOBILE_BANKID_AUTHENTICATION:
             case AWAITING_SUPPLEMENTAL_INFORMATION:
                 context.updateSignableOperationStatus(
-                        signableOperation,
-                        SignableOperationStatuses.AWAITING_CREDENTIALS,
-                        null,
-                        null);
+                        signableOperation, SignableOperationStatuses.AWAITING_CREDENTIALS, null);
                 break;
             default:
                 break;

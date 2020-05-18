@@ -321,6 +321,20 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     public void updateSignableOperationStatus(
             SignableOperation signableOperation,
             SignableOperationStatuses status,
+            String statusMessage) {
+        signableOperation.setStatus(status);
+        if (Optional.ofNullable(getCatalog()).isPresent() && statusMessage != null) {
+            signableOperation.setStatusMessage(getCatalog().getString(statusMessage));
+        } else {
+            signableOperation.setStatusMessage(statusMessage);
+        }
+
+        updateSignableOperation(signableOperation);
+    }
+
+    public void updateSignableOperationStatus(
+            SignableOperation signableOperation,
+            SignableOperationStatuses status,
             String statusMessage,
             String internalStatus) {
         signableOperation.setStatus(status);
