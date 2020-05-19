@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
@@ -54,6 +55,7 @@ import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCom
 import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
@@ -375,6 +377,8 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer));
+        commands.add(
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
@@ -463,6 +467,8 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer));
+        commands.add(
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
 
         log.debug("Created Authenticate operation for credential");
         return new AgentWorkerOperation(
@@ -636,6 +642,7 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer),
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING),
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request)));
     }
@@ -993,6 +1000,8 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer));
+        commands.add(
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
@@ -1106,6 +1115,8 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer));
+        commands.add(
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
