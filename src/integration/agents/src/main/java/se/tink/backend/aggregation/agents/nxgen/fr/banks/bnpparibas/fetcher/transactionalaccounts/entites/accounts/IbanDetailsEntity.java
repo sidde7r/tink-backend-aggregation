@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AgencyInfoEntity {
-    @JsonProperty("nom")
-    private String name;
+public class IbanDetailsEntity {
+    @JsonProperty("infoVirement")
+    private TransferInfoEntity transferInfo;
 
-    public String getName() {
-        return name;
+    public TransferInfoEntity getTransferInfo() {
+        return transferInfo;
     }
 }

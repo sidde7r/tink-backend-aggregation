@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.transactions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.accounts.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -76,5 +78,21 @@ public class InfoUdcEntity {
 
     public boolean isIndicServiceHomeConnecte() {
         return indicServiceHomeConnecte;
+    }
+
+    public List<AccountEntity> getSavingsAccounts() {
+        return this.accountGroup.stream()
+                .filter(AccountGroupEntity::isSavingsAccounts)
+                .findFirst()
+                .map(AccountGroupEntity::getAccounts)
+                .orElseGet(Collections::emptyList);
+    }
+
+    public List<AccountEntity> getCheckingsAccounts() {
+        return this.accountGroup.stream()
+                .filter(AccountGroupEntity::isCheckingAccount)
+                .findFirst()
+                .map(AccountGroupEntity::getAccounts)
+                .orElseGet(Collections::emptyList);
     }
 }

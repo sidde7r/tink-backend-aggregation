@@ -99,9 +99,9 @@ public class LoginRequest extends AbstractForm {
                 BnpParibasConstants.AuthFormValues.VALUE_1,
                 BnpParibasConstants.AuthFormValues.IDB64,
                 BnpParibasConstants.AuthFormValues.VALUE_1,
+                BnpParibasConstants.AuthFormValues.BRACKETS_HCE,
                 BnpParibasConstants.AuthFormValues.HCE,
-                BnpParibasConstants.AuthFormValues.HCE,
-                BnpParibasConstants.AuthFormValues.HCE);
+                BnpParibasConstants.AuthFormValues.BRACKETS_HCE);
     }
 
     private String buildUserAgentString() {

@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticat
 
 import com.google.common.collect.Maps;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.entites.LoginDataEntity;
@@ -24,8 +22,7 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password)
-            throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password) {
         if (!bnpParibasPersistentStorage.isRegisteredDevice()) {
             registerAndLogin(username, password);
         } else {

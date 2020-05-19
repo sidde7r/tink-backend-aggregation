@@ -3,248 +3,165 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tra
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
-    private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
+    @JsonProperty("plafond")
+    private double ceiling;
 
-    @JsonProperty("codeEcoCompte")
-    private int ecoAccountCode;
+    @JsonProperty("isAutreCompte")
+    private int anotherAccountIs;
 
-    private int codeNatureRelationCommercial;
+    private String value;
 
-    @JsonProperty("identifiantProduitCompte")
-    private String accountProductId;
+    @JsonProperty("actif")
+    private int active;
 
-    @JsonProperty("identifiantSGIRattache")
-    private String SgieIdentifier;
+    @JsonProperty("key")
+    private String ibanKey;
 
-    @JsonProperty("indicAssuranceVie")
-    private boolean indicativeLifeInsurance;
+    @JsonProperty("libellePersoProduit")
+    private String wordingCharacterProduct;
 
-    @JsonProperty("indicCompteJoint")
-    private boolean indicJointAccount;
-
-    @JsonProperty("indicCompteTiers")
-    private boolean indicativeThirdPartyAccount;
+    @JsonProperty("isCompteDeFacturation")
+    private int fromBillingAccountIs;
 
     @JsonProperty("libelleProduit")
     private String productLabel;
 
+    @JsonProperty("libelleCourtProduit")
+    private String shortNameProduct;
+
+    @JsonProperty("dateSoldeDispo")
+    private String dateBalanceAvailable;
+
+    @JsonProperty("dateDernierMvt")
+    private String lastTimeMvt;
+
+    @JsonProperty("soldeDispo")
+    private double availableBalance;
+
+    @JsonProperty("soldeAVenir")
+    private double hipComix;
+
+    @JsonProperty("soldeAVenirContreValeur")
+    private double soldeaComingAgainstValue;
+
+    @JsonProperty("indicateurSolde")
+    private int balanceIndicator;
+
+    @JsonProperty("indicateurSoldeEnCours")
+    private int balanceIndicatorUnderway;
+
+    @JsonProperty("avertissementDepassement")
+    private int overflowWarning;
+
+    @JsonProperty("typeIdentifiantProduit")
+    private int typeIdentifierMaterial;
+
+    @JsonProperty("codeEcoCompte")
+    private int ecoAccountCode;
+
+    @JsonProperty("indicAssuranceVie")
+    private int indicLifeInsurance;
+
+    @JsonProperty("indicCompteJoint")
+    private int indicJointAccount;
+
+    @JsonProperty("indicCompteTiers")
+    private int thirdIndicAccount;
+
+    private String devise;
+
     @JsonProperty("nomAgence")
     private String agencyName;
 
-    private String relationCommercial;
-
     @JsonProperty("typeCompte")
-    private int accountType;
-
-    @JsonProperty("codeMarque")
-    private String brandCode;
-
-    @JsonProperty("dateDernierMouvement")
-    private String dateLastMovement;
-
-    @JsonProperty("montantDecouvertAutorise")
-    private int authorisedAmount;
-
-    @JsonProperty("solde")
-    private BalanceEntity balance;
-
-    @JsonProperty("ibanChiffre")
-    private String ibanKey;
+    private AccountTypesLabelEntity accountTypes;
 
     @JsonProperty("titulaire")
-    private CustomerEntity holder;
+    private HolderEntity holder;
 
-    @JsonProperty("codeRegroupement")
-    private int groupingCode;
+    private List<ServicesEntity> services;
+    private int eligibleSolde;
 
-    @JsonProperty("compteFavoris")
-    private boolean favoritesAccount;
+    @JsonProperty("comptePrincipal")
+    private boolean mainAccount;
 
-    @JsonProperty("seuilMeteoCritique")
-    private double criticaWeatherThreshold;
+    @JsonProperty("compteFavori")
+    private boolean accountFavorite;
 
-    @JsonProperty("seuilMeteoVigilance")
-    private double vigilanceWeatherThreshold;
+    @JsonProperty("indicLivret")
+    private boolean indicBooklet;
 
-    @JsonProperty("ribAnonymise")
-    private String anonymisedRib;
+    @JsonProperty("montantDecouvertAutorise")
+    private int authorizesAmountDiscovered;
+
+    private String ribAnonymise;
+
+    @JsonProperty("faciliteCaisse")
+    private double facilitatesFund;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(RibListEntity accountDetails) {
-        String iban = getIbanFromRib(accountDetails);
-
-        return TransactionalAccount.builder(
-                        getTinkAccountType(), iban.toLowerCase(), balance.getTinkAmount())
-                .setAccountNumber(iban)
-                .setHolderName(new HolderName(getCustomerName()))
-                .setName(productLabel)
+    private Optional<TransactionalAccount> toTinkAccount(
+            String iban, TransactionalAccountType accountType) {
+        if (Strings.isNullOrEmpty(iban)) {
+            return Optional.empty();
+        }
+        return TransactionalAccount.nxBuilder()
+                .withType(accountType)
+                .withoutFlags()
+                .withBalance(BalanceModule.of(getTinkAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(getAccountName())
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .addHolderName(getCustomerName())
                 .putInTemporaryStorage(BnpParibasConstants.Storage.IBAN_KEY, ibanKey)
                 .build();
     }
 
-    /**
-     * In France RIB is a statement of banking identity which is used for setting up payments and
-     * more. Our way of getting the iban number if through the RIB details. For some reason it's
-     * returned as a list, but since the details are fetched with the encrypted iban as a query
-     * parameter it's highly unlikely that other accounts are in this list. That's why we just pick
-     * the first element in the list. This function throws an exception if there are less or more
-     * than one element as we have to investigate that case.
-     */
     @JsonIgnore
-    private String getIbanFromRib(RibListEntity accountDetails) {
-        List<RibEntity> ribList = accountDetails.getRibList();
-
-        if (ribList.size() != 1) {
-            throw new IllegalStateException(
-                    String.format(
-                            "Expected details for one account, found %d.",
-                            accountDetails.getRibList().size()));
-        }
-
-        return ribList.get(0).getAccountInfo().getIban();
+    public Optional<TransactionalAccount> toTinkCheckingAccount(String iban) {
+        return this.toTinkAccount(iban, TransactionalAccountType.CHECKING);
     }
 
     @JsonIgnore
-    private AccountTypes getTinkAccountType() {
-        if (productLabel.equalsIgnoreCase(BnpParibasConstants.AccountType.CHECKING)) {
-            return AccountTypes.CHECKING;
-        }
-
-        log.warn(
-                "{}: Unknown type: {}",
-                BnpParibasConstants.Tags.UNKNOWN_ACCOUNT_TYPE,
-                productLabel);
-        return AccountTypes.OTHER;
-    }
-
-    @JsonIgnore
-    public boolean isKnownAccountType() {
-        return productLabel.equalsIgnoreCase(BnpParibasConstants.AccountType.CHECKING);
+    public Optional<TransactionalAccount> toTinkSavingsAccount(String iban) {
+        return this.toTinkAccount(iban, TransactionalAccountType.SAVINGS);
     }
 
     @JsonIgnore
     private String getCustomerName() {
-        if (holder.getFirstName() == null || holder.getFullName() == null) {
+        if (holder.getFirstName() == null || holder.getLastName() == null) {
             return null;
         }
 
-        return holder.getFirstName() + " " + holder.getFullName();
+        return holder.getFirstName() + " " + holder.getLastName();
     }
 
-    public int getEcoAccountCode() {
-        return ecoAccountCode;
-    }
-
-    public int getCodeNatureRelationCommercial() {
-        return codeNatureRelationCommercial;
-    }
-
-    public String getAccountProductId() {
-        return accountProductId;
-    }
-
-    public String getSgieIdentifier() {
-        return SgieIdentifier;
-    }
-
-    public boolean isIndicativeLifeInsurance() {
-        return indicativeLifeInsurance;
-    }
-
-    public boolean isIndicJointAccount() {
-        return indicJointAccount;
-    }
-
-    public boolean isIndicativeThirdPartyAccount() {
-        return indicativeThirdPartyAccount;
-    }
-
-    public String getProductLabel() {
-        return productLabel;
-    }
-
-    public String getAgencyName() {
-        return agencyName;
-    }
-
-    public String getRelationCommercial() {
-        return relationCommercial;
-    }
-
-    public int getAccountType() {
-        return accountType;
-    }
-
-    public String getBrandCode() {
-        return brandCode;
-    }
-
-    public String getDateLastMovement() {
-        return dateLastMovement;
-    }
-
-    public int getAuthorisedAmount() {
-        return authorisedAmount;
-    }
-
-    public BalanceEntity getBalance() {
-        return balance;
+    private ExactCurrencyAmount getTinkAmount() {
+        return ExactCurrencyAmount.inEUR(availableBalance);
     }
 
     public String getIbanKey() {
         return ibanKey;
     }
 
-    public CustomerEntity getHolder() {
-        return holder;
-    }
-
-    public int getGroupingCode() {
-        return groupingCode;
-    }
-
-    public boolean isFavoritesAccount() {
-        return favoritesAccount;
-    }
-
-    public double getCriticaWeatherThreshold() {
-        return criticaWeatherThreshold;
-    }
-
-    public double getVigilanceWeatherThreshold() {
-        return vigilanceWeatherThreshold;
-    }
-
-    public String getAnonymisedRib() {
-        return anonymisedRib;
-    }
-
-    @JsonObject
-    public static class AccountInfoEntity {
-        private String bic;
-        private String iban;
-        private String rib;
-
-        public String getBic() {
-            return bic;
-        }
-
-        public String getIban() {
-            return iban;
-        }
-
-        public String getRib() {
-            return rib;
-        }
+    private String getAccountName() {
+        return this.productLabel;
     }
 }
