@@ -1115,8 +1115,7 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer));
-        commands.add(
-                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
+
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
@@ -1159,6 +1158,7 @@ public class AgentWorkerOperationFactory {
                                 context,
                                 (ConfigureWhitelistInformationRequest) request,
                                 controllerWrapper));
+                commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
             }
 
             // Update the accounts on system side
