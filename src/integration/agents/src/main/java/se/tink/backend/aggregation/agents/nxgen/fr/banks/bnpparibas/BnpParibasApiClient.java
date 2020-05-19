@@ -94,7 +94,7 @@ public class BnpParibasApiClient {
     public List<TransactionAccountEntity> getAccountIbanDetails() {
         AccountIbanDetailsRequest request =
                 new AccountIbanDetailsRequest(
-                        BnpParibasConstants.AccountIbanDetails.MODE_BENEFICIAIRE_1);
+                        BnpParibasConstants.AccountIbanDetails.MODE_BENEFICIAIRE_TRUE);
         IbanDetailsResponse ibanDetailsResponse =
                 client.request(BnpParibasConstants.Urls.LIST_IBANS)
                         .type(MediaType.APPLICATION_JSON_TYPE)
