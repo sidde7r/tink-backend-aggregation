@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.DemoFinancialInstitutionLoginCredentials;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.Storage;
@@ -20,27 +19,27 @@ public class DemoFinancialInstitutionAuthenticator implements PasswordAuthentica
 
     @Override
     public void authenticate(final String username, final String password)
-            throws AuthenticationException, AuthorizationException, LoginException {
+            throws AuthenticationException, AuthorizationException {
 
-        Map<String, String> user_credentials = new HashMap<String, String>();
-        user_credentials.put(
+        Map<String, String> userCredentials = new HashMap<>();
+        userCredentials.put(
                 DemoFinancialInstitutionLoginCredentials.USER1_USERNAME,
                 DemoFinancialInstitutionLoginCredentials.USER1_PASSWORD);
-        user_credentials.put(
+        userCredentials.put(
                 DemoFinancialInstitutionLoginCredentials.USER2_USERNAME,
                 DemoFinancialInstitutionLoginCredentials.USER2_PASSWORD);
-        user_credentials.put(
+        userCredentials.put(
                 DemoFinancialInstitutionLoginCredentials.USER3_USERNAME,
                 DemoFinancialInstitutionLoginCredentials.USER3_PASSWORD);
 
-        if (!username.equals(null) && user_credentials.containsKey(username)) {
-            if (user_credentials.get(username).equals(password)) {
+        if (username != null && userCredentials.containsKey(username)) {
+            if (userCredentials.get(username).equals(password)) {
                 putInSessionStorage(sessionStorage, username, password);
             } else throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception();
         }
     }
 
-    public static void putInSessionStorage(
+    private static void putInSessionStorage(
             SessionStorage sessionStorage, String username, String password) {
         sessionStorage.put(Storage.BASIC_AUTH_USERNAME, username);
         sessionStorage.put(Storage.BASIC_AUTH_PASSWORD, password);

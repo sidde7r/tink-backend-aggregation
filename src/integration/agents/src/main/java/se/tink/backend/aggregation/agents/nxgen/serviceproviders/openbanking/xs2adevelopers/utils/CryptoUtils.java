@@ -5,8 +5,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CryptoUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(CryptoUtils.class);
 
     private CryptoUtils() {}
 
@@ -20,10 +24,15 @@ public class CryptoUtils {
     public static String getCodeChallenge(String codeVerifier) {
         byte[] bytes = codeVerifier.getBytes(StandardCharsets.US_ASCII);
         MessageDigest md = null;
+        final String algorithm = "SHA-256";
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            md = MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error(
+                    "Could not find MessageDigest object that implements required digest algorithm: {}",
+                    algorithm,
+                    e);
+            throw new IllegalArgumentException(e);
         }
         md.update(bytes, 0, bytes.length);
         byte[] digest = md.digest();

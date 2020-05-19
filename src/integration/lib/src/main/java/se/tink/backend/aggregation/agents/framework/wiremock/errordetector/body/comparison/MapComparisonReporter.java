@@ -43,17 +43,17 @@ public class MapComparisonReporter implements ComparisonReporter {
 
         StringBuilder errorMessage = new StringBuilder();
 
-        if (missingBodyKeysInGivenRequest.size() > 0 || bodyKeysWithDifferentValue.size() > 0) {
+        if (!missingBodyKeysInGivenRequest.isEmpty() || !bodyKeysWithDifferentValue.isEmpty()) {
             errorMessage.append("There is a mismatch between request bodies\n");
             errorMessage.append("The differences are the following:\n");
-            if (missingBodyKeysInGivenRequest.size() > 0) {
+            if (!missingBodyKeysInGivenRequest.isEmpty()) {
                 errorMessage.append("The following keys only appear in expected object\n");
-                missingBodyKeysInGivenRequest.forEach(key -> errorMessage.append(key + "\n"));
+                missingBodyKeysInGivenRequest.forEach(key -> errorMessage.append(key).append("\n"));
             }
-            if (bodyKeysWithDifferentValue.size() > 0) {
+            if (!bodyKeysWithDifferentValue.isEmpty()) {
                 errorMessage.append(
                         "For the following keys the expected and given objects have different values\n");
-                bodyKeysWithDifferentValue.forEach(key -> errorMessage.append(key + "\n"));
+                bodyKeysWithDifferentValue.forEach(key -> errorMessage.append(key).append("\n"));
             }
         }
         return errorMessage.toString();

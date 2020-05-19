@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.framework.wiremock;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -65,32 +67,30 @@ public class WireMockErrorDetectorTest {
         body.put("key1", "value1");
         body.put("key2", "value2");
 
-        CompareEntity differences = null;
-
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/wrong_endpoint")
-                            .header("Header1", "HeaderValue1")
-                            .header("Header2", "HeaderValue2")
-                            .type(MediaType.APPLICATION_JSON_TYPE)
-                            .post(String.class, mapper.writeValueAsString(body));
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/wrong_endpoint")
+                                        .header("Header1", "HeaderValue1")
+                                        .header("Header2", "HeaderValue2")
+                                        .type(MediaType.APPLICATION_JSON_TYPE)
+                                        .post(String.class, mapper.writeValueAsString(body)));
 
         // then
-        Assert.assertNotNull(differences);
-        Assert.assertTrue(differences.areMethodsMatching());
-        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertTrue(differences.getBodyComparisonReporter() instanceof MapComparisonReporter);
-        MapComparisonReporter reporter =
-                (MapComparisonReporter) differences.getBodyComparisonReporter();
-        Assert.assertEquals(0, reporter.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(0, reporter.getBodyKeysWithDifferentValue().size());
-        Assert.assertFalse(differences.areUrlsMatching());
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        // and
+        assertThat(differences.areMethodsMatching()).isTrue();
+        assertThat(differences.areUrlsMatching()).isFalse();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).isEmpty();
+        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
+        // and
+        MapComparisonReporter reporter = getReporter(differences, MapComparisonReporter.class);
+        assertThat(reporter.getMissingBodyKeysInGivenRequest()).isEmpty();
+        assertThat(reporter.getBodyKeysWithDifferentValue()).isEmpty();
     }
 
     @Test
@@ -98,31 +98,27 @@ public class WireMockErrorDetectorTest {
             whenFailedJSONRequestIsMadeErrorDetectorShouldDetectMethodMismatchBetweenFailedRequestAndClosestMatch()
                     throws IOException {
         // given
-        Map<String, String> body = new HashMap<>();
-        body.put("key1", "value1");
-        body.put("key2", "value2");
-
-        CompareEntity differences = null;
 
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/json")
-                            .header("Header1", "HeaderValue1")
-                            .header("Header2", "HeaderValue2")
-                            .type(MediaType.APPLICATION_JSON_TYPE)
-                            .get(String.class);
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/json")
+                                        .header("Header1", "HeaderValue1")
+                                        .header("Header2", "HeaderValue2")
+                                        .type(MediaType.APPLICATION_JSON_TYPE)
+                                        .get(String.class));
 
         // then
-        Assert.assertNotNull(differences);
-        Assert.assertFalse(differences.areMethodsMatching());
-        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertTrue(differences.areUrlsMatching());
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        // and
+        assertThat(differences.areMethodsMatching()).isFalse();
+        assertThat(differences.areUrlsMatching()).isTrue();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).isEmpty();
+        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
     }
 
     @Test
@@ -134,33 +130,29 @@ public class WireMockErrorDetectorTest {
         body.put("key1", "value1");
         body.put("key2", "value2");
 
-        CompareEntity differences = null;
-
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/json")
-                            .header("Header1", "WrongValue")
-                            .type(MediaType.APPLICATION_JSON_TYPE)
-                            .post(String.class, mapper.writeValueAsString(body));
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/json")
+                                        .header("Header1", "WrongValue")
+                                        .type(MediaType.APPLICATION_JSON_TYPE)
+                                        .post(String.class, mapper.writeValueAsString(body)));
 
         // then
-        Assert.assertNotNull(differences);
-        Assert.assertTrue(differences.areMethodsMatching());
-        Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertTrue(differences.getBodyComparisonReporter() instanceof MapComparisonReporter);
-        MapComparisonReporter reporter =
-                (MapComparisonReporter) differences.getBodyComparisonReporter();
-        Assert.assertEquals(0, reporter.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(0, reporter.getBodyKeysWithDifferentValue().size());
-        Assert.assertEquals(1, differences.getMissingHeaderKeysInGivenRequest().size());
-        Assert.assertEquals(1, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("header2"));
-        Assert.assertTrue(differences.getHeaderKeysWithDifferentValues().contains("header1"));
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        // and
+        assertThat(differences.areMethodsMatching()).isTrue();
+        assertThat(differences.areUrlsMatching()).isTrue();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).containsOnly("header2");
+        assertThat(differences.getHeaderKeysWithDifferentValues()).containsOnly("header1");
+        // and
+        MapComparisonReporter reporter = getReporter(differences, MapComparisonReporter.class);
+        assertThat(reporter.getMissingBodyKeysInGivenRequest()).isEmpty();
+        assertThat(reporter.getBodyKeysWithDifferentValue()).isEmpty();
     }
 
     @Test
@@ -171,76 +163,66 @@ public class WireMockErrorDetectorTest {
         Map<String, String> body = new HashMap<>();
         body.put("key1", "wrongValue1");
 
-        CompareEntity differences = null;
-
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/json")
-                            .header("Header1", "HeaderValue1")
-                            .header("Header2", "HeaderValue2")
-                            .type(MediaType.APPLICATION_JSON_TYPE)
-                            .post(String.class, mapper.writeValueAsString(body));
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/json")
+                                        .header("Header1", "HeaderValue1")
+                                        .header("Header2", "HeaderValue2")
+                                        .type(MediaType.APPLICATION_JSON_TYPE)
+                                        .post(String.class, mapper.writeValueAsString(body)));
 
         // then
-        Assert.assertNotNull(differences);
-        Assert.assertTrue(differences.areMethodsMatching());
-        Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertTrue(differences.getBodyComparisonReporter() instanceof MapComparisonReporter);
-        MapComparisonReporter reporter =
-                (MapComparisonReporter) differences.getBodyComparisonReporter();
-        Assert.assertEquals(1, reporter.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(1, reporter.getBodyKeysWithDifferentValue().size());
-        Assert.assertTrue(reporter.getMissingBodyKeysInGivenRequest().contains("key2"));
-        Assert.assertTrue(reporter.getBodyKeysWithDifferentValue().contains("key1"));
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        assertThat(differences.areMethodsMatching()).isTrue();
+        assertThat(differences.areUrlsMatching()).isTrue();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).isEmpty();
+        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
+        // and
+        MapComparisonReporter reporter = getReporter(differences, MapComparisonReporter.class);
+        assertThat(reporter.getMissingBodyKeysInGivenRequest()).containsOnly("key2");
+        assertThat(reporter.getBodyKeysWithDifferentValue()).containsOnly("key1");
     }
 
     @Test
     public void
             whenFormRequestIsMadeErrorDetectorShouldDetectRequestBodyMismatchBetweenFailedRequestAndClosestMatch()
                     throws IOException {
+        // given
         String form = Form.builder().put("key1", "wrong_value").build().serialize();
 
-        CompareEntity differences = null;
-
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/urlencoded")
-                            .header("Header1", "HeaderValue1")
-                            .header("Header2", "HeaderValue2")
-                            .body(form, MediaType.APPLICATION_FORM_URLENCODED)
-                            .post(String.class);
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/urlencoded")
+                                        .header("Header1", "HeaderValue1")
+                                        .header("Header2", "HeaderValue2")
+                                        .body(form, MediaType.APPLICATION_FORM_URLENCODED)
+                                        .post(String.class));
 
         // then
-        Assert.assertNotNull(differences);
-        Assert.assertTrue(differences.areMethodsMatching());
-        Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertTrue(differences.getBodyComparisonReporter() instanceof MapComparisonReporter);
-        MapComparisonReporter reporter =
-                (MapComparisonReporter) differences.getBodyComparisonReporter();
-        Assert.assertEquals(1, reporter.getMissingBodyKeysInGivenRequest().size());
-        Assert.assertEquals(1, reporter.getBodyKeysWithDifferentValue().size());
-        Assert.assertTrue(reporter.getMissingBodyKeysInGivenRequest().contains("key2"));
-        Assert.assertTrue(reporter.getBodyKeysWithDifferentValue().contains("key1"));
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        assertThat(differences.areMethodsMatching()).isTrue();
+        assertThat(differences.areUrlsMatching()).isTrue();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).isEmpty();
+        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
+        // and
+        MapComparisonReporter reporter = getReporter(differences, MapComparisonReporter.class);
+        assertThat(reporter.getMissingBodyKeysInGivenRequest()).containsOnly("key2");
+        assertThat(reporter.getBodyKeysWithDifferentValue()).containsOnly("key1");
     }
 
     @Test
-    public void whenSuccessfulXMLRequestIsMadeErrorDetectorShouldDetectNothing()
-            throws IOException {
-
+    public void whenSuccessfulXMLRequestIsMadeErrorDetectorShouldDetectNothing() {
+        // given
         String body =
                 "<v:Envelope xmlns:v=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:d=\"http://www.w3.org/2001/XMLSchema\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
                         + "  <v:Header />\n"
@@ -258,30 +240,23 @@ public class WireMockErrorDetectorTest {
                         + "  </v:Body>\n"
                         + "</v:Envelope>";
 
-        CompareEntity differences = null;
-
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/xml_endpoint")
-                            .header("SOAPAction", "SoapAction")
-                            .type(MediaType.TEXT_XML_TYPE)
-                            .accept(MediaType.WILDCARD)
-                            .post(String.class, body);
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        httpClient
+                .request("http://dummy.com/xml_endpoint")
+                .header("SOAPAction", "SoapAction")
+                .type(MediaType.TEXT_XML_TYPE)
+                .accept(MediaType.WILDCARD)
+                .post(String.class, body);
 
         // then
-        Assert.assertNull(differences);
+        assertThat(server.hadEncounteredAnError()).isFalse();
     }
 
     @Test
     public void
             whenFailedXMLRequestIsMadeErrorDetectorShouldDetectRequestBodyMismatchBetweenFailedRequestAndClosestMatch()
                     throws IOException {
-
+        // given
         String body =
                 "<v:Envelope xmlns:v=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:d=\"http://www.w3.org/2001/XMLSchema\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
                         + "  <v:Header />\n"
@@ -298,39 +273,36 @@ public class WireMockErrorDetectorTest {
                         + "  </v:Body>\n"
                         + "</v:Envelope>";
 
-        CompareEntity differences = null;
-
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/xml_endpoint")
-                            .header("SOAPAction", "SoapAction")
-                            .type(MediaType.TEXT_XML_TYPE)
-                            .accept(MediaType.WILDCARD)
-                            .post(String.class, body);
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/xml_endpoint")
+                                        .header("SOAPAction", "SoapAction")
+                                        .type(MediaType.TEXT_XML_TYPE)
+                                        .accept(MediaType.WILDCARD)
+                                        .post(String.class, body));
 
         // then
-        Assert.assertNotNull(differences);
-        Assert.assertTrue(differences.areMethodsMatching());
-        Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertTrue(
-                differences.getBodyComparisonReporter() instanceof PlainTextComparisonReporter);
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        assertThat(differences.areMethodsMatching()).isTrue();
+        assertThat(differences.areUrlsMatching()).isTrue();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).isEmpty();
+        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
+        // and
         PlainTextComparisonReporter reporter =
-                (PlainTextComparisonReporter) differences.getBodyComparisonReporter();
-        Assert.assertTrue(reporter.isThereDifference());
+                getReporter(differences, PlainTextComparisonReporter.class);
+        assertThat(reporter.isThereDifference()).isTrue();
     }
 
     @Test
     public void
             whenFailedXMLRequestIsMadeErrorDetectorShouldDetectHeaderMismatchBetweenFailedRequestAndClosestMatch()
                     throws IOException {
-
+        // given
         String body =
                 "<v:Envelope xmlns:v=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:d=\"http://www.w3.org/2001/XMLSchema\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
                         + "  <v:Header />\n"
@@ -348,121 +320,115 @@ public class WireMockErrorDetectorTest {
                         + "  </v:Body>\n"
                         + "</v:Envelope>";
 
-        CompareEntity differences = null;
-
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/xml_endpoint")
-                            .type(MediaType.TEXT_XML_TYPE)
-                            .accept(MediaType.WILDCARD)
-                            .post(String.class, body);
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/xml_endpoint")
+                                        .type(MediaType.TEXT_XML_TYPE)
+                                        .accept(MediaType.WILDCARD)
+                                        .post(String.class, body));
 
         // then
-        Assert.assertNotNull(differences);
-        Assert.assertTrue(differences.areMethodsMatching());
-        Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertTrue(
-                differences.getBodyComparisonReporter() instanceof PlainTextComparisonReporter);
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        assertThat(differences.areMethodsMatching()).isTrue();
+        assertThat(differences.areUrlsMatching()).isTrue();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).containsOnly("soapaction");
+        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
+        // and
         PlainTextComparisonReporter reporter =
-                (PlainTextComparisonReporter) differences.getBodyComparisonReporter();
-        Assert.assertTrue(!reporter.isThereDifference());
-        Assert.assertEquals(1, differences.getMissingHeaderKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("soapaction"));
+                getReporter(differences, PlainTextComparisonReporter.class);
+        assertThat(reporter.isThereDifference()).isFalse();
     }
 
     @Test
-    public void whenSuccessfulPlainTextRequestIsMadeErrorDetectorShouldDetectNothing()
-            throws IOException {
-
+    public void whenSuccessfulPlainTextRequestIsMadeErrorDetectorShouldDetectNothing() {
+        // given
         String body = "this request body must be sent";
 
-        CompareEntity differences = null;
-
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/plaintext")
-                            .header("Header1", "HeaderValue1")
-                            .type(MediaType.TEXT_PLAIN_TYPE)
-                            .post(String.class, body);
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        httpClient
+                .request("http://dummy.com/plaintext")
+                .header("Header1", "HeaderValue1")
+                .type(MediaType.TEXT_PLAIN_TYPE)
+                .post(String.class, body);
 
         // then
-        Assert.assertNull(differences);
+        assertThat(server.hadEncounteredAnError()).isFalse();
     }
 
     @Test
     public void
             whenFailedPlainTextRequestIsMadeErrorDetectorShouldDetectRequestBodyMismatchBetweenFailedRequestAndClosestMatch()
                     throws IOException {
-
+        // given
         String body = "wrong body";
-        CompareEntity differences = null;
 
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/plaintext")
-                            .header("Header1", "HeaderValue1")
-                            .type(MediaType.TEXT_PLAIN_TYPE)
-                            .post(String.class, body);
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/plaintext")
+                                        .header("Header1", "HeaderValue1")
+                                        .type(MediaType.TEXT_PLAIN_TYPE)
+                                        .post(String.class, body));
 
         // then
-        Assert.assertNotNull(differences);
-        Assert.assertTrue(differences.areMethodsMatching());
-        Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertEquals(0, differences.getMissingHeaderKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertTrue(
-                differences.getBodyComparisonReporter() instanceof PlainTextComparisonReporter);
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        assertThat(differences.areMethodsMatching()).isTrue();
+        assertThat(differences.areUrlsMatching()).isTrue();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).isEmpty();
+        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
+        // and
         PlainTextComparisonReporter reporter =
-                (PlainTextComparisonReporter) differences.getBodyComparisonReporter();
-        Assert.assertTrue(reporter.isThereDifference());
+                getReporter(differences, PlainTextComparisonReporter.class);
+        assertThat(reporter.isThereDifference()).isTrue();
     }
 
     @Test
     public void
             whenFailedPlainTextRequestIsMadeErrorDetectorShouldDetectHeaderMismatchBetweenFailedRequestAndClosestMatch()
                     throws IOException {
-
+        // given
         String body = "this request body must be sent";
-        CompareEntity differences = null;
 
         // when
-        try {
-            String response =
-                    httpClient
-                            .request("http://dummy.com/plaintext")
-                            .type(MediaType.TEXT_PLAIN_TYPE)
-                            .post(String.class, body);
-        } catch (HttpResponseException e) {
-            differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
-        }
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                httpClient
+                                        .request("http://dummy.com/plaintext")
+                                        .type(MediaType.TEXT_PLAIN_TYPE)
+                                        .post(String.class, body));
 
         // then
-        Assert.assertNotNull(differences);
-        Assert.assertTrue(differences.areMethodsMatching());
-        Assert.assertTrue(differences.areUrlsMatching());
-        Assert.assertTrue(
-                differences.getBodyComparisonReporter() instanceof PlainTextComparisonReporter);
+        assertException(throwable);
+        // and
+        CompareEntity differences = server.findDifferencesBetweenFailedRequestAndItsClosestMatch();
+        assertThat(differences.areMethodsMatching()).isTrue();
+        assertThat(differences.areUrlsMatching()).isTrue();
+        assertThat(differences.getMissingHeaderKeysInGivenRequest()).containsOnly("header1");
+        assertThat(differences.getHeaderKeysWithDifferentValues()).isEmpty();
+        // and
         PlainTextComparisonReporter reporter =
-                (PlainTextComparisonReporter) differences.getBodyComparisonReporter();
-        Assert.assertTrue(!reporter.isThereDifference());
-        Assert.assertEquals(1, differences.getMissingHeaderKeysInGivenRequest().size());
-        Assert.assertEquals(0, differences.getHeaderKeysWithDifferentValues().size());
-        Assert.assertTrue(differences.getMissingHeaderKeysInGivenRequest().contains("header1"));
+                getReporter(differences, PlainTextComparisonReporter.class);
+        assertThat(reporter.isThereDifference()).isFalse();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T getReporter(CompareEntity differences, Class<T> tClass) {
+        assertThat(differences.getBodyComparisonReporter()).isInstanceOf(tClass);
+        return (T) differences.getBodyComparisonReporter();
+    }
+
+    private static void assertException(Throwable throwable) {
+        assertThat(throwable).isInstanceOf(HttpResponseException.class);
+        assertThat(((HttpResponseException) throwable).getResponse().getStatus()).isEqualTo(404);
     }
 }

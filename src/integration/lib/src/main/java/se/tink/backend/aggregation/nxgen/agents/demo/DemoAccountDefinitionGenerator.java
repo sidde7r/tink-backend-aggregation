@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
-import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET_CODES;
-import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET_REGEX;
+import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MarketCodes;
+import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MarketRegex;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -96,9 +96,8 @@ public class DemoAccountDefinitionGenerator {
     private static String generateAccountNumbersUK(
             String userDeterministicKey, String deterministicKey) {
         Integer sortCode =
-                DemoConstants.MARKET_CODES.UK_SORT_CODES.get(
-                        generateNumber(userDeterministicKey, 2)
-                                % MARKET_CODES.UK_SORT_CODES.size());
+                MarketCodes.UK_SORT_CODES.get(
+                        generateNumber(userDeterministicKey, 2) % MarketCodes.UK_SORT_CODES.size());
         return sortCode
                 + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 3));
     }
@@ -158,11 +157,11 @@ public class DemoAccountDefinitionGenerator {
         return new DemoSavingsAccount() {
             @Override
             public String getAccountId() {
-                if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
-                } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
+                } else if (providerName.matches(MarketRegex.IT_PROVIDERS_REGEX)) {
                     return generateAccountNumbersIT(deterministicKey);
-                } else if (providerName.matches(MARKET_REGEX.FR_PROVIDERS_REGEX)) {
+                } else if (providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)) {
                     return generateAccountNumbersFR(deterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
@@ -182,11 +181,11 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public List<AccountIdentifier> getIdentifiers() {
                 AccountIdentifier.Type type = AccountIdentifier.Type.SE;
-                if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
                     type = AccountIdentifier.Type.SORT_CODE;
                 }
-                if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)
-                        || providerName.matches(MARKET_REGEX.FR_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.IT_PROVIDERS_REGEX)
+                        || providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)) {
                     type = AccountIdentifier.Type.IBAN;
                 }
                 AccountIdentifier identifier =
@@ -210,11 +209,11 @@ public class DemoAccountDefinitionGenerator {
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
-                if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
-                } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
+                } else if (providerName.matches(MarketRegex.IT_PROVIDERS_REGEX)) {
                     return generateAccountNumbersIT(deterministicKey);
-                } else if (providerName.matches(MARKET_REGEX.FR_PROVIDERS_REGEX)) {
+                } else if (providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)) {
                     return generateAccountNumbersFR(deterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
@@ -252,11 +251,11 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public List<AccountIdentifier> getIdentifiers() {
                 AccountIdentifier.Type type = AccountIdentifier.Type.SE;
-                if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
                     type = AccountIdentifier.Type.SORT_CODE;
                 }
-                if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)
-                        || providerName.matches(MARKET_REGEX.FR_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.IT_PROVIDERS_REGEX)
+                        || providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)) {
                     type = AccountIdentifier.Type.IBAN;
                 }
                 AccountIdentifier identifier =
@@ -275,11 +274,11 @@ public class DemoAccountDefinitionGenerator {
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
-                if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
-                } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
+                } else if (providerName.matches(MarketRegex.IT_PROVIDERS_REGEX)) {
                     return generateAccountNumbersIT(deterministicKey);
-                } else if (providerName.matches(MARKET_REGEX.FR_PROVIDERS_REGEX)) {
+                } else if (providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)) {
                     return generateAccountNumbersFR(deterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
@@ -338,11 +337,11 @@ public class DemoAccountDefinitionGenerator {
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
-                if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
                     return generateAccountNumbersUK(userDeterministicKey, deterministicKey);
-                } else if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)) {
+                } else if (providerName.matches(MarketRegex.IT_PROVIDERS_REGEX)) {
                     return generateAccountNumbersIT(deterministicKey);
-                } else if (providerName.matches(MARKET_REGEX.FR_PROVIDERS_REGEX)) {
+                } else if (providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)) {
                     return generateAccountNumbersFR(deterministicKey);
                 } else {
                     return generateAccountNumbers(deterministicKey);
@@ -370,11 +369,11 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public List<AccountIdentifier> getIdentifiers() {
                 AccountIdentifier.Type type = AccountIdentifier.Type.SE;
-                if (providerName.matches(MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
                     type = AccountIdentifier.Type.SORT_CODE;
                 }
-                if (providerName.matches(MARKET_REGEX.IT_PROVIDERS_REGEX)
-                        || providerName.matches(MARKET_REGEX.FR_PROVIDERS_REGEX)) {
+                if (providerName.matches(MarketRegex.IT_PROVIDERS_REGEX)
+                        || providerName.matches(MarketRegex.FR_PROVIDERS_REGEX)) {
                     type = AccountIdentifier.Type.IBAN;
                 }
                 AccountIdentifier identifier =

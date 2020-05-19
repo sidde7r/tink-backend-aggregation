@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executo
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
-import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MarketRegex;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoIdentityData;
@@ -277,7 +277,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                 DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                         USERNAME, this.provider, 1));
 
-        if (this.provider.matches(DemoConstants.MARKET_REGEX.UK_PROVIDERS_REGEX)) {
+        if (this.provider.matches(MarketRegex.UK_PROVIDERS_REGEX)) {
             if (this.provider.matches(DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX)) {
                 return Collections.emptyList();
             }

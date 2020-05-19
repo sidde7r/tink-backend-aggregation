@@ -58,7 +58,7 @@ public final class AgentParsingUtils {
         }
 
         // Using BigDecimal for the division to not end up with stuff like 0.016200000000000003
-        BigDecimal interest = new BigDecimal(parseAmount(interestString.replace("%", "")));
+        BigDecimal interest = BigDecimal.valueOf(parseAmount(interestString.replace("%", "")));
         return parsePercentageFormInterest(interest).doubleValue();
     }
 

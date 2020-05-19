@@ -54,7 +54,7 @@ public class WireMockTestServer {
     }
 
     public boolean hadEncounteredAnError() {
-        return wireMockServer.findUnmatchedRequests().getRequests().size() > 0;
+        return !wireMockServer.findUnmatchedRequests().getRequests().isEmpty();
     }
 
     public CompareEntity findDifferencesBetweenFailedRequestAndItsClosestMatch()
@@ -78,9 +78,9 @@ public class WireMockTestServer {
         StringBuilder errorMessage = new StringBuilder();
         errorMessage.append(
                 "The following request could not be matched with any expected requests\n");
-        errorMessage.append(entity.getGivenRequest() + "\n");
+        errorMessage.append(entity.getGivenRequest()).append("\n");
         errorMessage.append("The closest expected request is the following\n");
-        errorMessage.append(entity.getExpectedRequest() + "\n");
+        errorMessage.append(entity.getExpectedRequest()).append("\n");
         errorMessage.append("The difference between them are the following\n");
 
         // Check URL
@@ -98,16 +98,17 @@ public class WireMockTestServer {
         if (entity.getMissingHeaderKeysInGivenRequest().size() > 0) {
             errorMessage.append("The following headers are missing in the request\n");
             entity.getMissingHeaderKeysInGivenRequest()
-                    .forEach(key -> errorMessage.append(key + "\n"));
+                    .forEach(key -> errorMessage.append(key).append("\n"));
         }
 
         entity.getHeaderKeysWithDifferentValues()
                 .forEach(
                         key ->
-                                errorMessage.append(
-                                        "The header "
-                                                + key
-                                                + " has different values for the request and its closest match\n"));
+                                errorMessage
+                                        .append("The header ")
+                                        .append(key)
+                                        .append(
+                                                " has different values for the request and its closest match\n"));
 
         errorMessage.append(entity.getBodyComparisonReporter().report());
         return errorMessage.toString();

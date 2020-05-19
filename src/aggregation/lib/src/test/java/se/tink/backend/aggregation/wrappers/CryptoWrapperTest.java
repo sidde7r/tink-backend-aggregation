@@ -73,7 +73,7 @@ public class CryptoWrapperTest {
     public void ensureClientName_equalsExpectedClientName() {
         Optional<String> clientName = cryptoWrapper.getClientName();
 
-        assertThat(clientName.get()).isEqualTo(CLIENT_NAME);
+        assertThat(clientName).hasValue(CLIENT_NAME);
     }
 
     @Test
@@ -84,6 +84,7 @@ public class CryptoWrapperTest {
         // Since there is a test that tests that there actually is a latest crypto configuration
         // there is no
         // need for if-statements before doing get on the cryptoConfiguration.
+        assertThat(cryptoConfiguration).isPresent();
         assertThat(cryptoConfiguration.get().getKeyId()).isEqualTo(DEFAULT_CRYPTO_CONFIGURATIONS);
     }
 
