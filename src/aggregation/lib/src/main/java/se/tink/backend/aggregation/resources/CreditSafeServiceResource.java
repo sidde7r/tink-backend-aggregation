@@ -89,6 +89,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
 
         if (Objects.isNull(clientInfo)) {
             HttpResponseHelper.error(Status.BAD_REQUEST);
+            return;
         }
 
         String clusterId = clientInfo.getClusterId();

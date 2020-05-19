@@ -7,21 +7,24 @@ import java.util.List;
 
 public class DemoConstants {
 
-    public static String BASE_PATH = "data/demo";
-    public static String GENERATION_BASE_FILE = "generationbase.json";
+    public static final String BASE_PATH = "data/demo";
+    public static final String GENERATION_BASE_FILE = "generationbase.json";
 
     // Change to take amount and return the conversion
     public static double getSekToCurrencyConverter(String currency, double amountInSek) {
         double conversionAmount;
         switch (currency) {
             case "EUR":
-                conversionAmount = 10.22;
+                conversionAmount = 10.22d;
+                break;
             case "USD":
-                conversionAmount = 9.06;
+                conversionAmount = 9.06d;
+                break;
             case "GBP":
-                conversionAmount = 11.77;
+                conversionAmount = 11.77d;
+                break;
             default:
-                conversionAmount = 1;
+                conversionAmount = 1d;
         }
 
         return roundDecimal(amountInSek / conversionAmount);
@@ -29,23 +32,21 @@ public class DemoConstants {
 
     // always return 2 decimals
     private static double roundDecimal(double number) {
-        BigDecimal bd = new BigDecimal(number);
+        BigDecimal bd = BigDecimal.valueOf(number);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 
-    public static String IT_ACCOUNT_NUMBER_PREFIX = "IT60X";
-
-    public static class MARKET_CODES {
-        public static List<Integer> UK_SORT_CODES =
+    static class MarketCodes {
+        static final List<Integer> UK_SORT_CODES =
                 Arrays.asList(
                         90128, 70436, 236972, 230580, 40004, 40075, 40026, 87199, 608371, 401276,
                         231470, 202678, 83210, 774926, 110001, 166300, 609104, 606004);
     }
 
-    public static class MARKET_REGEX {
+    public static class MarketRegex {
         public static final String UK_PROVIDERS_REGEX = "^(?:uk|gb)-.*";
-        public static final String IT_PROVIDERS_REGEX = "^it-.*";
-        public static final String FR_PROVIDERS_REGEX = "^fr-.*";
+        static final String IT_PROVIDERS_REGEX = "^it-.*";
+        static final String FR_PROVIDERS_REGEX = "^fr-.*";
     }
 }

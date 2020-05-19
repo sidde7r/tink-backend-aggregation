@@ -106,7 +106,7 @@ public class Payment {
             log.warn("amount shouldn't be null");
         }
 
-        if (exactCurrencyAmount != null) {
+        if (exactCurrencyAmount != null && amount != null) {
             if (exactCurrencyAmount.getDoubleValue() == amount.doubleValue()
                     && exactCurrencyAmount.getCurrencyCode().equals(amount.getCurrency())) {
                 log.info("Amount and ExactCurrencyAmount is the same!");
@@ -181,7 +181,7 @@ public class Payment {
         return false;
     }
 
-    public String getIbanMarket(String accountNumber) {
+    private String getIbanMarket(String accountNumber) {
         return IbanUtil.getCountryCode(accountNumber);
     }
 

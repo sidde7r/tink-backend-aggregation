@@ -42,7 +42,7 @@ public class DemoAccountFactoryTest {
         // Checking Account
         Assert.assertEquals(AccountTypes.CHECKING, checkingAccount.getType());
         Assert.assertEquals("GBP", checkingAccount.getExactBalance().getCurrencyCode());
-        Assert.assertEquals(813.96, checkingAccount.getExactBalance().getDoubleValue(), 0.001);
+        Assert.assertEquals(69.16, checkingAccount.getExactBalance().getDoubleValue(), 0.001);
         Assert.assertEquals("23147081396957", checkingAccount.getAccountNumber());
         Assert.assertEquals("Checking Account tink", checkingAccount.getName());
 
@@ -57,15 +57,15 @@ public class DemoAccountFactoryTest {
         Assert.assertNotNull(checkingAccount.getExactAvailableBalance());
         Assert.assertEquals("GBP", checkingAccount.getExactAvailableBalance().getCurrencyCode());
         Assert.assertEquals(
-                732.56, checkingAccount.getExactAvailableBalance().getDoubleValue(), 0.001);
+                62.24, checkingAccount.getExactAvailableBalance().getDoubleValue(), 0.001);
         Assert.assertNotNull(checkingAccount.getExactCreditLimit());
         Assert.assertEquals("GBP", checkingAccount.getExactCreditLimit().getCurrencyCode());
-        Assert.assertEquals(5000.0, checkingAccount.getExactCreditLimit().getDoubleValue(), 0.001);
+        Assert.assertEquals(424.81, checkingAccount.getExactCreditLimit().getDoubleValue(), 0.001);
 
         // Savings Account
         Assert.assertEquals(AccountTypes.SAVINGS, savingsAccount.getType());
         Assert.assertEquals("GBP", savingsAccount.getExactBalance().getCurrencyCode());
-        Assert.assertEquals(48799.29, savingsAccount.getExactBalance().getDoubleValue(), 0.001);
+        Assert.assertEquals(4146.07, savingsAccount.getExactBalance().getDoubleValue(), 0.001);
         Assert.assertEquals("23147061152705", savingsAccount.getAccountNumber());
         Assert.assertEquals("Savings Account tink", savingsAccount.getName());
 

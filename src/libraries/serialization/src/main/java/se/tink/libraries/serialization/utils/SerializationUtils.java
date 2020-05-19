@@ -205,7 +205,7 @@ public class SerializationUtils {
         PublicKey pubKey = kp.getPublic();
         PrivateKey privKey = kp.getPrivate();
 
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         m.put("alg", privKey.getAlgorithm());
         m.put("pubKey", Hex.encodeHexString(pubKey.getEncoded()));
         m.put("privKey", Hex.encodeHexString(privKey.getEncoded()));
@@ -213,10 +213,13 @@ public class SerializationUtils {
     }
 
     public static KeyPair deserializeKeyPair(String data) {
+        HashMap<String, String> m =
+                SerializationUtils.deserializeFromString(
+                        data, new TypeReference<HashMap<String, String>>() {});
+        if (m == null) {
+            throw new IllegalStateException("Could not deserialize object");
+        }
         try {
-            HashMap<String, String> m =
-                    SerializationUtils.deserializeFromString(
-                            data, new TypeReference<HashMap<String, String>>() {});
             byte[] pubKeyBytes = Hex.decodeHex(m.get("pubKey").toCharArray());
             byte[] privKeyBytes = Hex.decodeHex(m.get("privKey").toCharArray());
 

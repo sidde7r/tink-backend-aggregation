@@ -32,6 +32,7 @@ junit_test(
         "//third_party:junit_junit",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
     ],
 )
