@@ -3,7 +3,7 @@ load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 junit_test(
     name = "manual",
     srcs = glob(["*.java"]),
-    data = [],
+    data = ["//:agent_test_data"],
     tags = [
         "external",
         "manual",
