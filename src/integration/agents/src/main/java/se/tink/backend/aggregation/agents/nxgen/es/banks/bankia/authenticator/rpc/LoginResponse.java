@@ -5,113 +5,74 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LoginResponse {
-    @JsonProperty("resultadoCorrecto")
-    private boolean correctResult;
 
-    @JsonProperty("resultadoMensaje")
-    private String resultMessage;
+    @JsonProperty("j_gid_response_tgt")
+    private String jGidResponseTgt;
 
-    @JsonProperty("nombreCompletoUsuario")
-    private String fullNameUser;
+    @JsonProperty("j_gid_response_ind_dl")
+    private String jGidResponseIndDl;
 
-    @JsonProperty("esMulticanal")
-    private boolean isMultichannel;
+    @JsonProperty("j_gid_response_contrato")
+    private String jGidResponseContrato;
 
-    @JsonProperty("catalogacionCliente")
-    private String customerCataloging;
+    @JsonProperty("j_gid_response_domain")
+    private String jGidResponseDomain;
 
-    @JsonProperty("segmentoEtiquetado")
-    private String segmentLabeling;
+    @JsonProperty("j_gid_response_cod_error")
+    private String jGidResponseCodError;
 
-    private String ursusHash;
+    @JsonProperty("j_gid_response_url")
+    private String jGidResponseUrl;
 
-    @JsonProperty("mostrarZonaGestorAceptacionApps")
-    private boolean showZoneManagerAcceptanceApps;
+    @JsonProperty("j_gid_response_lt")
+    private String jGidResponseLt;
 
-    @JsonProperty("mostrarBandejaDeTareasPG")
-    private boolean showTaskTrayPg;
+    @JsonProperty("j_gid_response_rsa")
+    private String jGidResponseRsa;
 
-    @JsonProperty("mostrarGestorBpApps")
-    private boolean showGestorBpApps;
+    @JsonProperty("j_gid_response_error")
+    private String jGidResponseError;
 
-    @JsonProperty("nombreUsuario")
-    private String username;
+    @JsonProperty("version-gid-client")
+    private String versionGidClient;
 
-    @JsonProperty("apellido1Usuario")
-    private String surname1User;
-
-    @JsonProperty("apellido2Usuario")
-    private String surname2User;
-
-    @JsonProperty("tramoEdad")
-    private int ageSection;
-
-    @JsonProperty("rangoEdad")
-    private String ageRange;
-
-    private String execution;
-
-    public String getExecution() {
-        return execution;
+    public String getJGidResponseTgt() {
+        return jGidResponseTgt;
     }
 
-    public boolean isCorrectResult() {
-        return correctResult;
+    public String getJGidResponseIndDl() {
+        return jGidResponseIndDl;
     }
 
-    public String getResultMessage() {
-        return resultMessage;
+    public String getJGidResponseContrato() {
+        return jGidResponseContrato;
     }
 
-    public String getFullNameUser() {
-        return fullNameUser;
+    public String getJGidResponseDomain() {
+        return jGidResponseDomain;
     }
 
-    public boolean isMultichannel() {
-        return isMultichannel;
+    public String getJGidResponseCodError() {
+        return jGidResponseCodError;
     }
 
-    public String getCustomerCataloging() {
-        return customerCataloging;
+    public String getJGidResponseUrl() {
+        return jGidResponseUrl;
     }
 
-    public String getSegmentLabeling() {
-        return segmentLabeling;
+    public String getJGidResponseLt() {
+        return jGidResponseLt;
     }
 
-    public String getUrsusHash() {
-        return ursusHash;
+    public String getJGidResponseRsa() {
+        return jGidResponseRsa;
     }
 
-    public boolean isShowZoneManagerAcceptanceApps() {
-        return showZoneManagerAcceptanceApps;
+    public String getJGidResponseError() {
+        return jGidResponseError;
     }
 
-    public boolean isShowTaskTrayPg() {
-        return showTaskTrayPg;
-    }
-
-    public boolean isShowGestorBpApps() {
-        return showGestorBpApps;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getSurname1User() {
-        return surname1User;
-    }
-
-    public String getSurname2User() {
-        return surname2User;
-    }
-
-    public int getAgeSection() {
-        return ageSection;
-    }
-
-    public String getAgeRange() {
-        return ageRange;
+    public String getVersionGidClient() {
+        return versionGidClient;
     }
 }

@@ -16,17 +16,15 @@ public abstract class BankiaConstants {
     public static final String PROVIDER_NAME = "es-bankia-password";
     public static final String MARKET = "ES";
     public static final String LANGUAGE = "en";
-    private static final String URL_BASE_M = "https://m.bankia.es";
     private static final String URL_BASE_OIP = "https://oip.bankia.es";
 
     public static class Url {
-        public static final String LOGIN = URL_BASE_M + "/es/login";
-        public static final String LOGIN_KEY = URL_BASE_M + "/es/login/key";
-        public static final String GLOBAL_POSITION_CLIENT_SCENARIO =
-                URL_BASE_OIP + "/api/microservicios/2.0/posicionglobal/escenariocliente";
+        public static final String LOGIN =
+                URL_BASE_OIP + "/api/1.0/escenario/escenarioaplicacion/login";
+        public static final String LOGIN_KEY = URL_BASE_OIP + "/api/1.0/login/key";
         public static final String DISCONNECT = URL_BASE_OIP + "/es/desconectar";
         public static final String SERVICES_CONTRACTS =
-                URL_BASE_OIP + "/api/1.0/servicios/contratos/4.0/contratos";
+                URL_BASE_OIP + "/api/1.0/servicios/contratos/6.0/contratos";
         public static final String SERVICES_ACCOUNT_MOVEMENT =
                 URL_BASE_OIP + "/api/1.0/servicios/cuenta.movimiento/3.0/cuenta/movimiento";
         public static final String CREDIT_CARD_TRANSACTIONS =
@@ -38,11 +36,10 @@ public abstract class BankiaConstants {
                 URL_BASE_OIP + "/api/1.0/operativas/1.0/prestamos/ObtenerDatosGeneralesPrestamoSBP";
 
         public static final String IDENTITY_DATA =
-                URL_BASE_OIP + "/api/1.0/servicios/cliente.datos/2.0/cliente/datos";
-    }
-
-    public static class Parameter {
-        public static final String ALIAS = "ALIAS";
+                URL_BASE_OIP + "/api/1.0/servicios/cliente.datos/5.0/cliente/datos";
+        public static final String CUSTOMER_SCENARIO =
+                URL_BASE_OIP
+                        + "/api/1.0/servicios/contexto.escenariocliente/5.0/contexto/escenariocliente";
     }
 
     public static class Query {
@@ -92,6 +89,7 @@ public abstract class BankiaConstants {
         public static final String _1 = "1";
         public static final String EMPTY_RESUME_POINT = "";
         public static final String ACCEPT_LANGUAGE = "es";
+        public static final String EMPTY_EXECUTION_STRING = "";
     }
 
     public static class StorageKey {
@@ -155,6 +153,7 @@ public abstract class BankiaConstants {
         public static final String NO_DATA_FOR_ENQUIRY_CODE = "VAVC003E";
         public static final String NO_DATA_FOR_ENQUIRY_MESSAGE =
                 "There is no data for the enquiry.";
+        public static final String WRONG_CREDENTIALS = "CM04110E";
     }
 
     public static class Logging {

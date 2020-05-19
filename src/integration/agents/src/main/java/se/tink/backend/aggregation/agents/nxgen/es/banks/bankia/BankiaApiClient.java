@@ -68,7 +68,7 @@ public class BankiaApiClient {
                 .queryParam(
                         BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
                 .queryParam(
-                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.UPPER_CASE_OIP)
+                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
                 .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptLanguage(Default.ACCEPT_LANGUAGE);
@@ -180,15 +180,16 @@ public class BankiaApiClient {
                 .get(String.class);
     }
 
-    public LoginResponse initiateLogin() {
-        return createRequest(BankiaConstants.Url.LOGIN)
-                .queryParam(BankiaConstants.Query.VERSION, BankiaConstants.Default._5_0)
-                .queryParam(BankiaConstants.Query.TIPO, BankiaConstants.Default.ANDROID_PHONE)
-                .get(LoginResponse.class);
-    }
-
     public RsaKeyResponse getLoginKey() {
-        return createRequest(BankiaConstants.Url.LOGIN_KEY).get(RsaKeyResponse.class);
+        try {
+            return createRequest(BankiaConstants.Url.LOGIN_KEY).get(RsaKeyResponse.class);
+
+        } catch (HttpResponseException exception) {
+            if (exception.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
+                return exception.getResponse().getBody(RsaKeyResponse.class);
+            }
+            throw exception;
+        }
     }
 
     public LoginResponse login(
@@ -199,12 +200,23 @@ public class BankiaApiClient {
         LoginRequest formBody =
                 LoginRequest.create(
                         persistentStorage, username, password, execution, encryptedPassword);
+        try {
 
-        return createRequest(BankiaConstants.Url.LOGIN)
-                .queryParam(BankiaConstants.Query.VERSION, BankiaConstants.Default._5_0)
-                .queryParam(BankiaConstants.Query.TIPO, BankiaConstants.Default.ANDROID_PHONE)
-                .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(LoginResponse.class);
+            return createRequest(BankiaConstants.Url.LOGIN)
+                    .queryParam(
+                            BankiaConstants.Query.X_J_GID_COD_APP,
+                            BankiaConstants.Default.LOWER_CASE_AM)
+                    .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(LoginResponse.class);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE
+                    && e.getResponse()
+                            .getBody(String.class)
+                            .contains(BankiaConstants.Errors.WRONG_CREDENTIALS)) {
+                return e.getResponse().getBody(LoginResponse.class);
+            }
+            throw e;
+        }
     }
 
     /**
@@ -219,8 +231,7 @@ public class BankiaApiClient {
      */
     public boolean authorizeSession() {
         try {
-            createInSessionRequest(BankiaConstants.Url.GLOBAL_POSITION_CLIENT_SCENARIO)
-                    .get(String.class);
+            createInSessionRequest(BankiaConstants.Url.CUSTOMER_SCENARIO).get(String.class);
             return true;
         } catch (HttpResponseException exception) {
             int status = exception.getResponse().getStatus();
