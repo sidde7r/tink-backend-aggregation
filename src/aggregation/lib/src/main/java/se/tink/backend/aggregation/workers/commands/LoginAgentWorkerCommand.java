@@ -171,20 +171,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             weHavePreviouslyLoggedInSuccessfully = true;
         }
 
-        if (Objects.equals(AgentWorkerCommandResult.CONTINUE, result)) {
-
-            log.info(
-                    String.format(
-                            "Credentials contain - supplemental Information: {}: %s",
-                            credentials.getSupplementalInformation()));
-            log.info(
-                    String.format(
-                            "Credentials contain - status payload: {}: %s",
-                            credentials.getStatusPayload()));
-            log.info(
-                    String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
-            statusUpdater.updateStatus(CredentialsStatus.UPDATING);
-        }
+        log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
 
         return result;
     }

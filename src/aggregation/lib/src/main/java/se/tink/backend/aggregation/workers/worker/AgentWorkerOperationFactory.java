@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
@@ -54,6 +55,7 @@ import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCom
 import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
@@ -88,6 +90,8 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
+    private static final ImmutableList<String> CLUSTER_NESTON =
+            ImmutableList.of("neston-production", "neston-staging", "neston-preprod");
 
     private final CacheClient cacheClient;
     private final MetricCacheLoader metricCacheLoader;
@@ -375,6 +379,8 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer));
+        commands.add(
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
@@ -463,6 +469,8 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer));
+        commands.add(
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
 
         log.debug("Created Authenticate operation for credential");
         return new AgentWorkerOperation(
@@ -568,6 +576,7 @@ public class AgentWorkerOperationFactory {
                 createWhitelistRefreshableItemsCommands(
                         request,
                         context,
+                        clientInfo,
                         RefreshableItem.REFRESHABLE_ITEMS_ALL,
                         controllerWrapper));
 
@@ -636,6 +645,7 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer),
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING),
                 new TransferAgentWorkerCommand(
                         context, request, createCommandMetricState(request)));
     }
@@ -993,9 +1003,15 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer));
+        commands.add(
+                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
-                        request, context, request.getItemsToRefresh(), controllerWrapper));
+                        request,
+                        context,
+                        clientInfo,
+                        request.getItemsToRefresh(),
+                        controllerWrapper));
 
         log.debug("Created whitelist refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -1106,9 +1122,25 @@ public class AgentWorkerOperationFactory {
                         loginAgentWorkerCommandState,
                         createCommandMetricState(request),
                         loginAgentEventProducer));
+
+        // Having this status transition here is a bug. It should be removed after validating SEB
+        // and KBC implementations not relying on this bug. We've put a deadline internally
+        // for 2020-06-02. Discussion and Decision in this thread:
+        // https://tink.slack.com/archives/CS4BJQJBV/p1589784587001700
+        // Reverting the commit where this comment and condition is being introduced is the fix.
+        // Comment written 2020-05-19
+        if (!CLUSTER_NESTON.contains(clientInfo.getClusterId())) {
+            commands.add(
+                    new SetCredentialsStatusAgentWorkerCommand(
+                            context, CredentialsStatus.UPDATING));
+        }
         commands.addAll(
                 createWhitelistRefreshableItemsCommands(
-                        request, context, request.getItemsToRefresh(), controllerWrapper));
+                        request,
+                        context,
+                        clientInfo,
+                        request.getItemsToRefresh(),
+                        controllerWrapper));
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationMetricName, request, commands, context);
@@ -1117,6 +1149,7 @@ public class AgentWorkerOperationFactory {
     private ImmutableList<AgentWorkerCommand> createWhitelistRefreshableItemsCommands(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
+            ClientInfo clientInfo,
             Set<RefreshableItem> itemsToRefresh,
             ControllerWrapper controllerWrapper) {
 
@@ -1148,6 +1181,19 @@ public class AgentWorkerOperationFactory {
                                 context,
                                 (ConfigureWhitelistInformationRequest) request,
                                 controllerWrapper));
+
+                // NOT having this status transition here is a bug. It should be removed after
+                // validating SEB and KBC implementations not relying on this bug. We've
+                // put a deadline internally for 2020-06-02
+                // Discussion and Decision in this thread:
+                // https://tink.slack.com/archives/CS4BJQJBV/p1589784587001700
+                // Reverting the commit where this comment and condition is being introduced is the
+                // fix. Comment written 2020-05-19
+                if (CLUSTER_NESTON.contains(clientInfo.getClusterId())) {
+                    commands.add(
+                            new SetCredentialsStatusAgentWorkerCommand(
+                                    context, CredentialsStatus.UPDATING));
+                }
             }
 
             // Update the accounts on system side
