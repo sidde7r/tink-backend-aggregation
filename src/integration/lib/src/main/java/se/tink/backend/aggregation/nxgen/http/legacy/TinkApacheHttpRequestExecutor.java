@@ -57,6 +57,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String SIGNATURE_INFO_HEADER_KEY = "X-Signature-Info";
     private static final String EIDAS_CLUSTER_ID_HEADER = "X-Tink-QWAC-ClusterId";
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
+    // TODO: Make a lib for these shared headers
+    private static final String EIDAS_CERTID_HEADER = "X-Tink-QSealC-CertId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
     private static final ImmutableSet<String> ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN =
@@ -279,6 +281,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         } else if (shouldUseEidasProxy) {
             request.addHeader(EIDAS_CLUSTER_ID_HEADER, eidasIdentity.getClusterId());
             request.addHeader(EIDAS_APPID_HEADER, eidasIdentity.getAppId());
+            request.addHeader(EIDAS_CERTID_HEADER, eidasIdentity.getCertId());
             request.addHeader(EIDAS_PROXY_REQUESTER, eidasIdentity.getRequester());
         } else if (shouldAddRequestSignature) {
 
@@ -296,8 +299,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
                     }
                 } catch (Exception e) {
                     log.warn(
-                            "Error occurred in QSealC signing, appId {} clusterId {}",
+                            "Error occurred in QSealC signing, appId {} certId {} clusterId {}",
                             eidasIdentity.getAppId(),
+                            eidasIdentity.getCertId(),
                             eidasIdentity.getClusterId(),
                             e);
                     addRequestSignature(request);
