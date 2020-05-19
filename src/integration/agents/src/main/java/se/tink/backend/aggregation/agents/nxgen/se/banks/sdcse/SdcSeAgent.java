@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAg
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.DummyConverter;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -22,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /*
- * Configure market specific client, this is SE
+ * Configure market specific client, this is SE in KIRKBY
  */
 public class SdcSeAgent extends SdcAgent
         implements RefreshIdentityDataExecutor, RefreshCreditCardAccountsExecutor {
@@ -48,6 +50,11 @@ public class SdcSeAgent extends SdcAgent
                 true,
                 persistentStorage,
                 credentials);
+    }
+
+    @Override
+    protected AccountNumberToIbanConverter getIbanConverter() {
+        return new DummyConverter();
     }
 
     @Override

@@ -15,7 +15,8 @@ public class FilterAccountsResponseTest {
         FilterAccountsResponse response = getTestData();
 
         // when
-        Collection<TransactionalAccount> accounts = response.getTinkAccounts();
+        Collection<TransactionalAccount> accounts =
+                response.getTinkAccounts(accountNumber -> accountNumber);
 
         // then
         assertThat(accounts).isNotNull();

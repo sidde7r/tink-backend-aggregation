@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -29,12 +30,15 @@ public class SdcAccount {
     private String productElementType;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
+    public TransactionalAccount toTinkAccount(final AccountNumberToIbanConverter converter) {
 
         AccountTypes accountTypes = convertAccountType();
 
         Builder<?, ?> builder =
-                TransactionalAccount.builder(accountTypes, id, amount.toTinkAmount())
+                TransactionalAccount.builder(
+                                accountTypes,
+                                converter.convertToIban(id),
+                                amount.toExactCurrencyAmount())
                         .setAccountNumber(id)
                         .setName(name)
                         .setBankIdentifier(normalizedBankId());

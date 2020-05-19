@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcCo
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcPinAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcSmsOtpAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.DefaultAccountNumberToIbanConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcTransactionFetcher;
@@ -90,13 +92,18 @@ public class SdcDkAgent extends SdcAgent
         return new TransactionalAccountRefreshController(
                 this.metricRefreshController,
                 this.updateController,
-                new SdcAccountFetcher(this.bankClient, this.sdcSessionStorage),
+                new SdcAccountFetcher(this.bankClient, this.sdcSessionStorage, getIbanConverter()),
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
                                 new SdcTransactionFetcher(
                                         this.bankClient, this.sdcSessionStorage, this.parser),
                                 DK_MAX_CONSECUTIVE_EMPTY_PAGES)));
+    }
+
+    @Override
+    protected AccountNumberToIbanConverter getIbanConverter() {
+        return DefaultAccountNumberToIbanConverter.DK_CONVERTER;
     }
 
     @Override
