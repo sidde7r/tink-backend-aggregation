@@ -1,20 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.authenticator.SocieteGeneraleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class SocieteGeneraleAgent extends NextGenerationAgent
@@ -24,9 +23,9 @@ public class SocieteGeneraleAgent extends NextGenerationAgent
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public SocieteGeneraleAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public SocieteGeneraleAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         apiClient = new SocieteGeneraleApiClient(client, persistentStorage, sessionStorage);
         checkDeviceId();
 
