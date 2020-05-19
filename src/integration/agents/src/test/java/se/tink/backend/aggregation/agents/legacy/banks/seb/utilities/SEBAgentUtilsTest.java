@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils.AbroadTransactionParser;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.i18n.Catalog;
 
 public class SEBAgentUtilsTest {
 
@@ -157,5 +158,12 @@ public class SEBAgentUtilsTest {
         assertEquals(TransactionTypes.DEFAULT, SEBAgentUtils.getTransactionType("0000000000"));
         assertEquals(TransactionTypes.TRANSFER, SEBAgentUtils.getTransactionType("5490990004"));
         assertEquals(TransactionTypes.DEFAULT, SEBAgentUtils.getTransactionType(null));
+    }
+
+    @Test
+    public void testCorrectTranslationDep() {
+        assertEquals(
+                "Från-kontot är inte giltigt",
+                Catalog.getCatalog("sv_SE").getString("Invalid source account"));
     }
 }

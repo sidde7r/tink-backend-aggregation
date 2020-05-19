@@ -10,9 +10,6 @@ junit_test(
         "//etc:development",
     ],
     visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//po:i18n",
-    ],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/legacy/banks/seb",
         "//src/integration/amount",
