@@ -14,7 +14,6 @@ junit_test(
         "//src/libraries/account_identifier",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_iban4j_iban4j",
-        "@tink_backend//src/libraries/i18n",
         "@tink_backend//src/libraries/provider",
     ],
 )

@@ -56,6 +56,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/utils/transfer",
+        "//src/libraries/i18n",
     ],
 )
 

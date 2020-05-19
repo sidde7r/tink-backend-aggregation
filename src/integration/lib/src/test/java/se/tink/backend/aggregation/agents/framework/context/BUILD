@@ -18,6 +18,7 @@ java_library(
         "//src/integration/models",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/integration/transfer:rpc",
+        "//src/libraries/i18n",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_code_findbugs_jsr305",
@@ -26,7 +27,6 @@ java_library(
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_slf4j_slf4j_api",
-        "@tink_backend//src/libraries/i18n",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
     ],
 )

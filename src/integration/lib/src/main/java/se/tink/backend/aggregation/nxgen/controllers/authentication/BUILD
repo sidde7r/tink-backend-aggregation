@@ -27,6 +27,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/cryptography",
+        "//src/libraries/i18n",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_code_findbugs_jsr305",
@@ -37,7 +38,6 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_json_json",
         "//third_party:org_slf4j_slf4j_api",
-        "@tink_backend//src/libraries/i18n",
         "@tink_backend//src/libraries/uuid",
     ],
 )
