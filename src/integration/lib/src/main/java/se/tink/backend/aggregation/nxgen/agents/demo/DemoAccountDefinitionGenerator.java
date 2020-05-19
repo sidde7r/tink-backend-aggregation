@@ -6,6 +6,7 @@ import static se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants.MARKET
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -391,12 +392,32 @@ public class DemoAccountDefinitionGenerator {
 
     public static Map<Account, List<TransferDestinationPattern>> generateTransferDestinations(
             List<Account> accounts) {
-        List<GeneralAccountEntity> sourceAccounts =
+        List<Account> sourceAccounts =
                 accounts.stream()
                         .filter(
                                 a ->
                                         a.getType() == AccountTypes.CHECKING
                                                 || a.getType() == AccountTypes.SAVINGS)
+                        .collect(Collectors.toList());
+        List<AccountIdentifier> sourceIdentifiers =
+                accounts.stream()
+                        .filter(
+                                a ->
+                                        a.getType() == AccountTypes.CHECKING
+                                                || a.getType() == AccountTypes.SAVINGS)
+                        .map(Account::getIdentifiers)
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toList());
+        Map<Account, List<TransferDestinationPattern>> result = new HashMap<>();
+        sourceIdentifiers.forEach(
+                id -> result.putAll(generateTransferDestinations(sourceAccounts, id.getType())));
+        return result;
+    }
+
+    private static Map<Account, List<TransferDestinationPattern>> generateTransferDestinations(
+            List<Account> accounts, Type destinationAccountType) {
+        List<GeneralAccountEntity> sourceAccounts =
+                accounts.stream()
                         .map(DemoAccountDefinitionGenerator::accountToGeneralAccountEntity)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
@@ -407,17 +428,20 @@ public class DemoAccountDefinitionGenerator {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList());
-        return new TransferDestinationPatternBuilder()
-                .setSourceAccounts(sourceAccounts)
-                .setDestinationAccounts(destinationAccounts)
-                .setTinkAccounts(accounts)
-                .addMultiMatchPattern(Type.IBAN, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(Type.SEPA_EUR, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(Type.SE, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(Type.SORT_CODE, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(Type.SE_BG, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(Type.SE_PG, TransferDestinationPattern.ALL)
-                .build();
+        TransferDestinationPatternBuilder builder =
+                new TransferDestinationPatternBuilder()
+                        .matchDestinationAccountsOn(
+                                destinationAccountType, getClassForType(destinationAccountType))
+                        .setSourceAccounts(sourceAccounts)
+                        .setDestinationAccounts(destinationAccounts)
+                        .setTinkAccounts(accounts)
+                        .addMultiMatchPattern(
+                                destinationAccountType, TransferDestinationPattern.ALL);
+        if (destinationAccountType.equals(Type.SE)) {
+            builder.addMultiMatchPattern(Type.SE_PG, TransferDestinationPattern.ALL)
+                    .addMultiMatchPattern(Type.SE_BG, TransferDestinationPattern.ALL);
+        }
+        return builder.build();
     }
 
     private static Class<? extends AccountIdentifier> getClassForType(Type type) {
