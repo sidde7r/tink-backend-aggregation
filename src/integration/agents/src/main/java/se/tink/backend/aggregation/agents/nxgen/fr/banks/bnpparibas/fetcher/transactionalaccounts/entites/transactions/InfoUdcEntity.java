@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tra
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.accounts.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -82,35 +81,18 @@ public class InfoUdcEntity {
     }
 
     public List<AccountEntity> getSavingsAccounts() {
-        Optional<AccountGroupEntity> maybeSavings =
-                this.accountGroup.stream()
-                        .filter(AccountGroupEntity::isSavingsAccounts)
-                        .findFirst();
-        if (!maybeSavings.isPresent()) {
-            return Collections.emptyList();
-        }
-        return maybeSavings.get().getAccounts();
+        return this.accountGroup.stream()
+                .filter(AccountGroupEntity::isSavingsAccounts)
+                .findFirst()
+                .map(AccountGroupEntity::getAccounts)
+                .orElseGet(Collections::emptyList);
     }
 
     public List<AccountEntity> getCheckingsAccounts() {
-        Optional<AccountGroupEntity> maybeCheckings =
-                this.accountGroup.stream()
-                        .filter(AccountGroupEntity::isCheckingAccount)
-                        .findFirst();
-        if (!maybeCheckings.isPresent()) {
-            return Collections.emptyList();
-        }
-        return maybeCheckings.get().getAccounts();
-    }
-
-    public List<AccountEntity> getInvestmentAccounts() {
-        Optional<AccountGroupEntity> maybeInvestment =
-                this.accountGroup.stream()
-                        .filter(AccountGroupEntity::isInvestmentAccount)
-                        .findFirst();
-        if (!maybeInvestment.isPresent()) {
-            return Collections.emptyList();
-        }
-        return maybeInvestment.get().getAccounts();
+        return this.accountGroup.stream()
+                .filter(AccountGroupEntity::isCheckingAccount)
+                .findFirst()
+                .map(AccountGroupEntity::getAccounts)
+                .orElseGet(Collections::emptyList);
     }
 }

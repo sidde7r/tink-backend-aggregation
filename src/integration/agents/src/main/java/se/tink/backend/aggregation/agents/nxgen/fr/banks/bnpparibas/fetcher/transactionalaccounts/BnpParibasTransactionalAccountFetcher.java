@@ -19,37 +19,35 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
         this.apiClient = apiClient;
     }
 
-    private TransactionalAccount convertToTinkCheckingAccount(AccountEntity accountEntity) {
+    private Optional<TransactionalAccount> convertToTinkCheckingAccount(
+            AccountEntity accountEntity) {
         List<TransactionAccountEntity> accountIbanDetails = apiClient.getAccountIbanDetails();
-        Optional<TransactionAccountEntity> maybeIbanDetails =
+        String iban =
                 accountIbanDetails.stream()
                         .filter(
                                 transactionAccountEntity ->
                                         transactionAccountEntity
                                                 .getIbanKey()
                                                 .equals(accountEntity.getIbanKey()))
-                        .findFirst();
-        if (!maybeIbanDetails.isPresent()) {
-            return null;
-        }
-        String iban = maybeIbanDetails.get().getIban();
+                        .findFirst()
+                        .map(TransactionAccountEntity::getIban)
+                        .orElse(null);
         return accountEntity.toTinkCheckingAccount(iban);
     }
 
-    private TransactionalAccount convertToTinkSavingsAccount(AccountEntity accountEntity) {
+    private Optional<TransactionalAccount> convertToTinkSavingsAccount(
+            AccountEntity accountEntity) {
         List<TransactionAccountEntity> accountIbanDetails = apiClient.getAccountIbanDetails();
-        Optional<TransactionAccountEntity> maybeIbanDetails =
+        String iban =
                 accountIbanDetails.stream()
                         .filter(
                                 transactionAccountEntity ->
                                         transactionAccountEntity
                                                 .getIbanKey()
                                                 .equals(accountEntity.getIbanKey()))
-                        .findFirst();
-        if (!maybeIbanDetails.isPresent()) {
-            return null;
-        }
-        String iban = maybeIbanDetails.get().getIban();
+                        .findFirst()
+                        .map(TransactionAccountEntity::getIban)
+                        .orElse(null);
         return accountEntity.toTinkSavingsAccount(iban);
     }
 
@@ -61,10 +59,14 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
         List<TransactionalAccount> checking =
                 infoUdc.getCheckingsAccounts().stream()
                         .map(this::convertToTinkCheckingAccount)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .collect(Collectors.toList());
         List<TransactionalAccount> savings =
                 infoUdc.getSavingsAccounts().stream()
                         .map(this::convertToTinkSavingsAccount)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .collect(Collectors.toList());
 
         accounts.addAll(checking);

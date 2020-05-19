@@ -3,11 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tra
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import se.tink.backend.agents.rpc.AccountTypes;
+import java.util.Optional;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -109,25 +113,35 @@ public class AccountEntity {
     private double facilitatesFund;
 
     @JsonIgnore
-    public TransactionalAccount toTinkCheckingAccount(String iban) {
-        return TransactionalAccount.builder(
-                        AccountTypes.CHECKING, iban.toLowerCase(), getTinkAmount())
-                .setAccountNumber(iban)
-                .setHolderName(new HolderName(getCustomerName()))
-                .setName(productLabel)
+    private Optional<TransactionalAccount> toTinkAccount(
+            String iban, TransactionalAccountType accountType) {
+        if (Strings.isNullOrEmpty(iban)) {
+            return Optional.empty();
+        }
+        return TransactionalAccount.nxBuilder()
+                .withType(accountType)
+                .withoutFlags()
+                .withBalance(BalanceModule.of(getTinkAmount()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(getAccountName())
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .addHolderName(getCustomerName())
                 .putInTemporaryStorage(BnpParibasConstants.Storage.IBAN_KEY, ibanKey)
                 .build();
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkSavingsAccount(String iban) {
-        return TransactionalAccount.builder(
-                        AccountTypes.SAVINGS, iban.toLowerCase(), getTinkAmount())
-                .setAccountNumber(iban)
-                .setHolderName(new HolderName(getCustomerName()))
-                .setName(productLabel)
-                .putInTemporaryStorage(BnpParibasConstants.Storage.IBAN_KEY, ibanKey)
-                .build();
+    public Optional<TransactionalAccount> toTinkCheckingAccount(String iban) {
+        return this.toTinkAccount(iban, TransactionalAccountType.CHECKING);
+    }
+
+    @JsonIgnore
+    public Optional<TransactionalAccount> toTinkSavingsAccount(String iban) {
+        return this.toTinkAccount(iban, TransactionalAccountType.SAVINGS);
     }
 
     @JsonIgnore
@@ -145,5 +159,9 @@ public class AccountEntity {
 
     public String getIbanKey() {
         return ibanKey;
+    }
+
+    private String getAccountName() {
+        return this.productLabel;
     }
 }
