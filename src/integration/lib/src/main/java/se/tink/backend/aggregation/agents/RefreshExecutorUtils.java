@@ -170,6 +170,10 @@ public final class RefreshExecutorUtils {
                     throw new IllegalStateException(
                             String.format("Invalid refreshable item detected %s", item.name()));
             }
+        } else {
+            log.warn(
+                    "A request for {} is received, agent is not capable of doing this",
+                    item.name());
         }
     }
 
