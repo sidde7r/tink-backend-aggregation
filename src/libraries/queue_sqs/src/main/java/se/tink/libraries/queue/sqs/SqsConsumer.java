@@ -45,7 +45,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
                             // Production rate will be way higher than this, leading to a long tail
                             // of the background refresh. Observed peak individual pods before this
                             // change has been noted to be around 5 consumptions/second.
-                            RateLimiter rateLimiter = RateLimiter.create(0.2);
+                            RateLimiter rateLimiter = RateLimiter.create(0.4);
                             while (running.get()) {
                                 rateLimiter.acquire();
                                 ReceiveMessageRequest request = createReceiveMessagesRequest();
