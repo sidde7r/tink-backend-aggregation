@@ -757,6 +757,7 @@ spec:
   - record: sum:tink_cancelled_transfers_in_sweden:delta12h
     expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled"}[12h])) or on() vector(0)
 
+  {{- if eq .Values.Environment "production" }}
   # TODO increase the threshold when we go live with a Swedish customer
   - record: thresold:tink_transfers_in_sweden:lowerBound12h
     expr: vector(5)
@@ -770,3 +771,4 @@ spec:
     annotations:
       description: Aggregation service saw fewer than expected minumum number of transfers in 12h time window.
       summary: Number of transfers happened in the last 12 hours is below historical threshold.
+  {{- end }}
