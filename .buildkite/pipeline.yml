@@ -86,6 +86,8 @@ steps:
   - name: ':junit: System Test'
     branches: '!master'
     command: .buildkite/run-system-tests.sh
+    soft_fail:
+      - exit_status: 1
     timeout_in_minutes: 15
     agents:
       queue: default
