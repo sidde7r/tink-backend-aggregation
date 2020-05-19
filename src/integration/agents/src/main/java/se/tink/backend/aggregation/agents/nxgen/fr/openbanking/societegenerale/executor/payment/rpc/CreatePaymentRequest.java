@@ -1,18 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PartyIdentificationEntity;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.BeneficiaryEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.DebtorAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentTypeInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.CreditTransferTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.DebtorAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PartyIdentificationEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentTypeInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.SupplementaryDataEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.List;
-
 
 @JsonObject
 public class CreatePaymentRequest {
@@ -23,6 +19,8 @@ public class CreatePaymentRequest {
     private PaymentTypeInformationEntity paymentTypeInformation;
     private DebtorAccountEntity debtorAccount;
     private BeneficiaryEntity beneficiary;
+    private String chargeBearer;
+    private String requestedExecutionDate;
     private List<CreditTransferTransactionEntity> creditTransferTransaction;
     private SupplementaryDataEntity supplementaryData;
 
@@ -35,9 +33,11 @@ public class CreatePaymentRequest {
         this.paymentTypeInformation = builder.paymentTypeInformation;
         this.debtorAccount = builder.debtorAccount;
         this.beneficiary = builder.beneficiary;
+        this.chargeBearer = builder.chargeBearer;
+        this.requestedExecutionDate = builder.requestedExecutionDate;
         this.creditTransferTransaction = builder.creditTransferTransaction;
         this.supplementaryData = builder.supplementaryData;
-        }
+    }
 
     public static class Builder {
         private String paymentInformationId;
@@ -45,9 +45,10 @@ public class CreatePaymentRequest {
         private int numberOfTransactions;
         private PartyIdentificationEntity initiatingParty;
         private PaymentTypeInformationEntity paymentTypeInformation;
-        private PartyIdentificationEntity debtor;
         private DebtorAccountEntity debtorAccount;
+        private String chargeBearer;
         private BeneficiaryEntity beneficiary;
+        private String requestedExecutionDate;
         private List<CreditTransferTransactionEntity> creditTransferTransaction;
         private SupplementaryDataEntity supplementaryData;
 
@@ -82,11 +83,20 @@ public class CreatePaymentRequest {
             return this;
         }
 
+        public Builder withChargeBearer(String chargeBearer) {
+            this.chargeBearer = chargeBearer;
+            return this;
+        }
+
         public Builder withBeneficiary(BeneficiaryEntity beneficiary) {
             this.beneficiary = beneficiary;
             return this;
         }
 
+        public Builder withRequestedExecutionDate(String requestedExecutionDate) {
+            this.requestedExecutionDate = requestedExecutionDate;
+            return this;
+        }
 
         public Builder withCreditTransferTransaction(
                 List<CreditTransferTransactionEntity> creditTransferTransaction) {
@@ -103,6 +113,4 @@ public class CreatePaymentRequest {
             return new CreatePaymentRequest(this);
         }
     }
-
-    }
-
+}

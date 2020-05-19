@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.Urls.BASE_URL;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.Urls.AIS_BASE_URL;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.Urls.TRUSTED_BENEFICIARIES_PATH;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.ACCESS_TOKEN;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.BEARER_HEADER_VALUE;
@@ -84,7 +84,7 @@ public class SocieteGeneraleApiClientTest {
         // given
         final TrustedBeneficiariesResponse expectedResponse =
                 createTrustedBeneficiariesPage2Response();
-        final URL nextPageUrl = new URL(BASE_URL + NEXT_PAGE_PATH);
+        final URL nextPageUrl = new URL(AIS_BASE_URL + NEXT_PAGE_PATH);
 
         setUpHttpClientMockForApi(nextPageUrl, expectedResponse);
 

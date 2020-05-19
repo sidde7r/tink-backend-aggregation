@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class GetPaymentLinksEntity {
-
     private Href request;
     private Href confirmation;
 }

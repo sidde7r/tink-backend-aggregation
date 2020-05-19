@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale;
 
 import com.google.inject.Inject;
 import java.util.List;
-import se.tink.backend.agents.rpc.Account;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -48,17 +48,16 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
     private final SocieteGeneraleApiClient apiClient;
     private final SocieteGeneraleAuthenticator authenticator;
 
-    private TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
-    private SignatureHeaderProvider signatureHeaderProvider;
-    final SocieteGeneraleConfiguration societeGeneraleConfiguration;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
+    private final SignatureHeaderProvider signatureHeaderProvider;
+    private final SocieteGeneraleConfiguration societeGeneraleConfiguration;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
     public SocieteGeneraleAgent(
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
-
-
 
         societeGeneraleConfiguration = getConfiguration();
         signatureHeaderProvider =
@@ -172,6 +171,10 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
         return Optional.of(
                 new PaymentController(
                         new SocieteGeneralePaymentExecutor(
-                                apiClient, societeGeneraleConfiguration.getRedirectUrl())));
+                                apiClient,
+                                societeGeneraleConfiguration.getRedirectUrl(),
+                                sessionStorage,
+                                supplementalInformationHelper,
+                                strongAuthenticationState)));
     }
 }

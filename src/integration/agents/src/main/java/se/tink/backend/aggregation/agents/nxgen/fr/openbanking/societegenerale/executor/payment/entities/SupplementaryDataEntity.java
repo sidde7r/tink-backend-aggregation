@@ -1,21 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @JsonObject
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class SupplementaryDataEntity {
     private List<String> acceptedAuthenticationApproach;
     private String successfulReportUrl;
     private String unsuccessfulReportUrl;
 
-
     @JsonIgnore
-    public static SupplementaryDataEntity of(PaymentRequest paymentRequest,String redirectUrl) {
+    public static SupplementaryDataEntity of(PaymentRequest paymentRequest, String redirectUrl) {
         List<String> authenticationApproach = new ArrayList<>();
         authenticationApproach.add("REDIRECT");
         return new SupplementaryDataEntity.Builder()
@@ -30,8 +34,6 @@ public class SupplementaryDataEntity {
         this.successfulReportUrl = builder.successfulReportUrl;
         this.unsuccessfulReportUrl = builder.unsuccessfulReportUrl;
     }
-
-    public SupplementaryDataEntity() {}
 
     public static class Builder {
         private List<String> acceptedAuthenticationApproach;

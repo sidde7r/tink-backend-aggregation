@@ -9,4 +9,12 @@ public class PaymentAuthorizationCancelledByUserException extends PaymentAuthori
     public PaymentAuthorizationCancelledByUserException(OpenIdError openIdError) {
         super(openIdError, MESSAGE);
     }
+
+    public PaymentAuthorizationCancelledByUserException(String message) {
+        super(message);
+    }
+
+    public PaymentAuthorizationCancelledByUserException() {
+        this(MESSAGE);
+    }
 }

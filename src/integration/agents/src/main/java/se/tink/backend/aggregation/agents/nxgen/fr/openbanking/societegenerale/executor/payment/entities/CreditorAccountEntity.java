@@ -1,21 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 @JsonObject
 public class CreditorAccountEntity {
 
     private String iban;
-
-    @JsonIgnore
-    public CreditorAccountEntity(String iban) {
-        this.iban = iban;
-    }
-
-    public CreditorAccountEntity() {}
-
-    public String getIban() {
-        return iban;
-    }
 }

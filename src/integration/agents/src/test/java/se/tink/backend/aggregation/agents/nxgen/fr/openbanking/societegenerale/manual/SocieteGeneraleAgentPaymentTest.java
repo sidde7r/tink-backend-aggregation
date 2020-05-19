@@ -1,8 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.manual;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -14,18 +17,13 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-
-
-public class SpcieteGeneraleAgentPaymentTest {
+public class SocieteGeneraleAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
 
     private final ArgumentManager<ArgumentManager.PsuIdArgumentEnum> manager =
             new ArgumentManager<>(ArgumentManager.PsuIdArgumentEnum.values());
-    private final ArgumentManager<SpcieteGeneraleAgentPaymentTest.Arg> creditorDebtorManager =
-            new ArgumentManager<>(SpcieteGeneraleAgentPaymentTest.Arg.values());
+    private final ArgumentManager<SocieteGeneraleAgentPaymentTest.Arg> creditorDebtorManager =
+            new ArgumentManager<>(SocieteGeneraleAgentPaymentTest.Arg.values());
 
     @Before
     public void setup() throws Exception {
@@ -49,12 +47,14 @@ public class SpcieteGeneraleAgentPaymentTest {
     private List<Payment> createRealDomesticPayment() {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(SpcieteGeneraleAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+                        creditorDebtorManager.get(
+                                SocieteGeneraleAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
         Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(SpcieteGeneraleAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+                        creditorDebtorManager.get(
+                                SocieteGeneraleAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
         Debtor debtor = new Debtor(debtorAccountIdentifier);
 
         Reference reference = new Reference("Message", "ReferenceToCreditor");
@@ -70,6 +70,7 @@ public class SpcieteGeneraleAgentPaymentTest {
                         .withExecutionDate(executionDate)
                         .withCurrency(currency)
                         .withReference(reference)
+                        .withUniqueId(UUID.randomUUID().toString())
                         .build());
     }
 
