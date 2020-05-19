@@ -14,11 +14,6 @@ public class BPSondrioAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return BPSondrioConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new BPSondrioApiClient(
                 client, persistentStorage, sessionStorage, requestManual, temporaryStorage);

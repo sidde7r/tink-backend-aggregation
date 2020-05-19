@@ -36,7 +36,6 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     protected final CrosskeyBaseApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private final String clientName;
 
     public CrosskeyBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -52,13 +51,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         new CreditCardTransactionFetcher(apiClient));
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        this.clientName = request.getProvider().getPayload();
     }
-
-    protected abstract String getIntegrationName();
-
-    protected abstract String getClientName();
 
     protected abstract String getxFapiFinancialId();
 

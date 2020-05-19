@@ -11,9 +11,4 @@ public class CredemAgent extends CbiGlobeAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return CredemConstants.INTEGRATION_NAME;
-    }
 }

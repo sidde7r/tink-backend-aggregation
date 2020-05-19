@@ -15,11 +15,6 @@ public class SandboxAgent extends RedsysAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return "redsys-sandbox";
-    }
-
-    @Override
     public String getAspspCode() {
         return "redsys";
     }

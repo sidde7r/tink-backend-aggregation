@@ -20,11 +20,6 @@ public class FideuramAgent extends CbiGlobeAgent
     }
 
     @Override
-    protected String getIntegrationName() {
-        return FideuramConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
                 CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);

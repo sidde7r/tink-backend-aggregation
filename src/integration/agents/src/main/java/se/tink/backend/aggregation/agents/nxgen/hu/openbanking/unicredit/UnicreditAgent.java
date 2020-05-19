@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit;
 
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.UnicreditConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.UnicreditAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.unicredit.authenticator.UnicreditAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseAgent;
@@ -17,11 +16,6 @@ public class UnicreditAgent extends UnicreditBaseAgent {
     public UnicreditAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getIntegrationName() {
-        return Market.INTEGRATION_NAME;
     }
 
     @Override

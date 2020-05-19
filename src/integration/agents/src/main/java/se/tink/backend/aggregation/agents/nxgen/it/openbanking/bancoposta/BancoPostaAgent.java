@@ -21,11 +21,6 @@ public class BancoPostaAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return BancoPostaConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new BancoPostaApiClient(
                 client, persistentStorage, sessionStorage, requestManual, temporaryStorage);

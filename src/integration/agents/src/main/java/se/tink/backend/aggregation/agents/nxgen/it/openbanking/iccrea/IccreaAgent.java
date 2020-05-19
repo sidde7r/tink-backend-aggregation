@@ -11,16 +11,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IccreaAgent extends CbiGlobeAgent {
 
-    public static final String INTEGRATION_NAME = "iccrea";
-
     public IccreaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getIntegrationName() {
-        return INTEGRATION_NAME;
     }
 
     @Override

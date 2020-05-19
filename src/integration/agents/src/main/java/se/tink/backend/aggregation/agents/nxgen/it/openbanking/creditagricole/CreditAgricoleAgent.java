@@ -11,9 +11,4 @@ public class CreditAgricoleAgent extends CbiGlobeAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return CreditAgricoleConstants.INTEGRATION_NAME;
-    }
 }

@@ -21,7 +21,6 @@ public class FintechblocksConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String INVALID_ACCOUNT_TYPE = "Invalid account type.";
         public static final String MISSING_REFRESH_TOKEN = "Refresh token is missing.";
-        public static final String MISSING_AUTHENTICATOR = "Authenticator is missing.";
     }
 
     public static class ApiService {

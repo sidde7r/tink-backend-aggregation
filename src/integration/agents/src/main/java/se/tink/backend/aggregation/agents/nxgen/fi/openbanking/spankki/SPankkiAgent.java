@@ -7,23 +7,15 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SPankkiAgent extends CrosskeyBaseAgent {
 
+    private static final String X_FAPI_FINANCIAL_ID = "s-pankki";
+
     public SPankkiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
     @Override
-    public String getIntegrationName() {
-        return SPankkiConstants.Market.INTEGRATION_NAME;
-    }
-
-    @Override
-    public String getClientName() {
-        return SPankkiConstants.Market.CLIENT_NAME;
-    }
-
-    @Override
     protected String getxFapiFinancialId() {
-        return SPankkiConstants.X_FAPI_FINANCIAL_ID;
+        return X_FAPI_FINANCIAL_ID;
     }
 }

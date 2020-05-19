@@ -5,8 +5,6 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public abstract class BnpParibasFortisConstants {
 
-    public static final String INTEGRATION_NAME = "bnpparibasfortis";
-
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CACC")

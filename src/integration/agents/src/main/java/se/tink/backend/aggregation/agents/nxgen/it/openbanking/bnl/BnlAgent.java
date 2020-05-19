@@ -17,11 +17,6 @@ public class BnlAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return BnlConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
                 CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);

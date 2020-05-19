@@ -20,11 +20,6 @@ public class IspAgent extends CbiGlobeAgent
     }
 
     @Override
-    protected String getIntegrationName() {
-        return IspConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CbiGlobeTransactionalAccountFetcher accountFetcher =
                 CbiGlobeTransactionalAccountFetcher.createFromBooked(apiClient, persistentStorage);

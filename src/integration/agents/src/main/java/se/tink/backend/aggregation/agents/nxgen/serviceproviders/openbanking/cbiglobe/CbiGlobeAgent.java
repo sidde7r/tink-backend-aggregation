@@ -41,7 +41,6 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshTransferDestinationExecutor {
 
-    protected final String clientName;
     protected CbiGlobeApiClient apiClient;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected TemporaryStorage temporaryStorage;
@@ -54,7 +53,6 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
 
         temporaryStorage = new TemporaryStorage();
         apiClient = getApiClient(request.isManual());
-        clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         userState = new CbiUserState(persistentStorage, sessionStorage);
         authenticator = getAuthenticator();
@@ -65,8 +63,6 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     private void applyFilters(TinkHttpClient client) {
         client.addFilter(new AccessExceededFilter());
     }
-
-    protected abstract String getIntegrationName();
 
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new CbiGlobeApiClient(
