@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.bancoposta;
 
 public final class BancoPostaConstants {
-    public static final String INTEGRATION_NAME = "bancoposta";
 
     private BancoPostaConstants() {
         throw new AssertionError();

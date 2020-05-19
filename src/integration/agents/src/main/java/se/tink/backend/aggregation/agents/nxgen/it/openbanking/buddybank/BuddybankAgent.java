@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.BuddybankConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.authenticator.BuddybankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.buddybank.payment.executor.BuddybankPaymentController;
@@ -19,11 +18,6 @@ public class BuddybankAgent extends UnicreditBaseAgent {
     public BuddybankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-    }
-
-    @Override
-    protected String getIntegrationName() {
-        return Market.INTEGRATION_NAME;
     }
 
     @Override

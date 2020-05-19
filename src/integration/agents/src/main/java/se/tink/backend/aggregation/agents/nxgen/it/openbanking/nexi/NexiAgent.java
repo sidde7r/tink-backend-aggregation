@@ -18,11 +18,6 @@ public class NexiAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return NexiConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new NexiApiClient(
                 client, persistentStorage, sessionStorage, requestManual, temporaryStorage);

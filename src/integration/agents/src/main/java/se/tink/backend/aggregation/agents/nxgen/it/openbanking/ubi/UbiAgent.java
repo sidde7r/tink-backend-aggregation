@@ -16,11 +16,6 @@ public class UbiAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return UbiConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
         if (authenticator == null) {
             authenticator =

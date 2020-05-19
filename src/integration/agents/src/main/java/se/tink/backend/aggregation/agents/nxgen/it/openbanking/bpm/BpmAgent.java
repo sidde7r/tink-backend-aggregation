@@ -18,9 +18,4 @@ public class BpmAgent extends CbiGlobeAgent {
         return new BpmApiClient(
                 client, persistentStorage, sessionStorage, requestManual, temporaryStorage);
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return BpmConstants.INTEGRATION_NAME;
-    }
 }

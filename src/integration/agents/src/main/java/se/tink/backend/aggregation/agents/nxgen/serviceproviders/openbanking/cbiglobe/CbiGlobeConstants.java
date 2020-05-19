@@ -1,19 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class CbiGlobeConstants {
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
-                    .put(AccountTypes.SAVINGS, "some_string2_the_integratee_uses")
-                    .put(AccountTypes.CREDIT_CARD, "some_string3_the_integratee_uses")
-                    .ignoreKeys("some_string4_the_integratee_uses")
-                    .build();
 
     private CbiGlobeConstants() {
         throw new AssertionError();

@@ -7,23 +7,15 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AlandsbankenAgent extends CrosskeyBaseAgent {
 
+    private static final String X_FAPI_FINANCIAL_ID = "alandsbanken-fi";
+
     public AlandsbankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
     @Override
-    public String getIntegrationName() {
-        return AlandsbankenConstants.Market.INTEGRATION_NAME;
-    }
-
-    @Override
-    public String getClientName() {
-        return AlandsbankenConstants.Market.CLIENT_NAME;
-    }
-
-    @Override
     protected String getxFapiFinancialId() {
-        return AlandsbankenConstants.X_FAPI_FINANCIAL_ID;
+        return X_FAPI_FINANCIAL_ID;
     }
 }

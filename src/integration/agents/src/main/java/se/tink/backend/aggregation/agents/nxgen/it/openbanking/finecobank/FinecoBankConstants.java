@@ -8,8 +8,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class FinecoBankConstants {
 
-    public static final String INTEGRATION_NAME = "finecobank";
-
     private FinecoBankConstants() {
         throw new AssertionError();
     }

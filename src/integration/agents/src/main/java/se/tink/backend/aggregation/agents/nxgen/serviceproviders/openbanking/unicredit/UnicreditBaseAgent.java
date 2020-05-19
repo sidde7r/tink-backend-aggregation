@@ -35,7 +35,6 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshTransferDestinationExecutor {
 
-    private final String clientName;
     protected final UnicreditBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AutoAuthenticationController authenticator;
@@ -45,12 +44,8 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         apiClient = getApiClient(request.isManual());
-        clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
-
-    protected abstract String getIntegrationName();
 
     protected abstract UnicreditBaseApiClient getApiClient(boolean manualRequest);
 

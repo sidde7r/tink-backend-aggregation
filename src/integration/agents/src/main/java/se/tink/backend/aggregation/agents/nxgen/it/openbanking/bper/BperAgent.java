@@ -11,9 +11,4 @@ public class BperAgent extends CbiGlobeAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return BperConstants.INTEGRATION_NAME;
-    }
 }

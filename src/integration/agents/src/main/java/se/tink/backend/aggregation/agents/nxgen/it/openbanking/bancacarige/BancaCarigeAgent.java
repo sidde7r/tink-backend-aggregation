@@ -13,11 +13,6 @@ public class BancaCarigeAgent extends CbiGlobeAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return BancaCarigeConstants.INTEGRATION_NAME;
-    }
-
-    @Override
     protected CbiGlobeApiClient getApiClient(boolean requestManual) {
         return new BancaCarigeApiClient(
                 client, persistentStorage, sessionStorage, requestManual, temporaryStorage);

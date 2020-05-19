@@ -32,7 +32,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class PayPalAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
-    private final String clientName;
     private final PayPalApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -40,9 +39,7 @@ public final class PayPalAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new PayPalApiClient(client, persistentStorage);
-        clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
         apiClient.setConfiguration(getClientConfiguration());
     }
 

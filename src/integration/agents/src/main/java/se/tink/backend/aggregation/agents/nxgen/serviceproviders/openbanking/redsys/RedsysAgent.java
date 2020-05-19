@@ -38,7 +38,6 @@ public abstract class RedsysAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 AspspConfiguration {
 
-    private final String clientName;
     private final RedsysApiClient apiClient;
     private final RedsysConsentStorage consentStorage;
 
@@ -62,7 +61,6 @@ public abstract class RedsysAgent extends NextGenerationAgent
                         consentStorage,
                         supplementalInformationHelper,
                         strongAuthenticationState);
-        clientName = request.getProvider().getPayload();
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -74,10 +72,6 @@ public abstract class RedsysAgent extends NextGenerationAgent
                 getAgentConfigurationController().getAgentConfiguration(RedsysConfiguration.class);
         apiClient.setConfiguration(redsysConfiguration, configuration.getEidasProxy());
         apiClient.setPsuIpAddress(HeaderValues.PSU_IP_ADDRESS);
-    }
-
-    protected String getIntegrationName() {
-        return RedsysConstants.INTEGRATION_NAME;
     }
 
     @Override

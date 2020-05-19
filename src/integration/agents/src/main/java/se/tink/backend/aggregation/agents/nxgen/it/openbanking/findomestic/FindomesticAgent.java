@@ -11,9 +11,4 @@ public class FindomesticAgent extends CbiGlobeAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
-
-    @Override
-    protected String getIntegrationName() {
-        return FindomesticConstants.INTEGRATION_NAME;
-    }
 }

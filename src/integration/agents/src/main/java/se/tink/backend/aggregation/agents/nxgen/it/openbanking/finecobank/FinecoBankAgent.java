@@ -33,7 +33,6 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor {
 
-    private final String clientName;
     private final FinecoBankApiClient apiClient;
     private final FinecoBankConfiguration finecoBankConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -46,8 +45,6 @@ public final class FinecoBankAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        this.clientName = request.getProvider().getPayload();
-
         this.finecoBankConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(FinecoBankConfiguration.class);
@@ -57,9 +54,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 new FinecoBankApiClient(client, persistentStorage, this.finecoBankConfiguration);
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
-
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
         this.creditCardRefreshController = getCreditCardRefreshController();
     }
 

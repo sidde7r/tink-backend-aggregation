@@ -5,8 +5,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class ArgentaConstants {
 
-    public static final String INTEGRATION_NAME = "argenta";
-
     private ArgentaConstants() {
         throw new AssertionError();
     }

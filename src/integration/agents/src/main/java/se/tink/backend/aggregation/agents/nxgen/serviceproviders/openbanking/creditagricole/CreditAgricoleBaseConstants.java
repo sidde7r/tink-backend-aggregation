@@ -4,8 +4,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 public final class CreditAgricoleBaseConstants {
 
-    public static final String INTEGRATION_NAME = "creditagricole";
-
     private CreditAgricoleBaseConstants() {
         throw new AssertionError();
     }
