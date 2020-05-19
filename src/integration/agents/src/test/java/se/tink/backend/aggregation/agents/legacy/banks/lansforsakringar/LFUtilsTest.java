@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 import org.junit.Assert;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.Recipient
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionEntity;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.i18n.Catalog;
 
 public class LFUtilsTest {
     @Test
@@ -233,5 +235,12 @@ public class LFUtilsTest {
         transaction.setDate(new Date(1488150000000L));
 
         Assert.assertFalse(LFUtils.isSamePayment(paymentRequest, transaction));
+    }
+
+    @Test
+    public void testCorrectTranslationDep() {
+        assertEquals(
+                "Mottagarkontot är inte giltigt",
+                Catalog.getCatalog("sv_SE").getString("Invalid destination account"));
     }
 }
