@@ -732,7 +732,7 @@ spec:
     expr: 100 * ((sum(increase(tink_temporary_errors_total[1h])) BY (provider)) /
       (sum(increase(tink_executions_total[1h])) BY (provider)))
 
-# PAY2-412 Experiments
+# Payments SE market dashboard
   - record: sum:tink_transfers_in_sweden:delta15m
     expr: sum(increase(tink_agent_transfer_total{market="SE"}[15m])) or on() vector(0)
 
@@ -756,3 +756,17 @@ spec:
 
   - record: sum:tink_cancelled_transfers_in_sweden:delta12h
     expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled"}[12h])) or on() vector(0)
+
+  # TODO increase the threshold when we go live with a Swedish customer
+  - record: thresold:tink_transfers_in_sweden:lowerBound12h
+    expr: vector(5)
+
+  - alert: TransferCountLowerThanExpectedLowerBound
+    expr: sum:tink_transfers_in_sweden:delta12h < thresold:tink_transfers_in_sweden:lowerBound12h
+    labels:
+      severity: urgent
+      who: payments
+      priority: P4
+    annotations:
+      description: Aggregation service saw fewer than expected minumum number of transfers in 12h time window.
+      summary: Number of transfers happened in the last 12 hours is below historical threshold.
