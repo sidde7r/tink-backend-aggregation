@@ -72,7 +72,7 @@ public class SocieteGeneraleAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SocieteGeneraleSessionHandler(apiClient);
+        return SessionHandler.alwaysFail();
     }
 
     private void checkDeviceId() {
