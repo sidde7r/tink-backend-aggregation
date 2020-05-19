@@ -1,13 +1,17 @@
 load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 
 junit_test(
-    name = "seb",
+    name = "manual",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:agents",
         "//data:aggregation_test",
         "//data:provider_configurations",
         "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
