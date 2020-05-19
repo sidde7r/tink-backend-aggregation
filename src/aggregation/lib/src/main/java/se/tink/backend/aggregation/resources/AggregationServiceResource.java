@@ -344,15 +344,10 @@ public class AggregationServiceResource implements AggregationService {
                         .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
                         // Trying to get rid of possible sandbox providers if they exist.
                         .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
-                        // To remove business provider if any.
-                        .filter(
-                                prv ->
-                                        !StringUtils.containsIgnoreCase(
-                                                prv.getType().name(), "BUSINESS_BANK"))
                         .collect(Collectors.toList());
 
         Preconditions.checkState(
-                filteredProviders.size() == 1,
+                validateFilteredProviders(filteredProviders),
                 String.format(
                         "Trying to validate secrets. Should find 1 provider for financialInstituionId : %s, but found instead : %d",
                         financialInstitutionId, filteredProviders.size()));
@@ -365,5 +360,19 @@ public class AggregationServiceResource implements AggregationService {
                         request.getExcludedSensitiveSecretsNames(),
                         request.getAgentConfigParamNames(),
                         request.getExcludedAgentConfigParamNames());
+    }
+
+    private boolean validateFilteredProviders(List<ProviderConfiguration> filteredProviders) {
+        if (filteredProviders.size() == 1) {
+            return true;
+        }
+        // This is the case there are two open banking provider share the same FIID, same secrets.
+        // E.g. one private provider and one business provider
+        return filteredProviders.stream()
+                        .map(ProviderConfiguration::getFinancialInstitutionName)
+                        .distinct()
+                        .limit(2)
+                        .count()
+                == 1;
     }
 }
