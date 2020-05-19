@@ -58,7 +58,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final String EIDAS_CLUSTER_ID_HEADER = "X-Tink-QWAC-ClusterId";
     private static final String EIDAS_APPID_HEADER = "X-Tink-QWAC-AppId";
     // TODO: Make a lib for these shared headers
-    private static final String EIDAS_CERTID_HEADER = "X-Tink-QSealC-CertId";
+    private static final String EIDAS_CERTID_HEADER = "X-Tink-QWAC-CertId";
     private static final String EIDAS_PROXY_REQUESTER = "X-Tink-Debug-ProxyRequester";
 
     private static final ImmutableSet<String> ALLOWED_CLUSTERIDS_FOR_QSEALCSIGN =
