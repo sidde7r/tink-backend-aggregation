@@ -3,6 +3,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 junit_test(
     name = "service",
     srcs = glob(["*.java"]),
+    classpath_resources = [
+        # This will place it at bazel-out/k8-fastbuild/bin/src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/service.jar:testcontainers.properties
+        "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/resources",
+    ],
     data = [
         "//data:agents",
         "//src/aggregation/fake_aggregation_controller/src/main/java/se/tink/backend/fake_aggregation_controller:image.tar",
