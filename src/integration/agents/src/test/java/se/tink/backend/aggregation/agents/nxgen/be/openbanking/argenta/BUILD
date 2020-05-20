@@ -2,13 +2,8 @@ load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 
 junit_test(
     name = "argenta",
-    srcs = glob(["*.java"]),
-    data = [
-        "//data:aggregation_test",
-        "//data:cryptography_test",
-        "//data:provider_configurations",
-        "//etc:development",
-    ],
+    srcs = glob(["agent/*.java"]),
+    data = ["//:agent_test_data"],
     tags = [
         "external",
         "manual",
@@ -17,13 +12,44 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/argenta",
         "//src/integration/amount",
-        "//src/integration/lib",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
-        "//src/integration/models",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)
+
+junit_test(
+    name = "argenta_unit_tests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["agent/**/*.java"],
+    ),
+    data = [
+        "//data:aggregation_test",
+        "//data:provider_configurations",
+    ],
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//third_party:asm_asm",
+    ],
+    deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/openbanking/argenta",
+        "//src/integration/amount",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/eidas/proxy",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidassigner/identity",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/refresh",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/account",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/core/authentication",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/filter/filterable/request",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/serialization",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
     ],
 )
