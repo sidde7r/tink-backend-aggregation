@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 @JsonObject
 public class AssetsDetailPositionDto {
 
+    private static final Double ZERO = Double.valueOf(0);
+
     private TypeValuePair groupId;
     private TypeValuePair presentation;
     private TypeValuePair currentValue;
@@ -68,34 +70,38 @@ public class AssetsDetailPositionDto {
         return Optional.ofNullable(presentIndicativeRate)
                 .map(TypeValuePair::getValue)
                 .map(Double::valueOf)
-                .orElse(0.0);
+                .orElse(ZERO);
     }
 
     public Double toMarketValue() {
         return Optional.ofNullable(marketValue)
                 .map(TypeValuePair::getValue)
                 .map(Double::valueOf)
-                .orElse(0.0);
+                .orElse(ZERO);
     }
 
     public Double toProfit() {
         return Optional.ofNullable(notRealisedValue)
                 .map(TypeValuePair::getValue)
                 .map(Double::valueOf)
-                .orElse(0.0);
+                .orElse(ZERO);
     }
 
     private Double toQuantity() {
         return Optional.ofNullable(numberValue)
                 .map(TypeValuePair::getValue)
                 .map(Double::valueOf)
-                .orElse(0.0);
+                .orElse(ZERO);
     }
 
     private Double toAverageAcquisitionPrice() {
+        Double quantity = toQuantity();
+        if (quantity.equals(ZERO)) {
+            return ZERO;
+        }
         Double aap = (toMarketValue() - toProfit()) / toQuantity();
-        if (aap < 0) {
-            return 0.0;
+        if (aap.compareTo(ZERO) < 0) {
+            return ZERO;
         }
         return aap;
     }
