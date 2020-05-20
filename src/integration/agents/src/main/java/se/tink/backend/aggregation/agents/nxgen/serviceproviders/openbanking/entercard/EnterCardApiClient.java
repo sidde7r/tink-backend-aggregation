@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -181,5 +182,14 @@ public final class EnterCardApiClient {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(EnterCardPaymentInitiationResponse.class, paymentInitiationRequest);
+    }
+
+    public OAuth2Token getPersistRefreshToken() {
+        return persistentStorage
+                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () ->
+                                new NoSuchElementException(
+                                        "Cannot refresh access token, could not fetch persisted token object"));
     }
 }
