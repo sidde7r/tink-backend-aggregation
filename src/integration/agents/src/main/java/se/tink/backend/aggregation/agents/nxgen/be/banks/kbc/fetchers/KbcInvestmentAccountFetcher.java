@@ -20,6 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.Invest
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.investment.InvestmentBalanceStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.investment.InvestmentBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -107,8 +109,11 @@ public class KbcInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
                         .flatMap(List::stream)
                         .collect(Collectors.toList());
 
-        return InvestmentAccount.nxBuilder()
-                .withPortfolios(portfolioModules)
+        InvestmentBalanceStep<InvestmentBuildStep> investmentBalanceStepBuilder =
+                portfolioModules.isEmpty()
+                        ? InvestmentAccount.nxBuilder().withoutPortfolios()
+                        : InvestmentAccount.nxBuilder().withPortfolios(portfolioModules);
+        return investmentBalanceStepBuilder
                 .withCashBalance(cashBalance)
                 .withId(investmentEntry.getKey())
                 .build();
