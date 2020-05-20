@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.authenticator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
@@ -13,6 +15,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class EnterCardAuthenticator implements OAuth2Authenticator {
+
+    private final Logger logger = LoggerFactory.getLogger(EnterCardAuthenticator.class);
 
     private final EnterCardApiClient apiClient;
     private final EnterCardConfiguration configuration;
@@ -42,7 +46,22 @@ public class EnterCardAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        return apiClient.refreshToken(refreshToken);
+        logger.info("Entercard - Refreshing access token call");
+
+        // TODO temporary log: input parameter refresh token
+        logger.info("Entercard - input parameter refresh token: {}", refreshToken.hashCode());
+
+        OAuth2Token persistedRefreshToken = apiClient.getPersistRefreshToken();
+        // TODO temporary log: to trace persist refresh token
+        logger.info(
+                "Entercard - get persist refresh token: {}",
+                persistedRefreshToken.getRefreshToken().get().hashCode());
+
+        OAuth2Token token = apiClient.refreshToken(refreshToken);
+
+        // TODO temporary log to trace new refresh token
+        logger.info("Entercard - get new refresh token: {}", token.getRefreshToken().hashCode());
+        return token;
     }
 
     @Override
