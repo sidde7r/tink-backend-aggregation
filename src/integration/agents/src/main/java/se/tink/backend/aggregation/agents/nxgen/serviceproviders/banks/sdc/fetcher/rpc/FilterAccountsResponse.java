@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities.SdcAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities.SdcCreditCardEntity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -17,10 +18,11 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class FilterAccountsResponse extends ArrayList<SdcAccount> {
 
     @JsonIgnore
-    public Collection<TransactionalAccount> getTinkAccounts() {
+    public Collection<TransactionalAccount> getTinkAccounts(
+            final AccountNumberToIbanConverter converter) {
         return stream()
                 .filter(SdcAccount::isTransactionalAccount)
-                .map(SdcAccount::toTinkAccount)
+                .map(a -> a.toTinkAccount(converter))
                 .collect(Collectors.toList());
     }
 

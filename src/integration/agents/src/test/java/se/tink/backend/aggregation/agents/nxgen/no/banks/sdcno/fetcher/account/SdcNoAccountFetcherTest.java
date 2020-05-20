@@ -14,6 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -31,7 +32,7 @@ public class SdcNoAccountFetcherTest {
     @Before
     public void setUp() {
         client = mock(SdcNoApiClient.class);
-        fetcher = new SdcNoAccountFetcher(client);
+        fetcher = new SdcNoAccountFetcher(client, accountNumber -> accountNumber);
     }
 
     @Test
@@ -40,7 +41,7 @@ public class SdcNoAccountFetcherTest {
         TransactionalAccount transactionalAccount = transactionalAccount();
         // and
         FilterAccountsResponse response = mock(FilterAccountsResponse.class);
-        given(response.getTinkAccounts())
+        given(response.getTinkAccounts(any(AccountNumberToIbanConverter.class)))
                 .willReturn(Collections.singletonList(transactionalAccount));
         // and
         given(client.filterAccounts(any(FilterAccountsRequest.class))).willReturn(response);
@@ -62,7 +63,7 @@ public class SdcNoAccountFetcherTest {
 
     private TransactionalAccount transactionalAccount() {
         return TransactionalAccount.builder(
-                        AccountTypes.CHECKING, "sample id", ExactCurrencyAmount.inEUR(12.34d))
+                        AccountTypes.CHECKING, "sampleid", ExactCurrencyAmount.inEUR(12.34d))
                 .setAccountNumber("sample account number")
                 .setName("sample name")
                 .setBankIdentifier("sample bank identifier")

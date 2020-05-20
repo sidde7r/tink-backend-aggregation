@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SdcServiceConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SessionStorageAgreement;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.entities.SessionStorageAgreements;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.FilterAccountsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -15,8 +16,14 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class SdcAccountFetcher extends SdcAgreementFetcher
         implements AccountFetcher<TransactionalAccount> {
 
-    public SdcAccountFetcher(SdcApiClient bankClient, SdcSessionStorage sessionStorage) {
+    private final AccountNumberToIbanConverter converter;
+
+    public SdcAccountFetcher(
+            SdcApiClient bankClient,
+            SdcSessionStorage sessionStorage,
+            AccountNumberToIbanConverter converter) {
         super(bankClient, sessionStorage);
+        this.converter = converter;
     }
 
     @Override
@@ -57,6 +64,6 @@ public class SdcAccountFetcher extends SdcAgreementFetcher
                         .setOnlyFavorites(false)
                         .setOnlyQueryable(true);
 
-        return bankClient.filterAccounts(request).getTinkAccounts();
+        return bankClient.filterAccounts(request).getTinkAccounts(converter);
     }
 }
