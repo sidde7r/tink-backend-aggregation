@@ -4,6 +4,8 @@ import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.entites.LoginDataEntity;
@@ -26,12 +28,14 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class BnpParibasApiClient {
     private final TinkHttpClient client;
+    private static final Logger log = LoggerFactory.getLogger(BnpParibasApiClient.class);
 
     public BnpParibasApiClient(TinkHttpClient client) {
         this.client = client;
     }
 
     public NumpadDataEntity getNumpadParams() {
+        log.info("Enter getNumpadParams()");
         NumpadRequest formBody = NumpadRequest.create();
 
         NumpadResponse response =
@@ -41,6 +45,7 @@ public class BnpParibasApiClient {
 
         response.assertReturnCodeOk();
 
+        log.info("Leave getNumpadParams()");
         return response.getData();
     }
 
@@ -50,6 +55,7 @@ public class BnpParibasApiClient {
             String passwordIndices,
             BnpParibasPersistentStorage bnpParibasPersistentStorage)
             throws LoginException {
+        log.info("Enter login()");
         LoginRequest formBody =
                 LoginRequest.create(username, gridId, passwordIndices, bnpParibasPersistentStorage);
 
@@ -65,18 +71,22 @@ public class BnpParibasApiClient {
         }
         response.assertReturnCodeOk();
 
+        log.info("Leave login()");
         return response.getData();
     }
 
     public void keepAlive() {
+        log.info("Enter keepAlive()");
         BaseResponse response =
                 client.request(BnpParibasConstants.Urls.KEEP_ALIVE).get(BaseResponse.class);
 
         response.assertReturnCodeOk();
+        log.info("Leave keepAlive()");
     }
 
     public AccountTransactionsEntity getTransactionalAccountTransactions(
             Date fromDate, Date toDate, String ibanKey) {
+        log.info("Enter getTransactionalAccountTransactions()");
 
         TransactionalAccountTransactionsRequest request =
                 TransactionalAccountTransactionsRequest.create(fromDate, toDate, ibanKey);
@@ -88,19 +98,23 @@ public class BnpParibasApiClient {
 
         response.assertReturnCodeOk();
 
+        log.info("Leave getTransactionalAccountTransactions()");
         return response.getData().transactionsInfo().getAccountTransactions();
     }
 
     public InfoUdcEntity getAccounts() {
+        log.info("Enter getAccounts()");
         AccountsResponse response =
                 client.request(BnpParibasConstants.Urls.LIST_ACCOUNTS).get(AccountsResponse.class);
 
         response.assertReturnCodeOk();
 
+        log.info("Leave getAccounts()");
         return response.getData().getInfoUdc();
     }
 
     public List<TransactionAccountEntity> getAccountIbanDetails() {
+        log.info("Enter getAccountIbanDetails()");
         AccountIbanDetailsRequest request =
                 new AccountIbanDetailsRequest(
                         BnpParibasConstants.AccountIbanDetails.MODE_BENEFICIAIRE_TRUE);
@@ -111,6 +125,7 @@ public class BnpParibasApiClient {
 
         ibanDetailsResponse.assertReturnCodeOk();
 
+        log.info("Leave getAccountIbanDetails()");
         return ibanDetailsResponse.getData().getTransferInfo().getCreditAccountsList();
     }
 }
