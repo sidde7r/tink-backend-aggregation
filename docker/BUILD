@@ -14,6 +14,13 @@ container_layer(
     ],
 )
 
+container_layer(
+    name = "libtesseract_installer",
+    debs = [
+        "@libtesseract-dev_4.0.0-2//file",
+    ],
+)
+
 container_image(
     name = "aggregation_image",
     base = "@openjdk_jdk8//image",
@@ -27,6 +34,7 @@ container_image(
     ],
     layers = [
         ":libm4ri_installer",
+        ":libtesseract_installer",
     ],
     tars = [
         "//deb:aggregation_bin_tar",
