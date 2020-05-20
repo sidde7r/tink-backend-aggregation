@@ -104,15 +104,18 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                                         new NoSuchElementException(
                                                 "Cannot refresh access token, could not fetch old token object"));
 
-        refreshToken =
+        final String persistToken =
                 oldToken.getRefreshToken()
                         .orElseThrow(
                                 () ->
                                         new NoSuchElementException(
                                                 "Cannot refresh access token, could not fetch refresh token from old token object"));
 
+        // TODO temporary log input parameter refresh token
+        logger.info("Volksbank - input parameter refresh token: {}", refreshToken.hashCode());
+
         // TODO temporary log to trace persist refresh token
-        logger.info("Volksbank - get persist refresh token: {}", refreshToken.hashCode());
+        logger.info("Volksbank - get persist refresh token: {}", persistToken.hashCode());
 
         URL url =
                 urlFactory
