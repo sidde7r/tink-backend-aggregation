@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrum
 @JsonObject
 public class AssetsDetailPositionDto {
 
+    private static final double ZERO = 0;
+
     private TypeValuePair groupId;
     private TypeValuePair presentation;
     private TypeValuePair currentValue;
@@ -64,38 +66,42 @@ public class AssetsDetailPositionDto {
         return Optional.ofNullable(productName).map(TypeValuePair::getValue).orElse("");
     }
 
-    public Double toMarketPrice() {
+    public double toMarketPrice() {
         return Optional.ofNullable(presentIndicativeRate)
                 .map(TypeValuePair::getValue)
-                .map(Double::valueOf)
-                .orElse(0.0);
+                .map(Double::parseDouble)
+                .orElse(ZERO);
     }
 
-    public Double toMarketValue() {
+    public double toMarketValue() {
         return Optional.ofNullable(marketValue)
                 .map(TypeValuePair::getValue)
-                .map(Double::valueOf)
-                .orElse(0.0);
+                .map(Double::parseDouble)
+                .orElse(ZERO);
     }
 
-    public Double toProfit() {
+    public double toProfit() {
         return Optional.ofNullable(notRealisedValue)
                 .map(TypeValuePair::getValue)
-                .map(Double::valueOf)
-                .orElse(0.0);
+                .map(Double::parseDouble)
+                .orElse(ZERO);
     }
 
     private Double toQuantity() {
         return Optional.ofNullable(numberValue)
                 .map(TypeValuePair::getValue)
-                .map(Double::valueOf)
-                .orElse(0.0);
+                .map(Double::parseDouble)
+                .orElse(ZERO);
     }
 
-    private Double toAverageAcquisitionPrice() {
-        Double aap = (toMarketValue() - toProfit()) / toQuantity();
-        if (aap < 0) {
-            return 0.0;
+    private double toAverageAcquisitionPrice() {
+        double quantity = toQuantity();
+        if (quantity == ZERO) {
+            return ZERO;
+        }
+        double aap = (toMarketValue() - toProfit()) / toQuantity();
+        if (aap < ZERO) {
+            return ZERO;
         }
         return aap;
     }
