@@ -24,6 +24,10 @@ public class BnpParibasConstants {
         public static final String IBAN_KEY = "ibanKey";
     }
 
+    public static final class Errors {
+        public static final String INCORRECT_CREDENTIALS = "201";
+    }
+
     public static final class Auth {
         // This has to be the user agent for transaction fetching to work
         public static final String USER_AGENT = "MesComptes/374 CFNetwork/1121.2.2 Darwin/19.3.0";

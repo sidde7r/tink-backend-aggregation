@@ -54,6 +54,13 @@ public class LoginDataEntity {
     @JsonProperty("codeMotifOrigineClient")
     private String codeOriginOriginCustomer;
 
+    @JsonProperty("errorCode")
+    private String errorCode;
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
     public String getStatus() {
         return status;
     }
