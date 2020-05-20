@@ -8,7 +8,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginResponse extends BaseResponse {
     private LoginDataEntity data;
 
+    private String errorCode;
+
     public LoginDataEntity getData() {
         return data;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
     }
 }

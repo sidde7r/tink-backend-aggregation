@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas;
 
+import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.entites.LoginDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.entites.NumpadDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.rpc.LoginRequest;
@@ -45,7 +48,8 @@ public class BnpParibasApiClient {
             String username,
             String gridId,
             String passwordIndices,
-            BnpParibasPersistentStorage bnpParibasPersistentStorage) {
+            BnpParibasPersistentStorage bnpParibasPersistentStorage)
+            throws LoginException {
         LoginRequest formBody =
                 LoginRequest.create(username, gridId, passwordIndices, bnpParibasPersistentStorage);
 
@@ -54,6 +58,11 @@ public class BnpParibasApiClient {
                         .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(LoginResponse.class);
 
+        if (!Strings.isNullOrEmpty(response.getErrorCode())
+                && response.getErrorCode()
+                        .equals(BnpParibasConstants.Errors.INCORRECT_CREDENTIALS)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
         response.assertReturnCodeOk();
 
         return response.getData();

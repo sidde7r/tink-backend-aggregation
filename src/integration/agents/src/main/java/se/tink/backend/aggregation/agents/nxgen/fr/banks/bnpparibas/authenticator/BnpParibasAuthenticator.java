@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticat
 
 import com.google.common.collect.Maps;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.entites.LoginDataEntity;
@@ -22,7 +23,7 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) {
+    public void authenticate(String username, String password) throws LoginException {
         if (!bnpParibasPersistentStorage.isRegisteredDevice()) {
             registerAndLogin(username, password);
         } else {
@@ -30,7 +31,7 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
         }
     }
 
-    private void registerAndLogin(String username, String password) {
+    private void registerAndLogin(String username, String password) throws LoginException {
         bnpParibasPersistentStorage.createAndSaveIdfaAndIdfvValues();
 
         LoginDataEntity loginData = login(username, password);
@@ -38,7 +39,7 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
         bnpParibasPersistentStorage.saveLoginId(loginData.getLoginId());
     }
 
-    private LoginDataEntity login(String username, String password) {
+    private LoginDataEntity login(String username, String password) throws LoginException {
         NumpadDataEntity numpadData = apiClient.getNumpadParams();
         String passwordIndices = getIndexStringFromPassword(numpadData.getGrid(), password);
 
