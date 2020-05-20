@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator;
 
+import com.google.common.base.Strings;
 import java.util.Optional;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.NordeaBankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
@@ -17,11 +20,13 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.identitydata.IdentityData;
 
 public class NordeaBankIdAutostartAuthenticator
         implements BankIdAuthenticator<BankIdAutostartResponse> {
     private final NordeaSEApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private String givenSsn;
     private String state;
     private String nonce;
     private String codeVerifier;
@@ -37,6 +42,7 @@ public class NordeaBankIdAutostartAuthenticator
     @Override
     public BankIdAutostartResponse init(String ssn)
             throws BankServiceException, AuthorizationException, AuthenticationException {
+        this.givenSsn = ssn;
         return refreshAutostartToken();
     }
 
@@ -106,7 +112,8 @@ public class NordeaBankIdAutostartAuthenticator
         return Base64.encodeBase64URLSafeString(Hash.sha256(codeVerifier));
     }
 
-    private BankIdStatus fetchAccessToken(BankIdAutostartResponse bankIdAutostartResponse) {
+    private BankIdStatus fetchAccessToken(BankIdAutostartResponse bankIdAutostartResponse)
+            throws LoginException {
         try {
             final FetchCodeRequest fetchCodeRequest =
                     new FetchCodeRequest().setCode(bankIdAutostartResponse.getCode());
@@ -115,9 +122,21 @@ public class NordeaBankIdAutostartAuthenticator
             apiClient
                     .fetchAccessToken(bankIdAutostartResponse.getCode(), codeVerifier)
                     .storeTokens(sessionStorage);
+
+            // If SSN is given, check that it matches the logged in user
+            if (!Strings.isNullOrEmpty(this.givenSsn)) {
+                checkIdentity(this.givenSsn);
+            }
         } catch (HttpResponseException e) {
             return BankIdStatus.NO_CLIENT;
         }
         return BankIdStatus.DONE;
+    }
+
+    private void checkIdentity(String ssn) throws LoginException {
+        final IdentityData identityData = apiClient.fetchIdentityData().toTinkIdentityData();
+        if (!identityData.getSsn().equalsIgnoreCase(ssn)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
     }
 }
