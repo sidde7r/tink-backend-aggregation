@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -41,41 +39,6 @@ public class SerializationUtils {
 
         try {
             return BINARY_MAPPER.readValue(data, cls);
-        } catch (Exception e) {
-            log.error("Could not deserialize object", e);
-            return null;
-        }
-    }
-
-    public static <T> T deserializeFromBinary(byte[] data, TypeReference<T> typeReference) {
-        if (data == null) {
-            return null;
-        }
-
-        try {
-            return BINARY_MAPPER.readValue(data, typeReference);
-        } catch (Exception e) {
-            log.error("Could not deserialize object", e);
-            return null;
-        }
-    }
-
-    public static <T> T deserializeFromBinary(File file, TypeReference<T> typeReference) {
-        if (file == null) {
-            return null;
-        }
-
-        try {
-            return BINARY_MAPPER.readValue(file, typeReference);
-        } catch (Exception e) {
-            log.error("Could not deserialize object", e);
-            return null;
-        }
-    }
-
-    public static <T> T deserializeFromBinary(InputStream stream, TypeReference<T> typeReference) {
-        try {
-            return BINARY_MAPPER.readValue(stream, typeReference);
         } catch (Exception e) {
             log.error("Could not deserialize object", e);
             return null;
@@ -176,19 +139,6 @@ public class SerializationUtils {
         } catch (JsonProcessingException e) {
             log.error("Could not serialize object", e);
             return null;
-        }
-    }
-
-    public static <T> boolean serializeToBinary(File file, T value) {
-        try {
-            BINARY_MAPPER.writeValue(file, value);
-            return true;
-        } catch (JsonProcessingException e) {
-            log.error("Could not serialize object", e);
-            return false;
-        } catch (IOException e) {
-            log.error("Could not write object", e);
-            return false;
         }
     }
 
