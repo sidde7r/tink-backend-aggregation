@@ -52,7 +52,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public final class ArgentaApiClient {
+public class ArgentaApiClient {
 
     private final TinkHttpClient client;
     private final ArgentaConfiguration configuration;
