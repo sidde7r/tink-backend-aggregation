@@ -39,8 +39,9 @@ public abstract class OAuth2TokenBase {
     }
 
     public void updateWithOldToken(OAuth2TokenBase oldOAuth2Token) {
-        if (!this.getRefreshToken().isPresent() && oldOAuth2Token.getRefreshToken().isPresent()) {
-            this.setRefreshToken(oldOAuth2Token.getRefreshToken().get());
+        Optional<String> possibleOldRefreshToken = oldOAuth2Token.getRefreshToken();
+        if (!this.getRefreshToken().isPresent() && possibleOldRefreshToken.isPresent()) {
+            this.setRefreshToken(possibleOldRefreshToken.get());
             this.setRefreshExpiresInSeconds(
                     oldOAuth2Token.hasRefreshExpire()
                             ? oldOAuth2Token.getRefreshExpireEpoch() - this.getIssuedAt()

@@ -25,10 +25,6 @@ public class DemoFinancialInstitutionConstants {
         public static final String USER3_PASSWORD = "1234";
     }
 
-    public static class Responses {
-        public static final String SUCCESS_STRING = "SUCCESS";
-    }
-
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";

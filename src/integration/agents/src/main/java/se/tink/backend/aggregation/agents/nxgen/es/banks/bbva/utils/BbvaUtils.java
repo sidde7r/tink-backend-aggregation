@@ -21,6 +21,10 @@ public class BbvaUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(BbvaUtils.class);
     private static final Random RANDOM = new Random();
 
+    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
+    private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
+    private static final Pattern ES_PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$");
+
     /**
      * Splits a URI string and gets the pagination key
      *
@@ -73,10 +77,6 @@ public class BbvaUtils {
      * @return
      */
     public static String formatUsername(String username) {
-        final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
-        final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
-        final Pattern ES_PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$");
-
         return Match(username)
                 .of(
                         Case($(NIE_PATTERN.asPredicate()), username),
