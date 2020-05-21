@@ -1,32 +1,38 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.enums.AccountFlag;
 
 public final class KbcConstants {
 
+    public static final List<String> CHECKING_ACCOUNT_KEYS =
+            ImmutableList.of(
+                    "CACC",
+                    "CASH",
+                    "CHAR",
+                    "CISH",
+                    "COMM",
+                    "SLRY",
+                    "TRAN",
+                    "TRAS",
+                    "CurrentAccount",
+                    "Current");
+
+    public static final List<String> SAVING_ACCOUNT_KEYS = ImmutableList.of("LLSV", "ONDP", "SVGS");
+
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
                     .put(
                             TransactionalAccountType.CHECKING,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
-                            "CACC",
-                            "CASH",
-                            "CHAR",
-                            "CISH",
-                            "COMM",
-                            "SLRY",
-                            "TRAN",
-                            "TRAS",
-                            "CurrentAccount",
-                            "Current")
+                            CHECKING_ACCOUNT_KEYS.toArray(new String[0]))
                     .put(
                             TransactionalAccountType.SAVINGS,
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
-                            "LLSV",
-                            "ONDP",
-                            "SVGS")
+                            SAVING_ACCOUNT_KEYS.toArray(new String[0]))
                     .build();
 
     private KbcConstants() {
