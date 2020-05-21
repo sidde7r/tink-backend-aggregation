@@ -253,12 +253,19 @@ http_file(
     urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
 )
 
-# libtesseract, needed by `agents.nxgen.fr.banks.bnpparibas` and `agents.nxgen.fr.banks.societegenerale`.
+# libtesseract, needed by some RE agents
 http_file(
     name = "libtesseract-dev_4.0.0-2",
     downloaded_file_path = "libtesseract-dev_4.0.0-2_amd64.deb",
     sha256 = "1e509dc182e4e7a6de19ce2aa8b2c8b89006edd4497aa27f7d66db3f3a6b8f4b",
     urls = ["http://ftp.se.debian.org/debian/pool/main/t/tesseract/libtesseract-dev_4.0.0-2_amd64.deb"],
+)
+
+http_file(
+    name = "libtesseract4_4.0.0-2",
+    downloaded_file_path = "libtesseract4_4.0.0-2_amd64.deb",
+    sha256 = "8e96d37eceff951c9e89f328577cb177faf6813bbd76a8c4a7deede72f73a680",
+    urls = ["http://ftp.se.debian.org/debian/pool/main/t/tesseract/libtesseract4_4.0.0-2_amd64.deb"],
 )
 
 # proto_library rules implicitly depend on @com_google_protobuf//:protoc,
