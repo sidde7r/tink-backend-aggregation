@@ -275,6 +275,13 @@ http_file(
     urls = ["http://ftp.acc.umu.se/debian/pool/main/l/leptonlib/liblept5_1.74.1-1_amd64.deb"],
 )
 
+http_file(
+    name = "libgomp1_8.3.0-6",
+    downloaded_file_path = "libgomp1_8.3.0-6_amd64.deb",
+    sha256 = "909fcd28491d7ebecf44ee2e8d0269b600271b0b6d236b19f2c0469cde162d21",
+    urls = ["http://ftp.se.debian.org/debian/pool/main/g/gcc-8/libgomp1_8.3.0-6_amd64.deb"],
+)
+
 # proto_library rules implicitly depend on @com_google_protobuf//:protoc,
 # which is the proto-compiler.
 PROTOBUF_VERSION = "3.9.0"

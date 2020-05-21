@@ -20,6 +20,7 @@ container_layer(
         "@libtesseract-dev_4.0.0-2//file",
         "@libtesseract4_4.0.0-2//file",
         "@liblept5_1.74.1-1//file",
+        "@libgomp1_8.3.0-6//file",
     ],
 )
 
