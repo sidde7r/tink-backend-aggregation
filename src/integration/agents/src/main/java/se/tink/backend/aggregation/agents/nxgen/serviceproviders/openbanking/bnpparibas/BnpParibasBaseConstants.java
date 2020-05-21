@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.enums.AccountFlag;
 
 public final class BnpParibasBaseConstants {
-    public static final String INTEGRATION_NAME = "bnpparibas";
 
     public static class Urls {
         public static final String ACCOUNTS_PATH = "/accounts";
