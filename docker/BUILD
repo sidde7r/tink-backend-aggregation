@@ -18,6 +18,7 @@ container_layer(
     name = "libtesseract_installer",
     debs = [
         "@libtesseract-dev_4.0.0-2//file",
+        "@libtesseract4_4.0.0-2//file",
     ],
 )
 
