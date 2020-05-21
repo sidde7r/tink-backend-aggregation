@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
@@ -17,9 +16,7 @@ public class BnpParibasUtils {
     }
 
     public static String getSignature(
-            EidasProxyConfiguration configuration,
-            BnpParibasConfiguration bnpParibasConfiguration,
-            EidasIdentity eidasIdentity) {
+            EidasProxyConfiguration configuration, EidasIdentity eidasIdentity) {
 
         return String.format(
                 "%s=\"%s\"",

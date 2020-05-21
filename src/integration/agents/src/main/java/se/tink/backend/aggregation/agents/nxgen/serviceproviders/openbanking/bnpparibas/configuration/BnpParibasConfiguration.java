@@ -12,7 +12,6 @@ public class BnpParibasConfiguration implements ClientConfiguration {
     @Secret private String clientId;
     @SensitiveSecret private String clientSecret;
     @AgentConfigParam private String redirectUrl;
-    @Secret private String eidasQwac;
     @Secret private String keyId;
     @Secret private String authorizeUrl;
     @Secret private String tokenUrl;
@@ -28,10 +27,6 @@ public class BnpParibasConfiguration implements ClientConfiguration {
 
     public String getRedirectUrl() {
         return redirectUrl;
-    }
-
-    public String getEidasQwac() {
-        return eidasQwac;
     }
 
     public String getKeyId() {

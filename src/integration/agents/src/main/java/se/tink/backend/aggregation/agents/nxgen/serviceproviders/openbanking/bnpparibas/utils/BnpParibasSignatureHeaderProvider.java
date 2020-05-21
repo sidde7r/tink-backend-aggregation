@@ -20,12 +20,7 @@ public class BnpParibasSignatureHeaderProvider {
                 getKeyId(bnpParibasConfiguration),
                 BnpParibasUtils.getAlgorithm(),
                 getHeaders(),
-                getSignature(
-                        configuration,
-                        eidasIdentity,
-                        authorizationCode,
-                        requestId,
-                        bnpParibasConfiguration));
+                getSignature(configuration, eidasIdentity, authorizationCode, requestId));
     }
 
     private String getKeyId(BnpParibasConfiguration bnpParibasConfiguration) {
@@ -47,8 +42,7 @@ public class BnpParibasSignatureHeaderProvider {
             EidasProxyConfiguration configuration,
             EidasIdentity eidasIdentity,
             String authorizationCode,
-            String requestId,
-            BnpParibasConfiguration bnpParibasConfiguration) {
+            String requestId) {
 
         String signatureString =
                 String.format(

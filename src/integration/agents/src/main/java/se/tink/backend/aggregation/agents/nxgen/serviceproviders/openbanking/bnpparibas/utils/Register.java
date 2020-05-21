@@ -25,7 +25,7 @@ public class Register {
         return bnpParibasConfiguration.getKeyId()
                 + BnpParibasUtils.getAlgorithm()
                 + getEmptyHeaders()
-                + getSignature(configuration, bnpParibasConfiguration, defaultEidasIdentity);
+                + getSignature(configuration, defaultEidasIdentity);
     }
 
     private static String getEmptyHeaders() {

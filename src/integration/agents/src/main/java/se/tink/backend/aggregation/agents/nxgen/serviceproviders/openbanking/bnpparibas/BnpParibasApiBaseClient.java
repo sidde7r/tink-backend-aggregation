@@ -55,7 +55,7 @@ public class BnpParibasApiBaseClient {
                 .getUrl();
     }
 
-    public String getAuthorizationString() {
+    private String getAuthorizationString() {
         return String.format(
                 "%s:%s",
                 bnpParibasConfiguration.getClientId(), bnpParibasConfiguration.getClientSecret());
