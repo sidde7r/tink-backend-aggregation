@@ -5,20 +5,17 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.HeadersToSign;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.PathVariables;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.ArgentaConstants.QueryValues;
@@ -35,14 +32,10 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.TimeUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -58,24 +51,21 @@ public class ArgentaApiClient {
     private final ArgentaConfiguration configuration;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
-    private final AgentsServiceConfiguration agentsServiceConfiguration;
-    private final EidasIdentity eidasIdentity;
+    private final SignatureHeaderProvider signatureHeaderProvider;
 
     public ArgentaApiClient(
             TinkHttpClient client,
             ArgentaConfiguration configuration,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            EidasIdentity eidasIdentity) {
+            SignatureHeaderProvider signatureHeaderProvider) {
         Preconditions.checkNotNull(configuration);
 
         this.client = client;
         this.configuration = configuration;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
-        this.agentsServiceConfiguration = agentsServiceConfiguration;
-        this.eidasIdentity = eidasIdentity;
+        this.signatureHeaderProvider = signatureHeaderProvider;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -94,7 +84,9 @@ public class ArgentaApiClient {
                 .header(HeaderKeys.API_KEY, configuration.getApiKey())
                 .header(HeaderKeys.CERTIFICATE, configuration.getClientSigningCertificate())
                 .header(HeaderKeys.PSU_ID_ADDRESS, configuration.getPsuIpAddress())
-                .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers));
+                .header(
+                        HeaderKeys.SIGNATURE,
+                        signatureHeaderProvider.generateSignatureHeader(headers));
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -111,7 +103,6 @@ public class ArgentaApiClient {
     }
 
     public URL buildAuthorizeUrl(String state, String consentId) {
-
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
 
@@ -150,7 +141,6 @@ public class ArgentaApiClient {
     }
 
     public OAuth2Token exchangeAuthorizationCode(String code) {
-
         TokenRequest tokenRequest =
                 new TokenRequest(
                         code,
@@ -199,33 +189,6 @@ public class ArgentaApiClient {
                 .format(ZonedDateTime.now(ZoneOffset.UTC));
     }
 
-    private String generateSignatureHeader(Map<String, Object> headers) {
-        QsealcSigner signer =
-                QsealcSignerImpl.build(
-                        agentsServiceConfiguration.getEidasProxy().toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity);
-
-        String signedHeaders =
-                Arrays.stream(HeadersToSign.values())
-                        .map(HeadersToSign::getHeader)
-                        .filter(headers::containsKey)
-                        .map(String::toLowerCase)
-                        .collect(Collectors.joining(" "));
-
-        String signedHeadersWithValues =
-                Arrays.stream(HeadersToSign.values())
-                        .map(HeadersToSign::getHeader)
-                        .filter(headers::containsKey)
-                        .map(header -> String.format("%s: %s", header, headers.get(header)))
-                        .collect(Collectors.joining("\n"));
-
-        String signature = signer.getSignatureBase64(signedHeadersWithValues.getBytes());
-
-        return String.format(
-                HeaderValues.SIGNATURE_HEADER, configuration.getKeyId(), signedHeaders, signature);
-    }
-
     private String createDigest(String body) {
         return String.format(
                 HeaderValues.SHA_256.concat("%s"),
@@ -240,7 +203,6 @@ public class ArgentaApiClient {
     }
 
     public OAuth2Token exchangeRefreshToken(String refreshToken) {
-
         RefreshTokenRequest refreshTokenRequest =
                 new RefreshTokenRequest(FormValues.REFRESH_TOKEN, refreshToken);
 

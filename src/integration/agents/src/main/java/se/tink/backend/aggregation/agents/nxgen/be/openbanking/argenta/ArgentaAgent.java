@@ -10,7 +10,12 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configuration.ArgentaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcAlg;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -39,17 +44,25 @@ public final class ArgentaAgent extends NextGenerationAgent
                 getAgentConfigurationController().getAgentConfiguration(ArgentaConfiguration.class);
         super.setConfiguration(agentsServiceConfiguration);
 
-        this.apiClient =
+        EidasProxyConfiguration eidasProxy = agentsServiceConfiguration.getEidasProxy();
+        QsealcSigner qsealcSigner =
+                QsealcSignerImpl.build(
+                        eidasProxy.toInternalConfig(),
+                        QsealcAlg.EIDAS_RSA_SHA256,
+                        getEidasIdentity());
+
+        SignatureHeaderProvider signatureHeaderProvider =
+                new SignatureHeaderProvider(argentaConfiguration, qsealcSigner);
+        apiClient =
                 new ArgentaApiClient(
                         client,
                         argentaConfiguration,
                         persistentStorage,
                         sessionStorage,
-                        agentsServiceConfiguration,
-                        getEidasIdentity());
-        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+                        signatureHeaderProvider);
 
-        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
     @Override
