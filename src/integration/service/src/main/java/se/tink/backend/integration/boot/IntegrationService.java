@@ -113,8 +113,11 @@ class IntegrationService {
         httpServer.stop(shutdownLatch);
         grpcServer.stop(shutdownLatch, duration, unit);
 
-        shutdownLatch.await(duration + 1L, unit);
-
-        logger.info("Shutdown took: {} ms", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        boolean shutdownResult = shutdownLatch.await(duration + 1L, unit);
+        if (shutdownResult) {
+            logger.info("Shutdown took: {} ms", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        } else {
+            logger.error("Shutdown is not finished yet, elapsed {} {}", duration + 1L, unit);
+        }
     }
 }
