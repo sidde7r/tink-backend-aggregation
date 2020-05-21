@@ -86,7 +86,7 @@ public final class ArgentaConstants {
         public static final String JSON_UTF_8 = "application/json;charset=UTF-8";
     }
 
-    enum HeadersToSign {
+    public enum HeadersToSign {
         DIGEST("digest"),
         X_REQUEST_ID("x-request-id");
 
