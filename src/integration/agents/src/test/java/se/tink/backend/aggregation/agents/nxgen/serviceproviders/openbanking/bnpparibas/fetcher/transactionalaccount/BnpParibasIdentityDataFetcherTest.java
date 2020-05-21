@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -44,16 +43,12 @@ public class BnpParibasIdentityDataFetcherTest {
 
         when(sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN)).thenReturn(token);
         when(apiClient.getBnpParibasConfiguration()).thenReturn(bnpParibasConfiguration);
-        when(bnpParibasSignatureHeaderProvider.buildSignatureHeader(
-                        any(), any(), any(), any(), any()))
+        when(bnpParibasSignatureHeaderProvider.buildSignatureHeader(any(), any(), any()))
                 .thenReturn(signature);
-        when(apiClient.getEndUserIdentity(anyString(), anyString()))
-                .thenReturn(endUserIdentityResponse);
+        when(apiClient.getEndUserIdentity()).thenReturn(endUserIdentityResponse);
         when(endUserIdentityResponse.getConnectedPsu()).thenReturn(connectedPsu);
 
-        bnpParibasIdentityDataFetcher =
-                new BnpParibasIdentityDataFetcher(
-                        apiClient, sessionStorage, bnpParibasSignatureHeaderProvider);
+        bnpParibasIdentityDataFetcher = new BnpParibasIdentityDataFetcher(apiClient);
     }
 
     @Test

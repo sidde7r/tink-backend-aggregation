@@ -46,8 +46,7 @@ public class BnpParibasTransactionalAccountFetcherTest {
 
         when(sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN)).thenReturn(token);
         when(apiClient.getBnpParibasConfiguration()).thenReturn(bnpParibasConfiguration);
-        when(bnpParibasSignatureHeaderProvider.buildSignatureHeader(
-                        any(), any(), any(), any(), any()))
+        when(bnpParibasSignatureHeaderProvider.buildSignatureHeader(any(), any(), any()))
                 .thenReturn(signature);
     }
 
@@ -55,11 +54,10 @@ public class BnpParibasTransactionalAccountFetcherTest {
     public void shouldReturnEmptyCollectionOnFetchAccounts() {
         // given
         when(accountsResponse.getAccounts()).thenReturn(null);
-        when(apiClient.fetchAccounts(anyString(), anyString())).thenReturn(accountsResponse);
+        when(apiClient.fetchAccounts()).thenReturn(accountsResponse);
 
         BnpParibasTransactionalAccountFetcher bnpParibasTransactionalAccountFetcher =
-                new BnpParibasTransactionalAccountFetcher(
-                        apiClient, sessionStorage, bnpParibasSignatureHeaderProvider);
+                new BnpParibasTransactionalAccountFetcher(apiClient);
 
         // when
         Collection<TransactionalAccount> resp =
@@ -83,14 +81,12 @@ public class BnpParibasTransactionalAccountFetcherTest {
         BalanceResponse balanceResponse = mock(BalanceResponse.class);
 
         when(accountsItemEntity.toTinkAccount(any())).thenReturn(optionalTransactionalAccount);
-        when(apiClient.getBalance(anyString(), anyString(), anyString()))
-                .thenReturn(balanceResponse);
+        when(apiClient.getBalance(anyString())).thenReturn(balanceResponse);
         when(accountsResponse.getAccounts()).thenReturn(list);
-        when(apiClient.fetchAccounts(anyString(), anyString())).thenReturn(accountsResponse);
+        when(apiClient.fetchAccounts()).thenReturn(accountsResponse);
 
         BnpParibasTransactionalAccountFetcher bnpParibasTransactionalAccountFetcher =
-                new BnpParibasTransactionalAccountFetcher(
-                        apiClient, sessionStorage, bnpParibasSignatureHeaderProvider);
+                new BnpParibasTransactionalAccountFetcher(apiClient);
 
         // when
         Collection<TransactionalAccount> resp =
