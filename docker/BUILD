@@ -21,6 +21,9 @@ container_layer(
         "@libtesseract4_4.0.0-2//file",
         "@liblept5_1.74.1-1//file",
         "@libgomp1_8.3.0-6//file",
+        "@libwebp6_0.6.1-2//file",
+        "@libopenjp2-7_2.3.0-2//file",
+        "@libc6_2.28-10//file",
     ],
 )
 
