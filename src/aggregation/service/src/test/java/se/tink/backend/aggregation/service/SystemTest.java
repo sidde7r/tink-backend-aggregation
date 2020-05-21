@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -183,9 +184,8 @@ public class SystemTest {
                         fakeAggregationControllerEndpoint(), 50, 1);
 
         // then
-        Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
-        Assert.assertTrue(finalStatusForCredentials.isPresent());
-        Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
+        Assertions.assertThat(authenticateEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
+        Assertions.assertThat(finalStatusForCredentials).hasValue("UPDATED");
     }
 
     @Test
@@ -271,9 +271,8 @@ public class SystemTest {
                         fakeAggregationControllerEndpoint(), 50, 1);
 
         // then
-        Assert.assertEquals(204, authenticateEndpointCallResult.getStatusCodeValue());
-        Assert.assertTrue(finalStatusForCredentials.isPresent());
-        Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
+        Assertions.assertThat(authenticateEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
+        Assertions.assertThat(finalStatusForCredentials).hasValue("UPDATED");
     }
 
     @Test
@@ -355,10 +354,10 @@ public class SystemTest {
                 credentialsCallbacks.get(credentialsCallbacks.size() - 1);
 
         // then
-        Assert.assertEquals(204, transferEndpointCallResult.getStatusCodeValue());
-        Assert.assertTrue(finalStatusForCredentials.isPresent());
-        Assert.assertEquals("UPDATED", finalStatusForCredentials.get());
-        Assert.assertEquals("TRANSFER", lastCallbackForCredentials.get("requestType").asText());
+        Assertions.assertThat(transferEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
+        Assertions.assertThat(finalStatusForCredentials).hasValue("UPDATED");
+        Assertions.assertThat(lastCallbackForCredentials.get("requestType").asText())
+                .isEqualTo("TRANSFER");
     }
 
     private String fakeAggregationControllerEndpoint() {

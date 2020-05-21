@@ -25,6 +25,7 @@ junit_test(
         "//src/aggregation/service/src/test/java/se/tink/backend/aggregation/service/utils",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//third_party:lombok_plugin",
+        "//third_party:org_assertj_assertj_core",
         "@lombok//:org_projectlombok_lombok",
         "@system_tests//:com_fasterxml_jackson_core_jackson_databind",
         "@system_tests//:com_google_guava_guava",
