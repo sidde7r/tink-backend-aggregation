@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc;
 
+import static se.tink.libraries.amount.ExactCurrencyAmount.of;
+
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentType;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -25,7 +27,7 @@ public class BasePaymentResponse {
                 new Payment.Builder()
                         .withCreditor(getTinkCreditor(creditor))
                         .withDebtor(getTinkDebtor(debtor))
-                        .withAmount(new Amount(amount.getCurrency(), amount.getValue()))
+                        .withExactCurrencyAmount(of(amount.getValue(), amount.getCurrency()))
                         .withCurrency(payment.getCurrency())
                         .withUniqueId(paymentId)
                         .withType(paymentType.getTinkPaymentType())

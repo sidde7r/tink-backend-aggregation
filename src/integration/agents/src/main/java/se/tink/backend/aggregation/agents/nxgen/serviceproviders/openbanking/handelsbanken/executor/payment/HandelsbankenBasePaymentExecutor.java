@@ -64,12 +64,9 @@ public abstract class HandelsbankenBasePaymentExecutor
                         CreditorNameEntity.of(creditor.getName()),
                         getCreditorAgentEntity(creditor).orElse(null));
 
-        final PaymentResponse paymentResponse =
-                apiClient
-                        .createPayment(createPaymentRequest, paymentProduct)
-                        .toTinkPaymentResponse(payment, paymentProduct);
-
-        return paymentResponse;
+        return apiClient
+                .createPayment(createPaymentRequest, paymentProduct)
+                .toTinkPaymentResponse(payment, paymentProduct);
     }
 
     @Override
@@ -147,7 +144,7 @@ public abstract class HandelsbankenBasePaymentExecutor
 
     public abstract Signer getSigner();
 
-    protected void validateExecutionDate(LocalDate date) throws DateValidationException {
+    private void validateExecutionDate(LocalDate date) throws DateValidationException {
         if (Objects.isNull(date) || LocalDate.now().isEqual(date)) {
             return;
         }
