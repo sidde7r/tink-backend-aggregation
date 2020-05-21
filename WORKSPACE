@@ -268,6 +268,13 @@ http_file(
     urls = ["http://ftp.se.debian.org/debian/pool/main/t/tesseract/libtesseract4_4.0.0-2_amd64.deb"],
 )
 
+http_file(
+    name = "liblept5_1.74.1-1",
+    downloaded_file_path = "liblept5_1.74.1-1_amd64.deb",
+    sha256 = "64d9ae6d3101b5a85118109178df3575d92ca25ff0b273b732280cb9580fe416",
+    urls = ["http://ftp.acc.umu.se/debian/pool/main/l/leptonlib/liblept5_1.74.1-1_amd64.deb"],
+)
+
 # proto_library rules implicitly depend on @com_google_protobuf//:protoc,
 # which is the proto-compiler.
 PROTOBUF_VERSION = "3.9.0"
