@@ -27,7 +27,7 @@ public class KbcAgentTest {
                         .addCredentialField(
                                 KbcConstants.CredentialKeys.IBAN,
                                 ibanManager.get(IbanArgumentEnum.IBAN))
-                        .setFinancialInstitutionId("kbc")
+                        .setFinancialInstitutionId("7802078d8a7049398f9668e5478934ea")
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(
