@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
+
+    private static final int MAX_FETCH_PERIOD_MONTHS = 12;
     private final HandelsbankenAccountConverter accountConverter;
 
     public HandelsbankenAgent(
@@ -38,7 +40,7 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
     @Override
     protected Date setMaxPeriodTransactions() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -HandelsbankenFIConstants.MAX_FETCH_PERIOD_MONTHS);
+        calendar.add(Calendar.MONTH, -MAX_FETCH_PERIOD_MONTHS);
         persistentStorage.put(
                 HandelsbankenBaseConstants.StorageKeys.MAX_FETCH_PERIOD_MONTHS, calendar.getTime());
 

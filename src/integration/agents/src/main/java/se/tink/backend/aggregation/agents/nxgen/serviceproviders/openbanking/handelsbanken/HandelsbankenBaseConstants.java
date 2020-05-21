@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public final class HandelsbankenBaseConstants {
-    public static final String INTEGRATION_NAME = "handelsbanken";
 
     public static class Urls {
         private static final String BASE_URL = "https://api.handelsbanken.com/openbanking";
@@ -66,7 +65,6 @@ public final class HandelsbankenBaseConstants {
         public static final String COUNTRY = "country";
         public static final String CONSENT_ID = "consentId";
         public static final String BEARER = "Bearer ";
-        public static final String PSU_CORPORATE_ID = "PSU-CORPORATE-ID";
     }
 
     public static class BodyKeys {

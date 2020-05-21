@@ -16,10 +16,6 @@ public class HandelsbankenSEConstants {
         public static final String USERNAME = "username";
     }
 
-    public static class OAuth2Type {
-        public static final String BEARER = "Bearer";
-    }
-
     public static class CreditorAgentIdentificationType {
         public static final String SE_CLEARING_NUMBER = "SESBA";
     }
