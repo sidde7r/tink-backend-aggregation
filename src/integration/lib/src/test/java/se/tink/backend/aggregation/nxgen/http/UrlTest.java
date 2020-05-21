@@ -96,7 +96,6 @@ public class UrlTest {
     public void ensureMultipleQueryParams_withNullKeys_areRemoved() {
         String rawUrl = BASE_URL + "?key3=val3";
         HashMap<String, String> queryParams = new HashMap<>();
-        queryParams.put(null, "val1");
         queryParams.put(null, "val2");
         queryParams.put("key3", "val3");
 

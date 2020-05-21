@@ -12,13 +12,13 @@ public class CryptoUtils {
 
     private CryptoUtils() {}
 
-    public static String calculateRequestSignature(String body, String endpoint, String method) {
+    static String calculateRequestSignature(String body, String endpoint, String method) {
         String key = IspConstants.Crypto.SIGNATURE_CALCULATION_KEY;
         String data = String.format("%s%s%s", body, method.toUpperCase(), endpoint);
         return EncodingUtils.encodeAsBase64String(Hash.hmacSha256(key, data));
     }
 
-    public static String encryptRequest(String body) {
+    static String encryptRequest(String body) {
         byte[] key = IspConstants.Crypto.BODY_ENCRYPTION_KEY.getBytes();
         byte[] iv = new byte[IV_LENGTH];
         RANDOM.nextBytes(iv);
@@ -26,11 +26,12 @@ public class CryptoUtils {
         return EncodingUtils.encodeAsBase64String(Arrays.concatenate(iv, bytes));
     }
 
-    public static String decryptResponse(String body) {
+    static byte[] decryptResponse(String body) {
         byte[] key = IspConstants.Crypto.BODY_ENCRYPTION_KEY.getBytes();
         byte[] decodedBody = EncodingUtils.decodeBase64String(body);
         byte[] iv = Arrays.copyOfRange(decodedBody, 0, IV_LENGTH);
         byte[] encryptedEntity = Arrays.copyOfRange(decodedBody, IV_LENGTH, decodedBody.length);
-        return new String(AES.decryptCbcPkcs7(key, iv, encryptedEntity));
+
+        return AES.decryptCbcPkcs7(key, iv, encryptedEntity);
     }
 }

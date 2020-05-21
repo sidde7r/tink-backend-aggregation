@@ -55,8 +55,7 @@ public class IspSignEncryptFilter extends Filter {
         response.getInternalResponse()
                 .setEntityInputStream(
                         new ByteArrayInputStream(
-                                CryptoUtils.decryptResponse(response.getBody(String.class))
-                                        .getBytes()));
+                                CryptoUtils.decryptResponse(response.getBody(String.class))));
     }
 
     private void changeMimeType(HttpResponse response) {

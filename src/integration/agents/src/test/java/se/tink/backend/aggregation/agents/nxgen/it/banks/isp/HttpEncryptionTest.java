@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.it.banks.isp;
 
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 
 public class HttpEncryptionTest {
@@ -20,15 +21,15 @@ public class HttpEncryptionTest {
         // when
         String signature = CryptoUtils.calculateRequestSignature(BODY, ENDPOINT, METHOD);
         // then
-        Assertions.assertThat(signature).isEqualTo(SIGNATURE);
+        assertThat(signature).isEqualTo(SIGNATURE);
     }
 
     @Test
     public void shouldDecryptBody() {
         // when
-        String decryptedBody = CryptoUtils.decryptResponse(ENCRYPTED_BODY);
+        byte[] decryptedBody = CryptoUtils.decryptResponse(ENCRYPTED_BODY);
         // then
-        Assertions.assertThat(decryptedBody).isEqualTo(BODY);
+        assertThat(decryptedBody).isEqualTo(BODY.getBytes());
     }
 
     @Test
@@ -39,8 +40,8 @@ public class HttpEncryptionTest {
 
         // when
         String encryptedBody = CryptoUtils.encryptRequest(BODY);
-        String decryptedBody = CryptoUtils.decryptResponse(encryptedBody);
+        byte[] decryptedBody = CryptoUtils.decryptResponse(encryptedBody);
         // then
-        Assertions.assertThat(decryptedBody).isEqualTo(BODY);
+        assertThat(decryptedBody).isEqualTo(BODY.getBytes());
     }
 }

@@ -47,7 +47,7 @@ public class SEBAgentUtils {
         return str1.replace("-", "").trim().equalsIgnoreCase(str2.replace("-", "").trim());
     }
 
-    protected static AccountTypes guessAccountType(Integer accountTypeCode) {
+    static AccountTypes guessAccountType(Integer accountTypeCode) {
         if (accountTypeCode.equals(SEBAccountType.PRIVATKONTO.getCode())
                 || accountTypeCode.equals(SEBAccountType.SPECIALINLONEKONTO.getCode())
                 || accountTypeCode.equals(SEBAccountType.PERSONALLONEKONTO.getCode())) {
@@ -61,7 +61,7 @@ public class SEBAgentUtils {
 
         if (accountTypeCode.equals(SEBAccountType.ISK_KAPITALKONTO.getCode())
                 || accountTypeCode.equals(SEBAccountType.FUND.getCode())
-                || accountTypeCode == SEBAccountType.IPS.getCode()
+                || accountTypeCode.equals(SEBAccountType.IPS.getCode())
                 || accountTypeCode.equals(SEBAccountType.PLACERINGSKONTO.getCode())) {
             return AccountTypes.INVESTMENT;
         }
