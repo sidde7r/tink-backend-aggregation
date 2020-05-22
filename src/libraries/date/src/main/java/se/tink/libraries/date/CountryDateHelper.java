@@ -221,6 +221,34 @@ public class CountryDateHelper {
      * If providedDate is not null it will return providedDate otherwise it will calculate the next
      * date that is not a holiday
      *
+     * @param providedDate the date to consider as {@link java.time.LocalDate}
+     * @param cutOffHours if the time of day is past this hour, the returned date will be the next
+     *     business day.
+     * @param cutOffMinutes if the time of day is past this minute, the returned date will be the
+     *     next business day.
+     * @return the next available business day or providedDate as {@link java.time.LocalDate}
+     */
+    public java.time.LocalDate getProvidedDateOrBestPossibleLocalDate(
+            java.time.LocalDate providedDate, int cutOffHours, int cutOffMinutes) {
+        Date providedDateAsLocalDate =
+                providedDate == null
+                        ? null
+                        : Date.from(
+                                providedDate
+                                        .atStartOfDay()
+                                        .atZone(timezone.toZoneId())
+                                        .toInstant());
+        return getProvidedDateOrBestPossibleDate(
+                        providedDateAsLocalDate, cutOffHours, cutOffMinutes)
+                .toInstant()
+                .atZone(timezone.toZoneId())
+                .toLocalDate();
+    }
+
+    /**
+     * If providedDate is not null it will return providedDate otherwise it will calculate the next
+     * date that is not a holiday
+     *
      * @param providedDate the date to consider
      * @param cutOffHours if the time of day is past this hour, the returned date will be the next
      *     business day.
