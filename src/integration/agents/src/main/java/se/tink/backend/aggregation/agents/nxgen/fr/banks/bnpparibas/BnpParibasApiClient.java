@@ -111,10 +111,10 @@ public class BnpParibasApiClient {
         if (tries == MAX_TRIES) {
             log.info(
                     "getTransactionalAccountTransactions -- Max tries reached, returning empty list of transactions.");
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         if (Objects.isNull(response)) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         response.assertReturnCodeOk();
 
