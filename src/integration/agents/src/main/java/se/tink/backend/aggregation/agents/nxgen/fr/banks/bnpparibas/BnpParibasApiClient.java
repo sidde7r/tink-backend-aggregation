@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas;
 
 import com.google.common.base.Strings;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
@@ -15,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.rpc.NumpadRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.rpc.NumpadResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.accounts.TransactionAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.transactions.AccountTransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.transactions.InfoUdcEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.rpc.AccountIbanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.rpc.AccountsResponse;
@@ -24,11 +25,13 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.rpc.TransactionalAccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.storage.BnpParibasPersistentStorage;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class BnpParibasApiClient {
     private final TinkHttpClient client;
     private static final Logger log = LoggerFactory.getLogger(BnpParibasApiClient.class);
+    private static final int MAX_TRIES = 3;
 
     public BnpParibasApiClient(TinkHttpClient client) {
         this.client = client;
@@ -76,19 +79,43 @@ public class BnpParibasApiClient {
         response.assertReturnCodeOk();
     }
 
-    public AccountTransactionsEntity getTransactionalAccountTransactions(
+    public Collection<Transaction> getTransactionalAccountTransactions(
             Date fromDate, Date toDate, String ibanKey) {
         TransactionalAccountTransactionsRequest request =
                 TransactionalAccountTransactionsRequest.create(fromDate, toDate, ibanKey);
 
-        TransactionalAccountTransactionsResponse response =
-                client.request(BnpParibasConstants.Urls.TRANSACTIONAL_ACCOUNT_TRANSACTIONS)
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .post(TransactionalAccountTransactionsResponse.class, request);
+        TransactionalAccountTransactionsResponse response = null;
+        int tries = 0;
+        for (tries = 0; tries < MAX_TRIES; tries++) {
+            try {
+                response =
+                        client.request(BnpParibasConstants.Urls.TRANSACTIONAL_ACCOUNT_TRANSACTIONS)
+                                .type(MediaType.APPLICATION_JSON_TYPE)
+                                .post(TransactionalAccountTransactionsResponse.class, request);
+                break;
+            } catch (javax.ws.rs.WebApplicationException wae) {
+                log.error(
+                        String.format(
+                                "[Try %d]: WebApplicationException -- getTransactionalAccountTransactions",
+                                tries),
+                        wae);
+            } catch (Exception e) {
+                log.error(
+                        String.format(
+                                "[Try %d]: Exception -- getTransactionalAccountTransactions",
+                                tries),
+                        e);
+            }
+        }
+        if (tries == MAX_TRIES) {
+            log.info(
+                    "getTransactionalAccountTransactions -- Max tries reached, returning empty list of transactions.");
+            return Collections.EMPTY_LIST;
+        }
 
         response.assertReturnCodeOk();
 
-        return response.getData().transactionsInfo().getAccountTransactions();
+        return response.getData().transactionsInfo().getAccountTransactions().toTinkTransactions();
     }
 
     public InfoUdcEntity getAccounts() {
