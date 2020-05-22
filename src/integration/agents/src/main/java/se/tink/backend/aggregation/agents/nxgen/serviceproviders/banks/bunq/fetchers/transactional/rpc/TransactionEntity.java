@@ -84,10 +84,14 @@ public class TransactionEntity {
     }
 
     private String getTinkDescription() {
-        return Stream.of(description, getDebtor(), getCreditor())
-                .filter(str -> !Strings.isNullOrEmpty(str))
-                .findFirst()
-                .orElse("");
+        String transactionDescription =
+                Stream.of(description, getDebtor())
+                        .filter(str -> !Strings.isNullOrEmpty(str))
+                        .reduce("", (s1, s2) -> s1 + "\n" + s2);
+        if (transactionDescription.isEmpty()) {
+            return getCreditor();
+        }
+        return transactionDescription.trim();
     }
 
     private String getDebtor() {
@@ -95,6 +99,6 @@ public class TransactionEntity {
     }
 
     private String getCreditor() {
-        return alias == null ? null : alias.getDisplayName();
+        return alias == null ? "" : alias.getDisplayName();
     }
 }

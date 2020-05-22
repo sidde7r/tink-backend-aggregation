@@ -15,8 +15,11 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/bunq",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bunq",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/libraries/serialization",
     ],
 )
