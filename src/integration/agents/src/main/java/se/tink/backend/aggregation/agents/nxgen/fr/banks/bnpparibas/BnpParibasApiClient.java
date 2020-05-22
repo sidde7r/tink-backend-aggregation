@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.rpc.BaseResp
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.storage.BnpParibasPersistentStorage;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 
 public class BnpParibasApiClient {
     private final TinkHttpClient client;
@@ -94,19 +95,12 @@ public class BnpParibasApiClient {
                                 .type(MediaType.APPLICATION_JSON_TYPE)
                                 .post(TransactionalAccountTransactionsResponse.class, request);
                 break;
-            } catch (javax.ws.rs.WebApplicationException wae) {
+            } catch (HttpClientException hce) {
                 log.error(
                         String.format(
                                 "[Try %d]: WebApplicationException -- getTransactionalAccountTransactions",
                                 tries),
-                        wae);
-            } catch (Exception e) {
-                log.error(
-                        String.format(
-                                "[Try %d]: Exception -- getTransactionalAccountTransactions",
-                                tries),
-                        e);
-                throw new RuntimeException(e);
+                        hce);
             }
         }
         if (tries == RETRY_POLICY_MAX_ATTEMPTS) {
