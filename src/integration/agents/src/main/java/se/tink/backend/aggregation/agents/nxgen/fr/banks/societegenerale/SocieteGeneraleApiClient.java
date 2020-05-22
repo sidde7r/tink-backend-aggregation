@@ -48,7 +48,7 @@ public class SocieteGeneraleApiClient {
                 client.request(SocieteGeneraleConstants.Url.SBM_MOB_MOB_SBM_RLV_SNT_CPT)
                         .get(String.class);
 
-        return extractData(raw, AccountsResponse.class);
+        return extractData(raw, AccountsResponse.class, AccountsData.class);
     }
 
     public GenericResponse<?> getAuthInfo() {
@@ -64,7 +64,7 @@ public class SocieteGeneraleApiClient {
         String raw =
                 client.request(SocieteGeneraleConstants.Url.SEC_VK_GEN_CRYPTO).get(String.class);
 
-        return extractData(raw, LoginGridResponse.class);
+        return extractData(raw, LoginGridResponse.class, LoginGridData.class);
     }
 
     public byte[] getLoginNumPadImage(String crypto) {
@@ -103,7 +103,7 @@ public class SocieteGeneraleApiClient {
                                 Integer.toString(1 + (page * pageSize)))
                         .get(String.class);
 
-        return extractData(raw, TransactionsResponse.class);
+        return extractData(raw, TransactionsResponse.class, TransactionsData.class);
     }
 
     public Optional<AuthenticationData> postAuthentication(
@@ -120,11 +120,11 @@ public class SocieteGeneraleApiClient {
                         .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(String.class);
 
-        return extractData(raw, AuthenticationResponse.class);
+        return extractData(raw, AuthenticationResponse.class, AuthenticationData.class);
     }
 
     private <T> Optional<T> extractData(
-            String raw, Class<? extends GenericResponse<T>> wrapperClass) {
+            String raw, Class<? extends GenericResponse<T>> wrapperClass, Class<T> valueType) {
 
         T retVal = null;
 
@@ -145,16 +145,13 @@ public class SocieteGeneraleApiClient {
                 return Optional.empty();
             }
 
-            String parsableResponse = null;
-
             if (response.isEncrypted()) {
                 String encryptedDataAsString = response.getData().toString();
-                parsableResponse = decrypt(encryptedDataAsString);
+                String parsableResponse = decrypt(encryptedDataAsString);
+                retVal = MAPPER.readValue(parsableResponse, valueType);
             } else {
-                parsableResponse = raw;
+                retVal = MAPPER.readValue(raw, wrapperClass).getData();
             }
-
-            retVal = MAPPER.readValue(parsableResponse, wrapperClass).getData();
 
         } catch (IOException e) {
             throw new ResponseParseException(
