@@ -4,7 +4,9 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.BnpParibasConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.entites.LoginDataEntity;
@@ -48,6 +50,9 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
 
     private LoginDataEntity login(String username, String password) throws LoginException {
         log.info("Enter login()");
+        if (!StringUtils.isNumeric(password)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
         NumpadDataEntity numpadData = apiClient.getNumpadParams();
         String passwordIndices = getIndexStringFromPassword(numpadData.getGrid(), password);
 
