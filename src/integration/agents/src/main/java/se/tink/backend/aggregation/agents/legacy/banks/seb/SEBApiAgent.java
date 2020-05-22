@@ -950,12 +950,12 @@ public class SEBApiAgent extends AbstractAgent
     private List<AccountEntity> listAccounts(String id) {
         ClientResponse response = queryAccounts(id);
         try {
-            if (!isValidResponse(response)) {
+            final Optional<SebResponse> sebResponse = getValidSebResponse(response);
+
+            if (!sebResponse.isPresent()) {
                 return Collections.emptyList();
             }
-
-            SebResponse sebResponse = response.getEntity(SebResponse.class);
-            return sebResponse.getAccountEntities();
+            return sebResponse.get().getAccountEntities();
         } finally {
             response.close();
         }
@@ -967,23 +967,27 @@ public class SEBApiAgent extends AbstractAgent
         return postAsJSON(ACCOUNTS_URL, payload, ClientResponse.class);
     }
 
-    private boolean isValidResponse(final ClientResponse response) {
+    private Optional<SebResponse> getValidSebResponse(final ClientResponse response) {
         if (response == null) {
-            return false;
+            return Optional.empty();
         }
 
         if (response.getStatus() != HttpStatus.SC_OK
                 || !response.hasEntity()
                 || !response.getType().isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
-            return false;
+            return Optional.empty();
         }
 
         SebResponse sebResponse = response.getEntity(SebResponse.class);
         if (sebResponse == null) {
-            return false;
+            return Optional.empty();
         }
 
-        return sebResponse.isValid();
+        if (!sebResponse.isValid()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(sebResponse);
     }
 
     // Since we're updating investment accounts separately we don't want to update them when
@@ -1779,7 +1783,7 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         ClientResponse response = queryAccounts(customerId);
-        return isValidResponse(response);
+        return getValidSebResponse(response).isPresent();
     }
 
     @Override
