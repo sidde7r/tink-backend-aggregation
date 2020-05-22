@@ -24,7 +24,7 @@ public class HandelsbankenSEIdentityFetcher {
                 .orElseThrow(NoSuchElementException::new);
     }
 
-    private static Optional<IdentityData> mandatesToIdentity(List<Mandate> mandates) {
+    public static Optional<IdentityData> mandatesToIdentity(List<Mandate> mandates) {
         return mandates.stream()
                 .distinct()
                 .map(
