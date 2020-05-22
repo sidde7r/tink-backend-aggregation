@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 public class BnpParibasApiClient {
     private final TinkHttpClient client;
     private static final Logger log = LoggerFactory.getLogger(BnpParibasApiClient.class);
-    private static final int MAX_TRIES = 3;
+    private static final int RETRY_POLICY_MAX_ATTEMPTS = 3;
 
     public BnpParibasApiClient(TinkHttpClient client) {
         this.client = client;
@@ -87,7 +87,7 @@ public class BnpParibasApiClient {
 
         TransactionalAccountTransactionsResponse response = null;
         int tries = 0;
-        for (tries = 0; tries < MAX_TRIES; tries++) {
+        for (tries = 0; tries < RETRY_POLICY_MAX_ATTEMPTS; tries++) {
             try {
                 response =
                         client.request(BnpParibasConstants.Urls.TRANSACTIONAL_ACCOUNT_TRANSACTIONS)
@@ -109,7 +109,7 @@ public class BnpParibasApiClient {
                 throw new RuntimeException(e);
             }
         }
-        if (tries == MAX_TRIES) {
+        if (tries == RETRY_POLICY_MAX_ATTEMPTS) {
             log.info(
                     "getTransactionalAccountTransactions -- Max tries reached, returning empty list of transactions.");
             return Collections.emptyList();
