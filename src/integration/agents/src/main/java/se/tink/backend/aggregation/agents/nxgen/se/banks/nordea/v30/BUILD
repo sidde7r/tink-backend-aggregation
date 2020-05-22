@@ -36,6 +36,7 @@ java_library(
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
+        "//src/libraries/giro_validation",
         "//src/libraries/i18n",
         "//src/libraries/social_security_number",
         "//third_party:com_google_code_findbugs_jsr305",
