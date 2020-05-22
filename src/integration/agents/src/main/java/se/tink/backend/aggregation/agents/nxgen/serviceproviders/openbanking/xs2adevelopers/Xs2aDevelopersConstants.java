@@ -21,6 +21,7 @@ public final class Xs2aDevelopersConstants {
                     "0-Euro-Konto Vorteil",
                     "b.compact account",
                     "Current Account",
+                    "comfort2bank zichtrekening",
                     "Girokonto");
 
     public static final List<String> SAVING_ACCOUNT_KEYS =
