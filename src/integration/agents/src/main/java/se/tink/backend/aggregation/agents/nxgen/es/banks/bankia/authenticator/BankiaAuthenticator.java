@@ -26,13 +26,26 @@ public final class BankiaAuthenticator implements PasswordAuthenticator {
         LoginResponse loginResponse =
                 apiClient.login(
                         username, password, BankiaConstants.Default.EMPTY_EXECUTION_STRING, rsaKey);
+
         if (loginResponse.getJGidResponseCodError() != null
-                && loginResponse
-                        .getJGidResponseCodError()
-                        .equalsIgnoreCase(BankiaConstants.Errors.WRONG_CREDENTIALS)) {
+                && canCodeBeMappedToError(
+                        BankiaConstants.Errors.WRONG_CREDENTIALS,
+                        loginResponse.getJGidResponseCodError())) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
+        } else if (canCodeBeMappedToError(
+                BankiaConstants.Errors.UNKNOWN_LOGIN_ERROR,
+                loginResponse.getJGidResponseCodError())) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    BankiaConstants.Errors.UNKNOWN_LOGIN_ERROR);
         }
 
         apiClient.authorizeSession();
+    }
+
+    private boolean canCodeBeMappedToError(String error, String code) {
+        return BankiaConstants.Errors.ERROR_MAPPER
+                .translate(code)
+                .map(error::equalsIgnoreCase)
+                .orElse(false);
     }
 }

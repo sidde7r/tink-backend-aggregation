@@ -150,10 +150,19 @@ public abstract class BankiaConstants {
     }
 
     public static class Errors {
+        public static final int LOGIN_ERROR = 428;
         public static final String NO_DATA_FOR_ENQUIRY_CODE = "VAVC003E";
         public static final String NO_DATA_FOR_ENQUIRY_MESSAGE =
                 "There is no data for the enquiry.";
-        public static final String WRONG_CREDENTIALS = "CM04110E";
+        public static final String WRONG_CREDENTIALS = "Wrong credentials";
+
+        public static final String UNKNOWN_LOGIN_ERROR = "Unknown login error";
+
+        public static final TypeMapper<String> ERROR_MAPPER =
+                TypeMapper.<String>builder()
+                        .put(WRONG_CREDENTIALS, "CM04110E", "CM04111E")
+                        .put(UNKNOWN_LOGIN_ERROR, "AQ99999E", "CM04150E")
+                        .build();
     }
 
     public static class Logging {
