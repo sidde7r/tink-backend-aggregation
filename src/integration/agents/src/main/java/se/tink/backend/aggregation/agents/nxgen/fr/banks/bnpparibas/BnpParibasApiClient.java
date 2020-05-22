@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas;
 
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +104,7 @@ public class BnpParibasApiClient {
                                 tries),
                         hce);
             }
+            Uninterruptibles.sleepUninterruptibly(500, TimeUnit.MILLISECONDS);
         }
         if (tries == RETRY_POLICY_MAX_ATTEMPTS) {
             log.info(
