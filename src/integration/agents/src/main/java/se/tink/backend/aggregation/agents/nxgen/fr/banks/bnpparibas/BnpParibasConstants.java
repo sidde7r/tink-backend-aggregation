@@ -75,8 +75,8 @@ public class BnpParibasConstants {
         public static final String PAST_OR_PENDING = "2";
     }
 
-    public static final class AccountIbanDetails {
-        public static final int MODE_BENEFICIAIRE_TRUE = 1;
+    static final class AccountIbanDetails {
+        static final int MODE_BENEFICIAIRE_TRUE = 1;
     }
 
     public static final class TransactionDescriptionFormatting {
