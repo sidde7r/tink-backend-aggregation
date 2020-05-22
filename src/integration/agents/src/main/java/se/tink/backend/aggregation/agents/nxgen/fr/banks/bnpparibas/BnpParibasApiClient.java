@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,7 +113,9 @@ public class BnpParibasApiClient {
                     "getTransactionalAccountTransactions -- Max tries reached, returning empty list of transactions.");
             return Collections.EMPTY_LIST;
         }
-
+        if (Objects.isNull(response)) {
+            return Collections.EMPTY_LIST;
+        }
         response.assertReturnCodeOk();
 
         return response.getData().transactionsInfo().getAccountTransactions().toTinkTransactions();
