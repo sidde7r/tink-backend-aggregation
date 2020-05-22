@@ -26,7 +26,6 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
 
     protected final DeutscheBankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private DeutscheBankConfiguration deutscheBankConfiguration;
 
     public DeutscheBankAgent(
             CredentialsRequest request,
@@ -34,19 +33,17 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair());
 
-        deutscheBankConfiguration =
+        DeutscheBankConfiguration deutscheBankConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(DeutscheBankConfiguration.class);
 
         apiClient = new DeutscheBankApiClient(client, sessionStorage, deutscheBankConfiguration);
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-
         final DeutscheBankAuthenticatorController deutscheBankAuthenticatorController =
                 new DeutscheBankAuthenticatorController(
                         supplementalInformationHelper,
