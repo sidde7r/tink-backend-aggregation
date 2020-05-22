@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas;
 
 import com.google.common.base.Strings;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.rpc.NumpadRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.authenticator.rpc.NumpadResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.accounts.TransactionAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.transactions.AccountTransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.transactions.InfoUdcEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.rpc.AccountIbanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.rpc.AccountsResponse;
@@ -24,18 +26,19 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.rpc.TransactionalAccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.storage.BnpParibasPersistentStorage;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 
 public class BnpParibasApiClient {
     private final TinkHttpClient client;
     private static final Logger log = LoggerFactory.getLogger(BnpParibasApiClient.class);
+    private static final int RETRY_POLICY_MAX_ATTEMPTS = 3;
 
     public BnpParibasApiClient(TinkHttpClient client) {
         this.client = client;
     }
 
     public NumpadDataEntity getNumpadParams() {
-        log.info("Enter getNumpadParams()");
         NumpadRequest formBody = NumpadRequest.create();
 
         NumpadResponse response =
@@ -44,8 +47,6 @@ public class BnpParibasApiClient {
                         .post(NumpadResponse.class);
 
         response.assertReturnCodeOk();
-
-        log.info("Leave getNumpadParams()");
         return response.getData();
     }
 
@@ -55,7 +56,6 @@ public class BnpParibasApiClient {
             String passwordIndices,
             BnpParibasPersistentStorage bnpParibasPersistentStorage)
             throws LoginException {
-        log.info("Enter login()");
         LoginRequest formBody =
                 LoginRequest.create(username, gridId, passwordIndices, bnpParibasPersistentStorage);
 
@@ -70,51 +70,68 @@ public class BnpParibasApiClient {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         response.assertReturnCodeOk();
-
-        log.info("Leave login()");
         return response.getData();
     }
 
     public void keepAlive() {
-        log.info("Enter keepAlive()");
         BaseResponse response =
                 client.request(BnpParibasConstants.Urls.KEEP_ALIVE).get(BaseResponse.class);
 
         response.assertReturnCodeOk();
-        log.info("Leave keepAlive()");
     }
 
-    public AccountTransactionsEntity getTransactionalAccountTransactions(
+    public Collection<Transaction> getTransactionalAccountTransactions(
             Date fromDate, Date toDate, String ibanKey) {
-        log.info("Enter getTransactionalAccountTransactions()");
-
         TransactionalAccountTransactionsRequest request =
                 TransactionalAccountTransactionsRequest.create(fromDate, toDate, ibanKey);
 
-        TransactionalAccountTransactionsResponse response =
-                client.request(BnpParibasConstants.Urls.TRANSACTIONAL_ACCOUNT_TRANSACTIONS)
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .post(TransactionalAccountTransactionsResponse.class, request);
-
+        TransactionalAccountTransactionsResponse response = null;
+        int tries = 0;
+        for (tries = 0; tries < RETRY_POLICY_MAX_ATTEMPTS; tries++) {
+            try {
+                response =
+                        client.request(BnpParibasConstants.Urls.TRANSACTIONAL_ACCOUNT_TRANSACTIONS)
+                                .type(MediaType.APPLICATION_JSON_TYPE)
+                                .post(TransactionalAccountTransactionsResponse.class, request);
+                break;
+            } catch (javax.ws.rs.WebApplicationException wae) {
+                log.error(
+                        String.format(
+                                "[Try %d]: WebApplicationException -- getTransactionalAccountTransactions",
+                                tries),
+                        wae);
+            } catch (Exception e) {
+                log.error(
+                        String.format(
+                                "[Try %d]: Exception -- getTransactionalAccountTransactions",
+                                tries),
+                        e);
+                throw new RuntimeException(e);
+            }
+        }
+        if (tries == RETRY_POLICY_MAX_ATTEMPTS) {
+            log.info(
+                    "getTransactionalAccountTransactions -- Max tries reached, returning empty list of transactions.");
+            return Collections.emptyList();
+        }
+        if (Objects.isNull(response)) {
+            return Collections.emptyList();
+        }
         response.assertReturnCodeOk();
 
-        log.info("Leave getTransactionalAccountTransactions()");
-        return response.getData().transactionsInfo().getAccountTransactions();
+        return response.getData().transactionsInfo().getAccountTransactions().toTinkTransactions();
     }
 
     public InfoUdcEntity getAccounts() {
-        log.info("Enter getAccounts()");
         AccountsResponse response =
                 client.request(BnpParibasConstants.Urls.LIST_ACCOUNTS).get(AccountsResponse.class);
 
         response.assertReturnCodeOk();
 
-        log.info("Leave getAccounts()");
         return response.getData().getInfoUdc();
     }
 
     public List<TransactionAccountEntity> getAccountIbanDetails() {
-        log.info("Enter getAccountIbanDetails()");
         AccountIbanDetailsRequest request =
                 new AccountIbanDetailsRequest(
                         BnpParibasConstants.AccountIbanDetails.MODE_BENEFICIAIRE_TRUE);
@@ -125,7 +142,6 @@ public class BnpParibasApiClient {
 
         ibanDetailsResponse.assertReturnCodeOk();
 
-        log.info("Leave getAccountIbanDetails()");
         return ibanDetailsResponse.getData().getTransferInfo().getCreditAccountsList();
     }
 }

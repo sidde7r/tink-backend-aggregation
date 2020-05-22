@@ -24,9 +24,7 @@ public class BnpParibasTransactionalAccountTransactionFetcher
         String ibanKey = account.getFromTemporaryStorage(BnpParibasConstants.Storage.IBAN_KEY);
 
         Collection<? extends Transaction> transactions =
-                apiClient
-                        .getTransactionalAccountTransactions(fromDate, toDate, ibanKey)
-                        .toTinkTransactions();
+                apiClient.getTransactionalAccountTransactions(fromDate, toDate, ibanKey);
 
         return PaginatorResponseImpl.create(transactions);
     }

@@ -17,6 +17,7 @@ public class SocieteGeneraleAgentTest {
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
+                .expectLoggedIn(false)
                 .build()
                 .testRefresh();
     }
