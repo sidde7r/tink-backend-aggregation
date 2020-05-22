@@ -210,9 +210,7 @@ public class BankiaApiClient {
                     .post(LoginResponse.class);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE
-                    && e.getResponse()
-                            .getBody(String.class)
-                            .contains(BankiaConstants.Errors.WRONG_CREDENTIALS)) {
+                    || e.getResponse().getStatus() == BankiaConstants.Errors.LOGIN_ERROR) {
                 return e.getResponse().getBody(LoginResponse.class);
             }
             throw e;
