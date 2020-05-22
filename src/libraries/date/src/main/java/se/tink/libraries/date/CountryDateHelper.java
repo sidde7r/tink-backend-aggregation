@@ -210,6 +210,16 @@ public class CountryDateHelper {
     /**
      * If providedDate is null it will return the current date, otherwise return providedDate
      *
+     * @param providedDate the {@link java.time.LocalDate} to consider
+     * @return current {@link java.time.LocalDate} or providedDate
+     */
+    public java.time.LocalDate getProvidedDateOrCurrentLocalDate(java.time.LocalDate providedDate) {
+        return providedDate == null ? getNowAsLocalDate() : providedDate;
+    }
+
+    /**
+     * If providedDate is null it will return the current date, otherwise return providedDate
+     *
      * @param providedDate the date to consider
      * @return current date or providedDate
      */
