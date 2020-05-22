@@ -106,6 +106,7 @@ public class BnpParibasApiClient {
                                 "[Try %d]: Exception -- getTransactionalAccountTransactions",
                                 tries),
                         e);
+                throw new RuntimeException(e);
             }
         }
         if (tries == MAX_TRIES) {
