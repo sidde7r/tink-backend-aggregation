@@ -3,11 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static se.tink.backend.agents.rpc.AccountTypes.CHECKING;
 import static se.tink.backend.agents.rpc.AccountTypes.SAVINGS;
-import static se.tink.libraries.amount.ExactCurrencyAmount.of;
 
 import java.util.Collection;
 import junitparams.JUnitParamsRunner;
@@ -49,11 +46,10 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
         // then
         assertThat(Xs2aDevelopersConstants.ACCOUNT_TYPE_MAPPER.isOf(accountType, CHECKING))
                 .isTrue();
-        assertTransactionalAccountIsProperlyMapped(
-                accounts.iterator().next(), "PL666", "NAME", of("12.12", "EUR"));
-        verify(apiClient).getAccounts();
-        verify(apiClient).getBalance(accountEntity);
-        verifyNoMoreInteractions(apiClient);
+        TransactionalAccount account = accounts.iterator().next();
+        assertThat(account.getAccountNumber()).isEqualTo("PL666");
+        assertThat(account.getName()).isEqualTo("NAME");
+        assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inEUR(12.12));
     }
 
     @Test
@@ -70,11 +66,11 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
 
         // then
         assertThat(Xs2aDevelopersConstants.ACCOUNT_TYPE_MAPPER.isOf(accountType, SAVINGS)).isTrue();
-        assertTransactionalAccountIsProperlyMapped(
-                accounts.iterator().next(), "PL666", "NAME", of("12.12", "EUR"));
-        verify(apiClient).getAccounts();
-        verify(apiClient).getBalance(accountEntity);
-        verifyNoMoreInteractions(apiClient);
+
+        TransactionalAccount account = accounts.iterator().next();
+        assertThat(account.getAccountNumber()).isEqualTo("PL666");
+        assertThat(account.getName()).isEqualTo("NAME");
+        assertThat(account.getExactBalance()).isEqualTo(ExactCurrencyAmount.inEUR(12.12));
     }
 
     @Test
@@ -100,16 +96,6 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
     @SuppressWarnings("unused")
     private static Object savingAccountKeysParameters() {
         return Xs2aDevelopersConstants.SAVING_ACCOUNT_KEYS;
-    }
-
-    private void assertTransactionalAccountIsProperlyMapped(
-            TransactionalAccount account,
-            String accountNumber,
-            String name,
-            ExactCurrencyAmount balance) {
-        assertThat(account.getAccountNumber()).isEqualTo(accountNumber);
-        assertThat(account.getName()).isEqualTo(name);
-        assertThat(account.getExactBalance()).isEqualTo(balance);
     }
 
     private static GetAccountsResponse getAccountsResponse(String accountType) {
