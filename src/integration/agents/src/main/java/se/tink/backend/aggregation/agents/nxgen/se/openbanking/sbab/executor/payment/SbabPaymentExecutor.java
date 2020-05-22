@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment;
 
 import com.google.common.base.Strings;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -19,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstant
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.TransferData;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.SbabDateUtil;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.TypePair;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstant
 import se.tink.backend.aggregation.nxgen.controllers.signing.multifactor.bankid.BankIdSigningController;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.utils.accountidentifier.IntraBankChecker;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
@@ -78,7 +79,6 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-
         Payment payment = paymentRequest.getPayment();
 
         TransferData transferData =
@@ -86,7 +86,7 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .withAmount(payment.getAmount().doubleValue())
                         .withCounterPartAccount(payment.getCreditor().getAccountNumber())
                         .withCurrency(payment.getCurrency())
-                        .withTransferDate(getExecutionDateOrCurrentDate(payment))
+                        .withTransferDate(getExecutionDate(payment))
                         .withCounterPartStatement(
                                 getCounterPartStatementIfValidOrThrow(
                                         payment.getReference().getValue()))
@@ -125,13 +125,6 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
         }
 
         return counterPartStatement;
-    }
-
-    private String getExecutionDateOrCurrentDate(Payment payment) {
-        LocalDate executionDate =
-                payment.getExecutionDate() == null ? LocalDate.now() : payment.getExecutionDate();
-
-        return executionDate.toString();
     }
 
     @Override
@@ -201,6 +194,14 @@ public class SbabPaymentExecutor implements PaymentExecutor, FetchablePaymentExe
                         .orElseGet(Stream::empty)
                         .map(this::callFetch)
                         .collect(Collectors.toList()));
+    }
+
+    private String getExecutionDate(Payment payment) {
+        return SbabDateUtil.getTransferDate(
+                payment.getExecutionDate(),
+                IntraBankChecker.isSwedishMarketIntraBank(
+                        payment.getDebtor().getAccountIdentifier(),
+                        payment.getCreditor().getAccountIdentifier()));
     }
 
     private PaymentResponse callFetch(PaymentRequest paymentRequest) {
