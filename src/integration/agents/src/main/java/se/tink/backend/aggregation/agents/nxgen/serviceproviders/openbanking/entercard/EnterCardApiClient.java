@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.EnterCardPaymentInitiationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.PaymentInitiationRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.utils.EnterCardUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -105,23 +104,6 @@ public final class EnterCardApiClient {
         setTokenToStorage(getToken(response.getCode()));
 
         return getToken(response.getCode());
-    }
-
-    public URL getAuthorizeUrl(String state) {
-        final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl();
-        final String codeVerifier = EnterCardUtils.getCodeVerifier();
-        persistentStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
-
-        return createRequest(Urls.AUTHORIZATION)
-                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
-                .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
-                .queryParam(QueryKeys.CLIENT_ID, clientId)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
-                .queryParam(QueryKeys.CODE_CHALLENGE, EnterCardUtils.getCodeChallenge(codeVerifier))
-                .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.S256)
-                .getUrl();
     }
 
     public OAuth2Token getToken(String code) {

@@ -7,11 +7,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.AppCodeForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.KeepAliveForm;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.SelectRegionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.SignInResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.StrongAuthenticationForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.StrongAuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.UserAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.rpc.OperationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
@@ -37,16 +35,6 @@ public class CreditAgricoleApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    /* SIGN IN METHODS */
-
-    public SelectRegionResponse selectRegion() {
-        return client.request(
-                        Url.SELECT_REGION.parameter(
-                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID)))
-                .accept(MediaType.APPLICATION_JSON)
-                .get(SelectRegionResponse.class);
-    }
-
     public byte[] numberPad() {
         return client.request(Url.NUMBER_PAD).accept(MediaType.WILDCARD).get(byte[].class);
     }
@@ -61,13 +49,6 @@ public class CreditAgricoleApiClient {
                                 .queryParam(QueryParam.USER_ACCOUNT_NUMBER, userAccountNumber))
                 .accept(MediaType.APPLICATION_JSON)
                 .get(SignInResponse.class);
-    }
-
-    public UserAgreementResponse userAgreement() {
-        return client.request(
-                        Url.USER_AGREEMENT.parameter(
-                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID)))
-                .get(UserAgreementResponse.class);
     }
 
     public DefaultResponse appCode(String appCode) {

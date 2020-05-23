@@ -291,23 +291,6 @@ public class BanquePopulaireApiClient {
         return response.toLowerCase().contains(BanquePopulaireConstants.TRUE);
     }
 
-    public void logout() {
-        try {
-            baseRequest(
-                            getAppConfigEntity().getAuthBaseUrl()
-                                    + getBankEntity().getApplicationAPIContextRoot()
-                                    + BanquePopulaireConstants.Urls.LOGOUT_PATH)
-                    .get(HttpResponse.class);
-
-            baseRequest(
-                            getAppConfigEntity().getAuthBaseUrl()
-                                    + getAppConfigEntity().getWebSSOv3LogoutURL())
-                    .get(HttpResponse.class);
-        } catch (Exception e) {
-            LOGGER.info("Error logging out", e);
-        }
-    }
-
     private void addCookiesForAuthDomain(String newDomainUri) {
         try {
             URI uri = new URI(newDomainUri);

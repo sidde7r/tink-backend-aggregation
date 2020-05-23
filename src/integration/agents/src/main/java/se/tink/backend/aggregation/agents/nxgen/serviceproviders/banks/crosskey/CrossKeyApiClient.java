@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.creditcard.rpc.CardsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyAccount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.investment.rpc.FundInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.investment.rpc.InstrumentDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.investment.rpc.InstrumentDetailsResponse;
@@ -193,13 +192,6 @@ public class CrossKeyApiClient {
     public CardsResponse fetchCards(CardsRequest request) {
         return post(
                 buildRequest(CrossKeyConstants.Url.FETCH_GETCARDS), CardsResponse.class, request);
-    }
-
-    public CrossKeyCard fetchCard(String cardId) {
-        return get(
-                buildRequest(CrossKeyConstants.Url.FETCH_GETCARD)
-                        .queryParam(CrossKeyConstants.Query.ID, cardId),
-                CrossKeyCard.class);
     }
 
     public List<CreditCardTransactionEntity> fetchCreditCardTransactions(

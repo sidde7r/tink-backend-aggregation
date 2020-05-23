@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
@@ -22,9 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestGet;
@@ -169,21 +166,6 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
                                         () ->
                                                 new IllegalStateException(
                                                         ErrorMessages.MISSING_TOKEN)));
-    }
-
-    private RequestBuilder buildRequestForIbans(final String reqPath, final List<String> ibans) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, 2);
-        final String date = DateFormat.formatDate(calendar.getTime(), DateFormat.YEAR_MONTH_DAY);
-
-        final AccessEntity access = new AccessEntity.Builder().addIbans(ibans).build();
-
-        final ConsentBaseRequest consentRequest = new ConsentBaseRequest();
-        consentRequest.setAccess(access);
-
-        final String payload = consentRequest.toData();
-        final String digest = generateDigest(payload);
-        return buildRequest(date, digest, reqPath);
     }
 
     public CreatePaymentResponse createPayment(final CreatePaymentRequest paymentRequest) {

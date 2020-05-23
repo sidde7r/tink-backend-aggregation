@@ -44,8 +44,4 @@ public enum AddressType2Code {
     public String value() {
         return name();
     }
-
-    public static AddressType2Code fromValue(String v) {
-        return valueOf(v);
-    }
 }

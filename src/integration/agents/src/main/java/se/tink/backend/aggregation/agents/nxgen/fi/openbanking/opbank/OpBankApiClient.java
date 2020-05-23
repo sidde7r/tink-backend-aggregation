@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.StorageKeys;
@@ -189,18 +188,5 @@ public final class OpBankApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
-    }
-
-    private RequestBuilder createRequestInSession(URL url) {
-        final OAuth2Token authToken = getTokenFromStorage();
-
-        return createRequest(url).addBearerToken(authToken);
-    }
-
-    private OAuth2Token getTokenFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 }

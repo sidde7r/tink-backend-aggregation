@@ -28,10 +28,6 @@ public class AapFileParser implements RequestResponseParser {
                                 .collect(Collectors.toList());
     }
 
-    public AapFileParser(List<String> lines) {
-        this.lines = lines;
-    }
-
     @Override
     public ImmutableSet<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
 

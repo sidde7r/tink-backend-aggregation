@@ -190,11 +190,6 @@ public class CountryDateHelper {
         return calendar;
     }
 
-    /** Returns whether a localDate is a business day or not. */
-    public boolean isBusinessDay(LocalDate date) {
-        return isBusinessDay(date.toDate());
-    }
-
     /** Returns whether a calendar date is a business day or not. */
     public boolean isBusinessDay(Calendar calendar) {
         if (holidays.contains(

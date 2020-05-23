@@ -2,7 +2,6 @@ package se.tink.libraries.amount;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -94,10 +93,6 @@ public class Amount extends Number {
         this.value = amount;
     }
 
-    public void setValue(long unscaledValue, int scale) {
-        setValue(toBigDecimal(unscaledValue, scale));
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Amount)) {
@@ -137,21 +132,6 @@ public class Amount extends Number {
     }
 
     @JsonIgnore
-    public boolean isGreaterThan(int pivot) {
-        return value > pivot;
-    }
-
-    @JsonIgnore
-    public boolean isGreaterThan(double pivot) {
-        return value > pivot;
-    }
-
-    @JsonIgnore
-    public boolean isLessThan(int pivot) {
-        return value < pivot;
-    }
-
-    @JsonIgnore
     public boolean isLessThan(double pivot) {
         return value < pivot;
     }
@@ -165,20 +145,6 @@ public class Amount extends Number {
     public Amount subtract(double toSubtract) {
 
         return new Amount(this.currency, this.value - toSubtract);
-    }
-
-    @JsonIgnore
-    public Amount subtract(Amount toSubtract) {
-        Preconditions.checkArgument(
-                Objects.equals(this.currency, toSubtract.getCurrency()), CURRENCY_ERROR_MESSAGE);
-        return subtract(toSubtract.getValue());
-    }
-
-    @JsonIgnore
-    public Amount add(Amount toAdd) {
-        Preconditions.checkArgument(
-                Objects.equals(this.currency, toAdd.getCurrency()), CURRENCY_ERROR_MESSAGE);
-        return add(toAdd.getValue());
     }
 
     public BigDecimal toBigDecimal() {
@@ -211,14 +177,5 @@ public class Amount extends Number {
 
     public Amount negate() {
         return new Amount(currency, -value);
-    }
-
-    /**
-     * Removes negative sign.
-     *
-     * @return Unsigned amount
-     */
-    public Amount stripSign() {
-        return new Amount(currency, Math.abs(value));
     }
 }

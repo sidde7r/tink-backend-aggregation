@@ -1,14 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
-import com.google.common.base.Charsets;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
@@ -127,14 +123,6 @@ public class BawagPskApiClient {
         // class for this purpose.
 
         return new GetAccountInformationListResponse(envelope);
-    }
-
-    private static String readFileContents(final String path) {
-        try {
-            return new String(FileUtils.readFileToByteArray(new File(path)), Charsets.UTF_8);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
     }
 
     public GetAccountStatementItemsResponse getGetAccountStatementItemsResponse(

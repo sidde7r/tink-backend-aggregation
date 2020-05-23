@@ -244,14 +244,6 @@ public final class DateUtils {
         return m1.until(m2, ChronoUnit.MONTHS);
     }
 
-    public static boolean before(Date date1, Date date2) {
-        return date1.compareTo(date2) < 0;
-    }
-
-    public static boolean after(Date date1, Date date2) {
-        return date1.compareTo(date2) > 0;
-    }
-
     public static java.time.LocalDate toJavaTimeLocalDate(java.util.Date date) {
         if (date != null) {
             return Instant.ofEpochMilli(date.getTime()).atZone(DEFAULT_ZONE_ID).toLocalDate();

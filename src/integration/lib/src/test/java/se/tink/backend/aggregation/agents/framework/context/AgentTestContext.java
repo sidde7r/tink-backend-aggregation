@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class AgentTestContext extends AgentContext {
@@ -176,10 +175,6 @@ public class AgentTestContext extends AgentContext {
         }
     }
 
-    public void processAccounts() {
-        log.info("Processing accounts");
-    }
-
     @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         log.info("Updating account");
@@ -203,10 +198,6 @@ public class AgentTestContext extends AgentContext {
         } catch (Exception e) {
             // NOOP.
         }
-    }
-
-    public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountId) {
-        throw new NotImplementedException("Account features need to be cached to be retrievable");
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {
@@ -283,15 +274,6 @@ public class AgentTestContext extends AgentContext {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
         transactionsByAccountBankId.put(accountUniqueId, transactions);
-    }
-
-    public void updateSignableOperation(SignableOperation operation) {
-        log.info(
-                "Updating transfer status: "
-                        + operation.getStatus()
-                        + (Strings.isNullOrEmpty(operation.getStatusMessage())
-                                ? ""
-                                : " (" + operation.getStatusMessage() + ")"));
     }
 
     @Override

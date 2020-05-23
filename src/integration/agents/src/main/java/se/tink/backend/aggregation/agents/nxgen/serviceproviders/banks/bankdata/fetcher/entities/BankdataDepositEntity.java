@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class BankdataDepositEntity {
@@ -50,10 +49,6 @@ public class BankdataDepositEntity {
 
     public boolean isOwnDeposit() {
         return ownDeposit;
-    }
-
-    public Amount toTinkAmount() {
-        return Amount.inDKK(quotedValue);
     }
 
     public double getMarketValue() {

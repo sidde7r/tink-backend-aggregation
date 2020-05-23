@@ -22,8 +22,4 @@ public class JsonUtils {
             throw new IllegalStateException(je);
         }
     }
-
-    public static void prettyPrintJson(Object json) {
-        System.out.println(prettyJson(json));
-    }
 }

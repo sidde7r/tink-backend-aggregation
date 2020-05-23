@@ -184,10 +184,6 @@ public class DanskeBankApiClient {
                 response, ListSecurityDetailsResponse.class);
     }
 
-    public void keepAlive() {
-        postRequest(constants.getExtendSessionUrl(), "{}");
-    }
-
     public BindDeviceResponse bindDevice(String stepUpTokenValue, BindDeviceRequest request) {
         String secSystem = configuration.getBindDeviceSecuritySystem().orElse("");
         RequestBuilder requestBuilder =

@@ -13,13 +13,6 @@ public class AgentContractEntitiesJsonFileParser {
         agentContractEntitiesJsonParser = new AgentContractEntitiesJsonParser();
     }
 
-    public AgentContractEntitiesJsonFileParser(
-            ResourceFileReader resourceFileReader,
-            AgentContractEntitiesJsonParser agentContractEntitiesJsonParser) {
-        this.resourceFileReader = resourceFileReader;
-        this.agentContractEntitiesJsonParser = agentContractEntitiesJsonParser;
-    }
-
     public AgentContractEntity parseContractOnBasisOfFile(String filePath) {
         String fileContent = resourceFileReader.read(filePath);
         return agentContractEntitiesJsonParser.parse(fileContent);

@@ -40,7 +40,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -274,26 +273,5 @@ public final class LansforsakringarApiClient {
     public void signPayment(String paymentId) {
         createRequestInSession(new URL(Urls.SIGN_PAYMENT).parameter(IdTags.PAYMENT_ID, paymentId))
                 .post(AuthorizePaymentResponse.class);
-    }
-
-    private void getConsentScaStatus(String consentId, String authorizationId) {
-        HttpResponse response =
-                createRequestInSession(
-                                new URL(Urls.SCA_STATUS)
-                                        .parameter(IdTags.CONSENT_ID, consentId)
-                                        .parameter(IdTags.AUTHORIZATION_ID, authorizationId))
-                        .header(
-                                LansforsakringarConstants.HeaderKeys.PSU_ID,
-                                getCredentials().getField(Field.Key.USERNAME))
-                        .header(
-                                LansforsakringarConstants.HeaderKeys.PSU_ID_TYPE,
-                                LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
-                        .header(
-                                LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI,
-                                getConfiguration().getRedirectUrl())
-                        .header(
-                                LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED,
-                                false)
-                        .get(HttpResponse.class);
     }
 }

@@ -14,11 +14,6 @@ public class AmericanExpressV62Utils {
                 && !AmericanExpressV62Constants.NOT_APPLICABLE.equalsIgnoreCase(value);
     }
 
-    public static double parseAmount(final String value) {
-        return StringUtils.parseAmount(
-                value.replaceAll(AmericanExpressV62Constants.NUMBER_REGEX, ""));
-    }
-
     public static BigDecimal parseAmountToBigDecimal(final String value) {
         return BigDecimal.valueOf(
                 StringUtils.parseAmount(

@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.norwegian.utils;
 
-import com.google.common.collect.Lists;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -68,19 +66,5 @@ public class CreditCardParsingUtils {
         }
 
         return Optional.of(matcher.group(1));
-    }
-
-    /** Parses list of pages that could be collected */
-    public static List<Integer> parsePages(String htmlContent) {
-
-        List<Integer> result = Lists.newArrayList();
-
-        Elements selects = Jsoup.parse(htmlContent).select("#filter").first().children();
-
-        for (Element select : selects) {
-            result.add(Integer.parseInt(select.val()));
-        }
-
-        return result;
     }
 }

@@ -35,8 +35,4 @@ public class AccountIdentifiersResponse {
         return AccountIdentifier.create(
                 AccountIdentifier.Type.SORT_CODE, bankIdentifier + accountIdentifier);
     }
-
-    public boolean hasIdentifier(AccountIdentifier identifier) {
-        return identifier.equals(getIbanIdentifier()) || identifier.equals(getSortCodeIdentifier());
-    }
 }
