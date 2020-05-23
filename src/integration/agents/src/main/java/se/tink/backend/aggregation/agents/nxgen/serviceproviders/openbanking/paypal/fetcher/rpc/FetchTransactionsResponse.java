@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +62,7 @@ public class FetchTransactionsResponse implements TransactionKeyPaginatorRespons
     private String extractNextPageToken(LinkEntity link) {
         try {
             return URLEncodedUtils.parse(
-                            new URI(link.getReference()).getRawQuery(), Charset.forName("UTF-8"))
+                            new URI(link.getReference()).getRawQuery(), StandardCharsets.UTF_8)
                     .stream()
                     .filter(p -> p.getName().equals(QueryKeys.NEXT_PAGE_TOKEN))
                     .findFirst()

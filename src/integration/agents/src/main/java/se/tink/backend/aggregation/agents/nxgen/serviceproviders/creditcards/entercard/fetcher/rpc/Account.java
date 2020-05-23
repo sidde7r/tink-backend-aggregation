@@ -65,7 +65,7 @@ public class Account {
         }
         return cards.stream()
                 .filter(Objects::nonNull)
-                .filter(card -> card.isPrimary() == true)
+                .filter(card -> card.isPrimary())
                 .findFirst()
                 .orElse(cards.stream().findFirst().get());
     }

@@ -25,7 +25,6 @@ public class AccountIdPairsTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void extractAccountIdPairsWhenWebPageHasMultipleAccountIdAnchors() {
         // given
         String webpage =

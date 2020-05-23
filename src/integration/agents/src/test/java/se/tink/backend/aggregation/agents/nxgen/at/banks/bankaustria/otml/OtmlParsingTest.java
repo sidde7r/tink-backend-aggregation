@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -57,7 +58,8 @@ public class OtmlParsingTest {
         Document doc =
                 documentBuilder.parse(
                         new ByteArrayInputStream(
-                                BankAustriaTestData.SETTINGS_DATA_SOURCES.getBytes("UTF-8")));
+                                BankAustriaTestData.SETTINGS_DATA_SOURCES.getBytes(
+                                        StandardCharsets.UTF_8)));
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         XPathExpression expression =
@@ -83,7 +85,7 @@ public class OtmlParsingTest {
                 documentBuilder.parse(
                         new ByteArrayInputStream(
                                 BankAustriaTestData.SETTINGS_ASSUMED_DATA_SOURCES.getBytes(
-                                        "UTF-8")));
+                                        StandardCharsets.UTF_8)));
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         XPathExpression expression =
@@ -115,7 +117,7 @@ public class OtmlParsingTest {
                 documentBuilder.parse(
                         new ByteArrayInputStream(
                                 BankAustriaTestData.BALANCE_MOVEMENTS_FOR_ACCOUNT.getBytes(
-                                        "UTF-8")));
+                                        StandardCharsets.UTF_8)));
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         XPathExpression expression =
@@ -137,7 +139,7 @@ public class OtmlParsingTest {
                 documentBuilder.parse(
                         new ByteArrayInputStream(
                                 BankAustriaTestData.BALANCE_MOVEMENTS_FOR_ACCOUNT.getBytes(
-                                        "UTF-8")));
+                                        StandardCharsets.UTF_8)));
         XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         XPathExpression expression =

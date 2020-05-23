@@ -5,7 +5,7 @@ import com.nimbusds.srp6.SRP6Routines;
 import com.nimbusds.srp6.XRoutine;
 import com.nimbusds.srp6.XRoutineWithUserIdentity;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -65,8 +65,8 @@ public class Srp {
         return xRoutine.computeX(
                 digest,
                 salt,
-                userId.getBytes(Charset.forName("UTF-8")),
-                password.getBytes(Charset.forName("UTF-8")));
+                userId.getBytes(StandardCharsets.UTF_8),
+                password.getBytes(StandardCharsets.UTF_8));
     }
 
     private BigInteger computeU(BigInteger B) {

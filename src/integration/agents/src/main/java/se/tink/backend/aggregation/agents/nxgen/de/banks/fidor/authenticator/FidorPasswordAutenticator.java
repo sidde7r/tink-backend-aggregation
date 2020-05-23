@@ -111,8 +111,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
 
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 
-        String code = driver.getCurrentUrl().split("(=|&)")[1];
-        return code;
+        return driver.getCurrentUrl().split("([=&])")[1];
     }
 
     @Override
