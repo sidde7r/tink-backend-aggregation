@@ -157,7 +157,7 @@ public class NordeaFIAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new NordeaFISessionHandler(apiClient, sessionStorage);
+        return new NordeaFISessionHandler(apiClient);
     }
 
     @Override

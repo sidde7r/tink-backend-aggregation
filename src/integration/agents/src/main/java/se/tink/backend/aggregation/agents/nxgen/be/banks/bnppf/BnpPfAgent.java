@@ -84,6 +84,6 @@ public class BnpPfAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BnpPfSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 }

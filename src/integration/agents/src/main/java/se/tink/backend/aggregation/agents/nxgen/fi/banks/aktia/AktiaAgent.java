@@ -113,7 +113,7 @@ public class AktiaAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new AktiaSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 
     @Override
