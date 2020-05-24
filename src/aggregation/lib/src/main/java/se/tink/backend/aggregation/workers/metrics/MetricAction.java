@@ -34,7 +34,11 @@ public class MetricAction implements MetricActionIface {
     public void start(List<? extends Number> metricBuckets) {
         Preconditions.checkState(timer == null, "MetricAction already in progress");
 
-        timer = metricCacheLoader.startTimer(metricPath.suffix("duration"), metricBuckets);
+        timer =
+                metricCacheLoader
+                        .getMetricRegistry()
+                        .timer(metricPath.suffix("duration"), metricBuckets)
+                        .time();
         state.add(this);
     }
 
