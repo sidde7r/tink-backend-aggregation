@@ -26,7 +26,6 @@ public class MetricActionTest {
     private Counter counterMock;
     private MetricRegistry metricRegistry;
     private MetricAction action;
-    private Credentials credentials;
 
     @Before
     public void setup() {
@@ -36,7 +35,6 @@ public class MetricActionTest {
         counterMock = mock(Counter.class);
         when(metricRegistry.meter(any())).thenReturn(counterMock);
         state = mockMetricState();
-        credentials = mockCredentials();
         action = new MetricAction(state, metricRegistry, ACTION_NAME);
     }
 
