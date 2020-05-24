@@ -79,8 +79,4 @@ public class MetricAction implements MetricActionIface {
             return name().toLowerCase();
         }
     }
-
-    public MetricId getMetricId() {
-        return this.metricPath;
-    }
 }
