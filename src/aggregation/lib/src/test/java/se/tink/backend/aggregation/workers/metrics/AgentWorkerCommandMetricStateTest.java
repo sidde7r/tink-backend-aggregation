@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.workers.metrics;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -22,7 +21,6 @@ import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 
 public class AgentWorkerCommandMetricStateTest {
     private AgentWorkerCommandMetricState metrics;
-    private MetricCacheLoader loader;
     private Timer timerMock;
     private Counter counterMock;
     private MetricRegistry metricRegistry;
@@ -39,18 +37,19 @@ public class AgentWorkerCommandMetricStateTest {
         when(metricRegistry.timer(any())).thenReturn(timerMock);
         counterMock = mock(Counter.class);
         when(metricRegistry.meter(any())).thenReturn(counterMock);
-        loader = spy(new MetricCacheLoader(metricRegistry));
         provider = mockProvider();
         credentials = mockCredentials();
         requestType = CredentialsRequestType.UPDATE;
 
-        metrics = new AgentWorkerCommandMetricState(provider, credentials, loader, requestType);
+        metrics =
+                new AgentWorkerCommandMetricState(
+                        provider, credentials, metricRegistry, requestType);
         metrics.init(command);
     }
 
     private void mockNextTimer() {
         Timer.Context timer = mock(Timer.Context.class);
-        when(loader.getMetricRegistry().timer(any(MetricId.class)).time()).thenReturn(timer);
+        when(metricRegistry.timer(any(MetricId.class)).time()).thenReturn(timer);
     }
 
     private MetricAction buildAction(String action) {
@@ -84,7 +83,9 @@ public class AgentWorkerCommandMetricStateTest {
 
     @Test(expected = IllegalStateException.class)
     public void ensureExceptionIsThrown_whenMetricsState_notInitiatedByCommand_onStart() {
-        metrics = new AgentWorkerCommandMetricState(provider, credentials, loader, requestType);
+        metrics =
+                new AgentWorkerCommandMetricState(
+                        provider, credentials, metricRegistry, requestType);
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
     }
 
@@ -96,7 +97,9 @@ public class AgentWorkerCommandMetricStateTest {
 
     @Test(expected = IllegalStateException.class)
     public void ensureExceptionIsThrown_whenMetricsState_notInitiatedByCommand_onGetAction() {
-        metrics = new AgentWorkerCommandMetricState(provider, credentials, loader, requestType);
+        metrics =
+                new AgentWorkerCommandMetricState(
+                        provider, credentials, metricRegistry, requestType);
         buildAction("should-throw-exception");
     }
 

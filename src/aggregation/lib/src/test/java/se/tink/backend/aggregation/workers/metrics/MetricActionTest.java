@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.workers.metrics;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +22,6 @@ public class MetricActionTest {
     private static final MetricId ACTION_NAME = MetricId.newId("test_action");
 
     private AgentWorkerCommandMetricState state;
-    private MetricCacheLoader loader;
     private Timer timerMock;
     private Counter counterMock;
     private MetricRegistry metricRegistry;
@@ -37,10 +35,9 @@ public class MetricActionTest {
         when(metricRegistry.timer(any())).thenReturn(timerMock);
         counterMock = mock(Counter.class);
         when(metricRegistry.meter(any())).thenReturn(counterMock);
-        loader = spy(new MetricCacheLoader(metricRegistry));
         state = mockMetricState();
         credentials = mockCredentials();
-        action = new MetricAction(state, loader, ACTION_NAME);
+        action = new MetricAction(state, metricRegistry, ACTION_NAME);
     }
 
     private AgentWorkerCommandMetricState mockMetricState() {
@@ -48,7 +45,8 @@ public class MetricActionTest {
         Credentials credentials = mockCredentials();
         CredentialsRequestType requestType = CredentialsRequestType.UPDATE;
 
-        return new AgentWorkerCommandMetricState(provider, credentials, loader, requestType);
+        return new AgentWorkerCommandMetricState(
+                provider, credentials, metricRegistry, requestType);
     }
 
     private Credentials mockCredentials() {
@@ -61,12 +59,12 @@ public class MetricActionTest {
 
     private void mockNextTimer() {
         Timer.Context timer = mock(Timer.Context.class);
-        when(loader.getMetricRegistry().timer(ACTION_NAME).time()).thenReturn(timer);
+        when(metricRegistry.timer(ACTION_NAME).time()).thenReturn(timer);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureInstantiationThrowsException_whenState_isNull() {
-        new MetricAction(null, loader, MetricId.newId("invalid-instantiation"));
+        new MetricAction(null, metricRegistry, MetricId.newId("invalid-instantiation"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -97,21 +95,16 @@ public class MetricActionTest {
     @Test
     public void ensureLoadedActionName_andActionOutcome_isUsed_whenMarking() {
         action.completed();
-        verify(loader).getMetricRegistry();
         verify(metricRegistry).meter(markerName("completed"));
         verify(counterMock).inc();
-        reset(loader);
         reset(counterMock);
 
         action.failed();
-        verify(loader).getMetricRegistry();
         verify(metricRegistry).meter(markerName("failed"));
         verify(counterMock).inc();
-        reset(loader);
         reset(counterMock);
 
         action.cancelled();
-        verify(loader).getMetricRegistry();
         verify(metricRegistry).meter(markerName("cancelled"));
         verify(counterMock).inc();
     }
