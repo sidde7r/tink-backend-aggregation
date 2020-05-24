@@ -24,4 +24,8 @@ public class MetricCacheLoader {
     Timer.Context startTimer(MetricId timerPath, List<? extends Number> metricBuckets) {
         return metricRegistry.timer(timerPath, metricBuckets).time();
     }
+
+    public MetricRegistry getMetricRegistry() {
+        return metricRegistry;
+    }
 }
