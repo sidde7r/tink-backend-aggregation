@@ -17,10 +17,6 @@ public class MetricCacheLoader {
         metricRegistry.meter(meterPath).inc();
     }
 
-    Timer.Context startTimer(MetricId timerPath) {
-        return metricRegistry.timer(timerPath).time();
-    }
-
     Timer.Context startTimer(MetricId timerPath, List<? extends Number> metricBuckets) {
         return metricRegistry.timer(timerPath, metricBuckets).time();
     }

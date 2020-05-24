@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.metrics;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -14,12 +15,17 @@ import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.metrics.types.timers.Timer;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 
 public class AgentWorkerCommandMetricStateTest {
     private AgentWorkerCommandMetricState metrics;
     private MetricCacheLoader loader;
+    private Timer timerMock;
+    private Counter counterMock;
+    private MetricRegistry metricRegistry;
     private Provider provider;
     private Credentials credentials;
     private CredentialsRequestType requestType;
@@ -28,7 +34,12 @@ public class AgentWorkerCommandMetricStateTest {
     public void setup() {
         MetricsCommand command = mockCommand("test_command");
 
-        loader = mock(MetricCacheLoader.class);
+        metricRegistry = mock(MetricRegistry.class);
+        timerMock = mock(Timer.class);
+        when(metricRegistry.timer(any())).thenReturn(timerMock);
+        counterMock = mock(Counter.class);
+        when(metricRegistry.meter(any())).thenReturn(counterMock);
+        loader = spy(new MetricCacheLoader(metricRegistry));
         provider = mockProvider();
         credentials = mockCredentials();
         requestType = CredentialsRequestType.UPDATE;
@@ -39,7 +50,7 @@ public class AgentWorkerCommandMetricStateTest {
 
     private void mockNextTimer() {
         Timer.Context timer = mock(Timer.Context.class);
-        when(loader.startTimer(any(MetricId.class))).thenReturn(timer);
+        when(loader.getMetricRegistry().timer(any(MetricId.class)).time()).thenReturn(timer);
     }
 
     private MetricAction buildAction(String action) {

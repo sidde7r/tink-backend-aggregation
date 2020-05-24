@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.workers.metrics;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +14,8 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.metrics.types.timers.Timer;
 
 public class MetricActionTest {
@@ -19,12 +23,20 @@ public class MetricActionTest {
 
     private AgentWorkerCommandMetricState state;
     private MetricCacheLoader loader;
+    private Timer timerMock;
+    private Counter counterMock;
+    private MetricRegistry metricRegistry;
     private MetricAction action;
     private Credentials credentials;
 
     @Before
     public void setup() {
-        loader = mock(MetricCacheLoader.class);
+        metricRegistry = mock(MetricRegistry.class);
+        timerMock = mock(Timer.class);
+        when(metricRegistry.timer(any())).thenReturn(timerMock);
+        counterMock = mock(Counter.class);
+        when(metricRegistry.meter(any())).thenReturn(counterMock);
+        loader = spy(new MetricCacheLoader(metricRegistry));
         state = mockMetricState();
         credentials = mockCredentials();
         action = new MetricAction(state, loader, ACTION_NAME);
@@ -48,7 +60,7 @@ public class MetricActionTest {
 
     private void mockNextTimer() {
         Timer.Context timer = mock(Timer.Context.class);
-        when(loader.startTimer(ACTION_NAME)).thenReturn(timer);
+        when(loader.getMetricRegistry().timer(ACTION_NAME).time()).thenReturn(timer);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -77,7 +89,8 @@ public class MetricActionTest {
     @Test
     public void ensureLoadedActionName_isUsed_whenStartingTimer() {
         action.start();
-        verify(loader).startTimer(MetricId.newId("test_action_duration"));
+        verify(metricRegistry).timer(MetricId.newId("test_action_duration"));
+        verify(timerMock).time();
     }
 
     @Test
