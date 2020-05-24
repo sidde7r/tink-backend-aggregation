@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.metrics;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -96,13 +97,23 @@ public class MetricActionTest {
     @Test
     public void ensureLoadedActionName_andActionOutcome_isUsed_whenMarking() {
         action.completed();
-        verify(loader).mark(markerName("completed"));
+        verify(loader).getMetricRegistry();
+        verify(metricRegistry).meter(markerName("completed"));
+        verify(counterMock).inc();
+        reset(loader);
+        reset(counterMock);
 
         action.failed();
-        verify(loader).mark(markerName("failed"));
+        verify(loader).getMetricRegistry();
+        verify(metricRegistry).meter(markerName("failed"));
+        verify(counterMock).inc();
+        reset(loader);
+        reset(counterMock);
 
         action.cancelled();
-        verify(loader).mark(markerName("cancelled"));
+        verify(loader).getMetricRegistry();
+        verify(metricRegistry).meter(markerName("cancelled"));
+        verify(counterMock).inc();
     }
 
     private MetricId markerName(String name) {

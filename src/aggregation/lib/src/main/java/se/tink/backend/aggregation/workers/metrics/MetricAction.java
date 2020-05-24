@@ -69,7 +69,10 @@ public class MetricAction implements MetricActionIface {
     }
 
     private void mark(Outcome outcome) {
-        metricCacheLoader.mark(metricPath.label("outcome", outcome.getMetricName()));
+        metricCacheLoader
+                .getMetricRegistry()
+                .meter(metricPath.label("outcome", outcome.getMetricName()))
+                .inc();
     }
 
     private enum Outcome {
