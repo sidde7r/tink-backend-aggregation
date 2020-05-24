@@ -17,15 +17,4 @@ public interface MetricActionIface {
     void cancelled();
 
     void unavailable();
-
-    enum Outcome {
-        COMPLETED,
-        FAILED,
-        CANCELLED,
-        UNAVAILABLE;
-
-        protected String getMetricName() {
-            return name().toLowerCase();
-        }
-    }
 }
