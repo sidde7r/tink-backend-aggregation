@@ -298,6 +298,8 @@ public class SwedbankBaseConstants {
     public static class ErrorMessage {
         public static final String INVALID_DESTINATION =
                 BankTransferConstants.ErrorMessage.INVALID_DESTINATION;
+        public static final String INVALID_DESTINATION_MESSAGE =
+                "Please fill in your own note with letters and numbers.";
         public static final String INVALID_SOURCE =
                 BankTransferConstants.ErrorMessage.INVALID_SOURCE;
         public static final String SOURCE_NOT_FOUND = "Source account could not be found at bank.";
