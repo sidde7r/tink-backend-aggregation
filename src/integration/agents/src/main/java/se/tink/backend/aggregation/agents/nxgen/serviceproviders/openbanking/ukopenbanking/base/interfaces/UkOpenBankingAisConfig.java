@@ -25,8 +25,6 @@ public interface UkOpenBankingAisConfig {
 
     URL getWellKnownURL();
 
-    URL getIdentityDataURL();
-
     boolean isPartyEndpointEnabled();
 
     boolean isAccountPartiesEndpointEnabled();

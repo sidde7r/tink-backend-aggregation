@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 public final class AccountV31Fetcher<T extends Account> implements AccountFetcher<T> {
 
     private final UkOpenBankingApiClient apiClient;
-    private final PartyDataV31Fetcher identityFetcher;
+    private final IdentityDataV31Fetcher identityFetcher;
     private final AccountTypeMapper accountTypeMapper;
     private final AccountMapper<T> accountMapper;
 

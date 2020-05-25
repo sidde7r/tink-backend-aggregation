@@ -25,10 +25,6 @@ public class IdentityDataV31Entity {
 
     private String mobile;
 
-    public IdentityDataEntity toTinkIdentityData() {
-        return new IdentityDataEntity(getName());
-    }
-
     public String getName() {
         return Objects.nonNull(fullLegalName) ? fullLegalName : name;
     }
