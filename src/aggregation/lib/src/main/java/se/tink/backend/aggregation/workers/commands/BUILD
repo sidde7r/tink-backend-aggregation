@@ -96,5 +96,6 @@ java_library(
         "@com_tink_api_grpc//event_producer_service:event_producer_service_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_proto",
+        "@maven//:io_prometheus_simpleclient",
     ],
 )
