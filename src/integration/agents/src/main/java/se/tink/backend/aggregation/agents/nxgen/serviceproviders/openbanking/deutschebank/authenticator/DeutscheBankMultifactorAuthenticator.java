@@ -65,11 +65,6 @@ public class DeutscheBankMultifactorAuthenticator implements TypedAuthenticator,
         return consent;
     }
 
-    public String getConsentStatus(String consentStatusLink) {
-        ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus(consentStatusLink);
-        return consentStatusResponse.getConsentStatus();
-    }
-
     private void poll(ConsentBaseResponse consent) throws ThirdPartyAppException {
         for (int i = 0; i < DeutscheBankConstants.FormValues.MAX_POLLS_COUNTER; i++) {
             Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);

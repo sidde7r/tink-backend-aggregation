@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -57,14 +56,6 @@ public final class AccountTypePredicateMapper<KeyType> {
 
     public static <T> AccountTypePredicateMapper.Builder<T> builder() {
         return new Builder<>();
-    }
-
-    private boolean verify(KeyType key, AccountTypes value) {
-        return translate(key).filter(value::equals).isPresent();
-    }
-
-    private boolean verify(KeyType key, Collection<AccountTypes> values) {
-        return translate(key).filter(values::contains).isPresent();
     }
 
     public Optional<AccountTypes> translate(KeyType accountTypeKey) {

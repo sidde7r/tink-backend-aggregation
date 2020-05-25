@@ -81,14 +81,6 @@ public class BPostBankApiClient {
         }
     }
 
-    public void initModel() throws AuthenticationException {
-        try {
-            new InitModelRequest().call(httpClient);
-        } catch (RequestException ex) {
-            throw mapToAuthenticationException(ex, LoginError.NOT_SUPPORTED);
-        }
-    }
-
     public BPostBankAccountsResponseDTO fetchAccounts(BPostBankAuthContext authContext)
             throws RequestException {
         return new TransactionalAccountRequest(authContext).call(httpClient);

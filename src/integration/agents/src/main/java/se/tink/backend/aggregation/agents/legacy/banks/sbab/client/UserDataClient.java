@@ -3,12 +3,10 @@ package se.tink.backend.aggregation.agents.banks.sbab.client;
 import com.google.api.client.util.Maps;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
-import org.jsoup.nodes.Element;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.LoanEntity;
@@ -112,15 +110,5 @@ public class UserDataClient extends SBABClient {
     private Optional<LoanResponse> getLoanResponse() {
         LoanResponse loanResponse = createJsonRequestWithBearer(LOAN_URL).get(LoanResponse.class);
         return Optional.ofNullable(loanResponse);
-    }
-
-    private static MultivaluedMapImpl getFormData(Element form) {
-        MultivaluedMapImpl data = new MultivaluedMapImpl();
-
-        for (Element input : form.getElementsByTag("input")) {
-            data.putSingle(input.attr("name"), input.attr("value"));
-        }
-
-        return data;
     }
 }

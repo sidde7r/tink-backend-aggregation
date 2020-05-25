@@ -16,18 +16,6 @@ public class EntitySelect extends BelfiusRequest {
                 .setSessionId(sessionId);
     }
 
-    public static BelfiusRequest.Builder createWithMenuAccess(String sessionId) {
-        return BelfiusRequest.builder()
-                .setRequests(
-                        WidgetEventsRequest.create(
-                                WidgetEventInformation.newRepeaterValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.ENTITY_SWITCHER, "1")),
-                        WidgetEventsRequest.create(
-                                WidgetEventInformation.newMenuAccessWidgetEvent(
-                                        "Container@mb_MenuAccess")))
-                .setSessionId(sessionId);
-    }
-
     public static BelfiusRequest.Builder createWithCardNumber(String sessionId, String cardNumber) {
         return BelfiusRequest.builder()
                 .setRequests(

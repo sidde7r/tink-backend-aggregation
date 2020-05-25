@@ -4,9 +4,6 @@ import com.google.common.collect.Maps;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.Objects;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xnap.commons.i18n.I18n;
@@ -49,37 +46,6 @@ public class Catalog {
         } catch (Exception e) {
             log.error("Could not instantiate catalog for locale: {}", locale);
         }
-    }
-
-    public static Optional<Catalog> getOptionalCatalog(String locale) {
-        return getOptionalCatalog(getLocale(locale));
-    }
-
-    public static Optional<Catalog> getOptionalCatalog(Locale locale) {
-        if (locale == null) {
-            return Optional.empty();
-        }
-
-        Catalog catalog = new Catalog();
-        synchronized (catalogsLock) {
-            if (!catalogs.containsKey(locale)) {
-                try {
-                    catalog.i18n = I18nFactory.getI18n(Catalog.class, I18N_MESSAGES_BUNDLE, locale);
-                    if (catalog.i18n != null
-                            && catalog.i18n.getResources() != null
-                            && catalog.i18n.getResources().getLocale() != null
-                            && Objects.equals(
-                                    catalog.i18n.getResources().getLocale().getLanguage(),
-                                    locale.getLanguage())) {
-                        catalogs.put(locale, catalog);
-                    }
-                } catch (MissingResourceException e) {
-                    // NOP
-                }
-            }
-        }
-
-        return Optional.ofNullable(catalogs.get(locale));
     }
 
     public static Locale getLocale(String locale) {
@@ -125,12 +91,5 @@ public class Catalog {
 
     public String getString(LocalizableEnum localizableEnum) {
         return getString(localizableEnum.getKey().get());
-    }
-
-    public String getPluralString(LocalizablePluralEnum localizablePluralEnum, long n) {
-        return getPluralString(
-                localizablePluralEnum.getKey().getSingular(),
-                localizablePluralEnum.getKey().getPlural(),
-                n);
     }
 }

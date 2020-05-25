@@ -6,8 +6,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
@@ -56,20 +54,6 @@ public class RabobankUtils {
         }
     }
 
-    private static PrivateKey getPrivateKeyFromKeyStore(
-            final KeyStore keyStore, final String password) {
-        try {
-            final Enumeration<String> aliases = keyStore.aliases();
-            if (!aliases.hasMoreElements()) {
-                throw new IllegalStateException("No aliases in keystore!");
-            }
-            final String alias = aliases.nextElement();
-            return (PrivateKey) keyStore.getKey(alias, password.toCharArray());
-        } catch (final KeyStoreException | UnrecoverableKeyException | NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     private static X509Certificate getX509CertificateFromKeystore(final KeyStore keyStore) {
         try {
             final Enumeration<String> aliases = keyStore.aliases();
@@ -102,10 +86,6 @@ public class RabobankUtils {
         } catch (final CertificateEncodingException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public static PrivateKey getPrivateKey(final byte[] pkcs12Bytes, final String password) {
-        return getPrivateKeyFromKeyStore(getKeyStore(pkcs12Bytes, password), password);
     }
 
     public static String getCertificateSerialNumber(

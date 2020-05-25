@@ -143,28 +143,8 @@ public final class AvanzaAccountTypeMappers {
         return verify(accountTypeKey, TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
-    public boolean isTransactionalAccount(AccountTypes type) {
-        return TransactionalAccount.ALLOWED_ACCOUNT_TYPES.contains(type);
-    }
-
-    public boolean isSavingsAccount(String accountTypeKey) {
-        return verify(accountTypeKey, AccountTypes.SAVINGS);
-    }
-
-    public boolean isCheckingAccount(String accountTypeKey) {
-        return verify(accountTypeKey, AccountTypes.CHECKING);
-    }
-
     public boolean isLoanAccount(String accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.LOAN);
-    }
-
-    public boolean isCreditCardAccount(String accountTypeKey) {
-        return verify(accountTypeKey, AccountTypes.CREDIT_CARD);
-    }
-
-    public boolean isCreditCardAccount(AccountTypes type) {
-        return type == AccountTypes.CREDIT_CARD;
     }
 
     private class AvanzaAccountTypeMapperExecutor implements AccountTypeMapperExecutor<String> {

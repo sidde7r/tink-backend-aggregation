@@ -70,13 +70,6 @@ public class CustodyAccount {
         return profit == null || profit.isEmpty() ? null : StringUtils.parseAmount(profit);
     }
 
-    public boolean hasValidBankId() {
-        String bankId = getAccountId();
-
-        // Example formats of custody accounts are FONDA:01409805511 and ASBS:270111.1
-        return bankId != null && ALLOWED_BANKID_PATTERN.matcher(bankId).matches();
-    }
-
     public List<HoldingsEntity> getHoldings() {
         return holdings;
     }

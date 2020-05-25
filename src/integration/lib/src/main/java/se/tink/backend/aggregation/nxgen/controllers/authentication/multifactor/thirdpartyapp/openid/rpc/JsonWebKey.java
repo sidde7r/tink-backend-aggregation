@@ -2,9 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
-import java.io.IOException;
 import java.security.PublicKey;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
@@ -95,17 +93,6 @@ public class JsonWebKey {
             return createEcKey();
         } else {
             throw new IllegalStateException(String.format("Unknown key type: %s", keyType));
-        }
-    }
-
-    public static JsonWebKey fromJsonString(String json) {
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            return mapper.readValue(json, JsonWebKey.class);
-        } catch (IOException e) {
-            throw new IllegalStateException(String.format("Could not pars: %s", json));
         }
     }
 }

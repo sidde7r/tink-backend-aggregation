@@ -29,19 +29,6 @@ public final class AisValidator {
     }
 
     /**
-     * @return A builder based on this instance. All mutable members from this instance are
-     *     deep-copied into the builder.
-     */
-    public Builder rebuilder() {
-        final Builder builder = new Builder();
-        builder.aisDataRules = new HashSet<>(aisDataRules);
-        builder.accountRules = new HashSet<>(accountRules);
-        builder.transactionRules = new HashSet<>(transactionRules);
-        builder.executor = executor;
-        return builder;
-    }
-
-    /**
      * Carry out the actual validation. The validator's associated action will be executed and will
      * depend on the validation result.
      *

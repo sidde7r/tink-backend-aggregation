@@ -32,7 +32,6 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.net.client.TinkApacheHttpClient4;
@@ -74,10 +73,6 @@ public abstract class AbstractJerseyClientFactory {
         client.setConnectTimeout(CONNECT_TIMEOUT_MS);
     }
 
-    public TinkApacheHttpClient4 createCustomClient() {
-        return createCustomClient(new DefaultApacheHttpClient4Config());
-    }
-
     public TinkApacheHttpClient4 createCustomClient(
             SSLContext sslContext, X509HostnameVerifier hostnameVerifier) {
 
@@ -112,24 +107,6 @@ public abstract class AbstractJerseyClientFactory {
         setTimeouts(client);
 
         return client;
-    }
-
-    public ApacheHttpClient4 createThreadSafeCookieClient() {
-        ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
-
-        clientConfig
-                .getProperties()
-                .put(
-                        ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER,
-                        new ThreadSafeClientConnManager());
-
-        return createCookieClient(clientConfig);
-    }
-
-    public ApacheHttpClient4 createCookieClient() {
-        ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
-
-        return createCookieClient(clientConfig);
     }
 
     public ApacheHttpClient4 createCookieClient(ApacheHttpClient4Config clientConfig) {

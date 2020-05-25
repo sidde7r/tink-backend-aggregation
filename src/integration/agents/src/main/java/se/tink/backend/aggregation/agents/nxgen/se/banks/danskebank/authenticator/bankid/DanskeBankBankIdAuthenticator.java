@@ -165,21 +165,4 @@ public class DanskeBankBankIdAuthenticator implements BankIdAuthenticator<String
         return apiClient.finalizeAuthentication(
                 FinalizeAuthenticationRequest.createForBankId(finalizePackage));
     }
-
-    private String createJavascriptString(String ssn) {
-        String javascriptString =
-                "var e = %s;\n"
-                        + "var nt = new Function(\"eval(\" + JSON.stringify(e) + \"); return {\\n                  init: (typeof init === 'function' ? init : function () {}),\\n                  initSeBankIdLogon: initSeBankIdLogon,\\n                  pollSeBankId: pollSeBankId,\\n                  cleanup: (typeof cleanup === 'function' ? cleanup : function () {})\\n                 };\")();\n"
-                        + "function getLogonPackage(logonPackage, failMethod) {\n"
-                        + "    document.body.setAttribute(\"logonPackage\", logonPackage);"
-                        + "}\n"
-                        + "function getFinalizePackage(finalizePackage, failMethod) {\n"
-                        + "    document.body.setAttribute(\"finalizePackage\", finalizePackage)"
-                        + "}\n"
-                        + "function failMethod(arg1) {}\n"
-                        + "nt.initSeBankIdLogon(\"%s\", getLogonPackage, failMethod);\n"
-                        + "nt.pollSeBankId(\"OK\", getFinalizePackage, failMethod)";
-
-        return String.format(javascriptString, dynamicBankIdJavascript, ssn);
-    }
 }

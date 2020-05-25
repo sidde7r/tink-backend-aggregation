@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,14 +17,6 @@ public final class VolksbankUtils {
 
     private VolksbankUtils() {
         throw new AssertionError();
-    }
-
-    public static byte[] readFile(String path) {
-        try {
-            return Files.readAllBytes(Paths.get(path));
-        } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
     }
 
     public static Map<String, String> splitURLQuery(String query) {
@@ -68,10 +57,6 @@ public final class VolksbankUtils {
                         "yyyy-MM-dd"); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         return df;
-    }
-
-    public static String getCurrentDateAsString() {
-        return getDateFormat().format(new Date());
     }
 
     public static String getFutureDateAsString(int year) {

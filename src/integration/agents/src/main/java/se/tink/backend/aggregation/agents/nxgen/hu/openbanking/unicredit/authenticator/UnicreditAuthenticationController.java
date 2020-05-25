@@ -78,10 +78,6 @@ public class UnicreditAuthenticationController
                 .build();
     }
 
-    public ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
-        return ThirdPartyAppAuthenticationPayload.of(authorizeUrl);
-    }
-
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         URL authorizeUrl =
                 this.authenticator.buildAuthorizeUrl(strongAuthenticationState.getState());

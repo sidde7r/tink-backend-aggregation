@@ -109,30 +109,6 @@ public final class IngAtApiClient {
         return response;
     }
 
-    public HttpResponse search(URL url, Form form) {
-        final HttpResponse response =
-                client.request(url)
-                        .header("Host", "banking.ing.at")
-                        .header("Connection", "keep-alive")
-                        .header("Origin", "https://banking.ing.at")
-                        .header("Wicket-FocusedElementId", "id172")
-                        .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                        .header("X-Requested-With", "XMLHttpRequest")
-                        .header("Wicket-Ajax", "true")
-                        .header("Wicket-Ajax-BaseURL", "wicket/page?2")
-                        .header(
-                                "Referer",
-                                "https://banking.ing.at/online-banking/wicket/wicket/page?2")
-                        .header("Accept-Encoding", "gzip, deflate, br")
-                        .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
-                        .body(form.serialize())
-                        .post(HttpResponse.class);
-
-        updateCurrentUrl(response, url);
-        return response;
-    }
-
     public HttpResponse getAccountDetails(URL url) {
         final HttpResponse response =
                 client.request(url)

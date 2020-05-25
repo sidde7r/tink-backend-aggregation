@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.RefreshTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.AccountsResponse;
@@ -25,13 +24,6 @@ public class BoursoramaApiClient {
     public BoursoramaApiClient(TinkHttpClient client, BoursoramaConfiguration configuration) {
         this.client = client;
         this.configuration = configuration;
-    }
-
-    public TokenResponse exchangeAuthorizationCode(TokenRequest tokenRequest) {
-
-        return client.request(configuration.getBaseUrl() + Urls.CONSUME_AUTH_CODE)
-                .body(tokenRequest, MediaType.APPLICATION_JSON)
-                .post(TokenResponse.class);
     }
 
     public TokenResponse refreshToken(RefreshTokenRequest tokenRequest) {

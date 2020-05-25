@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.credit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc.IdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc.UserDataResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountTransactionDetailsRequestQueryParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountTransactionsRequestQueryParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -89,37 +88,6 @@ public class OpenbankApiClient {
                 .queryParam(
                         OpenbankConstants.QueryParams.TO_DATE,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                .get(AccountTransactionsResponse.class);
-    }
-
-    public AccountTransactionsResponse fetchTransactionDetails(
-            AccountTransactionDetailsRequestQueryParams queryParams) {
-        return client.request(OpenbankConstants.Urls.ACCOUNT_TRANSACTIONS)
-                .queryParam(
-                        OpenbankConstants.QueryParams.CONNECTING_PRODUCT_CODE,
-                        queryParams.getProductCodeOld())
-                .queryParam(
-                        OpenbankConstants.QueryParams.CONNECTING_CONTRACT_NUMBER,
-                        queryParams.getContractNumberOld())
-                .queryParam(
-                        OpenbankConstants.QueryParams.PRODUCT_CODE, queryParams.getProductCodeNew())
-                .queryParam(
-                        OpenbankConstants.QueryParams.CONTRACT_NUMBER,
-                        queryParams.getContractNumberNew())
-                .queryParam(
-                        OpenbankConstants.QueryParams.LANGUAGE_CODE,
-                        OpenbankConstants.Codes.LANGUAGE_CODE)
-                .queryParam(
-                        OpenbankConstants.QueryParams.CURRENCY_CODE,
-                        OpenbankConstants.Codes.CURRENCY_CODE)
-                .queryParam(
-                        OpenbankConstants.QueryParams.PROCEDURE_CODE,
-                        OpenbankConstants.Codes.PROCEDURE_CODE)
-                .queryParam(
-                        OpenbankConstants.QueryParams.MOVEMENT_OF_THE_DAY_INDEX,
-                        queryParams.getMovementOfTheDayIndex())
-                .queryParam(OpenbankConstants.QueryParams.DATE_NOTED, queryParams.getDateNoted())
-                .queryParam(OpenbankConstants.QueryParams.SITUATION_ID, "1")
                 .get(AccountTransactionsResponse.class);
     }
 

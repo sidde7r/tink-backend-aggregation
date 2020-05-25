@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.framework;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,7 +25,6 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -48,8 +45,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 
@@ -151,30 +146,6 @@ public final class NewAgentTestContext extends AgentContext {
         throw new AssertionError();
     }
 
-    private void displaySupplementalInformation(Credentials credentials) {
-        log.info("Requesting supplemental information.");
-
-        List<Field> supplementalInformation =
-                SerializationUtils.deserializeFromString(
-                        credentials.getSupplementalInformation(),
-                        new TypeReference<List<Field>>() {});
-
-        List<Map<String, String>> output =
-                supplementalInformation.stream()
-                        .map(
-                                field -> {
-                                    Map<String, String> row = new LinkedHashMap<>();
-                                    row.put("name", field.getName());
-                                    row.put("description", field.getDescription());
-                                    row.put("helpText", field.getHelpText());
-                                    row.put("masked", String.valueOf(field.isMasked()));
-                                    row.put("sensitive", String.valueOf(field.isSensitive()));
-                                    return row;
-                                })
-                        .collect(Collectors.toList());
-        CliPrintUtils.printTable(0, "supplemental information", output);
-    }
-
     @Override
     public Optional<String> waitForSupplementalInformation(
             String key, long waitFor, TimeUnit unit) {
@@ -214,10 +185,6 @@ public final class NewAgentTestContext extends AgentContext {
         }
 
         accountFeaturesByBankId.put(account.getBankId(), accountFeaturesToCache);
-    }
-
-    public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountIdentifier) {
-        return Optional.ofNullable(accountFeaturesByBankId.get(uniqueAccountIdentifier));
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {
@@ -287,15 +254,6 @@ public final class NewAgentTestContext extends AgentContext {
         Preconditions.checkNotNull(
                 accountUniqueId); // Necessary until we make @Nonnull throw the exception
         transactionsByAccountBankId.put(accountUniqueId, transactions);
-    }
-
-    public void updateSignableOperation(SignableOperation operation) {
-        log.info(
-                "Updating transfer status: "
-                        + operation.getStatus()
-                        + (Strings.isNullOrEmpty(operation.getStatusMessage())
-                                ? ""
-                                : " (" + operation.getStatusMessage() + ")"));
     }
 
     @Override
@@ -631,10 +589,6 @@ public final class NewAgentTestContext extends AgentContext {
                             new AccountDataDao(account, transactions, transferDestinationPatterns));
                 });
         return new CredentialDataDao(accountDataList, transfers, identityData);
-    }
-
-    public void printStatistics() {
-        //
     }
 
     @Override

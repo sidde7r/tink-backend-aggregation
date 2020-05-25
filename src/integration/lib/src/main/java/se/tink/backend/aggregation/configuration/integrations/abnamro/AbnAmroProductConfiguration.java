@@ -5,8 +5,6 @@ import com.google.common.collect.ImmutableList;
 
 public class AbnAmroProductConfiguration {
 
-    public AbnAmroProductConfiguration() {}
-
     AbnAmroProductConfiguration(ImmutableList<Integer> ids, ImmutableList<String> groups) {
         this.ids = ids;
         this.groups = groups;

@@ -14,9 +14,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.ConfirmTanCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithoutTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithoutTokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.util.CrossKeyUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
+import se.tink.libraries.strings.StringUtils;
 
 public class CrossKeyKeyCardAuthenticator implements KeyCardAuthenticator {
 
@@ -67,7 +67,7 @@ public class CrossKeyKeyCardAuthenticator implements KeyCardAuthenticator {
         credentials.setSensitivePayload(Field.Key.USERNAME, userId);
         AddDeviceResponse addDevice =
                 apiClient.addDevice(
-                        new AddDeviceRequest().setUdId(CrossKeyUtils.generateUdIdFor(userId)));
+                        new AddDeviceRequest().setUdId(StringUtils.hashAsUUID("TINK-" + userId)));
 
         addDevice.validate(
                 () -> new UnexpectedFailureException(addDevice, "Failure on adding of new device"));

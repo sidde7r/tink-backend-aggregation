@@ -4,13 +4,10 @@ import static com.google.common.base.Objects.equal;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoice;
@@ -18,7 +15,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentEn
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionEntity;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.account.create.form.AnswerEntity;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -58,38 +54,6 @@ public class LFUtils {
 
     public static Predicate<EInvoice> findEInvoice(final String electronicInvoiceId) {
         return input -> Objects.equals(input.getElectronicInvoiceId(), electronicInvoiceId);
-    }
-
-    /** Converts a map from supplemental information into a list of answer entities. */
-    public static List<AnswerEntity> convertSupplementalInformationToAnswers(
-            Map<String, Object> input) {
-        List<AnswerEntity> answers = Lists.newArrayList();
-
-        if (input == null) {
-            return answers;
-        }
-
-        for (String questionId : input.keySet()) {
-            answers.add(new AnswerEntity(questionId, input.get(questionId)));
-        }
-
-        return answers;
-    }
-
-    public static Integer parseNumMonthsBound(String bound) {
-        // "rateBindingPeriodLength": "3 MÅNADER"
-        // guessing it is "x ÅR" for years
-
-        Matcher mMonths = MONTHS_BOUND.matcher(bound);
-        if (mMonths.matches()) {
-            return Integer.parseInt(mMonths.group(1));
-        }
-
-        Matcher mYears = YEARS_BOUND.matcher(bound);
-        if (mYears.matches()) {
-            return Integer.parseInt(mYears.group(1)) * 12;
-        }
-        return null;
     }
 
     /**

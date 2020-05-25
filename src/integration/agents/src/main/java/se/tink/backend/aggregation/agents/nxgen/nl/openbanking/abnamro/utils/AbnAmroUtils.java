@@ -8,12 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
@@ -46,18 +42,6 @@ public final class AbnAmroUtils {
                 .orElseThrow(() -> new NoSuchElementException("Missing Oauth token!"));
     }
 
-    public static String createSignatureString(
-            final String date, final String digest, final String requestId) {
-        String result = AbnAmroConstants.Signature.SIGNING_STRING_DATE + date + "\n";
-        result +=
-                AbnAmroConstants.Signature.SIGNING_STRING_DIGEST
-                        + AbnAmroConstants.Signature.SIGNING_STRING_SHA_512
-                        + digest
-                        + "\n";
-        result += AbnAmroConstants.Signature.SIGNING_STRING_REQUEST_ID + requestId;
-        return result;
-    }
-
     private static KeyStore getKeyStore(final byte[] pkcs12Bytes, final String password) {
         final ByteArrayInputStream pkcs12Stream = new ByteArrayInputStream(pkcs12Bytes);
         try {
@@ -87,56 +71,7 @@ public final class AbnAmroUtils {
         }
     }
 
-    private static X509Certificate getX509CertificateFromKeystore(final KeyStore keyStore) {
-        try {
-            final Enumeration<String> aliases = keyStore.aliases();
-            if (!aliases.hasMoreElements()) {
-                throw new IllegalStateException("No aliases in keystore!");
-            }
-
-            final String alias = aliases.nextElement();
-            final Certificate cert = keyStore.getCertificate(alias);
-            if (!(cert instanceof X509Certificate)) {
-                throw new IllegalStateException("Certificate is not x509!");
-            }
-            return (X509Certificate) cert;
-        } catch (final KeyStoreException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public static X509Certificate getX509Certificate(
-            final byte[] pkcs12Bytes, final String password) {
-        final KeyStore keyStore = getKeyStore(pkcs12Bytes, password);
-        return getX509CertificateFromKeystore(keyStore);
-    }
-
-    public static String getB64EncodedX509Certificate(
-            final byte[] pkcs12Bytes, final String password) {
-        try {
-            return Base64.getEncoder()
-                    .encodeToString(getX509Certificate(pkcs12Bytes, password).getEncoded());
-        } catch (final CertificateEncodingException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     public static PrivateKey getPrivateKey(final byte[] pkcs12Bytes, final String password) {
         return getPrivateKeyFromKeyStore(getKeyStore(pkcs12Bytes, password), password);
-    }
-
-    public static String getCertificateSerialNumber(
-            final byte[] pkcs12Bytes, final String password) {
-        final X509Certificate x509 =
-                getX509CertificateFromKeystore(getKeyStore(pkcs12Bytes, password));
-        return x509.getSerialNumber().toString();
-    }
-
-    public static String createSignatureHeader(
-            final String keyId,
-            final String algorithm,
-            final String b64Signature,
-            final String headersValue) {
-        return new AbnAmroSignatureHeader(keyId, algorithm, b64Signature, headersValue).toString();
     }
 }

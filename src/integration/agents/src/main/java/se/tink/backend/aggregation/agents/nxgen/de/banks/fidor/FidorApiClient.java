@@ -6,7 +6,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.entities.OpenApiRateLimitEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.entities.OpenTokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.rpc.TransactionResponse;
@@ -157,16 +156,5 @@ public class FidorApiClient {
                         MediaType.APPLICATION_JSON,
                         FidorConstants.HEADERS.OPENAPI.APPLICATION_JSON_FIDOR_V1)
                 .get(UpcomingTransactionsResponse.class);
-    }
-
-    public OpenApiRateLimitEntity fetchOpenApiRateLimit(OpenTokenEntity tokenEntity) {
-
-        return getRequest(
-                        FidorConstants.URL.OPENAPI.SANDBOX_BASE,
-                        FidorConstants.URL.OPENAPI.RATELIMIT,
-                        tokenEntity.getAccessToken(),
-                        MediaType.APPLICATION_JSON,
-                        FidorConstants.HEADERS.OPENAPI.APPLICATION_JSON_FIDOR_V1)
-                .get(OpenApiRateLimitEntity.class);
     }
 }

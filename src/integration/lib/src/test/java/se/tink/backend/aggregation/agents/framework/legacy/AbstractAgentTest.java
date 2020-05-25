@@ -213,11 +213,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         Assert.assertEquals(sessionIsCleared, expected);
     }
 
-    protected void keepAliveCommand_willClearSession(
-            Credentials credentials, Class<? extends CookieContainer> sessionCls) throws Exception {
-        keepAliveCommand_willClearSession(credentials, sessionCls, true);
-    }
-
     /**
      * Test to verify that we can handle an expired session. Things that should happen in this
      * scenario - keepalive should be false - isLoggedIn should be false - persisted session should
@@ -358,32 +353,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         return testContext;
     }
 
-    protected void testAgent(Map<String, String> fields) throws Exception {
-        testAgent(createCredentials(fields, CredentialsTypes.PASSWORD), true);
-    }
-
-    protected void testAgentAuthenticationError(Map<String, String> fields) throws Exception {
-        Credentials credentials = createCredentials(fields, CredentialsTypes.PASSWORD);
-
-        AgentTestContext testContext = new AgentTestContext(credentials);
-
-        Agent agent =
-                factory.create(cls, createRefreshInformationRequest(credentials), testContext);
-
-        try {
-            Assert.assertTrue("Agent could not login successfully", agent.login());
-
-            refresh(agent);
-
-            Assert.assertEquals(CredentialsStatus.AUTHENTICATION_ERROR, credentials.getStatus());
-
-            agent.logout();
-        } finally {
-
-            agent.close();
-        }
-    }
-
     private void refresh(Agent agent) throws Exception {
         if (agent instanceof DeprecatedRefreshExecutor) {
             ((DeprecatedRefreshExecutor) agent).refresh();
@@ -397,12 +366,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
     protected void testAgent(String username, String password) throws Exception {
         testAgent(username, password, CredentialsTypes.PASSWORD, true);
-    }
-
-    protected void testAgent(String username, String password, String payload) throws Exception {
-        Credentials credentials = createCredentials(username, password, CredentialsTypes.PASSWORD);
-        credentials.setPayload(payload);
-        testAgent(credentials, true);
     }
 
     protected void testAgent(String username, String password, CredentialsTypes credentialsType)
