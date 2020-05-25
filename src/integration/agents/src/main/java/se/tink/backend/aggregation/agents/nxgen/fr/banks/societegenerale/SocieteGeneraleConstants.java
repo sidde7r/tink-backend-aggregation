@@ -76,6 +76,7 @@ public class SocieteGeneraleConstants {
         private static final ImmutableMap<String, TransactionalAccountType> ACCOUNT_TYPES_MAP =
                 ImmutableMap.<String, TransactionalAccountType>builder()
                         .put("050", TransactionalAccountType.CHECKING)
+                        .put("069", TransactionalAccountType.SAVINGS)
                         .build();
 
         /**
