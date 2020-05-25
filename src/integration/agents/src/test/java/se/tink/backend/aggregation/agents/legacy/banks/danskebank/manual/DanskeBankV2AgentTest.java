@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.danskebank;
+package se.tink.backend.aggregation.agents.banks.danskebank.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
