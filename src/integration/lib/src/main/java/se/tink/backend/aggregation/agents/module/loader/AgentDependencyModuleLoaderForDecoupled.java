@@ -2,10 +2,15 @@ package se.tink.backend.aggregation.agents.module.loader;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
-import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 
 public final class AgentDependencyModuleLoaderForDecoupled implements AgentDependencyModuleLoader {
+
+    private static final ModuleDetector moduleDetector = new ModuleDetector();
 
     /**
      * Looks for <code>@AgentDependencyModules</code> on agent and tries to instantiate any guice
@@ -19,33 +24,17 @@ public final class AgentDependencyModuleLoaderForDecoupled implements AgentDepen
     @Override
     public ImmutableSet<Module> getModulesFromAnnotation(final Class<?> agentClass)
             throws NoSuchMethodException {
-
+        List<Class<? extends Module>> modules = new ArrayList<>();
+        if (agentClass.isAnnotationPresent(AgentDependencyModules.class)) {
+            final AgentDependencyModules moduleAnnotation =
+                    agentClass.getAnnotation(AgentDependencyModules.class);
+            modules.addAll(Arrays.asList(moduleAnnotation.modules()));
+        }
         if (agentClass.isAnnotationPresent(AgentDependencyModulesForDecoupledMode.class)) {
             final AgentDependencyModulesForDecoupledMode moduleAnnotation =
                     agentClass.getAnnotation(AgentDependencyModulesForDecoupledMode.class);
-
-            try {
-
-                ImmutableSet.Builder<Module> setBuilder = ImmutableSet.builder();
-                for (Class<? extends Module> moduleClass : moduleAnnotation.modules()) {
-
-                    setBuilder.add(moduleClass.getDeclaredConstructor().newInstance());
-                }
-
-                return setBuilder.build();
-            } catch (NoSuchMethodException e) {
-
-                throw new NoSuchMethodException(
-                        "Agent dependency module must have default constructor.");
-            } catch (InstantiationException
-                    | IllegalAccessException
-                    | InvocationTargetException e) {
-
-                throw new IllegalStateException("Error instantiating module.", e);
-            }
+            modules.addAll(Arrays.asList(moduleAnnotation.modules()));
         }
-
-        // No modules loaded.
-        return ImmutableSet.of();
+        return moduleDetector.getModulesFromAnnotation(modules);
     }
 }
