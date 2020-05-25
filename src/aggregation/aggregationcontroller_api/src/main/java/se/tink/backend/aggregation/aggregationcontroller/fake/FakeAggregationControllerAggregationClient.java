@@ -179,7 +179,8 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response processEinvoices(
             HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
-        throw new UnsupportedOperationException("Not implemented");
+        callFakeAggregationController("processEinvoices", request);
+        return Response.ok().build();
     }
 
     @Override
