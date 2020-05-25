@@ -153,7 +153,7 @@ public abstract class BankiaConstants {
         public static final int LOGIN_ERROR = 428;
         public static final String NO_DATA_FOR_ENQUIRY_CODE = "VAVC003E";
         public static final String NO_DATA_FOR_ENQUIRY_MESSAGE =
-                "There is no data for the enquiry.";
+                "There is no data for the request.";
         public static final String WRONG_CREDENTIALS = "Wrong credentials";
 
         public static final String UNKNOWN_LOGIN_ERROR = "Unknown login error";
