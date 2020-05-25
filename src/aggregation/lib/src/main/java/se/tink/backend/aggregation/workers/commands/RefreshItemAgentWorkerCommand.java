@@ -109,11 +109,28 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                         CredentialsStatus.UNCHANGED,
                         context.getCatalog().getString(e.getUserMessage()));
                 action.unavailable();
+                refreshEventProducer.sendEventForRefreshWithErrorInBankSide(
+                        context.getRequest().getProvider().getName(),
+                        context.getCorrelationId(),
+                        context.getRequest().getProvider().getMarket(),
+                        context.getRequest().getCredentials().getId(),
+                        context.getAppId(),
+                        context.getClusterId(),
+                        context.getRequest().getCredentials().getUserId(),
+                        item);
                 return AgentWorkerCommandResult.ABORT;
             } catch (Exception e) {
                 action.failed();
                 log.warn("Couldn't refresh RefreshableItem({})", item);
-
+                refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
+                        context.getRequest().getProvider().getName(),
+                        context.getCorrelationId(),
+                        context.getRequest().getProvider().getMarket(),
+                        context.getRequest().getCredentials().getId(),
+                        context.getAppId(),
+                        context.getClusterId(),
+                        context.getRequest().getCredentials().getUserId(),
+                        item);
                 throw e;
             }
         } finally {
