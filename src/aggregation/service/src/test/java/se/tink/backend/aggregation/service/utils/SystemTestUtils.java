@@ -62,12 +62,9 @@ public class SystemTestUtils {
 
     public static ResponseEntity<String> makeGetRequest(String url, HttpHeaders headers)
             throws Exception {
-        TestRestTemplate restTemplate = new TestRestTemplate();
-
         ResponseEntity<String> response =
                 new TestRestTemplate()
-                        .exchange(
-                                url, HttpMethod.GET, new HttpEntity<Object>(headers), String.class);
+                        .exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
 
         int status = response.getStatusCodeValue();
         if (status >= 300) {

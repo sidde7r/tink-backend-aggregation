@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop;
 
 import com.google.common.base.Strings;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
@@ -64,8 +63,6 @@ public class CoopApiClient {
         if (page > 2) {
             return PaginatorResponseImpl.createEmpty(false);
         }
-
-        LocalDate now = LocalDate.now();
         // offset is already fetched transactions
         int offset = 0;
         if (page > 0) {

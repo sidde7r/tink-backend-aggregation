@@ -37,7 +37,6 @@ public final class DnbAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor {
 
     private final DnbApiClient apiClient;
-    private final String clientName;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
 
@@ -49,8 +48,6 @@ public final class DnbAgent extends NextGenerationAgent
 
         final Credentials credentials = request.getCredentials();
         apiClient = new DnbApiClient(client, sessionStorage, credentials);
-        clientName = request.getProvider().getPayload();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         apiClient.setConfiguration(

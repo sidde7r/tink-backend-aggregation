@@ -31,7 +31,6 @@ public class BelfiusUpcomingTransactionListDeserializer
     public void deserializeInto(
             List<BelfiusUpcomingTransaction> transactions, JsonParser jsonParser, JsonNode entry) {
         try {
-            String key = entry.get("key").asText();
             JsonNode value = entry.get("rp_hist");
             BelfiusUpcomingTransaction transaction =
                     jsonParser.getCodec().treeToValue(value, BelfiusUpcomingTransaction.class);

@@ -114,11 +114,6 @@ public class ClientConfigurationMetaInfoHandler {
         String providerClassName = provider.getClassName();
 
         String fullyQualifiedClassName = AGENTS_PACKAGE_PREFIX + "." + providerClassName;
-
-        // We first look into the same package tree
-        Optional<Class<? extends ClientConfiguration>> closestConfigurationClass =
-                searchForClosestConfigurationClassInSamePackageTree(fullyQualifiedClassName);
-
         // We first look into the same package tree
         return searchForClosestConfigurationClassInSamePackageTree(fullyQualifiedClassName)
                 // Otherwise we look among the superclasses of our agent class. This comes in handy

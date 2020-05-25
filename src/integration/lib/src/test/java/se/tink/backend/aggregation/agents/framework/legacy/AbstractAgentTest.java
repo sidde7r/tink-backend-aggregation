@@ -573,7 +573,6 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         AgentTestContext testContext = new AgentTestContext(credentials);
         Agent agent =
                 factory.create(cls, createRefreshInformationRequest(credentials), testContext);
-        SignableOperation signableOperation = new SignableOperation(transfer);
 
         try {
             Assert.assertTrue("Agent could not login successfully", agent.login());

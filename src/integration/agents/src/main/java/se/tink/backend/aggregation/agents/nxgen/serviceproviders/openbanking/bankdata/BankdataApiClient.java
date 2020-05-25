@@ -192,8 +192,7 @@ public final class BankdataApiClient {
                     createPaymentRequestInSession(url, StorageKeys.INITIAL_TOKEN)
                             .post(CreatePaymentResponse.class, paymentRequest);
 
-            AuthorizePaymentResponse authorizePaymentResponse =
-                    authorizePayment(response.getPaymentId(), type);
+            authorizePayment(response.getPaymentId(), type);
             return response;
         } catch (HttpResponseException e) {
             handleHttpResponseException(e);

@@ -105,9 +105,6 @@ public class FidorApiClient {
     }
 
     public OpenTokenEntity refreshOpenApiToken(OpenTokenEntity tokenEntity) {
-
-        String basic = FidorConstants.BASIC + FidorConstants.SANDBOX_BASE64_BASIC_AUTH;
-
         return getRequest(
                         FidorConstants.URL.OPENAPI.SANDBOX_BASE,
                         FidorConstants.URL.OPENAPI.OAUTH_TOKEN,

@@ -32,7 +32,6 @@ public final class CSVTransactionsPage implements PaginatorResponse {
     }
 
     private static Transaction recordToTransaction(final CSVRecord record) {
-        final String iban = record.get(0);
         final String text = record.get(1);
         final String valueDate = record.get(2);
         final String currency = record.get(3);

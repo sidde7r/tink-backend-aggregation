@@ -4,7 +4,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.RandomStringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.DeviceActivationRequest;
@@ -93,7 +92,6 @@ public class BbvaMxUtils {
             String salt,
             String publicKeyHex) {
 
-        String tokenHashHex = Hex.encodeHexString(tokenHash.getBytes());
         byte[] base64DecodedSalt = Base64.getUrlDecoder().decode(salt);
 
         String calculatedData =

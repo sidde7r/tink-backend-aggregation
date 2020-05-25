@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasUtils.getSignature;
 
-import java.util.Arrays;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
@@ -33,13 +32,6 @@ public class Register {
     }
 
     public static RegisterRequest buildBody() {
-        KeyEntity keyEntity =
-                new KeyEntity(
-                        Arrays.asList(
-                                new KeysEntity(
-                                        BnpParibasBaseConstants.RegisterUtils.CRYPT_ALG_FAMILY,
-                                        "",
-                                        BnpParibasBaseConstants.RegisterUtils.X5C)));
         return new RegisterRequest(
                 BnpParibasBaseConstants.RegisterUtils.REDIRECT_URIS,
                 BnpParibasBaseConstants.RegisterUtils.TOKEN_ENDPOINT_AUTH_METHOD,
