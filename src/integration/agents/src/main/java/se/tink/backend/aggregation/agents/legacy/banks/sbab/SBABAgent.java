@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.banks.sbab;
 import static se.tink.backend.aggregation.agents.banks.sbab.SBABConstants.INTEGRATION_NAME;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
 import java.time.LocalDate;
@@ -244,7 +243,6 @@ public class SBABAgent extends AbstractAgent
     }
 
     private List<Transaction> fetchTransactions(Account account) throws Exception {
-        List<Transaction> transactions = Lists.newArrayList();
         String accountNumber = account.getAccountNumber();
         TransactionsResponse upcomingTransactions =
                 userDataClient.fetchUpcomingTransactions(accountNumber);

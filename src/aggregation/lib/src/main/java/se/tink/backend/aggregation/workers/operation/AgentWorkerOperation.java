@@ -95,7 +95,6 @@ public class AgentWorkerOperation implements Runnable {
 
         AgentWorkerCommandResult commandResult = null;
         Stack<AgentWorkerCommand> executedCommands = new Stack<>();
-        int currentCommand = 0;
 
         for (AgentWorkerCommand command : commands) {
             try {

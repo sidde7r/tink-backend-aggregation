@@ -30,7 +30,6 @@ public class BelfiusTransactionListDeserializer extends JsonDeserializer<Belfius
     public void deserializeInto(
             List<BelfiusTransaction> transactions, JsonParser jsonParser, JsonNode entry) {
         try {
-            String key = entry.get("key").asText();
             JsonNode value = entry.get("rp_hist");
             BelfiusTransaction transaction =
                     jsonParser.getCodec().treeToValue(value, BelfiusTransaction.class);

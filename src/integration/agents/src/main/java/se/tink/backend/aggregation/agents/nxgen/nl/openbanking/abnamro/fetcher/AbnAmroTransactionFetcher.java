@@ -25,7 +25,6 @@ public class AbnAmroTransactionFetcher
             Calendar minDate = Calendar.getInstance();
             minDate.add(Calendar.MONTH, -18);
             // fromDate cannot be older than 18 months
-            final Date fromDate = minDate.getTime();
             final Date toDate = new Date();
             return apiClient.fetchTransactionsByDate(accountId, minDate.getTime(), toDate);
         }

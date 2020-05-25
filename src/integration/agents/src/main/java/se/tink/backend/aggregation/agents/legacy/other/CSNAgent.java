@@ -92,7 +92,6 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
 
         do {
             String description = (matcher.group(2)).trim();
-            String id = matcher.group(1).trim();
             double balance = -AgentParsingUtils.parseAmount(matcher.group(3).replace(",", ""));
 
             Account account = new Account();

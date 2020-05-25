@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
-import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -127,7 +126,6 @@ public class AccountEntity {
     public Optional<TransactionalAccount> toTinkAccount() {
         AccountIdentifier identifier =
                 AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban());
-        DisplayAccountIdentifierFormatter formatter = new DisplayAccountIdentifierFormatter();
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         NordeaBaseConstants.ACCOUNT_TYPE_MAPPER,

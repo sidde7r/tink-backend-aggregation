@@ -18,14 +18,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class BunqAgent extends BunqBaseAgent {
     private final BunqApiClient apiClient;
-    private final String clientName;
     private String backendHost;
     private BunqConfiguration bunqConfiguration;
 
     public BunqAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        clientName = payload.split(" ")[0];
         this.apiClient = new BunqApiClient(client, getBackendHost());
     }
 

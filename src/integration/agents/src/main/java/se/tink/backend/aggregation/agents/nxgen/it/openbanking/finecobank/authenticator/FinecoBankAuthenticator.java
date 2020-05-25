@@ -67,7 +67,6 @@ public final class FinecoBankAuthenticator
     @Override
     public ThirdPartyAppResponse<String> collect(String reference)
             throws AuthenticationException, AuthorizationException {
-        long startTime = System.currentTimeMillis();
         this.supplementalInformationHelper
                 .waitForSupplementalInformation(
                         strongAuthenticationState.getSupplementalKey(),

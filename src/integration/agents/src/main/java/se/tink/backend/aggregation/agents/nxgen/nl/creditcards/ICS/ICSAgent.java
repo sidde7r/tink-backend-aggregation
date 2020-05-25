@@ -31,7 +31,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAccountsExecutor {
 
     private final ICSApiClient apiClient;
-    private final String clientName;
     private final String redirectUri;
 
     private final CreditCardRefreshController creditCardRefreshController;
@@ -42,7 +41,6 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         configureHttpClient(client);
-        clientName = request.getProvider().getPayload().split(" ")[0];
         redirectUri = request.getProvider().getPayload().split(" ")[1];
 
         final ICSConfiguration icsConfiguration =

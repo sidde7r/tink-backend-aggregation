@@ -84,7 +84,6 @@ public class MessageResponse extends ResponseEntity {
         String messageDetail = messageResponse.getMessageDetail();
         String messageType = messageResponse.getMessageType();
         String messageTarget = messageResponse.getMessageTarget();
-        String messageContent = messageResponse.getMessageContent();
         return ((messageDetail != null && messageDetail.contains("ERROR"))
                 || (messageType != null && messageType.equalsIgnoreCase("error"))
                 || (messageTarget != null && messageTarget.equalsIgnoreCase("internal")));

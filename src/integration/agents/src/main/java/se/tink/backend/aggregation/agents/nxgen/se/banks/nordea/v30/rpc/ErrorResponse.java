@@ -163,8 +163,7 @@ public class ErrorResponse {
                     .build();
         }
         if (isDuplicatePayment()) {
-            // TODO fix
-            throw duplicatePaymentError(null);
+            throw duplicatePaymentError();
         }
         if (isWrongToAccountLengthError()) {
             throw wrongToAccountLengthError();
@@ -173,17 +172,11 @@ public class ErrorResponse {
             throw transferRejectedError(
                     ErrorCodes.UNREGISTERED_RECIPIENT, EndUserMessage.UNREGISTERED_RECIPIENT);
         }
-        if (isDuplicatePayment()) {
-            throw duplicatePaymentError(null);
-        }
         if (isNotEnoughFunds()) {
             throw notEnoughFundsError();
         }
         if (isSigningCollision()) {
             throw bankIdAlreadyInProgressError(null);
-        }
-        if (isDuplicatePayment()) {
-            throw duplicatePaymentError(null);
         }
         if (isWrongToAccountLengthError()) {
             throw wrongToAccountLengthError();
@@ -279,10 +272,10 @@ public class ErrorResponse {
                 .build();
     }
 
-    protected TransferExecutionException duplicatePaymentError(HttpResponseException e) {
+    protected TransferExecutionException duplicatePaymentError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT)
-                .setException(e)
+                .setMessage(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT)
                 .build();
     }
 

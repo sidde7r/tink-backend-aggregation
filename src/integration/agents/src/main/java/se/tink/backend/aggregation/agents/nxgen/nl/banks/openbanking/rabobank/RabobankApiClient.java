@@ -276,9 +276,6 @@ public final class RabobankApiClient {
     private String buildSignatureHeader(
             final String digest, final String requestId, final String date) {
         final String signingString = RabobankUtils.createSignatureString(date, digest, requestId);
-
-        final String certificateId = rabobankConfiguration.getCertificateId();
-
         final byte[] signatureBytes =
                 QsealcSignerImpl.build(
                                 eidasProxyConf.toInternalConfig(),

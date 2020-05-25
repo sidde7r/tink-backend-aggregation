@@ -23,8 +23,6 @@ public class AbnAmroAgentTest extends AbstractAgentTest<AbnAmroAgent> {
         credentials.setProviderName("nl-abnamro");
 
         testAgent(credentials);
-
-        int i = 10;
     }
 
     @Override

@@ -30,7 +30,6 @@ public class ConsentRequest {
     }
 
     public ConsentRequest() {
-        AccessEntity access = new AccessEntity("allAccounts");
         final Calendar now = Calendar.getInstance();
         now.add(Calendar.MONTH, 11);
         validUntil = now.getTime();

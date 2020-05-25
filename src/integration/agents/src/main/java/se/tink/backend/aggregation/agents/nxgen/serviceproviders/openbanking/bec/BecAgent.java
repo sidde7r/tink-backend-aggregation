@@ -28,7 +28,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class BecAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final BecApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -38,7 +37,6 @@ public class BecAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        clientName = request.getProvider().getPayload().split(",")[0];
         String url = request.getProvider().getPayload().split(",")[1];
 
         apiClient = new BecApiClient(client, persistentStorage, url);

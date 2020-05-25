@@ -33,7 +33,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class SparebankAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
-    private final String clientName;
     private final SparebankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -44,7 +43,6 @@ public final class SparebankAgent extends NextGenerationAgent
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
         List<String> payLoadValues = splitPayload(request.getProvider().getPayload());
         apiClient = new SparebankApiClient(client, sessionStorage, payLoadValues.get(1));
-        clientName = payLoadValues.get(0);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         apiClient.setConfiguration(

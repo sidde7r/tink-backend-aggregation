@@ -111,7 +111,6 @@ public class EnterCardBasePaymentExecutor implements PaymentExecutor, FetchableP
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        PaymentStatus paymentStatus;
         String nextStep;
 
         switch (paymentMultiStepRequest.getStep()) {

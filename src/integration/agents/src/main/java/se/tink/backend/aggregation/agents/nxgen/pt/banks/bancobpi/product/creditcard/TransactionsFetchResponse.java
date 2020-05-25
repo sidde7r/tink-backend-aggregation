@@ -58,8 +58,6 @@ public class TransactionsFetchResponse {
             JSONObject jsonTransaction = transactionsArray.getJSONObject(i);
             ExactCurrencyAmount transactionAmount =
                     ExactCurrencyAmount.of(jsonTransaction.getString("MontanteTransaccao"), "EUR");
-            LocalDate transactionDate =
-                    LocalDate.parse(jsonTransaction.getString("DataTransaccao"));
             transactions.add(
                     CreditCardTransaction.builder()
                             .setAmount(transactionAmount)
