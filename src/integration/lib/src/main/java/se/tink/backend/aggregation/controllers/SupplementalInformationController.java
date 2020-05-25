@@ -16,7 +16,7 @@ public class SupplementalInformationController {
     private final CuratorFramework coordinationClient;
 
     @Inject
-    public SupplementalInformationController(
+    SupplementalInformationController(
             CacheClient cacheClient, CuratorFramework coordinationClient) {
         this.cacheClient = cacheClient;
         this.coordinationClient = coordinationClient;
