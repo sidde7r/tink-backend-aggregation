@@ -299,7 +299,7 @@ public class SwedbankBaseConstants {
         public static final String INVALID_DESTINATION =
                 BankTransferConstants.ErrorMessage.INVALID_DESTINATION;
         public static final String INVALID_DESTINATION_MESSAGE =
-                "Please fill in your own note with letters and numbers.";
+                "Destination message can contain digits, letters in Swedish alphabet, or spaces.";
         public static final String INVALID_SOURCE =
                 BankTransferConstants.ErrorMessage.INVALID_SOURCE;
         public static final String SOURCE_NOT_FOUND = "Source account could not be found at bank.";

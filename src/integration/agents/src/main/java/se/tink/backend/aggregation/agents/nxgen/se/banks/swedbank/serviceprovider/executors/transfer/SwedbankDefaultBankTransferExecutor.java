@@ -49,7 +49,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
         // That profile will be selected so it's used going forward in the execution flow.
         if (!SwedbankNoteToRecipientUtils.isValidSwedbankNoteToRecipient(
                 transfer.getDestinationMessage())) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.INVALID_MESSAGE
                                     .getKey()
