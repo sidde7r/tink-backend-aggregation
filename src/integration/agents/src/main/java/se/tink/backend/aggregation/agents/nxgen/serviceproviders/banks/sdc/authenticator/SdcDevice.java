@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
 import com.google.common.base.Strings;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
@@ -49,7 +49,7 @@ public class SdcDevice {
                                             + SdcConstants.Session.MANUFACTURER
                                             + "|"
                                             + SdcConstants.Session.DEVICE)
-                                    .getBytes(Charset.forName("UTF-8")));
+                                    .getBytes(StandardCharsets.UTF_8));
 
             this.persistentStorage.putDeviceId(deviceId);
         }

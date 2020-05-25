@@ -211,7 +211,6 @@ public class ProductEntity {
         return getProductIdBoolean("@ownTransferFrom");
     }
 
-    @SuppressWarnings("rawtypes")
     public String getInternalId() {
         return (String) productId.get("$");
     }

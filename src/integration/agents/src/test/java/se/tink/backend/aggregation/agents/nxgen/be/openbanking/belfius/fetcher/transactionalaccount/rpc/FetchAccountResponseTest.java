@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc;
 
-import static org.junit.Assert.*;
-
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.apache.commons.lang3.reflect.FieldUtils;

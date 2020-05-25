@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale;
 
 import java.net.URI;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -89,7 +89,7 @@ public class LaBanquePostaleApiClient {
 
     private Optional<String> errorFromUri(URI uri) {
 
-        List<NameValuePair> query = URLEncodedUtils.parse(uri, Charset.forName("UTF-8").toString());
+        List<NameValuePair> query = URLEncodedUtils.parse(uri, StandardCharsets.UTF_8.toString());
 
         Map<String, String> m =
                 query.stream()

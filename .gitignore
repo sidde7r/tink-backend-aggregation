@@ -43,7 +43,6 @@ user.bazelrc
 
 # Misc
 .env
-.DS_Store
 
 # Virtual env
 **/.venv

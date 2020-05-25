@@ -20,7 +20,7 @@ public class HVBAgentTest {
     @AfterClass
     public static void afterClass() {
         ArgumentManager.afterClass();
-    };
+    }
 
     @Before
     public void before() {

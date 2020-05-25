@@ -6,7 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Base64;
@@ -463,7 +463,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             return Optional.empty();
         }
 
-        byte[] headerBytes = sortedHeaders.getBytes(Charset.forName("UTF-8"));
+        byte[] headerBytes = sortedHeaders.getBytes(StandardCharsets.UTF_8);
         byte[] digest = Hash.sha256(headerBytes);
         return Optional.of(EncodingUtils.encodeAsBase64String(digest));
     }

@@ -42,7 +42,6 @@ public class CreditSafeAgentTest extends AbstractAgentTest<CreditSafeAgent> {
         AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
                 CONFIGURATION_FACTORY.build(CONFIG_FILE);
         configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
-        ;
     }
 
     @Test

@@ -58,6 +58,6 @@ public enum CrossKeyMessage implements CrossKeyError {
                 .filter(value -> value.name().equals(error))
                 .map(value -> (CrossKeyError) value)
                 .findFirst()
-                .orElseThrow(() -> unexpectedFailure.get());
+                .orElseThrow(unexpectedFailure);
     }
 }

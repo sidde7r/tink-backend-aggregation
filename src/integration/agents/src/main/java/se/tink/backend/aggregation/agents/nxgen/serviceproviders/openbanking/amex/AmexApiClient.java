@@ -150,7 +150,6 @@ public class AmexApiClient {
      * fetched to few transaction and will make a new call to fetch all transaction during our 90
      * day period. This solution were selected since the API wont work properly with pagination.
      */
-    @SuppressWarnings("unchecked")
     public List<TransactionsResponseDto> fetchTransactions(
             HmacToken hmacToken, Date fromDate, Date toDate) {
 
