@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class SocieteGeneraleConstants {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SocieteGeneraleConstants {
 
     public static final String INTEGRATION_NAME = "societegenerale";
 
@@ -19,6 +22,8 @@ public class SocieteGeneraleConstants {
         public static final URL TRANSACTIONS_PATH =
                 new URL(BASE_URL + "/accounts/{accountResourceId}/transactions");
         public static final URL END_USER_IDENTITY_PATH = new URL(BASE_URL + "/end-user-identity");
+        public static final URL TRUSTED_BENEFICIARIES_PATH =
+                new URL(BASE_URL + "/trusted-beneficiaries");
     }
 
     public static class QueryKeys {
@@ -44,7 +49,7 @@ public class SocieteGeneraleConstants {
         public static final String BASIC = "Basic";
     }
 
-    public class QueryValues {
+    public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "aisp";
         public static final String AUTHORIZATION_CODE = "authorization_code";
@@ -57,7 +62,7 @@ public class SocieteGeneraleConstants {
         public static final String MISSING_BALANCE = "Balance could not be found";
     }
 
-    public class StorageKeys {
+    public static class StorageKeys {
         public static final String TOKEN = "STRING_TOKEN";
         public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
     }

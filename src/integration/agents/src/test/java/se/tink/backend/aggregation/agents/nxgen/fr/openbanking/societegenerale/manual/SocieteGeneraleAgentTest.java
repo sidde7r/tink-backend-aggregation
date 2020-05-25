@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.manual;
 
 import org.junit.Before;
 import org.junit.Test;

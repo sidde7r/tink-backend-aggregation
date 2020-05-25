@@ -45,3 +45,25 @@ RESPONSE 4
 Content-Type: application/json
 
 {"transactions":[{"entryReference":"2020-05-04T00:0012710917","transactionAmount":{"currency":"EUR","amount":"47.57"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-05-04","valueDate":"2020-05-04","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_1"]}},{"entryReference":"2020-05-02T00:0012710916","transactionAmount":{"currency":"EUR","amount":"0.80"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-05-02","valueDate":"2020-05-02","remittanceInformation":{"unstructured":["DUMMY_DESCRIPTION_2"]}}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"first":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"last":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions?page\u003d1","templated":true},"next":null}}
+
+REQUEST 5
+GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a/trusted-beneficiaries
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 5 SET BENEFICIARIES_FIRST_PAGE_LOADED
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"creditorAgent":{"bicFi":"AXUBFRPP"},"creditor":{"name":"MON COMPTE JOINT 1","postalAddress":{"country":"FR","addressLine":["79 rue DES TPPL","75019 PARIS"]}},"creditorAccount":{"iban":"FR7612548029981234567890161"}}],"_links":{"self":{"href":"/trusted-beneficiaries?page\u003d1","templated":true},"parent-list":{"href":"/accounts"},"first":{"href":"/trusted-beneficiaries?page\u003d1","templated":true},"last":{"href":"/trusted-beneficiaries?page\u003d2","templated":true},"next":{"href":"/trusted-beneficiaries?page\u003d2","templated":true}}}
+
+REQUEST 6 MATCH BENEFICIARIES_FIRST_PAGE_LOADED
+GET https://mtls.api.societegenerale.fr/sg/prod/pri/v1.4.2.4/psd2/xs2a/trusted-beneficiaries?page=2
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"creditorAgent":{"bicFi":"AXUBFRPP"},"creditor":{"name":"MON COMPTE JOINT 2"},"creditorAccount":{"iban":"FR7610278001110002007680247"}}],"_links":{"self":{"href":"/trusted-beneficiaries?page\u003d2","templated":true},"parent-list":{"href":"/accounts"},"first":{"href":"/trusted-beneficiaries?page\u003d1","templated":true},"last":{"href":"/trusted-beneficiaries?page\u003d2","templated":true},"prev":{"href":"/trusted-beneficiaries?page\u003d1","templated":true}}}

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -14,35 +13,25 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.entities.AccountsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SocieteGeneraleTransactionalAccountFetcherTest {
 
     private SocieteGeneraleApiClient apiClient;
-    private SessionStorage sessionStorage;
-    private SignatureHeaderProvider signatureHeaderProvider;
     private AccountsResponse accountsResponse;
 
     @Before
     public void init() {
         apiClient = mock(SocieteGeneraleApiClient.class);
-        sessionStorage = mock(SessionStorage.class);
-        signatureHeaderProvider = mock(SignatureHeaderProvider.class);
+
         final EndUserIdentityResponse user = mock(EndUserIdentityResponse.class);
         accountsResponse = mock(AccountsResponse.class);
 
-        when(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.TOKEN)).thenReturn("token");
-
-        when(signatureHeaderProvider.buildSignatureHeader(anyString(), anyString()))
-                .thenReturn("signature");
-        when(apiClient.getEndUserIdentity(anyString(), anyString())).thenReturn(user);
+        when(apiClient.getEndUserIdentity()).thenReturn(user);
         when(user.getConnectedPsu()).thenReturn("connectedPsu");
     }
 
@@ -58,11 +47,10 @@ public class SocieteGeneraleTransactionalAccountFetcherTest {
 
         when(accountsItemEntity.toTinkModel(any())).thenReturn(optionalTransactionalAccount);
         when(accountsResponse.getCashAccounts()).thenReturn(cashAccounts);
-        when(apiClient.fetchAccounts(anyString(), anyString())).thenReturn(accountsResponse);
+        when(apiClient.fetchAccounts()).thenReturn(accountsResponse);
 
         SocieteGeneraleTransactionalAccountFetcher societeGeneraleTransactionalAccountFetcher =
-                new SocieteGeneraleTransactionalAccountFetcher(
-                        apiClient, sessionStorage, signatureHeaderProvider);
+                new SocieteGeneraleTransactionalAccountFetcher(apiClient);
 
         // when
         Collection<TransactionalAccount> accounts =
@@ -77,10 +65,9 @@ public class SocieteGeneraleTransactionalAccountFetcherTest {
     @Test
     public void shouldReturnEmptyListOfAccountsWhenApiReturnsNullAccounts() {
         // given
-        when(apiClient.fetchAccounts(anyString(), anyString())).thenReturn(null);
+        when(apiClient.fetchAccounts()).thenReturn(null);
         SocieteGeneraleTransactionalAccountFetcher societeGeneraleTransactionalAccountFetcher =
-                new SocieteGeneraleTransactionalAccountFetcher(
-                        apiClient, sessionStorage, signatureHeaderProvider);
+                new SocieteGeneraleTransactionalAccountFetcher(apiClient);
 
         // when
         Collection<TransactionalAccount> accounts =

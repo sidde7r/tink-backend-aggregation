@@ -1,18 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale;
 
 import com.google.inject.Inject;
+import java.util.List;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.SocieteGeneraleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transfer.SocieteGeneraleTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -26,44 +32,47 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public final class SocieteGeneraleAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshIdentityDataExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final SocieteGeneraleApiClient apiClient;
     private final SocieteGeneraleAuthenticator authenticator;
-    private TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
-    private SignatureHeaderProvider signatureHeaderProvider;
+    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
     public SocieteGeneraleAgent(
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
-        final SocieteGeneraleConfiguration societeGeneraleConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(SocieteGeneraleConfiguration.class);
+
+        final SocieteGeneraleConfiguration societeGeneraleConfiguration = getConfiguration();
+        final SignatureHeaderProvider signatureHeaderProvider =
+                new SignatureHeaderProvider(qsealcSigner, societeGeneraleConfiguration);
 
         apiClient =
                 new SocieteGeneraleApiClient(
-                        client, persistentStorage, societeGeneraleConfiguration);
+                        client,
+                        persistentStorage,
+                        societeGeneraleConfiguration,
+                        signatureHeaderProvider);
 
         authenticator =
                 new SocieteGeneraleAuthenticator(
                         apiClient, persistentStorage, societeGeneraleConfiguration);
 
-        signatureHeaderProvider =
-                new SignatureHeaderProvider(qsealcSigner, societeGeneraleConfiguration);
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        societeGeneraleIdentityDataFetcher =
-                new SocieteGeneraleIdentityDataFetcher(
-                        apiClient, sessionStorage, signatureHeaderProvider);
+        societeGeneraleIdentityDataFetcher = new SocieteGeneraleIdentityDataFetcher(apiClient);
+
+        transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     @Override
@@ -115,14 +124,22 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return societeGeneraleIdentityDataFetcher.response();
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         SocieteGeneraleTransactionalAccountFetcher accountFetcher =
-                new SocieteGeneraleTransactionalAccountFetcher(
-                        apiClient, sessionStorage, signatureHeaderProvider);
+                new SocieteGeneraleTransactionalAccountFetcher(apiClient);
 
         SocieteGeneraleTransactionFetcher transactionFetcher =
-                new SocieteGeneraleTransactionFetcher(
-                        apiClient, sessionStorage, signatureHeaderProvider);
+                new SocieteGeneraleTransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -133,8 +150,13 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                         new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 
-    @Override
-    public FetchIdentityDataResponse fetchIdentityData() {
-        return societeGeneraleIdentityDataFetcher.response();
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new SocieteGeneraleTransferDestinationFetcher(apiClient));
+    }
+
+    private SocieteGeneraleConfiguration getConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentConfiguration(SocieteGeneraleConfiguration.class);
     }
 }
