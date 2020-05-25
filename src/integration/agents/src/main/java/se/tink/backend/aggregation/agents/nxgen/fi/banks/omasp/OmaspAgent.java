@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.Om
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.creditcard.OmaspCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.loan.OmaspLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transactionalaccount.OmaspTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.sessionhandler.OmaspSessionHandler;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -143,7 +142,7 @@ public class OmaspAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new OmaspSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 
     @Override

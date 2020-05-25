@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authentica
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.configuration.AbancaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.AbancaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.AbancaTransactionalAccountTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.session.AbancaSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -102,6 +101,6 @@ public final class AbancaAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new AbancaSessionHandler(apiClient);
+        return SessionHandler.alwaysFail();
     }
 }

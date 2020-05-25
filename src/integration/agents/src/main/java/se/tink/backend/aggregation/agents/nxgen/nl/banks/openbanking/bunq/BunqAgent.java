@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.BunqOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.BunqPaymentExecutor;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.session.BunqSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseAgent;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -73,7 +72,7 @@ public final class BunqAgent extends BunqBaseAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BunqSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 
     @Override

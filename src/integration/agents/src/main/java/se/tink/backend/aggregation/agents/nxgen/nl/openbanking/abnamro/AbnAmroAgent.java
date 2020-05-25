@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authentic
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.configuration.AbnAmroConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.AbnAmroAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.fetcher.AbnAmroTransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.session.AbnAmroSessionHandler;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -102,6 +101,6 @@ public final class AbnAmroAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new AbnAmroSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 }
