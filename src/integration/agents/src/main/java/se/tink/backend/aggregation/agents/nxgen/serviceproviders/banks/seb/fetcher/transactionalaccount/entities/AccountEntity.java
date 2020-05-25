@@ -70,16 +70,6 @@ public class AccountEntity {
     private String KTOUTDR_UTSKR;
 
     @JsonIgnore
-    private boolean canPayInvoices() {
-        return canPayInvoices.equals("1");
-    }
-
-    @JsonIgnore
-    private boolean canTransferFrom() {
-        return canTransferFrom.equals("1");
-    }
-
-    @JsonIgnore
     public boolean isTransactionalAccount() {
         return SebConstants.ACCOUNT_TYPE_MAPPER.isOf(accountType, AccountTypes.CHECKING)
                 || SebConstants.ACCOUNT_TYPE_MAPPER.isOf(accountType, AccountTypes.SAVINGS);

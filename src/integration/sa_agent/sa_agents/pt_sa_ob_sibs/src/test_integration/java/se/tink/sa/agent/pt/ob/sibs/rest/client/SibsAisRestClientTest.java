@@ -20,7 +20,6 @@ import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.entity.accou
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.AccountsResponse;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.BalancesResponse;
 import se.tink.sa.agent.pt.ob.sibs.rest.client.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.sa.framework.tools.JsonUtils;
 
 @Ignore
 @Slf4j
@@ -62,8 +61,6 @@ public class SibsAisRestClientTest extends AbstractRestClientTest {
                         sibsAccountInformationClient.getTransactionsForKey(nextTransactionsRequest);
             }
         }
-
-        log.info("AccountsResponse --> {}", JsonUtils.writeAsJson(accountsResponse));
     }
 
     private CommonSibsRequest getCommonRequest(String consentId, String bankCode) {

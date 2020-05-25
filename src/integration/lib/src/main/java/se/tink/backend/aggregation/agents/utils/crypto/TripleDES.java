@@ -12,28 +12,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class TripleDES {
-    public static byte[] encryptEcbPkcs5(byte[] key, byte[] data) {
-        return ecb(true, key, data, "PKCS5Padding");
-    }
-
-    public static byte[] decryptEcbPkcs5(byte[] key, byte[] data) {
-        return ecb(false, key, data, "PKCS5Padding");
-    }
-
     public static byte[] encryptEcbNoPadding(byte[] key, byte[] data) {
         return ecb(true, key, data, "NoPadding");
-    }
-
-    public static byte[] decryptEcbNoPadding(byte[] key, byte[] data) {
-        return ecb(false, key, data, "NoPadding");
-    }
-
-    public static byte[] encryptCbcPkcs5(byte[] key, byte[] iv, byte[] data) {
-        return cbc(true, key, iv, data, "PKCS5Padding");
-    }
-
-    public static byte[] decryptCbcPkcs5(byte[] key, byte[] iv, byte[] data) {
-        return cbc(false, key, iv, data, "PKCS5Padding");
     }
 
     public static byte[] encryptCbcNoPadding(byte[] key, byte[] iv, byte[] data) {

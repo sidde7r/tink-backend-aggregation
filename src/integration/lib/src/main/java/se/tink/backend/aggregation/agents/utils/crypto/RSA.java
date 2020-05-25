@@ -125,10 +125,6 @@ public class RSA {
         return encrypt("RSA/ECB/OAEPWithSHA-1AndMGF1Padding", publicKey, data);
     }
 
-    public static byte[] encryptEcbOaepSha256Mgf1(RSAPublicKey publicKey, byte[] data) {
-        return encrypt("RSA/ECB/OAEPWithSHA-256AndMGF1Padding", publicKey, data);
-    }
-
     public static byte[] encryptNonePkcs1(RSAPublicKey publicKey, byte[] data) {
         return encrypt("RSA/NONE/PKCS1Padding", publicKey, data);
     }
@@ -152,29 +148,9 @@ public class RSA {
         return sign("SHA256withRSA", privateKey, input);
     }
 
-    public static byte[] signSha512(final PrivateKey privateKey, final byte[] input) {
-        return sign("SHA512withRSA", privateKey, input);
-    }
-
     public static String pemFormatPublicKey(PublicKey publicKey) {
         String rawPublicKey = EncodingUtils.encodeAsBase64String(publicKey.getEncoded());
         return String.format(
                 "-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----\n", rawPublicKey);
-    }
-
-    private static boolean verify(
-            String type, PublicKey publicKey, byte[] input, byte[] signature) {
-        try {
-            Signature sigVerify = Signature.getInstance(type);
-            sigVerify.initVerify(publicKey);
-            sigVerify.update(input);
-            return sigVerify.verify(signature);
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    public static boolean verifySignSha256(PublicKey publicKey, byte[] input, byte[] signature) {
-        return verify("SHA256withRSA", publicKey, input, signature);
     }
 }

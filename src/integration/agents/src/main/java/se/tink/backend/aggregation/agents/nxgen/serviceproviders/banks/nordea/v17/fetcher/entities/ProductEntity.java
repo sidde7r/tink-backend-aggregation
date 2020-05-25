@@ -196,21 +196,6 @@ public class ProductEntity {
         return getProductIdBoolean("@view");
     }
 
-    @JsonIgnore
-    public boolean canMakePayment() {
-        return getProductIdBoolean("@paymentAccount");
-    }
-
-    @JsonIgnore
-    public boolean canReceiveInternalTransfer() {
-        return getProductIdBoolean("@ownTransferTo");
-    }
-
-    @JsonIgnore
-    public boolean canMakeInternalTransfer() {
-        return getProductIdBoolean("@ownTransferFrom");
-    }
-
     public String getInternalId() {
         return (String) productId.get("$");
     }

@@ -19,11 +19,6 @@ public class Hash {
         return Hex.encodeHexString(digest);
     }
 
-    public static String hmacSha256AsHex(byte[] key, byte[] data) {
-        byte[] digest = hmacSha256(key, data);
-        return Hex.encodeHexString(digest);
-    }
-
     public static String hmacSha256AsBase64(byte[] key, byte[] data) {
         byte[] digest = hmacSha256(key, data);
         return BASE64.encodeToString(digest);
@@ -45,10 +40,6 @@ public class Hash {
         return sha256AsHex(data.getBytes());
     }
 
-    public static byte[] sha1(final String data) {
-        return hashFunction("SHA-1", data.getBytes());
-    }
-
     public static byte[] sha256(final String data) {
         return hashFunction("SHA-256", data.getBytes());
     }
@@ -65,10 +56,6 @@ public class Hash {
         return BASE64.encodeToString(sha256(datas));
     }
 
-    public static byte[] hmacSha1(String key, String data) {
-        return hmacSha1(key.getBytes(), data.getBytes());
-    }
-
     public static byte[] hmacSha256(String key, String data) {
         return hmacSha256(key.getBytes(), data.getBytes());
     }
@@ -81,32 +68,8 @@ public class Hash {
         return hmac("HmacSHA256", key, data);
     }
 
-    public static byte[] sha512(final byte[]... datas) {
-        return hashFunction("SHA-512", datas);
-    }
-
     public static byte[] sha512(final String data) {
         return hashFunction("SHA-512", data.getBytes());
-    }
-
-    public static byte[] hmacSha512(final byte[] key, final byte[] data) {
-        return hmac("HmacSHA512", key, data);
-    }
-
-    public static String md5Base64(final byte[]... datas) {
-        return BASE64.encodeToString(md5(datas));
-    }
-
-    public static String md5Base64(String data) {
-        return BASE64.encodeToString(md5(data));
-    }
-
-    public static String md5AsHex(final byte[]... datas) {
-        return Hex.encodeHexString(md5(datas));
-    }
-
-    public static String md5AsHex(String data) {
-        return Hex.encodeHexString(md5(data));
     }
 
     public static byte[] md5(final String data) {
@@ -123,17 +86,6 @@ public class Hash {
             for (byte[] data : datas) {
                 md.update(data);
             }
-            return md.digest();
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    private static byte[] sha1WithCounter(byte[] inputData, byte[] counter) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(inputData);
-            md.update(counter);
             return md.digest();
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);

@@ -12,13 +12,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class DES {
-    public static byte[] encryptEcbPkcs5(byte[] key, byte[] data) {
-        return ecb(true, key, data, "PKCS5Padding");
-    }
-
-    public static byte[] decryptEcbPkcs5(byte[] key, byte[] data) {
-        return ecb(false, key, data, "PKCS5Padding");
-    }
 
     public static byte[] encryptEcbNoPadding(byte[] key, byte[] data) {
         return ecb(true, key, data, "NoPadding");
@@ -28,20 +21,8 @@ public class DES {
         return ecb(false, key, data, "NoPadding");
     }
 
-    public static byte[] encryptCbcPkcs5(byte[] key, byte[] iv, byte[] data) {
-        return cbc(true, key, iv, data, "PKCS5Padding");
-    }
-
-    public static byte[] decryptCbcPkcs5(byte[] key, byte[] iv, byte[] data) {
-        return cbc(false, key, iv, data, "PKCS5Padding");
-    }
-
     public static byte[] encryptCbcNoPadding(byte[] key, byte[] iv, byte[] data) {
         return cbc(true, key, iv, data, "NoPadding");
-    }
-
-    public static byte[] decryptCbcNoPadding(byte[] key, byte[] iv, byte[] data) {
-        return cbc(false, key, iv, data, "NoPadding");
     }
 
     private static byte[] ecb(boolean encrypt, byte[] key, byte[] data, String padding) {

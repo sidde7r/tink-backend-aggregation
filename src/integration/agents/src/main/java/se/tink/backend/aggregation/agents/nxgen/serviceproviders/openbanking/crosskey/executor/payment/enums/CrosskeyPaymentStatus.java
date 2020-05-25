@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.executor.payment.enums;
 
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
@@ -32,13 +31,6 @@ public enum CrosskeyPaymentStatus {
 
     CrosskeyPaymentStatus(String statusText) {
         this.statusText = statusText;
-    }
-
-    public static CrosskeyPaymentStatus fromString(String text) {
-        return Arrays.stream(CrosskeyPaymentStatus.values())
-                .filter(s -> s.statusText.equalsIgnoreCase(text))
-                .findFirst()
-                .orElse(UNKNOWN);
     }
 
     public static PaymentStatus mapToTinkPaymentStatus(

@@ -15,8 +15,4 @@ public class LogTag {
     public String toString() {
         return tag;
     }
-
-    public String concat(String message) {
-        return String.format("%s - %s", tag, message);
-    }
 }

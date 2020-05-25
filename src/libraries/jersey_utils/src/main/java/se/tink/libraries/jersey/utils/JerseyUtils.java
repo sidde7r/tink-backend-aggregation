@@ -2,7 +2,6 @@ package se.tink.libraries.jersey.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.filter.Filterable;
 import java.util.List;
@@ -33,10 +32,6 @@ public class JerseyUtils {
         }
 
         return interClusterJerseyClientFactory.build();
-    }
-
-    public static WebResource getResource(List<String> pinnedCertificates, String url) {
-        return getClient(pinnedCertificates).resource(url);
     }
 
     public static void registerAPIAccessToken(Filterable filterable, String accessToken) {

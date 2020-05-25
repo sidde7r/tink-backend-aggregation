@@ -55,11 +55,6 @@ public class SdcAmount {
     }
 
     @JsonIgnore
-    public ExactCurrencyAmount toTinkAmount() {
-        return ExactCurrencyAmount.of(BigDecimal.valueOf(value, scale), currency);
-    }
-
-    @JsonIgnore
     public ExactCurrencyAmount toExactCurrencyAmount() {
         return ExactCurrencyAmount.of(BigDecimal.valueOf(value, scale), currency);
     }

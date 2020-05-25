@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole;
 
 import com.google.common.collect.ImmutableList;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
+import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
@@ -15,6 +17,7 @@ import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @FilterOrder(category = FilterPhases.SECURITY, order = 0)
 public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterceptor {
@@ -86,8 +89,7 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
     @Override
     protected void prepareDigestAndAddAsHeader(HttpRequest request) {
         if (request.getBody() != null) {
-            String digest = CreditAgricoleBaseSignatureUtils.getDigest(request.getBody());
-
+            String digest = getDigest(request.getBody());
             request.getHeaders()
                     .add(
                             CreditAgricoleBaseConstants.HeaderKeys.DIGEST,
@@ -104,5 +106,11 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
                 QsealcSignerImpl.build(
                         eidasConf.toInternalConfig(), QsealcAlg.EIDAS_RSA_SHA256, eidasIdentity);
         return signer.getSignatureBase64(toSignString.getBytes());
+    }
+
+    private String getDigest(Object body) {
+        byte[] bytes =
+                SerializationUtils.serializeToString(body).getBytes(StandardCharsets.US_ASCII);
+        return Hash.sha256Base64(bytes);
     }
 }

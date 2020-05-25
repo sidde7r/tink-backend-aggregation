@@ -1,8 +1,6 @@
 package se.tink.libraries.cryptography;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.security.InvalidKeyException;
@@ -19,12 +17,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.bouncycastle.util.encoders.DecoderException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ECDSAUtils {
-    private static final Logger log = LoggerFactory.getLogger(ECDSAUtils.class);
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -50,11 +44,8 @@ public class ECDSAUtils {
 
     public static ECPublicKey getPublicKey(Reader keyReader) throws IOException {
         PEMParser pemReader = new PEMParser(keyReader);
-
         SubjectPublicKeyInfo publicKeyInfo = (SubjectPublicKeyInfo) pemReader.readObject();
-
         JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-
         return (ECPublicKey) converter.getPublicKey(publicKeyInfo);
     }
 
@@ -62,59 +53,17 @@ public class ECDSAUtils {
         return ECDSAUtils.getPublicKey(new StringReader(key));
     }
 
-    public static ECPrivateKey getPrivateKeyByPath(String path) {
-        try (PEMParser pemReader =
-                new PEMParser(new InputStreamReader(new FileInputStream(path)))) {
-
-            PEMKeyPair keyPair = (PEMKeyPair) pemReader.readObject();
-
-            JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-            return (ECPrivateKey) converter.getKeyPair(keyPair).getPrivate();
-        } catch (IOException e) {
-            log.error("Could not convert key path into valid private key.");
-            throw new RuntimeException("Could not convert key path into valid private key.", e);
-        }
-    }
-
-    public static ECPublicKey getPublicKeyByPath(String keyPath) {
-        try (PEMParser pemReader =
-                new PEMParser(new InputStreamReader(new FileInputStream(keyPath)))) {
-
-            SubjectPublicKeyInfo publicKeyInfo = (SubjectPublicKeyInfo) pemReader.readObject();
-
-            JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-
-            return (ECPublicKey) converter.getPublicKey(publicKeyInfo);
-        } catch (IOException e) {
-            log.error("Could not convert key path into valid public key.");
-            throw new RuntimeException("Could not convert key path into valid public key.", e);
-        }
-    }
-
-    public static boolean isValidPublicKey(String key) {
-        try {
-            getPublicKey(key);
-            return true;
-        } catch (DecoderException | IOException e) {
-            return false;
-        }
-    }
-
     public static Signature getSignature(PrivateKey key)
             throws NoSuchAlgorithmException, InvalidKeyException {
         Signature signature = Signature.getInstance(DEFAULT_SIGNATURE_ALGORITHM);
-
         signature.initSign(key);
-
         return signature;
     }
 
     public static Signature getSignature(PublicKey key)
             throws NoSuchAlgorithmException, InvalidKeyException {
         Signature signature = Signature.getInstance(DEFAULT_SIGNATURE_ALGORITHM);
-
         signature.initVerify(key);
-
         return signature;
     }
 }

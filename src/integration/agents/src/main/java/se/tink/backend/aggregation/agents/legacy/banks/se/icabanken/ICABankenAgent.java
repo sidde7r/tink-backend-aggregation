@@ -45,7 +45,6 @@ import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.icabanken.IcaBankenAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AcceptEInvoiceTransferRequest;
@@ -116,7 +115,6 @@ import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
@@ -1143,30 +1141,6 @@ public class ICABankenAgent extends AbstractAgent
                 .post(TransferResponse.class, transferRequest);
     }
 
-    private void updateTransferDestinations() {
-        List<AccountEntity> accountEntities = getAccounts();
-        List<RecipientEntity> recipientEntities = fetchDestinationAccounts();
-
-        TransferDestinationsResponse response = new TransferDestinationsResponse();
-
-        try {
-            response.addDestinations(
-                    getTransferAccountDestinations(
-                            systemUpdater.getUpdatedAccounts(),
-                            accountEntities,
-                            recipientEntities));
-            response.addDestinations(
-                    getPaymentAccountDestinations(
-                            systemUpdater.getUpdatedAccounts(),
-                            accountEntities,
-                            recipientEntities));
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-
-        systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
-    }
-
     private List<AccountEntity> getAccounts() {
         if (accountEntities != null) {
             return accountEntities;
@@ -1174,14 +1148,6 @@ public class ICABankenAgent extends AbstractAgent
 
         accountEntities = fetchAccounts();
         return accountEntities;
-    }
-
-    private void logDepots(List<DepotEntity> depots) {
-        LogTag investmentLogTag = LogTag.from("icabanken_investment");
-        try {
-        } catch (Exception e) {
-            log.info("error when fetching investment " + investmentLogTag.toString(), e);
-        }
     }
 
     private Optional<Instrument> toInstrument(FundHoldingsEntity fund, FundDetails fundDetails) {
@@ -1361,8 +1327,7 @@ public class ICABankenAgent extends AbstractAgent
     }
 
     private String initBankIDSignTransfer() throws BankIdException {
-        String url = INIT_TRANSFER_SIGN_URL;
-        return initBankID(url, true);
+        return initBankID(INIT_TRANSFER_SIGN_URL, true);
     }
 
     private String initBankID(String url, boolean useAutostartToken) throws BankIdException {
@@ -1576,8 +1541,6 @@ public class ICABankenAgent extends AbstractAgent
         return fetchAccountsPerType(RefreshableItem.CHECKING_ACCOUNTS);
     }
 
-    //////////// Refresh Executor Refactor /////////////
-
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return fetchTransactionsPerAccountType(RefreshableItem.CHECKING_TRANSACTIONS);
@@ -1729,6 +1692,4 @@ public class ICABankenAgent extends AbstractAgent
             return userMessage;
         }
     }
-
-    ////////////////////////////////////////////////////
 }

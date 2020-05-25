@@ -136,17 +136,6 @@ public class Amount extends Number {
         return value < pivot;
     }
 
-    @JsonIgnore
-    public Amount add(double toAdd) {
-        return new Amount(this.currency, this.value + toAdd);
-    }
-
-    @JsonIgnore
-    public Amount subtract(double toSubtract) {
-
-        return new Amount(this.currency, this.value - toSubtract);
-    }
-
     public BigDecimal toBigDecimal() {
         if (Double.isFinite(value)) {
             return BigDecimal.valueOf(Math.round(value * 100D), SCALE);

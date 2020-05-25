@@ -109,10 +109,6 @@ public class IngAtRsa {
         return BigInteger.ZERO;
     }
 
-    public String decrypt(final String ctext) {
-        return this.decrypt(ctext, 16);
-    }
-
     public String decrypt(final String ctext, final int size) {
         final BigInteger c = new BigInteger(ctext, size);
         final BigInteger m = this.doPrivate(c);
