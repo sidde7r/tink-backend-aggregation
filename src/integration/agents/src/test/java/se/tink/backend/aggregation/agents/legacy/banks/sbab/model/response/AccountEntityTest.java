@@ -2,10 +2,12 @@ package se.tink.backend.aggregation.agents.banks.sbab.model.response;
 
 import java.util.Optional;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.AccountEntity;
 
+@Ignore
 public class AccountEntityTest {
 
     @Test

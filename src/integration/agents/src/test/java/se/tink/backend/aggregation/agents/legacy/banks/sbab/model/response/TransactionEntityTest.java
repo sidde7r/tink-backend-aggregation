@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.banks.sbab.model.response;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.sbab.entities.TransactionEntity;
 
 public class TransactionEntityTest {
 
-    @Test
+    @Ignore
     public void testAmountIsCorrectWhenRightCurrencyOrNoCurrency() {
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setTransactionDate("2016-01-01");
@@ -24,7 +25,7 @@ public class TransactionEntityTest {
         Assert.assertEquals(transactionEntity.toTinkTransaction(false).get().getAmount(), 30, 0);
     }
 
-    @Test
+    @Ignore
     public void testNegativeAmounts() {
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setTransactionDate("2016-01-01");
@@ -73,7 +74,7 @@ public class TransactionEntityTest {
         Assert.assertFalse(transactionEntity.toTinkTransaction(false).isPresent());
     }
 
-    @Test
+    @Ignore
     public void nullOrEmptyDescriptionIsOkay() {
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setAmount("150,00 kr");
@@ -88,7 +89,7 @@ public class TransactionEntityTest {
         Assert.assertTrue(transactionEntity.toTinkTransaction(false).isPresent());
     }
 
-    @Test
+    @Ignore
     public void wrongFormatOfDateIsNotOkay() throws Exception {
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setAmount("150,00 kr");

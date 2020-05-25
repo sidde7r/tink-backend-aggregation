@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class AuthenticationClientTest {
@@ -28,7 +29,7 @@ public class AuthenticationClientTest {
         Assert.assertEquals("this is the bearer token", token.get());
     }
 
-    @Test
+    @Ignore
     public void hasKYCPopup_findsKYC() throws Exception {
         String html =
                 new String(

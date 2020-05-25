@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.sbab;
+package se.tink.backend.aggregation.agents.banks.sbab.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.banks.sbab.SBABAgent;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -63,7 +64,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test
     public void testWholeTransferFlow() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSource(new SwedishIdentifier("src account"));
         transfer.setDestination(new SwedishIdentifier("dest account"));
 
@@ -81,7 +82,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test
     public void testTransferInternal() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.SBAB_ANOTHER_NO));
 
@@ -90,7 +91,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test
     public void testTransferExternalAvanza() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.AVANZA_NO));
 
@@ -99,7 +100,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test
     public void testTransferExternalHandelsbanken() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.HANDELSBANKEN_NO));
 
@@ -158,7 +159,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
      */
     @Test
     public void testTransferExternalNewRecipient() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.HANDELSBANKEN_ANOTHER_NO));
 
@@ -167,7 +168,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test(expected = IllegalArgumentException.class)
     public void testTransferWithInvalidDestination() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier("12345"));
 
@@ -179,7 +180,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test(expected = IllegalArgumentException.class)
     public void testTransferWithInvalidSource() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSource(new SwedishIdentifier("12345"));
         transfer.setDestination(new SwedishIdentifier(TestAccount.HANDELSBANKEN_NO));
 
@@ -191,7 +192,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test(expected = TransferExecutionException.class)
     public void testTransferWithSourceFromAnotherBank() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSource(new SwedishIdentifier(TestAccount.HANDELSBANKEN_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.HANDELSBANKEN_ANOTHER_NO));
 
@@ -203,7 +204,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test(expected = TransferExecutionException.class)
     public void testTransferWithSameSourceAndDestination() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.SBAB_NO));
 
@@ -215,7 +216,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test(expected = TransferMessageException.class)
     public void testTransferExternalWithTooLongDestinationMessage() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setDestinationMessage("This message is too long for being a destination message");
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.HANDELSBANKEN_NO));
@@ -228,7 +229,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test(expected = TransferMessageException.class)
     public void testTransferExternalWithTooLongSourceMessage() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSourceMessage("This message is too long for being a source message");
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.HANDELSBANKEN_NO));
@@ -241,7 +242,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test(expected = TransferMessageException.class)
     public void testTransferInternalWithTooLongDestinationMessage() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setDestinationMessage("This message is too long for being a destination message");
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.SBAB_ANOTHER_NO));
@@ -254,7 +255,7 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     @Test(expected = TransferMessageException.class)
     public void testTransferInternalWithTooLongSourceMessage() throws Exception {
-        Transfer transfer = SBABAgentTestBase.create1SEKTransfer();
+        Transfer transfer = create1SEKTransfer();
         transfer.setSourceMessage("This message is too long for being a source message");
         transfer.setSource(new SwedishIdentifier(TestAccount.SBAB_NO));
         transfer.setDestination(new SwedishIdentifier(TestAccount.SBAB_ANOTHER_NO));
@@ -263,5 +264,17 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
         // This will result in a TransferMessageException.
 
         testTransferException(credentials, transfer);
+    }
+
+    private Transfer create1SEKTransfer() {
+        Transfer transfer = new Transfer();
+
+        transfer.setAmount(Amount.inSEK(1.0));
+        transfer.setDestinationMessage("Tink dest");
+        transfer.setSourceMessage("Tink source");
+        transfer.setType(TransferType.BANK_TRANSFER);
+        transfer.setDueDate(DateUtils.getToday());
+
+        return transfer;
     }
 }
