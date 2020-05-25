@@ -774,7 +774,7 @@ public class DanskeBankV2Agent extends AbstractAgent
             String challengeResponse = requestChallengeResponse(loginResponse.getChallenge());
 
             if (Strings.isNullOrEmpty(challengeResponse)) {
-                handleNullChallengeResponseForLogin(loginResponse, challengeResponse);
+                handleNullChallengeResponseForLogin(loginResponse);
             }
 
             apiClient.loginConfirmChallenge(loginResponse, challengeResponse);
@@ -828,8 +828,7 @@ public class DanskeBankV2Agent extends AbstractAgent
         }
     }
 
-    private void handleNullChallengeResponseForLogin(
-            LoginResponse loginResponse, String challengeResponse)
+    private void handleNullChallengeResponseForLogin(LoginResponse loginResponse)
             throws SupplementalInfoException {
 
         // If the login response is OK, then the user should have received the challenge. If the

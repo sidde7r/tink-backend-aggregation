@@ -176,7 +176,7 @@ public class AmexApiClient {
         return transactionResponses;
     }
 
-    private URL buildTransactionsUrl(int limit, Date fromDate, Date toDate) {
+    private URL buildTransactionsUrl(int limit, Date toDate) {
         return new URL(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS)
                 .queryParam(
                         AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
@@ -196,7 +196,7 @@ public class AmexApiClient {
     private List<TransactionsResponseDto> fetchTransactionsWithGivenLimit(
             HmacToken hmacToken, int limit, Date fromDate, Date toDate) {
 
-        URL url = buildTransactionsUrl(limit, fromDate, toDate);
+        URL url = buildTransactionsUrl(limit, toDate);
 
         // fetching posted transactions
         List<LinkedHashMap<String, String>> postedObjects =

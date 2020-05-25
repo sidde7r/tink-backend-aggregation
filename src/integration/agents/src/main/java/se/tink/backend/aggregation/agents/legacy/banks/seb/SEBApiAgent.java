@@ -1375,18 +1375,17 @@ public class SEBApiAgent extends AbstractAgent
         return parseCreditCardTransaction(transactionEntities, creditCardEntities);
     }
 
-    private List<Transaction> parsePendingTransactions(
-            List<SebTransaction> transactionEntities, Account account) {
-        return parseTransactions(transactionEntities, account, true);
+    private List<Transaction> parsePendingTransactions(List<SebTransaction> transactionEntities) {
+        return parseTransactions(transactionEntities, true);
     }
 
     private List<Transaction> parseTransactions(
             List<SebTransaction> transactionEntities, Account account) {
-        return parseTransactions(transactionEntities, account, false);
+        return parseTransactions(transactionEntities, false);
     }
 
     private List<Transaction> parseTransactions(
-            List<SebTransaction> transactionEntities, Account account, boolean pending) {
+            List<SebTransaction> transactionEntities, boolean pending) {
         List<Transaction> transactions = Lists.newArrayList();
         try {
             for (SebTransaction transactionEntity : transactionEntities) {
@@ -1520,7 +1519,7 @@ public class SEBApiAgent extends AbstractAgent
                 listAccountPendingTransactions(customerId, account.getAccountNumber());
 
         if (pendingEntities != null) {
-            transactions.addAll(parsePendingTransactions(pendingEntities, account));
+            transactions.addAll(parsePendingTransactions(pendingEntities));
         }
 
         transactions.addAll(listAccountTransactions(customerId, account));

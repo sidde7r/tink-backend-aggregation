@@ -60,7 +60,7 @@ public class SdcAccountTest {
                 SerializationUtils.deserializeFromString(SDC_CHECKING_ACCOUNT, SdcAccount.class);
 
         // when
-        CreditCardAccount creditCardAccount = sdcAccount.toTinkCreditCardAccount(null);
+        CreditCardAccount creditCardAccount = sdcAccount.toTinkCreditCardAccount();
 
         // then
         assertThat(creditCardAccount.getName()).isEqualTo("sample name");

@@ -143,7 +143,7 @@ public class SdcCreditCardFetcher extends SdcAgreementFetcher
         for (SdcAccount creditCardProviderAccount : creditCardProviderAccounts) {
             if (creditCardProviderAccount.isCreditCardAccount()) {
                 CreditCardAccount creditCardAccount =
-                        creditCardProviderAccount.toTinkCreditCardAccount(this.agentConfiguration);
+                        creditCardProviderAccount.toTinkCreditCardAccount();
 
                 // return value
                 creditCards.add(creditCardAccount);

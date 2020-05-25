@@ -93,7 +93,7 @@ public final class NorwegianApiClient {
         return createRequest(collectUrl).post(CollectBankIdResponse.class, request);
     }
 
-    public String completeBankId(String completeUrl, CollectBankIdRequest request) {
+    public String completeBankId(String completeUrl) {
         // Initiate the SAML request.
         String completeBankIdResponse = createRequest(completeUrl).get(String.class);
         Document completeDocument = Jsoup.parse(completeBankIdResponse);

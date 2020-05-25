@@ -89,7 +89,7 @@ public class AccountEntity {
         List<AccountIdentifier> identifiers = getAccountIdentifier(accountDetailsMap);
 
         CreditCardAccount card =
-                CreditCardAccount.builder(getUniqueId(credentialsId, accountNumber))
+                CreditCardAccount.builder(getUniqueId(credentialsId))
                         .setName(accountName)
                         .setAccountNumber(accountNumber)
                         .setExactBalance(ExactCurrencyAmount.inSEK(totalBalance))
@@ -120,8 +120,7 @@ public class AccountEntity {
         List<AccountIdentifier> identifiers = getAccountIdentifier(accountDetailsMap);
 
         TransactionalAccount account =
-                TransactionalAccount.builder(
-                                AccountTypes.OTHER, getUniqueId(credentialsId, accountNumber))
+                TransactionalAccount.builder(AccountTypes.OTHER, getUniqueId(credentialsId))
                         .setName(accountName)
                         .setAccountNumber(accountNumber)
                         .setExactBalance(ExactCurrencyAmount.of(totalBalance, "SEK"))
@@ -140,7 +139,7 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private String getUniqueId(String credentialsId, String accountNumber) {
+    private String getUniqueId(String credentialsId) {
         // THIS IS TO AVOID Migration of unique ID until we find a way to handle Migrations in a
         // better way than today.
         //        return accountNumber;

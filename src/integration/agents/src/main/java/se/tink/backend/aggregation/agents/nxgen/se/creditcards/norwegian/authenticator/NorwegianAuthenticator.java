@@ -69,7 +69,7 @@ public class NorwegianAuthenticator implements BankIdAuthenticator<OrderBankIdRe
 
             // Use the SAML created secret key to authenticate
             final String callbackResponse =
-                    apiClient.completeBankId(collectResponse.getCompleteUrl(), collectRequest);
+                    apiClient.completeBankId(collectResponse.getCompleteUrl());
 
             // Parse the JS window.location.href redirect from the Signicat Callback page, follow
             // that and submit the form to /signin-oidc-se

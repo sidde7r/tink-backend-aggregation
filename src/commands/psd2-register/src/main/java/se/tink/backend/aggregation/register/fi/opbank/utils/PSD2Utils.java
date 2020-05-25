@@ -26,27 +26,25 @@ public final class PSD2Utils {
     public static EidasProxyConfiguration eidasProxyConf =
             EidasProxyConfiguration.createLocal(OPBankRegisterConstants.Url.EIDAS_PROXY_URL.get());
 
-    public static String generateSignedSSAJwt(
-            String certificateId, String clusterId, String appId) {
+    public static String generateSignedSSAJwt(String clusterId, String appId) {
         final JSONObject ssaJson = SoftwareStatement.create();
         final String serializedSsa = SerializationUtils.serializeToString(ssaJson);
 
         final Payload payload = new Payload(serializedSsa);
         final JWSObject jws = new JWSObject(createHeaderJwt(), payload);
 
-        final String signedSSa = buildSignedJwt(jws, certificateId, clusterId, appId);
+        final String signedSSa = buildSignedJwt(jws, clusterId, appId);
         final JSONObject request = SsaRequest.create(signedSSa);
         final String jwsString = SerializationUtils.serializeToString(request);
 
         final Payload payload2 = new Payload(jwsString);
         final JWSObject jws2 = new JWSObject(createHeaderJwt(), payload2);
 
-        final String signedRequest = buildSignedJwt(jws2, certificateId, clusterId, appId);
+        final String signedRequest = buildSignedJwt(jws2, clusterId, appId);
         return signedRequest;
     }
 
-    private static String buildSignedJwt(
-            JWSObject jwsObject, String certificateId, String clusterId, String appId) {
+    private static String buildSignedJwt(JWSObject jwsObject, String clusterId, String appId) {
         EidasIdentity eidasIdentity =
                 new EidasIdentity(clusterId, appId, OPBankRegisterCommand.class);
 

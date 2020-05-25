@@ -35,7 +35,6 @@ public class OPBankRegisterCommand {
             System.exit(1);
         }
 
-        final String certificateId = cmd.getOptionValue(Option.CERTIFICATE_ID);
         final String clusterId = cmd.getOptionValue(Option.CLUSTER_ID);
         final String appId = cmd.getOptionValue(Option.APP_ID);
 
@@ -46,7 +45,7 @@ public class OPBankRegisterCommand {
 
         client.setEidasProxy(PSD2Utils.eidasProxyConf);
 
-        final String signJwt = PSD2Utils.generateSignedSSAJwt(certificateId, clusterId, appId);
+        final String signJwt = PSD2Utils.generateSignedSSAJwt(clusterId, appId);
 
         client.request(OPBankRegisterConstants.Url.TPP_REGISTER)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)

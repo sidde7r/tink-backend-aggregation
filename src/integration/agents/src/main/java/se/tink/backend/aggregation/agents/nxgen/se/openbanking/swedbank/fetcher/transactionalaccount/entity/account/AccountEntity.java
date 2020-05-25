@@ -71,7 +71,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance(currency)))
+                .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(bban)
