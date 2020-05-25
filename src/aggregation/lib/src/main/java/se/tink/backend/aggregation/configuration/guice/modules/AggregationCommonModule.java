@@ -5,6 +5,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Scopes;
+import io.prometheus.client.CollectorRegistry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -38,6 +39,7 @@ public class AggregationCommonModule extends AbstractModule {
         bind(MeterFactory.class).in(Scopes.SINGLETON);
         bind(VersionInformation.class).in(Scopes.SINGLETON);
 
+        bind(CollectorRegistry.class).toInstance(CollectorRegistry.defaultRegistry);
         bind(MetricCollector.class).in(Scopes.SINGLETON);
         bind(PrometheusExportServer.class).in(Scopes.SINGLETON);
         bind(MetricRegistry.class).in(Scopes.SINGLETON);
