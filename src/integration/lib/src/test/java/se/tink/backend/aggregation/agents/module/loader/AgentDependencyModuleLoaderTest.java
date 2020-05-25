@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.module.loader.testclasses.TestAgentLoa
 import se.tink.backend.aggregation.agents.module.loader.testclasses.ValidModule;
 import se.tink.backend.aggregation.agents.module.loader.testclasses.ValidModule2;
 
-public final class AgentAgentDependencyModuleLoaderTest {
+public final class AgentDependencyModuleLoaderTest {
 
     private AgentDependencyModuleLoader loader;
 
