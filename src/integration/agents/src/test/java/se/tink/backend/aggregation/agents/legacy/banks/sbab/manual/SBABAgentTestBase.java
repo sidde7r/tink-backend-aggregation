@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.sbab;
+package se.tink.backend.aggregation.agents.banks.sbab.manual;
 
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
