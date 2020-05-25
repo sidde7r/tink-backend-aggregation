@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState.formatSupplementalKey;
+
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.entities.PaymentRedirectInfoEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
@@ -52,7 +53,7 @@ public class BecPaymentController extends PaymentController {
                 ThirdPartyAppAuthenticationPayload.of(url));
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                OAuthUtils.formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 
     private PaymentRedirectInfoEntity getPaymentRedirectInfoFromSession(String id) {

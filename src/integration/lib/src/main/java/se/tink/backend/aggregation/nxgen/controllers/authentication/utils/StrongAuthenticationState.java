@@ -42,4 +42,8 @@ public class StrongAuthenticationState {
     public String getSupplementalKey() {
         return String.format(UNIQUE_PREFIX_TPCB, this.state);
     }
+
+    public static String formatSupplementalKey(String key) {
+        return String.format(UNIQUE_PREFIX_TPCB, key);
+    }
 }

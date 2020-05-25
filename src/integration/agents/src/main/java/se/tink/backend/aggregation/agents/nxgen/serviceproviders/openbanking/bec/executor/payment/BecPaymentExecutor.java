@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment;
 
+import java.security.SecureRandom;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Locale;
+import java.util.Random;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.BecConstants;
@@ -13,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.entities.PaymentRedirectInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -36,6 +38,8 @@ public class BecPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
 
     private static final Locale DEFAULT_LOCALE = Locale.getDefault();
     private static CountryDateHelper dateHelper = new CountryDateHelper(DEFAULT_LOCALE);
+    private static final Base64.Encoder URL_ENCODER = Base64.getUrlEncoder();
+    private static final Random RANDOM = new SecureRandom();
 
     private final BecApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -97,7 +101,7 @@ public class BecPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
                         payment.getExecutionDate()
                                 .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)));
 
-        String state = OAuthUtils.generateNonce();
+        String state = generateNonce();
         CreatePaymentResponse createPaymentResponse =
                 apiClient.createPayment(createPaymentRequest, state);
 
@@ -154,5 +158,11 @@ public class BecPaymentExecutor implements PaymentExecutor, FetchablePaymentExec
         return payment.getCreditor().getAccountIdentifierType().equals(Type.IBAN)
                 ? PaymentProducts.SEPA_CREDIT_TRANSFERS
                 : PaymentProducts.DOMESTIC_CREDIT_TRANSFER;
+    }
+
+    private static String generateNonce() {
+        byte[] randomData = new byte[32];
+        RANDOM.nextBytes(randomData);
+        return URL_ENCODER.encodeToString(randomData);
     }
 }

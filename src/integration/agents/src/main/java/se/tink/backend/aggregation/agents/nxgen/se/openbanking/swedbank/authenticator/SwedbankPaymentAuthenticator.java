@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState.formatSupplementalKey;
+
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -20,6 +21,6 @@ public class SwedbankPaymentAuthenticator {
                 ThirdPartyAppAuthenticationPayload.of(authorizeUrl));
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                OAuthUtils.formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }
 }

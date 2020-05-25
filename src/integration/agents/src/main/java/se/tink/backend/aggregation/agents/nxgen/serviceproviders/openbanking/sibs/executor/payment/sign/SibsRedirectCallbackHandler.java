@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState.formatSupplementalKey;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -64,7 +65,7 @@ public class SibsRedirectCallbackHandler {
         final ThirdPartyAppAuthenticationPayload payload = getRedirectPayload(redirectUrl);
         supplementalInformationHelper.openThirdPartyApp(payload);
 
-        final String supplementalInformationKey = OAuthUtils.formatSupplementalKey(scaState);
+        final String supplementalInformationKey = formatSupplementalKey(scaState);
         return supplementalInformationHelper.waitForSupplementalInformation(
                 supplementalInformationKey, waitFor, unit);
     }
