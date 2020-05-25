@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.danskebank;
+package se.tink.backend.aggregation.agents.banks.danskebank.v2.util;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Date;
