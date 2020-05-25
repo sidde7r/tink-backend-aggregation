@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.module.loader.testclasses;
 
-import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 
-@AgentDependencyModules(modules = InvalidModule.class)
+@AgentDependencyModulesForProductionMode(modules = InvalidModule.class)
 public final class TestAgentLoadingInvalidModule {}

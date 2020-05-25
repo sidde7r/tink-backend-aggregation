@@ -7,17 +7,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to load additional dependencies for the agent in the form of guice modules. Supports loading
- * one or more modules. <br>
+ * Used to load additional dependencies for the agent in the form of guice modules for the
+ * production mode. Supports loading one or more modules. <br>
  * <br>
  * Usage: <br>
  * <code>
- *     <br>@AgentDependencyModules(modules = MyModule.class)
+ *     <br>@AgentDependencyModulesForProductionMode(modules = MyModule.class)
  *     <br>class MyAgent
  * </code>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface AgentDependencyModules {
+public @interface AgentDependencyModulesForProductionMode {
     Class<? extends Module>[] modules();
 }
