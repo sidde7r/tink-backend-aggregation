@@ -77,10 +77,6 @@ public final class AktiaConstants {
         public static final String MISSING_CONFIGURATION = "Configuration is missing!";
     }
 
-    public class Market {
-        public static final String INTEGRATION_NAME = "aktia";
-    }
-
     public class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAYMENT_ID = "paymentId";
