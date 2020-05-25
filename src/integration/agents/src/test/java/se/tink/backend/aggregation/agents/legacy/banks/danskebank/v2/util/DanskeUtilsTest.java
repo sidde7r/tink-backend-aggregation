@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.danskebank;
+package se.tink.backend.aggregation.agents.banks.danskebank.v2.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,6 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.banks.danskebank.v2.util.DanskeUtils;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.account.TestAccount;
