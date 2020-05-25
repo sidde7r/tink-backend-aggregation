@@ -25,6 +25,6 @@ public class SecurityInfoMapper implements Mapper<SecurityInfo, Void> {
     }
 
     private boolean isTrue(Boolean value) {
-        return value != null && Boolean.TRUE.equals(value.booleanValue());
+        return Boolean.TRUE.equals(value);
     }
 }
