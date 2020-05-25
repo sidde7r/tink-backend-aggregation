@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
+import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
@@ -46,6 +47,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private final AgentWorkerCommandMetricState metrics;
     private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
     private final DataTrackerEventProducer dataTrackerEventProducer;
+    private final RefreshEventProducer refreshEventProducer;
 
     private final String agentName;
     private final String provider;
@@ -56,15 +58,15 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             RefreshableItem item,
             AgentWorkerCommandMetricState metrics,
             AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
-            DataTrackerEventProducer dataTrackerEventProducer) {
+            DataTrackerEventProducer dataTrackerEventProducer,
+            RefreshEventProducer refreshEventProducer) {
         this.context = context;
         this.item = item;
         this.metrics = metrics.init(this);
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.dataTrackerEventProducer = dataTrackerEventProducer;
-
+        this.refreshEventProducer = refreshEventProducer;
         CredentialsRequest request = context.getRequest();
-
         this.agentName = request.getProvider().getClassName();
         this.provider = request.getProvider().getName();
         this.market = request.getProvider().getMarket();
