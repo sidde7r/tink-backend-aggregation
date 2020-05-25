@@ -99,6 +99,10 @@ data:
     sendAgentLoginCompletedEvents: {{ .Values.sendAgentLoginCompletedEvents }}
     {{ end }}
 
+    {{ if .Values.sendAgentRefreshEvents }}
+    sendAgentRefreshEvents: {{ .Values.sendAgentRefreshEvents }}
+    {{ end }}
+
     {{- if .Values.clients }}
     provisionClientsConfig:
       clients:{{ .Values.clients | toYaml | trimSuffix "\n" | nindent 8 }}

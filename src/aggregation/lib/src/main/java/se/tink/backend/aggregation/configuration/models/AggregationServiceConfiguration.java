@@ -49,6 +49,7 @@ public class AggregationServiceConfiguration extends Configuration {
 
     @JsonProperty private boolean sendDataTrackingEvents = false;
     @JsonProperty private boolean sendAgentLoginCompletedEvents = false;
+    @JsonProperty private boolean sendAgentRefreshEvents = false;
 
     public AgentsServiceConfiguration getAgentsServiceConfiguration() {
         return agentsServiceConfiguration;
@@ -125,5 +126,9 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public boolean isSendAgentLoginCompletedEvents() {
         return sendAgentLoginCompletedEvents;
+    }
+
+    public boolean isSendAgentRefreshEvents() {
+        return sendAgentRefreshEvents;
     }
 }

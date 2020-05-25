@@ -177,6 +177,9 @@ public class AggregationDecoupledModule extends AbstractModule {
         bindConstant()
                 .annotatedWith(Names.named("sendAgentLoginCompletedEvents"))
                 .to(configuration.isSendAgentLoginCompletedEvents());
+        bindConstant()
+                .annotatedWith(Names.named("sendAgentRefreshEvents"))
+                .to(configuration.isSendAgentRefreshEvents());
 
         bind(CacheConfiguration.class)
                 .toProvider(Providers.of(configuration.getCacheConfiguration()));
