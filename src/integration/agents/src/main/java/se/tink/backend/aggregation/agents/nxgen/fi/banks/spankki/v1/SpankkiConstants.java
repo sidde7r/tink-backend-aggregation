@@ -62,7 +62,6 @@ public class SpankkiConstants {
 
     public static class LogTags {
         public static final LogTag LOG_TAG_CREDIT_CARD = LogTag.from("#spankki_creditcard");
-        public static final LogTag LOG_TAG_ACCOUNT_TYPE = LogTag.from("#spankki_accounttype");
     }
 
     public enum ServerResponse {

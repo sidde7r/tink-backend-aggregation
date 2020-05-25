@@ -9,9 +9,6 @@ public final class SparkassenConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_SCA_AUTHORIZATION_URL = "Sca Authorization Url missing";
         public static final String MISSING_SCA_METHOD_DETAILS = "Sca method details missing";
         public static final String COULD_NOT_PARSE_TRANSACTIONS =
@@ -24,7 +21,6 @@ public final class SparkassenConstants {
         public static final String BASE_URL = "https://xs2a.f-i-apim.de:8443/fixs2aop-env";
         public static final URL GET_CONSENT =
                 new URL(BASE_URL + "/xs2a-api/{bankCode}/v1/consents");
-        public static final URL AUTHORIZE = new URL(BASE_URL + "/oauth/{bankCode}/authorize");
         public static final URL UPDATE_SCA_METHOD =
                 new URL(GET_CONSENT + "/{consentId}/authorisations/{authorizationId}");
         public static final URL FINALIZE_AUTHORIZATION =

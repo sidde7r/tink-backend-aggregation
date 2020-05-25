@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken;
 
 public final class IcaBankenConstants {
 
-    public static final String INTEGRATION_NAME = "icabanken";
-
     public static class ProductionUrls {
         private static String BASE =
                 "https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0";
@@ -16,10 +14,6 @@ public final class IcaBankenConstants {
     }
 
     public static class SandboxUrls {
-        private static String BASE_URL = "accounts/1.0.0";
-        public static final String ACCOUNTS_PATH = BASE_URL + "/Accounts";
-        public static final String TRANSACTIONS_PATH =
-                BASE_URL + "/Accounts/{accountId}/transactions";
         // Base url is not the same for this request
         public static final String FETCH_TOKEN = "https://ims.icagruppen.se/oauth/v2/token";
 
@@ -32,7 +26,6 @@ public final class IcaBankenConstants {
     }
 
     public static class StorageKeys {
-        public static final String BASE_URL = "BASE_URL";
         public static final String TOKEN = "OAUTH_TOKEN";
     }
 
@@ -61,7 +54,6 @@ public final class IcaBankenConstants {
         public static final String SCOPE = "account";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String WITH_BALANCE = "true";
-        public static final String ACCOUNT = "account";
         public static final String REFRESH_TOKEN = "refresh_token";
 
         public static class PaymentProduct {
@@ -72,7 +64,6 @@ public final class IcaBankenConstants {
 
     public static class HeaderKeys {
         public static final String REQUEST_ID = "X-Request-ID";
-        public static final String CONTENT_TYPE = "Content-Type";
         public static final String AUTHORIZATION = "authorization";
         public static final String SCOPE = "scope";
     }
@@ -88,13 +79,9 @@ public final class IcaBankenConstants {
     }
 
     public static class ErrorMessages {
-        public static final String MISSING_CONFIGURATION = "ICA Banken configuration missing.";
         public static final String MAPPING =
                 "Cannot map Ica payment status: %s to Tink payment status.";
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_TOKEN = "Cannot find Token!";
-        public static final String UNSUPPORTED_TYPE = "Unsupported payment type";
     }
 
     public static class FormKeys {

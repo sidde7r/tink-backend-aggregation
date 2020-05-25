@@ -43,7 +43,6 @@ public final class HandelsbankenBaseConstants {
 
     public static class StorageKeys {
         public static final String MAX_FETCH_PERIOD_MONTHS = "maxFetchPeriodMonths";
-        public static final String PAYMENT_ID = "paymentId";
         public static final String PIS_TOKEN = "pisToken";
         public static final String CLIENT_TOKEN = "clientToken";
     }
@@ -159,7 +158,6 @@ public final class HandelsbankenBaseConstants {
     public static class Scope {
         public static final String PIS = "PIS";
         public static final String AIS = "AIS";
-        public static final String BOTH = AIS + " " + PIS;
     }
 
     public static class OAuth2Type {

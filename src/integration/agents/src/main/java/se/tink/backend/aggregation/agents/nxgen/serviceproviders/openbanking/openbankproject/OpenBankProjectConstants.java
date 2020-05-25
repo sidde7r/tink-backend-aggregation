@@ -16,10 +16,6 @@ public final class OpenBankProjectConstants {
     }
 
     public static class StorageKeys {
-        public static final String BASE_URL = "BASE_URL";
-        public static final String CLIENT_ID = "CLIENT_ID";
-        public static final String CLIENT_SECRET = "CLIENT_SECRET";
-        public static final String REDIRECT_URI = "REDIRECT_URI";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String BANK_ID = "BANK_ID";
     }
@@ -56,7 +52,6 @@ public final class OpenBankProjectConstants {
 
     public static class ErrorMessages {
         public static final String BAD_CONFIGURATION = "OpenBankProject configuration is invalid.";
-        public static final String MISSING_CONFIGURATION = "OpenBankProject configuration missing.";
     }
 
     public static class Fetcher {

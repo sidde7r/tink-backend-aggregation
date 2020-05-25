@@ -15,6 +15,5 @@ public class CreditMutuelConstants extends EuroInformationConstants {
 
     public static class Url {
         public static final String CREDIT_CARD_ACCOUNTS = "SCIM_default.aspx";
-        public static final String CREDIT_CARD_TRANSACTIONS = "banque/CRP8_SCIM_DEPCAR.aspx";
     }
 }

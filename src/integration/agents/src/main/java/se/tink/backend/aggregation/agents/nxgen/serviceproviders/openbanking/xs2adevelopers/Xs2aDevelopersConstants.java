@@ -50,19 +50,12 @@ public final class Xs2aDevelopersConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
-        public static final String UNKNOWN_ACCOUNT_TYPE = "Unknown account type.";
-        public static final String MISSING_AUTHENTICATOR = "Cannot find authenticator.";
         public static final String PARSING_URL = "Could not parse URL";
     }
 
     public static class ApiServices {
 
         public static final String POST_CONSENT = "/berlingroup/v1/consents";
-        public static final String AUTHORIZE = "/public/berlingroup/authorize";
         public static final String TOKEN = "/berlingroup/v1/token";
         public static final String GET_ACCOUNTS = "/berlingroup/v1/accounts";
         public static final String GET_BALANCES = "/berlingroup/v1/accounts/{accountId}/balances";
@@ -95,7 +88,6 @@ public final class Xs2aDevelopersConstants {
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
         public static final String BOOKING_STATUS = "bookingStatus";
-        public static final String WITH_BALANCE = "withBalance";
     }
 
     public static class QueryValues {
@@ -126,13 +118,11 @@ public final class Xs2aDevelopersConstants {
 
     public static class FormValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
-        public static final String CODE_VERIFIER = "code_verifier";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final Boolean FALSE = false;
         public static final int FREQUENCY_PER_DAY = 4;
         public static final Boolean TRUE = true;
         public static final String VALID_UNTIL = TimeUtils.getDate();
-        public static final String EUR = "EUR";
         public static final String ALL_ACCOUNTS = "allAccounts";
     }
 

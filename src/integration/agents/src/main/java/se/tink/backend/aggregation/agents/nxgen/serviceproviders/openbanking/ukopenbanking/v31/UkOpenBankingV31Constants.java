@@ -83,10 +83,6 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
         public static final String EXECUTE_PAYMENT = "EXECUTE_PAYMENT";
     }
 
-    public static class Error {
-        public static final String ACCESS_DENIED = "access_denied";
-    }
-
     public static class PaymentStatusCode {
         public static final String AWAITING_AUTHORISATION = "AwaitingAuthorisation";
     }

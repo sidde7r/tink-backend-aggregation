@@ -22,12 +22,6 @@ public final class NordeaSeConstants {
         public static final String GET_TOKEN = "/v4/authorize-decoupled/token";
     }
 
-    public static class StorageKeys {
-        public static final String TPP_TOKEN = "tpp-token";
-        public static final String ORDER_REF = "orderRef";
-        public static final String SSN = "ssn";
-    }
-
     public static class FormValues {
         public static final String ACCOUNTS_BALANCES = "ACCOUNTS_BALANCES";
         public static final String ACCOUNTS_BASIC = "ACCOUNTS_BASIC";
@@ -74,9 +68,5 @@ public final class NordeaSeConstants {
 
     public class TimeLimit {
         public static final int NON_CUSTOMER_BANKID = 180000;
-    }
-
-    public static final class Tags {
-        public static final String AUTHORIZATION_ERROR = "se_nordea_authorization_error";
     }
 }

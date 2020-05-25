@@ -14,8 +14,6 @@ public class IspConstants {
                 "/ib/content/api/sec/recuperasmartmobilestep3new";
         public static final String CHECK_TIME = "/ib/content/api/sec/checktime";
         public static final String CONFIRM_DEVICE = "/ib/content/api/sec/confermadevicemobile";
-        public static final String RECOVER_DEVICE_LIST =
-                "/ib/content/api/app/managedevice/recuperaListaDevice";
         public static final String DISABLE_ALL_BOOKMARKS =
                 "/ib/content/api/app/public/menu/disableAllBookMarkMobile";
     }

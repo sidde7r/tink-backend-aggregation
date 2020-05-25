@@ -8,14 +8,10 @@ public class RabobankConstants {
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
     public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
-    public static final int START_PAGE = 1;
-    public static final String INTEGRATION_NAME = "rabobank";
 
     public static class ErrorMessages {
         public static final String BOOKING_STATUS_INVALID =
                 "currently only bookingstatus booked is allowed";
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String UNAVAILABLE_TRX_HISTORY = "date can't be further than";
         public static final ImmutableList<Integer> ERROR_RESPONSES =
@@ -27,7 +23,6 @@ public class RabobankConstants {
 
     public static class Consents {
         public static final String PREFIX = "_ais.balances.read";
-        public static final String ACTIVE = "Active";
         public static final String EXPIRE = "expire";
         public static final String INVALID = "invalid";
         public static final String REVOKED_BY_USER = "revoked";
@@ -44,13 +39,11 @@ public class RabobankConstants {
         public static final String ALGORITHM = "algorithm";
         public static final String HEADERS = "headers";
         public static final String KEY_ID = "keyId";
-        private static final String SHA_256 = "sha-256";
         private static final String SHA_512 = "sha-512";
         public static final String RSA_SHA_256 = "rsa-sha256";
         public static final String SIGNING_STRING_DIGEST = "digest: ";
         public static final String SIGNING_STRING_DATE = "date: ";
         public static final String SIGNING_STRING_REQUEST_ID = "x-request-id: ";
-        public static final String SIGNING_STRING_SHA_256 = SHA_256 + "=";
         public static final String SIGNING_STRING_SHA_512 = SHA_512 + "=";
         public static final String SIGNATURE = "signature";
         public static final String HEADERS_VALUE = "date digest x-request-id";
@@ -84,7 +77,6 @@ public class RabobankConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE = "code";
         public static final String BOOKED = "booked";
-        public static final String BOTH = "both";
         public static final int TRANSACTIONS_SIZE = 100;
         public static final String SCOPES =
                 "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";

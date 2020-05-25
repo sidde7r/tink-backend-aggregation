@@ -99,7 +99,6 @@ public class SparebankenSorConstants {
 
     public static class Storage {
         public static final String ACCESS_TOKEN = "accessToken";
-        public static final String ACCOUNT_TRANSACTION_URLS = "accountTransactionUrls";
         public static final String TRANSACTIONS = "transactions";
         public static final String TEMPORARY_STORAGE_LINKS = "links";
         public static final String EVRY_TOKEN = "evryToken";

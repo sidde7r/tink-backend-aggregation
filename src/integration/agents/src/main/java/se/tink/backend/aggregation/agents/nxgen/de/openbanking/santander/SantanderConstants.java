@@ -24,7 +24,6 @@ public final class SantanderConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
     public static class Urls {
@@ -63,7 +62,6 @@ public final class SantanderConstants {
     }
 
     public static class QueryKeys {
-        public static final String CLIENT_ID = "client_id";
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String GRANT_TYPE = "grant_type";
@@ -71,15 +69,11 @@ public final class SantanderConstants {
 
     public static class QueryValues {
         public static final String GRANT_TYPE = "client_credentials";
-        public static final String SCOPE = "AIS:";
-        public static final String RESPONSE_TYPE = "code";
-        public static final String CODE_CHALLENGE_METHOD = "S256";
         public static final String BOTH = "both";
         public static final String TRUE = "true";
     }
 
     public static class HeaderKeys {
-        public static final String AUTHORIZATION = "Authorization";
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String X_IBM_CLIENT_ID = "X-IBM-Client-Id";
         public static final String CONSENT_ID = "Consent-ID";

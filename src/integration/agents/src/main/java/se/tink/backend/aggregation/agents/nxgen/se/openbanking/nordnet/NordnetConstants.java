@@ -52,6 +52,5 @@ public abstract class NordnetConstants {
 
     public class Market {
         public static final String INTEGRATION_NAME = "nordnet";
-        public static final String CLIENT_NAME = "tink";
     }
 }

@@ -181,10 +181,6 @@ public class IcaBankenConstants {
         public static final String EINVOICE_VALIDATE_ERROR = "Could not validate invoice";
     }
 
-    public static final class Log {
-        public static final String LOAN_TYPE = "icabanken_unknown_loan_type";
-    }
-
     public static final class Error {
         public static final int MULTIPLE_LOGIN_ERROR_CODE = 1001;
         public static final int GENERIC_ERROR_CODE = 1000;

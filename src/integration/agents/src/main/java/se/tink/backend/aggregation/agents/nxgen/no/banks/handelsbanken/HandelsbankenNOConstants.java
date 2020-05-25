@@ -105,8 +105,6 @@ public class HandelsbankenNOConstants {
         public static final String CUSTOMER_PORTAL_HOST = "https://customerportal.edb.com";
         public static final String INVESTOR_HOST = "https://investor.vps.no";
         public static final String AKSJER_HOST = "https://aksjer.handelsbanken.no";
-        public static final String USER_ID = "userId";
-        public static final String PHONE_NUMBER = "phoneNumber";
         public static final String SESSION_1 = "e1s1";
         public static final String SESSION_2 = "e1s2";
         public static final String DOB = "dateOfBirth";
@@ -255,8 +253,6 @@ public class HandelsbankenNOConstants {
     }
 
     public static final class EncapConstants {
-
-        public static final String applicationVersion = "11402";
 
         public static final String encapApiVersion = "3.5.4";
 

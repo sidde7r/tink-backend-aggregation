@@ -5,15 +5,11 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class KnabConstants {
 
-    public static final String INTEGRATION_NAME = "knab";
-
     private KnabConstants() {
         throw new AssertionError();
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String NO_SUPPLEMENTAL_INFORMATION =
                 "No suplemental information returned";
@@ -67,8 +63,6 @@ public final class KnabConstants {
         public static final String SCOPE = "scope";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CODE = "code";
-        public static final String GRANT_TYPE = "grant_type";
-        public static final String CLIENT_SECRET = "client_secret";
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DATE_FROM = "dateFrom";

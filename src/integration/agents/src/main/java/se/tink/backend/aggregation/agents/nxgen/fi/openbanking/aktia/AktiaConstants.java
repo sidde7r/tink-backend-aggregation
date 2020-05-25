@@ -39,8 +39,6 @@ public final class AktiaConstants {
     }
 
     public static class StorageKeys {
-        public static final String CLIENT_ID = "clientId";
-        public static final String CLIENT_SECRET = "clientSecret";
         public static final String CONSENT_ID = "consentId";
     }
 

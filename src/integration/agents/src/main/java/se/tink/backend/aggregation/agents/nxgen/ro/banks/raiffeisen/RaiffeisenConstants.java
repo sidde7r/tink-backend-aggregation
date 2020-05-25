@@ -49,8 +49,6 @@ public class RaiffeisenConstants {
         public static final String ACCEPT_TEXT_HTML = "text/html";
         public static final String X_IBM_CLIENT_ID = "x-ibm-client-id";
         public static final String X_REQUEST_ID = "x-request-id";
-        public static final String CLIENT_ID = "client_id";
-        public static final String CLIENT_SECRET = "client_secret";
     }
 
     public static final class BODY {

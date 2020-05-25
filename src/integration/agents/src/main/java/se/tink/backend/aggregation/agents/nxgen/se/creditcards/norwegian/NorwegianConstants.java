@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class NorwegianConstants {
 
-    public static final String INTEGRATION_NAME = "norwegian";
     public static final String URL_ENCODING = "UTF-8";
     public static final String CURRENCY = "SEK";
     public static final String CARD_ALIAS = "Norwegiankortet";
@@ -18,7 +17,6 @@ public final class NorwegianConstants {
     }
 
     public static class ErrorMessages {
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String ALREADY_IN_PROGRESS = "ALREADY_IN_PROGRESS";
         public static final String INVALID_SSN = "The provided ID number was invalid";
         public static final String NOT_CUSTOMER = "hittade inte kunden";
@@ -43,7 +41,6 @@ public final class NorwegianConstants {
                 "https://id.banknorwegian.se/std/method/banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=";
         public static final String TARGET_URL =
                 "https://identity.banknorwegian.se/MyPage/SignicatCallback?ipid=22&returnUrl=";
-        public static final String COLLECT = "collect";
         public static final String ORDER = "order";
     }
 

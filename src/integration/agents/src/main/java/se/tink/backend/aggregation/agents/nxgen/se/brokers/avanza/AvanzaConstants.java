@@ -1,13 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
 import com.sun.jersey.api.uri.UriTemplate;
-import java.time.ZoneId;
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class AvanzaConstants {
-
-    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
 
     public static final AvanzaAccountTypeMappers MAPPERS = new AvanzaAccountTypeMappers();
 
@@ -171,8 +168,6 @@ public class AvanzaConstants {
         public static final String SECURITY_TOKEN_FORMAT = "security_token:%s";
         public static final String BANKID_TRANSACTION_ID = "bankid_transaction_id";
     }
-
-    public static class QueryKeys {}
 
     public static class QueryValues {
         public static final String FROM_DATE_FOR_INVESTMENT_TRANSACTIONS = "2000-01-01";

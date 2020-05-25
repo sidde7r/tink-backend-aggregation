@@ -42,7 +42,6 @@ public abstract class UkOpenBankingConstants {
         public static final String ACCOUNT_TRANSACTIONS_REQUEST = "/accounts/%s/transactions";
         public static final String ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST =
                 "/accounts/%s/scheduled-payments";
-        public static final String ACCOUNT_REQUESTS = "/account-requests";
         public static final String PAYMENTS = "/payments";
         public static final String PAYMENT_SUBMISSIONS = "/payment-submissions";
 
@@ -74,7 +73,6 @@ public abstract class UkOpenBankingConstants {
 
     public static class JWTSignatureHeaders {
         public static class HEADERS {
-            public static final String KID = "kid";
             public static final String IAT = "http://openbanking.org.uk/iat";
             public static final String ISS = "http://openbanking.org.uk/iss";
             public static final String TAN = "http://openbanking.org.uk/tan";

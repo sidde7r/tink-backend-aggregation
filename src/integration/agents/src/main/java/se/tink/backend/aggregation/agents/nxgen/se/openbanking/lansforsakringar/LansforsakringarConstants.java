@@ -26,7 +26,6 @@ public abstract class LansforsakringarConstants {
         public static final String TOKEN = BASE_AUTH_URL + Endpoints.TOKEN;
 
         public static final String CONSENT = BASE_API_URL + Endpoints.CONSENT;
-        public static final String CONSENT_STATUS = BASE_API_URL + Endpoints.CONSENT_STATUS;
         public static final String CONSENT_PROVIDED = BASE_API_URL + Endpoints.CONSENT_PROVIDED;
         public static final String SCA_STATUS = BASE_API_URL + Endpoints.SCA_STATUS;
         public static final String GET_ACCOUNTS = BASE_API_URL + Endpoints.GET_ACCOUNTS;
@@ -43,8 +42,6 @@ public abstract class LansforsakringarConstants {
         public static final String TOKEN = "/as/token.oauth2";
 
         public static final String CONSENT = "/openbanking/ano/v2/consents";
-        public static final String CONSENT_STATUS =
-                "/openbanking/sec/v2/consents/{consentId}/status";
         public static final String CONSENT_PROVIDED =
                 "/openbanking/ano/v2/consents/{consentId}/authorisations";
         public static final String SCA_STATUS =
@@ -61,8 +58,6 @@ public abstract class LansforsakringarConstants {
     }
 
     public static class StorageKeys {
-        public static final String CLIENT_ID = "clientId";
-        public static final String CLIENT_SECRET = "clientSecret";
         public static final String ACCESS_TOKEN = "access-token";
         public static final String AUTHORIZATION_ID = "authorisationId";
         public static final String CONSENT_ID = "consentId";
@@ -77,14 +72,12 @@ public abstract class LansforsakringarConstants {
         public static final String AUTHORIZATION_ID = "AuthorisationID";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String STATE = "state";
-        public static final String SCOPE = "scope";
     }
 
     public static class QueryValues {
         public static final String BOTH = "both";
         public static final String TRUE = "true";
         public static final String RESPONSE_TYPE = "code";
-        public static final String SCOPE = "openid";
     }
 
     public static class HeaderKeys {
@@ -99,7 +92,6 @@ public abstract class LansforsakringarConstants {
                 "TPP-Explicit-Authorisation-Preferred";
         public static final String CONTENT_TYPE = "Content-Type";
         public static final String CACHE_CONTROL = "Cache-Control";
-        public static final String AUTHORIZATION = "Authorization";
     }
 
     public static class HeaderValues {
@@ -108,7 +100,6 @@ public abstract class LansforsakringarConstants {
         public static final String PSU_USER_AGENT = "Desktop Mode";
         public static final String PSU_ID_TYPE = "SSSN";
         public static final String NO_CACHE = "no-cache";
-        public static final String BEARER = "Bearer";
     }
 
     public static class FormKeys {
@@ -122,7 +113,6 @@ public abstract class LansforsakringarConstants {
     }
 
     public static class FormValues {
-        public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CITY = "Berlin";
         public static final String COUNTRY = "Tyskland";
@@ -139,10 +129,6 @@ public abstract class LansforsakringarConstants {
         public static final String UNSUPPORTED_PAYMENT_TYPE = "Payment type is not supported.";
         public static final String MISSING_TOKEN = "Failed to retrieve access token.";
         public static final String SERVICE_BLOCKED = "Service_blocked";
-    }
-
-    public class Market {
-        public static final String INTEGRATION_NAME = "lansforsakringar";
     }
 
     public class IdTags {

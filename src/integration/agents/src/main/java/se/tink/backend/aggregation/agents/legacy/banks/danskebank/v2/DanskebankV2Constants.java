@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2;
 
-import java.time.ZoneId;
-import java.util.Locale;
-
 public class DanskebankV2Constants {
     public static class ErrorMessage {
         public static final String TECHNICAL_ERROR =
@@ -19,10 +16,5 @@ public class DanskebankV2Constants {
         public static final int AUTHORIZATION_NOT_POSSIBLE = 333;
         public static final int UNAUTHORIZED = 6;
         public static final int INVALID_STATE = 9;
-    }
-
-    public static class Date {
-        public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("CET");
-        public static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");
     }
 }

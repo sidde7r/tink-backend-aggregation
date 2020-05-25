@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class IngConstants {
@@ -53,7 +51,6 @@ public class IngConstants {
     }
 
     public static final class AccountTypes {
-        public static final Integer DEBIT_CARD = 1;
         public static final Integer CREDIT_CARD = 3;
         public static final Integer TRANSACTION_ACCOUNT = 17;
         public static final Integer SAVINGS_ACCOUNT_20 = 20;
@@ -65,8 +62,6 @@ public class IngConstants {
 
         public static final Integer MORTGAGE_ACCOUNT = 70;
         public static final Integer LOAN_ACCOUNT = 77;
-
-        public static final Integer LIFE_INSURANCE = 100;
     }
 
     public static final class AccountCategories {
@@ -78,35 +73,16 @@ public class IngConstants {
                         AccountTypes.SAVINGS_ACCOUNT_20,
                         AccountTypes.SAVINGS_ACCOUNT_26,
                         AccountTypes.ZERO_TAX_ACCOUNT);
-        public static final ImmutableList<Integer> CREDIT_CARDS =
-                ImmutableList.of(AccountTypes.CREDIT_CARD);
         public static final ImmutableList<Integer> INVESTMENT =
                 ImmutableList.of(AccountTypes.INVESTMENT_FUND, AccountTypes.PENSION_PLAN);
         public static final ImmutableList<Integer> LOANS =
                 ImmutableList.of(AccountTypes.MORTGAGE_ACCOUNT, AccountTypes.LOAN_ACCOUNT);
-
-        public static final ImmutableList<Integer> IGNORED_ACCOUNT_TYPES =
-                ImmutableList.of(AccountTypes.DEBIT_CARD, AccountTypes.LIFE_INSURANCE);
-
-        public static final ImmutableList<Integer> ALL_KNOWN_ACCOUNT_TYPES =
-                ImmutableList.copyOf(
-                        ImmutableList.of(
-                                        TRANSACTION_ACCOUNTS,
-                                        SAVINGS_ACCOUNTS,
-                                        CREDIT_CARDS,
-                                        INVESTMENT,
-                                        LOANS,
-                                        IGNORED_ACCOUNT_TYPES)
-                                .stream()
-                                .flatMap(List::stream)
-                                .collect(Collectors.toList()));
     }
 
     public static final class AccountStatus {
         public static final String ACTIVE = "0"; // Activa
         public static final String OPERATIVE = "5"; // Operative
         public static final String SINGLE_CONTRACT = "7"; // Solo Contrato
-        public static final String CANCELLED = "8"; // Cancelada
     }
 
     public static final class Default {
@@ -130,13 +106,7 @@ public class IngConstants {
     }
 
     public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
-                LogTag.from("IngDirect_unknown_account_type");
 
-        public static final LogTag MISSING_PINPAD_POSITION =
-                LogTag.from("IngDirect_ES_Auth_Missing_pin_position");
-        public static final LogTag INVALID_PINPAD_NUMBERS =
-                LogTag.from("IngDirect_ES_Auth_Invalid_pinpad_numbers");
         public static final LogTag NON_NUMERIC_PASSWORD =
                 LogTag.from("IngDirect_ES_Auth_Non_numeric_password");
     }

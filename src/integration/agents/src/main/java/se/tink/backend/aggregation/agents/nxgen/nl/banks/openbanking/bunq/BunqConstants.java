@@ -8,12 +8,7 @@ public final class BunqConstants {
 
     public static final class Urls {
         public static final URL TOKEN_EXCHANGE = new URL("https://api.oauth.bunq.com/v1/token");
-        public static final URL TOKEN_EXCHANGE_SANDBOX =
-                new URL("https://api-oauth.sandbox.bunq.com/v1/token");
         public static final URL AUTHORIZE = new URL("https://oauth.bunq.com/auth");
-        public static final URL AUTHORIZE_SANDBOX = new URL("https://oauth.sandbox.bunq.com/auth");
-        public static final String PAYMENT =
-                "/v1/user/{userId}/monetary-account/{accountId}/payment";
         public static final String DRAFT_PAYMENT =
                 "/v1/user/{userId}/monetary-account/{accountId}/draft-payment";
         public static final String DRAFT_PAYMENT_SPECIFIC_PAYMENT =
@@ -40,10 +35,6 @@ public final class BunqConstants {
         public static final String PSD2_CLIENT_AUTH_TOKEN = "PSD2clientAuthToken";
         public static final String PSD2_SESSION_TIMEOUT = "PSD2-session-timeout";
         public static final String PSD2_DEVICE_RSA_SIGNING_KEY_PAIR = "PSD2deviceRsaSigningKeyPair";
-    }
-
-    public static final class Market {
-        public static final String INTEGRATION_NAME = "bunq";
     }
 
     public static final class Payment {

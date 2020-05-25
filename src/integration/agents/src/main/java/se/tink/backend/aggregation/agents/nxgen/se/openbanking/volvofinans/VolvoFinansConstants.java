@@ -44,7 +44,6 @@ public final class VolvoFinansConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String SCOPE = "scope";
-        public static final String CLIENT_SECRET = "client_secret";
         public static final String STATE = "state";
         public static final String WITH_BALANCE = "withBalance";
         public static final String DATE_TO = "dateTo";
@@ -54,12 +53,10 @@ public final class VolvoFinansConstants {
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "openbanking";
-        public static final Object GRANT_TYPE = "authorization_code";
         public static final String TRUE = "true";
     }
 
     public static class HeaderKeys {
-        public static final String AUTHORIZATION = "Authorization";
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String X_API_KEY = "X-API-KEY";
     }
@@ -83,6 +80,5 @@ public final class VolvoFinansConstants {
     public static class Accounts {
         public static final String STATUS_ENABLED = "enabled";
         public static final String STATUS_EXPECTED = "expected";
-        public static final String SEK = "SEK";
     }
 }

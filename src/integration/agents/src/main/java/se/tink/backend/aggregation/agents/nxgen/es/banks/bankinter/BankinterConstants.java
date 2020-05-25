@@ -8,7 +8,6 @@ import se.tink.libraries.account.enums.AccountFlag;
 
 public final class BankinterConstants {
 
-    public static final String INTEGRATION_NAME = "bankinter";
     public static final String DEFAULT_CURRENCY = "EUR";
 
     private BankinterConstants() {
@@ -24,7 +23,6 @@ public final class BankinterConstants {
     public static class Urls {
         public static final String BASE = "https://bancaonline.bankinter.com";
         public static final String LOGIN_PAGE = BASE + "/gestion/login.xhtml";
-        public static final String LOGIN = BASE + "/gestion/services/auth/login";
         public static final String KEEP_ALIVE = BASE + "/gestion/rest/usuario/numavisos";
         public static final String IDENTITY_DATA = BASE + "/gestion/rest/usuario/datos";
         public static final String GLOBAL_POSITION = BASE + Paths.GLOBAL_POSITION;
@@ -85,7 +83,6 @@ public final class BankinterConstants {
     }
 
     public static class QueryKeys {
-        public static final String ACCOUNT_INDEX = "INDEX_CTA";
         public static final String ACCOUNT_TYPE = "IND";
     }
 

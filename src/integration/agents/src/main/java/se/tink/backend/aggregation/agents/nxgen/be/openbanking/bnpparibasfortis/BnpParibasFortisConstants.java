@@ -61,9 +61,6 @@ public abstract class BnpParibasFortisConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String AMOUNT_EXTRACT_ERROR =
                 "Amount cannot be extracted from the response";
     }

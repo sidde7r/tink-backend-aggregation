@@ -11,8 +11,6 @@ public final class CmcicConstants {
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
     public static class Urls {
@@ -35,7 +33,6 @@ public final class CmcicConstants {
     public static class QueryKeys {
         public static final String RESPONSE_TYPE = "response_type";
         public static final String CLIENT_ID = "client_id";
-        public static final String REDIRECT_URI = "redirect_uri";
         public static final String SCOPE = "scope";
         public static final String STATE = "state";
         public static final String CODE_CHALLENGE = "code_challenge";
@@ -49,13 +46,9 @@ public final class CmcicConstants {
     }
 
     public static class Signature {
-        public static final String DATE = "date: ";
         public static final String TIMEZONE = "GMT";
-        public static final String DIGEST = "digest: ";
         public static final String DIGEST_PREFIX = "SHA-256=";
-        public static final String X_REQUEST_ID = "x-request-id: ";
         public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
-        public static final String CONTENT_TYPE = "content-type: ";
     }
 
     public static class HeaderKeys {
@@ -63,7 +56,6 @@ public final class CmcicConstants {
         public static final String HOST = "Host";
         public static final String DATE = "Date";
         public static final String X_REQUEST_ID = "X-Request-Id";
-        public static final String AUTHORIZATION = "Authorization";
         public static final String SIGNATURE = "Signature";
         public static final String CONTENT_TYPE = "Content-Type";
     }
@@ -74,19 +66,14 @@ public final class CmcicConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String SCOPE = "scope";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String REDIRECT_URI = "redirect_uri";
         public static final String CODE = "code";
         public static final String CODE_VERIFIER = "code_verifier";
     }
 
     public static class FormValues {
-        public static final String EMPTY = "";
-        public static final String GRANT_TYPE = "grant_type";
-        public static final String CLIENT_ID = "client_id";
         public static final String BENEFICIARY_NAME = "myMerchant";
         public static final String INSTRUCTION_ID = "MyInstrId";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String AUTHORIZATION_CODE = "authorization_code";
     }
 

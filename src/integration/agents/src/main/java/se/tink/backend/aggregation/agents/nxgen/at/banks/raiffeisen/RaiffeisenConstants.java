@@ -33,10 +33,8 @@ public class RaiffeisenConstants {
         public static final String ACCEPT_MISC =
                 "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8";
         public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
-        public static final String APP_VERSION = "8.4.1";
         public static final String CONNECTION_KEEP_ALIVE = "keep-alive";
         public static final String CONNECTION_KEY = "Connection";
-        public static final String HOST = "app.raiffeisen.at";
         public static final String REFERER = "Referer";
         public static final String UPGRADE_INSECURE_REQUESTS = "1";
         public static final String UPGRADE_INSECURE_REQUESTS_KEY = "Upgrade-Insecure-Requests";

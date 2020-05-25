@@ -71,8 +71,6 @@ public final class DnbConstants {
         public static final String FIRST_REQUEST =
                 BASE_URL + "/segp/ps/startsiden?firstrequestafterlogon=true";
 
-        // Fetcher
-        public static final String FETCH_ACCOUNTS = BASE_URL + "/segp/apps/tep/tepgetaccounts";
         public static final String FETCH_ACCOUNT_DETAILS =
                 BASE_URL + "/segp/apps/nbp/konto/integration/accounts/transactions";
         public static final String FETCH_TRANSACTIONS =

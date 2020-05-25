@@ -22,7 +22,6 @@ public class KbcConstants {
         KEY_EXCHANGE(createUrlWithHost("/SAI/A054/service/keyExchange/1")),
         CHALLENGE(createUrlWithHost("/SAI/A054/service/challenge/1")),
         REGISTER_LOGON(createUrlWithHost("/SAI/A054/service/logon/ucr/1")),
-        PERSONALISATION(createUrlWithHost("/SAI/A052/service/personalisation/1")),
         ENROLL_DEVICE(createUrlWithHost("/SAI/A052/service/enrollDevice/2")),
         SIGNING_TYPES(createUrlWithHost("/SAI/A052/service/signing/types/1")),
         SIGNING_CHALLENGE(createUrlWithHost("/SAI/A052/service/signing/challenge/ucr/1")),
@@ -83,10 +82,6 @@ public class KbcConstants {
         private static String createUrlWithHost(String uri) {
             return HOST + uri;
         }
-    }
-
-    public static final class MultiFactorAuthentication {
-        public static final String CODE = "code";
     }
 
     public static class ApplicationId {
@@ -198,9 +193,7 @@ public class KbcConstants {
     }
 
     public static class LogTags {
-        public static final LogTag ACCOUNTS = LogTag.from("#be_kbc_accounts");
         public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
-        public static final LogTag DEBUG = LogTag.from("#be_kbc_debug");
     }
 
     public static final String[] IGNORED_ACCOUNT_TYPES = {

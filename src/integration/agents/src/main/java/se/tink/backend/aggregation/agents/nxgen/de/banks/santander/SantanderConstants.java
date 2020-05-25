@@ -65,16 +65,6 @@ public class SantanderConstants {
 
     public static class LOGTAG {
         public static final LogTag SANTANDER_LOGIN_ERROR = LogTag.from("SANTANDER_LOGIN_ERROR");
-        public static final LogTag SANTANDER_REGEX_PARSE_ERROR =
-                LogTag.from("SANTANDER_REGEX_PARSE_ERROR");
-        public static final LogTag SANTANDER_UNKNOWN_ACCOUNTTYPE =
-                LogTag.from("SANTANDER_UNKNOWN_ACCOUNTTYPE");
-        public static final LogTag SANTANDER_ACCOUNT_LOGGING =
-                LogTag.from("SANTANDER_ACCOUNT_LOGGING");
-        public static final LogTag SANTANDER_ACCOUNT_PARSING_ERROR =
-                LogTag.from("SANTANDER_ACCOUNT_PARSING_ERROR");
-        public static final LogTag SANTANDER_TRANSACTION_LOGGING =
-                LogTag.from("SANTANDER_TRANSACTION_LOGGING");
         public static final LogTag SANTANDER_DATE_PARSING_ERROR =
                 LogTag.from("SANTANDER_DATE_PARSING_ERROR");
         public static final LogTag SANTANDER_TRANSACTION_ERROR =

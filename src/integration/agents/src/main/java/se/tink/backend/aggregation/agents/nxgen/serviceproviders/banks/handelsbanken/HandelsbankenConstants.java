@@ -69,7 +69,6 @@ public class HandelsbankenConstants {
             KEEP_ALIVE("keepalive"),
             LOANS("loans"),
             LOOKUP_RECIPIENT("lookup-recipient"),
-            NEXT_TRANSACTIONS("next"),
             PAYMENT_CONTEXT("payment-context"),
             PAYMENT_DETAIL("payment-detail"),
             PENDING_EINVOICES("einvoice-pending"),
@@ -118,7 +117,6 @@ public class HandelsbankenConstants {
         public static final String X_SHB_DEVICE_NAME = "X-SHB-DEVICE-NAME";
         public static final String DEVICE_NAME = "iOS;Tink;Tink";
         public static final String X_SHB_DEVICE_MODEL = "X-SHB-DEVICE-MODEL";
-        public static final String DEVICE_MODEL = "IOS-11.4.1,8.0.1,iPhone9.3,FIPRIV";
         public static final String X_SHB_DEVICE_CLASS = "X-SHB-DEVICE-CLASS";
         public static final String DEVICE_CLASS = "APP";
         public static final String X_SHB_APP_VERSION = "X-SHB-APP-VERSION";
@@ -132,7 +130,6 @@ public class HandelsbankenConstants {
         public static final String APPLICATION_ENTRY_POINT = "applicationEntryPoint";
         public static final String ACCOUNT_LIST = "accountList";
         public static final String CREDIT_CARDS = "creditCards";
-        public static final String CREDIT_CARD_TRANSACTIONS = "creditCardTransactions";
     }
 
     public static final class Authentication {

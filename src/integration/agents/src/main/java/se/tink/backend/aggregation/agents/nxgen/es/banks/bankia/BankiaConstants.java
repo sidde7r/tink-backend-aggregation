@@ -44,8 +44,6 @@ public abstract class BankiaConstants {
 
     public static class Query {
         public static final String CM_FORCED_DEVICE_TYPE = "cm-forced-device-type";
-        public static final String VERSION = "version";
-        public static final String TIPO = "tipo";
         public static final String OIGID = "oigid";
         public static final String J_GID_COD_APP = "j_gid_cod_app";
         public static final String J_GID_COD_DS = "j_gid_cod_ds";
@@ -143,10 +141,6 @@ public abstract class BankiaConstants {
 
     public static class InstrumentTypes {
         public static final String STOCK = "01"; // Type description (in Spanish): ACCIONES
-    }
-
-    public static class Regex {
-        public static final String CARD_NUMBER_UNMASKED = "[0-9]{16}";
     }
 
     public static class Errors {

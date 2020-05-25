@@ -74,16 +74,12 @@ public class NordeaV17Constants {
                                     UserMessage.TOO_MANY_LOGINS.getKey()))
                     .build();
 
-    public static final LogTag HTTP_REQUEST_LOG_TAG = LogTag.from("#nordea_v17_http_request");
     public static final LogTag CREDITCARD_LOG_TAG = LogTag.from("#nordea_v17_creditcard");
 
     public enum UserMessage implements LocalizableEnum {
         CODE_BLOCKED(
                 new LocalizableKey(
                         "Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office.")),
-        NO_VALID_BANKID(
-                new LocalizableKey(
-                        "You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID.")),
         NO_VALID_AGREEMENT(
                 new LocalizableKey(
                         "We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking")),
@@ -108,7 +104,6 @@ public class NordeaV17Constants {
         public static final String CARD_BALANCES_PARAM = "cardNumbers";
         public static final String CARD_NUMBER = "cardNumber";
         public static final String ACCOUNT_ID = "accountId";
-        public static final String PAYMENT_ID = "paymendId";
         public static final String CONTINUE_KEY = "continueKey";
         public static final String CREDIT_CONTINUE_KEY = "continuationKey";
         public static final String INVOICE_PERIOD = "invoicePeriod";
@@ -120,9 +115,7 @@ public class NordeaV17Constants {
         LOANS(getBankingEndpoint("/Loans/Details/{" + UrlParameter.ACCOUNT_ID + "}")),
         TRANSACTIONS(getBankingEndpoint("/Transactions")),
         PAYMENTS(getBankingEndpoint("/Payments")),
-        PAYMENT_DETAILS(getBankingEndpoint("/Payments/{" + UrlParameter.PAYMENT_ID + "}")),
         LIGHT_LOGIN(getAuthenticationEndpoint("/SecurityToken")),
-        REGISTER_DEVICE(getAuthenticationEndpoint("/RegisterDevice")),
         CUSTODY_ACCOUNTS(getSavingsEndpoint("/CustodyAccounts"));
 
         public static final String BASE_URL = "https://no.mobilebank.prod.nordea.com/";
@@ -167,7 +160,6 @@ public class NordeaV17Constants {
     public static class HeaderKey {
         public static final String REQUEST_ID = "x-Request-Id";
         public static final String APP_COUNTRY = "x-App-Country";
-        public static final String APP_VERSION = "x-App-Version";
     }
 
     public enum Header {

@@ -8,8 +8,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public final class OpBankConstants {
 
-    public static final String INTEGRATION_NAME = "opbank";
-
     private OpBankConstants() {
         throw new AssertionError();
     }
@@ -23,7 +21,6 @@ public final class OpBankConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
     public static class Urls {

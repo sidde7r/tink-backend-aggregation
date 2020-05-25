@@ -13,7 +13,6 @@ public final class SdcConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
     public static class Urls {
@@ -66,17 +65,6 @@ public final class SdcConstants {
         public static final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
     }
 
-    public static class FormKeys {
-        public static final String GRANT_TYPE = "grant_type";
-        public static final String CODE = "code";
-        public static final String REDIRECT_URI = "redirect_uri";
-        public static final String CLIENT_ID = "client_id";
-        public static final String CLIENT_SECRET = "client_secret";
-        public static final String SCOPE = "scope";
-        public static final String SSN = "ssn";
-        public static final String IPIDFR = "ipidfr";
-    }
-
     public static class FormValues {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String AUTHORIZATION_CODE = "authorization_code";
@@ -88,7 +76,6 @@ public final class SdcConstants {
     }
 
     public static class Account {
-        public static final String AVAILABLE = "available";
         public static final String CLOSING_BOOKED = "closingBooked";
     }
 

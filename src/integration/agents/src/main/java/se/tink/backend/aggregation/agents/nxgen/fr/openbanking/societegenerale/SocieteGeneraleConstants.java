@@ -7,8 +7,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SocieteGeneraleConstants {
 
-    public static final String INTEGRATION_NAME = "societegenerale";
-
     public static class Urls {
         private static final String BASE_AUTH = "https://particuliers.sg-signin.societegenerale.fr";
         public static final String BASE_URL =
@@ -57,8 +55,6 @@ public final class SocieteGeneraleConstants {
     }
 
     public static class ErrorMessages {
-        public static final String MISSING_CONFIGURATION =
-                "Missing configuration for Societe Generale";
         public static final String MISSING_BALANCE = "Balance could not be found";
     }
 
@@ -73,7 +69,6 @@ public final class SocieteGeneraleConstants {
     }
 
     public static class SignatureValues {
-        public static final String HEADERS = "x-request-id";
         public static final String RSA_SHA256 = "rsa-sha256";
         public static final String ALGORITHM = "algorithm";
     }

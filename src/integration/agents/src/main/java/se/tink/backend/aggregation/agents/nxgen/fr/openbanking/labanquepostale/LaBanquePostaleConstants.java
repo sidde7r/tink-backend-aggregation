@@ -21,7 +21,6 @@ public final class LaBanquePostaleConstants {
     }
 
     public static class HeaderKeys {
-        public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String SIGNATURE = "Signature";
         public static final String CONTENT_TYPE = "Content-Type";
     }
@@ -29,22 +28,6 @@ public final class LaBanquePostaleConstants {
     public static class HeaderValues {
 
         public static final String CONTENT_TYPE = "application/json";
-    }
-
-    public static class QueryKeys {
-        public static final String CLIENT_ID = "client_id";
-        public static final String SCOPE = "scope";
-        public static final String RESPONSE_TYPE = "response_type";
-        public static final String STATE = "state";
-        public static final String REDIRECT_URI = "redirect_uri";
-        public static final String CODE_CHALLENGE = "code_challenge";
-        public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
-        public static final String WITH_BALANCE = "withBalance";
-        public static final String BOOKING_STATUS = "bookingStatus";
-        public static final String CLIENT_SECRET = "client_secret";
-        public static final String GRANT_TYPE = "grant_type";
-        public static final String CODE = "code";
-        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class Payload {

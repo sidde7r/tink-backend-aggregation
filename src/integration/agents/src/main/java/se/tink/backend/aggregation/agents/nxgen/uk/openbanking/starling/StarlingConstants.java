@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class StarlingConstants {
-    static final String INTEGRATION_NAME = "starling";
 
     public static final TypeMapper<AccountIdentifier.Type> ACCOUNT_IDENTIFIER_MAPPER =
             TypeMapper.<AccountIdentifier.Type>builder()
@@ -76,37 +74,18 @@ public class StarlingConstants {
         public static final String JOINT = "JOINT";
     }
 
-    public class RequestValue {
-        public static final String CODE = OAuth2Constants.CallbackParams.CODE;
-        public static final String REFRESH_TOKEN = "refresh_token";
-    }
-
     public class RequestKey {
         public static final String FROM = "minTransactionTimestamp";
         public static final String TO = "maxTransactionTimestamp";
-        public static final String REDIRECT_URI = "redirect_uri";
-        public static final String RESPONSE_TYPE = "response_type";
-        public static final String STATE = "state";
-        public static final String GRANT_TYPE = "grant_type";
-        public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String CODE = OAuth2Constants.CallbackParams.CODE;
-    }
-
-    public class StorageKey {
-        public static final String CLIENT_ID = "client_id";
-        public static final String CLIENT_SECRET = "client_secret";
-        public static final String REDIRECT_URL = "redirect_url";
     }
 
     public class HeaderKey {
-        public static final String AUTHORIZATION = "Authorization";
         public static final String DIGEST = "Digest";
         public static final String DATE = "DATE";
     }
 
     public class TransactionDirections {
 
-        public static final String IN = "IN";
         public static final String OUT = "OUT";
     }
 }

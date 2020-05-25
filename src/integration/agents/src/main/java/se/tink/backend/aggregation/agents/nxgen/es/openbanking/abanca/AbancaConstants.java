@@ -37,7 +37,6 @@ public final class AbancaConstants {
 
     public static class HeaderKeys {
         public static final String AUTH_KEY = "AuthKey";
-        public static final String AUTHORIZATION = "Authorization";
         public static final String CHALLENGE_ID = "x-challenge-id";
         public static final String CHALLENGE_RESPONSE = "x-challenge-response";
     }
@@ -45,7 +44,6 @@ public final class AbancaConstants {
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String INVALID_BALANCE_RESPONSE = "Invalid balance response";
     }
 
@@ -56,20 +54,13 @@ public final class AbancaConstants {
     }
 
     public class QueryKeys {
-        public static final String USERNAME = "username";
-        public static final String PASSWORD = "password";
-        public static final String API_KEY = "api_key";
         public static final String RESPONSE_TYPE = "response_type";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String STATE = "state";
-        public static final String CODE = "code";
     }
 
     public class QueryValues {
-        public static final String AUTHORIZATION_CODE = "authorization_code";
-        public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE = "CODE";
-        public static final String GRANT_TYPE = "grant_type";
     }
 
     public static class FormKeys {
@@ -82,11 +73,6 @@ public final class AbancaConstants {
     public static class FormValues {
         public static final String GRANT_TYPE_CODE = "authorization_code";
         public static final String GRANT_TYPE_REFRESH = "refresh_token";
-    }
-
-    public static class Market {
-        public static final String INTEGRATION_NAME = "abanca";
-        public static final String CLIENT_NAME = "tink";
     }
 
     public static class ResponseErrorCodes {

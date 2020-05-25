@@ -54,8 +54,6 @@ public class SparebankenVestConstants {
                         HOST_SECURITY
                                 + "/Innlogging/privat-mobil/LoginServiceSAMobile2/ChoosePIN.aspx");
         static final URL STS_PRIVATE_WEB = new URL(HOST_SECURITY + "/STS/privat-web/Default.aspx");
-        static final URL STS_PRIVATE_WEB_LOGOUT =
-                new URL(HOST_SECURITY + "/STS/privat-web/RpLogout.aspx");
         static final URL ACCOUNTS = new URL(HOST_DBANK + "/dbank/api/oversikt/konti");
         static final URL TRANSACTIONS = new URL(HOST_DBANK + "/dbank/api/historikk/transaksjoner");
         static final URL CREDIT_CARD_TRANSACTIONS =
@@ -80,18 +78,11 @@ public class SparebankenVestConstants {
     }
 
     public static final class QueryParams {
-        static final String NO_CACHE_KEY = "no-cache";
-        static final String NO_CACHE_VALUE = "true";
         static final String SO_KEY = "so";
         static final String IS_NEW_ACTIVATION_KEY = "isNewActivation";
         static final String IS_NEW_ACTIVATION_VALUE = "true";
         static final String HARDWARE_ID_KEY = "hwid";
-        static final String ACCOUNT_NUMBER_KEY = "AccountNumber";
-        static final String ACCOUNT_NUMBER_KEY_NEW = "konto";
         static final String PREVENT_CACHE_KEY = "preventCache";
-        static final String ACCOUNTS_KEY = "accounts";
-        static final String STEP_KEY = "step";
-        static final String START_KEY = "start";
         static final String CARD_NUMBER_GUID_KEY = "CardnumberGuids";
         static final String KID_GUID_KEY = "kidGuid";
         static final String FROM_DATE_KEY = "fromDate";
@@ -141,8 +132,6 @@ public class SparebankenVestConstants {
         static final String ORIGIN_KEY = "Origin";
         static final String CONTENT_TYPE = "Content-Type";
         static final String RANGE_KEY = "Range";
-        public static final String RANGE_ITEMS = "items=";
-        public static final String RANGE_DASH = "-";
         static final String XCSRF_TOKEN = "X-CsrfToken";
 
         public static final String TEXT_HTML_APPLICATION_XHTML_XML =
@@ -170,10 +159,7 @@ public class SparebankenVestConstants {
     }
 
     public static class LogTags {
-        public static final LogTag UPCOMING_TRANSACTIONS =
-                LogTag.from("#SparebankenVest_upcoming_transactions");
         public static final LogTag LOANS = LogTag.from("#SparebankenVest_loans");
-        public static final LogTag INVESTMENTS = LogTag.from("#SparebankenVest_investments");
     }
 
     public static class HttpElements {

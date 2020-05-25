@@ -24,7 +24,6 @@ public final class AmericanExpressConstants {
     public static final class Tags {
         public static final String SESSION_ID = "sessionId";
         public static final String HARDWARE_ID = "hardwareId";
-        public static final String FACE = "face";
         public static final String CARD_LIST = "cardList";
         public static final String IS_PENDING = "pendingTransaction";
         public static final String CUPCAKE = "cupcake";
@@ -49,7 +48,6 @@ public final class AmericanExpressConstants {
     public static final class HeaderValues {
         public static final String CHARSET = "UTF-8";
         public static final String CLIENT_TYPE = "iPhone";
-        public static final String CLIENT_VERSION = "4.5.0";
         public static final String DEVICE_MODEL = "iPhone8,1";
         public static final String OS_BUILD = "iOS 10.2";
         public static final String OS_VERSION = "10.2";
@@ -57,7 +55,6 @@ public final class AmericanExpressConstants {
 
     public static final class RequestValue {
         public static final String TRUE = "true";
-        public static final String TIME_ZONE = "GMT+1";
         public static final String TIME_ZONE_OFFSET = "3600000";
     }
 

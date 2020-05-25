@@ -37,7 +37,6 @@ public class ICSConstants {
 
     public static final class Transaction {
         public static final String DEBIT = "Debit";
-        public static final String CREDIT = "Credit";
     }
 
     public enum OAuthGrantTypes {
@@ -93,8 +92,6 @@ public class ICSConstants {
 
     public static class ErrorMessages {
         public static final String CONSENT_ERROR = "consent_error";
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
         public static final String INVALID_TOKEN = "invalid_token";
         public static final String MISSING_BALANCE = "No balance available";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";

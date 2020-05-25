@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class VolksbankConstants {
@@ -15,7 +14,6 @@ public final class VolksbankConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String MISSING_SCA_URL = "Missing sca redirect url.";
         public static final String MISSING_BALANCE = "No balance found.";
         public static final String INVALID_CONSENT = "Invalid consent!";
@@ -42,7 +40,6 @@ public final class VolksbankConstants {
     }
 
     public static class StorageKeys {
-        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CONSENT_ID = "CONSENT_ID";
         public static final String CACHED_ACCOUNTS = "CACHED_ACCOUNTS";
     }

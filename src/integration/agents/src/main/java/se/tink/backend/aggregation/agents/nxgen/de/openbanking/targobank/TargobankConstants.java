@@ -51,18 +51,15 @@ public final class TargobankConstants {
     }
 
     public static class PathVariable {
-        public static final String ACCOUNT_ID = "accountId";
         public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class QueryKeys {
         public static final String WITH_BALANCE = "withBalance";
-        public static final String BOOKING_STATUS = "bookingStatus";
     }
 
     public static class QueryValues {
         public static final String WITH_BALANCE = "true";
-        public static final String BOOKING_STATUS = "booked";
     }
 
     public static class HeaderKeys {

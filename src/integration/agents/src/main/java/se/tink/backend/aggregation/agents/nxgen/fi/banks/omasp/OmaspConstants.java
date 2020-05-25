@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp;
 
 import com.google.common.collect.ImmutableMap;
-import java.time.format.DateTimeFormatter;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -24,7 +23,6 @@ public class OmaspConstants {
     public static final class LogTags {
         public static final LogTag LOG_TAG_AUTHENTICATION = LogTag.from("#omasp_authentication");
         public static final LogTag LOG_TAG_ACCOUNTS = LogTag.from("#omasp_accounts");
-        public static final LogTag LOG_TAG_CONTINUATIONKEY = LogTag.from("#omasp_continuationkey");
         public static final LogTag LOG_TAG_LOAN_DETAILS = LogTag.from("#omasp_loan_details");
     }
 
@@ -72,10 +70,6 @@ public class OmaspConstants {
     public static final class ErrorMessage {
         public static final String LOGIN_BLOCKED = "sisäänkirjautuminen on estetty";
     }
-
-    public static final String HMAC_KEY = "d8Ve963x8rVkffpUzdMe9mTxEqTL9SRV";
-    public static final DateTimeFormatter TIMESTAMP_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'");
 
     public enum UserMessage implements LocalizableEnum {
         LOGIN_BLOCKED(

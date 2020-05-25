@@ -15,11 +15,6 @@ public abstract class SebBrandedCardsConstants {
                 BASE_CREDIT_CARD_ACCOUNTS + "/branded-card-accounts/{accountId}/transactions";
     }
 
-    public static class Market {
-        public static final String INTEGRATION_NAME = "seb";
-        public static final String CLIENT_NAME = "tink";
-    }
-
     public static class QueryKey {
         public static final String BRAND_ID = "brandId";
     }

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank;
 
-import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
@@ -24,7 +23,6 @@ public final class FinecoBankConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String INVALID_CONSENT_BALANCES =
                 "Could not fetch the balances, because the consent is invalid. Please try again with a full consent.";
         public static final String INVALID_CONSENT_TRANSACTIONS =
@@ -89,7 +87,6 @@ public final class FinecoBankConstants {
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
         public static final String STATE = "state";
-        public static final String SUPPLEMENTAL_INFORMATION = "tpcb_%s";
     }
 
     public static class QueryValues {
@@ -128,10 +125,6 @@ public final class FinecoBankConstants {
     }
 
     public static class HeaderValues {
-        public static final String X_REQUEST_ID_ACCOUNTS = "123e4567-e89b-42d3-a456-556642440048";
-        public static final String X_REQUEST_ID_TRANSACTIONS =
-                "123e4567-e89b-42d3-a456-556642440071";
-        public static final String CONSENT_ID = "76b908cc-4605-4d06-8869-4387f5daa318";
         public static final String X_REQUEST_ID_PAYMENT_INITIATION =
                 "4e0c57ba-e655-4ebd-9574-9aeeee104e7f";
         public static final String X_REQUEST_ID_GET_PAYMENT =
@@ -151,12 +144,6 @@ public final class FinecoBankConstants {
     }
 
     public static class StatusValues {
-        public static final String EXPIRED = "expired";
-        public static final String RECEIVED = "received";
         public static final String VALID = "valid";
-        public static final String REVOKED_BY_PSU = "revokedByPsu";
-        public static final String TERMINATED_BY_TPP = "terminatedByTpp";
-        public static final ImmutableList<String> FAILED =
-                ImmutableList.of(EXPIRED, REVOKED_BY_PSU, TERMINATED_BY_TPP);
     }
 }

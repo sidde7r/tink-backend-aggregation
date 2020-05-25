@@ -48,7 +48,6 @@ public class CrossKeyConstants {
         public static final String ERR_PASSWORD_MISSING =
                 "ERR_PASSWORD_MISSING"; // happens if field is missing (i.e. null)
         public static final String ERR_PASSWORD_NOT_VALID = "ERR_PASSWORD_NOT_VALID";
-        public static final String PIN_CODE_INVALID = "PIN_CODE_INVALID";
         public static final String APP_VERSION = "1.8.0-iOS";
         public static final String LANGUAGE = "sv";
     }

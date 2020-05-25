@@ -161,12 +161,6 @@ public class DanskeBankConstants {
                 "Register with Danske Mobile Banking";
     }
 
-    public static class CodeApp {
-        public static final String STATUS_OK = "ok";
-        public static final String STATUS_TIMEOUT = "timeout";
-        public static final String STATUS_OVERWRITTEN = "overwritten";
-    }
-
     public static class Account {
         public static final String CREDIT_CARD_CODE = "101";
     }
@@ -189,13 +183,9 @@ public class DanskeBankConstants {
     }
 
     public static class LogTags {
-        public static final LogTag AUTHENTICATION_BANKID =
-                LogTag.from("Danske Bank - Authentication - BankID");
         public static final LogTag AUTHENTICATION_AUTO =
                 LogTag.from("Danske Bank - Authentication - Auto");
         public static final LogTag LOAN_ACCOUNT = LogTag.from("Loan_account");
-        public static final LogTag TRANSACTIONAL_ACCOUNT =
-                LogTag.from("Danske Bank - Transactional account");
     }
 
     public static class Javascript {
@@ -267,13 +257,7 @@ public class DanskeBankConstants {
         public static final String DEVICE_SERIAL_NUMBER = "DeviceSerialNumber";
     }
 
-    public static class Errors {
-        public static final String READ_TIMEOUT_ERROR = "Read timed out";
-    }
-
     public static class PollCodeTimeoutFilter {
-        public static final int NUM_TIMEOUT_RETRIES = 3;
-        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 3000;
         public static final int MAX_POLLS_COUNTER = 50;
     }
 
@@ -281,7 +265,6 @@ public class DanskeBankConstants {
         public static final String COMPLETED = "complete";
         public static final String PENDING = "pending";
         public static final String EXPIRED = "expired_to_be_changed";
-        public static final String CANCELLED = "canceled";
     }
 
     public static class DanskeIdFormValues {

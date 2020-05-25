@@ -38,12 +38,10 @@ public final class BbvaConstants {
 
     public static final class Defaults {
         public static final String CURRENCY = "EUR";
-        public static final String CHARSET = "UTF-8";
         public static final String TIMEZONE_CET = "CET";
     }
 
     public static final class AccountType {
-        public static final String CREDIT_CARD = "credit";
         public static final String CREDIT_CARD_SHORT_TYPE = "C";
     }
 
@@ -58,28 +56,14 @@ public final class BbvaConstants {
     }
 
     public static final class QueryValues {
-        public static final String FALSE = "false";
         public static final String FIRST_PAGE_KEY = "0";
         public static final String DASHBOARD_FILTER = "(showPending==true);(hasSicav==false)";
     }
 
     public static final class LogTags {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bbva_unknown_account_type");
         public static final LogTag TRANSACTIONS_RETRYING =
                 LogTag.from("bbva_transactions_retrying");
-        public static final LogTag INVESTMENT_INTERNATIONAL_PORTFOLIO =
-                LogTag.from("bbva_investment_international_portfolio");
-        public static final LogTag PRODUCTS_FULL_RESPONSE =
-                LogTag.from("bbva_products_full_response");
-        public static final LogTag INVESTMENT_MANAGED_FUNDS =
-                LogTag.from("bbva_investment_managed_funds");
-        public static final LogTag INVESTMENT_WEALTH_DEPOSITARY =
-                LogTag.from("bbva_investment_wealth_depositary");
         public static final LogTag LOAN_DETAILS = LogTag.from("bbva_loan_details");
-        public static final LogTag LOAN_MULTI_MORTGAGE = LogTag.from("bbva_loan_multi_mortgage");
-        public static final LogTag LOAN_REVOLVING_CREDIT =
-                LogTag.from("bbva_loan_revolving_credit");
-        public static final LogTag LOAN_WORKING_CAPITAL = LogTag.from("bbva_loan_working_capital");
         public static final LogTag UTILS_SPLIT_GET_PAGINATION_KEY =
                 LogTag.from("bbva_utils_split_get_pagination_key");
     }
@@ -99,10 +83,6 @@ public final class BbvaConstants {
         public static final String CREDIT_CARD_TRANSACTIONS =
                 BASE_URL + "/ASO/cardTransactions/V01/";
         public static final String LOAN_DETAILS = BASE_URL + "/ASO/loans/V01/{" + PARAM_ID + "}";
-        public static final String CARD_TRANSACTIONS =
-                BASE_URL + "/ASO/cardTransactions/V01/{" + PARAM_ID + "}";
-        public static final String SECURITY_PROFITABILITY =
-                BASE_URL + "/ASO/securityActions/V01/listProfitability";
         public static final String IDENTITY_DATA =
                 BASE_URL + "/ASO/contextualData/V02/{" + PARAM_ID + "}";
         public static final String HISTORICAL_DATE =

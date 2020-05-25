@@ -16,7 +16,6 @@ public class AsLhvConstants {
                     .build();
 
     public static class Storage {
-        public static final String USER_ID = "userId";
         public static final String CURRENT_USER = "currentUser";
         public static final String CURRENCIES = "currencies";
         public static final String BASE_CURRENCY_ID = "baseCurrencyId";

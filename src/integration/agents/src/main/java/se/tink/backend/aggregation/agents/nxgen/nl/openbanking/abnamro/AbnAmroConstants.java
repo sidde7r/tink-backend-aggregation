@@ -7,8 +7,6 @@ public final class AbnAmroConstants {
 
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
-    public static final int START_PAGE = 1;
-    public static final String INTEGRATION_NAME = "abnamro";
 
     private AbnAmroConstants() {
         throw new AssertionError();
@@ -53,8 +51,6 @@ public final class AbnAmroConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 
@@ -86,12 +82,6 @@ public final class AbnAmroConstants {
         public static final String BANK = "bank";
         public static final String FLOW = "flow";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String CONTENT_TYPE = "Content-Type";
-        public static final String CONSENT_ID = "Consent-ID";
-        public static final String AUTHORIZATION = "Authorization";
-        public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
-        public static final String SIGNATURE = "Signature";
-        public static final String DATE = "Date";
         public static final String BOOK_DATE_FROM = "bookDateFrom";
         public static final String BOOK_DATE_TO = "bookDateTo";
         public static final String NEXT_PAGE_KEY = "nextPageKey";

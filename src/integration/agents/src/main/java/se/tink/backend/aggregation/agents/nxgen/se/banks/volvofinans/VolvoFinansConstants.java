@@ -45,10 +45,6 @@ public class VolvoFinansConstants {
         public static final String HEADER_LOCATION = "location";
     }
 
-    public static final class Currencies {
-        public static String SEK = "SEK";
-    }
-
     public static final class BankIdStatus {
         public static final String DONE = "OK";
         public static final String WAITING = "PAGAENDE";

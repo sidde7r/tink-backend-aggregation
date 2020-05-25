@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SkandiaConstants {
 
-    public static final String INTEGRATION_NAME = "skandia";
     public static final TransactionalAccountTypeMapper ACCOUNT_TYPE_MAPPER =
             TransactionalAccountTypeMapper.builder()
                     .put(TransactionalAccountType.CHECKING, "Allt-i-Ett konto")
@@ -22,7 +21,6 @@ public final class SkandiaConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
     public static class ErrorCodes {
@@ -58,7 +56,6 @@ public final class SkandiaConstants {
         public static final String SCOPE = "scope";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String RESPONSE_TYPE = "response_type";
-        public static final String WITH_BALANCE = "withBalance";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
     }
@@ -68,10 +65,6 @@ public final class SkandiaConstants {
         public static final String BOOKED = "booked";
         public static final String CODE = "code";
         public static final String SCOPE = "psd2.aisp";
-        public static final String WITH_BALANCE = "true";
-        public static final String DATE_FROM = "dateFrom";
-        public static final String DATE_TO = "dateTo";
-        public static final String BOOKING_STATUS = "both";
     }
 
     public static class FormKeys {
@@ -89,7 +82,6 @@ public final class SkandiaConstants {
     }
 
     public static class HeaderKeys {
-        public static final String CONSENT_ID = "Consent-ID";
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String X_CLIENT_CERTIFICATE = "X-Client-Certificate";
         public static final String CLIENT_ID = "Client-Id";
