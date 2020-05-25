@@ -68,7 +68,6 @@ import se.tink.backend.aggregation.workers.concurrency.InterProcessSemaphoreMute
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.encryption.CredentialsCrypto;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
-import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
@@ -94,7 +93,6 @@ public class AgentWorkerOperationFactory {
             ImmutableList.of("neston-production", "neston-staging", "neston-preprod");
 
     private final CacheClient cacheClient;
-    private final MetricCacheLoader metricCacheLoader;
     private final CryptoConfigurationDao cryptoConfigurationDao;
     private final ControllerWrapperProvider controllerWrapperProvider;
     private final AggregatorInfoProvider aggregatorInfoProvider;
@@ -148,7 +146,6 @@ public class AgentWorkerOperationFactory {
             @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands) {
         this.cacheClient = cacheClient;
 
-        metricCacheLoader = new MetricCacheLoader(metricRegistry);
         this.cryptoConfigurationDao = cryptoConfigurationDao;
         this.controllerWrapperProvider = controllerWrapperProvider;
         this.aggregatorInfoProvider = aggregatorInfoProvider;
@@ -178,10 +175,7 @@ public class AgentWorkerOperationFactory {
 
     private AgentWorkerCommandMetricState createCommandMetricState(CredentialsRequest request) {
         return new AgentWorkerCommandMetricState(
-                request.getProvider(),
-                request.getCredentials(),
-                metricCacheLoader,
-                request.getType());
+                request.getProvider(), request.getCredentials(), metricRegistry, request.getType());
     }
 
     // Remove `ACCOUNTS` and `TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS` and replace them with

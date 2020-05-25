@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.workers.metrics;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,22 +14,28 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
+import se.tink.libraries.metrics.types.counters.Counter;
 import se.tink.libraries.metrics.types.timers.Timer;
 
 public class MetricActionTest {
     private static final MetricId ACTION_NAME = MetricId.newId("test_action");
 
     private AgentWorkerCommandMetricState state;
-    private MetricCacheLoader loader;
+    private Timer timerMock;
+    private Counter counterMock;
+    private MetricRegistry metricRegistry;
     private MetricAction action;
-    private Credentials credentials;
 
     @Before
     public void setup() {
-        loader = mock(MetricCacheLoader.class);
+        metricRegistry = mock(MetricRegistry.class);
+        timerMock = mock(Timer.class);
+        when(metricRegistry.timer(any())).thenReturn(timerMock);
+        counterMock = mock(Counter.class);
+        when(metricRegistry.meter(any())).thenReturn(counterMock);
         state = mockMetricState();
-        credentials = mockCredentials();
-        action = new MetricAction(state, loader, ACTION_NAME);
+        action = new MetricAction(state, metricRegistry, ACTION_NAME);
     }
 
     private AgentWorkerCommandMetricState mockMetricState() {
@@ -35,7 +43,8 @@ public class MetricActionTest {
         Credentials credentials = mockCredentials();
         CredentialsRequestType requestType = CredentialsRequestType.UPDATE;
 
-        return new AgentWorkerCommandMetricState(provider, credentials, loader, requestType);
+        return new AgentWorkerCommandMetricState(
+                provider, credentials, metricRegistry, requestType);
     }
 
     private Credentials mockCredentials() {
@@ -48,12 +57,12 @@ public class MetricActionTest {
 
     private void mockNextTimer() {
         Timer.Context timer = mock(Timer.Context.class);
-        when(loader.startTimer(ACTION_NAME)).thenReturn(timer);
+        when(metricRegistry.timer(ACTION_NAME).time()).thenReturn(timer);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureInstantiationThrowsException_whenState_isNull() {
-        new MetricAction(null, loader, MetricId.newId("invalid-instantiation"));
+        new MetricAction(null, metricRegistry, MetricId.newId("invalid-instantiation"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -77,19 +86,25 @@ public class MetricActionTest {
     @Test
     public void ensureLoadedActionName_isUsed_whenStartingTimer() {
         action.start();
-        verify(loader).startTimer(MetricId.newId("test_action_duration"));
+        verify(metricRegistry).timer(MetricId.newId("test_action_duration"));
+        verify(timerMock).time();
     }
 
     @Test
     public void ensureLoadedActionName_andActionOutcome_isUsed_whenMarking() {
         action.completed();
-        verify(loader).mark(markerName("completed"));
+        verify(metricRegistry).meter(markerName("completed"));
+        verify(counterMock).inc();
+        reset(counterMock);
 
         action.failed();
-        verify(loader).mark(markerName("failed"));
+        verify(metricRegistry).meter(markerName("failed"));
+        verify(counterMock).inc();
+        reset(counterMock);
 
         action.cancelled();
-        verify(loader).mark(markerName("cancelled"));
+        verify(metricRegistry).meter(markerName("cancelled"));
+        verify(counterMock).inc();
     }
 
     private MetricId markerName(String name) {

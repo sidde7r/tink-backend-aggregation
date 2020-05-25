@@ -11,12 +11,13 @@ import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.core.MetricId;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorkerCommandMetricState {
     private static final AggregationLogger log =
             new AggregationLogger(AgentWorkerCommandMetricState.class);
 
-    private final MetricCacheLoader metricCacheLoader;
+    private final MetricRegistry metricRegistry;
     private final Provider provider;
     private final Credentials credentials;
     private MetricsCommand command;
@@ -28,11 +29,11 @@ public class AgentWorkerCommandMetricState {
     public AgentWorkerCommandMetricState(
             Provider provider,
             Credentials credentials,
-            MetricCacheLoader metricCacheLoader,
+            MetricRegistry metricRegistry,
             CredentialsRequestType requestType) {
         this.provider = provider;
         this.credentials = credentials;
-        this.metricCacheLoader = metricCacheLoader;
+        this.metricRegistry = metricRegistry;
         this.requestType = requestType;
     }
 
@@ -62,7 +63,7 @@ public class AgentWorkerCommandMetricState {
         baseAction =
                 new MetricAction(
                         this,
-                        metricCacheLoader,
+                        metricRegistry,
                         MetricId.newId("agent_command")
                                 .label("operation_type", operationType.getMetricName()));
 
@@ -147,7 +148,7 @@ public class AgentWorkerCommandMetricState {
 
         return new MetricAction(
                 this,
-                metricCacheLoader,
+                metricRegistry,
                 MetricId.newId(command.getMetricName())
                         .label(action)
                         .label("provider_type", provider.getMetricTypeName())
