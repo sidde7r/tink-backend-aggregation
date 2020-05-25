@@ -129,15 +129,6 @@ public class DemoAccountDefinitionGenerator {
         return generateIban(deterministicKey, CountryCode.FR, "0", "01005", "20041", 12);
     }
 
-    private static String getCode(String deterministicKey) {
-        if (deterministicKey.length() < 4) {
-            return Strings.padStart(deterministicKey, 4, '0');
-        } else {
-            return deterministicKey.substring(
-                    deterministicKey.length() - 4, deterministicKey.length());
-        }
-    }
-
     private static String getAccountNumber(String userDeterministicKey, int expectedLength) {
         if (userDeterministicKey.length() < expectedLength) {
             return Strings.padStart(userDeterministicKey, expectedLength, '0');

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.client.provider_configuration.rpc;
 
 import static io.vavr.Predicates.not;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
@@ -17,7 +16,6 @@ import javax.annotation.Nullable;
 import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-// FIXME: remove all code that has JSON IGNORE
 public class ProviderConfiguration {
 
     public enum AccessType {
@@ -351,17 +349,6 @@ public class ProviderConfiguration {
     @JsonProperty("refreshschedule")
     public void setRefreshSchedule(ProviderRefreshSchedule refreshSchedule) {
         this.refreshScheduleSerialized = SerializationUtils.serializeToString(refreshSchedule);
-    }
-
-    @JsonIgnore
-    public Optional<ProviderRefreshSchedule> getRefreshSchedule() {
-        if (Strings.isNullOrEmpty(refreshScheduleSerialized)) {
-            return Optional.empty();
-        }
-
-        return Optional.ofNullable(
-                SerializationUtils.deserializeFromString(
-                        refreshScheduleSerialized, ProviderRefreshSchedule.class));
     }
 
     public ReleaseStatus getReleaseStatus() {

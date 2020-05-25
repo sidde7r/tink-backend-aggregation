@@ -33,10 +33,6 @@ public class GenericIdFromAccountNumberMigration extends DataVersionMigration {
                 .allMatch(account -> account.getBankId().equals(account.getAccountNumber()));
     }
 
-    private static String sanitize(String input) {
-        return input.replaceAll("[^A-Za-z0-9]", "");
-    }
-
     @Override
     protected Map<Account, String> migrateData(CredentialsRequest request, ClientInfo clientInfo) {
         return List.ofAll(request.getAccounts())

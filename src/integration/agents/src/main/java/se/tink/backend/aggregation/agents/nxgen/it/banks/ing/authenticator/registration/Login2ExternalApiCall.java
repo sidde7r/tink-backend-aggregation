@@ -97,12 +97,6 @@ public class Login2ExternalApiCall extends SimpleExternalApiCall<Arg, Result> {
                         () -> new IllegalStateException("Required value JSESSIONID is missing"));
     }
 
-    private Optional<String> getHeaderValue(HttpResponse httpResponse, String headerName) {
-        return Optional.of(httpResponse)
-                .map(HttpResponse::getHeaders)
-                .map(x -> x.getFirst(headerName));
-    }
-
     @Accessors(chain = true)
     @Data
     static class Arg {

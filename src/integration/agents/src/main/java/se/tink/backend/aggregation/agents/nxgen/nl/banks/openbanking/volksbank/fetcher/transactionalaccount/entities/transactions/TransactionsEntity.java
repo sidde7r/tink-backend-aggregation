@@ -3,9 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,17 +29,6 @@ public class TransactionsEntity {
 
     public List<BookedEntity> getBooked() {
         return booked;
-    }
-
-    private Map<String, String> getQueryMap(String query) {
-        String[] params = query.split("&");
-        Map<String, String> map = new HashMap<>();
-        for (String param : params) {
-            String name = param.split("=")[0];
-            String value = param.split("=")[1];
-            map.put(name, value);
-        }
-        return map;
     }
 
     public List<Transaction> toTinkTransactions(Date limitDate) {

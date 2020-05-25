@@ -92,11 +92,6 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private boolean hasAccountFlag(AccountFlagEntity accountFlag) {
-        return getAccountFlags().stream().anyMatch(accountFlag::equals);
-    }
-
-    @JsonIgnore
     private Predicate<AccountTypes> isTinkTransactionalAccount() {
         return anyOf(
                 AccountTypes.CHECKING::equals,

@@ -1,7 +1,6 @@
 package se.tink.backend.agents.rpc;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.List;
 
 /**
  * Class for feature flags. Reason why enum is not used is because the flexibility to add feature
@@ -109,20 +108,6 @@ public class FeatureFlags {
             this.flags = flags;
             this.minIosVersion = minIosVersion;
             this.minAndroidVersion = minAndroidVersion;
-        }
-
-        public boolean isFlagInGroup(List<String> userFlags) {
-            if (userFlags == null) {
-                return false;
-            }
-
-            for (String flag : userFlags) {
-                if (this.flags.contains(flag)) {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }
