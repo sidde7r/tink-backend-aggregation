@@ -69,7 +69,7 @@ public class LclAuthenticator implements PasswordAuthenticator {
 
     private void configureDeviceIfNotConfigured() {
         if (Strings.isNullOrEmpty(lclPersistentStorage.getDeviceId())) {
-            String deviceId = UUID.randomUUID().toString().replaceAll("-", "");
+            String deviceId = UUID.randomUUID().toString().replace("-", "");
             lclPersistentStorage.saveDeviceId(deviceId);
             apiClient.configureDevice();
         }
@@ -93,9 +93,17 @@ public class LclAuthenticator implements PasswordAuthenticator {
 
     private static String generateSessionId(String agentKey) {
         String timeStamp = Long.toString(System.currentTimeMillis());
-        long randomSessionIdSuffix = Math.abs(RANDOM.nextLong());
-
+        long randomSessionIdSuffix = positiveRandomLong();
         return timeStamp + agentKey + randomSessionIdSuffix;
+    }
+
+    private static long positiveRandomLong() {
+        while (true) {
+            long randomLong = RANDOM.nextLong();
+            if (randomLong > 0) {
+                return randomLong;
+            }
+        }
     }
 
     private String getXorPinInB64(String password) {

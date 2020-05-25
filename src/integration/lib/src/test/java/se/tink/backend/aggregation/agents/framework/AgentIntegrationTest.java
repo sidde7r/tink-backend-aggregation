@@ -356,8 +356,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 Map<String, String> map;
                 List<Field> fields;
                 String nextStep = signPaymentMultiStepResponse.getStep();
-                Payment paymentSign = signPaymentMultiStepResponse.getPayment();
-                Storage storageSign = signPaymentMultiStepResponse.getStorage();
 
                 while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
                     fields = signPaymentMultiStepResponse.getFields();
@@ -372,8 +370,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                             fields,
                                             new ArrayList<>(map.values())));
                     nextStep = signPaymentMultiStepResponse.getStep();
-                    paymentSign = signPaymentMultiStepResponse.getPayment();
-                    storageSign = signPaymentMultiStepResponse.getStorage();
                 }
 
                 PaymentResponse paymentResponse =
@@ -432,7 +428,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 }
             }
 
-            PaymentListResponse paymentListResponse = null;
+            PaymentListResponse paymentListResponse;
             if (paymentController.canFetch()) {
                 paymentListResponse =
                         paymentController.fetchMultiple(new PaymentListRequest(paymentRequests));
@@ -463,15 +459,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     // TODO auth: think about cases other than supplemental info, e.g. bankid,
                     // redirect
                     // etc.
-                    if (isSupplementalStep(paymentMultiStepResponse.getStep())) {
-                        fields = paymentMultiStepResponse.getFields();
-                        map =
-                                supplementalInformationController.askSupplementalInformation(
-                                        fields.toArray(new Field[fields.size()]));
-                    } else {
-                        fields = paymentMultiStepResponse.getFields();
-                        map = Collections.emptyMap();
-                    }
+                    fields = paymentMultiStepResponse.getFields();
+                    map = Collections.emptyMap();
 
                     paymentMultiStepResponse =
                             paymentController.sign(
@@ -520,8 +509,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                             new IllegalStateException(
                                                     "Agent doesn't implement constructPaymentController method."));
 
-            ArrayList<PaymentRequest> paymentRequests = new ArrayList<>();
-
             log.info("Executing bank transfer.");
 
             PaymentResponse createPaymentResponse =
@@ -554,7 +541,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
 
             PaymentStatus statusResult = payment.getStatus();
-            Assert.assertTrue(statusResult.equals(PaymentStatus.SIGNED));
+            Assert.assertEquals(statusResult, PaymentStatus.SIGNED);
 
             log.info("Done with bank transfer.");
 
@@ -564,10 +551,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             "%s does not implement a transfer executor interface.",
                             agent.getClass().getSimpleName()));
         }
-    }
-
-    private boolean isSupplementalStep(String step) {
-        return false;
     }
 
     private void doBankTransfer(Agent agent, Transfer transfer, boolean isUpdate) throws Exception {
@@ -806,18 +789,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private List<Payment> createItalianPayments(List<Account> accounts, String desinationAccount) {
 
-        List<Payment> payments = new ArrayList<>();
-
-        ExactCurrencyAmount amount = ExactCurrencyAmount.of("1.00", "EUR");
-        LocalDate executionDate = LocalDate.now();
-        String currency = "EUR";
-
-        payments =
-                accounts.stream()
-                        .map(a -> createPayment(a.getAccountNumber(), desinationAccount))
-                        .collect(Collectors.toList());
-
-        return payments;
+        return accounts.stream()
+                .map(a -> createPayment(a.getAccountNumber(), desinationAccount))
+                .collect(Collectors.toList());
     }
 
     private Payment createPayment(String sourceAccount, String desinationAccount) {

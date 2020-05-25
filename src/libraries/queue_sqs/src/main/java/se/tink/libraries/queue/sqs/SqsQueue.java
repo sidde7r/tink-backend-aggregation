@@ -74,7 +74,7 @@ public class SqsQueue {
             this.isAvailable =
                     isQueueCreated(
                             createRequest, amazonSQSClientBuilder, staticCredentialsProvider);
-            this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
+            this.url = getQueueUrl(configuration.getQueueName());
         } else {
             final AWSCredentialsProvider instanceCredentialsProvider =
                     RetryableInstanceProfileCredentialsProvider.createAsyncRefreshingProvider(true);
