@@ -205,11 +205,49 @@ public class CountryDateHelper {
     /**
      * If providedDate is null it will return the current date, otherwise return providedDate
      *
+     * @param providedDate the {@link java.time.LocalDate} to consider
+     * @return current {@link java.time.LocalDate} or providedDate
+     */
+    public java.time.LocalDate getProvidedDateOrCurrentLocalDate(java.time.LocalDate providedDate) {
+        return providedDate == null ? getNowAsLocalDate() : providedDate;
+    }
+
+    /**
+     * If providedDate is null it will return the current date, otherwise return providedDate
+     *
      * @param providedDate the date to consider
      * @return current date or providedDate
      */
     public Date getProvidedDateOrCurrentDate(Date providedDate) {
         return providedDate == null ? getNow() : providedDate;
+    }
+
+    /**
+     * If providedDate is not null it will return providedDate otherwise it will calculate the next
+     * date that is not a holiday
+     *
+     * @param providedDate the date to consider as {@link java.time.LocalDate}
+     * @param cutOffHours if the time of day is past this hour, the returned date will be the next
+     *     business day.
+     * @param cutOffMinutes if the time of day is past this minute, the returned date will be the
+     *     next business day.
+     * @return the next available business day or providedDate as {@link java.time.LocalDate}
+     */
+    public java.time.LocalDate getProvidedDateOrBestPossibleLocalDate(
+            java.time.LocalDate providedDate, int cutOffHours, int cutOffMinutes) {
+        Date providedDateAsLocalDate =
+                providedDate == null
+                        ? null
+                        : Date.from(
+                                providedDate
+                                        .atStartOfDay()
+                                        .atZone(timezone.toZoneId())
+                                        .toInstant());
+        return getProvidedDateOrBestPossibleDate(
+                        providedDateAsLocalDate, cutOffHours, cutOffMinutes)
+                .toInstant()
+                .atZone(timezone.toZoneId())
+                .toLocalDate();
     }
 
     /**

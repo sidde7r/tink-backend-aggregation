@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;

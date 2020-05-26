@@ -16,4 +16,8 @@ public class Debtor {
     public String getAccountNumber() {
         return accountIdentifier.getIdentifier();
     }
+
+    public AccountIdentifier getAccountIdentifier() {
+        return accountIdentifier;
+    }
 }

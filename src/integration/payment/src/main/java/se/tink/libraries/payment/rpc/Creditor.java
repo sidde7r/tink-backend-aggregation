@@ -26,4 +26,8 @@ public class Creditor {
     public String getName() {
         return name;
     }
+
+    public AccountIdentifier getAccountIdentifier() {
+        return accountIdentifier;
+    }
 }

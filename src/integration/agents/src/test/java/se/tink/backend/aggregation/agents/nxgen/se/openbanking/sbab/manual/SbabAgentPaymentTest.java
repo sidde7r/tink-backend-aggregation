@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.manual;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
