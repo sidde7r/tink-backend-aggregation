@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.manual;
 
 import java.time.LocalDate;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.manual;
 
 import org.junit.Ignore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebAgentBaseTest;
