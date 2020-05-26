@@ -1158,7 +1158,9 @@ public class AgentWorkerOperationFactory {
                                 context,
                                 (ConfigureWhitelistInformationRequest) request,
                                 controllerWrapper));
-                commands.add(new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
+                commands.add(
+                        new SetCredentialsStatusAgentWorkerCommand(
+                                context, CredentialsStatus.UPDATING));
             }
 
             // Update the accounts on system side
