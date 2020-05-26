@@ -81,7 +81,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         public static final MetricId error =
                 MetricId.newId("aggregation_supplemental_information_requests_error");
         private static final List<Integer> buckets =
-                Arrays.asList(0, 10, 20, 30, 40, 50, 60, 80, 100, 120);
+                Arrays.asList(
+                        0, 10, 20, 30, 40, 50, 60, 80, 100, 120, 240, 270, 300, 360, 420, 480, 600);
 
         public static void inc(MetricRegistry registry, MetricId metricId, String clusterId) {
             MetricId metricIdWithLabel = metricId.label(CLUSTER_LABEL, clusterId);
