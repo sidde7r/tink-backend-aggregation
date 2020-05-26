@@ -239,16 +239,4 @@ public class NordnetBankIdAuthentication {
                         loginResponse.getSessionType(), NordnetConstants.Session.TYPE_ANONYMOUS),
                 "Expecting session type to be anonymous");
     }
-
-    private String authorizeUser() {
-        ClientResponse response = apiClient.get(Urls.LOGIN_PAGE_URL);
-        URI location = response.getLocation();
-
-        // The redirect location holds an auth code needed for requesting a token
-        Preconditions.checkNotNull(location);
-        Matcher matcher = Patterns.FIND_CODE_FROM_URI.matcher(location.toASCIIString());
-        Preconditions.checkState(matcher.find(), "Expected auth code to be present");
-
-        return matcher.group(1);
-    }
 }

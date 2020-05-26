@@ -57,10 +57,6 @@ public class SdcTransaction {
                 .toString();
     }
 
-    private String formatDescription(String description, int numberOfCharacters) {
-        return description.substring(numberOfCharacters);
-    }
-
     public String getPaymentDate() {
         return paymentDate;
     }

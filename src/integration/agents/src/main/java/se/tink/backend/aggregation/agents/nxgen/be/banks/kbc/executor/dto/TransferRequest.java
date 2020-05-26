@@ -127,16 +127,6 @@ public class TransferRequest {
         return true;
     }
 
-    private static String getValidatedPrincipalName(Transfer transfer) {
-        Optional<String> principalName = transfer.getSource().getName();
-
-        if (!principalName.isPresent() || Strings.isNullOrEmpty(principalName.get())) {
-            cancelTransfer(KbcConstants.TransferMessage.MISSING_SOURCE_NAME.getKey().get());
-        }
-
-        return principalName.get();
-    }
-
     private static String getValidatedBeneficiaryName(Transfer transfer) {
         Optional<String> beneficiaryName = transfer.getDestination().getName();
 

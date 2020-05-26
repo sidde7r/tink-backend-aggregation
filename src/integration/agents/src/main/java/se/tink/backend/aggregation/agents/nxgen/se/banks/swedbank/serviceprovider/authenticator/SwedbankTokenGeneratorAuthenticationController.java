@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.InitSecurityTokenChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.authenticator.rpc.SecurityTokenChallengeResponse;
@@ -65,23 +64,6 @@ public class SwedbankTokenGeneratorAuthenticationController
 
     private InitSecurityTokenChallengeResponse initTokenGenerator(String ssn) {
         return apiClient.initTokenGenerator(ssn);
-    }
-
-    private Field responseField() {
-        return Field.builder()
-                .description(catalog.getString("Security Token"))
-                .name(SwedbankBaseConstants.DeviceAuthentication.CHALLENGE)
-                .numeric(true)
-                .hint("NNNNNNNN")
-                .maxLength(8)
-                .minLength(8)
-                .pattern("([0-9]{8})")
-                .helpText(
-                        catalog.getString(
-                                "Start your code generator and write your PIN code."
-                                        + " When APPLI is shown on the display press the key labeled 1 on your generator."
-                                        + " Write the response code shown on the display in the field below."))
-                .build();
     }
 
     @Override

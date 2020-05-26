@@ -25,8 +25,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public final class SantanderApiClient {
@@ -49,21 +47,8 @@ public final class SantanderApiClient {
         this.configuration = configuration;
     }
 
-    private RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
-    }
-
-    private RequestBuilder createRequestInSession(URL url) {
-        final OAuth2Token authToken = getTokenFromStorage();
-
-        return createRequest(url).addBearerToken(authToken);
-    }
-
-    public OAuth2Token getToken(String code) {
+    public OAuth2Token getToken() {
         TokenRequest request = new TokenRequest(QueryValues.GRANT_TYPE);
-
         return client.request(Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .addBasicAuth(

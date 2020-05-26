@@ -129,17 +129,6 @@ public class Hash {
         }
     }
 
-    private static byte[] sha1WithCounter(byte[] inputData, byte[] counter) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(inputData);
-            md.update(counter);
-            return md.digest();
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
     private static byte[] hmac(String algorithm, byte[] key, byte[] data) {
         try {
             Mac hmac = Mac.getInstance(algorithm);

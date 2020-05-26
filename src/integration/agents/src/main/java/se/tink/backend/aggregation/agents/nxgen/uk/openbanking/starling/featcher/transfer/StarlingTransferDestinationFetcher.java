@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,6 @@ import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntityImp
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.entity.PayeeAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.entity.PayeeEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
@@ -52,16 +50,6 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
                         .build();
 
         return new TransferDestinationsResponse(destinations);
-    }
-
-    private static List<PayeeAccountEntity.PayeeGeneralAccount> getDestinationAccounts(
-            Collection<PayeeEntity> payeeEntities) {
-        return payeeEntities.stream()
-                .map(PayeeEntity::streamAccounts)
-                .map(
-                        StarlingTransferDestinationFetcher
-                                ::getDestinationAccounts) // gets stream<list<>>
-                .collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll); // flatten to list<>
     }
 
     private static List<PayeeAccountEntity.PayeeGeneralAccount> getDestinationAccounts(

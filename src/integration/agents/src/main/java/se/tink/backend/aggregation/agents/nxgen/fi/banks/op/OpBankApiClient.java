@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
-import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants.IdTags;
@@ -31,7 +30,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /*
  * A class representing the API published by OP Bank used by Tink.
@@ -239,9 +237,5 @@ public class OpBankApiClient {
                 .header(Headers.ACCEPT_LANGUAGE, Headers.ACCEPT_LANGUAGE_VALUE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
-    }
-
-    private String formatDate(Date date) {
-        return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(date);
     }
 }

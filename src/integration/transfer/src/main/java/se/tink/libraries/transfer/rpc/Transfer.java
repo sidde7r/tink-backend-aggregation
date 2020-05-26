@@ -83,11 +83,6 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     }
 
     @JsonIgnore
-    public String getHashIgnoreSource() {
-        return getHash(true);
-    }
-
-    @JsonIgnore
     private String getHash(boolean ignoreSource) {
         AccountIdentifier sourceAccount = getSource();
         AccountIdentifier destinationAccount = getDestination();
@@ -401,41 +396,12 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         setPayload(payload);
     }
 
-    public void removePayload(TransferPayloadType type) {
-        Map<TransferPayloadType, String> payload = getPayload();
-        payload.remove(type);
-        setPayload(payload);
-    }
-
-    public void clearInternalInformation() {
-        setPayload(null);
-    }
-
     @Override
     public Transfer clone() {
         try {
             return (Transfer) super.clone();
         } catch (CloneNotSupportedException e) {
             return null;
-        }
-    }
-
-    @JsonIgnore
-    private void setOriginalTransfer() {
-        removePayload(TransferPayloadType.ORIGINAL_TRANSFER);
-        String originalTransfer = toOriginalTransferForPayload();
-
-        if (!Strings.isNullOrEmpty(originalTransfer)) {
-            addPayload(TransferPayloadType.ORIGINAL_TRANSFER, originalTransfer);
-        }
-    }
-
-    @JsonIgnore
-    private String toOriginalTransferForPayload() {
-        try {
-            return OBJECT_MAPPER.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Couldn't deserialize transfer to string");
         }
     }
 
@@ -467,16 +433,5 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     @JsonIgnore
     public boolean isOfType(TransferType type) {
         return getType() != null && getType().equals(type);
-    }
-
-    @JsonIgnore
-    public boolean isOneOfTypes(TransferType... types) {
-        for (TransferType type : types) {
-            if (isOfType(type)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -64,15 +64,6 @@ public class OpBankCreditCardFetcher
         return TransactionKeyPaginatorResponseImpl.createEmpty();
     }
 
-    private void tryFetchFromOldEndpoint(CreditCardAccount account) {
-        try {
-            String response = apiClient.fetchCreditCardTransactionsOldEndpoint(account);
-            LOGGER.infoExtraLong(response, OpBankConstants.Fetcher.CREDIT_CARD_TRX_LOGGING_OLD);
-        } catch (Exception e) {
-            LOGGER.warn(OpBankConstants.Fetcher.CREDIT_CARD_TRX_FAILED + " old endpoint", e);
-        }
-    }
-
     private Collection<CreditCardAccount> fetchContinuingCreditAccounts() {
         List<CreditCardAccount> creditAccounts = Lists.newArrayList();
 

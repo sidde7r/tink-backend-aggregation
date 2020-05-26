@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.utils.eact;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Optional;
@@ -94,10 +93,6 @@ public class UnstructuredRemittanceInformation {
 
     private CompoundElement getCompoundElement(ElementType elementType, int index) {
         return (CompoundElement) fields.get(elementType.name).get(index);
-    }
-
-    private BigInteger getBigIntegerElement(ElementType elementType, int index) {
-        return new BigInteger(getStringElement(elementType, index));
     }
 
     private Optional<String> getOptionalStringElement(ElementType elementType) {

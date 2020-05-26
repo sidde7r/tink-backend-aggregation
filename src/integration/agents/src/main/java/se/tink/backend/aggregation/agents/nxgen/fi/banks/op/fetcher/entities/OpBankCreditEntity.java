@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.util.List;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -35,16 +33,6 @@ public class OpBankCreditEntity {
         }
 
         return personalizedName;
-    }
-
-    @JsonIgnore
-    private LoanDetails.Type getLoanType(OpBankCreditEntity creditEntity) {
-        if (!OpBankConstants.Fetcher.COLLATERAL_CREDIT.equalsIgnoreCase(
-                creditEntity.getCreditType())) {
-            return LoanDetails.Type.OTHER;
-        }
-
-        return OpBankConstants.LoanType.findLoanType(usage).getTinkType();
     }
 
     // this credit account is continuing credit

@@ -34,7 +34,7 @@ public class SEBAgentUtils {
 
         private Integer code;
 
-        private SEBAccountType(int c) {
+        SEBAccountType(int c) {
             code = c;
         }
 
