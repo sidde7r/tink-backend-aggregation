@@ -1,7 +1,9 @@
 package se.tink.libraries.cache;
 
+import com.google.common.util.concurrent.Futures;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 public class FakeCacheClient implements CacheClient {
 
@@ -16,8 +18,9 @@ public class FakeCacheClient implements CacheClient {
     }
 
     @Override
-    public void set(CacheScope scope, String key, int expiredTime, Object object) {
+    public Future<?> set(CacheScope scope, String key, int expiredTime, Object object) {
         this.cache.put(getInternalKey(scope, key), object);
+        return Futures.immediateFuture(object);
     }
 
     @Override

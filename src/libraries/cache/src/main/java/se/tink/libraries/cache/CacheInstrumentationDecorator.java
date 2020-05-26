@@ -5,6 +5,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
@@ -76,13 +77,14 @@ public class CacheInstrumentationDecorator implements CacheClient {
     }
 
     @Override
-    public void set(CacheScope scope, String key, int expiredTime, Object object) {
+    public Future<?> set(CacheScope scope, String key, int expiredTime, Object object) {
         final Timer timer = cache.getUnchecked(new TimerKey("set", "hit", scope));
         final Timer.Context context = timer.time();
 
-        delegate.set(scope, key, expiredTime, object);
+        Future<?> future = delegate.set(scope, key, expiredTime, object);
 
         context.stop();
+        return future;
     }
 
     @Override

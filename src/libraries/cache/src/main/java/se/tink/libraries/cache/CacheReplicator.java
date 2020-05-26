@@ -3,6 +3,7 @@ package se.tink.libraries.cache;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -31,9 +32,9 @@ public class CacheReplicator implements CacheClient {
     }
 
     @Override
-    public void set(
+    public Future<?> set(
             final CacheScope scope, final String key, final int expiredTime, final Object object) {
-        primaryClient.set(scope, key, expiredTime, object);
+        Future<?> future = primaryClient.set(scope, key, expiredTime, object);
         for (final CacheClient asyncMirrorClient : asyncMirrorClients) {
             try {
                 asyncExecutor.execute(() -> asyncMirrorClient.set(scope, key, expiredTime, object));
@@ -41,6 +42,7 @@ public class CacheReplicator implements CacheClient {
                 // Deliberately ignored.
             }
         }
+        return future;
     }
 
     @Override
