@@ -65,8 +65,7 @@ public class SdcSeCreditCardFetcher extends SdcCreditCardFetcher {
                 .filter(SdcAccount::isCreditCardAccount)
                 .forEach(
                         account -> {
-                            CreditCardAccount creditCardAccount =
-                                    account.toTinkCreditCardAccount(this.agentConfiguration);
+                            CreditCardAccount creditCardAccount = account.toTinkCreditCardAccount();
 
                             // return value
                             creditCards.add(creditCardAccount);

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -52,7 +51,7 @@ public class SdcAccount {
     }
 
     @JsonIgnore
-    public CreditCardAccount toTinkCreditCardAccount(SdcConfiguration agentConfiguration) {
+    public CreditCardAccount toTinkCreditCardAccount() {
         return CreditCardAccount.builder(
                         id, amount.toExactCurrencyAmount(), availableAmount.toExactCurrencyAmount())
                 .setAccountNumber(localizedAccountId)

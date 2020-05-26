@@ -11,7 +11,7 @@ public class AccountBalanceResponse {
 
     private List<BalancesItem> balances;
 
-    public ExactCurrencyAmount getAvailableBalance(String defaultCurrency) {
+    public ExactCurrencyAmount getAvailableBalance() {
         return balances.stream()
                 .map(BalancesItem::getBalanceAmount)
                 .map(BalanceAmount::getAmount)

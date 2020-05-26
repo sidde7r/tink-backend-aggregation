@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.FundHoldingsResponse;
@@ -22,8 +21,7 @@ public class CustodyAccount extends BaseResponse {
     private String custodyAccountNumber;
     private HandelsbankenAmount marketValue;
 
-    public Optional<InvestmentAccount> toInvestmentAccount(
-            HandelsbankenSEApiClient client, Credentials credentials) {
+    public Optional<InvestmentAccount> toInvestmentAccount(HandelsbankenSEApiClient client) {
         if (type != null) {
             switch (type.toLowerCase()) {
                 case HandelsbankenSEConstants.Investments.FUND:

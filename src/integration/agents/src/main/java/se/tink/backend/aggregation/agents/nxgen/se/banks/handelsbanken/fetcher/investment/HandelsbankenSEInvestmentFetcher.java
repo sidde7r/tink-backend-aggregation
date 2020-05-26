@@ -40,7 +40,7 @@ public class HandelsbankenSEInvestmentFetcher implements AccountFetcher<Investme
                     .map(client::securitiesHoldings)
                     .map(
                             securityHoldingsResponse ->
-                                    securityHoldingsResponse.toTinkInvestments(client, credentials))
+                                    securityHoldingsResponse.toTinkInvestments(client))
                     .orElseGet(Collections::emptyList);
         } catch (HttpResponseException hre) {
             if (handleError(hre)) {
