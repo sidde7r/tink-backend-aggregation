@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.operation;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -8,6 +9,7 @@ import com.google.common.collect.Sets;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -45,6 +47,7 @@ import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.enums.StatisticMode;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -62,6 +65,35 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
     private ProviderSessionCacheController providerSessionCacheController;
+
+    private static class SupplementalInformationMetrics {
+        private static final String CLUSTER_LABEL = "client_cluster";
+        public static final MetricId duration =
+                MetricId.newId("tink_aggregation_supplemental_information_duration_seconds");
+        public static final MetricId attempts =
+                MetricId.newId("tink_aggregation_supplemental_information_requests_started");
+        public static final MetricId finished =
+                MetricId.newId("tink_aggregation_supplemental_information_requests_finished");
+        public static final MetricId cancelled =
+                MetricId.newId("tink_aggregation_supplemental_information_requests_cancelled");
+        public static final MetricId timedOut =
+                MetricId.newId("tink_aggregation_supplemental_information_requests_timed_out");
+        public static final MetricId error =
+                MetricId.newId("tink_aggregation_supplemental_information_requests_error");
+        private static final List<Integer> buckets =
+                Arrays.asList(0, 10, 20, 30, 40, 50, 60, 80, 100, 120);
+
+        public static void inc(MetricRegistry registry, MetricId metricId, String clusterId) {
+            MetricId metricIdWithLabel = metricId.label(CLUSTER_LABEL, clusterId);
+            registry.meter(metricIdWithLabel).inc();
+        }
+
+        public static void observe(
+                MetricRegistry metricRegistry, MetricId histogram, long duration) {
+
+            metricRegistry.histogram(histogram, buckets).update(duration);
+        }
+    }
     // Cached accounts have not been sent to system side yet.
     protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     // Updated accounts have been sent to System side and has been updated with their stored Tink Id
@@ -240,6 +272,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 new DistributedBarrier(
                         coordinationClient,
                         BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, key));
+        SupplementalInformationMetrics.inc(
+                getMetricRegistry(), SupplementalInformationMetrics.attempts, getClusterId());
+        Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             // Reset barrier.
             lock.removeBarrier();
@@ -254,24 +289,43 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
                 if (Objects.isNull(supplementalInformation)
                         || Objects.equals(supplementalInformation, "null")) {
+                    SupplementalInformationMetrics.inc(
+                            getMetricRegistry(),
+                            SupplementalInformationMetrics.cancelled,
+                            getClusterId());
                     log.info(
                             "Supplemental information request was cancelled by client (returned null)");
                     return Optional.empty();
                 }
                 log.info("Supplemental information response (non-null) has been received");
+                SupplementalInformationMetrics.inc(
+                        getMetricRegistry(),
+                        SupplementalInformationMetrics.finished,
+                        getClusterId());
                 return Optional.of(supplementalInformation);
             } else {
                 log.info("Supplemental information request timed out");
+                SupplementalInformationMetrics.inc(
+                        getMetricRegistry(),
+                        SupplementalInformationMetrics.timedOut,
+                        getClusterId());
                 // Did not get lock, release anyways and return.
                 lock.removeBarrier();
             }
 
         } catch (Exception e) {
             log.error("Caught exception while waiting for supplemental information", e);
+            SupplementalInformationMetrics.inc(
+                    getMetricRegistry(), SupplementalInformationMetrics.error, getClusterId());
         } finally {
             // Always clean up the supplemental information
             Credentials credentials = request.getCredentials();
             credentials.setSupplementalInformation(null);
+            stopwatch.stop();
+            SupplementalInformationMetrics.observe(
+                    getMetricRegistry(),
+                    SupplementalInformationMetrics.duration,
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS) / 1000);
         }
         log.info("Supplemental information (empty) will be returned");
         return Optional.empty();
