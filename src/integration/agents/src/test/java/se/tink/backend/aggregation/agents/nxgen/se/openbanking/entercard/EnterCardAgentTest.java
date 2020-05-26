@@ -48,4 +48,9 @@ public class EnterCardAgentTest {
     public void testMoreGolf() throws Exception {
         createTestAgent("se-moregolfmastercard-ob").testRefresh();
     }
+
+    @Test
+    public void testMervarde() throws Exception {
+        createTestAgent("se-mervardemastercard-ob").testRefresh();
+    }
 }
