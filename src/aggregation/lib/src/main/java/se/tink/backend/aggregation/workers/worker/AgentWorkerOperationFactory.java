@@ -89,8 +89,13 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerOperationFactory {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerOperationFactory.class);
-    private static final ImmutableList<String> CLUSTER_NESTON =
-            ImmutableList.of("neston-production", "neston-staging", "neston-preprod");
+    private static final ImmutableList<String> CLUSTERS_WITH_OPT_IN_BUG_FIXED =
+            ImmutableList.of(
+                    "neston-production",
+                    "neston-staging",
+                    "neston-preprod",
+                    "kerry-production",
+                    "kerry-staging");
 
     private final CacheClient cacheClient;
     private final CryptoConfigurationDao cryptoConfigurationDao;
@@ -1118,12 +1123,12 @@ public class AgentWorkerOperationFactory {
                         loginAgentEventProducer));
 
         // Having this status transition here is a bug. It should be removed after validating SEB
-        // and KBC implementations not relying on this bug. We've put a deadline internally
+        // implementation not relying on this bug. We've put a deadline internally
         // for 2020-06-02. Discussion and Decision in this thread:
         // https://tink.slack.com/archives/CS4BJQJBV/p1589784587001700
         // Reverting the commit where this comment and condition is being introduced is the fix.
         // Comment written 2020-05-19
-        if (!CLUSTER_NESTON.contains(clientInfo.getClusterId())) {
+        if (!CLUSTERS_WITH_OPT_IN_BUG_FIXED.contains(clientInfo.getClusterId())) {
             commands.add(
                     new SetCredentialsStatusAgentWorkerCommand(
                             context, CredentialsStatus.UPDATING));
@@ -1177,13 +1182,13 @@ public class AgentWorkerOperationFactory {
                                 controllerWrapper));
 
                 // NOT having this status transition here is a bug. It should be removed after
-                // validating SEB and KBC implementations not relying on this bug. We've
+                // validating SEB implementation not relying on this bug. We've
                 // put a deadline internally for 2020-06-02
                 // Discussion and Decision in this thread:
                 // https://tink.slack.com/archives/CS4BJQJBV/p1589784587001700
                 // Reverting the commit where this comment and condition is being introduced is the
                 // fix. Comment written 2020-05-19
-                if (CLUSTER_NESTON.contains(clientInfo.getClusterId())) {
+                if (CLUSTERS_WITH_OPT_IN_BUG_FIXED.contains(clientInfo.getClusterId())) {
                     commands.add(
                             new SetCredentialsStatusAgentWorkerCommand(
                                     context, CredentialsStatus.UPDATING));
