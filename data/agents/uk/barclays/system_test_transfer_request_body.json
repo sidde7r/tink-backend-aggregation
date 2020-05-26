@@ -59,7 +59,7 @@
         "transactional": true,
         "type": "BANK",
         "currency": "GBP",
-        "market": "UK"
+        "market": "GB"
     },
     "user": {
         "flags": [],

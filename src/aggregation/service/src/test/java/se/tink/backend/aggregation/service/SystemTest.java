@@ -8,6 +8,7 @@ import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseIde
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.parseTransactions;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForAllCallbacksForAnEndpoint;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalCredentialsUpdateStatusUntilFlowEnds;
+import static se.tink.backend.aggregation.service.utils.SystemTestUtils.pollForFinalSignableOperation;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.readRequestBodyFromFile;
 import static se.tink.backend.aggregation.service.utils.SystemTestUtils.resetFakeAggregationController;
 
@@ -179,13 +180,13 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForAuthenticateEndpoint);
 
-        Optional<String> finalStatusForCredentials =
+        String finalStatusForCredentials =
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         fakeAggregationControllerEndpoint(), 50, 1);
 
         // then
         Assertions.assertThat(authenticateEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).hasValue("UPDATED");
+        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
     }
 
     @Test
@@ -266,13 +267,13 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForAuthenticateEndpoint);
 
-        Optional<String> finalStatusForCredentials =
+        String finalStatusForCredentials =
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         fakeAggregationControllerEndpoint(), 50, 1);
 
         // then
         Assertions.assertThat(authenticateEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).hasValue("UPDATED");
+        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
     }
 
     @Test
@@ -343,7 +344,7 @@ public class SystemTest {
                                 aggregationHost, aggregationPort),
                         requestBodyForTransferEndpoint);
 
-        Optional<String> finalStatusForCredentials =
+        String finalStatusForCredentials =
                 pollForFinalCredentialsUpdateStatusUntilFlowEnds(
                         fakeAggregationControllerEndpoint(), 50, 1);
 
@@ -353,11 +354,16 @@ public class SystemTest {
         JsonNode lastCallbackForCredentials =
                 credentialsCallbacks.get(credentialsCallbacks.size() - 1);
 
+        JsonNode lastCallbackForSignableOperation =
+                pollForFinalSignableOperation(fakeAggregationControllerEndpoint(), 50, 1);
+
         // then
         Assertions.assertThat(transferEndpointCallResult.getStatusCodeValue()).isEqualTo(204);
-        Assertions.assertThat(finalStatusForCredentials).hasValue("UPDATED");
+        Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
         Assertions.assertThat(lastCallbackForCredentials.get("requestType").asText())
                 .isEqualTo("TRANSFER");
+        Assertions.assertThat(lastCallbackForSignableOperation.get("status").asText())
+                .isEqualTo("EXECUTED");
     }
 
     private String fakeAggregationControllerEndpoint() {

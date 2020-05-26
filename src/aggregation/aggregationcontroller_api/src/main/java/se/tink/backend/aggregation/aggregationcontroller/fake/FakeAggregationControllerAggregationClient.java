@@ -173,6 +173,7 @@ public class FakeAggregationControllerAggregationClient
     @Override
     public Response updateSignableOperation(
             HostConfiguration hostConfiguration, SignableOperation signableOperation) {
+        callFakeAggregationController("updateSignableOperation", signableOperation);
         return Response.ok().build();
     }
 

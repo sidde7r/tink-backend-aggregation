@@ -34,6 +34,8 @@ public class SystemTestUtils {
     private static Set<String> finalCredentialsStatus =
             ImmutableSet.of("TEMPORARY_ERROR", "AUTHENTICATION_ERROR", "UPDATED");
 
+    private static Set<String> finalSignableOperationStatus = ImmutableSet.of("EXECUTED", "FAILED");
+
     public static ResponseEntity<String> makePostRequest(String url, Object requestBody)
             throws Exception {
 
@@ -104,7 +106,7 @@ public class SystemTestUtils {
         return Optional.of(pushedData.get(endPoint));
     }
 
-    public static Optional<String> pollForFinalCredentialsUpdateStatusUntilFlowEnds(
+    public static String pollForFinalCredentialsUpdateStatusUntilFlowEnds(
             String url, int retryAmount, int sleepSeconds) throws Exception {
 
         for (int i = 0; i < retryAmount; i++) {
@@ -127,7 +129,35 @@ public class SystemTestUtils {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
-            return Optional.of(credentialsStatus);
+            return credentialsStatus;
+        }
+        throw new TimeoutException("Timeout for polling attempt");
+    }
+
+    public static JsonNode pollForFinalSignableOperation(
+            String url, int retryAmount, int sleepSeconds) throws Exception {
+
+        for (int i = 0; i < retryAmount; i++) {
+            Optional<List<String>> updateSignableOperationCallback =
+                    fetchCallbacksForEndpoint(url, "updateSignableOperation");
+
+            if (!updateSignableOperationCallback.isPresent()) {
+                Uninterruptibles.sleepUninterruptibly(sleepSeconds, TimeUnit.SECONDS);
+                continue;
+            }
+
+            List<String> signableOperationUpdateCallbacks = updateSignableOperationCallback.get();
+            JsonNode latestSignableOperationCallback =
+                    mapper.readTree(
+                            signableOperationUpdateCallbacks.get(
+                                    signableOperationUpdateCallbacks.size() - 1));
+            String signableOperationStatus = latestSignableOperationCallback.get("status").asText();
+
+            if (!finalSignableOperationStatus.contains(signableOperationStatus)) {
+                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+                continue;
+            }
+            return latestSignableOperationCallback;
         }
         throw new TimeoutException("Timeout for polling attempt");
     }
