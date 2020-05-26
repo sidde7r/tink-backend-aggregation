@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.ConstantValueHeaders;
@@ -17,6 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.InitializationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.KeyExchangeRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.KeyExchangeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
@@ -126,6 +130,25 @@ public class AmericanExpressV62ApiClient {
                 .header(Headers.CUPCAKE, sessionStorage.get(Tags.CUPCAKE))
                 .header(Headers.GATEKEEPER, sessionStorage.get(Tags.GATEKEEPER))
                 .header(Headers.AUTHORIZATION, sessionStorage.get(Tags.AUTHORIZATION));
+    }
+
+    public KeyExchangeResponse keyExchange(KeyExchangeRequest keyExchangeRequest) {
+        return client.request(AmericanExpressV62Constants.KEY_EXCHANGE_URL)
+                .header(
+                        Headers.TRACKING_ID,
+                        UUID.randomUUID().toString().replaceAll("-", "").toUpperCase())
+                .accept(MediaType.WILDCARD_TYPE)
+                .header(
+                        HttpHeaders.ACCEPT_ENCODING,
+                        ConstantValueHeaders.ACCEPT_ENCODING.getValue())
+                .header(
+                        HttpHeaders.ACCEPT_LANGUAGE,
+                        ConstantValueHeaders.ACCEPT_LANGUAGE.getValue())
+                .header(HttpHeaders.CONTENT_TYPE, ConstantValueHeaders.CONTENT_TYPE_JSON.getValue())
+                .header(Headers.APP_BLOCK, HeadersValue.APP_BLOCK)
+                .header(HttpHeaders.USER_AGENT, config.getUserAgent())
+                .header(Headers.CLIENT_ID, HeadersValue.CLIENT_ID)
+                .post(KeyExchangeResponse.class, keyExchangeRequest);
     }
 
     // Purpose of this api call is to retrieve a cookie named "SaneId"

@@ -9,6 +9,8 @@ public class AmericanExpressV62Constants {
     }
 
     public static final String BASE_API = "https://global.americanexpress.com";
+    public static final String KEY_EXCHANGE_URL =
+            "https://apigateway.americanexpress.com/payments/digital/v1/trust/device/keys";
     public static final String NOT_APPLICABLE = "n/a";
     public static final String DASH = "-";
     public static final String NUMBER_REGEX = "[^0-9,.]";
@@ -97,6 +99,9 @@ public class AmericanExpressV62Constants {
         public static final String AUTHORIZATION = "authorization";
         public static final String DEVICE_TIME = "x-axp-device-time";
         public static final String USER_AGENT = "user-agent";
+        public static final String TRACKING_ID = "tracking_id";
+        public static final String APP_BLOCK = "check_app_block";
+        public static final String CLIENT_ID = "client_id";
     }
 
     public static class HeadersValue {
@@ -105,6 +110,11 @@ public class AmericanExpressV62Constants {
         public static final String COMMIT_HASH_V30 = "bb326a4ecd7";
         public static final String START_DATE_V29 = "19/12/31 00:00:00";
         public static final String START_DATE_V30 = "20/01/01 00:00:00";
+        public static final String DEVICE_TYPE = "Phone";
+        public static final String CLIENT_VERSION = "1.0";
+        public static final String APP_BLOCK =
+                "com.americanexpress.mobilepayments.ios.paymentframework:1.0";
+        public static final String CLIENT_ID = "amexpayiospf";
     }
 
     public static class RequestValue {
@@ -136,6 +146,13 @@ public class AmericanExpressV62Constants {
         public static final String CLIENT_TYPE_VALUE = "iPhone";
     }
 
+    public static class CryptoKeys {
+        public static final String RSA_PUBLIC_KEY =
+                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuRK3RZ0A/GvvLFiGSCBhDKa4AVjwVIHE/rSAAaFLPNWfdEmS5FmiidDQpLXOHkHD9aAMzPKWRd5x1RmOKmKE3H9nmFaZQnGf5s+OOqzypnuckmr88mMRo+sa3HtyamfE7YnLZgUfaG35/nxc7cnMVRuZn9/SApKaGwRnwRThR2OW4c4YB2xXjCAsM5x4wtfXpXfExQFd8hWAWPpvxWIWhh4Tos2FSXWGYYm5FDk3oVOJebTV5sVBSH5avoMmz30lQ4KgrRBU0uLWBpwgivh+zXEbl6JMp5M5OYsEqjb3gYnBjDfyHVgFVBuMg+Dp93xI7LmmvsptxlyG2RoksrSlfQIDAQAB";
+        public static final String ZERO_IV_BASE64 = "AAAAAAAAAAAAAAAAAAAAAA==";
+        public static final String HMAC_SALT_BASE64 = "AAAAAAAAA6A=";
+    }
+
     public static class Fetcher {
         public static final int START_BILLING_INDEX = 0;
         // At least try 5 responses to fetch transactions
@@ -144,6 +161,8 @@ public class AmericanExpressV62Constants {
 
     public static class Storage {
         public static final String ALL_SUB_ACCOUNTS = "allSubAccounts";
+        public static final String RANDOM_HEX = "randomHex";
+        public static final String ENCRYPTED_KEYS = "encryptedKeys";
     }
 
     public static class StatusCode {
