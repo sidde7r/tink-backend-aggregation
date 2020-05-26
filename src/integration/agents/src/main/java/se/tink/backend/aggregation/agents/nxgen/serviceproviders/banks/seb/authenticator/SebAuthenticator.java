@@ -99,7 +99,7 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
 
     private void activateSession() throws AuthenticationException, AuthorizationException {
         try {
-            apiClient.initiateSession();
+            apiClient.initiateSession(this.ssn.substring(2));
         } catch (HttpResponseException e) {
             SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(this.ssn);
             if (!ssn.isValid()) {

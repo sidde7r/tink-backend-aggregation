@@ -70,8 +70,8 @@ public class SebApiClient {
                 .post(Response.class, request);
     }
 
-    public void initiateSession() throws HttpResponseException {
-        final Request request = new Request.Builder().withUserCredentials("").build();
+    public void initiateSession(String userId) throws HttpResponseException {
+        final Request request = new Request.Builder().withUserCredentials(userId).build();
         final Response response = post(SebConstants.Urls.INITIATE_SESSION, request);
 
         Preconditions.checkState(response.isValid());
