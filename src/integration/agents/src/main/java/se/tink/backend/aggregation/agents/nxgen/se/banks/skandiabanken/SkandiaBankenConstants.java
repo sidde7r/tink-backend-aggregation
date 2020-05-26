@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
-import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -14,7 +13,6 @@ import se.tink.libraries.transfer.enums.TransferType;
 
 public class SkandiaBankenConstants {
     public static final String CURRENCY = "SEK";
-    public static final String INTEGRATION_NAME = "skandiabanken";
 
     public static class Urls {
         public static final String BASE = "https://api.skandia.se";
@@ -149,7 +147,6 @@ public class SkandiaBankenConstants {
 
     public static class StorageKeys {
         public static final String INIT_ACCESS_TOKEN = "init_access_token";
-        public static final String BEARER_TOKEN = "bearer_token";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE_VERIFIER = "code_verifier";
         public static final String REQUEST_VER_TOKEN = "requestVerificationToken";
@@ -182,8 +179,6 @@ public class SkandiaBankenConstants {
                 "We're experiencing technical difficulties at the moment. Please try again or contact Customer services.";
         public static final String NOT_CUSTOMER =
                 "för att använda tjänsten behöver du bli kund hos oss.";
-        private static final ImmutableList<String> BANK_SIDE_FAILURES =
-                ImmutableList.of("connection reset", "connect timed out", "read timed out");
     }
 
     public static class PaymentStatus {

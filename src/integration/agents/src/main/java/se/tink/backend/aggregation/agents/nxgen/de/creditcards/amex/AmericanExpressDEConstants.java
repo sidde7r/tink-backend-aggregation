@@ -6,9 +6,6 @@ public final class AmericanExpressDEConstants {
         throw new AssertionError();
     }
 
-    public static final String MARKET = "DE";
-    public static final String PROVIDER_NAME = "de-americanexpress-password";
-
     public static class HeaderValues {
         public static final String APP_ID = "de.co.americanexpress.amexservice";
         public static final String USER_AGENT = "Amex%20DE/12 CFNetwork/978.0.7 Darwin/18.7.0";

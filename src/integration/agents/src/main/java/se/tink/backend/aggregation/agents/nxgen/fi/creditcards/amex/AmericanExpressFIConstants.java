@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.creditcards.amex;
 
 public final class AmericanExpressFIConstants {
 
-    public static final String MARKET = "FI";
-    public static final String PROVIDER_NAME = "fi-americanexpress-password";
-
     private AmericanExpressFIConstants() {
         throw new AssertionError();
     }

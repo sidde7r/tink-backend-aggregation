@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SocieteGeneraleConstants {
 
-    public static final String CURRENCY = "EUR";
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Paris");
     public static final String MARKET = "fr";
     public static final String PROVIDER_NAME = "fr-societegenerale-password";

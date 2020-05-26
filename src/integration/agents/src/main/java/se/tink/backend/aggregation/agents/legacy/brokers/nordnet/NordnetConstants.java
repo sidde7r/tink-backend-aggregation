@@ -56,7 +56,6 @@ public class NordnetConstants {
         static final String LOGIN_BANKID_PAGE_URL =
                 BASE_URL + "/api/2/authentication/eid/saml/request?eid_method=sbidAnother";
         static final String FETCH_TOKEN_URL = BASE_URL + "/oauth2/token";
-        static final String GET_ACCOUNTS_SUMMARY_URL = BASE_URL + "/api/2/accounts/summary";
         static final String GET_ACCOUNTS_URL = BASE_URL + "/api/2/accounts";
         static final String GET_ACCOUNTS_INFO_URL = BASE_URL + "/api/2/accounts/%s/info";
         static final String GET_POSITIONS_URL = BASE_URL + "/api/2/accounts/%s/positions";

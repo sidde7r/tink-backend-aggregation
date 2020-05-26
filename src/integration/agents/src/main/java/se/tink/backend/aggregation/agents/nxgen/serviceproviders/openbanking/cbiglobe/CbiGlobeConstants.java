@@ -13,7 +13,6 @@ public final class CbiGlobeConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String BALANCE_NOT_FOUND = "Balance cannot be found.";
         public static final String MAPPING =
                 "Cannot map payment status: %s to Tink payment status.";
@@ -88,22 +87,18 @@ public final class CbiGlobeConstants {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String BOTH = "both";
         public static final String BOOKED = "booked";
-        public static final String STATE = "state";
         public static final String PRODUCTION = "production";
     }
 
     public static class HeaderKeys {
-        public static final String AUTHORIZATION = "Authorization";
         public static final String ASPSP_CODE = "aspsp-code";
         public static final String ASPSP_PRODUCT_CODE = "aspsp-product-code";
-        public static final String PSU_ID = "psu-id";
         public static final String DATE = "date";
         public static final String X_REQUEST_ID = "x-request-id";
         public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
         public static final String TPP_REDIRECT_PREFERRED = "tpp-redirect-preferred";
         public static final String TPP_NOK_REDIRECT_URI = "tpp-nok-redirect-uri";
         public static final String CONSENT_ID = "consent-id";
-        public static final String PSU_ID_TYPE = "psu-id-type";
         public static final String PSU_IP_ADDRESS = "psu-ip-address";
         public static final String OPERATION_NAME = "operation-name";
         public static final String CODE = "code";
@@ -140,13 +135,7 @@ public final class CbiGlobeConstants {
         public static final String VERIFIED = "VERIFIED";
     }
 
-    public static class SCAStatus {
-        public static final String INITIATED = "INITIATED";
-    }
-
     public static class PaymentStep {
-        public static final String IN_PROGRESS_AUTHENTICATION_REQUIRED =
-                "IN_PROGRESS_AUTHENTICATION_REQUIRED";
         public static final String IN_PROGRESS = "IN_PROGRESS";
     }
 }

@@ -71,7 +71,6 @@ public class SebConstants {
         public static final String ACCOUNT_TYPE = "KONTO_TYP";
         public static final String CUSTOMER_NUMBER = "SEB_KUND_ID";
         public static final String MAX_ROWS = "MAX_ROWS";
-        public static final String ACCOUNT_NUMBER = "KONTO_NR";
         public static final String CREDIT_CARD_HANDLE = "BILL_UNIT_HDL";
         public static final String PENDING_TRANSACTIONS = "RESERVE_AMT_FL";
         public static final String INVESTMENT_DETAIL_HANDLE = "DETAIL_URL";
@@ -86,12 +85,7 @@ public class SebConstants {
 
     // ROR_TYP field in TransactionEntity
     public static class TransactionType {
-        public static final String OTHER = "1";
-        public static final String CARD_TRANSACTION = "2";
         public static final String FOREIGN_CARD_TRANSACTION = "5";
-        public static final String FOREIGN_WITHDRAWAL = "7";
-        // INVOICE_PAYMENT has BG, OCR
-        public static final String INVOICE_PAYMENT = "8";
     }
 
     public static class StorageKeys {
@@ -108,17 +102,10 @@ public class SebConstants {
         public static final int KYC_ERROR = 9200;
     }
 
-    public static class ErrorMessages {
-        public static final String UNKNOWN_BANKID_STATUS = "Unknown BankIdStatus (%s)";
-    }
-
     public enum UserMessage implements LocalizableEnum {
         MUST_AUTHORIZE_BANKID(
                 new LocalizableKey(
                         "The first time you use your mobile BankId you have to verify it with your Digipass. Login to the SEB-app with your mobile BankID to do this.")),
-        WRONG_BANKID(
-                new LocalizableKey(
-                        "Wrong BankID signature. Did you log in with the wrong personnummer?")),
         DO_NOT_SUPPORT_YOUTH(
                 new LocalizableKey(
                         "It looks like you have SEB Ung. Unfortunately we currently only support SEB's standard login.")),

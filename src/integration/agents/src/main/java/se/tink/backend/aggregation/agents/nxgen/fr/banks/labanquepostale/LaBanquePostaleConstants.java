@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -13,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public class LaBanquePostaleConstants {
 
     public static final String CURRENCY = "EUR";
-    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Paris");
     public static final String MARKET = "fr";
     public static final String PROVIDER_NAME = "fr-labanquepostale-password";
     public static final DateTimeFormatter DATE_FORMATTER =
@@ -108,8 +106,6 @@ public class LaBanquePostaleConstants {
         public static final String NO_NUMPAD_IMAGE = "Could not read numpad to image.";
         public static final String NO_NUMPAD_PARAMS = "Could not find numpad params in html doc.";
         public static final String UNKNOWN_ERROR = "Unknown error code %s was encountered.";
-        public static final String COULD_NOT_HANDLE_REQUEST =
-                "Server could not handle the request.";
         public static final String WRONG_DIGIT_COUNT =
                 String.format(
                         "Wrong number of keys found. Expected: %s", AuthConfig.PASSWORD_LENGTH);
@@ -118,7 +114,6 @@ public class LaBanquePostaleConstants {
     public static class ErrorCodes {
 
         public static final String INCORRECT_CREDENTIALS = "0x132120c8";
-        public static final String COULD_NOT_HANDLE_REQUEST = "0x13212070";
     }
 
     public static class Logging {

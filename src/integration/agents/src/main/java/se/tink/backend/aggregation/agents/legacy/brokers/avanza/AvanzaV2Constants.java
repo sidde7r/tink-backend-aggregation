@@ -48,11 +48,8 @@ public class AvanzaV2Constants {
         private static final String ACCOUNT = MOBILE + "/account";
         private static final String TRANSACTIONS = ACCOUNT + "/transactions";
 
-        public static final String LOGOUT = AUTH + "/sessions/%s";
         public static final String BANK_ID_INIT = AUTH + "/sessions/bankid";
         public static final String BANK_ID_COLLECT = AUTH + "/sessions/bankid/%s";
-        public static final String BANK_ID_COMPLETE =
-                AUTH + "/sessions/bankid/%s/%s?maxInactiveMinutes=60";
 
         public static final String ACCOUNTS_OVERVIEW = ACCOUNT + "/overview";
         public static final String ACCOUNT_DETAILS = ACCOUNT + "/%s/overview";

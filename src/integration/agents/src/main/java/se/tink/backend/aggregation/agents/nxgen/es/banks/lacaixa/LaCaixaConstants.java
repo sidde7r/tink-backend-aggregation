@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -112,7 +111,6 @@ public class LaCaixaConstants {
         public static final String LIQUIDATION_FILTER = "S";
         public static final String ZERO_BALANCE_CONTRACTS = "N";
         public static final String GLOBAL_POSITION_TYPE_P = "P"; // only la caixa engagements
-        public static final String GLOBAL_POSITION_TYPE_A = "A"; // la caixa and imagin engagemants
     }
 
     public static class AuthenticationParams {
@@ -142,10 +140,6 @@ public class LaCaixaConstants {
         public static final String ENROLMENT_CODE = "enrolmentCode";
     }
 
-    public static class StorageKeys {
-        public static final String INSTALLATION_ID = "installationId";
-    }
-
     public static class StatusCodes {
         public static final int INCORRECT_USERNAME_PASSWORD = 409; // Conflict
     }
@@ -159,23 +153,7 @@ public class LaCaixaConstants {
         public static final String SECOND_SUR_NAME = "linkSegape";
     }
 
-    public static class TransactionDescriptions {
-        public static final String TRANSFER = "TRANSFER";
-    }
-
-    public static class LogTags {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("lacaixa_unknown-accountype");
-        public static final LogTag UNKNOWN_LOAN_CATEGORY =
-                LogTag.from("lacaixa_unknown_loan_category");
-    }
-
-    public static class Sign {
-        public static final String PLUS = "+";
-        public static final String MINUS = "-";
-    }
-
     public static class LiquidationSimulation {
         public static final String TRUE = "S";
-        public static final String FALSE = "N";
     }
 }

@@ -6,8 +6,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public final class RedsysConstants {
 
-    public static final String INTEGRATION_NAME = "redsys";
-
     // Some banks will fail at certain times when using 90 days
     public static final int DEFAULT_REFRESH_DAYS = 89;
 
@@ -26,7 +24,6 @@ public final class RedsysConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
     public static class Urls {
@@ -40,7 +37,6 @@ public final class RedsysConstants {
         public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
         public static final String BALANCES = "/v1/accounts/%s/balances";
         public static final String CREATE_PAYMENT = "/v1/payments/%s";
-        public static final String SVA_CREATE_PAYMENT = "/v1/sva/payments/%s";
         public static final String GET_PAYMENT = "/v1/payments/%s/%s";
         public static final String PAYMENT_STATUS = "/v1/payments/%s/%s/status";
         public static final String PAYMENT_CANCEL = "/v1/payments/%s/%s";
@@ -52,9 +48,6 @@ public final class RedsysConstants {
         public static final String CONSENT_VALID_FROM = "consentValidFrom";
         public static final String SCA_REDIRECT = "scaRedirect";
         public static final String SCA_SUPPLEMENTAL_KEY = "scaSupplementalKey";
-        public static final String TRANSACTIONS_URL = "transactionsUrl";
-        public static final String BALANCES_URL = "balancesUrl";
-        public static final String ACCOUNT_REQUEST_ID = "requestId:";
         public static final String FETCHED_TRANSACTIONS = "fetchedTxUntil:";
     }
 
@@ -71,7 +64,6 @@ public final class RedsysConstants {
         public static final String OK = "ok";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
-        public static final String ENTRY_REFERENCE_FROM = "entryReferenceFrom";
     }
 
     public static class QueryValues {
@@ -85,7 +77,6 @@ public final class RedsysConstants {
         public static final class BookingStatus {
             public static final String BOOKED = "booked";
             public static final String PENDING = "pending";
-            public static final String BOTH = "both";
         }
     }
 
@@ -134,7 +125,6 @@ public final class RedsysConstants {
 
     public static class Signature {
         public static final String DIGEST_PREFIX = "SHA-256=";
-        public static final String KEY_ALGORITHM = "RSA";
         public static final String KEY_ID_FORMAT = "SN=%d,CA=%s";
         public static final String FORMAT =
                 "keyId=\"%s\",algorithm=\"SHA-256\",headers=\"%s\",signature=\"%s\"";
@@ -142,26 +132,7 @@ public final class RedsysConstants {
 
     public static class Links {
         public static final String SCA_REDIRECT = "scaRedirect";
-        public static final String SCA_STATUS = "scaStatus";
-        public static final String REDIRECT = "redirect";
-        public static final String STATUS = "status";
-        public static final String SELF = "self";
-        public static final String OAUTH = "oAuth";
-        public static final String BALANCES = "balances";
-        public static final String TRANSACTIONS = "transactions";
-        public static final String VIEW_ACCOUNT = "viewAccount";
-        public static final String VIEW_BALANCES = "viewBalances";
-        public static final String VIEW_TRANSACTIONS = "viewTransactions";
-        public static final String FIRST = "first";
         public static final String NEXT = "next";
-        public static final String PREVIOUS = "previous";
-        public static final String LAST = "last";
-        public static final String DOWNLOAD = "download";
-    }
-
-    public static class AccountType {
-        public static final String PERSONAL = "PRIV";
-        public static final String BUSINESS = "ORGA";
     }
 
     public static class ErrorCodes {
@@ -178,7 +149,5 @@ public final class RedsysConstants {
         public static final String EXPECTED = "expected";
         public static final String OPENING_BOOKED = "openingBooked";
         public static final String INTERIM_AVAILABLE = "interimAvailable";
-        public static final String INTERIM_BOOKED = "interimBooked";
-        public static final String FORWARD_AVAILABLE = "forwardAvailable";
     }
 }

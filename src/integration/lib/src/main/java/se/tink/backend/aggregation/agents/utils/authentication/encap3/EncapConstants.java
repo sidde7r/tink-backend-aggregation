@@ -15,7 +15,6 @@ public class EncapConstants {
         public static final String B64_AUTHENTICATION_KEY = "b64AuthenticationKey";
         public static final String B64_AUTHENTICATION_KEY_WITHOUT_PIN =
                 "b64AuthenticationKeyWithoutPin";
-        public static final String B64_TOTP_KEY = "b64TotpKey";
         public static final String B64_SALT_HASH = "saltHash";
         public static final String SIGNING_KEY_PHRASE = "signingKeyPhrase";
         public static final String REGISTRATION_ID = "registrationId";

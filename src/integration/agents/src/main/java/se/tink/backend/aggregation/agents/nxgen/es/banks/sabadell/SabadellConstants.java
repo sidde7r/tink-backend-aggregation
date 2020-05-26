@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class SabadellConstants {
@@ -96,7 +95,6 @@ public final class SabadellConstants {
 
     public static final class Authentication {
         public static final String TYPE_SCA = "indSca";
-        public static final String SIGNATURE_TYPE_TPC = "tpc";
     }
 
     public static final class FetcherRequest {
@@ -131,18 +129,6 @@ public final class SabadellConstants {
         public static final String SERVICING_FUNDS_ERROR = "es_sabadell_servicing_funds";
         public static final String PENSION_PLANS_ERROR = "es_sabadell_pension_plans";
         public static final String SAVINGS_ERROR = "es_sabadell_savings";
-        public static final LogTag CREDIT_CARD_TRANSACTIONS =
-                LogTag.from("es_sabadell_credit_card_transactions");
-        public static final LogTag LOANS = LogTag.from("es_sabadell_loans");
-        public static final LogTag DEPOSITS = LogTag.from("es_sabadell_deposits");
-        public static final LogTag SERVICING_FUNDS = LogTag.from("es_sabadell_servicing_funds");
-        public static final LogTag PENSION_PLANS = LogTag.from("es_sabadell_pension_plans");
-        public static final LogTag SAVINGS = LogTag.from("es_sabadell_savings");
-        public static final LogTag SERVICING_FUNDS_ACCOUNT_DETAILS =
-                LogTag.from("es_sabadell_servicing_funds_account_details");
-        public static final LogTag SAVINGS_PLAN_DETAILS =
-                LogTag.from("es_sabadell_savings_plan_details");
-        public static final LogTag LOAN_DETAILS = LogTag.from("es_sabadell_loan_details");
     }
 
     public static final class AccountTypes {
@@ -156,11 +142,6 @@ public final class SabadellConstants {
         public static final String CREDIT_CARD_SIN = "sin";
         public static final String CURRENCY_ACCOUNT = "CUENTA EN DIVISA";
         public static final String BUSINESS_EXPANSION_ACCOUNT = "CUENTA EXPANSIÓN NEGOCIOS";
-    }
-
-    public static final class IdentityTypes {
-
-        public static final String NIF = "01";
     }
 
     public static final class Constants {

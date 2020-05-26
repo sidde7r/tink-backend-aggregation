@@ -5,8 +5,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public final class PayPalConstants {
 
-    public static final String INTEGRATION_NAME = "paypal";
-
     private PayPalConstants() {
         throw new AssertionError();
     }
@@ -15,7 +13,6 @@ public final class PayPalConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String EMAIL_NOT_FOUND = "No valid email found for the user.";
         public static final String MISSING_NEXT_PAGE_TOKEN =
                 "Next page token for transaction fetching is missing.";

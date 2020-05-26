@@ -5,15 +5,12 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class CommerzbankConstants {
 
-    public static final String APP_ID = "650ceace-3a27-4a39-881e-8e89c1bd1a5d";
-    public static final String MULTIPLE_SPACES = "  ";
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     public static final String TIMEZONE_CET = "CET";
     public static final String LOGIN_INFO_ENTITY = "LoginInfoEntity";
 
     public static class Urls {
         public static final String HOST = "https://app.commerzbank.de";
-        public static final String LOGIN = "/app/lp/v4/applogin";
         public static final String OVERVIEW = "/app/rest/v3/financeoverview";
         public static final String TRANSACTIONS = "/app/rest/transactionoverview";
         public static final String LOGOUT = "/app/lp/v3/logout";
@@ -78,12 +75,10 @@ public class CommerzbankConstants {
                         Values.MOB_BKNI_IOS,
                         AppRegistration.DEVICE_DESCRIPTION,
                         "iOS " + Values.OS_VERSION);
-        public static final String ID = "";
     }
 
     public static class ACCOUNTS {
         public static final String SAVINGS_ACCOUNT = "Sparkonto";
-        public static final String CREDIT_CARD = "Kreditkarten";
     }
 
     public static class DisplayCategoryIndex {

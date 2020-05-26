@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionE
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class RedirectAuthenticationDemoAgentConstants {
-    public static final String DEMO_PROVIDER_SUCCESS_CASE_REGEX = ".*-test-open-banking-redirect";
     public static final String DEMO_PROVIDER_FAILURE_CASE_REGEX =
             ".*-test-open-banking-redirect-failed";
     public static final String DEMO_PROVIDER_CANCEL_CASE_REGEX =

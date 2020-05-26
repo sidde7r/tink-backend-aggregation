@@ -32,7 +32,6 @@ public final class RaiffeisenConstants {
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "No token in storage.";
         public static final String MAPPING =
                 "Cannot map Ica payment status: %s to Tink payment status.";
@@ -52,7 +51,6 @@ public final class RaiffeisenConstants {
         public static final URL INITIATE_PAYMENT = new URL(BASE_API_URL + Endpoints.INITIATION);
         public static final URL GET_PAYMENT = new URL(BASE_API_URL + Endpoints.GET_PAYMENT);
         public static final URL CONSENT_STATUS = new URL(BASE_API_URL + Endpoints.CONSENT_STATUS);
-        public static final URL BALANCES = new URL(BASE_API_URL + Endpoints.BALANCES);
     }
 
     public static class Endpoints {
@@ -67,7 +65,6 @@ public final class RaiffeisenConstants {
         private static final String GET_PAYMENT =
                 "/psd2-xs2a/rest/v1/payments/sepa-credit-transfers/{paymentId}";
         private static final String CONSENT_STATUS = CONSENTS + "/{consent-id}/status";
-        private static final String BALANCES = ACCOUNTS + "/{account-id}/balances";
     }
 
     public static class StorageKeys {
@@ -148,7 +145,6 @@ public final class RaiffeisenConstants {
     public static class IdTags {
 
         public static final String PAYMENT_ID = "paymentId";
-        public static final String CONSENT_ID = "consentId";
     }
 
     public static class StatusValues {

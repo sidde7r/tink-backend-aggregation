@@ -21,7 +21,6 @@ public final class ArgentaConstants {
         public static final URL CONSENT = new URL(BASE_API_URL + Endpoints.CONSENT);
         public static final URL TOKEN = new URL(BASE_API_URL + Endpoints.TOKEN);
         public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
-        public static final URL BALANCES = new URL(BASE_API_URL + Endpoints.BALANCES);
         public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
     }
 
@@ -31,7 +30,6 @@ public final class ArgentaConstants {
         public static final String TOKEN = "/psd2/v1/berlingroup-auth/token";
 
         public static final String ACCOUNTS = "/berlingroup/v1/accounts";
-        public static final String BALANCES = "/berlingroup/v1/accounts/{accountId}/balances";
         public static final String TRANSACTIONS =
                 "/berlingroup/v1/accounts/{accountId}/transactions";
     }

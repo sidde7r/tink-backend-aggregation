@@ -1,14 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank;
 
-import java.time.ZoneId;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public abstract class OpenbankConstants {
-    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Madrid");
-    public static final String PROVIDER_NAME = "es-openbank-password";
 
     public static final String USERNAME_TYPE = "username-type";
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
@@ -20,7 +16,6 @@ public abstract class OpenbankConstants {
                     .build();
 
     public static class Codes {
-        public static final String MARKET_CODE = "es";
         public static final String LANGUAGE_CODE = "E";
         public static final String CURRENCY_CODE = "EUR";
         public static final String PROCEDURE_CODE = "BE";
@@ -42,7 +37,6 @@ public abstract class OpenbankConstants {
 
         static final String USER_DATA_PATH = "/posicion-global-total";
         static final String ACCOUNT_TRANSACTIONS_PATH = "/my-money/cuentas/movimientos";
-        static final String TRANSACTION_DETAILS_PATH = "/cuentas/movimientos/detalles";
         static final String CARD_TRANSACTIONS_PATH = "/my-cards/tarjetas/movimientos-categoria";
         static final String IDENTITY_PATH = "/user/profile";
     }
@@ -57,8 +51,6 @@ public abstract class OpenbankConstants {
         public static final URL USER_DATA = new URL(HOST + ApiService.USER_DATA_PATH);
         public static final URL ACCOUNT_TRANSACTIONS =
                 new URL(HOST + ApiService.ACCOUNT_TRANSACTIONS_PATH);
-        public static final URL TRANSACTION_DETAILS =
-                new URL(HOST + ApiService.TRANSACTION_DETAILS_PATH);
         public static final URL CARD_TRANSACTIONS =
                 new URL(HOST + ApiService.CARD_TRANSACTIONS_PATH);
         static final URL IDENTITY_URL = new URL(HOST + ApiService.IDENTITY_PATH);
@@ -75,8 +67,6 @@ public abstract class OpenbankConstants {
         public static final String PASSPORT = "P";
         public static final String OTHER_DOCUMENT = "I";
     }
-
-    public static class AccountType {}
 
     public static class Headers {
         static final String AUTH_TOKEN = "openBankAuthToken";
@@ -101,10 +91,5 @@ public abstract class OpenbankConstants {
         public static final String INVALID_LOGIN_USERNAME_TYPE = "NotNull";
         public static final String INCORRECT_CREDENTIALS = "bad.input.credentials.incorrect";
         public static final String NO_RECORDS_FOUND = "XX9511";
-    }
-
-    public static class LogTags {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
-                LogTag.from(PROVIDER_NAME + "-unknown-account-type");
     }
 }

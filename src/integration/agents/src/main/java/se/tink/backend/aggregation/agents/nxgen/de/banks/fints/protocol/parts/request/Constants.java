@@ -14,7 +14,6 @@ public class Constants {
             "1"; // To what area is encryption applied, 1 means SHM, so for that message only?
     public static final String COMPRESSION_NONE = "0";
 
-    public static final String PRODUCT_VERSION = "0.1";
     public static final String COUNTRY_CODE = "280";
     public static final String DEFAULT_BPD_VERSION = "0";
     public static final String DEFAULT_UPD_VERSION = "0";

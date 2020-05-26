@@ -16,9 +16,6 @@ public class BanquePopulaireConstants {
                 "Basic QlBfY3liZXJwbHVzLm1vYmlsZS5pb3NfUFJPRF8zLjIxOmYxNjVkY2E4LTUzMWMtNGFiOC04Y2U2LTg3YmFjNmYwNzM4Yg==";
 
         public static final String AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS";
-        public static final String AUTHENTICATION_LOCKED = "AUTHENTICATION_LOCKED";
-        public static final String AUTHENTICATION_CANCELLED = "AUTHENTICATION_CANCELED";
-        public static final String AUTHENTICATION_FAILED = "FAILED_AUTHENTICATION";
     }
 
     public static final class Fetcher {
@@ -96,12 +93,8 @@ public class BanquePopulaireConstants {
     }
 
     public static final class LogTags {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bp_unknown_account_type");
         public static final LogTag UNKNOWN_TRANSACTION_STATUS =
                 LogTag.from("bp_unknown_transaction_status");
-        public static final LogTag PAGINATION_RESPONSE = LogTag.from("bp_pagination_response");
-        public static final LogTag UNKNOWN_LOAN_TYPE = LogTag.from("bp_unknown_loantype");
-        public static final LogTag CREDIT_CARD = LogTag.from("bp_credit_card");
     }
 
     // this is a first attempt to type the different accounts

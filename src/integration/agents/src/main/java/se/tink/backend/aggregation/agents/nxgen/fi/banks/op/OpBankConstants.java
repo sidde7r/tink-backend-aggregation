@@ -14,10 +14,8 @@ public class OpBankConstants {
     public static final String AUTH_TOKEN_KEY = "f944972f20ea3de522f312d4a5baf0f9";
     public static final String AUTH_TOKEN_START = "F";
 
-    public static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final String LANGUAGE_CODE = "en";
     public static final String AUTH_TOKEN_PREFIX = "F";
-    public static final int ONE_WEEK_AGO_IN_DAYS = -7;
     public static final int KEYCARD_PIN_LENGTH = 4;
 
     public static final List<String> DEFAULT_CONFIGURATIONS =
@@ -26,9 +24,6 @@ public class OpBankConstants {
     public static final String DEFAULT_CONFIGURATION_NAME = "Tink";
 
     public static final String PARAM_ENCRYPTED_ACCOUNT_NUMBER = "ENCRYPTED_ACCOUNT_NUMBER";
-    public static final String PARAM_NAME_EXPIRY_DATE = "EXPIRY_DATE";
-    public static final String PARAM_NAME_CARD_NUMBER = "CARD_NUMBER";
-    public static final String QUERY_STRING_KEY_FIRST_PAGE = "firstPage";
     public static final String PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED = "AGREEMENT_NUMBER_ENCRYPTED";
     public static final String PARAM_NAME_PORTFOLIO_ID = "PORTFOLIO_ID";
 
@@ -76,7 +71,6 @@ public class OpBankConstants {
                                 + "/mobile/trading/assets/portfolio/{"
                                 + PARAM_NAME_PORTFOLIO_ID
                                 + "}");
-        public static final URL TRADING_FUNDS = new URL(BASE_URL + "/mobile/trading/funds");
         public static final URL CREDITS = new URL(BASE_URL + "/mobile/credits");
 
         public static final URL COLLATERAL_CREDITS_DETAILS =
@@ -107,15 +101,6 @@ public class OpBankConstants {
                                 + PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED
                                 + "}/CONTINUING_CREDIT/transactions");
         public static final URL CARDS = new URL(BASE_URL + "/mobile/cards");
-
-        public static final URL CARDS_DETAILS =
-                new URL(
-                        BASE_URL
-                                + "/mobile/cards/{"
-                                + PARAM_NAME_CARD_NUMBER
-                                + "}/details/{"
-                                + PARAM_NAME_EXPIRY_DATE
-                                + "}");
     }
 
     public static class Headers {
@@ -180,7 +165,6 @@ public class OpBankConstants {
         public static class Level {
             public static final String LOGGEDIN_WITH_LIGHTLOGIN = "VPT_LMA";
             public static final String LOGGEDIN = "VPT";
-            public static final String STRONGLY_AUTHENTICATED = "STRONGLY_AUTHENTICATED";
         }
     }
 
@@ -212,8 +196,6 @@ public class OpBankConstants {
         public static final LogTag INVESTMENT_LOGGING = LogTag.from("#opbank_investment_logging");
         public static final LogTag LOAN_LOGGING = LogTag.from("#opbank_loan_logging");
         public static final LogTag CREDIT_LOGGING = LogTag.from("#opbank_credit_logging");
-        public static final LogTag CREDIT_CARD_TRX_LOGGING_NEW =
-                LogTag.from("#opbank_creditcard_transactions_new");
         public static final LogTag CREDIT_CARD_TRX_LOGGING_OLD =
                 LogTag.from("#opbank_creditcard_transactions_old");
         public static final String CREDIT_CARD_TRX_FAILED = "#opbank_creditcard_fetching_failed";

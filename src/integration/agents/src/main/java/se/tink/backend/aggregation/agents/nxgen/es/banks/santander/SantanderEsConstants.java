@@ -72,8 +72,6 @@ public class SantanderEsConstants {
                     .build();
 
     public static final class Tags {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
-                LogTag.from("es_santander_unknown_account_type");
         public static final LogTag LOAN_ACCOUNT = LogTag.from("es_santander_loan");
         public static final LogTag INVESTMENT_ACCOUNT = LogTag.from("es_santander_investment");
     }

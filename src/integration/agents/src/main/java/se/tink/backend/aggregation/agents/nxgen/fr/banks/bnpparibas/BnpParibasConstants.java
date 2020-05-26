@@ -50,7 +50,6 @@ public class BnpParibasConstants {
         public static final String BRACKETS_HCE = "[HCE]";
         public static final String HCE = "HCE";
 
-        public static final String USER_AGENT = "MesComptes/127 CFNetwork/889.9 Darwin/17.2.0";
         public static final String IP_ADDRESS = "127.0.0.1";
 
         public static final String OS_NAME = "iOS";

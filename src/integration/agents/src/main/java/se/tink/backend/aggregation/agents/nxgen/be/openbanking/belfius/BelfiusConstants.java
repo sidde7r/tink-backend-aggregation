@@ -9,10 +9,6 @@ public final class BelfiusConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final int INTERNAL_SERVER_ERROR = 500;
     }
 
@@ -39,7 +35,6 @@ public final class BelfiusConstants {
         public static final String REQUEST_ID = "Request-ID";
         public static final String ACCEPT = "Accept";
         public static final String CLIENT_ID = "Client-ID";
-        public static final String AUTHORIZATION = "Authorization";
         public static final String REDIRECT_URI = "redirect-uri";
         public static final String CODE_CHALLENGE = "Code-Challenge";
         public static final String CODE_CHALLENGE_METHOD = "Code-Challenge-Method";
@@ -64,7 +59,6 @@ public final class BelfiusConstants {
 
     public static class HeaderValues {
         public static final String ACCEPT = "application/vnd.belfius.api+json; version=1";
-        public static final String AUTHORIZATION = "Bearer ";
         public static final String ACCEPT_LANGUAGE = "fr";
         public static final String CODE_CHALLENGE_TYPE = "S256";
     }

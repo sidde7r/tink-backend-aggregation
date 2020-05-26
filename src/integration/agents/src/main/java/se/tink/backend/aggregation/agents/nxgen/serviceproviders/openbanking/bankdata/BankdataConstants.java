@@ -2,23 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ba
 
 import java.util.HashMap;
 import java.util.Map;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util.TypePair;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public final class BankdataConstants {
-
-    public static final String INTEGRATION_NAME = "bankdata";
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "checkings")
-                    .put(AccountTypes.CHECKING, "savings")
-                    .build();
 
     public static final GenericTypeMapper<PaymentType, TypePair> PAYMENT_TYPE_MAPPER =
             GenericTypeMapper.<PaymentType, TypePair>genericBuilder()
@@ -34,8 +25,6 @@ public final class BankdataConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
-        public static final String UNSUPPORTED_PAYMENT_TYPE = "Unsupported payment type.";
     }
 
     public static final Map<PaymentType, String> TYPE_TO_DOMAIN_MAPPER = new HashMap<>();
@@ -72,8 +61,6 @@ public final class BankdataConstants {
         public static final String INITIAL_TOKEN = "INITIAL_TOKEN";
         public static final String CODE_VERIFIER = "CODE_VERIFIER";
         public static final String CONSENT_ID = "consentId";
-        public static final String IBAN = "IBAN";
-        public static final String CLIENT_ID = "CLIENT_ID";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
         public static final String STATE = "STATE";
@@ -103,8 +90,6 @@ public final class BankdataConstants {
         public static final String CODE = "code";
         public static final String CODE_CHALLENGE_METHOD = "S256";
         public static final String TRUE = "true";
-        public static final String BOOKED = "booked";
-        public static final String DATE_FROM = "2000-10-10";
         public static final String BOTH = "both";
     }
 
@@ -146,8 +131,6 @@ public final class BankdataConstants {
     }
 
     public static class PaymentRequests {
-        public static final String COUNTRY = "BH";
-        public static final String EUR = "EUR";
         public static final String IDENTIFICATION = "endToEndIdentification";
     }
 

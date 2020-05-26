@@ -100,7 +100,6 @@ public class EvoBancoConstants {
     }
 
     public static class Storage {
-        public static final String ACCESS_TOKEN = "access-token";
         public static final String USER_ID = "user-id";
         public static final String AGREEMENT_BE = "agreement-be";
         public static final String USER_BE = "user-be";
@@ -109,8 +108,6 @@ public class EvoBancoConstants {
         public static final String INTERNAL_ID_PE = "internal-id-pe";
         public static final String HOLDER_NAME = "holder-name";
         public static final String DEVICE_ID = "device-id";
-        public static final String USERNAME = "username";
-        public static final String PASSWORD = "password";
         public static final String USER_INFO = "user-info";
         public static final String CARD_STATE = "card-state";
     }
@@ -125,18 +122,6 @@ public class EvoBancoConstants {
                     .put(AccountTypes.CHECKING, "I#Cuenta Inteligente EVO", "I#Cuenta Inteligente")
                     .put(AccountTypes.SAVINGS, "I#Depósito")
                     .build();
-
-    public static final TypeMapper<String> CURRENCY_TYPE_MAPPER =
-            TypeMapper.<String>builder().put("978", "EUR").build();
-
-    public static class LogTags {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
-                LogTag.from("evobanco_unknown-accountype");
-        public static final LogTag UNEXPECTED_SESSION_EXCEPTION =
-                LogTag.from("evobanco_unexpected-session-exception");
-        public static final LogTag NO_TRANSACTIONS_FOUND =
-                LogTag.from("evobanco_no-transactions-found");
-    }
 
     public static class Constants {
         public static final String FIRST_SEQUENTIAL_NUMBER = "0000001";
@@ -156,6 +141,5 @@ public class EvoBancoConstants {
 
     public static class Tags {
         public static final LogTag INVESTMENTS_ERROR = LogTag.from("es_evobanco_investments_error");
-        public static final LogTag INVESTMENTS = LogTag.from("es_evobanco_investments");
     }
 }

@@ -61,7 +61,6 @@ public class ErsteBankConstants {
         public static final String TOKEN_ENTITY = "TOKEN_ENTITY";
         public static final String TRANSACTIONSURL = "ACCOUNT_URL";
         public static final String CREDITURL = "CREDIT_URL";
-        public static final String USERNAME = "USERNAME";
     }
 
     public static class PATTERN {

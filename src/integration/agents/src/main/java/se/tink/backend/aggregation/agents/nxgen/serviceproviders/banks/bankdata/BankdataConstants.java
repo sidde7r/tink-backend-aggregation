@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
-import java.nio.charset.Charset;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -11,8 +9,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BankdataConstants {
     public static final String MARKET_CURRENCY = "dkk";
-
-    public static final Charset CHARSET = Charsets.UTF_8;
 
     public static class Url {
         public static final String BASE_URL = "https://mobil.bankdata.dk/mobilbank/";
@@ -24,11 +20,6 @@ public class BankdataConstants {
                         "https://mobil.bankdata.dk/wps/portal/{"
                                 + UrlParam.BRANCH_NAME
                                 + "}/mobilnemid");
-        public static final URL NEMID_EXCHANGE =
-                new URL(
-                        "https://mobil.bankdata.dk/wps/portal/{"
-                                + UrlParam.BRANCH_NAME
-                                + "}/!ut/p/z1/04_Sj9CPykssy0xPLMnMz0vMAfIjo8ziPS1NTAw9DQw9LAycXAwcjd1M3SyC_YwM3M30w8EKgs2DXTzDPC0MDE1CHZ0C3EPNzIwMwEA_ihz9gb7GBqToN8ABHInUj0dBFH7jw_WjwErwhQBWBcheJGRJQW5oaGiEQaano6IiAHrmNso!/dz/d5/L2dBISEvZ0FBIS9nQSEh/p0/IZ7_79M422G0N82EB0QS3MJBS430G6=CZ6_I9441I01H80BD0A3F5F8SN20G6=LA0=Ejavax.portlet.action!login==/");
         public static final URL COMPLETE_ENROLL =
                 new URL("https://mobil.bankdata.dk/mobilbank/nemid/complete_enroll");
         public static final URL LOGIN_WITH_INSTALL_ID =
@@ -39,7 +30,6 @@ public class BankdataConstants {
         public static final URL PFM_TRANSACTIONS = new URL(BASE_URL + "pfm/transactions");
         public static final URL PFM_TRANSACTIONS_FUTURE =
                 new URL(BASE_URL + "pfm/transactions/future");
-        public static final URL CARDS = new URL(BASE_URL + "cards");
         public static final URL INVESTMENT_POOL_ACCOUNTS =
                 new URL(BASE_URL + "investment/poolaccounts");
         public static final URL DEPOSITS = new URL(BASE_URL + "deposits");
@@ -76,10 +66,6 @@ public class BankdataConstants {
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2ZnVkX28NfqZsWX8Xse1SaWiDZUkscBijKeabTOt2LxWqhDERkVJtYSglFJyDf0nVV+s41TvRNGTGYXBz4a6kvS9RpKY/KqfYl7zIIKI6cpI3IH17NMiEKvsMU6LpCpvhnb13iAknZAFwFohCYX/K18D6iBqxp2ZmqXEGQi30ncTtiVob4pdoiVo0WXEwSbC94haomW/WhMIPiFtl2tVIqmWwWLAXujjyBomUi2ZmwPEIA4MqPj6O09dnc8ArZpHBdbKdN2BFKsQOfD1Emw9bVxEi/zSLAeIGZDqr4sP0RytIm2iU8fz9cweS7gKh86V/tvxUSCyeHZtTiZo7nSTDwIDAQAB";
     }
 
-    public static class Storage {
-        public static final String NEMID_INSTALL_ID = "NEMID_INSTALL_ID";
-    }
-
     public static class Fetcher {
         public static final int START_PAGE = 0;
         public static final int ITEMS_PER_PAGE = 25;
@@ -114,12 +100,6 @@ public class BankdataConstants {
                             "Grundkonto",
                             "Forbrug")
                     .build();
-
-    public static class ErrorCodes {
-        public static final int ACCOUNT_NOT_ACTIVATED_IN_ONLINE_BANK = 109;
-        public static final int INCORRECT_CREDENTIALS = 112;
-        public static final int ACCOUNT_BLOCKED = 110;
-    }
 
     public static class TimeoutFilter {
         public static final int NUM_TIMEOUT_RETRIES = 3;

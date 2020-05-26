@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
 import java.util.Arrays;
 import java.util.List;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
@@ -31,7 +30,6 @@ public final class FiduciaConstants {
     }
 
     public static class StorageKeys {
-        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CONSENT_ID = "consent-id";
         public static final String STATE = "state";
         public static final String PSU_ID = "psu-id";
@@ -45,7 +43,6 @@ public final class FiduciaConstants {
         public static final String DIGEST = "digest";
         public static final String X_REQUEST_ID = "x-request-id";
         public static final String PSU_ID = "psu-id";
-        public static final String STATE = "state";
         public static final String ACCEPT = "accept";
         public static final String TPP_ID = "tpp-id";
         public static final String TPP_REDIRECT_URI = "tpp-redirect";
@@ -86,7 +83,6 @@ public final class FiduciaConstants {
         public static final String PSU_ID = "psu-id";
         public static final String EMPTY = "";
         public static final String SHA_256 = "SHA-256=";
-        public static final String TPP_REDIRECT_URI = "tpp-redirect-uri";
     }
 
     public static class SignatureValues {

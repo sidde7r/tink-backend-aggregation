@@ -45,12 +45,6 @@ public class CaisseEpargneConstants {
                 UNKNOWN_ACCOUNT_TYPE =
                         se.tink.backend.aggregation.agents.utils.log.LogTag.from(
                                 PROVIDER_NAME + "-unknown-account-type");
-        public static final se.tink.backend.aggregation.agents.utils.log.LogTag PARSE_FAILURE =
-                se.tink.backend.aggregation.agents.utils.log.LogTag.from(
-                        PROVIDER_NAME + "-parse-failure");
-        public static final se.tink.backend.aggregation.agents.utils.log.LogTag REQUEST_NOT_OK =
-                se.tink.backend.aggregation.agents.utils.log.LogTag.from(
-                        PROVIDER_NAME + "-request-nok");
     }
 
     public static class RequestValue {

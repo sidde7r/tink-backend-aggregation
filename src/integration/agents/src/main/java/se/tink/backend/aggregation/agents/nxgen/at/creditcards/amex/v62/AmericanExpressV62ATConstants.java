@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.at.creditcards.amex.v62;
 
 public final class AmericanExpressV62ATConstants {
 
-    public static final String MARKET = "AT";
-    public static final String PROVIDER_NAME = "at-americanexpress-password";
-
     private AmericanExpressV62ATConstants() {
         throw new AssertionError();
     }

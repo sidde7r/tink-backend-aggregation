@@ -6,12 +6,9 @@ public class HandelsbankenSEConstants {
 
     public static class CredentialKeys {
         public static final String SCOPE = "scope";
-        public static final String USERNAME = "username";
     }
 
     public static class Scope {
-        public static final String PIS = "PIS";
         public static final String AIS = "AIS";
-        public static final String BOTH = AIS + " " + PIS;
     }
 }

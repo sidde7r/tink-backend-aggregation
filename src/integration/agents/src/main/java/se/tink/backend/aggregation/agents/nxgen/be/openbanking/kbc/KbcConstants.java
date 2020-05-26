@@ -61,10 +61,6 @@ public final class KbcConstants {
         public static final String ACCOUNT_ID = "account-id";
     }
 
-    public static class HeaderKeys {
-        public static final String BEARER = "Bearer ";
-    }
-
     public static class StorageKeys {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String STATE = "STATE";

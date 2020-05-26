@@ -23,7 +23,6 @@ public final class VolksbankConstants {
         static final String MAIN = BASE + "main.xhtml";
         static final String GENERATE_BINDING = BASE + "geraetebindung.xhtml";
         static final String DASHBOARD = BASE + "dashboard";
-        public static final String MOBILEAUTH = BASE + "mobileauth.xhtml";
         static final String MOBILEDEVICES = BASE + "rest/mobiledevices";
         static final String LOGOUT = BASE + "logout.xhtml";
         static final String GIROKONTO = BASE + "girokonto";

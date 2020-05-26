@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -21,7 +20,6 @@ public class ArgentaConstants {
         static final URL AUTH_VALIDATE = new URL(BASE + "authentication/validate-auth");
         static final URL ACCOUNTS = new URL(BASE + "accounts");
         static final String TRANSACTIONS = "/transactions";
-        static final URL CREDIT_CARD = new URL(BASE + "cards");
     }
 
     public static final ImmutableMap<String, String> HEADERS =
@@ -52,10 +50,6 @@ public class ArgentaConstants {
         public static final int END_PAGE = 0;
     }
 
-    public static final class MultiFactorAuthentication {
-        public static final String CODE = "code";
-    }
-
     public static class Application {
         // Probably also want to change User-Agent
         static final String APPLICATION_VERSION = "5.6.1";
@@ -82,13 +76,8 @@ public class ArgentaConstants {
         public static final String TOO_MANY_DEVICES = "maximumaantal actieve registraties";
         public static final String AUTHENTICATION_ERROR = "de logingegevens zijn niet juist";
         public static final String ACCOUNT_BLOCKED = "is geblokkeerd";
-        public static final String INTERNET_BANKING_NOT_ACTIVE = "internetbankieren is niet actief";
         public static final String PROBLEM_SOLVING_IN_PROGRESS =
                 "We lossen het probleem zo snel mogelijk op";
         public static final String SOMETHING_WRONG = "Oeps, er ging iets mis";
-    }
-
-    public static class LogTags {
-        public static final LogTag LOG_TAG_ACCOUNT = LogTag.from("#Argenta_account");
     }
 }

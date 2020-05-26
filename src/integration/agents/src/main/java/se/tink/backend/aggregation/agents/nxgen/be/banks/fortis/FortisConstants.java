@@ -62,7 +62,6 @@ public class FortisConstants {
 
     public static class Headers {
         public static final String USER_AGENT = "User-Agent";
-        public static final String CONTENT_TYPE = "Content-Type";
         public static final String CSRF = "CSRF";
     }
 
@@ -129,8 +128,6 @@ public class FortisConstants {
         public static final LogTag MULTIPLE_CHALLENGES = LogTag.from("FORTIS_MULTIPLE_CHALLENGES");
         public static final LogTag MULTIPLE_USER_ENTITIES =
                 LogTag.from("FORTIS_MULTIPLE_USER_ENTITIES");
-        public static final LogTag UPCOMING_TRANSACTIONS =
-                LogTag.from("FORTIS_UPCOMING_TRANSACTIONS");
     }
 
     static class HttpClient {

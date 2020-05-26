@@ -6,8 +6,6 @@ public class OpenIdConstants {
 
     public static final String TINK_UKOPENBANKING_ORGID = "00158000016i44IAAQ";
     public static final String UKOB_TAN = "openbanking.org.uk";
-    public static final String TINK_TLS_AUTH_CLIENT_DN =
-            "/C=GB/O=OpenBanking/OU=00158000016i44IAAQ/CN=1hi7lvAZ6lVrKRCiOIjnXJ";
     public static final String MONZO_ORG_ID = "001580000103U9RAAU";
 
     public static class Scopes {
@@ -106,7 +104,6 @@ public class OpenIdConstants {
 
     public static class ParamDefaults {
         public static final String WEB = "web";
-        public static final String RESPONSE_MODE = "query";
     }
 
     public static final String CLIENT_ASSERTION_TYPE =
@@ -114,14 +111,12 @@ public class OpenIdConstants {
 
     public static class CallbackParams {
         public static final String CODE = "code";
-        public static final String ID_TOKEN = "id_token";
         public static final String ERROR = "error";
         public static final String ERROR_DESCRIPTION = "error_description";
     }
 
     public static class PersistentStorageKeys {
         public static final String AIS_ACCESS_TOKEN = "open_id_ais_access_token";
-        public static final String PIS_ACCESS_TOKEN = "open_id_pis_access_token";
         public static final String AIS_ACCOUNT_PERMISSIONS_GRANTED =
                 "ais_account_permissions_granted";
     }
@@ -129,9 +124,6 @@ public class OpenIdConstants {
     public static class HttpHeaders {
         public static final String AUTHORIZATION = "Authorization";
         public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
-        public static final String X_FAPI_CUSTOMER_LAST_LOGGED_TIME =
-                "x-fapi-customer-last-logged-time";
-        public static final String X_FAPI_CUSTOMER_IP_ADDRESS = "x-fapi-customer-ip-address";
         public static final String X_FAPI_INTERACTION_ID = "x-fapi-interaction-id";
     }
 
@@ -144,11 +136,7 @@ public class OpenIdConstants {
 
         public static class PAYLOAD_CLAIMS {
             public static final String ISSUER = "iss";
-            public static final String ISSUED_AT = "iat";
-            public static final String EXPIRES_AT = "exp";
             public static final String AUDIENCE = "aud";
-            public static final String JWT_ID = "jti";
-            public static final String TLS_CLIENT_AUTH_DN = "tls_client_auth_dn";
         }
     }
 }

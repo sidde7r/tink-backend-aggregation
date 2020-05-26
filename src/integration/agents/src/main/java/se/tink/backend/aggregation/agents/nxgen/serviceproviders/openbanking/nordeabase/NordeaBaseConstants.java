@@ -17,14 +17,9 @@ public final class NordeaBaseConstants {
                             AccountFlag.PSD2_PAYMENT_ACCOUNT,
                             "Savings")
                     .build();
-    public static final int REFRESH_TOKEN_RETRY_LIMIT = 2;
 
     private NordeaBaseConstants() {
         throw new AssertionError();
-    }
-
-    public static class Market {
-        public static String INTEGRATION_NAME = "nordea";
     }
 
     public static class Urls {
@@ -49,7 +44,6 @@ public final class NordeaBaseConstants {
 
     public static class TransactionalAccounts {
         public static final String PERSONAL_ACCOUNT = "PERSONKONTO";
-        public static final String NORDEA_CLEARING_NUMBER = "3300";
     }
 
     public static class ApiService {
@@ -72,7 +66,6 @@ public final class NordeaBaseConstants {
 
     public static class StorageKeys {
         public static final String ACCOUNT_ID = "account_id";
-        public static final String ACCESS_TOKEN = "accessToken";
     }
 
     public static class QueryKeys {

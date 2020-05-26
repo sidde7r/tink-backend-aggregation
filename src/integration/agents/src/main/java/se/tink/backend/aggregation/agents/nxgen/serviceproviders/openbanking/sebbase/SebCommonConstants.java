@@ -32,10 +32,7 @@ public class SebCommonConstants {
         public static final String COMPLETE = "complete";
         public static final String PENDING = "pending";
         public static final String FAILED = "failed";
-        public static final String USER_SIGN = "user_sign";
-        public static final String STARTED = "started";
         public static final String NO_CLIENT = "no_client";
-        public static final String OUTSTANDING_TRANSACTION = "outstanding_transaction";
         public static final String EXPIRED_TRANSACTION = "expired_transaction";
         public static final String USER_CANCEL = "user_cancel";
         public static final String CANCELLED = "cancelled";
@@ -80,10 +77,6 @@ public class SebCommonConstants {
     }
 
     public static class StorageKeys {
-        public static final String BASE_URL = "BASE_URL";
-        public static final String CLIENT_ID = "CLIENT_ID";
-        public static final String CLIENT_SECRET = "CLIENT_SECRET";
-        public static final String REDIRECT_URI = "REDIRECT_URI";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
     }
 
@@ -109,7 +102,6 @@ public class SebCommonConstants {
         public static final String INVALID_GRANT_ERROR = "invalid_grant";
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String SEB_SPECIFIC_ERROR = "SEB specific error has occurred.";
     }
 

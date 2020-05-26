@@ -5,9 +5,6 @@ public final class SibsConstants {
     private SibsConstants() {}
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String NO_BALANCE = "No balance found!";
         public static final String UNKNOWN_TRANSACTION_STATE = "Unknown transaction state.";
         public static final String MISSING_LINKS_OBJECT = "Response is missing links object";
@@ -16,7 +13,6 @@ public final class SibsConstants {
 
     public static class Urls {
         public static final String ACCOUNTS = "/{aspsp-cde}/v1-0-2/accounts";
-        public static final String ACCOUNT_DETAILS = "/{aspsp-cde}/v1-0-2/accounts/{account-id}";
         public static final String CREATE_CONSENT = "/{aspsp-cde}/v1-0-2/consents";
         public static final String CONSENT_STATUS =
                 "/{aspsp-cde}/v1-0-2/consents/{consent-id}/status";
@@ -60,8 +56,6 @@ public final class SibsConstants {
         public static final String DIGEST = "Digest";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
-        public static final String PSU_ID_TYPE = "PSU-ID-Type";
-        public static final String PSU_ID = "PSU-ID";
     }
 
     public static class FormValues {
@@ -73,7 +67,6 @@ public final class SibsConstants {
 
     public static class Formats {
         public static final String CONSENT_BODY_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
-        public static final String CONSENT_REQUEST_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss Z";
         public static final String RSA = "RSA";
         public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd";
         public static final String SIGNATURE_STRING_FORMAT =
@@ -94,12 +87,9 @@ public final class SibsConstants {
 
     public static class SignatureValues {
         public static final String RSA_SHA256 = "rsa-sha256";
-        public static final String HEADERS = "Digest TPP-Transaction-ID TPP-Request-ID Date";
-        public static final String HEADERS_NO_DIGEST = "TPP-Transaction-ID TPP-Request-ID Date";
     }
 
     public static class Storage {
-        public static final String PSU_ID = "username";
         public static final String PAYMENT_REDIRECT_URI = "paymentRedirectUrl";
         public static final String PAYMENT_UPDATE_PSU_URI = "updatePsuIdentification";
         public static final String STATE = "payment_state";

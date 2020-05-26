@@ -1,17 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
-
 public class VolksbankConstants {
 
     public static class Urls {
         public static final String HOST = "https://psd.bancairediensten.nl";
         public static final String BASE_PATH = "/psd2/";
-
-        // note: this is placed between BASE_PATH and Paths, for production we only use
-        // BASE_PATH/Paths
-        public static final String SANDBOX_PATH = "/sandbox";
     }
 
     public static class QueryParams {
@@ -23,7 +16,6 @@ public class VolksbankConstants {
         public static final String STATE = "state";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CLIENT_ID = "client_id";
-        public static final String CLIENT_SECRET = "client_secret";
         public static final String GRANT_TYPE = "grant_type";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CONSENT_ID = "consentId";
@@ -57,12 +49,6 @@ public class VolksbankConstants {
         public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
         public static final String CONSENT = "CONSENT";
     }
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "Current")
-                    .put(AccountTypes.SAVINGS, "Savings")
-                    .build();
 
     public class HeaderKeys {
         public static final String REQUEST_ID = "X-Request-ID";

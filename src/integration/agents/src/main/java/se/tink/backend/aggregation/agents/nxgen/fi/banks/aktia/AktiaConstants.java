@@ -66,10 +66,6 @@ public class AktiaConstants {
 
         // current_accounts, savings_accounts
         public static final URL ACCOUNT_LIST_0 = new URL(API_BASE + "/summary");
-        // cards, investments, loans
-        public static final URL ACCOUNT_LIST_1 = new URL(API_BASE + "/summary2");
-
-        public static final URL ACCOUNT_DETAILS = new URL(API_BASE + "/account/{accountId}");
 
         public static final URL ACCOUNT_TRANSACTIONS =
                 new URL(
@@ -77,10 +73,6 @@ public class AktiaConstants {
                                 + String.format(
                                         "/account/{%s}/transactionsAndLockedEvents",
                                         HttpParameters.ACCOUNT_ID));
-
-        // Example: `/card/transactions/68A3DD.../2?cardId=FFF9DE9...`
-        public static final URL CARD_TRANSACTIONS =
-                new URL(API_BASE + "/card/transactions/{evryCardId}/{evryCardVersion}");
     }
 
     public static class Avain {

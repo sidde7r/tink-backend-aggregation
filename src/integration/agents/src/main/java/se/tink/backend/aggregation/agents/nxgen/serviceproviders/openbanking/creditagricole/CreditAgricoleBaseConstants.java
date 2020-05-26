@@ -12,29 +12,20 @@ public final class CreditAgricoleBaseConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String INVALID_BALANCE_TYPE = "Balance type is not valid";
         public static final String UNABLE_LOAD_OAUTH_TOKEN = "Unable to load oauth_2_token";
-    }
-
-    public static class Urls {
-        public static final String BASE_URL = "https://api.credit-agricole.fr";
     }
 
     public static class ApiServices {
         public static final String ACCOUNTS = "/dsp2/v1/accounts";
         public static final String CONSENTS = "/dsp2/v1/consents";
         public static final String TRANSACTIONS = "/dsp2/v1/accounts/{accountId}/transactions";
-        public static final String FETCH_PAYMENT_REQUEST =
-                "/dsp2/v1/payment-requests/{paymentRequestResourceId}";
-        public static final String CREATE_PAYMENT_REQUEST = "/dsp2/v1/payment-requests/";
         public static final String TOKEN = "/authentication/v1/openid/token";
         public static final String FETCH_USER_IDENTITY_DATA = "/dsp2/v1/end-user-identity";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
-        public static final String STATE = "STATE";
         public static final String IS_INITIAL_FETCH = "isInitialFetch";
     }
 
@@ -57,14 +48,11 @@ public final class CreditAgricoleBaseConstants {
                 "{\"consommateur\": {\"nom\": \"ING\", \"version\": \"1.0.0\"}}";
         public static final String CATS_CANAL =
                 "{\"canal\": {\"canalId\": \"internet\", \"canalDistribution\": \"internet\"}}";
-        public static final String BEARER = "Bearer";
-        public static final String BASIC = "Basic";
         public static final String DIGEST_PREFIX = "SHA-256=";
     }
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
-        public static final String PAYMENT_REQUEST_RESOURCE_ID = "paymentRequestResourceId";
     }
 
     public static class BalanceTypes {
@@ -78,11 +66,6 @@ public final class CreditAgricoleBaseConstants {
 
     public class DateFormat {
         public static final String API_DATE_FORMAT = "yyyy-MM-dd";
-    }
-
-    public class FormValues {
-        public static final String BENEFICIARY_NAME = "myMerchant";
-        public static final String INSTRUCTION_ID = "MyInstrId";
     }
 
     public class QueryKeys {
@@ -105,14 +88,8 @@ public final class CreditAgricoleBaseConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
-    public class SignatureKeys {
-        public static final String KEY_ID = "keyId";
-        public static final String HEADERS = "headers";
-    }
-
     public class SignatureValues {
         public static final String RSA_SHA256 = "rsa-sha256";
-        public static final String ALGORITHM = "algorithm";
     }
 
     public class Formats {

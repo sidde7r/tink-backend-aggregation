@@ -9,11 +9,6 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 public final class ChebancaConstants {
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
-        public static final String AUTHENTICATION_ERROR = "Authentication error.";
         public static final String TRANSACTIONS_FETCH_FAILED = "Could not fetch transactions.";
         public static final String GET_CUSTOMER_ID_FAILED = "Could not get customer id.";
         public static final String CONSENT_CREATION_FAILED = "Could not create consent.";
@@ -28,7 +23,6 @@ public final class ChebancaConstants {
 
     public static class Urls {
         public static final String BASE_URL = "https://external-api.chebanca.io";
-        public static final String SANDBOX_BASE_URL = "https://sandbox-api.chebanca.io";
         public static final URL AUTHORIZE = new URL(BASE_URL + ApiServices.AUTHORIZE);
         public static final URL TOKEN = new URL(BASE_URL + ApiServices.TOKEN);
         public static final URL CUSTOMER_ID = new URL(BASE_URL + ApiServices.CUSTOMER_ID);
@@ -62,7 +56,6 @@ public final class ChebancaConstants {
         public static final String OAUTH_TOKEN =
                 OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CUSTOMER_ID = "customer-id";
-        public static final String AUTHORIZATION_URL = "authorization-url";
     }
 
     public static class QueryKeys {

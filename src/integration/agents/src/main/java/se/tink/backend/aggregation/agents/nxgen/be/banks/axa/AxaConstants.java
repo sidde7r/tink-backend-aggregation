@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.aggregation.nxgen.http.form.Form;
 
 public final class AxaConstants {
     private AxaConstants() {
@@ -50,69 +48,11 @@ public final class AxaConstants {
                     .put("Content-Type", "application/x-www-form-urlencoded")
                     .build();
 
-    public static final ImmutableList<String> CIPHER_SUITES =
-            ImmutableList.<String>builder()
-                    .add("TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384")
-                    .add("TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384")
-                    .add("TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256")
-                    .add("TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256")
-                    .add("TLS_DHE_DSS_WITH_AES_256_GCM_SHA384")
-                    .add("TLS_DHE_RSA_WITH_AES_256_GCM_SHA384")
-                    .add("TLS_DHE_DSS_WITH_AES_128_GCM_SHA256")
-                    .add("TLS_DHE_RSA_WITH_AES_128_GCM_SHA256")
-                    .add("TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384")
-                    .add("TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384")
-                    .add("TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA")
-                    .add("TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA")
-                    .add("TLS_DHE_RSA_WITH_AES_256_CBC_SHA256")
-                    .add("TLS_DHE_DSS_WITH_AES_256_CBC_SHA256")
-                    .add("TLS_DHE_RSA_WITH_AES_256_CBC_SHA")
-                    .add("TLS_DHE_DSS_WITH_AES_256_CBC_SHA")
-                    .add("TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256")
-                    .add("TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256")
-                    .add("TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA")
-                    .add("TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA")
-                    .add("TLS_DHE_RSA_WITH_AES_128_CBC_SHA256")
-                    .add("TLS_DHE_DSS_WITH_AES_128_CBC_SHA256")
-                    .add("TLS_DHE_RSA_WITH_AES_128_CBC_SHA")
-                    .add("TLS_DHE_DSS_WITH_AES_128_CBC_SHA")
-                    .add("TLS_RSA_WITH_AES_256_GCM_SHA384")
-                    .add("TLS_RSA_WITH_AES_128_GCM_SHA256")
-                    .add("TLS_RSA_WITH_AES_256_CBC_SHA256")
-                    .add("TLS_RSA_WITH_AES_128_CBC_SHA256")
-                    .add("TLS_RSA_WITH_AES_256_CBC_SHA")
-                    .add("TLS_RSA_WITH_AES_128_CBC_SHA")
-                    .add("TLS_EMPTY_RENEGOTIATION_INFO_SCSV")
-                    .build();
-
     public static class Request {
         public static final String TS_CLIENT_VERSION = "3.6.13;[1,2,3,6,7,8,10,11,12,14,19]";
         public static final String USER_AGENT = "AXA mobile API-v1.0 (axa-mobile-2.30)";
         public static final String APPL_CD = "MOBILEBANK";
-        public static final String VERSION_NUMBER = "2.30";
-        public static final String OPERATING_SYSTEM = "11.1.1";
-        public static final String MODEL = "Tinkdevice";
-        public static final String BRAND = "Tink";
-        public static final String LANGUAGE = "de";
         public static final String AXA_VERSION = "05";
-        public static final boolean JAILBROKEN_OR_ROOTED = false;
-        public static final String GRANT_TYPE = "password";
-        public static final String SCOPE = "mobilebanking";
-        public static final Form LOGON_BODY =
-                Form.builder()
-                        .put("grant_type", AxaConstants.Request.GRANT_TYPE)
-                        .put("scope", AxaConstants.Request.SCOPE)
-                        .put("language", AxaConstants.Request.LANGUAGE)
-                        .put("jailBrokenOrRooted", "" + AxaConstants.Request.JAILBROKEN_OR_ROOTED)
-                        .put("versionNumber", AxaConstants.Request.VERSION_NUMBER)
-                        .put("operatingSystem", AxaConstants.Request.OPERATING_SYSTEM)
-                        .put("model", AxaConstants.Request.MODEL)
-                        .put("brand", AxaConstants.Request.BRAND)
-                        .put("applCd", AxaConstants.Request.APPL_CD)
-                        .build();
-        public static final String USERNAME_KEY = "username";
-        public static final String PASSWORD_KEY = "password";
-        public static final String DEVICEID_KEY = "deviceId";
         public static final String BASIC_AUTH =
                 "NDNiNzQzMWMtZWI0Mi00ZWRjLTgxODYtNjczNzE4NDE5NDQ4OjdlMzk0NjliLTA1ZTQtNDk0OS1hZTMwLWNiOTUxOGZhYWRkYQ==";
         public static final String DIRECTION_FLAG = "1";

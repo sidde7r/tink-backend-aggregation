@@ -95,10 +95,7 @@ public class ImaginBankConstants {
     }
 
     public static class LogTags {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
-                LogTag.from("imaginbank_unknown_accountype");
         public static final LogTag MULTIPLE_ACCOUNTS = LogTag.from("imaginbank_multiple_accounts");
-        public static final LogTag CREDIT_CARD = LogTag.from("imaginbank_credit_card");
     }
 
     public static class Storage {

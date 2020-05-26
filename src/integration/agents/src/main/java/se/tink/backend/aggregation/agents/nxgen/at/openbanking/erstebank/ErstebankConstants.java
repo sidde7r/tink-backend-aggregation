@@ -14,12 +14,7 @@ public final class ErstebankConstants {
     }
 
     public static class Urls {
-        public static final URL BASE_URL = new URL(EndPoints.BASE_URL);
-        public static final URL AUTH = new URL(EndPoints.AUTH);
         public static final URL TOKEN = new URL(EndPoints.TOKEN);
-        public static final URL ACCOUNTS = new URL(EndPoints.ACCOUNTS);
-        public static final URL CONSENT = new URL(EndPoints.CONSENT);
-        public static final URL TRANSACTIONS = new URL(EndPoints.TRANSACTIONS);
         public static final URL CREATE_SEPA = new URL(EndPoints.CREATE_SEPA);
         public static final URL CREATE_CROSS_BORDER = new URL(EndPoints.CREATE_CROSS_BORDER);
         public static final URL FETCH_SEPA = new URL(EndPoints.FETCH_SEPA);
@@ -33,7 +28,6 @@ public final class ErstebankConstants {
         public static final String AUTH = BASE_AUTH + "/auth";
         public static final String TOKEN = BASE_AUTH + "/token";
         public static final String ACCOUNTS = BASE_URL + "/psd2-accounts-api/accounts";
-        public static final String CONSENT = BASE_URL + "/psd2-consent-api/consents";
         public static final String SIGN_CONSENT =
                 BASE_URL + "/psd2-consent-api/consents/%s/authorisations";
         public static final String TRANSACTIONS =

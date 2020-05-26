@@ -15,7 +15,6 @@ public class RevolutConstants {
         public static final URL USER_EXIST = new URL(HOST + "/user/exist");
         public static final URL SIGN_IN = new URL(HOST + "/signin");
         public static final URL VERIFICATION_OPTIONS = new URL(HOST + "/verification/options");
-        public static final URL RESEND_SMS_CODE = new URL(HOST + "/verification-code/resend");
         public static final URL RESEND_CODE_VIA_CALL = new URL(HOST + "/verification-code/call");
         public static final URL CONFIRM_SIGN_IN = new URL(HOST + "/signin/confirm");
         public static final URL FEATURES = new URL(HOST + "/features");
@@ -55,7 +54,6 @@ public class RevolutConstants {
 
     public static final class VerificationCodeChannel {
         public static final String SMS = "SMS";
-        public static final String EMAIL = "EMAIL";
         public static final String CALL = "CALL";
     }
 
@@ -90,9 +88,6 @@ public class RevolutConstants {
 
     public static final class Accounts {
         public static final String ACTIVE_STATE = "ACTIVE";
-        public static final String REQUIRED_REFERENCE = "requiredReference";
-        public static final String IBAN = "iban";
-        public static final String ACCOUNT_ID = "id";
     }
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
@@ -114,8 +109,6 @@ public class RevolutConstants {
 
     public static class TransactionTypes {
         public static final String CARD_PAYMENT = "CARD_PAYMENT";
-        public static final String TRANSFER = "TRANSFER";
-        public static final String REWARD = "REWARD";
         public static final String TOP_UP = "TOPUP";
     }
 

@@ -24,7 +24,6 @@ public class BelfiusConstants {
     public static final String TRANSACTION_BANK_NAME = "Belfius Belgium";
     public static final int MAX_NUMBER_OF_TRANSACTION_PAGES = 100;
     public static final int FIRST_TRANSACTION_PAGE = 0;
-    public static final String NOT_AVAILABLE = "N/A";
 
     public static final String TINK_FRENCH = "fr";
     public static final String BRAND = "Apple iPhone 7";
@@ -66,14 +65,7 @@ public class BelfiusConstants {
         public static final String DEVICE_TOKEN = "DEVICE_TOKEN";
     }
 
-    public static final class MultiFactorAuthentication {
-        public static final String CODE = "code";
-    }
-
     public static final class Widget {
-        // LoginRequest
-        public static final String VERSION_KIND_APP_LOGIN_PW =
-                "Container@reuse_LoginPw@minp_VersionKindApp";
         public static final String VERSION_KIND_APP =
                 "Container@reuse_LogonSoft@minp_VersionKindApp";
         public static final String DEVICE_TOKEN_HASHED =
@@ -129,8 +121,6 @@ public class BelfiusConstants {
         public static final String DEVICE_REGISTRATION_SIGNATURE_CHALLENGE =
                 "Container@reuse_DeviceRegistrationGeneric@reuse_signature@lb_Challenge";
 
-        // PrepareLoginRequest
-        public static final String CARD_NR = "Container@minp_CardNr";
         public static final String LOGON_SOFT = "Container@mb_LogonSoft";
         public static final String LOGIN_SOFT_CHALLENGE = "Container@reuse_LogonSoft@lbl_challenge";
         public static final String LOGON_SOFT_GET_CHALLENGE =
@@ -155,8 +145,6 @@ public class BelfiusConstants {
         public static final String HISTORY_TYPE_TRANSACTIONS =
                 "Container@reuse_History@inp_type_transactions";
         public static final String HISTORY_CURRENCY = "Container@reuse_History@inp_Currency";
-        public static final String HISTORY_DATE_FROM = "Container@reuse_History@inp_datefrom";
-        public static final String HISTORY_DATE_TO = "Container@reuse_History@inp_dateto";
         public static final String HISTORY_HIST = "Container@reuse_History@rep_hist";
         public static final String HISTORY_HAS_NEXT = "Container@reuse_History@lb_hasNext";
         public static final String HISTORY_BTN_NEXT = "Container@reuse_History@btn_Next";
@@ -351,11 +339,9 @@ public class BelfiusConstants {
         public static final String ACCOUNT_BLOCKED = "GE9KT60O/90AA/1204";
         public static final String ERROR_SIGN_CODE = "90AC/1300";
         public static final String ERROR_EMPTY_SIGN_CODE = "GE9KT58O/90AA/";
-        public static final String WRONG_CARD_NUMBER_CODE = "GE9KT082/1502";
         public static final String MISSING_MOBILEBANKING_SUBSCRIPTION = "GE9KT082/1501/1501";
         public static final String DEVICE_REGISTRATION_ERROR = "GE9KT048/1520/1520";
         public static final String SIGN_TEMP_ERROR_CODE = "12DB/000000";
-        public static final String IDENTICAL_PAYMENT = "12DB/000000";
         public static final String WEEKLY_READER_LIMIT_CODE = "1000/AMW036";
         public static final String BENEFICIARY_LIMIT = "1000/NOBENE";
         public static final String DAILY_LIMIT = "1000/AMD063";

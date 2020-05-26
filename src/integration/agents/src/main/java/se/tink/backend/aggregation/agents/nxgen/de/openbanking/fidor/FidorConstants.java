@@ -25,14 +25,11 @@ public final class FidorConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
     public static class Urls {
         private static final String BASE_URL = "https://xs2a.fidor.de";
         public static final String CONSENTS = BASE_URL + "/v1/consents";
-        public static final String ONBOARDING = BASE_URL + "/hello";
-        public static final String CREATE_ACCOUNT = BASE_URL + "/customers";
         public static final String OAUTH_PASSWORD = BASE_URL + "/oauth/token";
         public static final String FETCH_ACCOUNTS = BASE_URL + "/v1/accounts";
         public static final String FETCH_BALANCES = BASE_URL + "/v1/accounts/%s/balances";
@@ -64,7 +61,6 @@ public final class FidorConstants {
     }
 
     public static class QueryValues {
-        public static final String RESPONSE_TYPE = "code";
         public static final String GRANT_TYPE = "password";
     }
 
@@ -79,10 +75,4 @@ public final class FidorConstants {
     public static class HeaderValues {
         public static final String TPP_REDIRECT_PREFERRED = "true";
     }
-
-    public static class FormKeys {}
-
-    public static class FormValues {}
-
-    public static class LogTags {}
 }

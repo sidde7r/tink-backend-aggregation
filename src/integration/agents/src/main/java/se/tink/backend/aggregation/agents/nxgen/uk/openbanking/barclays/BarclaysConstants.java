@@ -5,7 +5,6 @@ public final class BarclaysConstants {
 
         public static final String AUTHONDEVICE = "authondevice";
         public static final String YES = "YES";
-        public static final String NO = "NO";
     }
 
     class Urls {

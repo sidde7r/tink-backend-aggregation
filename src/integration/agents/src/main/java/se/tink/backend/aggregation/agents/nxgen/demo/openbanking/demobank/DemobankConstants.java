@@ -4,11 +4,9 @@ public class DemobankConstants {
 
     public static class Urls {
         public static final String BASE_URL = "https://demobank.production.global.tink.se";
-        public static final String LOGIN = "/api/login";
         public static final String OAUTH_TOKEN = "/oauth/token";
         public static final String OAUTH_AUTHORIZE = "/oauth/authorize";
         public static final String ACCOUNTS = "/api/accounts";
-        public static final String ACCOUNT_DETAILS = "/api/account/{accountId}/details";
         public static final String TRANSACTIONS = "/api/account/{accountId}/transactions";
     }
 
@@ -34,7 +32,6 @@ public class DemobankConstants {
 
     public static class StorageKeys {
         public static final String OAUTH2_TOKEN = "oAuth2Token";
-        public static final String ACCOUNT_ID = "ACCOUNT_ID";
     }
 
     public static class ProviderNameRegex {
@@ -48,7 +45,6 @@ public class DemobankConstants {
 
     public static class AccountTypes {
         public static final String CHECKING = "CHECKING";
-        public static final String SAVINGS = "SAVINGS";
     }
 
     public static class ClusterSpecificCallbacks {
@@ -59,7 +55,5 @@ public class DemobankConstants {
                 "https://api.preprod.oxford.tink.com/api/v1/credentials/third-party/callback";
         public static final String OXFORD_PROD_CALLBACK =
                 "https://api.tink.com/api/v1/credentials/third-party/callback";
-        public static final String LOCAL_CALLBACK =
-                "https://127.0.0.1:7357/api/v1/credentials/third-party/callback";
     }
 }

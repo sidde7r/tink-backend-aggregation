@@ -45,7 +45,6 @@ public final class IngBaseConstants {
     }
 
     public static class QueryValues {
-        public static final String DATE_FORMAT = "yyyy-MM-dd";
         public static final String CODE = "code";
         public static final String PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW =
                 "payment-accounts:transactions:view payment-accounts:balances:view";
@@ -98,8 +97,6 @@ public final class IngBaseConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find Token!";
         public static final String MISSING_CLIENT_ID = "Cannot find client id!";

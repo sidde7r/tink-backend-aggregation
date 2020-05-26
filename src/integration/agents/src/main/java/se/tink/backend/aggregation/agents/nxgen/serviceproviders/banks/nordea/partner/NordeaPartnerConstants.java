@@ -19,10 +19,8 @@ public class NordeaPartnerConstants {
 
     public class EndPoints {
         public static final String PARTNER_PATH = "/partners/{partner_id}";
-        public static final String TOKEN = PARTNER_PATH + "/user/token";
         public static final String ACCOUNTS = PARTNER_PATH + "/accounts";
         public static final String ACCOUNT_TRANSACTIONS = ACCOUNTS + "/{account_id}/transactions";
-        public static final String PAYMENTS = PARTNER_PATH + "/payments";
         public static final String CARDS = PARTNER_PATH + "/cards";
         public static final String CARD_TRANSACTIONS = CARDS + "/{card_id}/transactions";
     }
@@ -37,8 +35,6 @@ public class NordeaPartnerConstants {
         public static final String CONTINUATION_KEY = "continuation_key";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
-        public static final String START_DATE = "start_date";
-        public static final String END_DATE = "end_date";
     }
 
     public class Jwt {
@@ -61,6 +57,5 @@ public class NordeaPartnerConstants {
     public static class CardCategory {
         public static final String COMBINED = "combined";
         public static final String CREDIT = "credit";
-        public static final String DEBIT = "debit";
     }
 }

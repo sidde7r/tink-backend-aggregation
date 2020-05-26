@@ -189,7 +189,6 @@ public class NordeaSEConstants {
     }
 
     public static class StorageKeys {
-        public static final String LOGIN_CODE = "login_code";
         public static final String ACCESS_TOKEN = "auth_token";
         public static final String TOKEN_TYPE = "token_type";
         public static final String REFRESH_TOKEN = "refresh_token";
@@ -198,7 +197,6 @@ public class NordeaSEConstants {
         public static final String SSN = "ssn";
         public static final String TOKEN_AUTH_METHOD = "auth_type";
         public static final String SENSITIVE_PAYLOAD_PASSWORD = "password";
-        public static final String DEVICE_TOKEN = "DeviceToken";
         public static final String PERSONAL_CODE_ENROLLMENT_ID = "personalCodeEnrollmentId";
         public static final String DEVICE_PRIVATE_KEY = "devicePrivateKey";
         public static final String DEVICE_PUBLIC_KEY = "devicePublicKey";
@@ -266,14 +264,11 @@ public class NordeaSEConstants {
         public static final String OWN_TRANSFER = "owntransfer";
         public static final String TO_ACCOUNT_TYPE = "NDA-SE";
         public static final int MAX_POLL_ATTEMPTS = 90;
-        public static final String RECIPIENT_NAME_FIELD_NAME = "name";
-        public static final String RECIPIENT_NAME_FIELD_DESCRIPTION = "Mottagarnamn";
     }
 
     public static class LogMessages {
         public static final String EINVOICE_NOT_FOUND =
                 "Could not find the selected invoice in user's bank.";
-        public static final String NO_RECIPIENT_NAME = "Could not get recipient name from user";
         public static final String NO_INVESTMENTS = "User has no agreement for investments";
         public static final String NO_CONFIRMED_INVESTMENTS =
                 "User has not confirmed classification for investments";
@@ -298,7 +293,6 @@ public class NordeaSEConstants {
 
     public static class ProductName {
         public static final String INVESTMENT = "ISK";
-        public static final String BUSINESS = "FÖRETAG";
     }
 
     public static class ErrorCodes {
@@ -324,7 +318,6 @@ public class NordeaSEConstants {
         public static final String DUPLICATE_PAYMENT =
                 "Duplicate payment. Technical code. Please try again.";
         public static final String TRANSFER_REJECTED = "Transfer rejected by Nordea";
-        public static final String TRANSFER_ERROR = "Something went wrong with the transfer.";
         public static final String PAYMENT_ERROR = "Something went wrong with the payment.";
         public static final String UNREGISTERED_RECIPIENT =
                 "Recipient accounts missing from accounts ledger";

@@ -6,7 +6,6 @@ public class SupremeCardApiConstants {
             "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X)";
     public static final String BANKID_QUERY_PARAMETER = "newmethod=sbid-mobil";
     public static final String ORDER_BANKID_PATH = "/order";
-    public static final String CARD_VALID = "card_valid";
     public static final String TRANSACTIONS_REQUEST_YEAR_KEY = "year";
     public static final String TRANSACTIONS_REQUEST_MONTH_KEY = "month";
 

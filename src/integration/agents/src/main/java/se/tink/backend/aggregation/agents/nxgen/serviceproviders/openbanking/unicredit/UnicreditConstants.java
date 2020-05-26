@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
@@ -22,7 +21,6 @@ public final class UnicreditConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_CREDENTIALS = "Client credentials missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String MISSING_SCA_URL = "scaRedirect url not present in response";
         public static final String ACCOUNT_BALANCE_NOT_FOUND = "Account balance not found";
         public static final String UNDEFINED_BALANCE_TYPE =
@@ -33,7 +31,6 @@ public final class UnicreditConstants {
     public static class Endpoints {
 
         public static final String CONSENTS = "/hydrogen/v1/consents";
-        public static final String UPDATE_CONSENT = "/hydrogen/v1/consents/{consent-id}";
         public static final String CONSENT_STATUS = "/hydrogen/v1/consents/{consent-id}/status";
         public static final String ACCOUNTS = "/hydrogen/v1/accounts";
         public static final String BALANCES = "/hydrogen/v1/accounts/{account-id}/balances";
@@ -52,7 +49,6 @@ public final class UnicreditConstants {
     }
 
     public static class StorageKeys {
-        public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String CONSENT_ID = "CONSENT_ID";
         public static final String STATE = "STATE";
     }
@@ -77,7 +73,6 @@ public final class UnicreditConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String TPP_REDIRECT_PREFERED = "TPP-Redirect-Preferred";
-        public static final String PSU_ID = "PSU-ID";
         public static final String STATE = "state";
         public static final String CODE = "code";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";

@@ -56,14 +56,6 @@ public class CreditAgricoleConstants {
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID));
-        public static final URL PERIMETER_ACCOUNTS =
-                new URL(
-                        HOST
-                                + String.format(
-                                        "/budget5/iphoneservice/portfolio/{%s}/perimeters/{%s}/{%s}/accounts",
-                                        StorageKey.USER_ID,
-                                        StorageKey.REGION_ID,
-                                        StorageKey.PARTNER_ID));
         public static final URL OPERATIONS =
                 new URL(
                         HOST
@@ -81,7 +73,6 @@ public class CreditAgricoleConstants {
     public static class QueryParam {
         public static final String USER_ACCOUNT_CODE = "accountCode";
         public static final String USER_ACCOUNT_NUMBER = "accountNumber";
-        public static final String START_DATE = "startDate";
     }
 
     public enum ConstantHeader implements HeaderEnum {
@@ -141,10 +132,6 @@ public class CreditAgricoleConstants {
 
     public static final class AccountType {
         public static final String CHECKING = "Compte courant";
-    }
-
-    public static final class Currency {
-        public static final String EUR = "EUR";
     }
 
     public static class ErrorCode {

@@ -55,11 +55,6 @@ public abstract class BbvaConstants {
         public static final String MISSING_TOKEN = "Cannot find token!";
     }
 
-    public class Market {
-        public static final String INTEGRATION_NAME = "bbva";
-        public static final String CLIENT_NAME = "tink";
-    }
-
     public class Pagination {
         public static final int START_PAGE = 1;
     }

@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 public abstract class CrosskeyBaseConstants {
 
-    public static final String INTEGRATION_NAME = "crosskey";
-
     public static class Urls {
 
         public static final String TOKEN = "/oidc/v1.0/token";
@@ -96,7 +94,6 @@ public abstract class CrosskeyBaseConstants {
 
     public static class UrlParameters {
         public static final String ACCOUNT_ID = "accountId";
-        public static final String CONSENT_ID = "consentId";
         public static final String INTERNATIONAL_PAYMENT_ID = "internationalPaymentId";
     }
 
@@ -116,7 +113,6 @@ public abstract class CrosskeyBaseConstants {
     }
 
     public static class Format {
-        public static final String TIMEZONE = "UTC";
         public static final String TRANSACTION_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ssX";
     }
 

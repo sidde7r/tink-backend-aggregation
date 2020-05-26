@@ -14,10 +14,8 @@ public final class AmericanExpressV62Constants {
     public static final String NUMBER_REGEX = "[^0-9,.]";
 
     public enum ConstantValueHeaders implements HeaderEnum {
-        AUTHORITY("authority", "global.americanexpress.com"),
         CHARSET("Charset", "UTF-8"),
         CLIENT_TYPE("X-AXP-ClientType", "iPhone"),
-        APP_VERSION("X-AXP-AppVersion", "6.29.0"),
         DEVICE_MODEL("X-AXP-DeviceModel", "iPhone8.1"),
         DEVICE_OS("X-AXP-DeviceOS", "iOS"),
         OS_VERSION("X-AXP-OSVersion", "13.3.1"),
@@ -53,9 +51,6 @@ public final class AmericanExpressV62Constants {
         public static final String TRANSACTION =
                 "/mobileone/msl/services/transactions/v1/getDetails";
         public static final String TIMELINE = "/mobileone/msl/services/timeline/v1/timelineDetail";
-        public static final String EXTEND_SESSION =
-                "/mobileone/msl/services/accountservicing/v1/extendSession";
-        public static final String LOG_OUT = "/mobileone/msl/services/accountservicing/v1/logoff";
         public static final String INITIALIZATION =
                 "/mobileone/msl/services/accountservicing/v1/initialization";
     }
@@ -99,7 +94,6 @@ public final class AmericanExpressV62Constants {
     }
 
     public static final class RequestValue {
-        public static final String TRUE = "true";
         public static final String TIME_ZONE = "GMT+1";
         public static final String TIME_ZONE_OFFSET = "7200000";
     }

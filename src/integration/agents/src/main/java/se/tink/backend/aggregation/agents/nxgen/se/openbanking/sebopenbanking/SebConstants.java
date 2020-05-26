@@ -6,7 +6,6 @@ public abstract class SebConstants {
     public static final String MARKET = "SE";
 
     public static class Urls {
-        public static final String BASE_AUTH_URL = "https://id.seb.se/tpp";
         public static final String BASE_AIS = "/tpp/ais/v5/identified2";
 
         // Urls for Checking accounts
@@ -33,9 +32,6 @@ public abstract class SebConstants {
     }
 
     public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String UNKNOWN_PAYMENT_PRODUCT =
                 "The payment product could not be determined";
         public static final String CROSS_BORDER_PAYMENT_NOT_SUPPORTED =

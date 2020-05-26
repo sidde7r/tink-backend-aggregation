@@ -4,7 +4,6 @@ public class DemoFinancialInstitutionConstants {
     public static final String INTEGRATION_NAME = "demoFinancialInstitution";
 
     public static class Urls {
-        public static final String LOGIN = "/login";
         public static final String ACCOUNTS = "/accounts";
         public static final String TRANSACTIONS = ACCOUNTS + "/{accountNumber}/transactions";
     }

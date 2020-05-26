@@ -23,17 +23,6 @@ public class HandelsbankenSEConstants {
         public static String SEK = "SEK";
     }
 
-    public static final class QueryParams {
-        public static final String IS_CARD = "isCard";
-        public static final String FROM = "from";
-        public static final String TO = "to";
-        public static final String AUTH_TOKEN = "authToken";
-
-        public static final class Defaults {
-            public static final String FALSE = "false";
-        }
-    }
-
     public static final class Urls {
         public static final URL ENTRY_POINT =
                 new URL("https://m.handelsbanken.se/open/entrypoint/priv");
@@ -208,8 +197,7 @@ public class HandelsbankenSEConstants {
     public static class Executor {
         public enum ExceptionMessages implements ExecutorExceptionResolver.ExceptionMessage {
             TRANSFER_AMOUNT_TOO_SMALL("Transfer amount is too small"),
-            SOURCE_ACCOUNT_NOT_FOUND("Source account not found"),
-            INVALID_DESTINATION_ACCOUNT("Destination account is not valid");
+            SOURCE_ACCOUNT_NOT_FOUND("Source account not found");
 
             private final String userMessage;
 

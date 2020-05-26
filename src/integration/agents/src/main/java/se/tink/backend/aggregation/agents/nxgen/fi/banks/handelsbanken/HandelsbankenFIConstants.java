@@ -25,14 +25,6 @@ public class HandelsbankenFIConstants {
 
     public static final class Headers {
         public static final String APP_VERSION = "3.4:1.6";
-        public static final String DEVICE_MODEL = "IOS-11.4.1,2.5.1,iPhone9.3,FIPRIV";
-    }
-
-    public static final class Fetcher {
-
-        public static final class Loans {
-            public static final LogTag LOG_TAG = LogTag.from("#fi_handelsbanken_loans");
-        }
     }
 
     public enum LoanType {

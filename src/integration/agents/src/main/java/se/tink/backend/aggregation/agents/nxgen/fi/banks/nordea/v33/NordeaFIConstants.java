@@ -14,7 +14,6 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaFIConstants {
     public static final String CURRENCY = "EUR";
-    public static final String CREDIT_LOAN = "credit_loan";
 
     public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
             ImmutableMap.<String, String>builder()
@@ -121,13 +120,10 @@ public class NordeaFIConstants {
     }
 
     public static class QueryParams {
-        public static final String OFFSET = "offset";
         public static final String LIMIT = "limit";
         public static final String PAGE = "page";
         public static final String PAGE_SIZE = "page_size";
         public static final String PAGE_SIZE_LIMIT = "30";
-        public static final String STATUS = "status";
-        public static final String STATUS_VALUES = "unconfirmed,confirmed,rejected,inprogress";
         public static final String CONTINUATION_KEY = "continuation_key";
     }
 
@@ -137,14 +133,8 @@ public class NordeaFIConstants {
 
     public static class SessionStorage {
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String REFRESH_EXPIRES_IN = "refresh_expires_in";
         public static final String ACCESS_TOKEN = "access_token";
-        public static final String SCOPE = "scope";
-        public static final String EXPIRES_IN = "expires_in";
-        public static final String ISSUED_TOKEN_TYPE = "issued_token_type";
         public static final String TOKEN_TYPE = "token_type";
-        public static final String USER_ID = "user_id";
-        public static final String AGREEMENT_ID = "agreement_id";
         public static final String USERNAME = "username";
     }
 

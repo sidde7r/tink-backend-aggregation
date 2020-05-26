@@ -43,8 +43,6 @@ public final class DeutscheBankConstants {
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
     public static class Urls {
@@ -66,9 +64,6 @@ public final class DeutscheBankConstants {
 
     public static class QueryKeys {
         public static final String STATE = "state";
-        public static final String WITH_BALANCE = "withBalance";
-        public static final String DATE_FROM = "dateFrom";
-        public static final String DATE_TO = "dateTo";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String DELTA_LIST = "deltaList";
     }
@@ -85,7 +80,6 @@ public final class DeutscheBankConstants {
 
     public static class QueryValues {
 
-        public static final String WITH_BALANCE = "true";
         public static final String BOOKING_STATUS = "both";
         public static final String DELTA_LIST = "true";
     }
@@ -106,10 +100,6 @@ public final class DeutscheBankConstants {
         public static final String EXPIRED = "expired";
         public static final String RECEIVED = "received";
         public static final String VALID = "valid";
-        public static final String REVOKED_BY_PSU = "revokedByPsu";
-        public static final String TERMINATED_BY_TPP = "terminatedByTpp";
-        public static final ImmutableList<String> FAILED =
-                ImmutableList.of(EXPIRED, REVOKED_BY_PSU, TERMINATED_BY_TPP);
     }
 
     public static class FormValues {
