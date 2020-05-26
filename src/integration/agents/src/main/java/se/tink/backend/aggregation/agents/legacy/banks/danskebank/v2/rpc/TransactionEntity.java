@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import javax.annotation.Nullable;
-import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.util.DanskeUtils;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

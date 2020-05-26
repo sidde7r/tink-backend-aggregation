@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.util.DanskeUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EInvoiceDetailsTransactionEntity {

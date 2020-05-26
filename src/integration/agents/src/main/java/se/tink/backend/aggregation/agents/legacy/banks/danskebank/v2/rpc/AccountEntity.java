@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
-import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.util.DanskeUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 

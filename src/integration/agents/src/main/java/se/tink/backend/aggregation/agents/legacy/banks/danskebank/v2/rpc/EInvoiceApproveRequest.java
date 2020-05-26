@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.Locale;
-import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.util.DanskeUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 /**
