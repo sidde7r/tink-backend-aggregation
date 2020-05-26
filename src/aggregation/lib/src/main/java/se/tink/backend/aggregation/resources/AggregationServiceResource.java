@@ -66,7 +66,7 @@ public class AggregationServiceResource implements AggregationService {
     private ApplicationDrainMode applicationDrainMode;
     private ProviderConfigurationService providerConfigurationService;
     private StartupChecksHandler startupChecksHandler;
-    public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
     @Inject
     public AggregationServiceResource(

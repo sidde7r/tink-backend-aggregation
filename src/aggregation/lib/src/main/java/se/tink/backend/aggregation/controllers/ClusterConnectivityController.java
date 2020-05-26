@@ -25,18 +25,8 @@ public class ClusterConnectivityController {
                 "Checking connectivity to the following environments: {}",
                 String.join(",", clusterIds));
 
-        boolean anyClusterFailed = false;
-
         for (String clusterId : clusterIds) {
-            try {
-                checkConnectivity(clusterId);
-            } catch (AggregationControllerNotReachable e) {
-                anyClusterFailed = true;
-            }
-        }
-
-        if (anyClusterFailed) {
-            throw new AggregationControllerNotReachable();
+            checkConnectivity(clusterId);
         }
 
         log.info("Finished checking connectivity to environments");
@@ -51,7 +41,7 @@ public class ClusterConnectivityController {
         try {
             controllerWrapper.checkConnectivity();
             log.info("Successfully sent request to: {}", clusterId);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("Connection to {} cluster failed : {}", clusterId, e.getMessage());
             throw new AggregationControllerNotReachable();
         }
