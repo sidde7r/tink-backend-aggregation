@@ -3,13 +3,11 @@ package se.tink.backend.aggregation.agents.utils.crypto;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -18,16 +16,8 @@ public class AES {
         return aesEcb(true, key, data, "PKCS5Padding");
     }
 
-    public static byte[] decryptEcbPkcs5(byte[] key, byte[] data) {
-        return aesEcb(false, key, data, "PKCS5Padding");
-    }
-
     public static byte[] encryptEcbPkcs7(byte[] key, byte[] data) {
         return aesEcb(true, key, data, "PKCS7Padding");
-    }
-
-    public static byte[] decryptEcbPkcs7(byte[] key, byte[] data) {
-        return aesEcb(false, key, data, "PKCS7Padding");
     }
 
     public static byte[] encryptEcbNoPadding(byte[] key, byte[] data) {
@@ -64,16 +54,6 @@ public class AES {
 
     public static byte[] decryptCtr(byte[] key, byte[] ctr, byte[] data) {
         return aesCtr(false, key, ctr, data);
-    }
-
-    public static byte[] encryptGcm(
-            byte[] key, byte[] iv, byte[] aad, int gcmTagLength, byte[] data) {
-        return aesGcm(true, key, iv, aad, gcmTagLength, data);
-    }
-
-    public static byte[] decryptGcm(
-            byte[] key, byte[] iv, byte[] aad, int gcmTagLength, byte[] data) {
-        return aesGcm(false, key, iv, aad, gcmTagLength, data);
     }
 
     public static byte[] encryptCfbSegmentationSize8NoPadding(byte[] key, byte[] iv, byte[] data) {
@@ -133,31 +113,6 @@ public class AES {
                 | IllegalBlockSizeException
                 | BadPaddingException
                 | InvalidAlgorithmParameterException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    private static byte[] aesGcm(
-            boolean encrypt, byte[] key, byte[] iv, byte[] aad, int gcmTagLength, byte[] data) {
-        try {
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-            SecretKey keyValue = new SecretKeySpec(key, "AES");
-
-            // configure gcm;
-            //  - tag length in bits (which must be located at the end of the input data)
-            //  - iv (which is 12 bytes long)
-            GCMParameterSpec spec =
-                    new GCMParameterSpec(gcmTagLength * 8, Arrays.copyOfRange(iv, 0, 12));
-            int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
-            cipher.init(opMode, keyValue, spec);
-            cipher.updateAAD(aad);
-            return cipher.doFinal(data);
-        } catch (NoSuchAlgorithmException
-                | NoSuchPaddingException
-                | InvalidKeyException
-                | InvalidAlgorithmParameterException
-                | IllegalBlockSizeException
-                | BadPaddingException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }

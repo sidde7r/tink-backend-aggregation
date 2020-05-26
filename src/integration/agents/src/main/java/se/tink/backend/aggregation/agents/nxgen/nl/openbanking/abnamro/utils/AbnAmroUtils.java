@@ -70,8 +70,4 @@ public final class AbnAmroUtils {
             throw new IllegalStateException(e);
         }
     }
-
-    public static PrivateKey getPrivateKey(final byte[] pkcs12Bytes, final String password) {
-        return getPrivateKeyFromKeyStore(getKeyStore(pkcs12Bytes, password), password);
-    }
 }

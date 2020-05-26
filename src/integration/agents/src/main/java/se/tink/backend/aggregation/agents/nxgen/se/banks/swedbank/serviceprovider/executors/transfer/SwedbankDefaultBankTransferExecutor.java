@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.rpc.RegisterTransferRecipientRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.transfer.rpc.RegisterTransferRecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankDateUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.executors.utilities.SwedbankNoteToRecipientUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
@@ -46,6 +47,17 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
         // We'll go through all the profiles to find the one the source account belongs to.
         // That profile will be selected so it's used going forward in the execution flow.
+        if (!SwedbankNoteToRecipientUtils.isValidSwedbankNoteToRecipient(
+                transfer.getDestinationMessage())) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.INVALID_MESSAGE
+                                    .getKey()
+                                    .get())
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION_MESSAGE)
+                    .build();
+        }
+
         String sourceAccountId = this.getSourceAccountIdAndSelectProfile(transfer);
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers();

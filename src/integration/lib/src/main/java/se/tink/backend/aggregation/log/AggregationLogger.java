@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.account.iface.Identifiable;
-import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.transfer.iface.UuidIdentifiable;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -39,10 +37,6 @@ public class AggregationLogger {
         log.debug(message);
     }
 
-    public void debug(String message, Throwable e) {
-        log.debug(message, e);
-    }
-
     public void error(String message) {
         log.error(message);
     }
@@ -57,14 +51,6 @@ public class AggregationLogger {
 
     public void info(String message, Throwable e) {
         log.info(message, e);
-    }
-
-    public void trace(String message) {
-        log.trace(message);
-    }
-
-    public void trace(String message, Throwable e) {
-        log.trace(message, e);
     }
 
     public void warn(String message) {
@@ -158,43 +144,7 @@ public class AggregationLogger {
         this.log.info(format(transfer) + message);
     }
 
-    public void error(UuidIdentifiable transfer, String message) {
-        this.log.error(format(transfer) + message);
-    }
-
     public void error(UuidIdentifiable transfer, String message, Throwable e) {
         this.log.error(format(transfer) + message, e);
-    }
-
-    public void info(Identifiable account, String message) {
-        this.log.info(String.format("[accountId: %s] %s", account.getId(), message));
-    }
-
-    private String format(GenericApplication application, String message) {
-        return "[applicationId: "
-                + UUIDUtils.toTinkUUID(application.getApplicationId())
-                + "] "
-                + message;
-    }
-
-    public void info(GenericApplication application, String message) {
-        this.log.info(format(application, message));
-    }
-
-    public void error(GenericApplication application, String message) {
-        this.log.error(format(application, message));
-    }
-
-    public void error(GenericApplication application, String message, Throwable e) {
-        this.log.error(format(application, message), e);
-    }
-
-    public void debug(GenericApplication application, String message) {
-        debug(
-                String.format(
-                        "[userId:%s applicationId:%s] %s",
-                        UUIDUtils.toTinkUUID(application.getUserId()),
-                        UUIDUtils.toTinkUUID(application.getApplicationId()),
-                        message));
     }
 }

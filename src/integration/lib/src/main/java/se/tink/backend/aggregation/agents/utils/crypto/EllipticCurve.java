@@ -25,7 +25,6 @@ import org.bouncycastle.jcajce.provider.asymmetric.util.EC5Util;
 import org.bouncycastle.jcajce.provider.asymmetric.util.ECUtil;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.ECPointUtil;
-import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.jce.spec.ECParameterSpec;
@@ -102,25 +101,6 @@ public class EllipticCurve {
         ECPoint q = publicKey.getQ();
         return c.createPoint(q.getAffineXCoord().toBigInteger(), q.getAffineYCoord().toBigInteger())
                 .getEncoded(compressed);
-    }
-
-    public static ECPrivateKey convertPointToPrivateKey(byte[] prvKeyBytes, String curveName) {
-        ECNamedCurveParameterSpec ecNamedCurveParameterSpec =
-                ECNamedCurveTable.getParameterSpec(curveName);
-        java.security.spec.EllipticCurve ellipticCurve =
-                EC5Util.convertCurve(
-                        ecNamedCurveParameterSpec.getCurve(), ecNamedCurveParameterSpec.getSeed());
-        java.security.spec.ECParameterSpec ecParameterSpec =
-                EC5Util.convertSpec(ellipticCurve, ecNamedCurveParameterSpec);
-        java.security.spec.ECPrivateKeySpec privateKeySpec =
-                new java.security.spec.ECPrivateKeySpec(
-                        new BigInteger(1, prvKeyBytes), ecParameterSpec);
-        try {
-            KeyFactory kf = KeyFactory.getInstance("EC", "BC");
-            return (ECPrivateKey) kf.generatePrivate(privateKeySpec);
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeySpecException e) {
-            throw new IllegalStateException(e);
-        }
     }
 
     public static ECPublicKey convertPointToPublicKey(byte[] pubKeybytes, String curveName) {

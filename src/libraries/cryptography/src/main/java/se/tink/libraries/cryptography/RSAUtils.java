@@ -32,11 +32,8 @@ public class RSAUtils {
     public static RSAPrivateKey getPrivateKey(String keyPath) {
         try (PEMParser pemReader =
                 new PEMParser(new InputStreamReader(new FileInputStream(keyPath)))) {
-
             PEMKeyPair keyPair = (PEMKeyPair) pemReader.readObject();
-
             JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-
             return (RSAPrivateKey) converter.getKeyPair(keyPair).getPrivate();
         } catch (IOException e) {
             throw new RuntimeException("Could not convert key path into valid private key.", e);
@@ -47,11 +44,8 @@ public class RSAUtils {
     public static RSAPublicKey getPublicKey(String keyPath) {
         try (PEMParser pemReader =
                 new PEMParser(new InputStreamReader(new FileInputStream(keyPath)))) {
-
             SubjectPublicKeyInfo publicKeyInfo = (SubjectPublicKeyInfo) pemReader.readObject();
-
             JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-
             return (RSAPublicKey) converter.getPublicKey(publicKeyInfo);
         } catch (IOException e) {
             throw new RuntimeException("Could not convert key path into valid public key.", e);
@@ -62,9 +56,7 @@ public class RSAUtils {
     public static Signature getSignature(PrivateKey key)
             throws NoSuchAlgorithmException, InvalidKeyException {
         Signature signature = Signature.getInstance(DEFAULT_SIGNATURE_ALGORITHM);
-
         signature.initSign(key);
-
         return signature;
     }
 
@@ -72,9 +64,7 @@ public class RSAUtils {
     public static Signature getSignature(PublicKey key)
             throws NoSuchAlgorithmException, InvalidKeyException {
         Signature signature = Signature.getInstance(DEFAULT_SIGNATURE_ALGORITHM);
-
         signature.initVerify(key);
-
         return signature;
     }
 }

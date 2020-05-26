@@ -1327,8 +1327,7 @@ public class ICABankenAgent extends AbstractAgent
     }
 
     private String initBankIDSignTransfer() throws BankIdException {
-        String url = INIT_TRANSFER_SIGN_URL;
-        return initBankID(url, true);
+        return initBankID(INIT_TRANSFER_SIGN_URL, true);
     }
 
     private String initBankID(String url, boolean useAutostartToken) throws BankIdException {
@@ -1542,8 +1541,6 @@ public class ICABankenAgent extends AbstractAgent
         return fetchAccountsPerType(RefreshableItem.CHECKING_ACCOUNTS);
     }
 
-    //////////// Refresh Executor Refactor /////////////
-
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
         return fetchTransactionsPerAccountType(RefreshableItem.CHECKING_TRANSACTIONS);
@@ -1695,6 +1692,4 @@ public class ICABankenAgent extends AbstractAgent
             return userMessage;
         }
     }
-
-    ////////////////////////////////////////////////////
 }

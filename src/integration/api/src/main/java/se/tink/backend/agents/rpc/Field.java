@@ -1,11 +1,8 @@
 package se.tink.backend.agents.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import java.util.regex.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Field {
@@ -303,47 +300,5 @@ public class Field {
                     .add("fieldKey", fieldKey)
                     .toString();
         }
-    }
-
-    /**
-     * Validate the value of a field
-     *
-     * @param field
-     * @return true if valid (false otherwise)
-     */
-    @JsonIgnore
-    public static boolean isValidField(Field field) {
-        return isValidField(field, field.getValue());
-    }
-
-    /**
-     * Validate the value of a field
-     *
-     * @param field
-     * @param value
-     * @return true if valid (false otherwise)
-     */
-    @JsonIgnore
-    public static boolean isValidField(Field field, String value) {
-
-        if (Strings.isNullOrEmpty(value)) {
-            return field.isOptional();
-        }
-
-        if (field.getMinLength() != null && field.getMinLength() > value.length()) {
-            return false;
-        }
-
-        if (field.getMaxLength() != null
-                && field.getMaxLength() > 0
-                && field.getMaxLength() < value.length()) {
-            return false;
-        }
-
-        if (!Strings.isNullOrEmpty(field.getPattern())) {
-            return Pattern.matches(field.getPattern(), value);
-        }
-
-        return true;
     }
 }

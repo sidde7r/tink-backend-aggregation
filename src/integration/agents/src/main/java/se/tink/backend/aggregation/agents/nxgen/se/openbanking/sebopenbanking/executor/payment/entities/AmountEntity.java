@@ -61,11 +61,6 @@ public class AmountEntity {
             return this;
         }
 
-        public Builder withEquivalentAmount(String equivalentAmount) {
-            this.equivalentAmount = equivalentAmount;
-            return this;
-        }
-
         public AmountEntity build() {
             return new AmountEntity(this);
         }

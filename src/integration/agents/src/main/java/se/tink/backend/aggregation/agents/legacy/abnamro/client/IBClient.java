@@ -39,11 +39,6 @@ public class IBClient extends Client {
             this.builder = createClientRequest(path);
         }
 
-        IBClientRequestBuilder withSession(String sessionToken) {
-            this.sessionToken = sessionToken;
-            return this;
-        }
-
         Builder build() {
             builder = builder.header("Accept-Language", DEFAULT_LANGUAGE);
 
