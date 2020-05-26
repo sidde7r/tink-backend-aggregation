@@ -66,6 +66,13 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     .help("Payments experiment with labels")
                     .labelNames("market", "provider")
                     .register();
+    private static final Counter experimentWithNoIncrement =
+            Counter.build()
+                    .namespace("tink")
+                    .subsystem("payments")
+                    .name("experiment_no_increment_total")
+                    .help("Payments experiment with no increments")
+                    .register();
 
     private final TransferRequest transferRequest;
     private final AgentWorkerCommandMetricState metrics;
