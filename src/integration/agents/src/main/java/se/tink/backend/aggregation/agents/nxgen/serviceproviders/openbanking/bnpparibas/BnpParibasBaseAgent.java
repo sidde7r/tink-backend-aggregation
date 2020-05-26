@@ -1,30 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.BnpParibasAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.BnpParibasPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BnpParibasBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -35,23 +37,20 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     private BnpParibasConfiguration bnpParibasConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AgentsServiceConfiguration agentsServiceConfiguration;
-    private BnpParibasTransactionalAccountFetcher accountFetcher;
-    private BnpParibasTransactionFetcher transactionFetcher;
     private AutoAuthenticationController authenticator;
     private BnpParibasIdentityDataFetcher bnpParibasIdentityDataFetcher;
-    private BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
 
     public BnpParibasBaseAgent(
-            final CredentialsRequest request,
-            final AgentContext context,
-            final SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-        this.apiClient = new BnpParibasApiBaseClient(client, sessionStorage);
-        bnpParibasSignatureHeaderProvider = new BnpParibasSignatureHeaderProvider();
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        bnpParibasIdentityDataFetcher =
-                new BnpParibasIdentityDataFetcher(
-                        this.apiClient, sessionStorage, bnpParibasSignatureHeaderProvider);
+            AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
+
+        BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider =
+                new BnpParibasSignatureHeaderProvider(qsealcSigner);
+        this.apiClient =
+                new BnpParibasApiBaseClient(
+                        client, sessionStorage, bnpParibasSignatureHeaderProvider);
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.bnpParibasIdentityDataFetcher = new BnpParibasIdentityDataFetcher(this.apiClient);
     }
 
     @Override
@@ -90,13 +89,6 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                         .getAgentConfiguration(BnpParibasConfiguration.class);
         apiClient.setConfiguration(bnpParibasConfiguration);
         client.setEidasProxy(configuration.getEidasProxy());
-
-        accountFetcher.setEidasProxyConfiguration(
-                configuration.getEidasProxy(), getEidasIdentity());
-        transactionFetcher.setEidasProxyConfiguration(
-                configuration.getEidasProxy(), getEidasIdentity());
-        bnpParibasIdentityDataFetcher.setEidasProxyConfiguration(
-                configuration.getEidasProxy(), getEidasIdentity());
     }
 
     public AgentsServiceConfiguration getConfiguration() {
@@ -129,13 +121,11 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        accountFetcher =
-                new BnpParibasTransactionalAccountFetcher(
-                        apiClient, sessionStorage, bnpParibasSignatureHeaderProvider);
+        BnpParibasTransactionalAccountFetcher accountFetcher =
+                new BnpParibasTransactionalAccountFetcher(apiClient);
 
-        transactionFetcher =
-                new BnpParibasTransactionFetcher(
-                        apiClient, sessionStorage, bnpParibasSignatureHeaderProvider);
+        BnpParibasTransactionFetcher transactionFetcher =
+                new BnpParibasTransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -149,5 +139,17 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return bnpParibasIdentityDataFetcher.response();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(
+                new PaymentController(
+                        new BnpParibasPaymentExecutor(
+                                apiClient,
+                                bnpParibasConfiguration,
+                                sessionStorage,
+                                strongAuthenticationState,
+                                supplementalInformationHelper)));
     }
 }

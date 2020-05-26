@@ -13,7 +13,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasApiBaseClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -28,7 +27,6 @@ public class BnpParibasTransactionFetcherTest {
     private String token;
     private BnpParibasConfiguration bnpParibasConfiguration;
     private String signature;
-    private AccountsResponse accountsResponse;
 
     @Before
     public void init() {
@@ -38,12 +36,10 @@ public class BnpParibasTransactionFetcherTest {
         token = "token";
         bnpParibasConfiguration = mock(BnpParibasConfiguration.class);
         signature = "signature";
-        accountsResponse = mock(AccountsResponse.class);
 
         when(sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN)).thenReturn(token);
         when(apiClient.getBnpParibasConfiguration()).thenReturn(bnpParibasConfiguration);
-        when(bnpParibasSignatureHeaderProvider.buildSignatureHeader(
-                        any(), any(), any(), any(), any()))
+        when(bnpParibasSignatureHeaderProvider.buildSignatureHeader(any(), any(), any()))
                 .thenReturn(signature);
     }
 
@@ -57,12 +53,10 @@ public class BnpParibasTransactionFetcherTest {
         TransactionsResponse transactionsResponse = mock(TransactionsResponse.class);
 
         when(account.getAccountNumber()).thenReturn(accountNumber);
-        when(apiClient.getTransactions(anyString(), anyString(), anyString(), any(), any()))
-                .thenReturn(transactionsResponse);
+        when(apiClient.getTransactions(anyString(), any(), any())).thenReturn(transactionsResponse);
 
         BnpParibasTransactionFetcher bnpParibasTransactionFetcher =
-                new BnpParibasTransactionFetcher(
-                        apiClient, sessionStorage, bnpParibasSignatureHeaderProvider);
+                new BnpParibasTransactionFetcher(apiClient);
 
         // when
         PaginatorResponse response =

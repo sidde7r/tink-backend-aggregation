@@ -14,6 +14,8 @@ public final class BnpParibasBaseConstants {
         public static final String BALANCES_PATH = "/accounts/{accountResourceId}/balances";
         public static final String TRANSACTIONS_PATH = "/accounts/{accountResourceId}/transactions";
         public static final String FETCH_USER_IDENTITY_DATA = "/end-user-identity";
+        public static final String CREATE_PAYMENT = "/payment-requests";
+        public static final String GET_PAYMENT = "/payment-requests/{paymentId}";
     }
 
     public class QueryKeys {
@@ -35,7 +37,9 @@ public final class BnpParibasBaseConstants {
     public class QueryValues {
         public static final String CODE = "code";
         public static final String FULL_SCOPES = "aisp extended_transaction_history";
+        public static final String PISP_SCOPE = "pisp";
         public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String TIMEZONE = "CET";
     }
@@ -58,11 +62,13 @@ public final class BnpParibasBaseConstants {
     public class StorageKeys {
         public static final String TOKEN = "OAUTH_TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
+        public static final String PAYMENT_AUTHORIZATION_URL = "PAYMENT_AUTHORIZATION_URL";
     }
 
     public class IdTags {
         public static final String ACCOUNT_RESOURCE_ID = "accountResourceId";
         public static final String BANK = "bank";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public class SignatureKeys {

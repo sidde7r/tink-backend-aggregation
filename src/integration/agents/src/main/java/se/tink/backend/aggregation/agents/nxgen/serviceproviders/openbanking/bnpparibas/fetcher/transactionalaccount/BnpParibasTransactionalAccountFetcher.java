@@ -3,59 +3,25 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasApiBaseClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final BnpParibasApiBaseClient apiClient;
-    private final SessionStorage sessionStorage;
-    private final BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
-    private EidasProxyConfiguration eidasProxyConfiguration;
-    private EidasIdentity eidasIdentity;
 
-    public BnpParibasTransactionalAccountFetcher(
-            BnpParibasApiBaseClient apiClient,
-            SessionStorage sessionStorage,
-            BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider) {
+    public BnpParibasTransactionalAccountFetcher(BnpParibasApiBaseClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
-        this.bnpParibasSignatureHeaderProvider = bnpParibasSignatureHeaderProvider;
-    }
-
-    public void setEidasProxyConfiguration(
-            EidasProxyConfiguration eidasProxyConfiguration, EidasIdentity eidasIdentity) {
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        String reqId = UUID.randomUUID().toString();
-        String signature =
-                bnpParibasSignatureHeaderProvider.buildSignatureHeader(
-                        eidasProxyConfiguration,
-                        eidasIdentity,
-                        sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN),
-                        reqId,
-                        apiClient.getBnpParibasConfiguration());
-
-        return Optional.ofNullable(apiClient.fetchAccounts(signature, reqId))
-                .map(AccountsResponse::getAccounts).orElseGet(Collections::emptyList).stream()
-                .map(
-                        acc ->
-                                acc.toTinkAccount(
-                                        apiClient.getBalance(
-                                                acc.getResourceId(), signature, reqId)))
+        return Optional.ofNullable(apiClient.fetchAccounts()).map(AccountsResponse::getAccounts)
+                .orElseGet(Collections::emptyList).stream()
+                .map(acc -> acc.toTinkAccount(apiClient.getBalance(acc.getResourceId())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

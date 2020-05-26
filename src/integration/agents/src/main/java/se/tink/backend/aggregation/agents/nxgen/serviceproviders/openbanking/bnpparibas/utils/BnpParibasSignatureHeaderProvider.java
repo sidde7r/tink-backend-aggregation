@@ -2,16 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 public class BnpParibasSignatureHeaderProvider {
 
+    private final QsealcSigner qsealcSigner;
+
+    public BnpParibasSignatureHeaderProvider(QsealcSigner qsealcSigner) {
+        this.qsealcSigner = qsealcSigner;
+    }
+
     public String buildSignatureHeader(
-            EidasProxyConfiguration configuration,
-            EidasIdentity eidasIdentity,
             String authorizationCode,
             String requestId,
             BnpParibasConfiguration bnpParibasConfiguration) {
@@ -20,7 +21,7 @@ public class BnpParibasSignatureHeaderProvider {
                 getKeyId(bnpParibasConfiguration),
                 BnpParibasUtils.getAlgorithm(),
                 getHeaders(),
-                getSignature(configuration, eidasIdentity, authorizationCode, requestId));
+                getSignature(authorizationCode, requestId));
     }
 
     private String getKeyId(BnpParibasConfiguration bnpParibasConfiguration) {
@@ -38,11 +39,7 @@ public class BnpParibasSignatureHeaderProvider {
                 BnpParibasBaseConstants.SignatureKeys.X_REQUEST_ID);
     }
 
-    private String getSignature(
-            EidasProxyConfiguration configuration,
-            EidasIdentity eidasIdentity,
-            String authorizationCode,
-            String requestId) {
+    private String getSignature(String authorizationCode, String requestId) {
 
         String signatureString =
                 String.format(
@@ -56,10 +53,6 @@ public class BnpParibasSignatureHeaderProvider {
         return String.format(
                 "%s=\"%s\"",
                 BnpParibasBaseConstants.SignatureKeys.SIGNATURE,
-                QsealcSignerImpl.build(
-                                configuration.toInternalConfig(),
-                                QsealcAlg.EIDAS_RSA_SHA256,
-                                eidasIdentity)
-                        .getSignatureBase64(signatureString.getBytes()));
+                qsealcSigner.getSignatureBase64(signatureString.getBytes()));
     }
 }
