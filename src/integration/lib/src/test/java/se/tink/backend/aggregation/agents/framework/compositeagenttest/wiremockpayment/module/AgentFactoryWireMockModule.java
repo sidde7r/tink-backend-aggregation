@@ -16,6 +16,8 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.H
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.WireMockConfiguration;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
+import se.tink.backend.aggregation.agents.module.loader.AgentDependencyModuleLoader;
+import se.tink.backend.aggregation.agents.module.loader.AgentDependencyModuleLoaderForDecoupled;
 
 public final class AgentFactoryWireMockModule extends AbstractModule {
 
@@ -52,6 +54,9 @@ public final class AgentFactoryWireMockModule extends AbstractModule {
         bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
         bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
         bind(Agent.class).toProvider(AgentProvider.class).in(Scopes.SINGLETON);
+        bind(AgentDependencyModuleLoader.class)
+                .to(AgentDependencyModuleLoaderForDecoupled.class)
+                .in(Scopes.SINGLETON);
         bindCommandsInSequence();
     }
 

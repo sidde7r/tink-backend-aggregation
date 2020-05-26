@@ -11,7 +11,6 @@ public final class UkOpenBankingLocalKeySignerModule extends AbstractModule {
 
     @Override
     protected void configure() {
-
         bind(UkOpenBankingConfiguration.class)
                 .toProvider(UkOpenBankingConfigurationProvider.class)
                 .in(Scopes.SINGLETON);

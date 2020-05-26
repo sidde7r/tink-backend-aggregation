@@ -30,6 +30,8 @@ import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provi
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.FakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.module.AgentWireMockModuleFactory;
+import se.tink.backend.aggregation.agents.module.loader.AgentDependencyModuleLoader;
+import se.tink.backend.aggregation.agents.module.loader.AgentDependencyModuleLoaderForDecoupled;
 import se.tink.backend.aggregation.aggregationcontroller.fake.FakeAggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.fake.FakeAggregationControllerSocket;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
@@ -290,6 +292,11 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(AgentModuleFactory.class).to(AgentWireMockModuleFactory.class).in(Scopes.SINGLETON);
         bind(AgentFactory.class).to(AgentFactoryImpl.class).in(Scopes.SINGLETON);
         bind(AapFileProvider.class).to(AggregationDecoupledAapFileProvider.class);
+
+        // AgentFactoryModule
+        bind(AgentDependencyModuleLoader.class)
+                .to(AgentDependencyModuleLoaderForDecoupled.class)
+                .in(Scopes.SINGLETON);
     }
 
     @Provides

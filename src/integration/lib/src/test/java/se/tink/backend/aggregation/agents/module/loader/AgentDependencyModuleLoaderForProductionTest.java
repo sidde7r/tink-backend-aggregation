@@ -15,13 +15,13 @@ import se.tink.backend.aggregation.agents.module.loader.testclasses.TestAgentLoa
 import se.tink.backend.aggregation.agents.module.loader.testclasses.ValidModule;
 import se.tink.backend.aggregation.agents.module.loader.testclasses.ValidModule2;
 
-public final class AgentAgentDependencyModuleLoaderTest {
+public final class AgentDependencyModuleLoaderForProductionTest {
 
-    private AgentDependencyModuleLoader loader;
+    private AgentDependencyModuleLoaderForProduction loader;
 
     @Before
     public void setup() {
-        loader = new AgentDependencyModuleLoader();
+        loader = new AgentDependencyModuleLoaderForProduction();
     }
 
     @Test
