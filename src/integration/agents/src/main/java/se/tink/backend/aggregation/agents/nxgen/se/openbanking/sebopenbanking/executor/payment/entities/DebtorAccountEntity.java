@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -24,5 +25,14 @@ public class DebtorAccountEntity {
     @JsonIgnore
     public static DebtorAccountEntity of(PaymentRequest paymentRequest) {
         return new DebtorAccountEntity(paymentRequest.getPayment().getDebtor().getAccountNumber());
+    }
+
+    @JsonIgnore
+    public static DebtorAccountEntity of(String accountNumber) throws DebtorValidationException {
+
+        if (!new IbanIdentifier(accountNumber).isValid()) {
+            throw DebtorValidationException.invalidIbanFormat("", new IllegalArgumentException());
+        }
+        return new DebtorAccountEntity(accountNumber);
     }
 }
