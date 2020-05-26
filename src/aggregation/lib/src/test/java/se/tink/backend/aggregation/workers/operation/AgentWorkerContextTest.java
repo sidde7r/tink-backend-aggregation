@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.metrics.collection.MetricCollector;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AgentWorkerContextTest {
@@ -31,8 +33,9 @@ public class AgentWorkerContextTest {
 
     @Before
     public void setUp() {
-        this.metricRegistry = Mockito.mock(MetricRegistry.class);
-        this.curatorClient = Mockito.mock(CuratorFramework.class);
+        MetricCollector metricCollector = new MetricCollector();
+        this.metricRegistry = new MetricRegistry(metricCollector);
+        this.curatorClient = Mockito.mock(CuratorFramework.class, Mockito.RETURNS_DEEP_STUBS);
         this.aggregatorInfo = Mockito.mock(AggregatorInfo.class);
         this.supplementalInfoController = Mockito.mock(SupplementalInformationController.class);
         this.providerSessionCacheController = Mockito.mock(ProviderSessionCacheController.class);
@@ -71,6 +74,19 @@ public class AgentWorkerContextTest {
                         argThat(
                                 (UpdateCredentialsStatusRequest controllerRequest) ->
                                         controllerRequest.getRefreshId().equals(testRefreshId)));
+    }
+
+    @Test
+    public void whenWaitingForSupplementalInformationTimesOutDoNotThrow() {
+        RefreshInformationRequest request = new RefreshInformationRequest();
+        String testRefreshId = "testRefreshId";
+        request.setRefreshId(testRefreshId);
+        request.setProvider(new Provider());
+        Credentials credentials = new Credentials();
+        request.setCredentials(credentials);
+        AgentWorkerContext context = buildAgentWorkerContext(request);
+
+        context.waitForSupplementalInformation("testKey", 2, TimeUnit.SECONDS);
     }
 
     @Test
