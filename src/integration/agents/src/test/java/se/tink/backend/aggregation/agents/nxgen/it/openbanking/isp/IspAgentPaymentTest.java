@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
@@ -17,7 +16,6 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
-@Ignore
 public class IspAgentPaymentTest {
     private AgentIntegrationTest.Builder builder;
 
