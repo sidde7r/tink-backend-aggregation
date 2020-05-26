@@ -69,17 +69,17 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static class SupplementalInformationMetrics {
         private static final String CLUSTER_LABEL = "client_cluster";
         public static final MetricId duration =
-                MetricId.newId("tink_aggregation_supplemental_information_duration_seconds");
+                MetricId.newId("aggregation_supplemental_information_seconds");
         public static final MetricId attempts =
-                MetricId.newId("tink_aggregation_supplemental_information_requests_started");
+                MetricId.newId("aggregation_supplemental_information_requests_started");
         public static final MetricId finished =
-                MetricId.newId("tink_aggregation_supplemental_information_requests_finished");
+                MetricId.newId("aggregation_supplemental_information_requests_finished");
         public static final MetricId cancelled =
-                MetricId.newId("tink_aggregation_supplemental_information_requests_cancelled");
+                MetricId.newId("aggregation_supplemental_information_requests_cancelled");
         public static final MetricId timedOut =
-                MetricId.newId("tink_aggregation_supplemental_information_requests_timed_out");
+                MetricId.newId("aggregation_supplemental_information_requests_timed_out");
         public static final MetricId error =
-                MetricId.newId("tink_aggregation_supplemental_information_requests_error");
+                MetricId.newId("aggregation_supplemental_information_requests_error");
         private static final List<Integer> buckets =
                 Arrays.asList(0, 10, 20, 30, 40, 50, 60, 80, 100, 120);
 
