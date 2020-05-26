@@ -66,6 +66,12 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
         final BankIdStatus status =
                 Authentication.statusMapper.translate(response.getStatus().toLowerCase()).get();
         if (status == BankIdStatus.DONE) {
+            if (Authentication.hintCodeMapper
+                            .translate(Strings.nullToEmpty(response.getHintCode()).toLowerCase())
+                            .get()
+                    == BankIdStatus.NO_CLIENT) {
+                return BankIdStatus.NO_CLIENT;
+            }
             activateSession();
         } else if (status == BankIdStatus.FAILED_UNKNOWN) {
             return Authentication.hintCodeMapper
