@@ -23,7 +23,6 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         accountConverter = new HandelsbankenAccountConverter();
-
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

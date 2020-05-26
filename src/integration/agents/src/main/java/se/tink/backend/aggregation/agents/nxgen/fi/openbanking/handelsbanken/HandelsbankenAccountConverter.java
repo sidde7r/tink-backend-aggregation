@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountConverter {
 
-    private final TypeMapper<TransactionalAccountType> accountTypes =
+    private static final TypeMapper<TransactionalAccountType> ACCOUNT_TYPES =
             TypeMapper.<TransactionalAccountType>builder()
                     .put(
                             TransactionalAccountType.CHECKING,
@@ -23,7 +23,7 @@ public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountCo
     @Override
     public Optional<TransactionalAccount> toTinkAccount(
             AccountsItemEntity accountEntity, BalancesItemEntity balance) {
-        return accountTypes
+        return ACCOUNT_TYPES
                 .translate(accountEntity.getAccountType())
                 .map(type -> accountEntity.toTinkAccount(type, balance))
                 .filter(Optional::isPresent)
