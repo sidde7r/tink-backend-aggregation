@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
+import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -283,6 +284,7 @@ public final class AgentWorkerOperationFactoryTest {
             bind(CredentialsEventProducer.class).toInstance(mock(CredentialsEventProducer.class));
             bind(DataTrackerEventProducer.class).toInstance(mock(DataTrackerEventProducer.class));
             bind(LoginAgentEventProducer.class).toInstance(mock(LoginAgentEventProducer.class));
+            bind(RefreshEventProducer.class).toInstance(mock(RefreshEventProducer.class));
             bind(AgentDataAvailabilityTrackerClient.class)
                     .toInstance(mock(AgentDataAvailabilityTrackerClient.class));
             bind(ManagedTppSecretsServiceClient.class)

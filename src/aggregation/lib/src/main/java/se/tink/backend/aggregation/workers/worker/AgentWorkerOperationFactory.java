@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
+import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
@@ -107,6 +108,7 @@ public class AgentWorkerOperationFactory {
     private final CredentialsEventProducer credentialsEventProducer;
     private final DataTrackerEventProducer dataTrackerEventProducer;
     private final LoginAgentEventProducer loginAgentEventProducer;
+    private final RefreshEventProducer refreshEventProducer;
     private final Predicate<Provider> shouldAddExtraCommands;
 
     // States
@@ -145,6 +147,7 @@ public class AgentWorkerOperationFactory {
             CredentialsEventProducer credentialsEventProducer,
             DataTrackerEventProducer dataTrackerEventProducer,
             LoginAgentEventProducer loginAgentEventProducer,
+            RefreshEventProducer refreshEventProducer,
             AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             ManagedTppSecretsServiceClient tppSecretsServiceClient,
             InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory,
@@ -172,6 +175,7 @@ public class AgentWorkerOperationFactory {
         this.credentialsEventProducer = credentialsEventProducer;
         this.dataTrackerEventProducer = dataTrackerEventProducer;
         this.loginAgentEventProducer = loginAgentEventProducer;
+        this.refreshEventProducer = refreshEventProducer;
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.tppSecretsServiceClient = tppSecretsServiceClient;
         this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
@@ -248,7 +252,8 @@ public class AgentWorkerOperationFactory {
                             item,
                             createCommandMetricState(request),
                             agentDataAvailabilityTrackerClient,
-                            dataTrackerEventProducer));
+                            dataTrackerEventProducer,
+                            refreshEventProducer));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -889,7 +894,8 @@ public class AgentWorkerOperationFactory {
                                 item,
                                 createCommandMetricState(request),
                                 agentDataAvailabilityTrackerClient,
-                                dataTrackerEventProducer));
+                                dataTrackerEventProducer,
+                                refreshEventProducer));
             }
         }
 
@@ -1226,7 +1232,8 @@ public class AgentWorkerOperationFactory {
                                                 item,
                                                 createCommandMetricState(request),
                                                 agentDataAvailabilityTrackerClient,
-                                                dataTrackerEventProducer)));
+                                                dataTrackerEventProducer,
+                                                refreshEventProducer)));
         // === END REFRESHING ===
         return commands.build();
     }
