@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
@@ -28,13 +27,14 @@ import org.springframework.http.ResponseEntity;
 
 public class SystemTestUtils {
 
-    private static ObjectMapper mapper = new ObjectMapper();
-    private static Logger log = LoggerFactory.getLogger(SystemTestUtils.class);
+    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final Logger log = LoggerFactory.getLogger(SystemTestUtils.class);
 
-    private static Set<String> finalCredentialsStatus =
+    private static final ImmutableSet<String> FINAL_CREDENTIALS_STATUS =
             ImmutableSet.of("TEMPORARY_ERROR", "AUTHENTICATION_ERROR", "UPDATED");
 
-    private static Set<String> finalSignableOperationStatus = ImmutableSet.of("EXECUTED", "FAILED");
+    private static final ImmutableSet<String> FINAL_SIGNABLE_OPERATION_STATUS =
+            ImmutableSet.of("EXECUTED", "FAILED");
 
     public static ResponseEntity<String> makePostRequest(String url, Object requestBody)
             throws Exception {
@@ -125,7 +125,7 @@ public class SystemTestUtils {
             String credentialsStatus =
                     latestCredentialsUpdateCallback.get("credentials").get("status").asText();
 
-            if (!finalCredentialsStatus.contains(credentialsStatus)) {
+            if (!FINAL_CREDENTIALS_STATUS.contains(credentialsStatus)) {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
@@ -153,7 +153,7 @@ public class SystemTestUtils {
                                     signableOperationUpdateCallbacks.size() - 1));
             String signableOperationStatus = latestSignableOperationCallback.get("status").asText();
 
-            if (!finalSignableOperationStatus.contains(signableOperationStatus)) {
+            if (!FINAL_SIGNABLE_OPERATION_STATUS.contains(signableOperationStatus)) {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 continue;
             }
