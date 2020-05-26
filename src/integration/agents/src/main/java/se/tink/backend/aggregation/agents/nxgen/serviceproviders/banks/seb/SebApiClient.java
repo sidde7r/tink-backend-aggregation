@@ -44,7 +44,7 @@ public class SebApiClient {
                 httpClient
                         .request(
                                 SebConstants.Urls.getUrl(
-                                        sebConfiguration.getBaseUrl(), Urls.AUTHENTICATE))
+                                        sebConfiguration.getAuthBaseUrl(), Urls.AUTHENTICATE))
                         .header(HeaderKeys.X_SEB_UUID, sebUUID)
                         .accept(MediaType.APPLICATION_JSON)
                         .type(MediaType.APPLICATION_JSON)
@@ -56,7 +56,7 @@ public class SebApiClient {
                 httpClient
                         .request(
                                 SebConstants.Urls.getUrl(
-                                        sebConfiguration.getBaseUrl(), Urls.AUTHENTICATE))
+                                        sebConfiguration.getAuthBaseUrl(), Urls.AUTHENTICATE))
                         .header(HeaderKeys.X_SEB_UUID, sebUUID)
                         .header(HeaderKeys.X_SEB_CSRF, csrfToken)
                         .get(HttpResponse.class));

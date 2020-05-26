@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
 
 public abstract class SebBaseConfiguration {
+    public abstract String getAuthBaseUrl();
+
     public abstract String getBaseUrl();
 
     public abstract String getListAccountsUrl();
