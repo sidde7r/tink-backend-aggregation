@@ -91,7 +91,11 @@ public class SebApiClient {
                 new Request.Builder()
                         .addComponent(new HardwareInformation())
                         .addComponent(new DeviceIdentification())
-                        .addServiceInput(ServiceInputKeys.CUSTOMER_TYPE, ServiceInputValues.PRIVATE)
+                        .addServiceInput(
+                                ServiceInputKeys.CUSTOMER_TYPE,
+                                sebConfiguration.isBusinessAgent()
+                                        ? ServiceInputValues.BUSINESS
+                                        : ServiceInputValues.PRIVATE)
                         .build();
 
         final Response response = post(SebConstants.Urls.ACTIVATE_SESSION, request);

@@ -78,6 +78,7 @@ public class SebConstants {
 
     public static class ServiceInputValues {
         public static final String PRIVATE = "P";
+        public static final String BUSINESS = "S";
         public static final String YES = "Y";
         public static final String DEFAULT_ACCOUNT_TYPE = "ICKEFOND";
         public static final int MAX_ROWS = 110;
