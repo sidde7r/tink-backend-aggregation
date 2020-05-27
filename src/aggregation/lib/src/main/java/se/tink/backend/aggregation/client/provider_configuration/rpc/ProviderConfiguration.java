@@ -40,6 +40,11 @@ public class ProviderConfiguration {
         NON_COMPLIANT
     }
 
+    public enum AuthenticationUserType {
+        PERSONAL,
+        BUSINESS
+    }
+
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
 
@@ -47,6 +52,7 @@ public class ProviderConfiguration {
     private static class FieldsList extends ArrayList<Field> {}
 
     private AccessType accessType;
+    private AuthenticationUserType authenticationUserType;
     private AuthenticationFlow authenticationFlow;
     private String capabilitiesSerialized;
     private String className;
@@ -90,6 +96,10 @@ public class ProviderConfiguration {
 
     public AuthenticationFlow getAuthenticationFlow() {
         return authenticationFlow;
+    }
+
+    public AuthenticationUserType getAuthenticationUserType() {
+        return authenticationUserType;
     }
 
     @JsonProperty("capabilities")
@@ -216,6 +226,10 @@ public class ProviderConfiguration {
 
     public void setAccessType(AccessType accessType) {
         this.accessType = accessType;
+    }
+
+    public void setAuthenticationUserType(AuthenticationUserType authenticationUserType) {
+        this.authenticationUserType = authenticationUserType;
     }
 
     public void setAuthenticationFlow(AuthenticationFlow authenticationFlow) {
