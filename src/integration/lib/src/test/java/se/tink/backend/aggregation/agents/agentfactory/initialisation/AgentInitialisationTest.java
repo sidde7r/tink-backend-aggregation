@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -96,23 +97,38 @@ public class AgentInitialisationTest {
 
     private static final String TEST_CLUSTER_ID = "testCluster-DummyId";
 
-    private static final String CREDENTIALS_OBJECT_TEMPLATE =
-            "{\"fields\":{\"username\":\"username\"},\"debugUntil\":695260800,\"providerLatency\":0,\"id\":\"refresh-test\",\"nextUpdate\":null,\"payload\":\"\",\"providerName\":\"%s\",\"sessionExpiryDate\":null,\"status\":\"CREATED\",\"statusPayload\":\"CREATED\",\"statusPrompt\":\"\",\"statusUpdated\":\"695260800\",\"supplementalInformation\":\"\",\"type\":\"PASSWORD\",\"updated\":\"695260800\",\"userId\":\"userId\",\"dataVersion\":1}";
-
-    private static final String USER_OBJECT_TEMPLATE =
-            "{\"flags\": [], \"flagsSerialized\": \"[]\", \"id\": \"userId\", \"profile\": {\"locale\": \"en_US\"}, \"username\": \"username\", \"debugUntil\": 695260800 }";
+    private static String CREDENTIALS_OBJECT_TEMPLATE;
+    private static String USER_OBJECT_TEMPLATE;
 
     private static User user;
-    private static AggregationServiceConfiguration configuration;
-    private static Map<String, List<String>> agentCapabilities;
+
+    /*
+       This is located in tink-backend-aggregation (test.yml). This contains dummy
+       secrets for OB agents.
+    */
+    private static AggregationServiceConfiguration aggregationServiceConfiguration;
+
+    /*
+       Map from agent class name to list of expected capabilities
+       (we read this from agent-capabilities.json from tink-backend)
+    */
+    private static Map<String, List<String>> expectedAgentCapabilities;
+
+    /*
+       Read from tink-backend
+    */
     private static List<Provider> providerConfigurationsForEnabledProviders;
+
+    /*
+       Which Guice modules are used by AgentFactory to create agent
+    */
     private static Set<Module> guiceModulesToUse;
     private static HostConfiguration hostConfiguration;
     private static Injector injector;
     private static AgentFactory agentFactory;
     private static AgentInitialisationTestConfig agentInitialisationTestConfig;
 
-    private static Map<String, List<String>> readCapabilities(String filePath) {
+    private static Map<String, List<String>> readExpectedAgentCapabilities(String filePath) {
         // given
         Path path = Paths.get(filePath);
 
@@ -135,8 +151,8 @@ public class AgentInitialisationTest {
         return yaml.loadAs(configFileStream, AgentInitialisationTestConfig.class);
     }
 
-    private static AggregationServiceConfiguration readConfiguration(String filePath)
-            throws IOException, ConfigurationException {
+    private static AggregationServiceConfiguration readAggregationServiceConfigurationForTest(
+            String filePath) throws IOException, ConfigurationException {
 
         ConfigurationFactory<AggregationServiceConfiguration> configurationFactory =
                 new ConfigurationFactory<>(
@@ -175,7 +191,6 @@ public class AgentInitialisationTest {
 
     private static List<Provider> getProviderConfigurationsForEnabledProviders(
             String folderForConfigurations) {
-
         return getProviderConfigurationFiles(folderForConfigurations).stream()
                 .map(AgentInitialisationTest::readProviderConfiguration)
                 .flatMap(AgentInitialisationTest::mapProviders)
@@ -192,7 +207,8 @@ public class AgentInitialisationTest {
 
         final ImmutableList.Builder<Module> modulesList =
                 (ImmutableList.Builder<Module>)
-                        buildForProductionMethod.invoke(null, configuration, ENVIRONMENT);
+                        buildForProductionMethod.invoke(
+                                null, aggregationServiceConfiguration, ENVIRONMENT);
 
         Set<Module> modules = modulesList.build().stream().collect(Collectors.toSet());
 
@@ -256,13 +272,28 @@ public class AgentInitialisationTest {
     public static void prepareForTest() {
         // given
         try {
-            configuration = readConfiguration("etc/test.yml");
+            CREDENTIALS_OBJECT_TEMPLATE =
+                    new String(
+                            Files.readAllBytes(
+                                    Paths.get(
+                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources/credentials_template.json")),
+                            StandardCharsets.UTF_8);
+
+            USER_OBJECT_TEMPLATE =
+                    new String(
+                            Files.readAllBytes(
+                                    Paths.get(
+                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources/user_template.json")),
+                            StandardCharsets.UTF_8);
+
+            aggregationServiceConfiguration =
+                    readAggregationServiceConfigurationForTest("etc/test.yml");
             providerConfigurationsForEnabledProviders =
                     getProviderConfigurationsForEnabledProviders(
                             "external/tink_backend/src/provider_configuration/data/seeding");
 
-            agentCapabilities =
-                    readCapabilities(
+            expectedAgentCapabilities =
+                    readExpectedAgentCapabilities(
                             "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
 
             agentInitialisationTestConfig =
@@ -303,7 +334,9 @@ public class AgentInitialisationTest {
         AgentConfigurationControllerable agentConfigurationController =
                 new AgentConfigurationController(
                         mock(TppSecretsServiceClient.class),
-                        configuration.getAgentsServiceConfiguration().getIntegrations(),
+                        aggregationServiceConfiguration
+                                .getAgentsServiceConfiguration()
+                                .getIntegrations(),
                         credentialsRequest.getProvider(),
                         context.getAppId(),
                         "clusterIdForSecretsService",
@@ -365,55 +398,55 @@ public class AgentInitialisationTest {
 
         // given
         // Find given and expected agent capabilitie
-        Set<String> givenAgentCapabilities = new HashSet<>();
-        List<String> expectedAgentCapabilities = agentCapabilities.get(provider.getClassName());
+        Set<String> givenCapabilities = new HashSet<>();
+        List<String> expectedCapabilities = expectedAgentCapabilities.get(provider.getClassName());
 
         if (agent instanceof RefreshCreditCardAccountsExecutor) {
-            givenAgentCapabilities.add("CREDIT_CARDS");
+            givenCapabilities.add("CREDIT_CARDS");
         }
         if (agent instanceof RefreshIdentityDataExecutor) {
-            givenAgentCapabilities.add("IDENTITY_DATA");
+            givenCapabilities.add("IDENTITY_DATA");
         }
         if (agent instanceof RefreshCheckingAccountsExecutor) {
-            givenAgentCapabilities.add("CHECKING_ACCOUNTS");
+            givenCapabilities.add("CHECKING_ACCOUNTS");
         }
         if (agent instanceof RefreshSavingsAccountsExecutor) {
-            givenAgentCapabilities.add("SAVINGS_ACCOUNTS");
+            givenCapabilities.add("SAVINGS_ACCOUNTS");
         }
         if (agent instanceof RefreshInvestmentAccountsExecutor) {
-            givenAgentCapabilities.add("INVESTMENTS");
+            givenCapabilities.add("INVESTMENTS");
         }
         if (agent instanceof RefreshLoanAccountsExecutor) {
             boolean relatedGivenCapability = false;
-            if (expectedAgentCapabilities.contains("LOANS")) {
-                givenAgentCapabilities.add("LOANS");
+            if (expectedCapabilities.contains("LOANS")) {
+                givenCapabilities.add("LOANS");
                 relatedGivenCapability = true;
             }
-            if (expectedAgentCapabilities.contains("MORTGAGE_AGGREGATION")) {
-                givenAgentCapabilities.add("MORTGAGE_AGGREGATION");
+            if (expectedCapabilities.contains("MORTGAGE_AGGREGATION")) {
+                givenCapabilities.add("MORTGAGE_AGGREGATION");
                 relatedGivenCapability = true;
             }
             if (!relatedGivenCapability) {
                 // Not MORTGAGE_AGGREGATION because LOANS is the new capability that covers
                 // all, MORTGAGE_AGGREGATION is just there for backward compatibility
-                givenAgentCapabilities.add("LOANS");
+                givenCapabilities.add("LOANS");
             }
         }
         if (agent instanceof TransferExecutor) {
             boolean relatedGivenCapability = false;
-            if (expectedAgentCapabilities.contains("TRANSFERS")) {
-                givenAgentCapabilities.add("TRANSFERS");
+            if (expectedCapabilities.contains("TRANSFERS")) {
+                givenCapabilities.add("TRANSFERS");
                 relatedGivenCapability = true;
             }
-            if (expectedAgentCapabilities.contains("PAYMENTS")) {
-                givenAgentCapabilities.add("PAYMENTS");
+            if (expectedCapabilities.contains("PAYMENTS")) {
+                givenCapabilities.add("PAYMENTS");
                 relatedGivenCapability = true;
             }
             if (!relatedGivenCapability) {
                 // Not TRANSFERS because PAYMENTS and TRANSFERS are the same and PAYMENTS is
                 // newer
                 // TRANSFER is there just for backward compatibility
-                givenAgentCapabilities.add("PAYMENTS");
+                givenCapabilities.add("PAYMENTS");
             }
         }
         /*
@@ -424,20 +457,20 @@ public class AgentInitialisationTest {
         that it should have the TRANSFER capability (see AxaAgent)
          */
         if (agent instanceof TransferExecutorNxgen) {
-            if (expectedAgentCapabilities.contains("TRANSFERS")) {
-                expectedAgentCapabilities.remove("TRANSFERS");
+            if (expectedCapabilities.contains("TRANSFERS")) {
+                expectedCapabilities.remove("TRANSFERS");
             }
-            if (expectedAgentCapabilities.contains("PAYMENTS")) {
-                expectedAgentCapabilities.remove("PAYMENTS");
+            if (expectedCapabilities.contains("PAYMENTS")) {
+                expectedCapabilities.remove("PAYMENTS");
             }
         }
 
         // then
         SetView<String> expectedButNotGiven =
-                Sets.difference(new HashSet<>(expectedAgentCapabilities), givenAgentCapabilities);
+                Sets.difference(new HashSet<>(expectedCapabilities), givenCapabilities);
 
         SetView<String> givenButNotExpected =
-                Sets.difference(givenAgentCapabilities, new HashSet<>(expectedAgentCapabilities));
+                Sets.difference(givenCapabilities, new HashSet<>(expectedCapabilities));
 
         StringBuilder builder = new StringBuilder();
         if (expectedButNotGiven.size() > 0) {
