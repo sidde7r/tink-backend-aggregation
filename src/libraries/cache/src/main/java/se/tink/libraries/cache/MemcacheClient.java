@@ -1,6 +1,8 @@
 package se.tink.libraries.cache;
 
+import com.google.common.util.concurrent.Futures;
 import java.io.IOException;
+import java.util.concurrent.Future;
 import javax.annotation.PreDestroy;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.ConnectionFactory;
@@ -17,11 +19,12 @@ public class MemcacheClient implements CacheClient {
     }
 
     @Override
-    public void set(CacheScope scope, String key, int expiredTime, Object object) {
+    public Future<?> set(CacheScope scope, String key, int expiredTime, Object object) {
         try {
-            memcachedClient.set(scope.withKey(key), expiredTime, object);
+            return memcachedClient.set(scope.withKey(key), expiredTime, object);
         } catch (Exception e) {
-            log.warn("Could not store a key to memcache.", e);
+            log.error("Could not store a key to memcache.", e);
+            return Futures.immediateFailedFuture(e);
         }
     }
 

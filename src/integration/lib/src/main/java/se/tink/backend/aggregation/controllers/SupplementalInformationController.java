@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.controllers;
 
 import com.google.inject.Inject;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import org.slf4j.Logger;
@@ -25,8 +28,12 @@ public class SupplementalInformationController {
     public void setSupplementalInformation(String credentialsId, String fields) {
         logger.info("Received supplemental information for credentialsId: {}", credentialsId);
 
-        cacheClient.set(
-                CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, credentialsId, 60 * 10, fields);
+        Future<?> future =
+                cacheClient.set(
+                        CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID,
+                        credentialsId,
+                        60 * 10,
+                        fields);
 
         logger.info(
                 "CacheClient cached the credentialsId: {} with value status {}",
@@ -37,6 +44,19 @@ public class SupplementalInformationController {
                         coordinationClient,
                         BarrierName.build(
                                 BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, credentialsId));
+        try {
+            if (future != null) {
+                future.get(5, TimeUnit.SECONDS);
+            }
+        } catch (TimeoutException e) {
+            logger.error(
+                    "[SupplementalInformationController] Timeout exception when writing to cache.",
+                    e);
+        } catch (Exception e) {
+            logger.error(
+                    "[SupplementalInformationController] Unhandled exception when writing to cache",
+                    e);
+        }
 
         try {
             lock.removeBarrier();
