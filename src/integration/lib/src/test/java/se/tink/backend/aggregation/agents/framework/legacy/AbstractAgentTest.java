@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.context.AgentTestContext;
-import se.tink.backend.aggregation.agents.framework.modules.production.ProductionModule;
+import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -66,7 +66,8 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         }
 
         // Provide AgentFactory with 'production' components.
-        final Injector injector = Guice.createInjector(new ProductionModule(configuration));
+        final Injector injector =
+                Guice.createInjector(new AgentIntegrationTestModule(configuration));
         factory = injector.getInstance(AgentFactory.class);
     }
 

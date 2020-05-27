@@ -9,6 +9,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/factory",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/module/loader",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
         "//third_party:com_google_inject_guice",
     ],

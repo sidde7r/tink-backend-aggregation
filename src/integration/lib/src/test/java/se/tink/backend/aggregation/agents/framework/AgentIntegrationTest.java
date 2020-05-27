@@ -38,7 +38,7 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
-import se.tink.backend.aggregation.agents.framework.modules.production.ProductionModule;
+import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
@@ -215,7 +215,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             agentConfigurationController.getSecretValuesObservable());
             context.setAgentConfigurationController(agentConfigurationController);
 
-            final Injector injector = Guice.createInjector(new ProductionModule(configuration));
+            final Injector injector =
+                    Guice.createInjector(new AgentIntegrationTestModule(configuration));
             final AgentFactory factory = injector.getInstance(AgentFactory.class);
 
             return factory.create(credentialsRequest, context);
