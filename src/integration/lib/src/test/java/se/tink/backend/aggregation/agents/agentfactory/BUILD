@@ -1,9 +1,9 @@
 load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 
 junit_test(
-    name = "initialisation",
+    name = "agentfactory",
     srcs = glob(
-        include = ["*.java"],
+        include = ["**/*.java"],
     ),
     data = [
         "//data:agents",
@@ -13,7 +13,7 @@ junit_test(
         "//data:eidas_dev",
         "//data:provider_configurations",
         "//etc:development",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
     ],
@@ -30,6 +30,7 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
@@ -72,6 +73,7 @@ junit_test(
         "//third_party:io_grpc_grpc_protobuf_lite",
         "//third_party:io_vavr",
         "//third_party:junit_junit",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_curator_curator_framework",
@@ -96,6 +98,5 @@ junit_test(
         "@aggregation//:io_reactivex_rxjava3_rxjava",
         "@aggregation//:joda_time_joda_time",
         "@aggregation//:org_yaml_snakeyaml",
-        "//third_party:lombok_libs",
     ],
 )

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.agentfactory.initialisation;
+package se.tink.backend.aggregation.agents.agentfactory;
 
 import static java.util.stream.Collectors.groupingBy;
 import static org.mockito.Mockito.doReturn;
@@ -126,7 +126,7 @@ public class AgentInitialisationTest {
     private static HostConfiguration hostConfiguration;
     private static Injector injector;
     private static AgentFactory agentFactory;
-    private static AgentInitialisationTestConfig agentInitialisationTestConfig;
+    private static AgentFactoryTestConfig agentFactoryTestConfig;
 
     private static Map<String, List<String>> readExpectedAgentCapabilities(String filePath) {
         // given
@@ -143,12 +143,12 @@ public class AgentInitialisationTest {
         }
     }
 
-    private static AgentInitialisationTestConfig readTestConfiguration(String filePath)
+    private static AgentFactoryTestConfig readTestConfiguration(String filePath)
             throws IOException {
         FileInputStream configFileStream = new FileInputStream(new File(filePath));
-        Yaml yaml = new Yaml(new Constructor(AgentInitialisationTestConfig.class));
+        Yaml yaml = new Yaml(new Constructor(AgentFactoryTestConfig.class));
         yaml.setBeanAccess(BeanAccess.FIELD);
-        return yaml.loadAs(configFileStream, AgentInitialisationTestConfig.class);
+        return yaml.loadAs(configFileStream, AgentFactoryTestConfig.class);
     }
 
     private static AggregationServiceConfiguration readAggregationServiceConfigurationForTest(
@@ -276,14 +276,14 @@ public class AgentInitialisationTest {
                     new String(
                             Files.readAllBytes(
                                     Paths.get(
-                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources/credentials_template.json")),
+                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json")),
                             StandardCharsets.UTF_8);
 
             USER_OBJECT_TEMPLATE =
                     new String(
                             Files.readAllBytes(
                                     Paths.get(
-                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources/user_template.json")),
+                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json")),
                             StandardCharsets.UTF_8);
 
             aggregationServiceConfiguration =
@@ -296,9 +296,9 @@ public class AgentInitialisationTest {
                     readExpectedAgentCapabilities(
                             "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
 
-            agentInitialisationTestConfig =
+            agentFactoryTestConfig =
                     readTestConfiguration(
-                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources/test_config.yml");
+                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml");
 
             providerConfigurationsForEnabledProviders.sort(
                     (p1, p2) -> p1.getName().compareTo(p2.getName()));
@@ -513,7 +513,7 @@ public class AgentInitialisationTest {
                 getProviders().stream()
                         .filter(
                                 provider ->
-                                        !agentInitialisationTestConfig
+                                        !agentFactoryTestConfig
                                                 .getIgnoredAgentsForInitialisationTest()
                                                 .contains(provider.getClassName()))
                         .collect(Collectors.toList());
@@ -547,12 +547,12 @@ public class AgentInitialisationTest {
                 getProviders().stream()
                         .filter(
                                 provider ->
-                                        !agentInitialisationTestConfig
+                                        !agentFactoryTestConfig
                                                 .getIgnoredAgentsForInitialisationTest()
                                                 .contains(provider.getClassName()))
                         .filter(
                                 provider ->
-                                        !agentInitialisationTestConfig
+                                        !agentFactoryTestConfig
                                                 .getIgnoredAgentsForCapabilityTest()
                                                 .contains(provider.getClassName()))
                         .collect(Collectors.toList());
