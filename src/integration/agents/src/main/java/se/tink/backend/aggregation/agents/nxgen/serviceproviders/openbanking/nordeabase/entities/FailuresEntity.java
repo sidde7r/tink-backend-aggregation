@@ -21,19 +21,16 @@ public class FailuresEntity {
                             .<BiFunction<String, Throwable, PaymentException>, String>
                                     genericBuilder()
                             .put(
-                                    (description, cause) ->
-                                            new PaymentValidationException(description, cause),
+                                    (msg, cause) -> new PaymentValidationException(msg, cause),
                                     "error.validation")
                             .put(
-                                    (description, cause) ->
-                                            new PaymentAuthenticationException(description, cause),
+                                    (msg, cause) -> new PaymentAuthenticationException(msg, cause),
                                     "error.apikey.missing",
                                     "error.token",
                                     "error.token.invalid",
                                     "error.token.expired")
                             .put(
-                                    (description, cause) ->
-                                            new PaymentAuthorizationException(description, cause),
+                                    (msg, cause) -> new PaymentAuthorizationException(msg, cause),
                                     "error.resource.denied")
                             .build();
 
@@ -44,7 +41,7 @@ public class FailuresEntity {
 
     @JsonIgnore
     public PaymentException buildRelevantException(Throwable cause) {
-        if (code == "error.validation") {
+        if ("error.validation".equals(code)) {
             if (!Strings.isNullOrEmpty(path)) {
                 if (path.startsWith("creditor")) {
                     return new CreditorValidationException(description, path, cause);

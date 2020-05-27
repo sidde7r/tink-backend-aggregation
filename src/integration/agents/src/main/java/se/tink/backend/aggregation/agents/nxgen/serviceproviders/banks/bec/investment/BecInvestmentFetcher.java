@@ -132,8 +132,7 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
             details = apiClient.fetchInstrumentDetails(url, accountNumber);
         } catch (HttpResponseException exception) {
             log.warn("Fetching investment details failed.", exception);
-        } finally {
-            return Optional.ofNullable(details);
         }
+        return Optional.ofNullable(details);
     }
 }
