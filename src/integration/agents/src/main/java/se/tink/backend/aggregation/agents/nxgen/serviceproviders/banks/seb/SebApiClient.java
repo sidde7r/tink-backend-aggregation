@@ -17,7 +17,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebCo
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.UserMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.entities.HardwareInformation;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.ChallengeSolutionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.SystemStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
@@ -60,6 +62,27 @@ public class SebApiClient {
                         .header(HeaderKeys.X_SEB_UUID, sebUUID)
                         .header(HeaderKeys.X_SEB_CSRF, csrfToken)
                         .get(HttpResponse.class));
+    }
+
+    public ChallengeResponse getChallenge() {
+        return httpClient
+                .request(
+                        SebConstants.Urls.getUrl(sebConfiguration.getAuthBaseUrl(), Urls.CHALLENGE))
+                .header(HeaderKeys.X_SEB_UUID, sebUUID)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .post(ChallengeResponse.class);
+    }
+
+    public Response verifyChallengeSolution(String signature, String userId) {
+        return httpClient
+                .request(
+                        SebConstants.Urls.getUrl(sebConfiguration.getAuthBaseUrl(), Urls.VERIFY))
+                .header(HeaderKeys.X_SEB_UUID, sebUUID)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .body(new ChallengeSolutionRequest(signature, userId))
+                .post(Response.class);
     }
 
     private Response post(String path, Request request) {

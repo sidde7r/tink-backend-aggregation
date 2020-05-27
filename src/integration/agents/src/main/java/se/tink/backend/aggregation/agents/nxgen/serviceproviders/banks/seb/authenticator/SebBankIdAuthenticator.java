@@ -27,8 +27,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 
-public class SebAuthenticator implements BankIdAuthenticator<String> {
-    private static final AggregationLogger LOG = new AggregationLogger(SebAuthenticator.class);
+public class SebBankIdAuthenticator implements BankIdAuthenticator<String> {
+    private static final AggregationLogger LOG = new AggregationLogger(SebBankIdAuthenticator.class);
     private final SebApiClient apiClient;
     private final SebSessionStorage sessionStorage;
     private final SebBaseConfiguration sebConfiguration;
@@ -36,7 +36,7 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
     private String csrfToken;
     private String ssn;
 
-    public SebAuthenticator(
+    public SebBankIdAuthenticator(
             SebApiClient apiClient,
             SebSessionStorage sessionStorage,
             SebBaseConfiguration sebConfiguration) {
