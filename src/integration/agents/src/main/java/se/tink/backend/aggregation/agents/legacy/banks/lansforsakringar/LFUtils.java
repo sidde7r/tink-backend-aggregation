@@ -3,12 +3,15 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar;
 import static com.google.common.base.Objects.equal;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.sun.jersey.api.client.ClientResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.EInvoice;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentEntity;
@@ -146,6 +149,15 @@ public class LFUtils {
         return Objects.equals(
                 transferRequest.calculateHash(),
                 upcomingTransactionEntity.calculateTransferHash(transferRequest.getFromAccount()));
+    }
+
+    public static boolean isClientResponseCancel(ClientResponse clientResponse) {
+        if (clientResponse.getStatus() == HttpStatus.SC_BAD_REQUEST
+                && clientResponse.getHeaders().getFirst("Error-Message") != null) {
+            String errorCode = clientResponse.getHeaders().getFirst("Error-Code");
+            return !Strings.isNullOrEmpty(errorCode);
+        }
+        return false;
     }
 
     private static long flattenDate(long date) {

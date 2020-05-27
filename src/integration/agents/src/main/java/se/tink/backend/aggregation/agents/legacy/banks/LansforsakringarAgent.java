@@ -1111,20 +1111,21 @@ public class LansforsakringarAgent extends AbstractAgent
     /** Helper method to validate a client response in the payment process. */
     private void validateTransactionClientResponse(ClientResponse clientResponse)
             throws TransferExecutionException {
-        if (clientResponse.getStatus() == HttpStatus.SC_BAD_REQUEST
-                && clientResponse.getHeaders().getFirst("Error-Message") != null) {
-            String errorCode = clientResponse.getHeaders().getFirst("Error-Code");
-            if (!Strings.isNullOrEmpty(errorCode)) {
-                if ("122111".equals(errorCode)) { // when amount > balance
+        if (LFUtils.isClientResponseCancel(clientResponse)) {
+            switch (clientResponse.getHeaders().getFirst("Error-Code")) {
+                case "122111":
                     throw cancelTransfer(EndUserMessage.EXCESS_AMOUNT);
-                }
+                case "99351":
+                    throw cancelTransfer(
+                            EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY);
+                default:
+                    throw cancelTransferWithMessage(
+                            String.format(
+                                    "Error code: %s, error message: %s",
+                                    clientResponse.getHeaders().getFirst("Error-Code"),
+                                    clientResponse.getHeaders().getFirst("Error-Message")),
+                            TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
             }
-            throw failTransferWithMessage(
-                    String.format(
-                            "Error code: %s, error message: %s",
-                            clientResponse.getHeaders().getFirst("Error-Code"),
-                            clientResponse.getHeaders().getFirst("Error-Message")),
-                    TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
         } else if (clientResponse.getStatus() != HttpStatus.SC_OK) {
             throw failTransfer(TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
         }
