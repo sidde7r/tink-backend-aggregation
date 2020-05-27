@@ -117,7 +117,6 @@ ignoredAgentsForCapabilityTest:
 #  we cannot cover them in test
 #
 ignoredAgentsForInitialisationTest:
-  - nxgen.be.banks.bpost.BPostBank
   - nxgen.se.banks.nordea.partner.NordeaPartnerSeAgent
   - nxgen.dk.banks.nordeapartner.NordeaPartnerDkAgent
   - nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent
