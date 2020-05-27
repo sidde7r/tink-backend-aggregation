@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.compliance.account_capabilities;
+package se.tink.backend.aggregation.compliance.account_classification;
 
 import lombok.Builder;
 import lombok.Getter;

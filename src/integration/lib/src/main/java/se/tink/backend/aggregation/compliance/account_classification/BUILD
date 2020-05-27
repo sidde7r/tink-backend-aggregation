@@ -1,5 +1,5 @@
 java_library(
-    name = "account_capabilities",
+    name = "psd2",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
