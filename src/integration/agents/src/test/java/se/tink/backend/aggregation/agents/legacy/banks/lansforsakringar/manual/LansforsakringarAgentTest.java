@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks.lansforsakringar;
+package se.tink.backend.aggregation.agents.banks.lansforsakringar.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;
