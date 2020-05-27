@@ -7,21 +7,21 @@ import lombok.Getter;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.BeanAccess;
-import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryTestConfig;
+import se.tink.backend.aggregation.agents.agentfactory.AgentFactoryTestConfiguration;
 
 @Getter
 public class TestConfigurationReaderUtil {
 
-    private final AgentFactoryTestConfig agentFactoryTestConfig;
+    private final AgentFactoryTestConfiguration agentFactoryTestConfiguration;
 
     public TestConfigurationReaderUtil(String configurationPath) {
         FileInputStream configFileStream = null;
         try {
             configFileStream = new FileInputStream(new File(configurationPath));
-            Yaml yaml = new Yaml(new Constructor(AgentFactoryTestConfig.class));
+            Yaml yaml = new Yaml(new Constructor(AgentFactoryTestConfiguration.class));
             yaml.setBeanAccess(BeanAccess.FIELD);
-            this.agentFactoryTestConfig =
-                    yaml.loadAs(configFileStream, AgentFactoryTestConfig.class);
+            this.agentFactoryTestConfiguration =
+                    yaml.loadAs(configFileStream, AgentFactoryTestConfiguration.class);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

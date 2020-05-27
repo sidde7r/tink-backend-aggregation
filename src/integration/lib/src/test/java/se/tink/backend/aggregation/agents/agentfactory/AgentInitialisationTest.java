@@ -19,21 +19,21 @@ import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationRe
 
 public class AgentInitialisationTest {
 
-    private static AgentFactoryTestConfig agentFactoryTestConfig =
+    private static AgentFactoryTestConfiguration agentFactoryTestConfiguration =
             new TestConfigurationReaderUtil(
                             "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
-                    .getAgentFactoryTestConfig();
+                    .getAgentFactoryTestConfiguration();
 
     private List<Provider> providerConfigurations =
             new ProviderFetcherUtil("external/tink_backend/src/provider_configuration/data/seeding")
                     .getProviderConfigurations();
 
-    private static AgentFactoryTestConfig readTestConfiguration(String filePath)
+    private static AgentFactoryTestConfiguration readTestConfiguration(String filePath)
             throws IOException {
         FileInputStream configFileStream = new FileInputStream(new File(filePath));
-        Yaml yaml = new Yaml(new Constructor(AgentFactoryTestConfig.class));
+        Yaml yaml = new Yaml(new Constructor(AgentFactoryTestConfiguration.class));
         yaml.setBeanAccess(BeanAccess.FIELD);
-        return yaml.loadAs(configFileStream, AgentFactoryTestConfig.class);
+        return yaml.loadAs(configFileStream, AgentFactoryTestConfiguration.class);
     }
 
     private void throwProperErrorMessageForAgentInitialisationException(
@@ -85,7 +85,7 @@ public class AgentInitialisationTest {
                 getProvidersForInitialisationTest().stream()
                         .filter(
                                 provider ->
-                                        !agentFactoryTestConfig
+                                        !agentFactoryTestConfiguration
                                                 .getIgnoredAgentsForInitialisationTest()
                                                 .contains(provider.getClassName()))
                         .collect(Collectors.toList());

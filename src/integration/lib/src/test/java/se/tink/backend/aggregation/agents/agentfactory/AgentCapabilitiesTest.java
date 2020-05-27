@@ -40,10 +40,10 @@ public class AgentCapabilitiesTest {
             readExpectedAgentCapabilities(
                     "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
 
-    private static AgentFactoryTestConfig agentFactoryTestConfig =
+    private static AgentFactoryTestConfiguration agentFactoryTestConfiguration =
             new TestConfigurationReaderUtil(
                             "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
-                    .getAgentFactoryTestConfig();
+                    .getAgentFactoryTestConfiguration();
 
     private List<Provider> providerConfigurations =
             new ProviderFetcherUtil("external/tink_backend/src/provider_configuration/data/seeding")
@@ -208,12 +208,12 @@ public class AgentCapabilitiesTest {
                 getProvidersForCapabilitiesTest().stream()
                         .filter(
                                 provider ->
-                                        !agentFactoryTestConfig
+                                        !agentFactoryTestConfiguration
                                                 .getIgnoredAgentsForInitialisationTest()
                                                 .contains(provider.getClassName()))
                         .filter(
                                 provider ->
-                                        !agentFactoryTestConfig
+                                        !agentFactoryTestConfiguration
                                                 .getIgnoredAgentsForCapabilityTest()
                                                 .contains(provider.getClassName()))
                         .collect(Collectors.toList());
