@@ -1,19 +1,23 @@
 package se.tink.backend.aggregation.agents.agentfactory;
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.junit.Assert.assertEquals;
 
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import io.dropwizard.jackson.Jackson;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
@@ -32,30 +36,37 @@ import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationRe
 
 public class AgentCapabilitiesTest {
 
-    /*
-       Map from agent class name to list of expected capabilities
-       (we read this from agent-capabilities.json from tink-backend)
-    */
-    private static Map<String, List<String>> expectedAgentCapabilities =
-            readExpectedAgentCapabilities(
-                    "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
+    private static final Logger log = LoggerFactory.getLogger(AgentCapabilitiesTest.class);
 
-    private static AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-            new TestConfigurationReaderUtil(
-                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
-                    .getAgentFactoryTestConfiguration();
+    private static Map<String, List<String>> expectedAgentCapabilities;
+    private static AgentFactoryTestConfiguration agentFactoryTestConfiguration;
+    private static List<Provider> providerConfigurations;
+    private static AgentInitialisationUtil agentInitialisationUtil;
 
-    private List<Provider> providerConfigurations =
-            new ProviderFetcherUtil("external/tink_backend/src/provider_configuration/data/seeding")
-                    .getProviderConfigurations();
+    @BeforeClass
+    public static void prepareForTest() {
+        // given
+        expectedAgentCapabilities =
+                readExpectedAgentCapabilities(
+                        "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
+
+        agentFactoryTestConfiguration =
+                new TestConfigurationReaderUtil(
+                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
+                        .getAgentFactoryTestConfiguration();
+
+        providerConfigurations =
+                new ProviderFetcherUtil(
+                                "external/tink_backend/src/provider_configuration/data/seeding")
+                        .getProviderConfigurations();
+
+        agentInitialisationUtil = new AgentInitialisationUtil("etc/test.yml");
+    }
 
     private static Map<String, List<String>> readExpectedAgentCapabilities(String filePath) {
-        // given
-        Path path = Paths.get(filePath);
-
         Map<String, List<String>> agentCapabilities;
         try {
-            byte[] agentCapabilitiesFileData = Files.readAllBytes(path);
+            byte[] agentCapabilitiesFileData = Files.readAllBytes(Paths.get(filePath));
             agentCapabilities =
                     Jackson.newObjectMapper()
                             .readValue(new String(agentCapabilitiesFileData), Map.class);
@@ -65,19 +76,23 @@ public class AgentCapabilitiesTest {
         }
     }
 
-    private void compareExpectedAndGivenAgentCapabilities(Provider provider) throws Exception {
+    private Optional<String> compareExpectedAndGivenAgentCapabilities(Provider provider) {
 
-        Agent agent = new AgentInitialisationUtil("etc/test.yml").initialiseAgent(provider);
-
-        // Skip capability checks because we cannot do that for these agents
-        if (agent instanceof DeprecatedRefreshExecutor) {
-            return;
+        Agent agent;
+        try {
+            agent = agentInitialisationUtil.initialiseAgent(provider);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
-        // given
-        // Find given and expected agent capabilitie
+        // Skip because we cannot perform check for such agents
+        if (agent instanceof DeprecatedRefreshExecutor) {
+            return Optional.empty();
+        }
+
         Set<String> givenCapabilities = new HashSet<>();
-        List<String> expectedCapabilities = expectedAgentCapabilities.get(provider.getClassName());
+        Set<String> expectedCapabilities =
+                new HashSet<>(expectedAgentCapabilities.get(provider.getClassName()));
 
         if (agent instanceof RefreshCreditCardAccountsExecutor) {
             givenCapabilities.add("CREDIT_CARDS");
@@ -143,7 +158,6 @@ public class AgentCapabilitiesTest {
             }
         }
 
-        // then
         SetView<String> expectedButNotGiven =
                 Sets.difference(new HashSet<>(expectedCapabilities), givenCapabilities);
 
@@ -169,7 +183,9 @@ public class AgentCapabilitiesTest {
                             + "\n");
         }
         if (expectedButNotGiven.size() > 0 || givenButNotExpected.size() > 0) {
-            throw new RuntimeException(builder.toString());
+            return Optional.of(builder.toString());
+        } else {
+            return Optional.empty();
         }
     }
 
@@ -202,9 +218,9 @@ public class AgentCapabilitiesTest {
         3- We cannot perform tests on agents that are not tested for initialisation
     */
     @Test
-    public void expectedCapabilitiesAndGivenCapabilitiesShouldMatchForAllAgents() {
+    public void expectedCapabilitiesAndGivenCapabilitiesShouldMatchForUnignoredAgents() {
         // given
-        List<Provider> providers =
+        List<Provider> providerForEachUnignoredAgent =
                 getProvidersForCapabilitiesTest().stream()
                         .filter(
                                 provider ->
@@ -218,16 +234,18 @@ public class AgentCapabilitiesTest {
                                                 .contains(provider.getClassName()))
                         .collect(Collectors.toList());
 
-        // when / then
-        providers
-                .parallelStream()
-                .forEach(
-                        provider -> {
-                            try {
-                                this.compareExpectedAndGivenAgentCapabilities(provider);
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
+        // when
+        List<String> errors =
+                providerForEachUnignoredAgent
+                        .parallelStream()
+                        .map(this::compareExpectedAndGivenAgentCapabilities)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+
+        errors.stream().forEach(log::error);
+
+        // then
+        assertEquals(0, errors.size());
     }
 }
