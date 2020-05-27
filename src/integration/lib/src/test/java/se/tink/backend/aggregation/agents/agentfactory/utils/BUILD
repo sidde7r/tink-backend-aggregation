@@ -1,10 +1,6 @@
-load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
-
-junit_test(
-    name = "agentfactory",
-    srcs = glob(
-        include = ["*.java"],
-    ),
+java_library(
+    name = "utils",
+    srcs = glob(["*.java"]),
     data = [
         "//data:agents",
         "//data:aggregation_test",
@@ -13,25 +9,31 @@ junit_test(
         "//data:eidas_dev",
         "//data:provider_configurations",
         "//etc:development",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
     ],
     deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/repositories",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/testclasses",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/utils",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/iface",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/contexts/agent",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/configuration/iface",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",
         "//src/integration/tpp_secrets_service/client",
+        "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/iface",
+        "//src/integration/user:rpc",
         "//src/libraries/metrics:collection",
         "//src/libraries/metrics:configuration",
         "//src/libraries/metrics:core",

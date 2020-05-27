@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisationUtil;
 import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcherUtil;
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReaderUtil;

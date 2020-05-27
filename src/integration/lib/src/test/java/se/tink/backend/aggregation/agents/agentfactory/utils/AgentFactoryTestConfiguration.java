@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.agentfactory;
+package se.tink.backend.aggregation.agents.agentfactory.utils;
 
 import java.util.List;
 import lombok.Getter;

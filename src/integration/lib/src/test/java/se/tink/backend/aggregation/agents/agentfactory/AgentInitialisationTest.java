@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
+import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisationUtil;
 import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcherUtil;
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReaderUtil;
