@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.eventproducerservice.grpc.EventAck;
+import se.tink.backend.eventproducerservice.grpc.EventAckAsync;
 import se.tink.backend.eventproducerservice.grpc.PostEventRequest;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
@@ -38,6 +39,16 @@ public class LoginExecutorTest {
         public ListenableFuture<EventAck> postEventAsync(Any data) {
             postedData = data;
             return null;
+        }
+
+        @Override
+        public ListenableFuture<EventAckAsync> postEventFireAndForget(Any data) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public ListenableFuture<EventAckAsync> postEventFireAndForget(PostEventRequest request) {
+            throw new UnsupportedOperationException();
         }
 
         @Override
