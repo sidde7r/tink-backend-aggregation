@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.AbstractModule;
@@ -23,6 +22,7 @@ import io.dropwizard.jackson.Jackson;
 import io.dropwizard.setup.Environment;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,6 +41,9 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.introspector.BeanAccess;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
@@ -103,26 +106,11 @@ public class AgentInitialisationTest {
     private static AggregationServiceConfiguration configuration;
     private static Map<String, List<String>> agentCapabilities;
     private static List<Provider> providerConfigurationsForEnabledProviders;
-    private static List<String> agentsIgnoredForCapabilityTest;
     private static Set<Module> guiceModulesToUse;
     private static HostConfiguration hostConfiguration;
     private static Injector injector;
     private static AgentFactory agentFactory;
-
-    /*
-       These agents are temporarily ignored because these agents fail in the test,
-       here are the reasons:
-
-       NordeaPartnerXXAgent: We need to create our own test JKS files otherwise we cannot cover them in test
-    */
-
-    private static ImmutableSet<String> temporarilyIgnoredAgents =
-            ImmutableSet.of(
-                    "nxgen.be.banks.bpost.BPostBank",
-                    "nxgen.se.banks.nordea.partner.NordeaPartnerSeAgent",
-                    "nxgen.dk.banks.nordeapartner.NordeaPartnerDkAgent",
-                    "nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent",
-                    "nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent");
+    private static AgentInitialisationTestConfig agentInitialisationTestConfig;
 
     private static Map<String, List<String>> readCapabilities(String filePath) {
         // given
@@ -139,10 +127,12 @@ public class AgentInitialisationTest {
         }
     }
 
-    private static List<String> readAgentsIgnoredForCapabilityTest(String filePath)
+    private static AgentInitialisationTestConfig readTestConfiguration(String filePath)
             throws IOException {
-        Path path = Paths.get(filePath);
-        return Files.readAllLines(path);
+        FileInputStream configFileStream = new FileInputStream(new File(filePath));
+        Yaml yaml = new Yaml(new Constructor(AgentInitialisationTestConfig.class));
+        yaml.setBeanAccess(BeanAccess.FIELD);
+        return yaml.loadAs(configFileStream, AgentInitialisationTestConfig.class);
     }
 
     private static AggregationServiceConfiguration readConfiguration(String filePath)
@@ -274,9 +264,10 @@ public class AgentInitialisationTest {
             agentCapabilities =
                     readCapabilities(
                             "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
-            agentsIgnoredForCapabilityTest =
-                    readAgentsIgnoredForCapabilityTest(
-                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources/ignored_agents_for_capability_test.txt");
+
+            agentInitialisationTestConfig =
+                    readTestConfiguration(
+                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources/test_config.yml");
 
             providerConfigurationsForEnabledProviders.sort(
                     (p1, p2) -> p1.getName().compareTo(p2.getName()));
@@ -368,8 +359,7 @@ public class AgentInitialisationTest {
         Agent agent = initialiseAgent(provider);
 
         // Skip capability checks because we cannot do that for these agents
-        if (agent instanceof DeprecatedRefreshExecutor
-                || agentsIgnoredForCapabilityTest.contains(provider.getClassName())) {
+        if (agent instanceof DeprecatedRefreshExecutor) {
             return;
         }
 
@@ -480,14 +470,20 @@ public class AgentInitialisationTest {
                 .entrySet()
                 .stream()
                 .map(entry -> entry.getValue().get(0))
-                .filter(provider -> !temporarilyIgnoredAgents.contains(provider.getClassName()))
                 .collect(Collectors.toList());
     }
 
     @Test
     public void whenEnabledProvidersAreGivenAgentFactoryShouldInstantiateAllEnabledAgents() {
         // given
-        List<Provider> providers = getProviders();
+        List<Provider> providers =
+                getProviders().stream()
+                        .filter(
+                                provider ->
+                                        !agentInitialisationTestConfig
+                                                .getIgnoredAgentsForInitialisationTest()
+                                                .contains(provider.getClassName()))
+                        .collect(Collectors.toList());
 
         // given / when
         providers.parallelStream().forEach(this::initialiseAgent);
@@ -509,11 +505,24 @@ public class AgentInitialisationTest {
 
         1- We do not make any assertions on PAYMENTS and TRANSFER capabilities.
         2- We do not make any assertions on agents that implement DeprecatedRefreshExecutor
+        3- We cannot perform tests on agents that are not tested for initialisation
     */
     @Test
     public void expectedCapabilitiesAndGivenCapabilitiesShouldMatchForAllAgents() {
         // given
-        List<Provider> providers = getProviders();
+        List<Provider> providers =
+                getProviders().stream()
+                        .filter(
+                                provider ->
+                                        !agentInitialisationTestConfig
+                                                .getIgnoredAgentsForInitialisationTest()
+                                                .contains(provider.getClassName()))
+                        .filter(
+                                provider ->
+                                        !agentInitialisationTestConfig
+                                                .getIgnoredAgentsForCapabilityTest()
+                                                .contains(provider.getClassName()))
+                        .collect(Collectors.toList());
 
         // when / then
         providers.parallelStream().forEach(this::compareExpectedAndGivenAgentCapabilities);

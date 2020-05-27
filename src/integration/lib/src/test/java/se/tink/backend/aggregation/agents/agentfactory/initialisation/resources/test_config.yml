@@ -1,0 +1,124 @@
+#
+#  These agents are ignored for capability tests because for these
+#  agents, the expected capabilities and actual capabilities differ.
+#  After market squads will fix these issues, we will remove the agents
+#  from this list.
+#
+ignoredAgentsForCapabilityTest:
+  - abnamro.AbnAmroAgent
+  - nxgen.at.openbanking.bawag.BawagAgent
+  - nxgen.be.banks.ing.IngAgent
+  - nxgen.be.openbanking.argenta.ArgentaAgent
+  - nxgen.be.openbanking.axa.AxaAgent
+  - nxgen.be.openbanking.belfius.BelfiusAgent
+  - nxgen.be.openbanking.beobank.BeoBankAgent
+  - nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisAgent
+  - nxgen.be.openbanking.bpost.BpostAgent
+  - nxgen.be.openbanking.cph.CphAgent
+  - nxgen.be.openbanking.crelan.CrelanAgent
+  - nxgen.be.openbanking.delen.DelenAgent
+  - nxgen.be.openbanking.deutschebank.DeutscheBankBEAgent
+  - nxgen.be.openbanking.europabank.EuropabankAgent
+  - nxgen.be.openbanking.ing.IngAgent
+  - nxgen.be.openbanking.kbc.KbcAgent
+  - nxgen.be.openbanking.keytradebank.KeytradeBankAgent
+  - nxgen.be.openbanking.montepaschi.MontepaschiAgent
+  - nxgen.be.openbanking.nagelmackers.NagelmackersAgent
+  - nxgen.be.openbanking.vanbreda.VanBredaAgent
+  - nxgen.be.openbanking.vdk.VdkAgent
+  - nxgen.de.banks.commerzbank.CommerzbankAgent
+  - nxgen.de.banks.fints.FinTsAgent
+  - nxgen.de.openbanking.commerzbank.CommerzBankAgent
+  - nxgen.de.openbanking.deutschebank.DeutscheBankDEAgent
+  - nxgen.de.openbanking.dkb.DkbAgent
+  - nxgen.de.openbanking.fiducia.FiduciaAgent
+  - nxgen.de.openbanking.ing.IngAgent
+  - nxgen.de.openbanking.santander.SantanderAgent
+  - nxgen.de.openbanking.sparkassen.SparkassenAgent
+  - nxgen.de.openbanking.targobank.TargobankAgent
+  - nxgen.dk.banks.bankdatadk.BankdataDkAgent
+  - nxgen.dk.banks.jyske.JyskeKeyCardAgent
+  - nxgen.dk.banks.jyske.JyskeNemidAgent
+  - nxgen.dk.openbanking.almbrand.AlmBrandAgent
+  - nxgen.dk.openbanking.danskebank.DanskebankV31Agent
+  - nxgen.dk.openbanking.djurslands.DjurslandsAgent
+  - nxgen.dk.openbanking.jyske.JyskeAgent
+  - nxgen.dk.openbanking.kreditbanken.KreditbankenAgent
+  - nxgen.dk.openbanking.nordea.NordeaDkAgent
+  - nxgen.dk.openbanking.nordfyns.NordfynsAgent
+  - nxgen.dk.openbanking.ringkjobinglandbobank.RingkjobingLandbobankAgent
+  - nxgen.dk.openbanking.skjern.SkjernAgent
+  - nxgen.dk.openbanking.sparekassensjaellandfyn.SparekassenSjaellandFynAgent
+  - nxgen.dk.openbanking.sydbank.SydbankAgent
+  - nxgen.es.banks.bankinter.BankinterAgent
+  - nxgen.es.banks.evobanco.EvoBancoAgent
+  - nxgen.es.openbanking.abanca.AbancaAgent
+  - nxgen.fi.banks.danskebank.DanskeBankFIAgent
+  - nxgen.fi.banks.handelsbanken.HandelsbankenFIAgent
+  - nxgen.fi.banks.poppankki.PopPankkiAgent
+  - nxgen.fi.openbanking.alandsbanken.AlandsbankenAgent
+  - nxgen.fi.openbanking.danskebank.DanskebankV31Agent
+  - nxgen.fi.openbanking.nordea.NordeaFiAgent
+  - nxgen.fi.openbanking.spankki.SPankkiAgent
+  - nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueAgent
+  - nxgen.fr.banks.cic.CicBankAgent
+  - nxgen.fr.banks.creditmutuel.CreditMutuelAgent
+  - nxgen.fr.banks.lcl.LclAgent
+  - nxgen.fr.banks.monabanq.MonaBanqAgent
+  - nxgen.fr.openbanking.cic.CicAgent
+  - nxgen.fr.openbanking.creditmutuel.CreditMutuelAgent
+  - nxgen.fr.openbanking.hellobank.HelloBankAgent
+  - nxgen.fr.openbanking.ing.IngAgent
+  - nxgen.it.openbanking.ing.IngAgent
+  - nxgen.nl.banks.openbanking.volksbank.VolksbankAgent
+  - nxgen.nl.openbanking.abnamro.AbnAmroAgent
+  - nxgen.nl.openbanking.ing.IngAgent
+  - nxgen.nl.openbanking.knab.KnabAgent
+  - nxgen.no.banks.dnb.DnbAgent
+  - nxgen.no.openbanking.danskebank.DanskebankV31Agent
+  - nxgen.no.openbanking.dnb.DnbAgent
+  - nxgen.no.openbanking.nordea.NordeaNoAgent
+  - nxgen.pt.banks.montepio.MontepioAgent
+  - nxgen.ro.banks.raiffeisen.RaiffeisenAgent
+  - nxgen.se.banks.volvofinans.VolvoFinansAgent
+  - nxgen.se.brokers.avanza.AvanzaAgent
+  - nxgen.se.business.handelsbanken.HandelsbankenSEAgent
+  - nxgen.se.business.nordea.NordeaSEAgent
+  - nxgen.se.business.seb.SebAgent
+  - nxgen.se.openbanking.alandsbanken.AlandsbankenAgent
+  - nxgen.se.openbanking.business.danskebank.DanskebankBusinessAgent
+  - nxgen.se.openbanking.business.seb.SebCorporateAgent
+  - nxgen.se.openbanking.danskebank.DanskebankV31Agent
+  - nxgen.se.openbanking.handelsbanken.HandelsbankenSEAgent
+  - nxgen.se.openbanking.resursbank.ResursBankAgent
+  - nxgen.se.openbanking.sbab.SbabAgent
+  - nxgen.se.openbanking.sebopenbanking.SebAgent
+  - nxgen.se.openbanking.swedbank.SwedbankAgent
+  - nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent
+  - nxgen.serviceproviders.openbanking.bec.BecAgent
+  - nxgen.serviceproviders.openbanking.paypal.PayPalAgent
+  - nxgen.serviceproviders.openbanking.redsys.agents.BankiaAgent
+  - nxgen.serviceproviders.openbanking.redsys.agents.BankinterAgent
+  - nxgen.serviceproviders.openbanking.redsys.agents.BbvaAgent
+  - nxgen.serviceproviders.openbanking.redsys.agents.CaixabankAgent
+  - nxgen.serviceproviders.openbanking.redsys.agents.EvobancoAgent
+  - nxgen.serviceproviders.openbanking.redsys.agents.SabadellAgent
+  - nxgen.serviceproviders.openbanking.redsys.agents.UnicajaAgent
+  - nxgen.serviceproviders.openbanking.sdc.SdcAgent
+  - nxgen.serviceproviders.openbanking.sparebank.SparebankAgent
+  - nxgen.uk.openbanking.barclays.BarclaysV31Agent
+  - nxgen.uk.openbanking.revolut.RevolutV31Agent
+  - nxgen.uk.openbanking.starling.StarlingAgent
+#
+#  These agents are temporarily ignored for initialisation tests,
+#  here are the reasons:
+#
+#  NordeaPartnerXXAgent: We need to create our own test JKS files otherwise
+#  we cannot cover them in test
+#
+ignoredAgentsForInitialisationTest:
+  - nxgen.be.banks.bpost.BPostBank
+  - nxgen.se.banks.nordea.partner.NordeaPartnerSeAgent
+  - nxgen.dk.banks.nordeapartner.NordeaPartnerDkAgent
+  - nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent
+  - nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent

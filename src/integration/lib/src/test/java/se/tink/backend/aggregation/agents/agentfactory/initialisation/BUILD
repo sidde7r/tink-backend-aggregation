@@ -3,7 +3,7 @@ load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 junit_test(
     name = "initialisation",
     srcs = glob(
-        ["*.java"],
+        include = ["*.java"],
     ),
     data = [
         "//data:agents",
@@ -95,5 +95,7 @@ junit_test(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_reactivex_rxjava3_rxjava",
         "@aggregation//:joda_time_joda_time",
+        "@aggregation//:org_yaml_snakeyaml",
+        "//third_party:lombok_libs",
     ],
 )
