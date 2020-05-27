@@ -539,6 +539,8 @@ public class DanskeBankV2Agent extends AbstractAgent
                                     TransferExecutionException.EndUserMessage
                                             .PAYMENT_CREATE_FAILED);
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setMessage(
+                            "Danskebank rejects the bill because it is invalid according to Danskebank.")
                     .setEndUserMessage(errorMessage)
                     .build();
         } else if (!billResponse.isChallengeNeeded()) {
