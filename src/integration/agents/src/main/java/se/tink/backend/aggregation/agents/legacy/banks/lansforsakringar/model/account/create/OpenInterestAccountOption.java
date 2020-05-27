@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model.account.create;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.aggregation.agents.banks.LansforsakringarAgent.SavingsAccountTypes;
+import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.SavingsAccountTypes;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenInterestAccountOption {

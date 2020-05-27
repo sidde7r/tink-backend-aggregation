@@ -178,12 +178,6 @@ public class LansforsakringarAgent extends AbstractAgent
             TransferMessageLengthConfig.createWithMaxLength(30, 14);
     private static final int MAX_ATTEMPTS = 80;
 
-    public enum SavingsAccountTypes {
-        fixedrate,
-        county,
-        saving
-    }
-
     private static final String BASE_URL = "https://mobil.lansforsakringar.se/appoutlet";
     private static final String EINVOICE_DESCRIPTION = "ElectronicInvoice";
     private static final String OVERVIEW_URL = BASE_URL + "/overview";
