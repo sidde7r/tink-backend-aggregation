@@ -75,7 +75,10 @@ public class AgentInitialisationTest {
                         .getProviderConfigurations();
 
         AgentInitialisationUtil agentInitialisationUtil =
-                new AgentInitialisationUtil("etc/test.yml");
+                new AgentInitialisationUtil(
+                        "etc/test.yml",
+                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json",
+                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json");
 
         List<Provider> providers =
                 getProvidersForInitialisationTest(providerConfigurations).stream()

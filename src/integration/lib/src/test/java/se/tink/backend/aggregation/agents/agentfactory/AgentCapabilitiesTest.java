@@ -38,6 +38,11 @@ public class AgentCapabilitiesTest {
 
     private static final Logger log = LoggerFactory.getLogger(AgentCapabilitiesTest.class);
 
+    private static final String TRANSFERS = "TRANSFERS";
+    private static final String LOANS = "LOANS";
+    private static final String MORTGAGE_AGGREGATION = "MORTGAGE_AGGREGATION";
+    private static final String PAYMENTS = "PAYMENTS";
+
     private Map<String, List<String>> readExpectedAgentCapabilities(String filePath) {
         Map<String, List<String>> agentCapabilities;
         try {
@@ -49,6 +54,75 @@ public class AgentCapabilitiesTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Set<String> collectGivenAgentCapabilities(
+            Agent agent, Set<String> expectedCapabilities) {
+        Set<String> givenCapabilities = new HashSet<>();
+        if (agent instanceof RefreshCreditCardAccountsExecutor) {
+            givenCapabilities.add("CREDIT_CARDS");
+        }
+        if (agent instanceof RefreshIdentityDataExecutor) {
+            givenCapabilities.add("IDENTITY_DATA");
+        }
+        if (agent instanceof RefreshCheckingAccountsExecutor) {
+            givenCapabilities.add("CHECKING_ACCOUNTS");
+        }
+        if (agent instanceof RefreshSavingsAccountsExecutor) {
+            givenCapabilities.add("SAVINGS_ACCOUNTS");
+        }
+        if (agent instanceof RefreshInvestmentAccountsExecutor) {
+            givenCapabilities.add("INVESTMENTS");
+        }
+        if (agent instanceof RefreshLoanAccountsExecutor) {
+            boolean relatedGivenCapability = false;
+            if (expectedCapabilities.contains(LOANS)) {
+                givenCapabilities.add(LOANS);
+                relatedGivenCapability = true;
+            }
+            if (expectedCapabilities.contains(MORTGAGE_AGGREGATION)) {
+                givenCapabilities.add(MORTGAGE_AGGREGATION);
+                relatedGivenCapability = true;
+            }
+            if (!relatedGivenCapability) {
+                // Not MORTGAGE_AGGREGATION because LOANS is the new capability that covers
+                // all, MORTGAGE_AGGREGATION is just there for backward compatibility
+                givenCapabilities.add(LOANS);
+            }
+        }
+        if (agent instanceof TransferExecutor) {
+            boolean relatedGivenCapability = false;
+            if (expectedCapabilities.contains(TRANSFERS)) {
+                givenCapabilities.add(TRANSFERS);
+                relatedGivenCapability = true;
+            }
+            if (expectedCapabilities.contains(PAYMENTS)) {
+                givenCapabilities.add(PAYMENTS);
+                relatedGivenCapability = true;
+            }
+            if (!relatedGivenCapability) {
+                // Not TRANSFERS because PAYMENTS and TRANSFERS are the same and PAYMENTS is
+                // newer
+                // TRANSFER is there just for backward compatibility
+                givenCapabilities.add(PAYMENTS);
+            }
+        }
+        /*
+        If agent is TransferExecutorNxgen, there is no way for us to determine if this agent
+        has transfer/payments capability or not so we will not make any assertions on that
+
+        Turned out that an agent implementing TransferExecutorNxgen interface does not prove
+        that it should have the TRANSFER capability (see AxaAgent)
+         */
+        if (agent instanceof TransferExecutorNxgen) {
+            if (expectedCapabilities.contains(TRANSFERS)) {
+                givenCapabilities.add(TRANSFERS);
+            }
+            if (expectedCapabilities.contains(PAYMENTS)) {
+                givenCapabilities.add(PAYMENTS);
+            }
+        }
+        return givenCapabilities;
     }
 
     private Optional<String> compareExpectedAndGivenAgentCapabilities(
@@ -68,73 +142,10 @@ public class AgentCapabilitiesTest {
             return Optional.empty();
         }
 
-        Set<String> givenCapabilities = new HashSet<>();
         Set<String> expectedCapabilities =
                 new HashSet<>(expectedAgentCapabilities.get(provider.getClassName()));
 
-        if (agent instanceof RefreshCreditCardAccountsExecutor) {
-            givenCapabilities.add("CREDIT_CARDS");
-        }
-        if (agent instanceof RefreshIdentityDataExecutor) {
-            givenCapabilities.add("IDENTITY_DATA");
-        }
-        if (agent instanceof RefreshCheckingAccountsExecutor) {
-            givenCapabilities.add("CHECKING_ACCOUNTS");
-        }
-        if (agent instanceof RefreshSavingsAccountsExecutor) {
-            givenCapabilities.add("SAVINGS_ACCOUNTS");
-        }
-        if (agent instanceof RefreshInvestmentAccountsExecutor) {
-            givenCapabilities.add("INVESTMENTS");
-        }
-        if (agent instanceof RefreshLoanAccountsExecutor) {
-            boolean relatedGivenCapability = false;
-            if (expectedCapabilities.contains("LOANS")) {
-                givenCapabilities.add("LOANS");
-                relatedGivenCapability = true;
-            }
-            if (expectedCapabilities.contains("MORTGAGE_AGGREGATION")) {
-                givenCapabilities.add("MORTGAGE_AGGREGATION");
-                relatedGivenCapability = true;
-            }
-            if (!relatedGivenCapability) {
-                // Not MORTGAGE_AGGREGATION because LOANS is the new capability that covers
-                // all, MORTGAGE_AGGREGATION is just there for backward compatibility
-                givenCapabilities.add("LOANS");
-            }
-        }
-        if (agent instanceof TransferExecutor) {
-            boolean relatedGivenCapability = false;
-            if (expectedCapabilities.contains("TRANSFERS")) {
-                givenCapabilities.add("TRANSFERS");
-                relatedGivenCapability = true;
-            }
-            if (expectedCapabilities.contains("PAYMENTS")) {
-                givenCapabilities.add("PAYMENTS");
-                relatedGivenCapability = true;
-            }
-            if (!relatedGivenCapability) {
-                // Not TRANSFERS because PAYMENTS and TRANSFERS are the same and PAYMENTS is
-                // newer
-                // TRANSFER is there just for backward compatibility
-                givenCapabilities.add("PAYMENTS");
-            }
-        }
-        /*
-        If agent is TransferExecutorNxgen, there is no way for us to determine if this agent
-        has transfer/payments capability or not so we will not make any assertions on that
-
-        Turned out that an agent implementing TransferExecutorNxgen interface does not prove
-        that it should have the TRANSFER capability (see AxaAgent)
-         */
-        if (agent instanceof TransferExecutorNxgen) {
-            if (expectedCapabilities.contains("TRANSFERS")) {
-                expectedCapabilities.remove("TRANSFERS");
-            }
-            if (expectedCapabilities.contains("PAYMENTS")) {
-                expectedCapabilities.remove("PAYMENTS");
-            }
-        }
+        Set<String> givenCapabilities = collectGivenAgentCapabilities(agent, expectedCapabilities);
 
         SetView<String> expectedButNotGiven =
                 Sets.difference(new HashSet<>(expectedCapabilities), givenCapabilities);
@@ -191,7 +202,8 @@ public class AgentCapabilitiesTest {
 
         Known limitations:
 
-        1- We do not make any assertions on PAYMENTS and TRANSFER capabilities.
+        1- We do not make any assertions on PAYMENTS and TRANSFER capabilities for agents
+           that implement TransferExecutorNxgen.
         2- We do not make any assertions on agents that implement DeprecatedRefreshExecutor
         3- We cannot perform tests on agents that are not tested for initialisation
     */
@@ -213,7 +225,10 @@ public class AgentCapabilitiesTest {
                         .getProviderConfigurations();
 
         AgentInitialisationUtil agentInitialisationUtil =
-                new AgentInitialisationUtil("etc/test.yml");
+                new AgentInitialisationUtil(
+                        "etc/test.yml",
+                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json",
+                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json");
 
         List<Provider> providerForEachUnignoredAgent =
                 getProvidersForCapabilitiesTest(providerConfigurations).stream()

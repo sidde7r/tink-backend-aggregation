@@ -68,30 +68,29 @@ public class AgentInitialisationUtil {
     private final User user;
     private AgentFactory agentFactory;
 
-    public AgentInitialisationUtil(String aggregationServiceConfigurationPath) {
+    public AgentInitialisationUtil(
+            String aggregationServiceConfigurationFilePath,
+            String credentialsTemplateFilePath,
+            String userTemplateFilePath) {
         this.testClusterId = "testCluster-DummyId";
 
-        // TODO: Parametrize the file paths for credentials and users
         try {
             credentialsTemplate =
                     new String(
-                            Files.readAllBytes(
-                                    Paths.get(
-                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json")),
+                            Files.readAllBytes(Paths.get(credentialsTemplateFilePath)),
                             StandardCharsets.UTF_8);
 
             user =
                     new ObjectMapper()
                             .readValue(
                                     new String(
-                                            Files.readAllBytes(
-                                                    Paths.get(
-                                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json")),
+                                            Files.readAllBytes(Paths.get(userTemplateFilePath)),
                                             StandardCharsets.UTF_8),
                                     User.class);
 
             aggregationServiceConfiguration =
-                    readAggregationServiceConfigurationForTest(aggregationServiceConfigurationPath);
+                    readAggregationServiceConfigurationForTest(
+                            aggregationServiceConfigurationFilePath);
 
             Injector injector = Guice.createInjector(getGuiceModulesToUse());
             agentFactory = injector.getInstance(AgentFactory.class);
