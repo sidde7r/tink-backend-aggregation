@@ -1,51 +1,28 @@
 package se.tink.backend.aggregation.agents.agentfactory;
 
 import static java.util.stream.Collectors.groupingBy;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-import io.dropwizard.configuration.ConfigurationException;
-import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.jackson.Jackson;
-import io.dropwizard.setup.Environment;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.BeanAccess;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
@@ -58,55 +35,10 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
-import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
-import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisationUtil;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.configuration.guice.modules.AggregationModuleFactory;
-import se.tink.backend.aggregation.configuration.guice.modules.FakeCryptoConfigurationsRepository;
-import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
-import se.tink.backend.aggregation.fakelogmasker.FakeLogMasker;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
-import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
-import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
-import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
-import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
-import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
-import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
-import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
-import se.tink.libraries.metrics.registry.MetricRegistry;
-import se.tink.libraries.user.rpc.User;
 
 public class AgentInitialisationTest {
-
-    private static final Validator VALIDATOR =
-            Validation.buildDefaultValidatorFactory().getValidator();
-
-    private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
-
-    private static final Environment ENVIRONMENT =
-            new Environment(
-                    "test",
-                    MAPPER,
-                    VALIDATOR,
-                    new com.codahale.metrics.MetricRegistry(),
-                    ClassLoader.getSystemClassLoader());
-
-    private static final String TEST_CLUSTER_ID = "testCluster-DummyId";
-
-    private static String CREDENTIALS_OBJECT_TEMPLATE;
-    private static String USER_OBJECT_TEMPLATE;
-
-    private static User user;
-
-    /*
-       This is located in tink-backend-aggregation (test.yml). This contains dummy
-       secrets for OB agents.
-    */
-    private static AggregationServiceConfiguration aggregationServiceConfiguration;
 
     /*
        Map from agent class name to list of expected capabilities
@@ -119,13 +51,6 @@ public class AgentInitialisationTest {
     */
     private static List<Provider> providerConfigurationsForEnabledProviders;
 
-    /*
-       Which Guice modules are used by AgentFactory to create agent
-    */
-    private static Set<Module> guiceModulesToUse;
-    private static HostConfiguration hostConfiguration;
-    private static Injector injector;
-    private static AgentFactory agentFactory;
     private static AgentFactoryTestConfig agentFactoryTestConfig;
 
     private static Map<String, List<String>> readExpectedAgentCapabilities(String filePath) {
@@ -136,7 +61,8 @@ public class AgentInitialisationTest {
         try {
             byte[] agentCapabilitiesFileData = Files.readAllBytes(path);
             agentCapabilities =
-                    new ObjectMapper().readValue(new String(agentCapabilitiesFileData), Map.class);
+                    Jackson.newObjectMapper()
+                            .readValue(new String(agentCapabilitiesFileData), Map.class);
             return agentCapabilities;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -151,19 +77,9 @@ public class AgentInitialisationTest {
         return yaml.loadAs(configFileStream, AgentFactoryTestConfig.class);
     }
 
-    private static AggregationServiceConfiguration readAggregationServiceConfigurationForTest(
-            String filePath) throws IOException, ConfigurationException {
-
-        ConfigurationFactory<AggregationServiceConfiguration> configurationFactory =
-                new ConfigurationFactory<>(
-                        AggregationServiceConfiguration.class, VALIDATOR, MAPPER, "");
-
-        return configurationFactory.build(new File(filePath));
-    }
-
     private static ProviderConfig readProviderConfiguration(File file) {
         try {
-            return new ObjectMapper().readValue(file, ProviderConfig.class);
+            return Jackson.newObjectMapper().readValue(file, ProviderConfig.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -197,97 +113,10 @@ public class AgentInitialisationTest {
                 .collect(Collectors.toList());
     }
 
-    private static Set<Module> getGuiceModulesToUse()
-            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        final Method buildForProductionMethod =
-                AggregationModuleFactory.class.getDeclaredMethod(
-                        "baseBuilder", AggregationServiceConfiguration.class, Environment.class);
-
-        buildForProductionMethod.setAccessible(true);
-
-        final ImmutableList.Builder<Module> modulesList =
-                (ImmutableList.Builder<Module>)
-                        buildForProductionMethod.invoke(
-                                null, aggregationServiceConfiguration, ENVIRONMENT);
-
-        Set<Module> modules = modulesList.build().stream().collect(Collectors.toSet());
-
-        modules.add(
-                new AbstractModule() {
-
-                    @Provides
-                    @Singleton
-                    @Named("clusterConfigurations")
-                    public Map<String, ClusterConfiguration> provideClusterConfigurations() {
-                        return new HashMap<>();
-                    }
-
-                    @Provides
-                    @Singleton
-                    @Named("aggregatorConfiguration")
-                    public Map<String, AggregatorConfiguration> providerAggregatorConfiguration() {
-                        return new HashMap<>();
-                    }
-
-                    @Provides
-                    @Singleton
-                    @Named("clientConfigurationByClientKey")
-                    public Map<String, ClientConfiguration> providerClientConfiguration() {
-                        return new HashMap<>();
-                    }
-
-                    @Provides
-                    @Singleton
-                    @Named("clientConfigurationByName")
-                    public Map<String, ClientConfiguration> providerClientConfigurationByName() {
-                        return new HashMap<>();
-                    }
-
-                    @Override
-                    protected void configure() {
-                        bind(CryptoConfigurationsRepository.class)
-                                .toInstance(
-                                        new FakeCryptoConfigurationsRepository(
-                                                new CryptoConfiguration()));
-                    }
-                });
-        return modules;
-    }
-
-    private CredentialsRequest createCredentialsRequest(Provider provider) throws IOException {
-
-        final Credentials credentials =
-                MAPPER.readValue(
-                        String.format(CREDENTIALS_OBJECT_TEMPLATE, provider.getName()),
-                        Credentials.class);
-
-        // This is to populate serializedFields field of Credentials object (which is normally done
-        // by Main)
-        credentials.setFields(credentials.getFields());
-
-        return new ManualAuthenticateRequest(user, provider, credentials, true);
-    }
-
     @BeforeClass
     public static void prepareForTest() {
         // given
         try {
-            CREDENTIALS_OBJECT_TEMPLATE =
-                    new String(
-                            Files.readAllBytes(
-                                    Paths.get(
-                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json")),
-                            StandardCharsets.UTF_8);
-
-            USER_OBJECT_TEMPLATE =
-                    new String(
-                            Files.readAllBytes(
-                                    Paths.get(
-                                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json")),
-                            StandardCharsets.UTF_8);
-
-            aggregationServiceConfiguration =
-                    readAggregationServiceConfigurationForTest("etc/test.yml");
             providerConfigurationsForEnabledProviders =
                     getProviderConfigurationsForEnabledProviders(
                             "external/tink_backend/src/provider_configuration/data/seeding");
@@ -303,49 +132,9 @@ public class AgentInitialisationTest {
             providerConfigurationsForEnabledProviders.sort(
                     (p1, p2) -> p1.getName().compareTo(p2.getName()));
 
-            guiceModulesToUse = getGuiceModulesToUse();
-            user = MAPPER.readValue(USER_OBJECT_TEMPLATE, User.class);
-
-            hostConfiguration = mock(HostConfiguration.class);
-            when(hostConfiguration.getClusterId()).thenReturn(TEST_CLUSTER_ID);
-
-            injector = Guice.createInjector(guiceModulesToUse);
-            agentFactory = injector.getInstance(AgentFactory.class);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public AgentContext createContext(CredentialsRequest credentialsRequest) {
-
-        AgentContext context = mock(AgentContext.class);
-        doReturn(TEST_CLUSTER_ID).when(context).getClusterId();
-        doReturn("tink").when(context).getAppId();
-        doReturn(mock(MetricRegistry.class)).when(context).getMetricRegistry();
-        doReturn(false).when(context).isTestContext();
-        doReturn(false).when(context).isWaitingOnConnectorTransactions();
-        doReturn(mock(AggregatorInfo.class)).when(context).getAggregatorInfo();
-        doReturn(new HashMap<>()).when(context).getTransactionCountByEnabledAccount();
-        doReturn(new ByteArrayOutputStream()).when(context).getLogOutputStream();
-
-        // Not easily mockable since we need the implementation of getAgentConfiguration ->
-        // getAgentConfigurationDev (and the parameter for these methods comes from Agent)
-        AgentConfigurationControllerable agentConfigurationController =
-                new AgentConfigurationController(
-                        mock(TppSecretsServiceClient.class),
-                        aggregationServiceConfiguration
-                                .getAgentsServiceConfiguration()
-                                .getIntegrations(),
-                        credentialsRequest.getProvider(),
-                        context.getAppId(),
-                        "clusterIdForSecretsService",
-                        credentialsRequest.getCallbackUri());
-
-        doReturn(agentConfigurationController).when(context).getAgentConfigurationController();
-        doReturn(new FakeLogMasker()).when(context).getLogMasker();
-
-        return context;
     }
 
     private void handleException(Exception e, Provider provider) {
@@ -374,22 +163,9 @@ public class AgentInitialisationTest {
         }
     }
 
-    private Agent initialiseAgent(Provider provider) {
-        try {
-            // given
-            CredentialsRequest credentialsRequest = createCredentialsRequest(provider);
-            AgentContext context = createContext(credentialsRequest);
+    private void compareExpectedAndGivenAgentCapabilities(Provider provider) throws Exception {
 
-            // when
-            return agentFactory.create(credentialsRequest, context);
-        } catch (Exception e) {
-            handleException(e, provider);
-            return null;
-        }
-    }
-
-    private void compareExpectedAndGivenAgentCapabilities(Provider provider) {
-        Agent agent = initialiseAgent(provider);
+        Agent agent = new AgentInitialisationUtil("etc/test.yml").initialiseAgent(provider);
 
         // Skip capability checks because we cannot do that for these agents
         if (agent instanceof DeprecatedRefreshExecutor) {
@@ -519,7 +295,17 @@ public class AgentInitialisationTest {
                         .collect(Collectors.toList());
 
         // given / when
-        providers.parallelStream().forEach(this::initialiseAgent);
+        AgentInitialisationUtil util = new AgentInitialisationUtil("etc/test.yml");
+        providers
+                .parallelStream()
+                .forEach(
+                        provider -> {
+                            try {
+                                util.initialiseAgent(provider);
+                            } catch (Exception e) {
+                                handleException(e, provider);
+                            }
+                        });
 
         /*
            What we want to test is to check whether we can initialise all agents without having
@@ -558,6 +344,15 @@ public class AgentInitialisationTest {
                         .collect(Collectors.toList());
 
         // when / then
-        providers.parallelStream().forEach(this::compareExpectedAndGivenAgentCapabilities);
+        providers
+                .parallelStream()
+                .forEach(
+                        provider -> {
+                            try {
+                                this.compareExpectedAndGivenAgentCapabilities(provider);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
     }
 }
