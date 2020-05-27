@@ -45,6 +45,7 @@ public abstract class SebBaseAgent extends NextGenerationAgent
     protected final CreditCardRefreshController creditCardRefreshController;
     protected final LoanRefreshController loanRefreshController;
     protected final InvestmentRefreshController investmentFetcher;
+    protected final SebAuthenticator sebAuthenticator;
 
     public SebBaseAgent(
             AgentComponentProvider agentComponentProvider, SebBaseConfiguration sebConfiguration) {
@@ -56,6 +57,7 @@ public abstract class SebBaseAgent extends NextGenerationAgent
         creditCardRefreshController = constructCreditCardRefreshController(sebConfiguration);
         loanRefreshController = constructLoanRefreshController(sebConfiguration);
         investmentFetcher = constructInvestmentRefreshController(sebConfiguration);
+        sebAuthenticator = constructSebAuthenticator(sebConfiguration);
     }
 
     protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
@@ -89,6 +91,10 @@ public abstract class SebBaseAgent extends NextGenerationAgent
                 metricRefreshController, updateController, new SebLoanFetcher(apiClient));
     }
 
+    private SebAuthenticator constructSebAuthenticator(SebBaseConfiguration sebConfiguration) {
+        return new SebAuthenticator(apiClient, sebSessionStorage, sebConfiguration);
+    }
+
     @Override
     protected SessionHandler constructSessionHandler() {
         return new SebSessionHandler(apiClient, sebSessionStorage);
@@ -97,10 +103,7 @@ public abstract class SebBaseAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new SebAuthenticator(apiClient, sebSessionStorage),
-                persistentStorage,
-                credentials);
+                supplementalRequester, sebAuthenticator, persistentStorage, credentials);
     }
 
     @Override

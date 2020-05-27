@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.UserMessage;
@@ -30,13 +31,18 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
     private static final AggregationLogger LOG = new AggregationLogger(SebAuthenticator.class);
     private final SebApiClient apiClient;
     private final SebSessionStorage sessionStorage;
+    private final SebBaseConfiguration sebConfiguration;
     private String autoStartToken;
     private String csrfToken;
     private String ssn;
 
-    public SebAuthenticator(SebApiClient apiClient, SebSessionStorage sessionStorage) {
+    public SebAuthenticator(
+            SebApiClient apiClient,
+            SebSessionStorage sessionStorage,
+            SebBaseConfiguration sebConfiguration) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.sebConfiguration = sebConfiguration;
     }
 
     @Override
