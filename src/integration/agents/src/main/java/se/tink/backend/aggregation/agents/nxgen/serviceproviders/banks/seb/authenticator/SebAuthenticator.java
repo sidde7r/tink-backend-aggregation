@@ -123,8 +123,10 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
         }
 
         final UserInformation userInformation = apiClient.activateSession();
-        // Check that the SSN from the credentials matches the logged in user
-        if (!userInformation.getSSN().equals(this.ssn)) {
+
+        // Check that the SSN from the credentials matches the logged in user. For business agent,
+        // we cannot verify this since there is no SSN in the response
+        if (!sebConfiguration.isBusinessAgent() && !userInformation.getSSN().equals(this.ssn)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
