@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.AddBeneficiaryControllerable;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.SuperAbstractAgent;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
@@ -35,7 +37,10 @@ import se.tink.libraries.transfer.rpc.Transfer;
  * imposing authenticator removed.
  */
 public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
-        implements TransferExecutorNxgen, PaymentControllerable, PersistentLogin {
+        implements TransferExecutorNxgen,
+                PaymentControllerable,
+                AddBeneficiaryControllerable,
+                PersistentLogin {
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -58,6 +63,7 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     private TransferController transferController;
     private SessionController sessionController;
     private PaymentController paymentController;
+    private Optional<AddBeneficiaryController> addBeneficiaryController = Optional.empty();
 
     protected SubsequentGenerationAgent(final AgentComponentProvider componentProvider) {
         super(componentProvider);
@@ -174,6 +180,14 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
         return Optional.ofNullable(paymentController);
     }
 
+    @Override
+    public Optional<AddBeneficiaryController> getAddBeneficiaryController() {
+        if (!addBeneficiaryController.isPresent()) {
+            addBeneficiaryController = constructAddBeneficiaryController();
+        }
+        return addBeneficiaryController;
+    }
+
     private SessionController getSessionController() {
         if (sessionController == null) {
             sessionController =
@@ -195,6 +209,10 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
     }
 
     public Optional<PaymentController> constructPaymentController() {
+        return Optional.empty();
+    }
+
+    public Optional<AddBeneficiaryController> constructAddBeneficiaryController() {
         return Optional.empty();
     }
 
