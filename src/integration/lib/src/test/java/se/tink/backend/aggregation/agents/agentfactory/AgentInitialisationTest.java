@@ -11,13 +11,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
@@ -36,7 +34,7 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisationUtil;
-import se.tink.backend.aggregation.configuration.ProviderConfig;
+import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcherUtil;
 
 public class AgentInitialisationTest {
 
@@ -49,7 +47,7 @@ public class AgentInitialisationTest {
     /*
        Read from tink-backend
     */
-    private static List<Provider> providerConfigurationsForEnabledProviders;
+    private static List<Provider> providerConfigurations;
 
     private static AgentFactoryTestConfig agentFactoryTestConfig;
 
@@ -77,49 +75,14 @@ public class AgentInitialisationTest {
         return yaml.loadAs(configFileStream, AgentFactoryTestConfig.class);
     }
 
-    private static ProviderConfig readProviderConfiguration(File file) {
-        try {
-            return Jackson.newObjectMapper().readValue(file, ProviderConfig.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static List<File> getProviderConfigurationFiles(String folderForConfigurations) {
-        return Arrays.asList(new File(folderForConfigurations).listFiles()).stream()
-                .filter(file -> file.getName().contains("providers-"))
-                .filter(file -> !file.getName().contains("development"))
-                .collect(Collectors.toList());
-    }
-
-    private static Stream<Provider> mapProviders(ProviderConfig config) {
-        return config.getProviders().stream()
-                .filter(
-                        provider ->
-                                ProviderStatuses.ENABLED.equals(provider.getStatus())
-                                        || ProviderStatuses.OBSOLETE.equals(provider.getStatus()))
-                .peek(
-                        provider -> {
-                            provider.setMarket(config.getMarket());
-                            provider.setCurrency(config.getCurrency());
-                        });
-    }
-
-    private static List<Provider> getProviderConfigurationsForEnabledProviders(
-            String folderForConfigurations) {
-        return getProviderConfigurationFiles(folderForConfigurations).stream()
-                .map(AgentInitialisationTest::readProviderConfiguration)
-                .flatMap(AgentInitialisationTest::mapProviders)
-                .collect(Collectors.toList());
-    }
-
     @BeforeClass
     public static void prepareForTest() {
         // given
         try {
-            providerConfigurationsForEnabledProviders =
-                    getProviderConfigurationsForEnabledProviders(
-                            "external/tink_backend/src/provider_configuration/data/seeding");
+            providerConfigurations =
+                    new ProviderFetcherUtil(
+                                    "external/tink_backend/src/provider_configuration/data/seeding")
+                            .getProviderConfigurations();
 
             expectedAgentCapabilities =
                     readExpectedAgentCapabilities(
@@ -128,9 +91,6 @@ public class AgentInitialisationTest {
             agentFactoryTestConfig =
                     readTestConfiguration(
                             "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml");
-
-            providerConfigurationsForEnabledProviders.sort(
-                    (p1, p2) -> p1.getName().compareTo(p2.getName()));
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -273,7 +233,11 @@ public class AgentInitialisationTest {
 
     // This method returns one provider for each agent
     private List<Provider> getProviders() {
-        return providerConfigurationsForEnabledProviders.stream()
+        return providerConfigurations.stream()
+                .filter(
+                        provider ->
+                                ProviderStatuses.ENABLED.equals(provider.getStatus())
+                                        || ProviderStatuses.OBSOLETE.equals(provider.getStatus()))
                 .filter(provider -> !provider.getName().toLowerCase().contains("test"))
                 .collect(groupingBy(Provider::getClassName))
                 .entrySet()
