@@ -1,16 +1,15 @@
 package se.tink.backend.aggregation.agents.agentfactory;
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.introspector.BeanAccess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisationUtil;
@@ -19,24 +18,29 @@ import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationRe
 
 public class AgentInitialisationTest {
 
-    private static AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-            new TestConfigurationReaderUtil(
-                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
-                    .getAgentFactoryTestConfiguration();
+    private static final Logger log = LoggerFactory.getLogger(AgentInitialisationTest.class);
 
-    private List<Provider> providerConfigurations =
-            new ProviderFetcherUtil("external/tink_backend/src/provider_configuration/data/seeding")
-                    .getProviderConfigurations();
+    private static AgentFactoryTestConfiguration agentFactoryTestConfiguration;
+    private static List<Provider> providerConfigurations;
+    private static AgentInitialisationUtil agentInitialisationUtil;
 
-    private static AgentFactoryTestConfiguration readTestConfiguration(String filePath)
-            throws IOException {
-        FileInputStream configFileStream = new FileInputStream(new File(filePath));
-        Yaml yaml = new Yaml(new Constructor(AgentFactoryTestConfiguration.class));
-        yaml.setBeanAccess(BeanAccess.FIELD);
-        return yaml.loadAs(configFileStream, AgentFactoryTestConfiguration.class);
+    @BeforeClass
+    public static void prepareForTest() {
+        // given
+        agentFactoryTestConfiguration =
+                new TestConfigurationReaderUtil(
+                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
+                        .getAgentFactoryTestConfiguration();
+
+        providerConfigurations =
+                new ProviderFetcherUtil(
+                                "external/tink_backend/src/provider_configuration/data/seeding")
+                        .getProviderConfigurations();
+
+        agentInitialisationUtil = new AgentInitialisationUtil("etc/test.yml");
     }
 
-    private void throwProperErrorMessageForAgentInitialisationException(
+    private String createProperErrorMessageForAgentInitialisationError(
             Exception e, Provider provider) {
         String errorMessagePrefix =
                 "Agent "
@@ -44,22 +48,20 @@ public class AgentInitialisationTest {
                         + " could not be instantiated for provider "
                         + provider.getName();
         if (e instanceof com.google.inject.ConfigurationException) {
-            throw new RuntimeException(
-                    errorMessagePrefix
-                            + " probably due to missing guice dependency.\n"
-                            + "Make sure that you add any additional modules to your agent via the "
-                            + "@AgentDependencyModules annotation, and that these modules bind any "
-                            + "dependency your agent may have.",
-                    e);
+            return errorMessagePrefix
+                    + " probably due to missing guice dependency.\n"
+                    + "Make sure that you add any additional modules to your agent via the "
+                    + "@AgentDependencyModules annotation, and that these modules bind any "
+                    + "dependency your agent may have.\n"
+                    + e.toString();
         } else if (e instanceof ClassNotFoundException) {
-            throw new RuntimeException(
-                    errorMessagePrefix
-                            + " due to ClassNotFound exception. \nPlease ensure the followings: \n"
-                            + "1) Necessary runtime dep is included in src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/BUILD\n"
-                            + "2) The className in provider configuration (which is in tink-backend) does not have any typo",
-                    e);
+            return errorMessagePrefix
+                    + " due to ClassNotFound exception. \nPlease ensure the followings: \n"
+                    + "1) Necessary runtime dep is included in src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/BUILD\n"
+                    + "2) The className in provider configuration (which is in tink-backend) does not have any typo\n"
+                    + e.toString();
         } else {
-            throw new RuntimeException(errorMessagePrefix, e);
+            return errorMessagePrefix + "\n" + e.toString();
         }
     }
 
@@ -90,22 +92,24 @@ public class AgentInitialisationTest {
                                                 .contains(provider.getClassName()))
                         .collect(Collectors.toList());
 
-        // given / when
-        AgentInitialisationUtil util = new AgentInitialisationUtil("etc/test.yml");
+        // when
+        List<String> errors = new ArrayList<>();
         providers
                 .parallelStream()
                 .forEach(
                         provider -> {
                             try {
-                                util.initialiseAgent(provider);
+                                agentInitialisationUtil.initialiseAgent(provider);
                             } catch (Exception e) {
-                                throwProperErrorMessageForAgentInitialisationException(e, provider);
+                                errors.add(
+                                        createProperErrorMessageForAgentInitialisationError(
+                                                e, provider));
                             }
                         });
 
-        /*
-           What we want to test is to check whether we can initialise all agents without having
-           an exception. For this reason, we don't have an explicit "then" block for this test
-        */
+        errors.stream().forEach(log::error);
+
+        // then
+        assertEquals(0, errors.size());
     }
 }
