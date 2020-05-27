@@ -13,6 +13,7 @@ junit_test(
         "//data:eidas_dev",
         "//data:provider_configurations",
         "//etc:development",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
     ],

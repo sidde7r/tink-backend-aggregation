@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -24,8 +26,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +44,15 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
+import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -86,7 +101,9 @@ public class AgentInitialisationTest {
 
     private static User user;
     private static AggregationServiceConfiguration configuration;
+    private static Map<String, List<String>> agentCapabilities;
     private static List<Provider> providerConfigurationsForEnabledProviders;
+    private static List<String> agentsIgnoredForCapabilityTest;
     private static Set<Module> guiceModulesToUse;
     private static HostConfiguration hostConfiguration;
     private static Injector injector;
@@ -106,6 +123,27 @@ public class AgentInitialisationTest {
                     "nxgen.dk.banks.nordeapartner.NordeaPartnerDkAgent",
                     "nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent",
                     "nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent");
+
+    private static Map<String, List<String>> readCapabilities(String filePath) {
+        // given
+        Path path = Paths.get(filePath);
+
+        Map<String, List<String>> agentCapabilities;
+        try {
+            byte[] agentCapabilitiesFileData = Files.readAllBytes(path);
+            agentCapabilities =
+                    new ObjectMapper().readValue(new String(agentCapabilitiesFileData), Map.class);
+            return agentCapabilities;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static List<String> readAgentsIgnoredForCapabilityTest(String filePath)
+            throws IOException {
+        Path path = Paths.get(filePath);
+        return Files.readAllLines(path);
+    }
 
     private static AggregationServiceConfiguration readConfiguration(String filePath)
             throws IOException, ConfigurationException {
@@ -233,6 +271,13 @@ public class AgentInitialisationTest {
                     getProviderConfigurationsForEnabledProviders(
                             "external/tink_backend/src/provider_configuration/data/seeding");
 
+            agentCapabilities =
+                    readCapabilities(
+                            "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
+            agentsIgnoredForCapabilityTest =
+                    readAgentsIgnoredForCapabilityTest(
+                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/initialisation/resources/ignored_agents_for_capability_test.txt");
+
             providerConfigurationsForEnabledProviders.sort(
                     (p1, p2) -> p1.getName().compareTo(p2.getName()));
 
@@ -305,33 +350,144 @@ public class AgentInitialisationTest {
         }
     }
 
-    private void initialiseAgent(Provider provider) {
+    private Agent initialiseAgent(Provider provider) {
         try {
             // given
             CredentialsRequest credentialsRequest = createCredentialsRequest(provider);
             AgentContext context = createContext(credentialsRequest);
 
             // when
-            Agent agent = agentFactory.create(credentialsRequest, context);
+            return agentFactory.create(credentialsRequest, context);
         } catch (Exception e) {
             handleException(e, provider);
+            return null;
         }
+    }
+
+    private void compareExpectedAndGivenAgentCapabilities(Provider provider) {
+        Agent agent = initialiseAgent(provider);
+
+        // Skip capability checks because we cannot do that for these agents
+        if (agent instanceof DeprecatedRefreshExecutor
+                || agentsIgnoredForCapabilityTest.contains(provider.getClassName())) {
+            return;
+        }
+
+        // given
+        // Find given and expected agent capabilitie
+        Set<String> givenAgentCapabilities = new HashSet<>();
+        List<String> expectedAgentCapabilities = agentCapabilities.get(provider.getClassName());
+
+        if (agent instanceof RefreshCreditCardAccountsExecutor) {
+            givenAgentCapabilities.add("CREDIT_CARDS");
+        }
+        if (agent instanceof RefreshIdentityDataExecutor) {
+            givenAgentCapabilities.add("IDENTITY_DATA");
+        }
+        if (agent instanceof RefreshCheckingAccountsExecutor) {
+            givenAgentCapabilities.add("CHECKING_ACCOUNTS");
+        }
+        if (agent instanceof RefreshSavingsAccountsExecutor) {
+            givenAgentCapabilities.add("SAVINGS_ACCOUNTS");
+        }
+        if (agent instanceof RefreshInvestmentAccountsExecutor) {
+            givenAgentCapabilities.add("INVESTMENTS");
+        }
+        if (agent instanceof RefreshLoanAccountsExecutor) {
+            boolean relatedGivenCapability = false;
+            if (expectedAgentCapabilities.contains("LOANS")) {
+                givenAgentCapabilities.add("LOANS");
+                relatedGivenCapability = true;
+            }
+            if (expectedAgentCapabilities.contains("MORTGAGE_AGGREGATION")) {
+                givenAgentCapabilities.add("MORTGAGE_AGGREGATION");
+                relatedGivenCapability = true;
+            }
+            if (!relatedGivenCapability) {
+                // Not MORTGAGE_AGGREGATION because LOANS is the new capability that covers
+                // all, MORTGAGE_AGGREGATION is just there for backward compatibility
+                givenAgentCapabilities.add("LOANS");
+            }
+        }
+        if (agent instanceof TransferExecutor) {
+            boolean relatedGivenCapability = false;
+            if (expectedAgentCapabilities.contains("TRANSFERS")) {
+                givenAgentCapabilities.add("TRANSFERS");
+                relatedGivenCapability = true;
+            }
+            if (expectedAgentCapabilities.contains("PAYMENTS")) {
+                givenAgentCapabilities.add("PAYMENTS");
+                relatedGivenCapability = true;
+            }
+            if (!relatedGivenCapability) {
+                // Not TRANSFERS because PAYMENTS and TRANSFERS are the same and PAYMENTS is
+                // newer
+                // TRANSFER is there just for backward compatibility
+                givenAgentCapabilities.add("PAYMENTS");
+            }
+        }
+        /*
+        If agent is TransferExecutorNxgen, there is no way for us to determine if this agent
+        has transfer/payments capability or not so we will not make any assertions on that
+
+        Turned out that an agent implementing TransferExecutorNxgen interface does not prove
+        that it should have the TRANSFER capability (see AxaAgent)
+         */
+        if (agent instanceof TransferExecutorNxgen) {
+            if (expectedAgentCapabilities.contains("TRANSFERS")) {
+                expectedAgentCapabilities.remove("TRANSFERS");
+            }
+            if (expectedAgentCapabilities.contains("PAYMENTS")) {
+                expectedAgentCapabilities.remove("PAYMENTS");
+            }
+        }
+
+        // then
+        SetView<String> expectedButNotGiven =
+                Sets.difference(new HashSet<>(expectedAgentCapabilities), givenAgentCapabilities);
+
+        SetView<String> givenButNotExpected =
+                Sets.difference(givenAgentCapabilities, new HashSet<>(expectedAgentCapabilities));
+
+        StringBuilder builder = new StringBuilder();
+        if (expectedButNotGiven.size() > 0) {
+            builder.append(
+                    "Agent "
+                            + provider.getClassName()
+                            + " has the following capabilities in agent-capabilities.json file, however it does not implement corresponding interface(s) for them : "
+                            + expectedButNotGiven.toString()
+                            + "\n");
+        }
+
+        if (givenButNotExpected.size() > 0) {
+            builder.append(
+                    "Agent "
+                            + provider.getClassName()
+                            + " has the following capabilities which are not mentioned in agent-capabilities.json : "
+                            + givenButNotExpected.toString()
+                            + "\n");
+        }
+        if (expectedButNotGiven.size() > 0 || givenButNotExpected.size() > 0) {
+            throw new RuntimeException(builder.toString());
+        }
+    }
+
+    // This method returns one provider for each agent
+    private List<Provider> getProviders() {
+        return providerConfigurationsForEnabledProviders.stream()
+                .filter(provider -> !provider.getName().toLowerCase().contains("test"))
+                .collect(groupingBy(Provider::getClassName))
+                .entrySet()
+                .stream()
+                .map(entry -> entry.getValue().get(0))
+                .filter(provider -> !temporarilyIgnoredAgents.contains(provider.getClassName()))
+                .collect(Collectors.toList());
     }
 
     @Test
     public void whenEnabledProvidersAreGivenAgentFactoryShouldInstantiateAllEnabledAgents() {
         // given
-        List<Provider> providers =
-                providerConfigurationsForEnabledProviders.stream()
-                        .filter(provider -> !provider.getName().toLowerCase().contains("test"))
-                        .collect(groupingBy(Provider::getClassName))
-                        .entrySet()
-                        .stream()
-                        .map(entry -> entry.getValue().get(0))
-                        .filter(
-                                provider ->
-                                        !temporarilyIgnoredAgents.contains(provider.getClassName()))
-                        .collect(Collectors.toList());
+        List<Provider> providers = getProviders();
 
         // given / when
         providers.parallelStream().forEach(this::initialiseAgent);
@@ -340,5 +496,26 @@ public class AgentInitialisationTest {
            What we want to test is to check whether we can initialise all agents without having
            an exception. For this reason, we don't have an explicit "then" block for this test
         */
+    }
+
+    /*
+        For each agent (except the agents specified in resource/igore_agents_for_capability_test.txt)
+        This test compares the real capabilities of the agent (by checking which interfaces it implements)
+        and the expected capabilities of the agent (by checking agent-capabilities.json file in tink-backend)
+        and fails if there is an agent where the real capabilities and expected capabilities are not
+        matching.
+
+        Known limitations:
+
+        1- We do not make any assertions on PAYMENTS and TRANSFER capabilities.
+        2- We do not make any assertions on agents that implement DeprecatedRefreshExecutor
+    */
+    @Test
+    public void expectedCapabilitiesAndGivenCapabilitiesShouldMatchForAllAgents() {
+        // given
+        List<Provider> providers = getProviders();
+
+        // when / then
+        providers.parallelStream().forEach(this::compareExpectedAndGivenAgentCapabilities);
     }
 }
