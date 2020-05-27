@@ -18,8 +18,6 @@ import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
@@ -46,6 +44,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.identitydata.IdentityData;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         implements RefreshTransferDestinationExecutor,
@@ -264,10 +263,16 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        UkOpenBankingIdentityDataFetcher fetcher =
-                new UkOpenBankingIdentityDataFetcher(
-                        apiClient, agentConfig, IdentityDataEntity.class);
-        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
+        return getAisSupport()
+                .makeIdentityDataFetcher(apiClient)
+                .fetchIdentityData()
+                .map(FetchIdentityDataResponse::new)
+                .orElse(
+                        new FetchIdentityDataResponse(
+                                IdentityData.builder()
+                                        .setFullName(null)
+                                        .setDateOfBirth(null)
+                                        .build()));
     }
 
     private AccountFetcher<TransactionalAccount> getTransactionalAccountFetcher() {

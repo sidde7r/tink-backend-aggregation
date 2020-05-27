@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -14,58 +16,62 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataV31Entity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.PartyFixtures;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.IdentityDataMapper;
+import se.tink.libraries.identitydata.IdentityData;
 
-public class PartyDataV31FetcherTest {
+public class IdentityDataV31FetcherTest {
 
-    private PartyDataV31Fetcher partyDataFetcher;
+    private IdentityDataV31Fetcher partyDataFetcher;
     private UKOpenBankingAis aisConfiguration;
     private UkOpenBankingApiClient apiClient;
+    private IdentityDataMapper identityDataMapper;
 
     @Before
     public void setUp() {
         apiClient = mock(UkOpenBankingApiClient.class);
         aisConfiguration = mock(UKOpenBankingAis.class);
-        partyDataFetcher = new PartyDataV31Fetcher(apiClient, aisConfiguration);
+        identityDataMapper = mock(IdentityDataMapper.class);
+        partyDataFetcher =
+                new IdentityDataV31Fetcher(apiClient, aisConfiguration, identityDataMapper);
     }
 
     @Test
-    public void DoNotfetchPartyOnlyIfItsNotEnabledInConfig() {
+    public void doNotfetchPartyOnlyIfItsNotEnabledInConfig() {
         // when
         when(aisConfiguration.isPartyEndpointEnabled()).thenReturn(false);
-        Optional<IdentityDataV31Entity> result = partyDataFetcher.fetchParty();
+        Optional<IdentityData> result = partyDataFetcher.fetchIdentityData();
 
         // then
         verifyZeroInteractions(apiClient);
-        assertThat(result.isPresent()).isFalse();
+        assertThat(result).isEmpty();
     }
 
     @Test
-    public void fetchPartReturnsCorrectResult() {
+    public void fetchIdentityDataReturnsCorrectResult() {
         // given
-        URL dummyBaseURL = new URL("https://dummy.com");
-        IdentityDataV31Entity expectedResponse = PartyFixtures.party();
+        IdentityData expectedResponse =
+                IdentityData.builder()
+                        .setFullName("Elon Musk")
+                        .setDateOfBirth(LocalDate.parse("2019-01-01"))
+                        .build();
 
         // when
         when(aisConfiguration.isPartyEndpointEnabled()).thenReturn(true);
-        when(aisConfiguration.getApiBaseURL()).thenReturn(dummyBaseURL);
-        when(apiClient.fetchV31Party()).thenReturn(Optional.of(expectedResponse));
+        when(apiClient.fetchV31Party()).thenReturn(Optional.of(mock(IdentityDataV31Entity.class)));
+        when(identityDataMapper.map(any())).thenReturn(expectedResponse);
 
-        Optional<IdentityDataV31Entity> result = partyDataFetcher.fetchParty();
+        Optional<IdentityData> result = partyDataFetcher.fetchIdentityData();
         // then
+        assertThat(result.get().getDateOfBirth()).isEqualTo(expectedResponse.getDateOfBirth());
         assertThat(result.get()).isEqualTo(expectedResponse);
     }
 
     @Test
-    public void fetchDataFromPartiesEndpoint_otherwiseFromPartyEndpoint() {
+    public void whenPartiesEndpointIsEnabled_fetchDataFromIt() {
         // given
-        URL dummyBaseURL = new URL("https://dummy.com");
-        IdentityDataV31Entity partyResponse = PartyFixtures.party();
         List<IdentityDataV31Entity> partiesResponse = PartyFixtures.parties();
 
-        when(aisConfiguration.getApiBaseURL()).thenReturn(dummyBaseURL);
         when(apiClient.fetchV31Parties("123ACC_ID")).thenReturn(partiesResponse);
-        when(apiClient.fetchV31Party("123ACC_ID")).thenReturn(Optional.of(partyResponse));
 
         // when
         when(aisConfiguration.isAccountPartiesEndpointEnabled()).thenReturn(true);
@@ -75,6 +81,13 @@ public class PartyDataV31FetcherTest {
 
         // then
         assertThat(partyListResult).isEqualTo(partiesResponse);
+    }
+
+    @Test
+    public void whenPartiesEndpointIsDisabled_fetchDataFromPartyEndpoint() {
+        // given
+        IdentityDataV31Entity partyResponse = PartyFixtures.party();
+        when(apiClient.fetchV31Party("123ACC_ID")).thenReturn(Optional.of(partyResponse));
 
         // when
         when(aisConfiguration.isAccountPartiesEndpointEnabled()).thenReturn(false);
