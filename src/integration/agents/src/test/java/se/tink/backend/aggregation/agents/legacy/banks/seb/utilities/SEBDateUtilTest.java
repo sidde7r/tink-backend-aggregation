@@ -25,7 +25,7 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransfersDatesAreNotMovedForInternalTransfers_when_notSet() {
+    public void testTransfersDatesAreNotMovedForInternalTransfersWhenNotSet() {
         Calendar cal = Calendar.getInstance();
         cal.set(2014, Calendar.APRIL, 3, 0, 0, 0);
 
@@ -60,7 +60,7 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransferDateIsMovedToNextBusinessDay_when_SaturdayBeforeMidday() {
+    public void testTransferDateIsMovedToNextBusinessDayWhenSaturdayBeforeMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 13, 10, 0, 0);
 
@@ -76,7 +76,7 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransferDateIsMovedToNextBusinessDay_when_SaturdayAfterMidday() {
+    public void testTransferDateIsMovedToNextBusinessDayWhenSaturdayAfterMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 13, 15, 0, 0);
 
@@ -92,7 +92,7 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransferDateIsMovedToNextBusinessDay_when_SundayBeforeMidday() {
+    public void testTransferDateIsMovedToNextBusinessDayWhenSundayBeforeMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 14, 10, 0, 0);
 
@@ -108,7 +108,7 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransferDateIsMovedToNextBusinessDay_when_SundayAfterMidday() {
+    public void testTransferDateIsMovedToNextBusinessDayWhenSundayAfterMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 14, 15, 0, 0);
 
@@ -124,7 +124,7 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransferDateIsNotMovedToNextBusinessDay_when_MondayBeforeMidday() {
+    public void testTransferDateIsNotMovedToNextBusinessDayWhenMondayBeforeMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 15, 11, 0, 0);
 
@@ -137,7 +137,7 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransferDateIsMovedToNextBusinessDay_when_MondayAfterMidday() {
+    public void testTransferDateIsMovedToNextBusinessDayWhenMondayAfterMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.FEBRUARY, 15, 15, 0, 0);
 
@@ -150,7 +150,7 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransferDateIsNotMovedToNextBusinessDay_when_FridayBeforeMidday() {
+    public void testTransferDateIsNotMovedToNextBusinessDayWhenFridayBeforeMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.MARCH, 11, 11, 0, 0);
 
@@ -163,7 +163,7 @@ public class SEBDateUtilTest {
     }
 
     @Test
-    public void testTransferDateIsMovedToNextBusinessDay_when_FridayAfterMidday() {
+    public void testTransferDateIsMovedToNextBusinessDayWhenFridayAfterMidday() {
         Calendar cal = Calendar.getInstance();
         cal.set(2016, Calendar.MARCH, 11, 15, 0, 0);
 

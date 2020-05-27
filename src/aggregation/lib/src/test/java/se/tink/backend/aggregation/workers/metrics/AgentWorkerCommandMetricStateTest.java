@@ -21,8 +21,6 @@ import se.tink.libraries.provider.ProviderDto.ProviderTypes;
 
 public class AgentWorkerCommandMetricStateTest {
     private AgentWorkerCommandMetricState metrics;
-    private Timer timerMock;
-    private Counter counterMock;
     private MetricRegistry metricRegistry;
     private Provider provider;
     private Credentials credentials;
@@ -30,13 +28,11 @@ public class AgentWorkerCommandMetricStateTest {
 
     @Before
     public void setup() {
-        MetricsCommand command = mockCommand("test_command");
+        MetricsCommand command = mockCommand();
 
         metricRegistry = mock(MetricRegistry.class);
-        timerMock = mock(Timer.class);
-        when(metricRegistry.timer(any())).thenReturn(timerMock);
-        counterMock = mock(Counter.class);
-        when(metricRegistry.meter(any())).thenReturn(counterMock);
+        when(metricRegistry.timer(any())).thenReturn(mock(Timer.class));
+        when(metricRegistry.meter(any())).thenReturn(mock(Counter.class));
         provider = mockProvider();
         credentials = mockCredentials();
         requestType = CredentialsRequestType.UPDATE;
@@ -56,9 +52,9 @@ public class AgentWorkerCommandMetricStateTest {
         return metrics.buildAction(new MetricId.MetricLabels().add("action", action));
     }
 
-    private MetricsCommand mockCommand(String metricName) {
+    private MetricsCommand mockCommand() {
         MetricsCommand command = mock(MetricsCommand.class);
-        when(command.getMetricName()).thenReturn(metricName);
+        when(command.getMetricName()).thenReturn("test_command");
 
         return command;
     }

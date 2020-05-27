@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.register.fi.opbank.utils;
 
-import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.Payload;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import net.minidev.json.JSONObject;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
@@ -40,8 +40,7 @@ public final class PSD2Utils {
         final Payload payload2 = new Payload(jwsString);
         final JWSObject jws2 = new JWSObject(createHeaderJwt(), payload2);
 
-        final String signedRequest = buildSignedJwt(jws2, clusterId, appId);
-        return signedRequest;
+        return buildSignedJwt(jws2, clusterId, appId);
     }
 
     private static String buildSignedJwt(JWSObject jwsObject, String clusterId, String appId) {
@@ -55,7 +54,7 @@ public final class PSD2Utils {
                         eidasIdentity);
 
         final String json = new Gson().toJson(jwsObject);
-        final byte[] signatureBytes = signer.getSignature(json.getBytes(Charsets.UTF_8));
+        final byte[] signatureBytes = signer.getSignature(json.getBytes(StandardCharsets.UTF_8));
         return new String(signatureBytes);
     }
 
