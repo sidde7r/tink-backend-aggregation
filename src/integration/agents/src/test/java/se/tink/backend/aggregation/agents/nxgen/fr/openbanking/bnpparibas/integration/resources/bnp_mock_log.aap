@@ -1,0 +1,48 @@
+REQUEST 1
+POST https://api-psd2.bddf.bnpparibas/as/psd2/retail/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator : Tink Testing
+
+client_id=DUMMY_ID&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&grant_type=authorization_code&code=DUMMY_AUTH_CODE
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":900,"state":"f2533843-785d-4499-b92f-61711101feed","scope":"aisp","refresh_token":"DUMMY_REFRESH_TOKEN"}
+
+REQUEST 2
+GET https://api-psd2.bddf.bnpparibas/psd2/retail/V1.4/accounts
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","accountId":{"iban":"FR7630004000000000000123400","currency":"EUR"},"name":"DUMMY_NAME","details":"Bnp Paribas","usage":"PRIV","cashAccountType":"CACC","psuStatus":"Co-account Holder","_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}],"_links":{"self":{"href":"/accounts"}}}
+
+REQUEST 3
+GET https://api-psd2.bddf.bnpparibas/psd2/retail/V1.4/accounts/DUMMY_RESOURCE_ID/balances
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"balances":[{"name":"SOLDE COMPTABLE au 14/01/2019","referenceDate":"2019-01-14","balanceAmount":{"amount":"123.45","currency":"EUR"},"balanceType":"CLBD"},{"name":"SOLDE PREVISIONNEL au 30/01/2019","referenceDate":"2019-01-30","balanceAmount":{"amount":"789.01","currency":"EUR"},"balanceType":"OTHR"}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/balances"}}}
+
+REQUEST 4
+GET https://api-psd2.bddf.bnpparibas/psd2/retail/V1.4/accounts/DUMMY_RESOURCE_ID/transactions
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"transactions":[{"entryReference":"AF5T2","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","valueDate":"","transactionDate":"","remittanceInformation":["SEPA CREDIT TRANSFER from PSD2Company"]}],"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions"}}}
