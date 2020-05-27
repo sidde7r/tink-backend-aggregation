@@ -15,39 +15,20 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasApiBaseClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.entities.AccountsItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.BalanceResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BnpParibasTransactionalAccountFetcherTest {
 
     private BnpParibasApiBaseClient apiClient;
-    private SessionStorage sessionStorage;
-    private BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
-    private String token;
-    private BnpParibasConfiguration bnpParibasConfiguration;
-    private String signature;
     private AccountsResponse accountsResponse;
 
     @Before
     public void init() {
         apiClient = mock(BnpParibasApiBaseClient.class);
-        sessionStorage = mock(SessionStorage.class);
-        bnpParibasSignatureHeaderProvider = mock(BnpParibasSignatureHeaderProvider.class);
-        token = "token";
-        bnpParibasConfiguration = mock(BnpParibasConfiguration.class);
-        signature = "signature";
         accountsResponse = mock(AccountsResponse.class);
-
-        when(sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN)).thenReturn(token);
-        when(apiClient.getBnpParibasConfiguration()).thenReturn(bnpParibasConfiguration);
-        when(bnpParibasSignatureHeaderProvider.buildSignatureHeader(any(), any(), any()))
-                .thenReturn(signature);
     }
 
     @Test

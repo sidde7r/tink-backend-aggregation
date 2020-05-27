@@ -2,7 +2,10 @@ load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
 
 junit_test(
     name = "bnpparibas",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["integration/**/*.java"],
+    ),
     data = ["//:agent_test_data"],
     tags = [
         "external",
