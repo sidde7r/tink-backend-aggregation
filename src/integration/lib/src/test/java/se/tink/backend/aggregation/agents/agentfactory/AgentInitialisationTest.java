@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisationUtil;
 import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcherUtil;
+import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReaderUtil;
 
 public class AgentInitialisationTest {
 
@@ -89,8 +90,9 @@ public class AgentInitialisationTest {
                             "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
 
             agentFactoryTestConfig =
-                    readTestConfiguration(
-                            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml");
+                    new TestConfigurationReaderUtil(
+                                    "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
+                            .getAgentFactoryTestConfig();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
