@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional.builder;
 
 import javax.annotation.Nonnull;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
@@ -67,6 +68,15 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      */
     @Deprecated
     <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value);
+
+    @Deprecated
+    B canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds);
+
+    @Deprecated
+    B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds);
+
+    @Deprecated
+    B canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer);
 
     /**
      * Constructs an account from this builder.

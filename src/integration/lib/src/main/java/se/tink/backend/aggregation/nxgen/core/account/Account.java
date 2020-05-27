@@ -102,6 +102,7 @@ public abstract class Account {
         this.exactAvailableCredit =
                 Optional.ofNullable(builder.getExactAvailableCredit()).orElse(null);
         this.payload = Maps.newHashMap();
+        this.capabilities = builder.getCapabilities();
         // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or
         // '-').
         Preconditions.checkState(
@@ -119,6 +120,7 @@ public abstract class Account {
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         this.productName = builder.getProductName();
         this.payload = Maps.newHashMap();
+        this.capabilities = builder.getCapabilities();
 
         if (Strings.isNullOrEmpty(builder.getAlias())) {
             // Fallback in case the received alias happened to be null at run-time.
@@ -302,6 +304,7 @@ public abstract class Account {
         private ExactCurrencyAmount exactBalance;
         private String alias;
         private String productName;
+        private AccountCapabilities capabilities = new AccountCapabilities();
 
         protected final void applyUniqueIdentifier(@Nonnull String uniqueIdentifier) {
             Preconditions.checkArgument(
@@ -380,6 +383,24 @@ public abstract class Account {
             return buildStep();
         }
 
+        @Override
+        public B canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds) {
+            this.capabilities.setCanWithdrawFunds(canWithdrawFunds);
+            return buildStep();
+        }
+
+        @Override
+        public B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds) {
+            this.capabilities.setCanPlaceFunds(canPlaceFunds);
+            return buildStep();
+        }
+
+        @Override
+        public B canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer) {
+            this.capabilities.setCanMakeAndReceiveTransfer(canMakeAndReceiveTransfer);
+            return buildStep();
+        }
+
         protected abstract B buildStep();
 
         String getUniqueIdentifier() {
@@ -421,6 +442,10 @@ public abstract class Account {
         Set<AccountFlag> getAccountFlags() {
             return accountFlags;
         }
+
+        public AccountCapabilities getCapabilities() {
+            return capabilities;
+        }
     }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project
@@ -437,6 +462,7 @@ public abstract class Account {
         protected HolderName holderName;
         protected ExactCurrencyAmount exactBalance;
         protected ExactCurrencyAmount exactAvailableCredit;
+        private AccountCapabilities capabilities = new AccountCapabilities();
         private T thisObj;
 
         @Deprecated
@@ -549,6 +575,25 @@ public abstract class Account {
         public T setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
             this.exactAvailableCredit = exactAvailableCredit;
             return self();
+        }
+
+        public T canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds) {
+            this.capabilities.setCanWithdrawFunds(canWithdrawFunds);
+            return self();
+        }
+
+        public T canPlaceFunds(AccountCapabilities.Answer canPlaceFunds) {
+            this.capabilities.setCanPlaceFunds(canPlaceFunds);
+            return self();
+        }
+
+        public T canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer) {
+            this.capabilities.setCanMakeAndReceiveTransfer(canMakeAndReceiveTransfer);
+            return self();
+        }
+
+        public AccountCapabilities getCapabilities() {
+            return capabilities;
         }
     }
 }
