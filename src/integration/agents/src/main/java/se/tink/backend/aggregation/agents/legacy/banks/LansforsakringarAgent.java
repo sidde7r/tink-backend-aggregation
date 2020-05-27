@@ -1115,8 +1115,14 @@ public class LansforsakringarAgent extends AbstractAgent
                 && clientResponse.getHeaders().getFirst("Error-Message") != null) {
             String errorCode = clientResponse.getHeaders().getFirst("Error-Code");
             if (!Strings.isNullOrEmpty(errorCode)) {
-                if ("122111".equals(errorCode)) { // when amount > balance
-                    throw cancelTransfer(EndUserMessage.EXCESS_AMOUNT);
+                switch (errorCode) {
+                    case "122111":
+                        throw cancelTransfer(EndUserMessage.EXCESS_AMOUNT);
+                    case "99351":
+                        throw cancelTransfer(
+                                EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY);
+                    default:
+                        break;
                 }
             }
             throw failTransferWithMessage(
