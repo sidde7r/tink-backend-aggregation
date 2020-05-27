@@ -4,11 +4,15 @@ import io.reactivex.rxjava3.core.Observable;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public interface AgentConfigurationControllerable {
 
     <T extends ClientConfiguration> T getAgentConfiguration(final Class<T> clientConfigClass);
+
+    <T extends ClientConfiguration> AgentConfiguration<T> getAgentCommonConfiguration(
+            final Class<T> clientConfigClass);
 
     void completeSecretValuesSubject();
 

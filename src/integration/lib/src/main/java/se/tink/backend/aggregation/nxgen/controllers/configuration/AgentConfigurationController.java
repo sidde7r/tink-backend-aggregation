@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
 import se.tink.backend.integration.tpp_secrets_service.client.entities.SecretsEntityCore;
@@ -51,6 +52,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     private Set<String> secretValues = Collections.emptySet();
     private final Subject<Collection<String>> secretValuesSubject =
             BehaviorSubject.<Collection<String>>create().toSerialized();
+    private static final String REDIRECT_URL_KEY = "redirectUrl";
 
     // Package private for testing purposes.
     AgentConfigurationController() {
@@ -191,8 +193,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                     "Could not find redirectUrls in secrets " + getSecretsServiceParamsString());
         }
 
-        final String REDIRECT_URL_KEY = "redirectUrl";
-
         if (Strings.isNullOrEmpty(redirectUrl)) {
             // No redirectUrl provided in the CredentialsRequest, pick the first one from
             // the registered list.
@@ -227,6 +227,13 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     public <T extends ClientConfiguration> T getAgentConfiguration(
             final Class<T> clientConfigClass) {
 
+        return getAgentCommonConfiguration(clientConfigClass).getClientConfiguration();
+    }
+
+    @Override
+    public <T extends ClientConfiguration> AgentConfiguration<T> getAgentCommonConfiguration(
+            final Class<T> clientConfigClass) {
+
         // For local development we can use the development.yml file.
         if (!tppSecretsServiceEnabled) {
             return getAgentConfigurationDev(clientConfigClass);
@@ -236,16 +243,34 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                 allSecretsMapObj,
                 "Secrets were not fetched. Try to init() the AgentConfigurationController.");
 
-        T clientConfig = OBJECT_MAPPER.convertValue(allSecretsMapObj, clientConfigClass);
+        T clientConfig =
+                Optional.ofNullable(OBJECT_MAPPER.convertValue(allSecretsMapObj, clientConfigClass))
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Agent configuration for agent: "
+                                                        + clientConfigClass.toString()
+                                                        + " is missing"
+                                                        + getSecretsServiceParamsString()));
 
-        return Optional.ofNullable(clientConfig)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Agent configuration for agent: "
-                                                + clientConfigClass.toString()
-                                                + " is missing"
-                                                + getSecretsServiceParamsString()));
+        String redirectUrl =
+                Optional.ofNullable(
+                                OBJECT_MAPPER
+                                        .convertValue(allSecretsMapObj, AgentConfiguration.class)
+                                        .getRedirectUrl())
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Common configuration is missing redirectUrl for appId: "
+                                                        + appId));
+
+        AgentConfiguration<T> agentConfiguration =
+                new AgentConfiguration.Builder()
+                        .setClientConfiguration(clientConfig)
+                        .setRedirectUrl(redirectUrl)
+                        .build();
+
+        return agentConfiguration;
     }
 
     private void notifySecretValues(Set<String> newSecretValues) {
@@ -364,7 +389,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     }
 
     // Used to read agent configuration from development.yml instead of Secrets Service
-    private <T extends ClientConfiguration> T getAgentConfigurationDev(
+    private <T extends ClientConfiguration> AgentConfiguration<T> getAgentConfigurationDev(
             final Class<T> clientConfigClass) {
         log.info(
                 "Not reading agent configuration from Secrets Service, make sure that you have "
@@ -385,6 +410,19 @@ public final class AgentConfigurationController implements AgentConfigurationCon
 
         extractSensitiveValues(clientConfigurationAsObject);
 
-        return OBJECT_MAPPER.convertValue(clientConfigurationAsObject, clientConfigClass);
+        AgentConfiguration<T> agentConfiguration =
+                new AgentConfiguration.Builder()
+                        .setClientConfiguration(
+                                OBJECT_MAPPER.convertValue(
+                                        clientConfigurationAsObject, clientConfigClass))
+                        .setRedirectUrl(
+                                OBJECT_MAPPER
+                                        .convertValue(
+                                                clientConfigurationAsObject,
+                                                AgentConfiguration.class)
+                                        .getRedirectUrl())
+                        .build();
+
+        return agentConfiguration;
     }
 }
