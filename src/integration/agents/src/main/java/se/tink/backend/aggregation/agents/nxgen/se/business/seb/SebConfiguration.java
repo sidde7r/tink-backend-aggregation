@@ -28,4 +28,9 @@ public class SebConfiguration extends SebBaseConfiguration {
     public Optional<List<AccountEntity>> getAccountEntities(Response response) {
         return response.getBusinessAccountEntities();
     }
+
+    @Override
+    public boolean isBusinessAgent() {
+        return true;
+    }
 }

@@ -13,4 +13,8 @@ public abstract class SebBaseConfiguration {
     public abstract String getListAccountsUrl();
 
     public abstract Optional<List<AccountEntity>> getAccountEntities(Response response);
+
+    public boolean isBusinessAgent() {
+        return false;
+    }
 }
