@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.fetch
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.lansforsakringar.LansforsakringarConstants.Accounts;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
