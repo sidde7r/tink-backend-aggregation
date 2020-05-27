@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -55,6 +56,7 @@ public abstract class Account {
     protected ExactCurrencyAmount exactAvailableCredit;
     protected ExactCurrencyAmount exactCreditLimit;
     protected Map<String, String> payload;
+    protected AccountCapabilities capabilities;
 
     protected Account(AccountBuilder<? extends Account, ?> builder, BalanceModule balanceModule) {
         this(
@@ -82,6 +84,7 @@ public abstract class Account {
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         this.payload = builder.getPayload();
+        this.capabilities = builder.getCapabilities();
     }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project
@@ -251,6 +254,7 @@ public abstract class Account {
         account.setExactAvailableCredit(this.exactAvailableCredit);
         account.setAvailableBalance(this.exactAvailableBalance);
         account.setCreditLimit(this.exactCreditLimit);
+        account.setCapabilities(this.capabilities);
 
         return account;
     }
