@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,26 +19,6 @@ import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationRe
 public class AgentInitialisationTest {
 
     private static final Logger log = LoggerFactory.getLogger(AgentInitialisationTest.class);
-
-    private static AgentFactoryTestConfiguration agentFactoryTestConfiguration;
-    private static List<Provider> providerConfigurations;
-    private static AgentInitialisationUtil agentInitialisationUtil;
-
-    @BeforeClass
-    public static void prepareForTest() {
-        // given
-        agentFactoryTestConfiguration =
-                new TestConfigurationReaderUtil(
-                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
-                        .getAgentFactoryTestConfiguration();
-
-        providerConfigurations =
-                new ProviderFetcherUtil(
-                                "external/tink_backend/src/provider_configuration/data/seeding")
-                        .getProviderConfigurations();
-
-        agentInitialisationUtil = new AgentInitialisationUtil("etc/test.yml");
-    }
 
     private String createProperErrorMessageForAgentInitialisationError(
             Exception e, Provider provider) {
@@ -67,7 +46,8 @@ public class AgentInitialisationTest {
     }
 
     // This method returns one provider for each agent
-    private List<Provider> getProvidersForInitialisationTest() {
+    private List<Provider> getProvidersForInitialisationTest(
+            List<Provider> providerConfigurations) {
         return providerConfigurations.stream()
                 .filter(
                         provider ->
@@ -84,8 +64,21 @@ public class AgentInitialisationTest {
     @Test
     public void whenEnabledProvidersAreGivenAgentFactoryShouldInstantiateAllEnabledAgents() {
         // given
+        AgentFactoryTestConfiguration agentFactoryTestConfiguration =
+                new TestConfigurationReaderUtil(
+                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
+                        .getAgentFactoryTestConfiguration();
+
+        List<Provider> providerConfigurations =
+                new ProviderFetcherUtil(
+                                "external/tink_backend/src/provider_configuration/data/seeding")
+                        .getProviderConfigurations();
+
+        AgentInitialisationUtil agentInitialisationUtil =
+                new AgentInitialisationUtil("etc/test.yml");
+
         List<Provider> providers =
-                getProvidersForInitialisationTest().stream()
+                getProvidersForInitialisationTest(providerConfigurations).stream()
                         .filter(
                                 provider ->
                                         !agentFactoryTestConfiguration
