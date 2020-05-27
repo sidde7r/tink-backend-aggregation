@@ -781,4 +781,14 @@ spec:
     annotations:
       description: We expect to see less than current number of transfers for ( <{ $labels.provider }> ) with outcome ( <{ $labels.outcome }> ).
       summary: Threshold exceed for ( <{ $labels.provider }> ) for transfers with outcome ( <{ $labels.outcome }> ).
+
+  - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier1Banks
+    expr: sum by (provider, outcome) (tink_agent_transfer_total{market="SE", provider=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}) >= 2
+    labels:
+      severity: urgent
+      who: payments
+      priority: P3
+    annotations:
+      description: We expect to see less than current number of transfers for ( <{ $labels.provider }> ) with outcome ( <{ $labels.outcome }> ).
+      summary: Threshold exceed for ( <{ $labels.provider }> ) for transfers with outcome ( <{ $labels.outcome }> ).
   {{- end }}
