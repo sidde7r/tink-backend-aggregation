@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -65,22 +64,6 @@ public class TransactionEntity {
     @JsonIgnore
     private final SimpleDateFormat transactionFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private boolean isDebit() {
-        return ICSConstants.Transaction.DEBIT.equalsIgnoreCase(creditDebitIndicator);
-    }
-
-    private ExactCurrencyAmount toTinkAmount() {
-
-        ExactCurrencyAmount result =
-                ExactCurrencyAmount.of(Double.parseDouble(billingAmount), billingCurrency);
-
-        if (isDebit()) {
-            return result.negate();
-        }
-
-        return result;
-    }
-
     private Date toTransactionDate() {
         try {
             return transactionFormat.parse(transactionDate);
@@ -91,7 +74,8 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(toTinkAmount())
+                .setAmount(
+                        ExactCurrencyAmount.of(Double.parseDouble(billingAmount), billingCurrency))
                 .setDescription(transactionInformation)
                 .setDate(toTransactionDate())
                 .setPayload(
