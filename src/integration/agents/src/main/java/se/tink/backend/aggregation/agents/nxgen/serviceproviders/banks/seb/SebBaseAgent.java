@@ -46,6 +46,7 @@ public abstract class SebBaseAgent extends NextGenerationAgent
     protected final LoanRefreshController loanRefreshController;
     protected final InvestmentRefreshController investmentFetcher;
     protected final SebAuthenticator sebAuthenticator;
+    protected final SebBaseConfiguration sebConfiguration;
 
     public SebBaseAgent(
             AgentComponentProvider agentComponentProvider, SebBaseConfiguration sebConfiguration) {
@@ -53,15 +54,15 @@ public abstract class SebBaseAgent extends NextGenerationAgent
         apiClient = new SebApiClient(client, sebConfiguration);
         sebSessionStorage = new SebSessionStorage(sessionStorage);
         transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController(sebConfiguration);
-        creditCardRefreshController = constructCreditCardRefreshController(sebConfiguration);
-        loanRefreshController = constructLoanRefreshController(sebConfiguration);
-        investmentFetcher = constructInvestmentRefreshController(sebConfiguration);
-        sebAuthenticator = constructSebAuthenticator(sebConfiguration);
+                constructTransactionalAccountRefreshController();
+        creditCardRefreshController = constructCreditCardRefreshController();
+        loanRefreshController = constructLoanRefreshController();
+        investmentFetcher = constructInvestmentRefreshController();
+        sebAuthenticator = constructSebAuthenticator();
+        this.sebConfiguration = sebConfiguration;
     }
 
-    protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
-            SebBaseConfiguration sebConfiguration) {
+    protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
@@ -72,26 +73,23 @@ public abstract class SebBaseAgent extends NextGenerationAgent
                         new UpcomingTransactionFetcher(apiClient)));
     }
 
-    protected CreditCardRefreshController constructCreditCardRefreshController(
-            SebBaseConfiguration sebConfiguration) {
+    protected CreditCardRefreshController constructCreditCardRefreshController() {
         SebCreditCardFetcher cardFetcher = new SebCreditCardFetcher(apiClient, sebSessionStorage);
         return new CreditCardRefreshController(
                 metricRefreshController, updateController, cardFetcher, cardFetcher);
     }
 
-    private InvestmentRefreshController constructInvestmentRefreshController(
-            SebBaseConfiguration sebConfiguration) {
+    private InvestmentRefreshController constructInvestmentRefreshController() {
         return new InvestmentRefreshController(
                 metricRefreshController, updateController, new SebInvestmentFetcher(apiClient));
     }
 
-    private LoanRefreshController constructLoanRefreshController(
-            SebBaseConfiguration sebConfiguration) {
+    private LoanRefreshController constructLoanRefreshController() {
         return new LoanRefreshController(
                 metricRefreshController, updateController, new SebLoanFetcher(apiClient));
     }
 
-    private SebAuthenticator constructSebAuthenticator(SebBaseConfiguration sebConfiguration) {
+    private SebAuthenticator constructSebAuthenticator() {
         return new SebAuthenticator(apiClient, sebSessionStorage, sebConfiguration);
     }
 
