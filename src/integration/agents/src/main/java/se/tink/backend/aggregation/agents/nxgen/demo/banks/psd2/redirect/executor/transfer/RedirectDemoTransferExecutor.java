@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer;
 
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_CANCEL_CASE_REGEX;
-import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_FAILURE_CASE_REGEX;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_PAYMENT_CANCEL_CASE_REGEX;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_PAYMENT_FAILED_CASE_REGEX;
 
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
@@ -53,7 +53,7 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
 
         String providerName = credentials.getProviderName();
         // This block handles PIS only business use case as source-account will be null in request
-        if (providerName.matches(DEMO_PROVIDER_FAILURE_CASE_REGEX)) { // FAILED case
+        if (providerName.matches(DEMO_PROVIDER_PAYMENT_FAILED_CASE_REGEX)) { // FAILED case
 
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(
@@ -61,7 +61,8 @@ public class RedirectDemoTransferExecutor implements BankTransferExecutor {
                     .setMessage(
                             "The transfer amount is larger than what is available on the account (test)")
                     .build();
-        } else if (providerName.matches(DEMO_PROVIDER_CANCEL_CASE_REGEX)) { // CANCELLED case
+        } else if (providerName.matches(
+                DEMO_PROVIDER_PAYMENT_CANCEL_CASE_REGEX)) { // CANCELLED case
 
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage("Cancel on payment signing (test)")
