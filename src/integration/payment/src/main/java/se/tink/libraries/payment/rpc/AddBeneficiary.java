@@ -7,7 +7,7 @@ public class AddBeneficiary {
     private AddBeneficiaryStatus status;
 
     private AddBeneficiary(Builder builder) {
-        // this.beneficiary = builder.beneficiary;
+        this.beneficiary = builder.beneficiary;
         this.status = builder.status;
     }
 
