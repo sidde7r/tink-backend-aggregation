@@ -9,7 +9,7 @@ public class SwedbankNoteToRecipientUtilsTest {
 
     @Test
     public void testSpaceAllowed() {
-        assertTrue(SwedbankNoteToRecipientUtils.isValidSwedbankNoteToRecipient("Test AB"));
+        assertTrue(SwedbankNoteToRecipientUtils.isValidSwedbankNoteToRecipient("Test_ AB-"));
     }
 
     @Test
@@ -20,5 +20,16 @@ public class SwedbankNoteToRecipientUtilsTest {
     @Test
     public void testSymbolNotAllowed() {
         assertFalse(SwedbankNoteToRecipientUtils.isValidSwedbankNoteToRecipient("LÅN April&Maj"));
+    }
+
+    @Test
+    public void testSymbolsNotAllowed() {
+        assertFalse(SwedbankNoteToRecipientUtils.isValidSwedbankNoteToRecipient("<>%"));
+    }
+
+    @Test
+    public void testAllStrangeCharsAllowed() {
+        assertTrue(
+                SwedbankNoteToRecipientUtils.isValidSwedbankNoteToRecipient("!@#$*()_-=,_[]\\/"));
     }
 }
