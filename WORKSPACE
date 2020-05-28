@@ -164,7 +164,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "8ad23588a46157e0728c822cebf367884f7f8bbc",
+    commit = "3648c1fc08318c140391428ec42d68e2cc61b4bb",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1586908800 +0000",
 )
@@ -385,6 +385,27 @@ MAVEN_REPOS = [
     "https://jcenter.bintray.com",
     "https://maven.google.com",
 ]
+
+jvm_maven_import_external(
+    name = "org_xerial_snappy_snappy_java",
+    artifact = "org.xerial.snappy:snappy-java:1.1.7",
+    artifact_sha256 = "c4e14c31d49e4301a9643ed60112136797b6244316bbe44ce190ac37ed8dfdaf",
+    server_urls = MAVEN_REPOS,
+)
+
+jvm_maven_import_external(
+    name = "com_sproutsocial_nsqj_j",
+    artifact = "com.sproutsocial:nsq-j:0.9.1",
+    artifact_sha256 = "bbb5cfffb7af71329f188172b02d7fc6d0a1f199fce3bf09ce189728355e9646",
+    server_urls = MAVEN_REPOS,
+)
+
+jvm_maven_import_external(
+    name = "com_google_http_client_google_http_client",
+    artifact = "com.google.http-client:google-http-client:1.17.0-rc",
+    artifact_sha256 = "c8e85f0d4882c012aeae02c954269eadb4b658b8db6e485b3d8241944b68ee0e",
+    server_urls = MAVEN_REPOS,
+)
 
 jvm_maven_import_external(
     name = "com_google_j2objc_j2objc_annotations",
