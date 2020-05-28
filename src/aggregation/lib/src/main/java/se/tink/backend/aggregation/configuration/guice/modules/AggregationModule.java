@@ -39,6 +39,7 @@ import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
 import se.tink.libraries.jersey.logging.ResourceCounterFilterFactory;
 import se.tink.libraries.jersey.logging.ResourceTimerFilterFactory;
+import se.tink.libraries.tracing.jersey.filter.ServerTracingFilter;
 
 public class AggregationModule extends AbstractModule {
     private final JerseyEnvironment jersey;
@@ -94,8 +95,12 @@ public class AggregationModule extends AbstractModule {
                 .addRequestFilters(
                         AccessLoggingFilter.class,
                         AggregationLoggerRequestFilter.class,
-                        RequestTracingFilter.class)
-                .addResponseFilters(AccessLoggingFilter.class, RequestTracingFilter.class)
+                        RequestTracingFilter.class,
+                        ServerTracingFilter.class)
+                .addResponseFilters(
+                        AccessLoggingFilter.class,
+                        RequestTracingFilter.class,
+                        ServerTracingFilter.class)
                 // This is not a resource, but a provider
                 .addResources(
                         AggregationService.class,
