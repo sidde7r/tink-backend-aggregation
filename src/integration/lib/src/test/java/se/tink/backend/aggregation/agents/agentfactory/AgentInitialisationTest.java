@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.groupingBy;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.Test;
@@ -53,7 +52,7 @@ public class AgentInitialisationTest {
     }
 
     // This method returns one provider for each agent
-    private Set<Provider> getProvidersForInitialisationTest(List<Provider> providerConfigurations) {
+    private Set<Provider> getProvidersForInitialisationTest(Set<Provider> providerConfigurations) {
         return providerConfigurations.stream()
                 .filter(
                         provider ->
@@ -63,7 +62,11 @@ public class AgentInitialisationTest {
                 .collect(groupingBy(Provider::getClassName))
                 .entrySet()
                 .stream()
-                .map(entry -> entry.getValue().get(0))
+                .map(
+                        entry -> {
+                            entry.getValue().sort((p1, p2) -> p1.getName().compareTo(p2.getName()));
+                            return entry.getValue().get(0);
+                        })
                 .collect(Collectors.toSet());
     }
 
@@ -79,9 +82,8 @@ public class AgentInitialisationTest {
                                 "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml")
                         .getAgentFactoryTestConfiguration();
 
-        List<Provider> providerConfigurations =
-                new ProviderFetcher(
-                                "external/tink_backend/src/provider_configuration/data/seeding")
+        Set<Provider> providerConfigurations =
+                new ProviderFetcher("external/tink_backend/src/provider_configuration/data/seeding")
                         .getProviderConfigurations();
 
         AgentInitialisor agentInitialisor =
