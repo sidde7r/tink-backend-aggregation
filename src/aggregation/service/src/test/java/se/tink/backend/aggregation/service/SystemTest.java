@@ -29,6 +29,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -162,6 +163,7 @@ public class SystemTest {
         assertThat(response, equalTo("pong"));
     }
 
+    @Ignore
     @Test
     public void getAuthenticateForAmexShouldSetCredentialsStatusUpdated() throws Exception {
 
@@ -189,6 +191,7 @@ public class SystemTest {
         Assertions.assertThat(finalStatusForCredentials).isEqualTo("UPDATED");
     }
 
+    @Ignore
     @Test
     public void getRefreshShouldUploadEntitiesForAmex() throws Exception {
         // given
