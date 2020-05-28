@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -20,7 +21,7 @@ public class ReferenceEntity {
         ReferenceEntity referenceEntity = new ReferenceEntity();
 
         referenceEntity.type = type;
-        referenceEntity.value = message;
+        referenceEntity.value = Strings.nullToEmpty(message);
 
         return referenceEntity;
     }
