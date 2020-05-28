@@ -18,6 +18,8 @@ public class ProviderFetcherUtil {
         this.folderForConfigurations = folderForConfigurations;
     }
 
+    // Must be a list because order is important since we want to have a deterministic
+    // behavior when picking a provider per agent.
     public List<Provider> getProviderConfigurations() {
         List<Provider> result =
                 Arrays.asList(new File(folderForConfigurations).listFiles()).stream()

@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.agentfactory.utils;
 
-import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 
 @Getter
 public class AgentFactoryTestConfiguration {
-    private List<String> ignoredAgentsForCapabilityTest;
-    private List<String> ignoredAgentsForInitialisationTest;
+    private Set<String> ignoredAgentsForCapabilityTest;
+    private Set<String> ignoredAgentsForInitialisationTest;
 }

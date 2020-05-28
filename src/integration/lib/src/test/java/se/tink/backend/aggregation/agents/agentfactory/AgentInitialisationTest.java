@@ -3,8 +3,9 @@ package se.tink.backend.aggregation.agents.agentfactory;
 import static java.util.stream.Collectors.groupingBy;
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -52,8 +53,7 @@ public class AgentInitialisationTest {
     }
 
     // This method returns one provider for each agent
-    private List<Provider> getProvidersForInitialisationTest(
-            List<Provider> providerConfigurations) {
+    private Set<Provider> getProvidersForInitialisationTest(List<Provider> providerConfigurations) {
         return providerConfigurations.stream()
                 .filter(
                         provider ->
@@ -64,7 +64,7 @@ public class AgentInitialisationTest {
                 .entrySet()
                 .stream()
                 .map(entry -> entry.getValue().get(0))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Test
@@ -86,17 +86,17 @@ public class AgentInitialisationTest {
                         CREDENTIALS_TEMPLATE_FILE_PATH,
                         USER_TEMPLATE_FILE_PATH);
 
-        List<Provider> providers =
+        Set<Provider> providers =
                 getProvidersForInitialisationTest(providerConfigurations).stream()
                         .filter(
                                 provider ->
                                         !agentFactoryTestConfiguration
                                                 .getIgnoredAgentsForInitialisationTest()
                                                 .contains(provider.getClassName()))
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toSet());
 
         // when
-        List<String> errors = new ArrayList<>();
+        Set<String> errors = new HashSet<>();
         providers
                 .parallelStream()
                 .forEach(

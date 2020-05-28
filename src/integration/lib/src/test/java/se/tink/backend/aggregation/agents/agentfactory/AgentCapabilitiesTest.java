@@ -35,7 +35,6 @@ import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcherUtil
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReaderUtil;
 
 public class AgentCapabilitiesTest {
-
     private static final Logger log = LoggerFactory.getLogger(AgentCapabilitiesTest.class);
 
     private static final String TRANSFERS = "TRANSFERS";
@@ -49,8 +48,8 @@ public class AgentCapabilitiesTest {
     private static final String USER_TEMPLATE_FILE_PATH =
             "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json";
 
-    private Map<String, List<String>> readExpectedAgentCapabilities(String filePath) {
-        Map<String, List<String>> agentCapabilities;
+    private Map<String, Set<String>> readExpectedAgentCapabilities(String filePath) {
+        Map<String, Set<String>> agentCapabilities;
         try {
             byte[] agentCapabilitiesFileData = Files.readAllBytes(Paths.get(filePath));
             agentCapabilities =
@@ -134,7 +133,7 @@ public class AgentCapabilitiesTest {
     private Optional<String> compareExpectedAndGivenAgentCapabilities(
             Provider provider,
             AgentInitialisationUtil agentInitialisationUtil,
-            Map<String, List<String>> expectedAgentCapabilities) {
+            Map<String, Set<String>> expectedAgentCapabilities) {
 
         Agent agent;
         try {
@@ -185,7 +184,7 @@ public class AgentCapabilitiesTest {
     }
 
     // This method returns one provider for each agent
-    private List<Provider> getProvidersForCapabilitiesTest(List<Provider> providerConfigurations) {
+    private Set<Provider> getProvidersForCapabilitiesTest(List<Provider> providerConfigurations) {
         return providerConfigurations.stream()
                 .filter(
                         provider ->
@@ -196,7 +195,7 @@ public class AgentCapabilitiesTest {
                 .entrySet()
                 .stream()
                 .map(entry -> entry.getValue().get(0))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     /*
@@ -216,7 +215,7 @@ public class AgentCapabilitiesTest {
     @Test
     public void expectedCapabilitiesAndGivenCapabilitiesShouldMatchForUnignoredAgents() {
         // given
-        Map<String, List<String>> expectedAgentCapabilities =
+        Map<String, Set<String>> expectedAgentCapabilities =
                 readExpectedAgentCapabilities(
                         "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
 
@@ -236,7 +235,7 @@ public class AgentCapabilitiesTest {
                         CREDENTIALS_TEMPLATE_FILE_PATH,
                         USER_TEMPLATE_FILE_PATH);
 
-        List<Provider> providerForEachUnignoredAgent =
+        Set<Provider> providerForEachUnignoredAgent =
                 getProvidersForCapabilitiesTest(providerConfigurations).stream()
                         .filter(
                                 provider ->
@@ -248,10 +247,10 @@ public class AgentCapabilitiesTest {
                                         !agentFactoryTestConfiguration
                                                 .getIgnoredAgentsForCapabilityTest()
                                                 .contains(provider.getClassName()))
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toSet());
 
         // when
-        List<String> errors =
+        Set<String> errors =
                 providerForEachUnignoredAgent
                         .parallelStream()
                         .map(
@@ -262,7 +261,7 @@ public class AgentCapabilitiesTest {
                                                 expectedAgentCapabilities))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toSet());
 
         errors.stream().forEach(log::error);
 
