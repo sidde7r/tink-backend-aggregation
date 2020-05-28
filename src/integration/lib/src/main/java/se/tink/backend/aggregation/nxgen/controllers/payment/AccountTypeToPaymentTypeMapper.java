@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
