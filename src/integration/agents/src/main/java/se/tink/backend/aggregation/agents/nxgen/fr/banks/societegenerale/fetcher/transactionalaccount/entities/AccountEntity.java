@@ -69,7 +69,7 @@ public class AccountEntity {
     private String familyCode;
 
     @JsonProperty("libelleDescriptif")
-    private String libelleDescription;
+    private String descriptiveLabel;
 
     public String getNumber() {
         return number;
@@ -81,6 +81,10 @@ public class AccountEntity {
 
     public String getLabel() {
         return label;
+    }
+
+    public String getDescriptiveLabel() {
+        return descriptiveLabel;
     }
 
     public String getTechnicalId() {

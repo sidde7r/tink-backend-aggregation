@@ -47,9 +47,11 @@ public class SocieteGeneraleTransactionalAccountFetcher
 
         if (!translated.isPresent()) {
             logger.info(
-                    "{} Unknown account type: {}",
+                    "{} Unknown account type: [{}], with product name: [{}] and product description [{}]",
                     SocieteGeneraleConstants.Logging.UNKNOWN_ACCOUNT_TYPE,
-                    productCode);
+                    productCode,
+                    entity.getLabel(),
+                    entity.getDescriptiveLabel());
         }
 
         return translated;
