@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -15,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.enums.FeatureFlags;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.user.rpc.User;
 

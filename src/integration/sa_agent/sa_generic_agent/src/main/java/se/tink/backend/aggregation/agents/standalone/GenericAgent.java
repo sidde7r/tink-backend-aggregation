@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.agents.standalone.mapper.factory.MappersContr
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.CommonExternalParametersProvider;
 import se.tink.backend.aggregation.agents.standalone.mapper.providers.impl.MockCommonExternalParametersProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.SupplementalWaitRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
@@ -44,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.sa.common.mapper.MappingContext;
 import se.tink.sa.model.auth.GetConsentStatusRequest;
 

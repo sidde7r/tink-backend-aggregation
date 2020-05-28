@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.SuperAbstractAgent;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -29,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 

@@ -10,12 +10,12 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.rpc.FetchLoanDetailsResponse;
-import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.user.rpc.User;
 
