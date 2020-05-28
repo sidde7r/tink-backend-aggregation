@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdStep;
@@ -25,6 +26,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     protected final List<AccountFlag> accountFlags = new ArrayList<>();
     private final TemporaryStorage temporaryStorage = new TemporaryStorage();
     protected Map<String, String> payload = new HashMap<>();
+    private AccountCapabilities capabilities = AccountCapabilities.createDefault();
 
     protected abstract B buildStep();
 
@@ -70,6 +72,24 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
         return buildStep();
     }
 
+    @Override
+    public B canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds) {
+        this.capabilities.setCanWithdrawFunds(canWithdrawFunds);
+        return buildStep();
+    }
+
+    @Override
+    public B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds) {
+        this.capabilities.setCanPlaceFunds(canPlaceFunds);
+        return buildStep();
+    }
+
+    @Override
+    public B canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer) {
+        this.capabilities.setCanMakeAndReceiveTransfer(canMakeAndReceiveTransfer);
+        return buildStep();
+    }
+
     IdModule getIdModule() {
         return idModule;
     }
@@ -97,5 +117,9 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     public Map<String, String> getPayload() {
         return payload;
+    }
+
+    public AccountCapabilities getCapabilities() {
+        return capabilities;
     }
 }

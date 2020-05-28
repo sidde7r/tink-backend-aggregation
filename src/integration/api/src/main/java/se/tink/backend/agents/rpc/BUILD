@@ -9,6 +9,7 @@ java_library(
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/amount",
         "//src/integration/credentials:demo",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_capabilities",
         "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//src/libraries/strings",

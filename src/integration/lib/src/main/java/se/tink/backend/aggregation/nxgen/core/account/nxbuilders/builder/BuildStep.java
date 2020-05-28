@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.account.enums.AccountFlag;
 
@@ -47,4 +48,12 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     B putPayload(@Nonnull String key, @Nonnull String value);
 
     B setBankIdentifier(String number);
+
+    // TODO: These should be made into a mandatory BuildStep:
+    // TODO: https://tinkab.atlassian.net/browse/AGG-290
+    B canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds);
+
+    B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds);
+
+    B canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer);
 }
