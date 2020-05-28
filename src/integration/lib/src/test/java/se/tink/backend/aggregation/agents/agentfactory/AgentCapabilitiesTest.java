@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import io.dropwizard.jackson.Jackson;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -78,7 +79,7 @@ public class AgentCapabilitiesTest {
                     Jackson.newObjectMapper()
                             .readValue(new String(agentCapabilitiesFileData), Map.class);
             return agentCapabilities;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -155,7 +156,7 @@ public class AgentCapabilitiesTest {
     private Class<?> getClassForProvider(Provider provider) {
         try {
             return AgentClassFactory.getAgentClass(provider);
-        } catch (Exception e) {
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

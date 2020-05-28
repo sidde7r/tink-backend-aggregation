@@ -94,7 +94,11 @@ public class AgentInitialisor {
 
             Injector injector = Guice.createInjector(getGuiceModulesToUse());
             agentFactory = injector.getInstance(AgentFactory.class);
-        } catch (Exception e) {
+        } catch (IOException
+                | ConfigurationException
+                | IllegalAccessException
+                | NoSuchMethodException
+                | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
