@@ -1,10 +1,6 @@
-load("@tink_backend//tools/bzl:junit_strict.bzl", "junit_test")
-
-junit_test(
-    name = "initialisation",
-    srcs = glob(
-        ["*.java"],
-    ),
+java_library(
+    name = "utils",
+    srcs = glob(["*.java"]),
     data = [
         "//data:agents",
         "//data:aggregation_test",
@@ -20,7 +16,6 @@ junit_test(
     runtime_deps = [
     ],
     deps = [
-        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration/guice/modules",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/models",
@@ -71,6 +66,7 @@ junit_test(
         "//third_party:io_grpc_grpc_protobuf_lite",
         "//third_party:io_vavr",
         "//third_party:junit_junit",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_apache_curator_curator_framework",
@@ -94,5 +90,6 @@ junit_test(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:io_reactivex_rxjava3_rxjava",
         "@aggregation//:joda_time_joda_time",
+        "@aggregation//:org_yaml_snakeyaml",
     ],
 )
