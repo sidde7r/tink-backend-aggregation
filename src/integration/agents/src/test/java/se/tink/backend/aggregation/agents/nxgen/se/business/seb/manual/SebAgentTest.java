@@ -14,14 +14,24 @@ public class SebAgentTest {
     private final ArgumentManager<SsnArgumentEnum> manager =
             new ArgumentManager<>(SsnArgumentEnum.values());
 
-    private AgentIntegrationTest.Builder testBuilder;
+    private AgentIntegrationTest.Builder sebBankId;
+    private AgentIntegrationTest.Builder sebToken;
 
     @Before
     public void before() {
         manager.before();
 
-        testBuilder =
+        sebBankId =
                 new AgentIntegrationTest.Builder("se", "seb-business-bankid")
+                        .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                        .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
+                        .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
+                        .addRefreshableItems(RefreshableItem.SAVING_ACCOUNTS)
+                        .addRefreshableItems(RefreshableItem.SAVING_TRANSACTIONS)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true);
+        sebToken =
+                new AgentIntegrationTest.Builder("se", "seb-business-token")
                         .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .addRefreshableItems(RefreshableItem.CHECKING_ACCOUNTS)
                         .addRefreshableItems(RefreshableItem.CHECKING_TRANSACTIONS)
@@ -37,7 +47,12 @@ public class SebAgentTest {
     }
 
     @Test
-    public void testLoginAndRefresh() throws Exception {
-        testBuilder.build().testRefresh();
+    public void testBankIdLoginAndRefresh() throws Exception {
+        sebBankId.build().testRefresh();
+    }
+
+    @Test
+    public void testTokenLoginAndRefresh() throws Exception {
+        sebToken.build().testRefresh();
     }
 }
