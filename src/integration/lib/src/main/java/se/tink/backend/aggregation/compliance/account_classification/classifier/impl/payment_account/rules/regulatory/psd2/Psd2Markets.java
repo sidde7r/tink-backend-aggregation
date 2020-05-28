@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.regulatory.psd2;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import se.tink.libraries.enums.MarketCode;
 
 public class Psd2Markets {
@@ -8,43 +8,42 @@ public class Psd2Markets {
     //  - EU countries (PSD2)
     //  - UK (Aligned with PSD2 regulations)
     //  - NO (Aligned with PSD2 regulations)
-    private static final ImmutableList<MarketCode> PSD2_MARKETS =
-            ImmutableList.<MarketCode>builder()
+    private static final ImmutableSet<MarketCode> PSD2_MARKETS =
+            ImmutableSet.of(
                     // EU countries
-                    .add(MarketCode.AT)
-                    .add(MarketCode.BE)
-                    .add(MarketCode.BG)
-                    .add(MarketCode.HR)
-                    .add(MarketCode.CY)
-                    .add(MarketCode.CZ)
-                    .add(MarketCode.DK)
-                    .add(MarketCode.EE)
-                    .add(MarketCode.FI)
-                    .add(MarketCode.FR)
-                    .add(MarketCode.DE)
-                    .add(MarketCode.GR)
-                    .add(MarketCode.HU)
-                    .add(MarketCode.IT)
-                    .add(MarketCode.LV)
-                    .add(MarketCode.LT)
-                    .add(MarketCode.LU)
-                    .add(MarketCode.MT)
-                    .add(MarketCode.NL)
-                    .add(MarketCode.PL)
-                    .add(MarketCode.PT)
-                    .add(MarketCode.RO)
-                    .add(MarketCode.SI)
-                    .add(MarketCode.ES)
-                    .add(MarketCode.SE)
+                    MarketCode.AT,
+                    MarketCode.BE,
+                    MarketCode.BG,
+                    MarketCode.HR,
+                    MarketCode.CY,
+                    MarketCode.CZ,
+                    MarketCode.DK,
+                    MarketCode.EE,
+                    MarketCode.FI,
+                    MarketCode.FR,
+                    MarketCode.DE,
+                    MarketCode.GR,
+                    MarketCode.HU,
+                    MarketCode.IT,
+                    MarketCode.LV,
+                    MarketCode.LT,
+                    MarketCode.LU,
+                    MarketCode.MT,
+                    MarketCode.NL,
+                    MarketCode.PL,
+                    MarketCode.PT,
+                    MarketCode.RO,
+                    MarketCode.SI,
+                    MarketCode.ES,
+                    MarketCode.SE,
 
                     // UK
-                    .add(MarketCode.IE)
-                    .add(MarketCode.GB)
-                    .add(MarketCode.UK)
+                    MarketCode.IE,
+                    MarketCode.GB,
+                    MarketCode.UK,
 
                     // Norway
-                    .add(MarketCode.NO)
-                    .build();
+                    MarketCode.NO);
 
     public static boolean isPsd2Market(MarketCode marketCode) {
         return PSD2_MARKETS.contains(marketCode);
