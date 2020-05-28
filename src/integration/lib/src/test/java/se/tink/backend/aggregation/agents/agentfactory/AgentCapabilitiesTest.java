@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javafx.util.Pair;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +30,7 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
 import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderReader;
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
+import se.tink.libraries.pair.Pair;
 
 /*
     For each agent (except the agents specified in resources/ignored_agents_for_tests.yml)
@@ -239,19 +239,19 @@ public class AgentCapabilitiesTest {
 
         // then
         expectedButNotGivenCapabilities.stream()
-                .filter(diff -> diff.getValue().size() > 0)
+                .filter(diff -> diff.second.size() > 0)
                 .forEach(
                         diff ->
                                 log.error(
                                         "Agent "
-                                                + diff.getKey().getClassName()
+                                                + diff.first.getClassName()
                                                 + " has the following capabilities in agent-capabilities.json file, however it does not implement corresponding interface(s) for them : "
-                                                + diff.getValue().toString()));
+                                                + diff.second.toString()));
 
         assertEquals(
                 0,
                 expectedButNotGivenCapabilities.stream()
-                        .filter(diff -> diff.getValue().size() > 0)
+                        .filter(diff -> diff.second.size() > 0)
                         .collect(Collectors.toSet())
                         .size());
     }
@@ -286,19 +286,19 @@ public class AgentCapabilitiesTest {
 
         // then
         givenButNotExpectedCapabilities.stream()
-                .filter(diff -> diff.getValue().size() > 0)
+                .filter(diff -> diff.second.size() > 0)
                 .forEach(
                         diff ->
                                 log.error(
                                         "Agent "
-                                                + diff.getKey().getClassName()
+                                                + diff.first.getClassName()
                                                 + " has the following capabilities which are not mentioned in agent-capabilities.json : "
-                                                + diff.getValue().toString()));
+                                                + diff.second.toString()));
 
         assertEquals(
                 0,
                 givenButNotExpectedCapabilities.stream()
-                        .filter(diff -> diff.getValue().size() > 0)
+                        .filter(diff -> diff.second.size() > 0)
                         .collect(Collectors.toSet())
                         .size());
     }
