@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.compliance.account_capabilities;
 
+import com.google.common.base.Preconditions;
+
 public class AccountCapabilities {
     public enum Answer {
         YES,
@@ -23,14 +25,17 @@ public class AccountCapabilities {
     }
 
     public void setCanWithdrawFunds(Answer canWithdrawFunds) {
+        Preconditions.checkNotNull(canWithdrawFunds);
         this.canWithdrawFunds = canWithdrawFunds;
     }
 
     public void setCanPlaceFunds(Answer canPlaceFunds) {
+        Preconditions.checkNotNull(canPlaceFunds);
         this.canPlaceFunds = canPlaceFunds;
     }
 
     public void setCanMakeAndReceiveTransfer(Answer canMakeAndReceiveTransfer) {
+        Preconditions.checkNotNull(canMakeAndReceiveTransfer);
         this.canMakeAndReceiveTransfer = canMakeAndReceiveTransfer;
     }
 
