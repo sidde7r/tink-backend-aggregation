@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.BaseFetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngBaseGatewayTimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.filters.IngRetryFilter;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
@@ -90,7 +91,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final IngBaseConfiguration ingBaseConfiguration = getClientConfiguration();
+        final AgentConfiguration<IngBaseConfiguration> ingBaseConfiguration =
+                getClientConfiguration();
 
         EidasIdentity eidasIdentity =
                 new EidasIdentity(context.getClusterId(), context.getAppId(), this.getAgentClass());
@@ -106,8 +108,9 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         }
     }
 
-    protected IngBaseConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(IngBaseConfiguration.class);
+    protected AgentConfiguration<IngBaseConfiguration> getClientConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(IngBaseConfiguration.class);
     }
 
     @Override

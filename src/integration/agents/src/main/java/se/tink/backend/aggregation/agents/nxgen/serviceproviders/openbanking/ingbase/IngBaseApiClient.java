@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ing
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.utils.IngBaseUtils;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -52,6 +53,7 @@ public class IngBaseApiClient {
     private final String market;
     private EidasIdentity eidasIdentity;
     private IngBaseConfiguration configuration;
+    private String redirectUrl;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private String certificateSerial;
     private final ProviderSessionCacheController providerSessionCacheController;
@@ -81,14 +83,16 @@ public class IngBaseApiClient {
     }
 
     public void setConfiguration(
-            IngBaseConfiguration configuration,
+            AgentConfiguration<IngBaseConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration,
             EidasIdentity eidasIdentity) {
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
         this.certificateSerial =
-                IngBaseUtils.getCertificateSerial(configuration.getClientCertificate());
+                IngBaseUtils.getCertificateSerial(
+                        agentConfiguration.getClientConfiguration().getClientCertificate());
     }
 
     public FetchAccountsResponse fetchAccounts() {
@@ -142,12 +146,11 @@ public class IngBaseApiClient {
                         QueryKeys.SCOPE,
                         QueryValues.PAYMENT_ACCOUNTS_TRANSACTIONS_AND_BALANCES_VIEW)
                 .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE);
     }
 
     public OAuth2Token getToken(final String code) {
-        final String redirectUrl = getConfiguration().getRedirectUrl();
 
         final String payload = new CustomerTokenRequest(code, redirectUrl).toData();
         return fetchToken(payload).toTinkToken();
@@ -236,7 +239,6 @@ public class IngBaseApiClient {
     }
 
     private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {
-        final String redirectUrl = getConfiguration().getRedirectUrl();
 
         final String reqPath =
                 new URL(Urls.OAUTH)
