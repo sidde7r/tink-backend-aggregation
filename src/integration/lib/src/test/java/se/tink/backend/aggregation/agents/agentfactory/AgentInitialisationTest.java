@@ -67,12 +67,16 @@ public class AgentInitialisationTest {
                 .collect(Collectors.toSet());
     }
 
+    /*
+       For each agent (except the agents specified in resources/ignored_agents_for_tests.yml)
+       this test checks whether we can initialise the agent or not.
+    */
     @Test
     public void whenEnabledProvidersAreGivenAgentFactoryShouldInstantiateAllEnabledAgents() {
         // given
         AgentFactoryTestConfiguration agentFactoryTestConfiguration =
                 new TestConfigurationReaderUtil(
-                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
+                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml")
                         .getAgentFactoryTestConfiguration();
 
         List<Provider> providerConfigurations =

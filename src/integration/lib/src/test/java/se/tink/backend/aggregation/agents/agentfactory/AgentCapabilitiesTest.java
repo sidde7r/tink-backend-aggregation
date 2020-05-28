@@ -199,7 +199,7 @@ public class AgentCapabilitiesTest {
     }
 
     /*
-        For each agent (except the agents specified in resource/igore_agents_for_capability_test.txt)
+        For each agent (except the agents specified in resources/ignored_agents_for_tests.yml)
         This test compares the real capabilities of the agent (by checking which interfaces it implements)
         and the expected capabilities of the agent (by checking agent-capabilities.json file in tink-backend)
         and fails if there is an agent where the real capabilities and expected capabilities are not
@@ -221,7 +221,7 @@ public class AgentCapabilitiesTest {
 
         AgentFactoryTestConfiguration agentFactoryTestConfiguration =
                 new TestConfigurationReaderUtil(
-                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/test_config.yml")
+                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml")
                         .getAgentFactoryTestConfiguration();
 
         List<Provider> providerConfigurations =
