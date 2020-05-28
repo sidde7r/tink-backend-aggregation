@@ -14,8 +14,8 @@ public class AccountClassifier {
                 new PaymentAccountClassifier(PaymentAccountRulesProvider.getRules());
     }
 
-    public PaymentAccountClassification classifyForPaymentAccount(
+    public PaymentAccountClassification classifyAsPaymentAccount(
             Provider provider, Account account) {
-        return paymentAccountClassifier.classifyForPaymentAccount(provider, account);
+        return paymentAccountClassifier.classifyAsPaymentAccount(provider, account);
     }
 }

@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.compliance.account_classification.classifier.
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.global.GlobalCheckingAccountRule;
 
 public class PaymentAccountRulesProvider {
+    // rules are to be processed identically but are split into two collections to just improve
+    // readability
     private static final List<ClassificationRule<PaymentAccountClassification>> globalRules =
             new ArrayList<>();
     private static final List<ClassificationRule<PaymentAccountClassification>> marketRules =

@@ -16,7 +16,7 @@ public class PaymentAccountClassifier {
         this.rules = rules;
     }
 
-    public PaymentAccountClassification classifyForPaymentAccount(
+    public PaymentAccountClassification classifyAsPaymentAccount(
             Provider provider, Account account) {
         // TODO process rules according to the algorithm/strategy
         Stream<ClassificationRule<PaymentAccountClassification>> applicableRules =
