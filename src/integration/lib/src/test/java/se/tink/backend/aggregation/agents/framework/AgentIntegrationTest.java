@@ -883,9 +883,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
                 AddBeneficiaryStatus statusResult =
                         createBeneficiaryMultiStepResponse.getBeneficiary().getStatus();
-                Assert.assertTrue(
-                        statusResult.equals(AddBeneficiaryStatus.SIGNED)
-                                || statusResult.equals(AddBeneficiaryStatus.ADDED));
+                Assert.assertEquals(statusResult, AddBeneficiaryStatus.ADDED);
                 log.info("Done with adding beneficiary.");
 
             } else {
