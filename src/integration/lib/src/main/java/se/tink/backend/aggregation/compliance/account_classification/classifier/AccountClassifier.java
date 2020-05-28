@@ -11,9 +11,7 @@ public class AccountClassifier {
 
     public AccountClassifier() {
         paymentAccountClassifier =
-                new PaymentAccountClassifier(
-                        PaymentAccountRulesProvider.getGlobalRules(),
-                        PaymentAccountRulesProvider.getMarketRules());
+                new PaymentAccountClassifier(PaymentAccountRulesProvider.getRules());
     }
 
     public PaymentAccountClassification classifyForPaymentAccount(
