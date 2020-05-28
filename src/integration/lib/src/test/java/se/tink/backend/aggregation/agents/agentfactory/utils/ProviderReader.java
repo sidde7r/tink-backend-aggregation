@@ -19,7 +19,7 @@ public class ProviderReader {
                 .filter(file -> file.getName().contains("providers-"))
                 .filter(file -> !file.getName().contains("development"))
                 .map(this::readProviderConfiguration)
-                .flatMap(this::setMarketAndCurrency)
+                .flatMap(this::populateMarketAndCurrencyFieldsForProviders)
                 .collect(Collectors.toSet());
     }
 
@@ -31,7 +31,7 @@ public class ProviderReader {
         }
     }
 
-    private Stream<Provider> setMarketAndCurrency(ProviderConfig config) {
+    private Stream<Provider> populateMarketAndCurrencyFieldsForProviders(ProviderConfig config) {
         return config.getProviders().stream()
                 .peek(
                         provider -> {
