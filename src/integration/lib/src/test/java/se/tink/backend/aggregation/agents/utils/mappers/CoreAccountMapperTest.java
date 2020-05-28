@@ -18,6 +18,8 @@ public class CoreAccountMapperTest {
                                 mapper.skip(
                                         se.tink.backend.agents.rpc.Account
                                                 ::setExactAvailableCredit))
+                .addMappings(
+                        mapper -> mapper.skip(se.tink.backend.agents.rpc.Account::setCapabilities))
                 .validate();
     }
 
