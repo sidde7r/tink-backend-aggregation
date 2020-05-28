@@ -25,6 +25,7 @@ public enum MarketCode {
     IT,
     LU,
     LV,
+    LT,
     MT,
     NL,
     NO,
