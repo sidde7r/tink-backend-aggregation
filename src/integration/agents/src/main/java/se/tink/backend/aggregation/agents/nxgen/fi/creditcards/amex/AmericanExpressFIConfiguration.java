@@ -20,6 +20,11 @@ public class AmericanExpressFIConfiguration implements AmericanExpressV62Configu
     }
 
     @Override
+    public String getInitVersion() {
+        return AmericanExpressFIConstants.INIT_VERSION;
+    }
+
+    @Override
     public String getUserAgent() {
         return AmericanExpressFIConstants.HeaderValues.USER_AGENT;
     }
@@ -45,10 +50,6 @@ public class AmericanExpressFIConfiguration implements AmericanExpressV62Configu
         request.setPayWithPointsEnabled(true);
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
-    }
-
-    public String getGitSha() {
-        return null;
     }
 
     @Override

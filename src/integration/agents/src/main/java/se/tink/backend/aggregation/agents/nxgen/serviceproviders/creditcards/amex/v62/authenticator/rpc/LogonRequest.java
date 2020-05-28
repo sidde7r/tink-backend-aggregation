@@ -8,15 +8,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LogonRequest {
-
+    private String amexPayKey;
     private List<CardArtRequest> cardArtRequest = ImmutableList.of(new CardArtRequest());
+    private boolean checkSmsRedundancy = false;
     private LoginCredentials loginCredentials;
 
-    public LogonRequest(String username, String password) {
+    public LogonRequest(String amexPayKey, String username, String password) {
+        this.amexPayKey = amexPayKey;
         this.loginCredentials = LoginCredentials.createLoginCredentials(username, password);
     }
 
-    public LogonRequest(String username, String password, String rememberMeToken) {
+    public LogonRequest(
+            String amexPayKey, String username, String password, String rememberMeToken) {
+        this.amexPayKey = amexPayKey;
         this.loginCredentials =
                 LoginCredentials.createLoginCredentials(username, password, rememberMeToken);
     }

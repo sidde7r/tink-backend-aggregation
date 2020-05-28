@@ -44,12 +44,13 @@ public class AmericanExpressV62UKConfiguration implements AmericanExpressV62Conf
     }
 
     @Override
-    public String getUserAgent() {
-        return AmericanExpressV62UKConstants.HeaderValues.USER_AGENT;
+    public String getInitVersion() {
+        return AmericanExpressV62UKConstants.INIT_VERSION;
     }
 
-    public String getGitSha() {
-        return AmericanExpressV62UKConstants.HeaderValues.GIT_SHA;
+    @Override
+    public String getUserAgent() {
+        return AmericanExpressV62UKConstants.HeaderValues.USER_AGENT;
     }
 
     @Override

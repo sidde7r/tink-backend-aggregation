@@ -4,6 +4,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CardArtRequest {
-    private final String minimumWidth = "1260";
+    private final String minimumWidth = "1490";
     private final String tag = "big-image";
 }

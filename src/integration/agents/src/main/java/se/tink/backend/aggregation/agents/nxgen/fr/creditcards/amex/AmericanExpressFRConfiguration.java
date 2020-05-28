@@ -21,6 +21,11 @@ public class AmericanExpressFRConfiguration implements AmericanExpressV62Configu
     }
 
     @Override
+    public String getInitVersion() {
+        return AmericanExpressFRConstants.INIT_VERSION;
+    }
+
+    @Override
     public String getUserAgent() {
         return AmericanExpressFRConstants.HeaderValues.USER_AGENT;
     }
@@ -46,10 +51,6 @@ public class AmericanExpressFRConfiguration implements AmericanExpressV62Configu
         request.setCmlEnabled(true);
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
-    }
-
-    public String getGitSha() {
-        return AmericanExpressFRConstants.HeaderValues.GIT_SHA;
     }
 
     public String getAppVersion() {

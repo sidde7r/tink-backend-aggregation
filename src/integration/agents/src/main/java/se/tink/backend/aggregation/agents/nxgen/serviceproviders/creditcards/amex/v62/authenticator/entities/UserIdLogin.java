@@ -7,10 +7,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JsonInclude(Include.NON_EMPTY)
 public class UserIdLogin {
-
+    private String password;
     private boolean rememberMeFlag = true;
     private String userId;
-    private String password;
     private String rememberMeToken;
 
     public UserIdLogin(String userId, String password) {
