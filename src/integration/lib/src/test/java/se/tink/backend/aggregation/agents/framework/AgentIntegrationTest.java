@@ -29,6 +29,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.AddBeneficiaryControllerable;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.PersistentLogin;
@@ -53,6 +54,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
+import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -75,7 +81,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.payment.enums.AddBeneficiaryStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.rpc.AddBeneficiary;
+import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -816,6 +825,81 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 .withReference(new Reference("TRANSFER", "test Tink"))
                 .withUniqueId(RandomUtils.generateRandomHexEncoded(15))
                 .build();
+    }
+
+    public void testAddBeneficiary(Beneficiary beneficiary) throws Exception {
+        initiateCredentials();
+        RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
+        readConfigurationFile();
+        Agent agent = createAgent(credentialsRequest);
+        try {
+            if (agent instanceof AddBeneficiaryControllerable) {
+                log.info("Adding beneficiary.");
+                AddBeneficiaryController addBeneficiaryController =
+                        ((AddBeneficiaryControllerable) agent)
+                                .getAddBeneficiaryController()
+                                .orElseThrow(
+                                        () ->
+                                                new NotImplementedException(
+                                                        "Agent does not implement constructAddBeneficiaryController method."));
+                AddBeneficiary addBeneficiary =
+                        new AddBeneficiary.Builder().withBeneficiary(beneficiary).build();
+
+                AddBeneficiaryResponse beneficiaryResponse =
+                        addBeneficiaryController.createBeneficiary(
+                                new AddBeneficiaryRequest(addBeneficiary));
+                AddBeneficiary retrievedBeneficiary = beneficiaryResponse.getBeneficiary();
+                Storage storage = Storage.copyOf(beneficiaryResponse.getStorage());
+                CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest =
+                        new CreateBeneficiaryMultiStepRequest(
+                                retrievedBeneficiary,
+                                storage,
+                                AuthenticationStepConstants.STEP_INIT,
+                                Collections.emptyList(),
+                                Collections.emptyList());
+                CreateBeneficiaryMultiStepResponse createBeneficiaryMultiStepResponse =
+                        addBeneficiaryController.sign(createBeneficiaryMultiStepRequest);
+                Map<String, String> map;
+                List<Field> fields;
+                String nextStep = createBeneficiaryMultiStepResponse.getStep();
+                retrievedBeneficiary = createBeneficiaryMultiStepResponse.getBeneficiary();
+                while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+                    fields = createBeneficiaryMultiStepResponse.getFields();
+                    map = Collections.emptyMap();
+
+                    createBeneficiaryMultiStepResponse =
+                            addBeneficiaryController.sign(
+                                    new CreateBeneficiaryMultiStepRequest(
+                                            retrievedBeneficiary,
+                                            storage,
+                                            nextStep,
+                                            fields,
+                                            new ArrayList<>(map.values())));
+                    nextStep = createBeneficiaryMultiStepResponse.getStep();
+                    fields = createBeneficiaryMultiStepResponse.getFields();
+                    retrievedBeneficiary = createBeneficiaryMultiStepResponse.getBeneficiary();
+                    storage = createBeneficiaryMultiStepResponse.getStorage();
+                }
+
+                AddBeneficiaryStatus statusResult =
+                        createBeneficiaryMultiStepResponse.getBeneficiary().getStatus();
+                Assert.assertEquals(statusResult, AddBeneficiaryStatus.ADDED);
+                log.info("Done with adding beneficiary.");
+
+            } else {
+                throw new NotImplementedException(agent.getAgentClass().getSimpleName());
+            }
+            if (configuration.getTestConfiguration().isDebugOutputEnabled()) {
+                printMaskedDebugLog(agent);
+            }
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
     }
 
     public void testGenericPaymentForRedirect(List<Payment> paymentList) throws Exception {

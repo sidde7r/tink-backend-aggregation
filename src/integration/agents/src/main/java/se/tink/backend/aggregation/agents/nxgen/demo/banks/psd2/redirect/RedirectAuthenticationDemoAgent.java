@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.Redirec
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.LoanAccount;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.StaticAccountUK;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.beneficiary.RedirectDemoAddBeneficaryExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -43,6 +44,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -181,6 +184,33 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
                         strongAuthenticationState);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    @Override
+    public Optional<AddBeneficiaryController> constructAddBeneficiaryController() {
+        String callbackUri = request.getCallbackUri();
+        if (OXFORD_PREPROD.equals(context.getClusterId())) {
+            callbackUri = OXFORD_PREPROD_CALLBACK;
+        } else if (OXFORD_STAGING.equals(context.getClusterId())) {
+            callbackUri = OXFORD_STAGING_CALLBACK;
+        }
+
+        RedirectOAuth2Authenticator redirectOAuth2Authenticator =
+                new RedirectOAuth2Authenticator(redirectToOxfordPreprod, callbackUri, credentials);
+        OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        redirectOAuth2Authenticator,
+                        credentials,
+                        strongAuthenticationState);
+        ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper);
+        AddBeneficiaryExecutor addBeneficiaryExecutor =
+                new RedirectDemoAddBeneficaryExecutor(
+                        credentials, thirdPartyAppAuthenticationController);
+        return Optional.of(new AddBeneficiaryController(addBeneficiaryExecutor));
     }
 
     @Override

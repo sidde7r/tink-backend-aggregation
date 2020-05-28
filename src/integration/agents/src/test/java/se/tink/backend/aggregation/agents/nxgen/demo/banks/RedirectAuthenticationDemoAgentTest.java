@@ -7,7 +7,9 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -132,6 +134,25 @@ public class RedirectAuthenticationDemoAgentTest {
                                 1, ITALY_DESTINATION_ACCOUNT, ITALY_SOURCE_ACCOUNT));
         // todo: Remove once we have the assumptions tested
         // builder.build().testGenericPaymentItalia(DESTINATION_ACCOUNT);
+    }
+
+    @Test
+    public void testAddBeneficiaryIT() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("it", "it-test-open-banking-redirect")
+                        .expectLoggedIn(false)
+                        .setFinancialInstitutionId("dummy")
+                        .setAppId("dummy")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
+
+        builder.build()
+                .testAddBeneficiary(
+                        new Beneficiary.Builder()
+                                .withAccountNumber(ITALY_DESTINATION_ACCOUNT)
+                                .withAccountNumberType(Type.IBAN)
+                                .withName("Test")
+                                .build());
     }
 
     @Test

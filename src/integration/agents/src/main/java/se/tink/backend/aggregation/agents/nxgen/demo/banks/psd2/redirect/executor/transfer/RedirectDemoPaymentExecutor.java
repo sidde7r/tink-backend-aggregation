@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectDemoAgentUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -176,13 +177,7 @@ public class RedirectDemoPaymentExecutor implements PaymentExecutor, FetchablePa
 
         String providerName = credentials.getProviderName();
         // This block handles PIS only business use case as source-account will be null in request
-        if (providerName.matches(
-                RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_PAYMENT_FAILED_CASE_REGEX)) {
-            throw RedirectAuthenticationDemoAgentConstants.FAILED_CASE_EXCEPTION;
-        } else if (providerName.matches(
-                RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_PAYMENT_CANCEL_CASE_REGEX)) {
-            throw RedirectAuthenticationDemoAgentConstants.CANCELLED_CASE_EXCEPTION;
-        }
+        RedirectDemoAgentUtils.throwIfFailStateProvider(providerName);
 
         PaymentMultiStepResponse pmr =
                 new PaymentMultiStepResponse(
