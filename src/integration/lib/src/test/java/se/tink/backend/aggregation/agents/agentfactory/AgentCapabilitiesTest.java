@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
-import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcher;
+import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderReader;
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
 
 /*
@@ -66,10 +66,10 @@ public class AgentCapabilitiesTest {
             readExpectedAgentCapabilities(EXPECTED_AGENT_CAPABILITIES_FILE_PATH);
 
     private static final AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-            new TestConfigurationReader().readConfiguration(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
+            new TestConfigurationReader().read(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
 
     private static final Set<Provider> providerConfigurations =
-            new ProviderFetcher().getProviderConfigurations(PROVIDER_CONFIG_FOLDER_PATH);
+            new ProviderReader().getProviderConfigurations(PROVIDER_CONFIG_FOLDER_PATH);
 
     private static Map<String, Set<String>> readExpectedAgentCapabilities(String filePath) {
         Map<String, Set<String>> agentCapabilities;

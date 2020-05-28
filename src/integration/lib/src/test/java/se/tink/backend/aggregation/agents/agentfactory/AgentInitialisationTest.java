@@ -15,7 +15,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisor;
-import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcher;
+import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderReader;
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
 
 public class AgentInitialisationTest {
@@ -98,10 +98,10 @@ public class AgentInitialisationTest {
     public void whenEnabledProvidersAreGivenAgentFactoryShouldInstantiateAllEnabledAgents() {
         // given
         AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-                new TestConfigurationReader().readConfiguration(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
+                new TestConfigurationReader().read(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
 
         Set<Provider> providerConfigurations =
-                new ProviderFetcher()
+                new ProviderReader()
                         .getProviderConfigurations(
                                 "external/tink_backend/src/provider_configuration/data/seeding");
 

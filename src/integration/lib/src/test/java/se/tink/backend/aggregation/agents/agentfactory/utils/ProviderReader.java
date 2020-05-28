@@ -12,7 +12,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 
 @NoArgsConstructor
-public class ProviderFetcher {
+public class ProviderReader {
 
     public Set<Provider> getProviderConfigurations(String folderForConfigurations) {
         return Arrays.asList(new File(folderForConfigurations).listFiles()).stream()

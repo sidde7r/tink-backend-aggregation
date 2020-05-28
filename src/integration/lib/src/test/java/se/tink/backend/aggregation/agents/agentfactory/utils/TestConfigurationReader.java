@@ -16,7 +16,7 @@ public class TestConfigurationReader {
         yaml.setBeanAccess(BeanAccess.FIELD);
     }
 
-    public AgentFactoryTestConfiguration readConfiguration(String configurationPath) {
+    public AgentFactoryTestConfiguration read(String configurationPath) {
         try (FileInputStream configFileStream = new FileInputStream(new File(configurationPath))) {
             return yaml.loadAs(configFileStream, AgentFactoryTestConfiguration.class);
         } catch (IOException e) {
