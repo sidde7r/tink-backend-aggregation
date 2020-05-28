@@ -39,6 +39,9 @@ public class AgentCapabilitiesTest {
     private static final String MORTGAGE_AGGREGATION = "MORTGAGE_AGGREGATION";
     private static final String PAYMENTS = "PAYMENTS";
 
+    private static final String IGNORED_AGENTS_FOR_TESTS_FILE_PATH =
+            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml";
+
     private Map<String, Set<String>> readExpectedAgentCapabilities(String filePath) {
         Map<String, Set<String>> agentCapabilities;
         try {
@@ -212,13 +215,12 @@ public class AgentCapabilitiesTest {
                         "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
 
         AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-                new TestConfigurationReader(
-                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml")
-                        .getAgentFactoryTestConfiguration();
+                new TestConfigurationReader().readConfiguration(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
 
         Set<Provider> providerConfigurations =
-                new ProviderFetcher("external/tink_backend/src/provider_configuration/data/seeding")
-                        .getProviderConfigurations();
+                new ProviderFetcher()
+                        .getProviderConfigurations(
+                                "external/tink_backend/src/provider_configuration/data/seeding");
 
         Set<Provider> providerForEachUnignoredAgent =
                 getProvidersForCapabilitiesTest(providerConfigurations).stream()

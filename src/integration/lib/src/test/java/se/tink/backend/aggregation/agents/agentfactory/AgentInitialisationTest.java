@@ -25,6 +25,8 @@ public class AgentInitialisationTest {
             "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json";
     private static final String USER_TEMPLATE_FILE_PATH =
             "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json";
+    private static final String IGNORED_AGENTS_FOR_TESTS_FILE_PATH =
+            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml";
 
     private String createProperErrorMessageForAgentInitialisationError(
             Exception e, Provider provider) {
@@ -78,13 +80,12 @@ public class AgentInitialisationTest {
     public void whenEnabledProvidersAreGivenAgentFactoryShouldInstantiateAllEnabledAgents() {
         // given
         AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-                new TestConfigurationReader(
-                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml")
-                        .getAgentFactoryTestConfiguration();
+                new TestConfigurationReader().readConfiguration(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
 
         Set<Provider> providerConfigurations =
-                new ProviderFetcher("external/tink_backend/src/provider_configuration/data/seeding")
-                        .getProviderConfigurations();
+                new ProviderFetcher()
+                        .getProviderConfigurations(
+                                "external/tink_backend/src/provider_configuration/data/seeding");
 
         AgentInitialisor agentInitialisor =
                 new AgentInitialisor(

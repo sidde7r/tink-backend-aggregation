@@ -7,18 +7,14 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.NoArgsConstructor;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 
+@NoArgsConstructor
 public class ProviderFetcher {
 
-    private String folderForConfigurations;
-
-    public ProviderFetcher(String folderForConfigurations) {
-        this.folderForConfigurations = folderForConfigurations;
-    }
-
-    public Set<Provider> getProviderConfigurations() {
+    public Set<Provider> getProviderConfigurations(String folderForConfigurations) {
         return Arrays.asList(new File(folderForConfigurations).listFiles()).stream()
                 .filter(file -> file.getName().contains("providers-"))
                 .filter(file -> !file.getName().contains("development"))

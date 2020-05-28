@@ -66,7 +66,7 @@ public class AgentInitialisor {
     private final AggregationServiceConfiguration aggregationServiceConfiguration;
     private final String credentialsTemplate;
     private final User user;
-    private AgentFactory agentFactory;
+    private final AgentFactory agentFactory;
 
     public AgentInitialisor(
             String aggregationServiceConfigurationFilePath,
