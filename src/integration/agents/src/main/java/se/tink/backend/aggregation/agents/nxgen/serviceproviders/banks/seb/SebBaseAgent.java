@@ -53,8 +53,8 @@ public abstract class SebBaseAgent extends NextGenerationAgent
     public SebBaseAgent(
             AgentComponentProvider agentComponentProvider, SebBaseConfiguration sebConfiguration) {
         super(agentComponentProvider);
-        apiClient = new SebApiClient(client, sebConfiguration);
         sebSessionStorage = new SebSessionStorage(sessionStorage);
+        apiClient = new SebApiClient(client, sebConfiguration, sebSessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
         creditCardRefreshController = constructCreditCardRefreshController();
         loanRefreshController = constructLoanRefreshController();
@@ -104,7 +104,7 @@ public abstract class SebBaseAgent extends NextGenerationAgent
         return new TypedAuthenticator[] {
             new BankIdAuthenticationController<>(
                     supplementalRequester,
-                    new SebBankIdAuthenticator(apiClient, sebSessionStorage, sebConfiguration),
+                    new SebBankIdAuthenticator(apiClient),
                     persistentStorage,
                     credentials),
             new SebTokenGenratorAuthenticationController(
