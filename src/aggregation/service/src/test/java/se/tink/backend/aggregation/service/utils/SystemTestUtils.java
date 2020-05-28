@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +45,7 @@ public class SystemTestUtils {
         headers.add("X-Tink-App-Id", "00000000-0000-0000-0000-000000000000");
         headers.add("X-Tink-Client-Api-Key", "00000000-0000-0000-0000-000000000000");
 
-        HttpEntity<Object> request = new HttpEntity<Object>(requestBody, headers);
+        HttpEntity<Object> request = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
@@ -62,7 +61,7 @@ public class SystemTestUtils {
         return response;
     }
 
-    public static ResponseEntity<String> makeGetRequest(String url, HttpHeaders headers)
+    private static ResponseEntity<String> makeGetRequest(String url, HttpHeaders headers)
             throws Exception {
         ResponseEntity<String> response =
                 new TestRestTemplate()
@@ -85,12 +84,12 @@ public class SystemTestUtils {
         makeGetRequest(url, headers);
     }
 
-    public static Optional<List<String>> fetchCallbacksForEndpoint(String url, String endPoint)
+    private static Optional<List<String>> fetchCallbacksForEndpoint(String url, String endPoint)
             throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", "application/json");
 
-        Map<String, List<String>> pushedData = new HashMap<>();
+        Map<String, List<String>> pushedData;
 
         ResponseEntity<String> dataResult = makeGetRequest(url, headers);
 

@@ -34,9 +34,8 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class MigrateCredentialsAndAccountsWorkerCommandTest {
 
-    private static String PROVIDER_NAME = "some-provider";
+    private static final String PROVIDER_NAME = "some-provider";
     private ControllerWrapper wrapper;
-    private ImmutableMap<String, AgentVersionMigration> migrations = ImmutableMap.of();
     private ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 
     @Before
@@ -549,7 +548,7 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
         MigrateCredentialsAndAccountsWorkerCommand migrateCredentialsAndAccountsWorkerCommand =
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         request, wrapper, createClientInfo());
-        migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableMap.copyOf(migrations));
+        migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableMap.of());
         return migrateCredentialsAndAccountsWorkerCommand;
     }
 

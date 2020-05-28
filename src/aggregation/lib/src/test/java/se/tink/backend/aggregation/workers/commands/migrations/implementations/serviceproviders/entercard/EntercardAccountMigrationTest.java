@@ -15,7 +15,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class EntercardAccountMigrationTest {
 
-    public EnterCardAccountIdMigration migration = new EnterCardAccountIdMigration();
+    private EnterCardAccountIdMigration migration = new EnterCardAccountIdMigration();
 
     @Test
     public void shouldMigrationAccountTest() {
@@ -63,53 +63,40 @@ public class EntercardAccountMigrationTest {
     }
 
     private List<Account> toMigrateAccounts() {
-        List<Account> accounts = new ArrayList<>(2);
-        Account creditCardAccount1 = new Account();
-        Account creditCardAccount2 = new Account();
+        List<Account> accounts = new ArrayList<>();
 
-        accounts.add(creditCardAccount1);
-        accounts.add(creditCardAccount2);
-
-        creditCardAccount1.setType(AccountTypes.CREDIT_CARD);
-        creditCardAccount1.setBankId("5852111");
-        creditCardAccount1.setIdentifiers(
-                Stream.of(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, "6161000013917309"))
-                        .collect(Collectors.toList()));
-
-        creditCardAccount2.setType(AccountTypes.CREDIT_CARD);
-        creditCardAccount2.setBankId("4142738");
-        creditCardAccount2.setIdentifiers(
-                Stream.of(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, "4581993000041132"))
-                        .collect(Collectors.toList()));
+        accounts.add(account("5852111", "6161000013917309"));
+        accounts.add(account("4142738", "4581993000041132"));
 
         return accounts;
     }
 
     private List<Account> notToMigrateAccounts() {
-        List<Account> accounts = new ArrayList<>(2);
-        Account creditCardAccount1 = new Account();
-        Account creditCardAccount2 = new Account();
+        List<Account> accounts = new ArrayList<>();
 
-        accounts.add(creditCardAccount1);
-        accounts.add(creditCardAccount2);
+        String bankIdentifier1 = "6161000013917308";
+        String bankIdentifier2 = "4581993000041131";
 
-        creditCardAccount1.setType(AccountTypes.CREDIT_CARD);
-        creditCardAccount1.setBankId("6161000013917309");
-        creditCardAccount1.setIdentifiers(
-                Stream.of(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, "6161000013917309"))
-                        .collect(Collectors.toList()));
-
-        creditCardAccount2.setType(AccountTypes.CREDIT_CARD);
-        creditCardAccount2.setBankId("4581993000041132");
-        creditCardAccount2.setIdentifiers(
-                Stream.of(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, "4581993000041132"))
-                        .collect(Collectors.toList()));
+        accounts.add(account(bankIdentifier1, bankIdentifier1));
+        accounts.add(account(bankIdentifier2, bankIdentifier2));
 
         return accounts;
     }
 
+    private Account account(final String bankid, final String cardNumber) {
+        Account account = new Account();
+
+        account.setType(AccountTypes.CREDIT_CARD);
+        account.setBankId(bankid);
+        account.setIdentifiers(
+                Stream.of(AccountIdentifier.create(Type.PAYMENT_CARD_NUMBER, cardNumber))
+                        .collect(Collectors.toList()));
+
+        return account;
+    }
+
     private List<Account> skipMigrationAccounts() {
-        List<Account> accounts = new ArrayList<>(2);
+        List<Account> accounts = new ArrayList<>();
         Account creditCardAccount1 = new Account();
         Account creditCardAccount2 = new Account();
 

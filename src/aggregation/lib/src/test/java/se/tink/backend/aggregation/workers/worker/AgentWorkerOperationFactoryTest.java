@@ -13,7 +13,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
-import java.util.Optional;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +58,8 @@ public final class AgentWorkerOperationFactoryTest {
     private static final String CLUSTER_ID = "my-cluster";
     private static final String PROVIDER_NAME = "myprovider";
     private static final String MARKET = "mymarket";
-    private static final Optional<String> CORRELATION_ID = Optional.of("correlation-id");
+    private static final String APP_ID = "mockedAppId";
+    private static final String CORRELATION_ID = "correlation-id";
 
     private AgentWorkerOperationFactory factory;
     private ClientInfo clientInfo;
@@ -125,13 +125,13 @@ public final class AgentWorkerOperationFactoryTest {
         RefreshInformationRequest refreshRequest = mock(RefreshInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
-        when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID.get());
+        when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
 
         // when
         AgentWorkerOperation operation = factory.createOperationRefresh(refreshRequest, clientInfo);
 
         // then
-        assertThat(operation.getContext().getRefreshId()).isEqualTo(CORRELATION_ID);
+        assertThat(operation.getContext().getRefreshId()).hasValue(CORRELATION_ID);
     }
 
     @Test
@@ -141,14 +141,14 @@ public final class AgentWorkerOperationFactoryTest {
                 mock(ConfigureWhitelistInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
-        when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID.get());
+        when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
 
         // when
         AgentWorkerOperation operation =
                 factory.createOperationConfigureWhitelist(refreshRequest, clientInfo);
 
         // then
-        assertThat(operation.getContext().getRefreshId()).isEqualTo(CORRELATION_ID);
+        assertThat(operation.getContext().getRefreshId()).hasValue(CORRELATION_ID);
     }
 
     @Test
@@ -156,8 +156,7 @@ public final class AgentWorkerOperationFactoryTest {
         // Arrange
         TransferRequest request = mock(TransferRequest.class);
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
-        String appId = "mockedAppId";
-        when(clientInfo.getAppId()).thenReturn(appId);
+        when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
 
@@ -165,7 +164,7 @@ public final class AgentWorkerOperationFactoryTest {
         factorySpy.createOperationExecuteTransfer(request, clientInfo);
 
         // Assert
-        verify(factorySpy, times(1)).createRefreshAccountsCommands(any(), any(), any());
+        verify(factorySpy).createRefreshAccountsCommands(any(), any(), any());
     }
 
     @Test
@@ -173,8 +172,7 @@ public final class AgentWorkerOperationFactoryTest {
         // Arrange
         TransferRequest request = mock(TransferRequest.class);
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
-        String appId = "mockedAppId";
-        when(clientInfo.getAppId()).thenReturn(appId);
+        when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
         when(request.isSkipRefresh()).thenReturn(true);
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
@@ -191,8 +189,7 @@ public final class AgentWorkerOperationFactoryTest {
         // Arrange
         TransferRequest request = mock(TransferRequest.class);
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
-        String appId = "mockedAppId";
-        when(clientInfo.getAppId()).thenReturn(appId);
+        when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
         when(provider.getMarket()).thenReturn(MarketCode.GB.toString());
@@ -202,7 +199,7 @@ public final class AgentWorkerOperationFactoryTest {
         factorySpy.createOperationExecuteTransfer(request, clientInfo);
 
         // Assert
-        verify(factorySpy, times(1))
+        verify(factorySpy)
                 .createTransferWithoutRefreshBaseCommands(any(), any(), any(), any(), any());
     }
 
@@ -211,8 +208,7 @@ public final class AgentWorkerOperationFactoryTest {
         // Arrange
         TransferRequest request = mock(TransferRequest.class);
         AgentWorkerOperationFactory factorySpy = spy(this.factory);
-        String appId = "mockedAppId";
-        when(clientInfo.getAppId()).thenReturn(appId);
+        when(clientInfo.getAppId()).thenReturn(APP_ID);
         when(request.getProvider()).thenReturn(provider);
         when(request.getType()).thenReturn(CredentialsRequestType.TRANSFER);
         when(provider.getMarket()).thenReturn(MarketCode.FR.toString());
@@ -222,7 +218,7 @@ public final class AgentWorkerOperationFactoryTest {
         factorySpy.createOperationExecuteTransfer(request, clientInfo);
 
         // Assert
-        verify(factorySpy, times(1))
+        verify(factorySpy)
                 .createTransferWithoutRefreshBaseCommands(any(), any(), any(), any(), any());
     }
 
@@ -233,21 +229,21 @@ public final class AgentWorkerOperationFactoryTest {
                 mock(RefreshWhitelistInformationRequest.class);
         when(refreshRequest.getProvider()).thenReturn(provider);
         when(refreshRequest.getType()).thenReturn(credentialsRequestType);
-        when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID.get());
+        when(refreshRequest.getRefreshId()).thenReturn(CORRELATION_ID);
 
         // when
         AgentWorkerOperation operation =
                 factory.createOperationWhitelistRefresh(refreshRequest, clientInfo);
 
         // then
-        assertThat(operation.getContext().getRefreshId()).isEqualTo(CORRELATION_ID);
+        assertThat(operation.getContext().getRefreshId()).hasValue(CORRELATION_ID);
     }
 
     private static class TestModule extends AbstractModule {
 
         private final ControllerWrapperProvider controllerWrapperProvider;
 
-        public TestModule(ControllerWrapperProvider controllerWrapperProvider) {
+        TestModule(ControllerWrapperProvider controllerWrapperProvider) {
             this.controllerWrapperProvider = controllerWrapperProvider;
         }
 
