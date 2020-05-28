@@ -28,9 +28,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
-import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
-import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisor;
 import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcher;
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
 
@@ -62,24 +60,25 @@ public class AgentCapabilitiesTest {
     }
 
     private Set<String> collectGivenAgentCapabilities(
-            Agent agent, Set<String> expectedCapabilities) {
+            Class agentClass, Set<String> expectedCapabilities) {
         Set<String> givenCapabilities = new HashSet<>();
-        if (agent instanceof RefreshCreditCardAccountsExecutor) {
+        // DeprecatedRefreshExecutor.class.isAssignableFrom(agentClass)
+        if (RefreshCreditCardAccountsExecutor.class.isAssignableFrom(agentClass)) {
             givenCapabilities.add("CREDIT_CARDS");
         }
-        if (agent instanceof RefreshIdentityDataExecutor) {
+        if (RefreshIdentityDataExecutor.class.isAssignableFrom(agentClass)) {
             givenCapabilities.add("IDENTITY_DATA");
         }
-        if (agent instanceof RefreshCheckingAccountsExecutor) {
+        if (RefreshCheckingAccountsExecutor.class.isAssignableFrom(agentClass)) {
             givenCapabilities.add("CHECKING_ACCOUNTS");
         }
-        if (agent instanceof RefreshSavingsAccountsExecutor) {
+        if (RefreshSavingsAccountsExecutor.class.isAssignableFrom(agentClass)) {
             givenCapabilities.add("SAVINGS_ACCOUNTS");
         }
-        if (agent instanceof RefreshInvestmentAccountsExecutor) {
+        if (RefreshInvestmentAccountsExecutor.class.isAssignableFrom(agentClass)) {
             givenCapabilities.add("INVESTMENTS");
         }
-        if (agent instanceof RefreshLoanAccountsExecutor) {
+        if (RefreshLoanAccountsExecutor.class.isAssignableFrom(agentClass)) {
             boolean relatedGivenCapability = false;
             if (expectedCapabilities.contains(LOANS)) {
                 givenCapabilities.add(LOANS);
@@ -95,7 +94,7 @@ public class AgentCapabilitiesTest {
                 givenCapabilities.add(LOANS);
             }
         }
-        if (agent instanceof TransferExecutor) {
+        if (TransferExecutor.class.isAssignableFrom(agentClass)) {
             boolean relatedGivenCapability = false;
             if (expectedCapabilities.contains(TRANSFERS)) {
                 givenCapabilities.add(TRANSFERS);
@@ -119,7 +118,7 @@ public class AgentCapabilitiesTest {
         Turned out that an agent implementing TransferExecutorNxgen interface does not prove
         that it should have the TRANSFER capability (see AxaAgent)
          */
-        if (agent instanceof TransferExecutorNxgen) {
+        if (TransferExecutorNxgen.class.isAssignableFrom(agentClass)) {
             if (expectedCapabilities.contains(TRANSFERS)) {
                 givenCapabilities.add(TRANSFERS);
             }
@@ -131,26 +130,24 @@ public class AgentCapabilitiesTest {
     }
 
     private Optional<String> compareExpectedAndGivenAgentCapabilities(
-            Provider provider,
-            AgentInitialisor agentInitialisor,
-            Map<String, Set<String>> expectedAgentCapabilities) {
+            Provider provider, Map<String, Set<String>> expectedAgentCapabilities) {
 
-        Agent agent;
+        Class agentClass;
         try {
-            agent = agentInitialisor.initialiseAgent(provider);
+            agentClass = AgentClassFactory.getAgentClass(provider);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
         // Skip because we cannot perform check for such agents
-        if (agent instanceof DeprecatedRefreshExecutor) {
+        if (DeprecatedRefreshExecutor.class.isAssignableFrom(agentClass)) {
             return Optional.empty();
         }
 
         Set<String> expectedCapabilities =
                 new HashSet<>(expectedAgentCapabilities.get(provider.getClassName()));
 
-        Set<String> givenCapabilities = collectGivenAgentCapabilities(agent, expectedCapabilities);
+        Set<String> givenCapabilities =
+                collectGivenAgentCapabilities(agentClass, expectedCapabilities);
 
         SetView<String> expectedButNotGiven =
                 Sets.difference(new HashSet<>(expectedCapabilities), givenCapabilities);
@@ -210,7 +207,6 @@ public class AgentCapabilitiesTest {
         1- We do not make any assertions on PAYMENTS and TRANSFER capabilities for agents
            that implement TransferExecutorNxgen.
         2- We do not make any assertions on agents that implement DeprecatedRefreshExecutor
-        3- We cannot perform tests on agents that are not tested for initialisation
     */
     @Test
     public void expectedCapabilitiesAndGivenCapabilitiesShouldMatchForUnignoredAgents() {
@@ -225,23 +221,11 @@ public class AgentCapabilitiesTest {
                         .getAgentFactoryTestConfiguration();
 
         List<Provider> providerConfigurations =
-                new ProviderFetcher(
-                                "external/tink_backend/src/provider_configuration/data/seeding")
+                new ProviderFetcher("external/tink_backend/src/provider_configuration/data/seeding")
                         .getProviderConfigurations();
-
-        AgentInitialisor agentInitialisor =
-                new AgentInitialisor(
-                        TEST_CONFIGURATION_FILE_PATH,
-                        CREDENTIALS_TEMPLATE_FILE_PATH,
-                        USER_TEMPLATE_FILE_PATH);
 
         Set<Provider> providerForEachUnignoredAgent =
                 getProvidersForCapabilitiesTest(providerConfigurations).stream()
-                        .filter(
-                                provider ->
-                                        !agentFactoryTestConfiguration
-                                                .getIgnoredAgentsForInitialisationTest()
-                                                .contains(provider.getClassName()))
                         .filter(
                                 provider ->
                                         !agentFactoryTestConfiguration
@@ -256,9 +240,7 @@ public class AgentCapabilitiesTest {
                         .map(
                                 provider ->
                                         compareExpectedAndGivenAgentCapabilities(
-                                                provider,
-                                                agentInitialisor,
-                                                expectedAgentCapabilities))
+                                                provider, expectedAgentCapabilities))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toSet());
