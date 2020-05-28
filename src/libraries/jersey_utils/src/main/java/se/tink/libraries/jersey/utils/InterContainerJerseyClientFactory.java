@@ -30,6 +30,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import se.tink.libraries.net.client.handler.TinkApacheHttpClient4Handler;
+import se.tink.libraries.tracing.jersey.filter.ClientTracingFilter;
 
 public class InterContainerJerseyClientFactory {
     // These should rarely change and the passphrase isn't sensitive. Therefore, not configurable
@@ -166,6 +167,7 @@ public class InterContainerJerseyClientFactory {
 
         client.setReadTimeout(readTimeoutMs);
         client.setConnectTimeout(connectTimeoutMs);
+        client.addFilter(new ClientTracingFilter());
 
         return client;
     }
