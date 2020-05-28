@@ -251,7 +251,8 @@ public class IntegrationWireMockTestTinkHttpClient implements TinkHttpClient {
 
     public RequestBuilder request(URL url) {
         try {
-            return tinkHttpClient.request(toWireMockHost(new URI(url.toString())));
+            return new IntegrationWireMockTestRequestBuilder(
+                    tinkHttpClient.request(toWireMockHost(new URI(url.toString()))));
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
