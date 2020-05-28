@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryException;
 
 public interface AddBeneficiaryExecutor {
     AddBeneficiaryResponse createBeneficiary(AddBeneficiaryRequest addBeneficiaryRequest)
-            throws PaymentException;
+            throws BeneficiaryException;
 
     CreateBeneficiaryMultiStepResponse sign(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest)
-            throws PaymentException, AuthenticationException;
+            throws BeneficiaryException, AuthenticationException;
 }

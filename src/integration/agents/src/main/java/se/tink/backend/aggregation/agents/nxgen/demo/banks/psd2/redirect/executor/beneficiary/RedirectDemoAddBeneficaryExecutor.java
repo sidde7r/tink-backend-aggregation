@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryException;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.Step;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectDemoAgentUtils;
@@ -35,7 +35,7 @@ public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor
 
     @Override
     public AddBeneficiaryResponse createBeneficiary(AddBeneficiaryRequest addBeneficiaryRequest)
-            throws PaymentException {
+            throws BeneficiaryException {
         try {
             thirdPartyAppAuthenticationController.authenticate(credentials);
         } catch (AuthenticationException | AuthorizationException e) {
@@ -55,7 +55,7 @@ public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor
     @Override
     public CreateBeneficiaryMultiStepResponse sign(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest)
-            throws PaymentException, AuthenticationException {
+            throws BeneficiaryException, AuthenticationException {
         switch (createBeneficiaryMultiStepRequest.getStep()) {
             case SigningStepConstants.STEP_INIT:
                 return init(createBeneficiaryMultiStepRequest);
@@ -87,14 +87,14 @@ public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor
 
     private CreateBeneficiaryMultiStepResponse init(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest)
-            throws PaymentAuthorizationException {
+            throws BeneficiaryAuthorizationException {
 
         switch (createBeneficiaryMultiStepRequest.getBeneficiary().getStatus()) {
             case CREATED:
                 return new CreateBeneficiaryMultiStepResponse(
                         createBeneficiaryMultiStepRequest, Step.AUTHORIZE, new ArrayList<>());
             case REJECTED:
-                throw new PaymentAuthorizationException(
+                throw new BeneficiaryAuthorizationException(
                         "Request to add beneficiary was rejected.",
                         new IllegalStateException("Beneficiary rejected."));
             default:
