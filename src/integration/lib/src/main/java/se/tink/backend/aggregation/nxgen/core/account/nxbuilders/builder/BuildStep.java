@@ -49,7 +49,8 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
 
     B setBankIdentifier(String number);
 
-    // TODO: These should be made into a mandatory BuildStep in the future.
+    // TODO: These should be made into a mandatory BuildStep:
+    // TODO: https://tinkab.atlassian.net/browse/AGG-290
     B canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds);
 
     B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds);
