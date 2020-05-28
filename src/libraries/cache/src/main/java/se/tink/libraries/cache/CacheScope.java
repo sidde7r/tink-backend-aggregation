@@ -7,7 +7,8 @@ public enum CacheScope {
     STATISTICS_BY_USERID("statistics-by-userId:"),
     CASSANDRA_STATISTICS_BY_USERID("cassandra-statistics-by-userId:"),
     SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID("supplementCredentials:"),
-    PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID("provider-session-by-financialInstitutionId:"),
+    PROVIDER_SESSION_BY_APPID_AND_FINANCIALINSTITUTIONID(
+            "provider-session-by-appId-and-financialInstitutionId:"),
     ENCRYPTED_CREDENTIALS_BY_CREDENTIALSID("encryptedCredentials:"),
     FRAUD_DETAILS_BY_USERID("fraud-details-content-by-userId:"),
     CREDENTIALS_KEEP_ALIVE_BY_CREDENTIALSID("keepAliveCredentials:"),

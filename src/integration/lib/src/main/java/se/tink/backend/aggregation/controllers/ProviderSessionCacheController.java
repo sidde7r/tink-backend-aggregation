@@ -21,11 +21,16 @@ public class ProviderSessionCacheController {
         this.coordinationClient = coordinationClient;
     }
 
+    private static String getCacheKey(String appId, String financialInstitutionId) {
+        return String.format("%s:%s", appId, financialInstitutionId);
+    }
+
     public void setProviderSessionCache(
-            String financialInstitutionId, String value, int expiredTimeInSeconds) {
+            String appId, String financialInstitutionId, String value, int expiredTimeInSeconds) {
         logger.info(
-                "Received provider session information for financialInstitutionId: {}."
+                "Received provider session information for appId: {} financialInstitutionId: {}."
                         + " This cache will be expired in {} seconds",
+                appId,
                 financialInstitutionId,
                 expiredTimeInSeconds);
 
@@ -39,13 +44,13 @@ public class ProviderSessionCacheController {
                         coordinationClient,
                         BarrierName.build(
                                 BarrierName.Prefix.PROVIDER_SESSION_INFORMATION,
-                                financialInstitutionId));
+                                getCacheKey(appId, financialInstitutionId)));
 
         try {
             lock.setBarrier();
             cacheClient.set(
-                    CacheScope.PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID,
-                    financialInstitutionId,
+                    CacheScope.PROVIDER_SESSION_BY_APPID_AND_FINANCIALINSTITUTIONID,
+                    getCacheKey(appId, financialInstitutionId),
                     expiredTimeInSeconds,
                     value);
             lock.removeBarrier();
@@ -54,10 +59,26 @@ public class ProviderSessionCacheController {
         }
     }
 
-    public String getProviderSessionCache(String financialInstitutionId) {
-        return (String)
-                cacheClient.get(
-                        CacheScope.PROVIDER_SESSION_BY_FINANCIALINSTITUTIONID,
-                        financialInstitutionId);
+    public String getProviderSessionCache(String appId, String financialInstitutionId) {
+        DistributedBarrier lock =
+                new DistributedBarrier(
+                        coordinationClient,
+                        BarrierName.build(
+                                BarrierName.Prefix.PROVIDER_SESSION_INFORMATION,
+                                getCacheKey(appId, financialInstitutionId)));
+
+        try {
+            lock.setBarrier();
+            String providerSessionCacheInformation =
+                    (String)
+                            cacheClient.get(
+                                    CacheScope.PROVIDER_SESSION_BY_APPID_AND_FINANCIALINSTITUTIONID,
+                                    getCacheKey(appId, financialInstitutionId));
+            lock.removeBarrier();
+            return providerSessionCacheInformation;
+        } catch (Exception e) {
+            logger.error("Caught exception while getting provider session cache information", e);
+            return null;
+        }
     }
 }
