@@ -39,12 +39,6 @@ public class AgentCapabilitiesTest {
     private static final String MORTGAGE_AGGREGATION = "MORTGAGE_AGGREGATION";
     private static final String PAYMENTS = "PAYMENTS";
 
-    private static final String TEST_CONFIGURATION_FILE_PATH = "etc/test.yml";
-    private static final String CREDENTIALS_TEMPLATE_FILE_PATH =
-            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json";
-    private static final String USER_TEMPLATE_FILE_PATH =
-            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json";
-
     private Map<String, Set<String>> readExpectedAgentCapabilities(String filePath) {
         Map<String, Set<String>> agentCapabilities;
         try {
@@ -59,9 +53,8 @@ public class AgentCapabilitiesTest {
     }
 
     private Set<String> collectGivenAgentCapabilities(
-            Class agentClass, Set<String> expectedCapabilities) {
+            Class<?> agentClass, Set<String> expectedCapabilities) {
         Set<String> givenCapabilities = new HashSet<>();
-        // DeprecatedRefreshExecutor.class.isAssignableFrom(agentClass)
         if (RefreshCreditCardAccountsExecutor.class.isAssignableFrom(agentClass)) {
             givenCapabilities.add("CREDIT_CARDS");
         }
@@ -131,7 +124,7 @@ public class AgentCapabilitiesTest {
     private Optional<String> compareExpectedAndGivenAgentCapabilities(
             Provider provider, Map<String, Set<String>> expectedAgentCapabilities) {
 
-        Class agentClass;
+        Class<?> agentClass;
         try {
             agentClass = AgentClassFactory.getAgentClass(provider);
         } catch (Exception e) {
