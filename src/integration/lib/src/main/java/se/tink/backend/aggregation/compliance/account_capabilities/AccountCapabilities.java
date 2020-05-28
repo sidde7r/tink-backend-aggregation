@@ -7,9 +7,20 @@ public class AccountCapabilities {
         UNKNOWN
     }
 
-    private Answer canWithdrawFunds = Answer.UNKNOWN;
-    private Answer canPlaceFunds = Answer.UNKNOWN;
-    private Answer canMakeAndReceiveTransfer = Answer.UNKNOWN;
+    private Answer canWithdrawFunds;
+    private Answer canPlaceFunds;
+    private Answer canMakeAndReceiveTransfer;
+
+    private AccountCapabilities(
+            Answer canWithdrawFunds, Answer canPlaceFunds, Answer canMakeAndReceiveTransfer) {
+        this.canWithdrawFunds = canWithdrawFunds;
+        this.canPlaceFunds = canPlaceFunds;
+        this.canMakeAndReceiveTransfer = canMakeAndReceiveTransfer;
+    }
+
+    public static AccountCapabilities createDefault() {
+        return new AccountCapabilities(Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
+    }
 
     public void setCanWithdrawFunds(Answer canWithdrawFunds) {
         this.canWithdrawFunds = canWithdrawFunds;

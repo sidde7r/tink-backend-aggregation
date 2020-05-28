@@ -86,8 +86,7 @@ public class Account implements Cloneable {
         this.identifiers = "[]";
         this.flags = "[]";
         this.accountExclusion = AccountExclusion.NONE;
-        // Use Default capabilities.
-        this.capabilities = new AccountCapabilities();
+        this.capabilities = AccountCapabilities.createDefault();
     }
 
     public ExactCurrencyAmount getExactAvailableCredit() {

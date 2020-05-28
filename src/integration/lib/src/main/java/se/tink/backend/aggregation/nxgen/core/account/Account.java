@@ -304,7 +304,7 @@ public abstract class Account {
         private ExactCurrencyAmount exactBalance;
         private String alias;
         private String productName;
-        private AccountCapabilities capabilities = new AccountCapabilities();
+        private AccountCapabilities capabilities = AccountCapabilities.createDefault();
 
         protected final void applyUniqueIdentifier(@Nonnull String uniqueIdentifier) {
             Preconditions.checkArgument(
@@ -462,7 +462,7 @@ public abstract class Account {
         protected HolderName holderName;
         protected ExactCurrencyAmount exactBalance;
         protected ExactCurrencyAmount exactAvailableCredit;
-        private AccountCapabilities capabilities = new AccountCapabilities();
+        private AccountCapabilities capabilities = AccountCapabilities.createDefault();
         private T thisObj;
 
         @Deprecated

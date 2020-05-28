@@ -26,7 +26,7 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     protected final List<AccountFlag> accountFlags = new ArrayList<>();
     private final TemporaryStorage temporaryStorage = new TemporaryStorage();
     protected Map<String, String> payload = new HashMap<>();
-    private AccountCapabilities capabilities = new AccountCapabilities();
+    private AccountCapabilities capabilities = AccountCapabilities.createDefault();
 
     protected abstract B buildStep();
 
