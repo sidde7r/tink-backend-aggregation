@@ -5,7 +5,6 @@ public class SebConstants {
 
         public static final String AUTH_BASE = "https://msme.seb.se";
         public static final String BASE = "https://msme.seb.se/ServiceFactory/PC_BANK";
-        public static final String LIST_ACCOUNTS =
-                BASE + "/PC_BankLista11Ktooversikt01.asmx/Execute";
+        public static final String LIST_ACCOUNTS = "/PC_BankLista11Ktooversikt01.asmx/Execute";
     }
 }
