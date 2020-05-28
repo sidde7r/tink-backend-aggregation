@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 
-public class ProviderFetcherUtil {
+public class ProviderFetcher {
 
     private String folderForConfigurations;
 
-    public ProviderFetcherUtil(String folderForConfigurations) {
+    public ProviderFetcher(String folderForConfigurations) {
         this.folderForConfigurations = folderForConfigurations;
     }
 

@@ -8,11 +8,11 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.BeanAccess;
 
 @Getter
-public class TestConfigurationReaderUtil {
+public class TestConfigurationReader {
 
     private final AgentFactoryTestConfiguration agentFactoryTestConfiguration;
 
-    public TestConfigurationReaderUtil(String configurationPath) {
+    public TestConfigurationReader(String configurationPath) {
         try (FileInputStream configFileStream = new FileInputStream(new File(configurationPath))) {
             Yaml yaml = new Yaml(new Constructor(AgentFactoryTestConfiguration.class));
             yaml.setBeanAccess(BeanAccess.FIELD);

@@ -30,9 +30,9 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
-import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisationUtil;
-import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcherUtil;
-import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReaderUtil;
+import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisor;
+import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcher;
+import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
 
 public class AgentCapabilitiesTest {
     private static final Logger log = LoggerFactory.getLogger(AgentCapabilitiesTest.class);
@@ -132,12 +132,12 @@ public class AgentCapabilitiesTest {
 
     private Optional<String> compareExpectedAndGivenAgentCapabilities(
             Provider provider,
-            AgentInitialisationUtil agentInitialisationUtil,
+            AgentInitialisor agentInitialisor,
             Map<String, Set<String>> expectedAgentCapabilities) {
 
         Agent agent;
         try {
-            agent = agentInitialisationUtil.initialiseAgent(provider);
+            agent = agentInitialisor.initialiseAgent(provider);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -220,17 +220,17 @@ public class AgentCapabilitiesTest {
                         "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
 
         AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-                new TestConfigurationReaderUtil(
+                new TestConfigurationReader(
                                 "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml")
                         .getAgentFactoryTestConfiguration();
 
         List<Provider> providerConfigurations =
-                new ProviderFetcherUtil(
+                new ProviderFetcher(
                                 "external/tink_backend/src/provider_configuration/data/seeding")
                         .getProviderConfigurations();
 
-        AgentInitialisationUtil agentInitialisationUtil =
-                new AgentInitialisationUtil(
+        AgentInitialisor agentInitialisor =
+                new AgentInitialisor(
                         TEST_CONFIGURATION_FILE_PATH,
                         CREDENTIALS_TEMPLATE_FILE_PATH,
                         USER_TEMPLATE_FILE_PATH);
@@ -257,7 +257,7 @@ public class AgentCapabilitiesTest {
                                 provider ->
                                         compareExpectedAndGivenAgentCapabilities(
                                                 provider,
-                                                agentInitialisationUtil,
+                                                agentInitialisor,
                                                 expectedAgentCapabilities))
                         .filter(Optional::isPresent)
                         .map(Optional::get)

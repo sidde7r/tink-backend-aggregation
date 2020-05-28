@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
-import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisationUtil;
-import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcherUtil;
-import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReaderUtil;
+import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisor;
+import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcher;
+import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
 
 public class AgentInitialisationTest {
 
@@ -75,17 +75,17 @@ public class AgentInitialisationTest {
     public void whenEnabledProvidersAreGivenAgentFactoryShouldInstantiateAllEnabledAgents() {
         // given
         AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-                new TestConfigurationReaderUtil(
+                new TestConfigurationReader(
                                 "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml")
                         .getAgentFactoryTestConfiguration();
 
         List<Provider> providerConfigurations =
-                new ProviderFetcherUtil(
+                new ProviderFetcher(
                                 "external/tink_backend/src/provider_configuration/data/seeding")
                         .getProviderConfigurations();
 
-        AgentInitialisationUtil agentInitialisationUtil =
-                new AgentInitialisationUtil(
+        AgentInitialisor agentInitialisor =
+                new AgentInitialisor(
                         TEST_CONFIGURATION_FILE_PATH,
                         CREDENTIALS_TEMPLATE_FILE_PATH,
                         USER_TEMPLATE_FILE_PATH);
@@ -106,7 +106,7 @@ public class AgentInitialisationTest {
                 .forEach(
                         provider -> {
                             try {
-                                agentInitialisationUtil.initialiseAgent(provider);
+                                agentInitialisor.initialiseAgent(provider);
                             } catch (Exception e) {
                                 errors.add(
                                         createProperErrorMessageForAgentInitialisationError(

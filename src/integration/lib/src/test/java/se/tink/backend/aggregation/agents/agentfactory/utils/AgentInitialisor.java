@@ -52,7 +52,7 @@ import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.user.rpc.User;
 
-public class AgentInitialisationUtil {
+public class AgentInitialisor {
 
     private static final Environment ENVIRONMENT =
             new Environment(
@@ -68,7 +68,7 @@ public class AgentInitialisationUtil {
     private final User user;
     private AgentFactory agentFactory;
 
-    public AgentInitialisationUtil(
+    public AgentInitialisor(
             String aggregationServiceConfigurationFilePath,
             String credentialsTemplateFilePath,
             String userTemplateFilePath) {
