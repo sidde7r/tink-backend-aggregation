@@ -10,9 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javafx.util.Pair;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +31,19 @@ import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestCon
 import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcher;
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
 
+/*
+    For each agent (except the agents specified in resources/ignored_agents_for_tests.yml)
+    These tests compares the real capabilities of the agent (by checking which interfaces it implements)
+    and the expected capabilities of the agent (by checking agent-capabilities.json file in tink-backend)
+    and fails if there is an agent where the real capabilities and expected capabilities are not
+    matching.
+
+    Limitations:
+
+    1- We do not make any assertions on PAYMENTS and TRANSFER capabilities for agents
+       that implement TransferExecutorNxgen.
+    2- We do not make any assertions on agents that implement DeprecatedRefreshExecutor
+*/
 public class AgentCapabilitiesTest {
     private static final Logger log = LoggerFactory.getLogger(AgentCapabilitiesTest.class);
 
@@ -42,7 +55,22 @@ public class AgentCapabilitiesTest {
     private static final String IGNORED_AGENTS_FOR_TESTS_FILE_PATH =
             "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml";
 
-    private Map<String, Set<String>> readExpectedAgentCapabilities(String filePath) {
+    private static final String EXPECTED_AGENT_CAPABILITIES_FILE_PATH =
+            "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json";
+
+    private static final String PROVIDER_CONFIG_FOLDER_PATH =
+            "external/tink_backend/src/provider_configuration/data/seeding";
+
+    private static final Map<String, Set<String>> expectedAgentCapabilities =
+            readExpectedAgentCapabilities(EXPECTED_AGENT_CAPABILITIES_FILE_PATH);
+
+    private static final AgentFactoryTestConfiguration agentFactoryTestConfiguration =
+            new TestConfigurationReader().readConfiguration(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
+
+    private static final Set<Provider> providerConfigurations =
+            new ProviderFetcher().getProviderConfigurations(PROVIDER_CONFIG_FOLDER_PATH);
+
+    private static Map<String, Set<String>> readExpectedAgentCapabilities(String filePath) {
         Map<String, Set<String>> agentCapabilities;
         try {
             byte[] agentCapabilitiesFileData = Files.readAllBytes(Paths.get(filePath));
@@ -124,19 +152,18 @@ public class AgentCapabilitiesTest {
         return givenCapabilities;
     }
 
-    private Optional<String> compareExpectedAndGivenAgentCapabilities(
-            Provider provider, Map<String, Set<String>> expectedAgentCapabilities) {
-
-        Class<?> agentClass;
+    private Class<?> getClassForProvider(Provider provider) {
         try {
-            agentClass = AgentClassFactory.getAgentClass(provider);
+            return AgentClassFactory.getAgentClass(provider);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        // Skip because we cannot perform check for such agents
-        if (DeprecatedRefreshExecutor.class.isAssignableFrom(agentClass)) {
-            return Optional.empty();
-        }
+    }
+
+    private SetView<String> getGivenButNotExpectedCapabilities(
+            Provider provider, Map<String, Set<String>> expectedAgentCapabilities) {
+
+        Class<?> agentClass = getClassForProvider(provider);
 
         Set<String> expectedCapabilities =
                 new HashSet<>(expectedAgentCapabilities.get(provider.getClassName()));
@@ -144,38 +171,25 @@ public class AgentCapabilitiesTest {
         Set<String> givenCapabilities =
                 collectGivenAgentCapabilities(agentClass, expectedCapabilities);
 
-        SetView<String> expectedButNotGiven =
-                Sets.difference(new HashSet<>(expectedCapabilities), givenCapabilities);
-
-        SetView<String> givenButNotExpected =
-                Sets.difference(givenCapabilities, new HashSet<>(expectedCapabilities));
-
-        StringBuilder builder = new StringBuilder();
-        if (expectedButNotGiven.size() > 0) {
-            builder.append(
-                    "Agent "
-                            + provider.getClassName()
-                            + " has the following capabilities in agent-capabilities.json file, however it does not implement corresponding interface(s) for them : "
-                            + expectedButNotGiven.toString()
-                            + "\n");
-        }
-
-        if (givenButNotExpected.size() > 0) {
-            builder.append(
-                    "Agent "
-                            + provider.getClassName()
-                            + " has the following capabilities which are not mentioned in agent-capabilities.json : "
-                            + givenButNotExpected.toString()
-                            + "\n");
-        }
-        if (expectedButNotGiven.size() > 0 || givenButNotExpected.size() > 0) {
-            return Optional.of(builder.toString());
-        } else {
-            return Optional.empty();
-        }
+        return Sets.difference(givenCapabilities, new HashSet<>(expectedCapabilities));
     }
 
-    // This method returns one provider for each agent
+    private SetView<String> getExpectedButNotGivenCapabilities(
+            Provider provider, Map<String, Set<String>> expectedAgentCapabilities) {
+
+        Class<?> agentClass = getClassForProvider(provider);
+
+        Set<String> expectedCapabilities =
+                new HashSet<>(expectedAgentCapabilities.get(provider.getClassName()));
+
+        Set<String> givenCapabilities =
+                collectGivenAgentCapabilities(agentClass, expectedCapabilities);
+
+        return Sets.difference(expectedCapabilities, new HashSet<>(givenCapabilities));
+    }
+
+    // This method returns one provider for each agent (for each agent it picks the provider
+    // which is the first in alphabetical order)
     private Set<Provider> getProvidersForCapabilitiesTest(Set<Provider> providerConfigurations) {
         return providerConfigurations.stream()
                 .filter(
@@ -194,58 +208,97 @@ public class AgentCapabilitiesTest {
                 .collect(Collectors.toSet());
     }
 
-    /*
-        For each agent (except the agents specified in resources/ignored_agents_for_tests.yml)
-        This test compares the real capabilities of the agent (by checking which interfaces it implements)
-        and the expected capabilities of the agent (by checking agent-capabilities.json file in tink-backend)
-        and fails if there is an agent where the real capabilities and expected capabilities are not
-        matching.
-
-        Known limitations:
-
-        1- We do not make any assertions on PAYMENTS and TRANSFER capabilities for agents
-           that implement TransferExecutorNxgen.
-        2- We do not make any assertions on agents that implement DeprecatedRefreshExecutor
-    */
     @Test
-    public void expectedCapabilitiesAndGivenCapabilitiesShouldMatchForUnignoredAgents() {
+    public void everyAgentShouldImplementCapabilitiesListedInTheAgentCapabilitiesJsonFile() {
         // given
-        Map<String, Set<String>> expectedAgentCapabilities =
-                readExpectedAgentCapabilities(
-                        "external/tink_backend/src/provider_configuration/data/seeding/providers/capabilities/agent-capabilities.json");
-
-        AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-                new TestConfigurationReader().readConfiguration(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
-
-        Set<Provider> providerConfigurations =
-                new ProviderFetcher()
-                        .getProviderConfigurations(
-                                "external/tink_backend/src/provider_configuration/data/seeding");
-
-        Set<Provider> providerForEachUnignoredAgent =
+        Set<Provider> providersForUnignoredAgents =
                 getProvidersForCapabilitiesTest(providerConfigurations).stream()
                         .filter(
                                 provider ->
                                         !agentFactoryTestConfiguration
                                                 .getIgnoredAgentsForCapabilityTest()
                                                 .contains(provider.getClassName()))
+                        .filter(
+                                provider ->
+                                        !DeprecatedRefreshExecutor.class.isAssignableFrom(
+                                                getClassForProvider(provider)))
                         .collect(Collectors.toSet());
 
         // when
-        Set<String> errors =
-                providerForEachUnignoredAgent
+        Set<Pair<Provider, SetView<String>>> expectedButNotGivenCapabilities =
+                providersForUnignoredAgents
                         .parallelStream()
                         .map(
                                 provider ->
-                                        compareExpectedAndGivenAgentCapabilities(
-                                                provider, expectedAgentCapabilities))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
+                                        new Pair<>(
+                                                provider,
+                                                getExpectedButNotGivenCapabilities(
+                                                        provider, expectedAgentCapabilities)))
                         .collect(Collectors.toSet());
 
-        errors.stream().forEach(log::error);
+        // then
+        expectedButNotGivenCapabilities.stream()
+                .filter(diff -> diff.getValue().size() > 0)
+                .forEach(
+                        diff ->
+                                log.error(
+                                        "Agent "
+                                                + diff.getKey().getClassName()
+                                                + " has the following capabilities in agent-capabilities.json file, however it does not implement corresponding interface(s) for them : "
+                                                + diff.getValue().toString()));
+
+        assertEquals(
+                0,
+                expectedButNotGivenCapabilities.stream()
+                        .filter(diff -> diff.getValue().size() > 0)
+                        .collect(Collectors.toSet())
+                        .size());
+    }
+
+    @Test
+    public void everyCapabilityListedInTheAgentCapabilitiesJsonFileShouldBeImplementedByTheAgent() {
+        // given
+        Set<Provider> providersForUnignoredAgents =
+                getProvidersForCapabilitiesTest(providerConfigurations).stream()
+                        .filter(
+                                provider ->
+                                        !agentFactoryTestConfiguration
+                                                .getIgnoredAgentsForCapabilityTest()
+                                                .contains(provider.getClassName()))
+                        .filter(
+                                provider ->
+                                        !DeprecatedRefreshExecutor.class.isAssignableFrom(
+                                                getClassForProvider(provider)))
+                        .collect(Collectors.toSet());
+
+        // when
+        Set<Pair<Provider, SetView<String>>> givenButNotExpectedCapabilities =
+                providersForUnignoredAgents
+                        .parallelStream()
+                        .map(
+                                provider ->
+                                        new Pair<>(
+                                                provider,
+                                                getGivenButNotExpectedCapabilities(
+                                                        provider, expectedAgentCapabilities)))
+                        .collect(Collectors.toSet());
 
         // then
-        assertEquals(0, errors.size());
+        givenButNotExpectedCapabilities.stream()
+                .filter(diff -> diff.getValue().size() > 0)
+                .forEach(
+                        diff ->
+                                log.error(
+                                        "Agent "
+                                                + diff.getKey().getClassName()
+                                                + " has the following capabilities which are not mentioned in agent-capabilities.json : "
+                                                + diff.getValue().toString()));
+
+        assertEquals(
+                0,
+                givenButNotExpectedCapabilities.stream()
+                        .filter(diff -> diff.getValue().size() > 0)
+                        .collect(Collectors.toSet())
+                        .size());
     }
 }
