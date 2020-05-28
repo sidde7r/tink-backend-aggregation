@@ -20,6 +20,12 @@ public class AgentInitialisationTest {
 
     private static final Logger log = LoggerFactory.getLogger(AgentInitialisationTest.class);
 
+    private static final String TEST_CONFIGURATION_FILE_PATH = "etc/test.yml";
+    private static final String CREDENTIALS_TEMPLATE_FILE_PATH =
+            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json";
+    private static final String USER_TEMPLATE_FILE_PATH =
+            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json";
+
     private String createProperErrorMessageForAgentInitialisationError(
             Exception e, Provider provider) {
         String errorMessagePrefix =
@@ -76,9 +82,9 @@ public class AgentInitialisationTest {
 
         AgentInitialisationUtil agentInitialisationUtil =
                 new AgentInitialisationUtil(
-                        "etc/test.yml",
-                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json",
-                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json");
+                        TEST_CONFIGURATION_FILE_PATH,
+                        CREDENTIALS_TEMPLATE_FILE_PATH,
+                        USER_TEMPLATE_FILE_PATH);
 
         List<Provider> providers =
                 getProvidersForInitialisationTest(providerConfigurations).stream()

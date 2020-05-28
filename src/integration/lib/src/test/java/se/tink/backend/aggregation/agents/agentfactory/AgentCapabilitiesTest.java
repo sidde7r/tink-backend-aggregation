@@ -43,6 +43,12 @@ public class AgentCapabilitiesTest {
     private static final String MORTGAGE_AGGREGATION = "MORTGAGE_AGGREGATION";
     private static final String PAYMENTS = "PAYMENTS";
 
+    private static final String TEST_CONFIGURATION_FILE_PATH = "etc/test.yml";
+    private static final String CREDENTIALS_TEMPLATE_FILE_PATH =
+            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json";
+    private static final String USER_TEMPLATE_FILE_PATH =
+            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json";
+
     private Map<String, List<String>> readExpectedAgentCapabilities(String filePath) {
         Map<String, List<String>> agentCapabilities;
         try {
@@ -226,9 +232,9 @@ public class AgentCapabilitiesTest {
 
         AgentInitialisationUtil agentInitialisationUtil =
                 new AgentInitialisationUtil(
-                        "etc/test.yml",
-                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json",
-                        "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json");
+                        TEST_CONFIGURATION_FILE_PATH,
+                        CREDENTIALS_TEMPLATE_FILE_PATH,
+                        USER_TEMPLATE_FILE_PATH);
 
         List<Provider> providerForEachUnignoredAgent =
                 getProvidersForCapabilitiesTest(providerConfigurations).stream()
