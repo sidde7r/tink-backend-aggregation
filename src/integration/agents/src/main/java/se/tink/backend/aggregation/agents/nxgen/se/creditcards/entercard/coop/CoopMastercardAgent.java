@@ -10,5 +10,7 @@ public class CoopMastercardAgent extends EnterCardAgent {
     public CoopMastercardAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new CoopMastercardConfiguration());
+
+        this.client.loadTrustMaterial(CoopTrustMaterialProvider.coopTrustStore(), null);
     }
 }

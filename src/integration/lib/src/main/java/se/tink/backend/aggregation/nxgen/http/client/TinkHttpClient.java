@@ -8,6 +8,7 @@ import java.util.List;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
@@ -20,7 +21,6 @@ import se.tink.backend.aggregation.nxgen.http.redirect.handler.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.serializecontainer.SerializeContainer;
-import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
 
 public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuilderProvidable {
 
@@ -70,7 +70,7 @@ public interface TinkHttpClient extends Filterable<TinkHttpClient>, RequestBuild
 
     void disableSslVerification();
 
-    void loadTrustMaterial(KeyStore truststore, TrustAllCertificatesStrategy trustStrategy);
+    void loadTrustMaterial(KeyStore truststore, TrustStrategy trustStrategy);
 
     void setSslProtocol(String sslProtocol);
 

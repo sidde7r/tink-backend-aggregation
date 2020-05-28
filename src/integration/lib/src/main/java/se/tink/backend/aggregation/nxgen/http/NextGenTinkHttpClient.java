@@ -52,6 +52,7 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -579,7 +580,7 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
                 this.internalHttpClientBuilder.setHostnameVerifier(new AllowAllHostnameVerifier());
     }
 
-    public void loadTrustMaterial(KeyStore truststore, TrustAllCertificatesStrategy trustStrategy) {
+    public void loadTrustMaterial(KeyStore truststore, TrustStrategy trustStrategy) {
         Preconditions.checkState(this.internalClient == null);
         try {
             this.internalSslContextBuilder =
