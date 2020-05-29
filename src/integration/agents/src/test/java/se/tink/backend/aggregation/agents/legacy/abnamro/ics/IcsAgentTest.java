@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroIcsCredentials;
 import se.tink.backend.aggregation.agents.framework.legacy.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class IcsAgentTest extends AbstractAgentTest<IcsAgent> {
@@ -24,6 +23,6 @@ public class IcsAgentTest extends AbstractAgentTest<IcsAgent> {
                 AbnAmroIcsCredentials.create(
                         UUIDUtils.generateUUID(), "64317013", ImmutableSet.of(4818618001336577L));
 
-        testAgent(CoreCredentialsMapper.toAggregationCredentials(credentials.getCredentials()));
+        testAgent(credentials.getCredentials());
     }
 }
