@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.framework.compositeagenttest.command;
 
 import com.google.inject.Inject;
-import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
+import se.tink.backend.aggregation.agents.framework.context.NewAgentTestContext;
 import se.tink.backend.aggregation.logmasker.LogMasker;
 
 public class HttpDebugTraceCommand implements CompositeAgentTestCommand {
