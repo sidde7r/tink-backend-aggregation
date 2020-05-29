@@ -42,7 +42,7 @@ public class CreditAgricoleAuthenticator implements Authenticator {
             throws AuthenticationException, AuthorizationException {
         String userAccountNumber = credentials.getField(StorageKey.USER_ACCOUNT_NUMBER);
         String userAccountCode = credentials.getField(StorageKey.USER_ACCOUNT_CODE);
-        String appCode = credentials.getField(StorageKey.APP_CODE);
+        //        String appCode = credentials.getField(StorageKey.APP_CODE);
 
         String shuffledAccountCode = getShuffledAccountCode(apiClient.numberPad(), userAccountCode);
         SignInResponse signInResponse =
@@ -52,7 +52,7 @@ public class CreditAgricoleAuthenticator implements Authenticator {
         // persistent storage
         persistentStorage.put(StorageKey.USER_ACCOUNT_NUMBER, userAccountNumber);
         persistentStorage.put(StorageKey.USER_ACCOUNT_CODE, userAccountCode);
-        persistentStorage.put(StorageKey.APP_CODE, appCode);
+        //        persistentStorage.put(StorageKey.APP_CODE, appCode);
         sessionStorage.put(StorageKey.SHUFFLED_USER_ACCOUNT_CODE, shuffledAccountCode);
 
         String partnerId = signInResponse.getActiveUsersList().get(0).getPartnerId();
@@ -64,7 +64,7 @@ public class CreditAgricoleAuthenticator implements Authenticator {
         String loginEmail = signInResponse.getEmailPart();
         persistentStorage.put(StorageKey.LOGIN_EMAIL, loginEmail);
 
-        checkResponseErrors(apiClient.appCode(appCode));
+        //        checkResponseErrors(apiClient.appCode(appCode));
 
         StrongAuthenticationResponse strongAuthenticationResponse =
                 checkResponseErrors(apiClient.strongAuthentication());
