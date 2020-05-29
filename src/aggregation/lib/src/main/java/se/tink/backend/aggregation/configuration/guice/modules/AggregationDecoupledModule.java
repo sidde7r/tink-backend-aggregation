@@ -111,6 +111,7 @@ import se.tink.libraries.queue.sqs.FakeProducer;
 import se.tink.libraries.queue.sqs.QueueMessageAction;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.service.version.VersionInformation;
+import se.tink.libraries.tracing.jersey.filter.ServerTracingFilter;
 
 /**
  * A singular place for all the Guice bindings necessary to start up and make calls to the
@@ -244,8 +245,12 @@ public class AggregationDecoupledModule extends AbstractModule {
                 .addRequestFilters(
                         AccessLoggingFilter.class,
                         AggregationLoggerRequestFilter.class,
-                        RequestTracingFilter.class)
-                .addResponseFilters(AccessLoggingFilter.class, RequestTracingFilter.class)
+                        RequestTracingFilter.class,
+                        ServerTracingFilter.class)
+                .addResponseFilters(
+                        AccessLoggingFilter.class,
+                        RequestTracingFilter.class,
+                        ServerTracingFilter.class)
                 // This is not a resource, but a provider
                 .addResources(
                         AggregationService.class,

@@ -16,5 +16,6 @@ java_library(
         "//third_party:commons_io_commons_io",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_httpcomponents_httpcore",
+        "@tink_backend//src/libraries/tracing/jersey",
     ],
 )

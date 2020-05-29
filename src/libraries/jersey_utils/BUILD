@@ -19,6 +19,7 @@ java_library(
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_guava_guava",
+        "@tink_backend//src/libraries/tracing",
     ],
 )
 

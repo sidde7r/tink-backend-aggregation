@@ -6,6 +6,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.filter.Filterable;
 import java.util.List;
 import java.util.Objects;
+import se.tink.libraries.tracing.jersey.filter.ClientTracingFilter;
 
 public class JerseyUtils {
     public static Client getClient(List<String> pinnedCertificates) {
@@ -31,7 +32,10 @@ public class JerseyUtils {
                     clientCertificate, clientCertificatePassword);
         }
 
-        return interClusterJerseyClientFactory.build();
+        Client client = interClusterJerseyClientFactory.build();
+        client.addFilter(new ClientTracingFilter());
+
+        return client;
     }
 
     public static void registerAPIAccessToken(Filterable filterable, String accessToken) {
