@@ -74,7 +74,7 @@ public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaym
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        apiClient.fetchToken();
+        apiClient.fetchPispToken();
 
         AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
