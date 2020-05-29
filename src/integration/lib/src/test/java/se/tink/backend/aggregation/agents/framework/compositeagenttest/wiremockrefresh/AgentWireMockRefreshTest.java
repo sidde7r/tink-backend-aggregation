@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.contractproducer.ContractProducer;
 import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -35,6 +38,8 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
 public final class AgentWireMockRefreshTest {
+
+    private static final Logger log = LoggerFactory.getLogger(AgentWireMockRefreshTest.class);
 
     private final CompositeAgentTest compositeAgentTest;
     private final WireMockTestServer server;
@@ -98,6 +103,12 @@ public final class AgentWireMockRefreshTest {
                 throw new RuntimeException(server.createErrorLogForFailedRequest());
             }
             throw e;
+        }
+        if (dumpContentForContractFile) {
+            ContractProducer contractProducer = new ContractProducer();
+            log.info(
+                    "This is the content for building the contract file : \n"
+                            + contractProducer.produceFromContext(compositeAgentTest.getContext()));
         }
     }
 
