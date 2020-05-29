@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Storage;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -27,6 +28,7 @@ public class AmericanExpressV62PasswordAuthenticatorTest {
     AmericanExpressV62ApiClient amexClient;
     AmericanExpressV62PasswordAuthenticator authenticator;
     AmericanExpressV62Storage instanceStorage;
+    RandomValueGenerator randomValueGenerator;
     private ObjectMapper mapper = new ObjectMapper();
 
     @Before
@@ -35,9 +37,14 @@ public class AmericanExpressV62PasswordAuthenticatorTest {
         persistentStorage = Mockito.mock(PersistentStorage.class);
         amexClient = Mockito.mock(AmericanExpressV62ApiClient.class);
         instanceStorage = Mockito.mock(AmericanExpressV62Storage.class);
+        randomValueGenerator = Mockito.mock(RandomValueGenerator.class);
         authenticator =
                 new AmericanExpressV62PasswordAuthenticator(
-                        amexClient, persistentStorage, sessionStorage, instanceStorage);
+                        amexClient,
+                        persistentStorage,
+                        sessionStorage,
+                        instanceStorage,
+                        randomValueGenerator);
     }
 
     @Test
