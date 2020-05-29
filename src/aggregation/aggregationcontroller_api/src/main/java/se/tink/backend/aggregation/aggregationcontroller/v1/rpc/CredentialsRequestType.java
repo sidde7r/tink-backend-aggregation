@@ -11,7 +11,8 @@ public enum CredentialsRequestType {
     UPDATE,
     REENCRYPT,
     MIGRATE,
-    MANUAL_AUTHENTICATION;
+    MANUAL_AUTHENTICATION,
+    CREATE_BENEFICIARY;
 
     public static CredentialsRequestType translateFromServiceRequestType(
             se.tink.libraries.credentials.service.CredentialsRequestType

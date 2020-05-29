@@ -9,6 +9,7 @@ java_library(
         "//src/aggregation/api/src/main/java/se/tink/backend/aggregation/cluster/identification",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
+        "//src/integration/payment:rpc",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//src/integration/transfer:rpc",
         "//src/integration/user:rpc",
