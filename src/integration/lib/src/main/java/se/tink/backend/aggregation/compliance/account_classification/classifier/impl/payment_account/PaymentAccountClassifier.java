@@ -9,6 +9,8 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
+import se.tink.backend.aggregation.compliance.account_classification.metrics.PaymentAccountClassificationMetrics;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 /**
  * This class determines whether an account classifies as Payment Account, Non-Payment Account or
@@ -28,9 +30,13 @@ import se.tink.backend.aggregation.compliance.account_classification.classifier.
  */
 public class PaymentAccountClassifier {
     private final List<ClassificationRule<PaymentAccountClassification>> rules;
+    private final PaymentAccountClassificationMetrics metrics;
 
-    public PaymentAccountClassifier(List<ClassificationRule<PaymentAccountClassification>> rules) {
+    public PaymentAccountClassifier(
+            List<ClassificationRule<PaymentAccountClassification>> rules,
+            MetricRegistry metricRegistry) {
         this.rules = rules;
+        this.metrics = new PaymentAccountClassificationMetrics(metricRegistry);
     }
 
     public PaymentAccountClassification classifyAsPaymentAccount(
@@ -38,10 +44,14 @@ public class PaymentAccountClassifier {
         Stream<ClassificationRule<PaymentAccountClassification>> applicableRules =
                 getApplicableRules(provider);
         List<PaymentAccountClassification> allResults =
-                applicableRules
-                        .map(r -> r.classify(provider, account))
-                        .collect(Collectors.toList());
+                collectClassificationResults(provider, account, applicableRules);
 
+        PaymentAccountClassification classificationResult = classify(allResults);
+        metrics.finalResult(classificationResult, provider);
+        return classificationResult;
+    }
+
+    private PaymentAccountClassification classify(List<PaymentAccountClassification> allResults) {
         if (anyMatch(allResults, PaymentAccountClassification.PAYMENT_ACCOUNT)) {
             return PaymentAccountClassification.PAYMENT_ACCOUNT;
         }
@@ -50,6 +60,20 @@ public class PaymentAccountClassifier {
         }
 
         return PaymentAccountClassification.UNDETERMINED;
+    }
+
+    private List<PaymentAccountClassification> collectClassificationResults(
+            Provider provider,
+            Account account,
+            Stream<ClassificationRule<PaymentAccountClassification>> applicableRules) {
+        return applicableRules
+                .map(
+                        r -> {
+                            PaymentAccountClassification result = r.classify(provider, account);
+                            metrics.ruleResult(r, result);
+                            return result;
+                        })
+                .collect(Collectors.toList());
     }
 
     private Stream<ClassificationRule<PaymentAccountClassification>> getApplicableRules(

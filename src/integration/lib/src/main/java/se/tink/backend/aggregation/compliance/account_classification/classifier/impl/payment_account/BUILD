@@ -11,5 +11,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/classifier/impl",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/classifier/impl/payment_account/rules/global",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/classifier/impl/payment_account/rules/regulatory/psd2",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/metrics",
+        "//src/libraries/metrics:registry",
     ],
 )

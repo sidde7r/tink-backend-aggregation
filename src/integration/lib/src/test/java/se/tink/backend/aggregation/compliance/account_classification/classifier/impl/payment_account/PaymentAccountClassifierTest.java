@@ -13,11 +13,13 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class PaymentAccountClassifierTest {
 
     private static final boolean ENABLED = true;
     private static final boolean DISABLED = false;
+    private MetricRegistry metricRegistry = new MetricRegistry();
 
     @Test
     public void shouldClassifyAsPaymentAccountIfRuleReturnsPaymentAccount() {
@@ -25,7 +27,7 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.PAYMENT_ACCOUNT));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules);
+        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
 
         // when
         PaymentAccountClassification result =
@@ -41,7 +43,7 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.PAYMENT_ACCOUNT));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules);
+        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
 
         // when
         PaymentAccountClassification result =
@@ -56,7 +58,7 @@ public class PaymentAccountClassifierTest {
         List<ClassificationRule<PaymentAccountClassification>> rules = new ArrayList<>();
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules);
+        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
 
         // when
         PaymentAccountClassification result =
@@ -71,7 +73,7 @@ public class PaymentAccountClassifierTest {
         List<ClassificationRule<PaymentAccountClassification>> rules = new ArrayList<>();
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules);
+        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
 
         // when
         PaymentAccountClassification result =
@@ -83,7 +85,8 @@ public class PaymentAccountClassifierTest {
 
     @Test
     public void shouldClassifyAsUndeterminedIfNoRules() {
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(Collections.emptyList());
+        PaymentAccountClassifier classifier =
+                new PaymentAccountClassifier(Collections.emptyList(), metricRegistry);
 
         // when
         PaymentAccountClassification result =
@@ -99,7 +102,7 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.PAYMENT_ACCOUNT));
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules);
+        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
 
         // when
         PaymentAccountClassification result =
