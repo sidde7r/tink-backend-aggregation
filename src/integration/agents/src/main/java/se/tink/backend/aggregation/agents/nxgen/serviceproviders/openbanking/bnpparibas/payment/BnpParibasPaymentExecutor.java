@@ -5,6 +5,7 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
@@ -83,6 +84,9 @@ public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaym
 
         BnpParibasPaymentType paymentType = BnpParibasPaymentType.SEPA;
 
+        LocalDate executionDate =
+                Optional.ofNullable(payment.getExecutionDate()).orElse(LocalDate.now());
+
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
                         .withPaymentType(paymentType)
@@ -90,7 +94,7 @@ public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaym
                         .withCreditorAccount(creditor)
                         .withCreditorName(new CreditorEntity(payment.getCreditor().getName()))
                         .withDebtorAccount(debtor)
-                        .withExecutionDate(payment.getExecutionDate())
+                        .withExecutionDate(executionDate)
                         .withCreationDateTime(LocalDateTime.now())
                         .withRedirectUrl(
                                 new URL(configuration.getRedirectUrl())
