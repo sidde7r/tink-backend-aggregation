@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.seb.SebConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public class SebConfiguration extends SebBaseConfiguration {
 

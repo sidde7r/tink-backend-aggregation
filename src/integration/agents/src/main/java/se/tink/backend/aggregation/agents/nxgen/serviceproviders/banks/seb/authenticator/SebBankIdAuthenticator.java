@@ -11,13 +11,11 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.Authentication;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.AuthenticationResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class SebBankIdAuthenticator implements BankIdAuthenticator<String> {
-    private static final AggregationLogger LOG =
-            new AggregationLogger(SebBankIdAuthenticator.class);
+
     private final SebApiClient apiClient;
 
     private String autoStartToken;

@@ -10,31 +10,22 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.ChallengeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.type.AuthenticationControllerType;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.i18n.Catalog;
 
 public class SebTokenGenratorAuthenticationController
         implements TypedAuthenticator, AuthenticationControllerType {
     private final SebApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private final Catalog catalog;
-    private final SebSessionStorage sessionStorage;
 
     public SebTokenGenratorAuthenticationController(
-            SebApiClient apiClient,
-            SupplementalInformationHelper supplementalInformationHelper,
-            Catalog catalog,
-            SebSessionStorage sebSessionStorage) {
+            SebApiClient apiClient, SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
-        this.catalog = catalog;
-        sessionStorage = sebSessionStorage;
     }
 
     @Override

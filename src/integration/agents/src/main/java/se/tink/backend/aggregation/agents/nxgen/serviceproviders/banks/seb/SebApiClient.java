@@ -235,7 +235,7 @@ public class SebApiClient {
 
     public void setupSession(String ssn) throws AuthenticationException, AuthorizationException {
         try {
-            initiateSession("");
+            initiateSession(ssn.substring(2));
         } catch (HttpResponseException e) {
             SocialSecurityNumber.Sweden formattedSsn = new SocialSecurityNumber.Sweden(ssn);
             if (!formattedSsn.isValid()) {
@@ -244,7 +244,8 @@ public class SebApiClient {
 
             // Check if the user is younger than 18 and then throw unauthorized exception.
             if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
-                    && formattedSsn.getAge(LocalDate.now(ZoneId.of("CET"))) < SebConstants.AGE_LIMIT) {
+                    && formattedSsn.getAge(LocalDate.now(ZoneId.of("CET")))
+                            < SebConstants.AGE_LIMIT) {
                 throw AuthorizationError.UNAUTHORIZED.exception(
                         UserMessage.DO_NOT_SUPPORT_YOUTH.getKey(), e);
             }
