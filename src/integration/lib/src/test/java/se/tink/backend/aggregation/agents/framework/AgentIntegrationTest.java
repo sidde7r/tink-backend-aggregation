@@ -114,6 +114,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
+    private Boolean dumpContentForContractFile;
 
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
@@ -129,6 +130,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
+        this.dumpContentForContractFile = builder.isDumpContentForContractFile();
 
         this.clusterIdForSecretsService =
                 MoreObjects.firstNonNull(
@@ -1048,6 +1050,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String redirectUrl;
         private String clusterIdForSecretsService = null;
 
+        private boolean dumpContentForContractFile = false;
+
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
@@ -1268,6 +1272,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         public Builder setClusterIdForSecretsService(String clusterIdForSecretsService) {
             this.clusterIdForSecretsService = clusterIdForSecretsService;
             return this;
+        }
+
+        public Builder dumpContentForContractFile() {
+            this.dumpContentForContractFile = true;
+            return this;
+        }
+
+        public boolean isDumpContentForContractFile() {
+            return this.dumpContentForContractFile;
         }
 
         public AgentIntegrationTest build() {
