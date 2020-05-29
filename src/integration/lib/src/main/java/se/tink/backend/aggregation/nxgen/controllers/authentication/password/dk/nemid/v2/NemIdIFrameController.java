@@ -158,7 +158,7 @@ public class NemIdIFrameController {
         }
 
         if (!isValid) {
-            throw new IllegalStateException("Can't validate NemId credentials.");
+            throw LoginError.INVALIDATED_CREDENTIALS.exception("Can't validate NemId credentials.");
         }
     }
 
@@ -178,7 +178,7 @@ public class NemIdIFrameController {
         return otpIconPhone.isPresent();
     }
 
-    private void waitForNemidToken(WebDriver driver) {
+    private void waitForNemidToken(WebDriver driver) throws LoginException {
         boolean isNemIdApproved = false;
         for (int i = 0; i < 120; i++) {
 
@@ -191,7 +191,8 @@ public class NemIdIFrameController {
         }
 
         if (!isNemIdApproved) {
-            throw new NemIdNoResponseException("NemID request was not approved.");
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                    "NemID request was not approved.");
         }
     }
 

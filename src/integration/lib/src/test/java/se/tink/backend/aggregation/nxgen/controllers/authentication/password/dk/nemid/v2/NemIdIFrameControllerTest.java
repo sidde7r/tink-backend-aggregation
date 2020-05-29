@@ -209,7 +209,7 @@ public class NemIdIFrameControllerTest {
         verify(sleeper, times(20)).sleepFor(1_000);
         // and
         assertThat(throwable)
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(AuthenticationException.class)
                 .hasMessage("Can't validate NemId credentials.");
     }
 
@@ -266,7 +266,7 @@ public class NemIdIFrameControllerTest {
         verify(sleeper, times(120)).sleepFor(1_000);
         // and
         assertThat(throwable)
-                .isInstanceOf(NemIdNoResponseException.class)
+                .isInstanceOf(AuthenticationException.class)
                 .hasMessage("NemID request was not approved.");
     }
 
