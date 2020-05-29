@@ -30,7 +30,7 @@ public class PaymentRequest {
     }
 
     @Deprecated
-    public static PaymentRequest of(final Transfer transfer, final boolean isSkipRefresh) {
+    public static PaymentRequest of(final Transfer transfer, final String market) {
         Creditor creditorInRequest =
                 new Creditor(
                         transfer.getDestination(),
@@ -53,7 +53,7 @@ public class PaymentRequest {
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withUniqueId(UUIDUtils.toTinkUUID(transfer.getId()));
 
-        if (!isSkipRefresh) {
+        if (!market.equalsIgnoreCase("GB")) {
             paymentInRequestBuilder.withDebtor(new Debtor(transfer.getSource()));
         }
 

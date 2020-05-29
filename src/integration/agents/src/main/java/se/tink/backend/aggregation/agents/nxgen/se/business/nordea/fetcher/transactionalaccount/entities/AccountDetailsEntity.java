@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.business.nordea.NordeaSEConst
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
@@ -34,18 +35,7 @@ public class AccountDetailsEntity {
                 .withType(AccountType.getAccountTypeForCode(account.getProductTypeExtension()))
                 .withPaymentAccountFlag()
                 .withBalance(BalanceModule.of(getBalance(account)))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(getIbanFormatted())
-                                .withAccountNumber(account.getProductNumber())
-                                .withAccountName(account.getNickName())
-                                .addIdentifier(new IbanIdentifier(getIbanFormatted()))
-                                .addIdentifier(new SwedishIdentifier(longAccountNumber))
-                                .addIdentifier(getPlusGiroIdentifier(account))
-                                .setProductName(
-                                        AccountType.getAccountNameForCode(
-                                                account.getProductTypeExtension()))
-                                .build())
+                .withId(getId(account))
                 .setApiIdentifier(account.getProductId().getId())
                 .setBankIdentifier(getIbanFormatted())
                 .addHolderName(accountHolderName)
@@ -57,13 +47,30 @@ public class AccountDetailsEntity {
     }
 
     private PlusGiroIdentifier getPlusGiroIdentifier(AccountEntity account) {
-        if ("PG".equalsIgnoreCase(account.getAccountType())) {
-            return new PlusGiroIdentifier(account.getProductNumber());
-        }
-        return null;
+        return new PlusGiroIdentifier(account.getProductNumber());
     }
 
     private ExactCurrencyAmount getBalance(AccountEntity account) {
         return ExactCurrencyAmount.of(account.getBalance(), account.getCurrency());
+    }
+
+    private IdModule getId(AccountEntity account) {
+        final IdBuildStep idModule =
+                IdModule.builder()
+                        .withUniqueIdentifier(getIbanFormatted())
+                        .withAccountNumber(account.getProductNumber())
+                        .withAccountName(account.getNickName())
+                        .addIdentifier(new IbanIdentifier(getIbanFormatted()))
+                        .addIdentifier(new SwedishIdentifier(longAccountNumber))
+                        .setProductName(
+                                AccountType.getAccountNameForCode(
+                                        account.getProductTypeExtension()));
+        if ("PG".equalsIgnoreCase(account.getAccountType())) {
+            PlusGiroIdentifier plusGiroIdentifier = getPlusGiroIdentifier(account);
+            if (plusGiroIdentifier.getGiroNumber() != null) {
+                idModule.addIdentifier(plusGiroIdentifier);
+            }
+        }
+        return idModule.build();
     }
 }

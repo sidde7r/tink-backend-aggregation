@@ -377,7 +377,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         PaymentResponse createPaymentResponse =
                 paymentController.create(
                         PaymentRequest.of(
-                                transferRequest.getTransfer(), transferRequest.isSkipRefresh()));
+                                transferRequest.getTransfer(),
+                                transferRequest.getProvider().getMarket()));
 
         log.info(
                 String.format(
