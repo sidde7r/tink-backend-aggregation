@@ -146,7 +146,7 @@ public class LogMaskerTest {
 
     private Credentials mockCredentials() {
         Credentials credentials = mock(Credentials.class);
-        when(credentials.getSensitivePayload())
+        when(credentials.getSensitivePayloadAsMap())
                 .thenReturn(
                         ImmutableMap.<String, String>builder()
                                 .put("test-sensitive-key-1", "1010")

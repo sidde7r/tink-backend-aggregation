@@ -149,7 +149,7 @@ public class CredentialsStringMaskerBuilderTest {
         ImmutableMap<String, String> nestedSensitivePayload = assembleNestedSensitivePayload();
 
         Credentials nestedMockCredentials = mock(Credentials.class);
-        when(nestedMockCredentials.getSensitivePayload()).thenReturn(nestedSensitivePayload);
+        when(nestedMockCredentials.getSensitivePayloadAsMap()).thenReturn(nestedSensitivePayload);
 
         CredentialsStringMaskerBuilder credentialsStringMaskerBuilder =
                 new CredentialsStringMaskerBuilder(
@@ -236,7 +236,7 @@ public class CredentialsStringMaskerBuilderTest {
 
         Credentials mock = mock(Credentials.class);
         when(mock.getPassword()).thenReturn(PASSWORD);
-        when(mock.getSensitivePayload()).thenReturn(SENSITIVE_PAYLOAD);
+        when(mock.getSensitivePayloadAsMap()).thenReturn(SENSITIVE_PAYLOAD);
         when(mock.getUserId()).thenReturn(USER_ID);
         when(mock.getUsername()).thenReturn(USERNAME);
 

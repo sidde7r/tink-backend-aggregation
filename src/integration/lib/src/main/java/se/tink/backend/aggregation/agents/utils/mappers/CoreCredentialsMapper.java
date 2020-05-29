@@ -28,6 +28,16 @@ public class CoreCredentialsMapper {
                                 mapper ->
                                         mapper.skip(
                                                 se.tink.backend.agents.rpc.Credentials
+                                                        ::setSensitivePayloadSerialized))
+                        .addMappings(
+                                mapper ->
+                                        mapper.skip(
+                                                se.tink.backend.agents.rpc.Credentials
+                                                        ::setSensitivePayloadAsMap))
+                        .addMappings(
+                                mapper ->
+                                        mapper.skip(
+                                                se.tink.backend.agents.rpc.Credentials
                                                         ::setPersistentSession))
                         .addMappings(
                                 mapper ->

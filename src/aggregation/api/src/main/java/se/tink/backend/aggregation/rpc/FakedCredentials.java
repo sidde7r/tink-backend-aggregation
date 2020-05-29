@@ -121,7 +121,7 @@ public class FakedCredentials extends Credentials {
 
     @Override
     @JsonIgnore
-    public void setSensitivePayload(Map<String, String> sensitivePayload) {
+    public void setSensitivePayloadAsMap(Map<String, String> sensitivePayload) {
         // Not saving on fake credential
     }
 
