@@ -6,10 +6,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import java.util.Objects;
 import java.util.Set;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
-import se.tink.libraries.credentials.enums.CredentialsStatus;
-import se.tink.libraries.credentials.enums.CredentialsTypes;
-import se.tink.libraries.credentials.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AbnAmroIcsCredentials {
@@ -29,10 +28,6 @@ public class AbnAmroIcsCredentials {
                 isAbnAmroIcsCredentials(credentials), "Credentials is of wrong provider");
 
         this.credentials = credentials;
-    }
-
-    public AbnAmroIcsCredentials(se.tink.backend.agents.rpc.Credentials credentials) {
-        this(CoreCredentialsMapper.fromAggregationCredentials(credentials));
     }
 
     public static AbnAmroIcsCredentials create(String userId, String bcNumber) {
