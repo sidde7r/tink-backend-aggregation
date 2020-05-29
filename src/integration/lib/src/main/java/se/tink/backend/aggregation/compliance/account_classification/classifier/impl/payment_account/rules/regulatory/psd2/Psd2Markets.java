@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.regulatory.psd2;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 import se.tink.libraries.enums.MarketCode;
 
@@ -8,7 +9,8 @@ public class Psd2Markets {
     //  - EU countries (PSD2)
     //  - UK (Aligned with PSD2 regulations)
     //  - NO (Aligned with PSD2 regulations)
-    private static final ImmutableSet<MarketCode> PSD2_MARKETS =
+    @VisibleForTesting
+    static final ImmutableSet<MarketCode> PSD2_MARKETS =
             ImmutableSet.of(
                     // EU countries
                     MarketCode.AT,

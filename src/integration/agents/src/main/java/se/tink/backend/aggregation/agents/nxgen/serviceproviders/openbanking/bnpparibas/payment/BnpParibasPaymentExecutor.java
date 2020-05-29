@@ -49,6 +49,7 @@ import se.tink.libraries.payment.rpc.Payment;
 public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
     private static final String BNP_PAYMENT_POST_SIGN_STATE = "bnp_payment_post_sign_state";
+    private static final String CREDITOR_NAME = "Payment Creditor";
     private static final long WAIT_FOR_MINUTES = 9L;
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 60;
@@ -92,7 +93,7 @@ public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaym
                         .withPaymentType(paymentType)
                         .withAmount(amount)
                         .withCreditorAccount(creditor)
-                        .withCreditorName(new CreditorEntity(payment.getCreditor().getName()))
+                        .withCreditorName(new CreditorEntity(CREDITOR_NAME))
                         .withDebtorAccount(debtor)
                         .withExecutionDate(executionDate)
                         .withCreationDateTime(LocalDateTime.now())

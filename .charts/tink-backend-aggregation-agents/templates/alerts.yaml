@@ -793,7 +793,7 @@ spec:
       summary: Threshold exceed for ( <{ $labels.provider }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
   - alert: TransferCancelledOutcomeThresholdIsPassedForSwedenTier2Banks
-    expr: sum by (provider, outcome) (tink_agent_transfer_total{market="SE", provider!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="cancelled"}) >= 3
+    expr: sum by (provider, outcome) (tink_agent_transfer_total{market="SE", provider!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="cancelled"}) >= 6
     labels:
       severity: urgent
       who: payments
@@ -803,7 +803,7 @@ spec:
       summary: Threshold exceed for ( <{ $labels.provider }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
   - alert: TransferCancelledOutcomeThresholdIsPassedForSwedenTier1Banks
-    expr: sum by (provider, outcome) (tink_agent_transfer_total{market="SE", provider=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="cancelled"}) >= 3
+    expr: sum by (provider, outcome) (tink_agent_transfer_total{market="SE", provider=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="cancelled"}) >= 6
     labels:
       severity: urgent
       who: payments
