@@ -8,6 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
 
 public class SebConfiguration extends SebBaseConfiguration {
+
+    @Override
+    public String getAuthBaseUrl() {
+        return Urls.AUTH_BASE;
+    }
+
     @Override
     public String getBaseUrl() {
         return Urls.BASE;
@@ -21,5 +27,10 @@ public class SebConfiguration extends SebBaseConfiguration {
     @Override
     public Optional<List<AccountEntity>> getAccountEntities(Response response) {
         return response.getBusinessAccountEntities();
+    }
+
+    @Override
+    public boolean isBusinessAgent() {
+        return true;
     }
 }

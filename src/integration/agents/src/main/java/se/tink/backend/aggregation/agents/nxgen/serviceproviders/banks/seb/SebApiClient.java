@@ -2,12 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Objects;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.InitResult;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.ServiceInputKeys;
@@ -18,6 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebCo
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.entities.DeviceIdentification;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.entities.HardwareInformation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.ChallengeResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.ChallengeSolutionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.SystemStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.transactionalaccount.entities.ReservedTransactionQuery;
@@ -27,15 +33,21 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.R
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class SebApiClient {
     private final TinkHttpClient httpClient;
     private final SebBaseConfiguration sebConfiguration;
     private final String sebUUID;
+    private final SebSessionStorage sessionStorage;
 
-    public SebApiClient(TinkHttpClient httpClient, SebBaseConfiguration sebConfiguration) {
+    public SebApiClient(
+            TinkHttpClient httpClient,
+            SebBaseConfiguration sebConfiguration,
+            SebSessionStorage sebSessionStorage) {
         this.httpClient = httpClient;
         this.sebConfiguration = sebConfiguration;
+        this.sessionStorage = sebSessionStorage;
         sebUUID = UUID.randomUUID().toString().toUpperCase();
     }
 
@@ -44,7 +56,7 @@ public class SebApiClient {
                 httpClient
                         .request(
                                 SebConstants.Urls.getUrl(
-                                        sebConfiguration.getBaseUrl(), Urls.AUTHENTICATE))
+                                        sebConfiguration.getAuthBaseUrl(), Urls.AUTHENTICATE))
                         .header(HeaderKeys.X_SEB_UUID, sebUUID)
                         .accept(MediaType.APPLICATION_JSON)
                         .type(MediaType.APPLICATION_JSON)
@@ -56,10 +68,30 @@ public class SebApiClient {
                 httpClient
                         .request(
                                 SebConstants.Urls.getUrl(
-                                        sebConfiguration.getBaseUrl(), Urls.AUTHENTICATE))
+                                        sebConfiguration.getAuthBaseUrl(), Urls.AUTHENTICATE))
                         .header(HeaderKeys.X_SEB_UUID, sebUUID)
                         .header(HeaderKeys.X_SEB_CSRF, csrfToken)
                         .get(HttpResponse.class));
+    }
+
+    public ChallengeResponse getChallenge() {
+        return httpClient
+                .request(
+                        SebConstants.Urls.getUrl(sebConfiguration.getAuthBaseUrl(), Urls.CHALLENGE))
+                .header(HeaderKeys.X_SEB_UUID, sebUUID)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .post(ChallengeResponse.class);
+    }
+
+    public Response verifyChallengeSolution(String signature, String userId) {
+        return httpClient
+                .request(SebConstants.Urls.getUrl(sebConfiguration.getAuthBaseUrl(), Urls.VERIFY))
+                .header(HeaderKeys.X_SEB_UUID, sebUUID)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .body(new ChallengeSolutionRequest(signature, userId))
+                .post(Response.class);
     }
 
     private Response post(String path, Request request) {
@@ -70,8 +102,8 @@ public class SebApiClient {
                 .post(Response.class, request);
     }
 
-    public void initiateSession() throws HttpResponseException {
-        final Request request = new Request.Builder().withUserCredentials("").build();
+    private void initiateSession(String userId) throws HttpResponseException {
+        final Request request = new Request.Builder().withUserCredentials(userId).build();
         final Response response = post(SebConstants.Urls.INITIATE_SESSION, request);
 
         Preconditions.checkState(response.isValid());
@@ -85,13 +117,17 @@ public class SebApiClient {
         }
     }
 
-    public UserInformation activateSession()
+    private UserInformation activateSession()
             throws AuthorizationException, AuthenticationException {
         final Request request =
                 new Request.Builder()
                         .addComponent(new HardwareInformation())
                         .addComponent(new DeviceIdentification())
-                        .addServiceInput(ServiceInputKeys.CUSTOMER_TYPE, ServiceInputValues.PRIVATE)
+                        .addServiceInput(
+                                ServiceInputKeys.CUSTOMER_TYPE,
+                                sebConfiguration.isBusinessAgent()
+                                        ? ServiceInputValues.BUSINESS
+                                        : ServiceInputValues.PRIVATE)
                         .build();
 
         final Response response = post(SebConstants.Urls.ACTIVATE_SESSION, request);
@@ -195,5 +231,36 @@ public class SebApiClient {
                         .addServiceInput(ServiceInputKeys.INVESTMENT_DETAIL_HANDLE, handle)
                         .build();
         return post(Urls.INVESTMENT_ACCOUNT_DETAILS, request);
+    }
+
+    public void setupSession(String ssn) throws AuthenticationException, AuthorizationException {
+        try {
+            initiateSession(ssn.substring(2));
+        } catch (HttpResponseException e) {
+            SocialSecurityNumber.Sweden formattedSsn = new SocialSecurityNumber.Sweden(ssn);
+            if (!formattedSsn.isValid()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
+            }
+
+            // Check if the user is younger than 18 and then throw unauthorized exception.
+            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
+                    && formattedSsn.getAge(LocalDate.now(ZoneId.of("CET")))
+                            < SebConstants.AGE_LIMIT) {
+                throw AuthorizationError.UNAUTHORIZED.exception(
+                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey(), e);
+            }
+
+            throw e;
+        }
+
+        final UserInformation userInformation = activateSession();
+
+        // Check that the SSN from the credentials matches the logged in user. For business agent,
+        // we cannot verify this since there is no SSN in the response
+        if (!sebConfiguration.isBusinessAgent() && !userInformation.getSSN().equals(ssn)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        sessionStorage.putUserInformation(userInformation);
     }
 }

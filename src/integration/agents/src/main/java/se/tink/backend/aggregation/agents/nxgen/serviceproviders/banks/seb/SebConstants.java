@@ -17,6 +17,8 @@ public class SebConstants {
             return new URL(baseUrl + path);
         }
 
+        public static final String CHALLENGE = "/auth/dp/v2/challenge";
+        public static final String VERIFY = "/auth/dp/v2/verify";
         public static final String AUTHENTICATE = "/auth/bid/v2/authentications";
         public static final String INITIATE_SESSION = "/PC_BankInit11Session01.asmx/Execute";
         public static final String ACTIVATE_SESSION = "/PC_BankAktivera01Session01.asmx/Execute";
@@ -78,6 +80,7 @@ public class SebConstants {
 
     public static class ServiceInputValues {
         public static final String PRIVATE = "P";
+        public static final String BUSINESS = "S";
         public static final String YES = "Y";
         public static final String DEFAULT_ACCOUNT_TYPE = "ICKEFOND";
         public static final int MAX_ROWS = 110;

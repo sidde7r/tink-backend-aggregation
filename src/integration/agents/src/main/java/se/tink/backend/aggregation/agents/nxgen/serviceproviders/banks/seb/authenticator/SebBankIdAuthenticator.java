@@ -2,41 +2,28 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.auth
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Optional;
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.Authentication;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.UserMessage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.rpc.AuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.UserInformation;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.libraries.social.security.SocialSecurityNumber;
 
-public class SebAuthenticator implements BankIdAuthenticator<String> {
-    private static final AggregationLogger LOG = new AggregationLogger(SebAuthenticator.class);
+public class SebBankIdAuthenticator implements BankIdAuthenticator<String> {
+
     private final SebApiClient apiClient;
-    private final SebSessionStorage sessionStorage;
+
     private String autoStartToken;
     private String csrfToken;
     private String ssn;
 
-    public SebAuthenticator(SebApiClient apiClient, SebSessionStorage sessionStorage) {
+    public SebBankIdAuthenticator(SebApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -66,7 +53,13 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
         final BankIdStatus status =
                 Authentication.statusMapper.translate(response.getStatus().toLowerCase()).get();
         if (status == BankIdStatus.DONE) {
-            activateSession();
+            if (Authentication.hintCodeMapper
+                            .translate(Strings.nullToEmpty(response.getHintCode()).toLowerCase())
+                            .get()
+                    == BankIdStatus.NO_CLIENT) {
+                return BankIdStatus.NO_CLIENT;
+            }
+            apiClient.setupSession(this.ssn);
         } else if (status == BankIdStatus.FAILED_UNKNOWN) {
             return Authentication.hintCodeMapper
                     .translate(Strings.nullToEmpty(response.getHintCode()).toLowerCase())
@@ -89,33 +82,5 @@ public class SebAuthenticator implements BankIdAuthenticator<String> {
     @Override
     public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         return Optional.empty();
-    }
-
-    private void activateSession() throws AuthenticationException, AuthorizationException {
-        try {
-            apiClient.initiateSession();
-        } catch (HttpResponseException e) {
-            SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(this.ssn);
-            if (!ssn.isValid()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(e);
-            }
-
-            // Check if the user is younger than 18 and then throw unauthorized exception.
-            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
-                    && ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < SebConstants.AGE_LIMIT) {
-                throw AuthorizationError.UNAUTHORIZED.exception(
-                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey(), e);
-            }
-
-            throw e;
-        }
-
-        final UserInformation userInformation = apiClient.activateSession();
-        // Check that the SSN from the credentials matches the logged in user
-        if (!userInformation.getSSN().equals(this.ssn)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-
-        sessionStorage.putUserInformation(userInformation);
     }
 }

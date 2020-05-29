@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.SebAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.SebBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.authenticator.SebTokenGenratorAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.creditcard.SebCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.investment.SebInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.loan.SebLoanFetcher;
@@ -23,6 +24,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.sessi
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -45,21 +48,22 @@ public abstract class SebBaseAgent extends NextGenerationAgent
     protected final CreditCardRefreshController creditCardRefreshController;
     protected final LoanRefreshController loanRefreshController;
     protected final InvestmentRefreshController investmentFetcher;
+    protected final SebBaseConfiguration sebConfiguration;
 
     public SebBaseAgent(
             AgentComponentProvider agentComponentProvider, SebBaseConfiguration sebConfiguration) {
         super(agentComponentProvider);
-        apiClient = new SebApiClient(client, sebConfiguration);
-        sebSessionStorage = new SebSessionStorage(sessionStorage);
-        transactionalAccountRefreshController =
-                constructTransactionalAccountRefreshController(sebConfiguration);
-        creditCardRefreshController = constructCreditCardRefreshController(sebConfiguration);
-        loanRefreshController = constructLoanRefreshController(sebConfiguration);
-        investmentFetcher = constructInvestmentRefreshController(sebConfiguration);
+        this.sebConfiguration = sebConfiguration;
+        sebSessionStorage = new SebSessionStorage(sessionStorage, sebConfiguration);
+        apiClient = new SebApiClient(client, sebConfiguration, sebSessionStorage);
+        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        creditCardRefreshController = constructCreditCardRefreshController();
+        loanRefreshController = constructLoanRefreshController();
+        investmentFetcher = constructInvestmentRefreshController();
     }
 
-    protected TransactionalAccountRefreshController constructTransactionalAccountRefreshController(
-            SebBaseConfiguration sebConfiguration) {
+    protected TransactionalAccountRefreshController
+            constructTransactionalAccountRefreshController() {
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
                 updateController,
@@ -70,21 +74,18 @@ public abstract class SebBaseAgent extends NextGenerationAgent
                         new UpcomingTransactionFetcher(apiClient)));
     }
 
-    protected CreditCardRefreshController constructCreditCardRefreshController(
-            SebBaseConfiguration sebConfiguration) {
+    protected CreditCardRefreshController constructCreditCardRefreshController() {
         SebCreditCardFetcher cardFetcher = new SebCreditCardFetcher(apiClient, sebSessionStorage);
         return new CreditCardRefreshController(
                 metricRefreshController, updateController, cardFetcher, cardFetcher);
     }
 
-    private InvestmentRefreshController constructInvestmentRefreshController(
-            SebBaseConfiguration sebConfiguration) {
+    private InvestmentRefreshController constructInvestmentRefreshController() {
         return new InvestmentRefreshController(
                 metricRefreshController, updateController, new SebInvestmentFetcher(apiClient));
     }
 
-    private LoanRefreshController constructLoanRefreshController(
-            SebBaseConfiguration sebConfiguration) {
+    private LoanRefreshController constructLoanRefreshController() {
         return new LoanRefreshController(
                 metricRefreshController, updateController, new SebLoanFetcher(apiClient));
     }
@@ -96,11 +97,18 @@ public abstract class SebBaseAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new SebAuthenticator(apiClient, sebSessionStorage),
-                persistentStorage,
-                credentials);
+        return new TypedAuthenticationController(constructAuthenticators());
+    }
+
+    private TypedAuthenticator[] constructAuthenticators() {
+        return new TypedAuthenticator[] {
+            new BankIdAuthenticationController<>(
+                    supplementalRequester,
+                    new SebBankIdAuthenticator(apiClient),
+                    persistentStorage,
+                    credentials),
+            new SebTokenGenratorAuthenticationController(apiClient, supplementalInformationHelper)
+        };
     }
 
     @Override

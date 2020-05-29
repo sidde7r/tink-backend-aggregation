@@ -8,6 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
 
 public class SebConfiguration extends SebBaseConfiguration {
+
+    @Override
+    public String getAuthBaseUrl() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
     @Override
     public String getBaseUrl() {
         return Urls.BASE;

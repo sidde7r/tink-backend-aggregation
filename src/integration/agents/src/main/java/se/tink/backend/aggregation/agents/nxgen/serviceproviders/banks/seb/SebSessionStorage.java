@@ -10,9 +10,11 @@ import se.tink.libraries.strings.StringUtils;
 
 public class SebSessionStorage {
     final SessionStorage sessionStorage;
+    private final SebBaseConfiguration sebConfiguration;
 
-    public SebSessionStorage(SessionStorage storage) {
+    public SebSessionStorage(SessionStorage storage, SebBaseConfiguration sebConfiguration) {
         sessionStorage = storage;
+        this.sebConfiguration = sebConfiguration;
     }
 
     public void putUserInformation(UserInformation userInformation) {
@@ -34,11 +36,14 @@ public class SebSessionStorage {
         }
         sessionStorage.put(StorageKeys.SHORT_USERID, userId);
 
-        final String ssn = userInformation.getSSN();
-        if (Strings.isNullOrEmpty(ssn)) {
-            throw new IllegalStateException("Did not get customer SSN.");
+        // For business we don't get SSN
+        if (!sebConfiguration.isBusinessAgent()) {
+            final String ssn = userInformation.getSSN();
+            if (Strings.isNullOrEmpty(ssn)) {
+                throw new IllegalStateException("Did not get customer SSN.");
+            }
+            sessionStorage.put(StorageKeys.SSN, ssn);
         }
-        sessionStorage.put(StorageKeys.SSN, ssn);
     }
 
     public void putCardHandle(String uniqueId, String handle) {
