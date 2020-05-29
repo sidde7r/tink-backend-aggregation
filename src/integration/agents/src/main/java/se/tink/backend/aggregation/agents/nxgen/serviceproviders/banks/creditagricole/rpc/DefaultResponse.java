@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -19,5 +22,17 @@ public class DefaultResponse {
 
     public List<InfoEntity> getInfos() {
         return infos;
+    }
+
+    public boolean isResponseOK() {
+        return Optional.ofNullable(infos).orElse(Collections.emptyList()).stream()
+                .map(InfoEntity::getMessage)
+                .anyMatch("OK"::equals);
+    }
+
+    public List<String> getAllErrorCodes() {
+        return Optional.ofNullable(errors).orElse(Collections.emptyList()).stream()
+                .map(ErrorEntity::getCode)
+                .collect(Collectors.toList());
     }
 }

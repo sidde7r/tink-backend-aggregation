@@ -1,45 +1,47 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole;
 
+import com.google.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.StorageKey;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.CreditAgricoleAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator2.CreditAgricoleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.CreditAgricoleTransactionalAccountsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.filters.CreditAgricoleHttpFilter;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class CreditAgricoleAgent extends NextGenerationAgent
+public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final CreditAgricoleApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private CreditAgricoleAuthenticator authenticator;
 
-    public CreditAgricoleAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-        configureHttpClient(client);
-        persistentStorage.put(StorageKey.REGION_ID, request.getProvider().getPayload());
-        apiClient = new CreditAgricoleApiClient(client, persistentStorage, sessionStorage);
-
-        transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new CreditAgricoleHttpFilter());
+    @Inject
+    public CreditAgricoleAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
+        this.apiClient = new CreditAgricoleApiClient(client, persistentStorage, sessionStorage);
+        this.transactionalAccountRefreshController =
+                constructTransactionalAccountRefreshController();
+        storeRegionId();
+        storeUserInput();
     }
 
     @Override
-    protected Authenticator constructAuthenticator() {
-        return new CreditAgricoleAuthenticator(apiClient, sessionStorage, persistentStorage);
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        if (authenticator == null) {
+            authenticator =
+                    new CreditAgricoleAuthenticator(
+                            apiClient, persistentStorage, supplementalInformationFormer);
+        }
+
+        return authenticator;
     }
 
     @Override
@@ -62,6 +64,36 @@ public class CreditAgricoleAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
+
+    private void storeRegionId() {
+        String payload = request.getProvider().getPayload();
+        if (StringUtils.isBlank(payload)) {
+            throw new RuntimeException("CA region id need to be configured in provider payload!");
+        }
+
+        persistentStorage.put(StorageKey.REGION_ID, payload);
+    }
+
+    private void storeUserInput() {
+        if (!persistentStorage
+                .get(StorageKey.IS_DEVICE_REGISTERED, Boolean.class)
+                .orElse(Boolean.FALSE)) {
+            persistentStorage.put(
+                    StorageKey.USER_ACCOUNT_NUMBER,
+                    request.getCredentials().getField(Key.USERNAME));
+            persistentStorage.put(
+                    StorageKey.USER_ACCOUNT_CODE, request.getCredentials().getField(Key.PASSWORD));
+            persistentStorage.put(
+                    StorageKey.LOGIN_EMAIL, request.getCredentials().getField(Key.EMAIL));
+            persistentStorage.put(
+                    StorageKey.APP_CODE, request.getCredentials().getField(Key.ACCESS_PIN));
+        }
+    }
+
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
         CreditAgricoleTransactionalAccountsFetcher transactionalAccountsFetcher =
                 new CreditAgricoleTransactionalAccountsFetcher(apiClient);
@@ -70,10 +102,5 @@ public class CreditAgricoleAgent extends NextGenerationAgent
                 updateController,
                 transactionalAccountsFetcher,
                 transactionalAccountsFetcher);
-    }
-
-    @Override
-    protected SessionHandler constructSessionHandler() {
-        return new CreditAgricoleSessionHandler(apiClient);
     }
 }
