@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -360,6 +361,18 @@ public class AggregationServiceResource implements AggregationService {
                         request.getExcludedSensitiveSecretsNames(),
                         request.getAgentConfigParamNames(),
                         request.getExcludedAgentConfigParamNames());
+    }
+
+    @Override
+    public void createBeneficiary(
+            CreateBeneficiaryCredentialsRequest request, ClientInfo clientInfo) {
+        // This is intentionally left empty as we want the entry point to be present for testing
+        // purposes.
+        // TODO: Implement the actual logic for this.
+        logger.info(
+                "Transfer Request received from main. beneficiary is: {} and update: {}",
+                request.getBeneficiary(),
+                request.isUpdate());
     }
 
     private boolean validateFilteredProviders(List<ProviderConfiguration> filteredProviders) {

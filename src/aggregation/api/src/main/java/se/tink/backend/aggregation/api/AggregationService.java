@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -171,4 +172,12 @@ public interface AggregationService {
     @Produces(MediaType.APPLICATION_JSON)
     SecretsNamesValidationResponse validateSecretsNames(
             SecretsNamesValidationRequest request, @ClientContext ClientInfo clientInfo);
+
+    @POST
+    @Path("beneficiary")
+    @TeamOwnership(Team.PAYMENTS)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    void createBeneficiary(
+            CreateBeneficiaryCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 }
