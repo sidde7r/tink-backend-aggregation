@@ -7,8 +7,10 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class PaymentAccountClassificationMetrics {
-    private static final MetricId classification =
-            MetricId.newId("aggregation_payment_account_classification");
+    private static final MetricId classificationRule =
+            MetricId.newId("aggregation_payment_account_classification_rule");
+    private static final MetricId classificationDecision =
+            MetricId.newId("aggregation_payment_account_classification_decision");
 
     private final MetricRegistry metricRegistry;
 
@@ -21,16 +23,16 @@ public class PaymentAccountClassificationMetrics {
             PaymentAccountClassification classificationResult) {
         metricRegistry
                 .meter(
-                        classification
+                        classificationRule
                                 .label("rule", rule.getClass().getName())
-                                .label("rule_result", classificationResult.toString()))
+                                .label("classification_result", classificationResult.toString()))
                 .inc();
     }
 
     public void finalResult(PaymentAccountClassification classificationResult, Provider provider) {
         metricRegistry
                 .meter(
-                        classification
+                        classificationDecision
                                 .label("provider", provider.getName())
                                 .label("classification_result", classificationResult.toString()))
                 .inc();
