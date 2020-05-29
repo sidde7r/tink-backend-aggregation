@@ -49,6 +49,6 @@ public class ContractProducer {
                 .forEach(account -> cleanMap(account, BLACK_LIST_FOR_ACCOUNT_KEYS));
         ((List<Map<String, Object>>) data.get("transactions"))
                 .forEach(transaction -> cleanMap(transaction, BLACK_LIST_FOR_TRANSACTIONS_KEYS));
-        return MAPPER.writeValueAsString(data);
+        return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(data);
     }
 }
