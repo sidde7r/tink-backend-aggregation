@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.authenticator
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.authenticator.bankid.rpc.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.authenticator.bankid.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.authenticator.bankid.rpc.TokenExchangeResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.fetcher.transactionalaccount.rpc.AccountListResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.fetcher.transactionalaccount.rpc.SavingsResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -40,5 +42,21 @@ public class CollectorApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(Headers.AUTHORIZATION, bearerToken)
                 .post(TokenExchangeResponse.class);
+    }
+
+    public AccountListResponse fetchAccounts(String token) {
+        return client.request(Urls.ACCOUNTS)
+                .type(MediaType.APPLICATION_JSON)
+                .header(Headers.AUTHORIZATION, token)
+                .get(AccountListResponse.class);
+    }
+
+    public SavingsResponse getAccountInfo(String accountId) {
+        final String bearerToken = sessionStorage.get(CollectorConstants.Storage.BEARER_TOKEN);
+        return client.request(
+                        Urls.SAVINGS.parameter(CollectorConstants.IdTags.ACCOUNT_ID, accountId))
+                .type(MediaType.APPLICATION_JSON)
+                .header(Headers.AUTHORIZATION, bearerToken)
+                .get(SavingsResponse.class);
     }
 }
