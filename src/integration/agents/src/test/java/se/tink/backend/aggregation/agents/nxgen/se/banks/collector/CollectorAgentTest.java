@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class CollectorAgentTest {
     private final ArgumentManager<SsnArgumentEnum> manager =
@@ -26,6 +27,8 @@ public class CollectorAgentTest {
     public void test() throws Exception {
         new AgentIntegrationTest.Builder("se", "se-collector-bankid")
                 .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .build()
