@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.agentfactory;
 
 import static java.util.stream.Collectors.groupingBy;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.Assert.assertNull;
 
-import java.util.HashSet;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.Test;
@@ -13,7 +15,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentFactoryTestConfiguration;
 import se.tink.backend.aggregation.agents.agentfactory.utils.AgentInitialisor;
-import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderFetcher;
+import se.tink.backend.aggregation.agents.agentfactory.utils.ProviderReader;
 import se.tink.backend.aggregation.agents.agentfactory.utils.TestConfigurationReader;
 
 public class AgentInitialisationTest {
@@ -25,29 +27,47 @@ public class AgentInitialisationTest {
             "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/credentials_template.json";
     private static final String USER_TEMPLATE_FILE_PATH =
             "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/user_template.json";
+    private static final String IGNORED_AGENTS_FOR_TESTS_FILE_PATH =
+            "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml";
 
-    private String createProperErrorMessageForAgentInitialisationError(
-            Exception e, Provider provider) {
-        String errorMessagePrefix =
-                "Agent "
-                        + provider.getClassName()
-                        + " could not be instantiated for provider "
-                        + provider.getName();
-        if (e instanceof com.google.inject.ConfigurationException) {
+    private Throwable getRootCause(Throwable throwable) {
+        Throwable rootCause = new Throwable(throwable);
+        while (rootCause != null) {
+            if (rootCause instanceof com.google.inject.ConfigurationException
+                    || rootCause instanceof ClassNotFoundException) {
+                return rootCause;
+            }
+            rootCause = rootCause.getCause();
+        }
+        return throwable;
+    }
+
+    private String getStackTrace(Throwable e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return sw.toString();
+    }
+
+    private String createProperErrorMessageForAgentInitialisationError(Throwable e) {
+        String errorMessagePrefix = "Agent could not be instantiated";
+
+        Throwable rootCause = getRootCause(e);
+        if (rootCause instanceof com.google.inject.ConfigurationException) {
             return errorMessagePrefix
                     + " probably due to missing guice dependency.\n"
                     + "Make sure that you add any additional modules to your agent via the "
                     + "@AgentDependencyModules annotation, and that these modules bind any "
                     + "dependency your agent may have.\n"
-                    + e.toString();
-        } else if (e instanceof ClassNotFoundException) {
+                    + getStackTrace(e);
+        } else if (rootCause instanceof ClassNotFoundException) {
             return errorMessagePrefix
                     + " due to ClassNotFound exception. \nPlease ensure the followings: \n"
                     + "1) Necessary runtime dep is included in src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/agentfactory/BUILD\n"
                     + "2) The className in provider configuration (which is in tink-backend) does not have any typo\n"
-                    + e.toString();
+                    + getStackTrace(e);
         } else {
-            return errorMessagePrefix + "\n" + e.toString();
+            return errorMessagePrefix + "\n" + getStackTrace(e);
         }
     }
 
@@ -78,13 +98,12 @@ public class AgentInitialisationTest {
     public void whenEnabledProvidersAreGivenAgentFactoryShouldInstantiateAllEnabledAgents() {
         // given
         AgentFactoryTestConfiguration agentFactoryTestConfiguration =
-                new TestConfigurationReader(
-                                "src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/agentfactory/resources/ignored_agents_for_tests.yml")
-                        .getAgentFactoryTestConfiguration();
+                new TestConfigurationReader().read(IGNORED_AGENTS_FOR_TESTS_FILE_PATH);
 
         Set<Provider> providerConfigurations =
-                new ProviderFetcher("external/tink_backend/src/provider_configuration/data/seeding")
-                        .getProviderConfigurations();
+                new ProviderReader()
+                        .getProviderConfigurations(
+                                "external/tink_backend/src/provider_configuration/data/seeding");
 
         AgentInitialisor agentInitialisor =
                 new AgentInitialisor(
@@ -102,23 +121,20 @@ public class AgentInitialisationTest {
                         .collect(Collectors.toSet());
 
         // when
-        Set<String> errors = new HashSet<>();
-        providers
-                .parallelStream()
-                .forEach(
-                        provider -> {
-                            try {
-                                agentInitialisor.initialiseAgent(provider);
-                            } catch (Exception e) {
-                                errors.add(
-                                        createProperErrorMessageForAgentInitialisationError(
-                                                e, provider));
-                            }
-                        });
-
-        errors.stream().forEach(log::error);
+        Throwable throwable =
+                catchThrowable(
+                        () ->
+                                providers
+                                        .parallelStream()
+                                        .forEach(
+                                                provider -> {
+                                                    agentInitialisor.initialiseAgent(provider);
+                                                }));
 
         // then
-        assertEquals(0, errors.size());
+        if (throwable != null) {
+            log.error(createProperErrorMessageForAgentInitialisationError(throwable));
+        }
+        assertNull(throwable);
     }
 }

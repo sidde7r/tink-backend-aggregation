@@ -44,6 +44,7 @@ junit_test(
         "//src/libraries/metrics:prometheus",
         "//src/libraries/metrics:registry",
         "//src/libraries/metrics:timers",
+        "//src/libraries/pair",
         "//src/libraries/strings",
         "//src/libraries/uuid",
         "//third_party:com_auth0_java_jwt",

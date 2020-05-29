@@ -66,7 +66,7 @@ public class AgentInitialisor {
     private final AggregationServiceConfiguration aggregationServiceConfiguration;
     private final String credentialsTemplate;
     private final User user;
-    private AgentFactory agentFactory;
+    private final AgentFactory agentFactory;
 
     public AgentInitialisor(
             String aggregationServiceConfigurationFilePath,
@@ -94,15 +94,23 @@ public class AgentInitialisor {
 
             Injector injector = Guice.createInjector(getGuiceModulesToUse());
             agentFactory = injector.getInstance(AgentFactory.class);
-        } catch (Exception e) {
+        } catch (IOException
+                | ConfigurationException
+                | IllegalAccessException
+                | NoSuchMethodException
+                | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Agent initialiseAgent(Provider provider) throws Exception {
-        CredentialsRequest credentialsRequest = createCredentialsRequest(provider);
-        AgentContext context = createContext(credentialsRequest);
-        return agentFactory.create(credentialsRequest, context);
+    public Agent initialiseAgent(Provider provider) {
+        try {
+            CredentialsRequest credentialsRequest = createCredentialsRequest(provider);
+            AgentContext context = createContext(credentialsRequest);
+            return agentFactory.create(credentialsRequest, context);
+        } catch (ReflectiveOperationException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private AggregationServiceConfiguration readAggregationServiceConfigurationForTest(

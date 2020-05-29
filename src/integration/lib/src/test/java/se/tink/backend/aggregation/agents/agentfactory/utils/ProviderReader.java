@@ -7,23 +7,19 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.NoArgsConstructor;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 
-public class ProviderFetcher {
+@NoArgsConstructor
+public class ProviderReader {
 
-    private String folderForConfigurations;
-
-    public ProviderFetcher(String folderForConfigurations) {
-        this.folderForConfigurations = folderForConfigurations;
-    }
-
-    public Set<Provider> getProviderConfigurations() {
+    public Set<Provider> getProviderConfigurations(String folderForConfigurations) {
         return Arrays.asList(new File(folderForConfigurations).listFiles()).stream()
                 .filter(file -> file.getName().contains("providers-"))
                 .filter(file -> !file.getName().contains("development"))
                 .map(this::readProviderConfiguration)
-                .flatMap(this::setMarketAndCurrency)
+                .flatMap(this::populateMarketAndCurrencyFieldsForProviders)
                 .collect(Collectors.toSet());
     }
 
@@ -35,7 +31,7 @@ public class ProviderFetcher {
         }
     }
 
-    private Stream<Provider> setMarketAndCurrency(ProviderConfig config) {
+    private Stream<Provider> populateMarketAndCurrencyFieldsForProviders(ProviderConfig config) {
         return config.getProviders().stream()
                 .peek(
                         provider -> {
