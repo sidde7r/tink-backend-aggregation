@@ -118,6 +118,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                         context.getClusterId(),
                         context.getRequest().getCredentials().getUserId(),
                         item);
+                log.warn("BankServiceException is received and credentials status set unchanged.");
                 return AgentWorkerCommandResult.ABORT;
             } catch (Exception e) {
                 action.failed();
