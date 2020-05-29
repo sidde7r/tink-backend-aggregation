@@ -5,13 +5,15 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.PaymentAccountClassifier;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.PaymentAccountRulesProvider;
+import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class AccountClassifier {
     private final PaymentAccountClassifier paymentAccountClassifier;
 
-    public AccountClassifier() {
+    public AccountClassifier(MetricRegistry metricRegistry) {
         paymentAccountClassifier =
-                new PaymentAccountClassifier(PaymentAccountRulesProvider.getRules());
+                new PaymentAccountClassifier(
+                        PaymentAccountRulesProvider.getRules(), metricRegistry);
     }
 
     public PaymentAccountClassification classifyAsPaymentAccount(

@@ -8,6 +8,7 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/classifier/impl",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification/classifier/impl/payment_account",
+        "//src/libraries/metrics:registry",
         "//third_party:junit_junit",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
