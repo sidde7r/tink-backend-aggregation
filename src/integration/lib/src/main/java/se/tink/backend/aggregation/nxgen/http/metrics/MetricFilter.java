@@ -28,25 +28,12 @@ public class MetricFilter extends Filter {
     }
 
     private MetricId populateMetric(MetricId metric, HttpResponse response) {
-        return metric.label("provider", cleanMetricName(provider.getName()))
+        return metric.label("provider", provider.getName())
                 .label("agent", provider.getClassName())
                 .label("provider_type", provider.getMetricTypeName())
                 .label("market", provider.getMarket())
                 .label("className", provider.getClassName())
                 .label("status", Integer.toString(response.getStatus()));
-    }
-
-    /**
-     * Clean graphite metrics names.
-     *
-     * <p>This was created because I was seeing a lot of stacktraces in Carbon log due to broken
-     * metric names.
-     *
-     * @param proposal the proposed metrics' name.
-     * @return cleaned metric's name
-     */
-    private static String cleanMetricName(String proposal) {
-        return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 
     @Override
