@@ -5,12 +5,9 @@ junit_test(
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:cryptography_test",
         "//data:provider_configurations",
         "//etc:development",
-    ],
-    tags = [
-        "external",
-        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [
