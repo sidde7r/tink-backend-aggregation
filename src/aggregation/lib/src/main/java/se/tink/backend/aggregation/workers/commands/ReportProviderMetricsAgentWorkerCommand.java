@@ -34,7 +34,7 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
 
         return new MetricId.MetricLabels()
                 .add("provider_type", provider.getType().name().toLowerCase())
-                .add("provider", cleanMetricName(provider.getName()))
+                .add("provider", provider.getName())
                 .add("market", provider.getMarket())
                 .add("operation", operationName);
     }
@@ -112,9 +112,5 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
         // Counts total executions finished. Useful when calculating relative errors from meters
         // above.
         state.getExecutionsMeters().get(providerMetricName).inc();
-    }
-
-    private static String cleanMetricName(String proposal) {
-        return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 }
