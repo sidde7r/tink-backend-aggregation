@@ -36,7 +36,7 @@ public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorker
         MetricId.MetricLabels metricLabels =
                 new MetricId.MetricLabels()
                         .add("provider_type", provider.getType().name().toLowerCase())
-                        .add("provider", cleanMetricName(provider.getName()))
+                        .add("provider", provider.getName())
                         .add("className", Optional.ofNullable(provider.getClassName()).orElse(""))
                         .add("operation", operationName)
                         .add("status", status.name())
@@ -90,9 +90,5 @@ public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorker
             default:
                 break;
         }
-    }
-
-    private static String cleanMetricName(String proposal) {
-        return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 }
