@@ -82,9 +82,7 @@ public class RateLimitedExecutorService implements Managed {
                                                 .add(
                                                         "provider_type",
                                                         provider.getType().name().toLowerCase())
-                                                .add(
-                                                        "provider",
-                                                        cleanMetricName(provider.getName()));
+                                                .add("provider", provider.getName());
 
                                 return new RateLimitedExecutorProxy(
                                         () ->
@@ -139,9 +137,5 @@ public class RateLimitedExecutorService implements Managed {
 
         log.info(String.format("Old provider rate limiter factory: %s", oldFactory));
         log.info(String.format("New provider rate limiter factory: %s", cachedFactor));
-    }
-
-    private static String cleanMetricName(String proposal) {
-        return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 }
