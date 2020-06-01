@@ -151,6 +151,12 @@ public class BaseTransferExecutor {
                         .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
                         .setException(hre)
                         .build();
+            } else if (errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorField.REFERENCE)) {
+                return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                        .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_OCR)
+                        .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
+                        .setException(hre)
+                        .build();
             }
         }
 
