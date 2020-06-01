@@ -24,6 +24,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/ratelimit",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/refresh",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker/beneficiary",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker/conditions/annotation",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/wrappers",
         "//src/integration/agent_data_availability_tracker/client/src/main/java/se/tink/backend/integration/agent_data_availability_tracker/client:agent-data-availability-tracker-client",
