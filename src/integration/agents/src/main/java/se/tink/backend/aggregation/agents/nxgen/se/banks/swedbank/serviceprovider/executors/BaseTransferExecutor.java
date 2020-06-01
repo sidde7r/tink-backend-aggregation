@@ -136,7 +136,7 @@ public class BaseTransferExecutor {
 
     // convert HttpResponseException to TransferExecutionException if response indicates bad date
     // for payment or transfer
-    protected RuntimeException convertExceptionIfBadPaymentDate(HttpResponseException hre)
+    protected RuntimeException convertExceptionIfBadPayment(HttpResponseException hre)
             throws TransferExecutionException {
         HttpResponse httpResponse = hre.getResponse();
         // swedbank doesn't allow payment with due date today

@@ -120,7 +120,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
 
             return registeredTransfers;
         } catch (HttpResponseException e) {
-            throw convertExceptionIfBadPaymentDate(e);
+            throw convertExceptionIfBadPayment(e);
         }
     }
 

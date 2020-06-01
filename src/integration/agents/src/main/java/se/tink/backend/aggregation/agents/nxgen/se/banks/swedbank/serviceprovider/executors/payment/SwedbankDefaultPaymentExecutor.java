@@ -115,7 +115,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
                     destinationAccountId,
                     sourceAccountId);
         } catch (HttpResponseException hre) {
-            throw convertExceptionIfBadPaymentDate(hre);
+            throw convertExceptionIfBadPayment(hre);
         }
     }
 
