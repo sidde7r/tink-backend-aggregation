@@ -14,35 +14,34 @@ public class PaymentAccountClassificationMetrics {
             MetricId.newId("aggregation_payment_account_classification_decision");
 
     private final MetricRegistry metricRegistry;
-    private final MetricId.MetricLabels defaultMetricLabels;
 
-    public PaymentAccountClassificationMetrics(MetricRegistry metricRegistry, Provider provider) {
+    public PaymentAccountClassificationMetrics(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
-        this.defaultMetricLabels =
-                new MetricId.MetricLabels()
-                        .add("provider", provider.getName())
-                        .add("market", provider.getMarket());
     }
 
     public void ruleResult(
+            Provider provider,
             Account account,
             ClassificationRule<PaymentAccountClassification> rule,
             PaymentAccountClassification classificationResult) {
         metricRegistry
                 .meter(
                         classificationRuleResult
-                                .label(defaultMetricLabels)
+                                .label("provider", provider.getName())
+                                .label("market", provider.getMarket())
                                 .label("account_type", account.getType().toString())
                                 .label("rule", rule.getClass().getName())
                                 .label("classification_result", classificationResult.toString()))
                 .inc();
     }
 
-    public void finalResult(Account account, PaymentAccountClassification classificationResult) {
+    public void finalResult(
+            Provider provider, Account account, PaymentAccountClassification classificationResult) {
         metricRegistry
                 .meter(
                         finalClassificationResult
-                                .label(defaultMetricLabels)
+                                .label("provider", provider.getName())
+                                .label("market", provider.getMarket())
                                 .label("account_type", account.getType().toString())
                                 .label("classification_result", classificationResult.toString()))
                 .inc();

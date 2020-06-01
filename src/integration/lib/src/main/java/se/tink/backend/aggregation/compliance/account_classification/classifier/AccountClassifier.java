@@ -10,13 +10,14 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 public class AccountClassifier {
     private final PaymentAccountClassifier paymentAccountClassifier;
 
-    public AccountClassifier(MetricRegistry metricRegistry, Provider provider) {
+    public AccountClassifier(MetricRegistry metricRegistry) {
         paymentAccountClassifier =
                 new PaymentAccountClassifier(
-                        PaymentAccountRulesProvider.getRules(), metricRegistry, provider);
+                        PaymentAccountRulesProvider.getRules(), metricRegistry);
     }
 
-    public PaymentAccountClassification classifyAsPaymentAccount(Account account) {
-        return paymentAccountClassifier.classifyAsPaymentAccount(account);
+    public PaymentAccountClassification classifyAsPaymentAccount(
+            Provider provider, Account account) {
+        return paymentAccountClassifier.classifyAsPaymentAccount(provider, account);
     }
 }

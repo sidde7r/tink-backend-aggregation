@@ -31,25 +31,23 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 public class PaymentAccountClassifier {
     private final List<ClassificationRule<PaymentAccountClassification>> rules;
     private final PaymentAccountClassificationMetrics metrics;
-    private final Provider provider;
 
     public PaymentAccountClassifier(
             List<ClassificationRule<PaymentAccountClassification>> rules,
-            MetricRegistry metricRegistry,
-            Provider provider) {
+            MetricRegistry metricRegistry) {
         this.rules = rules;
-        this.metrics = new PaymentAccountClassificationMetrics(metricRegistry, provider);
-        this.provider = provider;
+        this.metrics = new PaymentAccountClassificationMetrics(metricRegistry);
     }
 
-    public PaymentAccountClassification classifyAsPaymentAccount(Account account) {
+    public PaymentAccountClassification classifyAsPaymentAccount(
+            Provider provider, Account account) {
         Stream<ClassificationRule<PaymentAccountClassification>> applicableRules =
-                getApplicableRules();
+                getApplicableRules(provider);
         List<PaymentAccountClassification> allResults =
-                collectClassificationResults(account, applicableRules);
+                collectClassificationResults(provider, account, applicableRules);
 
         PaymentAccountClassification classificationResult = classify(allResults);
-        metrics.finalResult(account, classificationResult);
+        metrics.finalResult(provider, account, classificationResult);
         return classificationResult;
     }
 
@@ -65,19 +63,21 @@ public class PaymentAccountClassifier {
     }
 
     private List<PaymentAccountClassification> collectClassificationResults(
+            Provider provider,
             Account account,
             Stream<ClassificationRule<PaymentAccountClassification>> applicableRules) {
         return applicableRules
                 .map(
                         rule -> {
                             PaymentAccountClassification result = rule.classify(provider, account);
-                            metrics.ruleResult(account, rule, result);
+                            metrics.ruleResult(provider, account, rule, result);
                             return result;
                         })
                 .collect(Collectors.toList());
     }
 
-    private Stream<ClassificationRule<PaymentAccountClassification>> getApplicableRules() {
+    private Stream<ClassificationRule<PaymentAccountClassification>> getApplicableRules(
+            Provider provider) {
         return Optional.ofNullable(rules).orElse(Collections.emptyList()).stream()
                 .filter(rule -> rule.isApplicable(provider));
     }
