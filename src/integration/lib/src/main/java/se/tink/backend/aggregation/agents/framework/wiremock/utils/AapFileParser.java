@@ -102,6 +102,11 @@ public class AapFileParser implements RequestResponseParser {
     }
 
     private Pair<String, String> parseHeader(String header) {
+        // AAP-381: Since Wiremock does not support HTTP2 pseudo headers
+        // we convert them to regular headers
+        if (header.startsWith(":")) {
+            header = header.substring(1);
+        }
         final int deliminatorIndex = header.indexOf(':');
         String key = header.substring(0, deliminatorIndex).trim();
         String value = header.substring(deliminatorIndex + 1).trim();
