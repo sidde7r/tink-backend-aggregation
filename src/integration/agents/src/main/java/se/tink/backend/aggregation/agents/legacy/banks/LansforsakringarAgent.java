@@ -1112,6 +1112,8 @@ public class LansforsakringarAgent extends AbstractAgent
                 case "99351":
                     throw cancelTransfer(
                             EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY);
+                case "12215":
+                    throw cancelTransfer(EndUserMessage.INVALID_OCR);
                 default:
                     throw cancelTransferWithMessage(
                             String.format(
