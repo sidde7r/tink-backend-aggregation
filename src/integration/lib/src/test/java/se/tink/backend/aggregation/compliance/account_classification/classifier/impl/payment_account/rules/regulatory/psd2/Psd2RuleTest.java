@@ -52,15 +52,15 @@ public class Psd2RuleTest {
     }
 
     @Test
-    public void nonOpenBankingWithAnyYesCapabilitiesShouldReturnPaymentAccount() {
+    public void nonOpenBankingWithAllYesCapabilitiesShouldReturnPaymentAccount() {
         Psd2Rule rule = new Psd2Rule();
 
         Provider provider = prepareMockedNonOpenBankingProvider();
 
         AccountCapabilities capabilities = AccountCapabilities.createDefault();
         capabilities.setCanPlaceFunds(AccountCapabilities.Answer.YES);
-        capabilities.setCanMakeAndReceiveTransfer(AccountCapabilities.Answer.NO);
-        capabilities.setCanWithdrawFunds(AccountCapabilities.Answer.NO);
+        capabilities.setCanMakeAndReceiveTransfer(AccountCapabilities.Answer.YES);
+        capabilities.setCanWithdrawFunds(AccountCapabilities.Answer.YES);
         Account account = prepareMockedAccountWithCapabilities(capabilities);
 
         PaymentAccountClassification result = rule.classify(provider, account);
@@ -69,14 +69,14 @@ public class Psd2RuleTest {
     }
 
     @Test
-    public void nonOpenBankingWithAllNoCapabilitiesShouldReturnNonPaymentAccount() {
+    public void nonOpenBankingWithAnyNoCapabilitiesShouldReturnNonPaymentAccount() {
         Psd2Rule rule = new Psd2Rule();
 
         Provider provider = prepareMockedNonOpenBankingProvider();
 
         AccountCapabilities capabilities = AccountCapabilities.createDefault();
-        capabilities.setCanPlaceFunds(AccountCapabilities.Answer.NO);
-        capabilities.setCanMakeAndReceiveTransfer(AccountCapabilities.Answer.NO);
+        capabilities.setCanPlaceFunds(AccountCapabilities.Answer.YES);
+        capabilities.setCanMakeAndReceiveTransfer(AccountCapabilities.Answer.YES);
         capabilities.setCanWithdrawFunds(AccountCapabilities.Answer.NO);
         Account account = prepareMockedAccountWithCapabilities(capabilities);
 

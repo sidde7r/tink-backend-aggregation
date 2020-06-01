@@ -14,24 +14,24 @@ public class Psd2Rule implements ClassificationRule<PaymentAccountClassification
         return Psd2Markets.isPsd2Market(provider.getMarket());
     }
 
-    private boolean isAnyCapabilityYes(AccountCapabilities accountCapabilities) {
+    private boolean areAllCapabilitiesYes(AccountCapabilities accountCapabilities) {
         return accountCapabilities.getCanMakeAndReceiveTransfer() == AccountCapabilities.Answer.YES
-                || accountCapabilities.getCanPlaceFunds() == AccountCapabilities.Answer.YES
-                || accountCapabilities.getCanWithdrawFunds() == AccountCapabilities.Answer.YES;
+                && accountCapabilities.getCanPlaceFunds() == AccountCapabilities.Answer.YES
+                && accountCapabilities.getCanWithdrawFunds() == AccountCapabilities.Answer.YES;
     }
 
-    private boolean areAllCapabilitiesNo(AccountCapabilities accountCapabilities) {
+    private boolean isAnyCapabilityNo(AccountCapabilities accountCapabilities) {
         return accountCapabilities.getCanMakeAndReceiveTransfer() == AccountCapabilities.Answer.NO
-                && accountCapabilities.getCanPlaceFunds() == AccountCapabilities.Answer.NO
-                && accountCapabilities.getCanWithdrawFunds() == AccountCapabilities.Answer.NO;
+                || accountCapabilities.getCanPlaceFunds() == AccountCapabilities.Answer.NO
+                || accountCapabilities.getCanWithdrawFunds() == AccountCapabilities.Answer.NO;
     }
 
     // Note: This rule is ONLY applicable for providers in a PSD2 market (see `isApplicable`).
     // The classification works as follows:
     // 1. Is provider OpenBanking ==> PAYMENT_ACCOUNT
     // 2. Account lacks capabilities ==>  UNDETERMINED
-    // 3. Is any capability YES ==> PAYMENT_ACCOUNT
-    // 4. Are all capabilities NO ==> NON_PAYMENT_ACCOUNT
+    // 3. Are all capabilities YES ==> PAYMENT_ACCOUNT
+    // 4. Is any capability NO ==> NON_PAYMENT_ACCOUNT
     // 5. ==> UNDETERMINED
     @Override
     public PaymentAccountClassification classify(Provider provider, Account account) {
@@ -46,11 +46,11 @@ public class Psd2Rule implements ClassificationRule<PaymentAccountClassification
             return PaymentAccountClassification.UNDETERMINED;
         }
 
-        if (isAnyCapabilityYes(accountCapabilities)) {
+        if (areAllCapabilitiesYes(accountCapabilities)) {
             return PaymentAccountClassification.PAYMENT_ACCOUNT;
         }
 
-        if (areAllCapabilitiesNo(accountCapabilities)) {
+        if (isAnyCapabilityNo(accountCapabilities)) {
             return PaymentAccountClassification.NON_PAYMENT_ACCOUNT;
         }
 
