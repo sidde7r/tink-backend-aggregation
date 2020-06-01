@@ -103,7 +103,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
                         .addAll(
                                 createClusterMetricsLabels(
                                         controllerWrapper.getHostConfiguration().getClusterId()))
-                        .add("provider", cleanMetricName(provider.getName()))
+                        .add("provider", provider.getName())
                         .add("market", provider.getMarket())
                         .add(
                                 "agent",
