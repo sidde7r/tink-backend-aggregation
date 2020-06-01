@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.compliance.account_classification.metrics;
 
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
@@ -24,22 +25,25 @@ public class PaymentAccountClassificationMetrics {
     }
 
     public void ruleResult(
+            Account account,
             ClassificationRule<PaymentAccountClassification> rule,
             PaymentAccountClassification classificationResult) {
         metricRegistry
                 .meter(
                         classificationRuleResult
                                 .label(defaultMetricLabels)
+                                .label("account_type", account.getType().toString())
                                 .label("rule", rule.getClass().getName())
                                 .label("classification_result", classificationResult.toString()))
                 .inc();
     }
 
-    public void finalResult(PaymentAccountClassification classificationResult) {
+    public void finalResult(Account account, PaymentAccountClassification classificationResult) {
         metricRegistry
                 .meter(
                         finalClassificationResult
                                 .label(defaultMetricLabels)
+                                .label("account_type", account.getType().toString())
                                 .label("classification_result", classificationResult.toString()))
                 .inc();
     }

@@ -49,7 +49,7 @@ public class PaymentAccountClassifier {
                 collectClassificationResults(account, applicableRules);
 
         PaymentAccountClassification classificationResult = classify(allResults);
-        metrics.finalResult(classificationResult);
+        metrics.finalResult(account, classificationResult);
         return classificationResult;
     }
 
@@ -69,9 +69,9 @@ public class PaymentAccountClassifier {
             Stream<ClassificationRule<PaymentAccountClassification>> applicableRules) {
         return applicableRules
                 .map(
-                        r -> {
-                            PaymentAccountClassification result = r.classify(provider, account);
-                            metrics.ruleResult(r, result);
+                        rule -> {
+                            PaymentAccountClassification result = rule.classify(provider, account);
+                            metrics.ruleResult(account, rule, result);
                             return result;
                         })
                 .collect(Collectors.toList());
@@ -79,7 +79,7 @@ public class PaymentAccountClassifier {
 
     private Stream<ClassificationRule<PaymentAccountClassification>> getApplicableRules() {
         return Optional.ofNullable(rules).orElse(Collections.emptyList()).stream()
-                .filter(r -> r.isApplicable(provider));
+                .filter(rule -> rule.isApplicable(provider));
     }
 
     private boolean anyMatch(
