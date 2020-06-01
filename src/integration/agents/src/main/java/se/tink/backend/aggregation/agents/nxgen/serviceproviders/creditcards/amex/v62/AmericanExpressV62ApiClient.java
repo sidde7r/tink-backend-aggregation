@@ -152,7 +152,7 @@ public class AmericanExpressV62ApiClient {
     // Purpose of this api call is to retrieve a cookie named "SaneId"
     public void fetchSaneIdCookie() {
         client.request(AmericanExpressV62Constants.BASE_API + Urls.SANE_ID)
-                .queryParam(QueryKeys.FACE, QueryValues.FACE_VALUE)
+                .queryParam(QueryKeys.FACE, config.getLocale())
                 .queryParam(QueryKeys.CLIENT_TYPE, QueryValues.CLIENT_TYPE_VALUE)
                 .queryParam(QueryKeys.PAGE, QueryValues.PAGE_VALUE)
                 .queryParam(QueryKeys.VERSION, QueryValues.VERSION_VALUE)

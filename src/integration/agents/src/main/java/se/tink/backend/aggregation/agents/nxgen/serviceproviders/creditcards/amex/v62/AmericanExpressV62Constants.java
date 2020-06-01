@@ -144,7 +144,6 @@ public class AmericanExpressV62Constants {
 
     public static class QueryValues {
         public static final String PAGE_VALUE = "eula";
-        public static final String FACE_VALUE = "sv_SE";
         public static final String VERSION_VALUE = "23da90ada6b32378654c7c1a88c0e2a808ab3cb3";
         public static final String CLIENT_TYPE_VALUE = "iPhone";
     }
