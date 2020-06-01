@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
@@ -28,10 +29,11 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.PAYMENT_ACCOUNT));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
         PaymentAccountClassifier classifier =
-                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
+                new PaymentAccountClassifier(rules, metricRegistry, prepareMockedProvider());
 
         // when
-        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
+        PaymentAccountClassification result =
+                classifier.classifyAsPaymentAccount(prepareMockedAccount());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.PAYMENT_ACCOUNT);
@@ -44,10 +46,11 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.PAYMENT_ACCOUNT));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
         PaymentAccountClassifier classifier =
-                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
+                new PaymentAccountClassifier(rules, metricRegistry, prepareMockedProvider());
 
         // when
-        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
+        PaymentAccountClassification result =
+                classifier.classifyAsPaymentAccount(prepareMockedAccount());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.NON_PAYMENT_ACCOUNT);
@@ -59,10 +62,11 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
         PaymentAccountClassifier classifier =
-                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
+                new PaymentAccountClassifier(rules, metricRegistry, prepareMockedProvider());
 
         // when
-        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
+        PaymentAccountClassification result =
+                classifier.classifyAsPaymentAccount(prepareMockedAccount());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.NON_PAYMENT_ACCOUNT);
@@ -74,10 +78,11 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         PaymentAccountClassifier classifier =
-                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
+                new PaymentAccountClassifier(rules, metricRegistry, prepareMockedProvider());
 
         // when
-        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
+        PaymentAccountClassification result =
+                classifier.classifyAsPaymentAccount(prepareMockedAccount());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.UNDETERMINED);
@@ -87,10 +92,11 @@ public class PaymentAccountClassifierTest {
     public void shouldClassifyAsUndeterminedIfNoRules() {
         PaymentAccountClassifier classifier =
                 new PaymentAccountClassifier(
-                        Collections.emptyList(), metricRegistry, new Provider());
+                        Collections.emptyList(), metricRegistry, prepareMockedProvider());
 
         // when
-        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
+        PaymentAccountClassification result =
+                classifier.classifyAsPaymentAccount(prepareMockedAccount());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.UNDETERMINED);
@@ -103,10 +109,11 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.PAYMENT_ACCOUNT));
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
         PaymentAccountClassifier classifier =
-                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
+                new PaymentAccountClassifier(rules, metricRegistry, prepareMockedProvider());
 
         // when
-        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
+        PaymentAccountClassification result =
+                classifier.classifyAsPaymentAccount(prepareMockedAccount());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.UNDETERMINED);
@@ -119,5 +126,18 @@ public class PaymentAccountClassifierTest {
         when(rule.isApplicable(any())).thenReturn(isApplicable);
         when(rule.classify(any(), any())).thenReturn(classificationResult);
         return rule;
+    }
+
+    private Provider prepareMockedProvider() {
+        Provider provider = mock(Provider.class);
+        when(provider.getName()).thenReturn("testProvider");
+        when(provider.getMarket()).thenReturn("TEST");
+        return provider;
+    }
+
+    private Account prepareMockedAccount() {
+        Account account = mock(Account.class);
+        when(account.getType()).thenReturn(AccountTypes.CHECKING);
+        return account;
     }
 }
