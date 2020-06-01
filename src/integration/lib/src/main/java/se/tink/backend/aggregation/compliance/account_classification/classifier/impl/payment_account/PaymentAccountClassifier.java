@@ -31,20 +31,22 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
 public class PaymentAccountClassifier {
     private final List<ClassificationRule<PaymentAccountClassification>> rules;
     private final PaymentAccountClassificationMetrics metrics;
+    private final Provider provider;
 
     public PaymentAccountClassifier(
             List<ClassificationRule<PaymentAccountClassification>> rules,
-            MetricRegistry metricRegistry) {
+            MetricRegistry metricRegistry,
+            Provider provider) {
         this.rules = rules;
         this.metrics = new PaymentAccountClassificationMetrics(metricRegistry);
+        this.provider = provider;
     }
 
-    public PaymentAccountClassification classifyAsPaymentAccount(
-            Provider provider, Account account) {
+    public PaymentAccountClassification classifyAsPaymentAccount(Account account) {
         Stream<ClassificationRule<PaymentAccountClassification>> applicableRules =
-                getApplicableRules(provider);
+                getApplicableRules();
         List<PaymentAccountClassification> allResults =
-                collectClassificationResults(provider, account, applicableRules);
+                collectClassificationResults(account, applicableRules);
 
         PaymentAccountClassification classificationResult = classify(allResults);
         metrics.finalResult(classificationResult, provider);
@@ -63,7 +65,6 @@ public class PaymentAccountClassifier {
     }
 
     private List<PaymentAccountClassification> collectClassificationResults(
-            Provider provider,
             Account account,
             Stream<ClassificationRule<PaymentAccountClassification>> applicableRules) {
         return applicableRules
@@ -76,8 +77,7 @@ public class PaymentAccountClassifier {
                 .collect(Collectors.toList());
     }
 
-    private Stream<ClassificationRule<PaymentAccountClassification>> getApplicableRules(
-            Provider provider) {
+    private Stream<ClassificationRule<PaymentAccountClassification>> getApplicableRules() {
         return Optional.ofNullable(rules).orElse(Collections.emptyList()).stream()
                 .filter(r -> r.isApplicable(provider));
     }

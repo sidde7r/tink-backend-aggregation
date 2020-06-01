@@ -27,11 +27,11 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.PAYMENT_ACCOUNT));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
+        PaymentAccountClassifier classifier =
+                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
 
         // when
-        PaymentAccountClassification result =
-                classifier.classifyAsPaymentAccount(new Provider(), new Account());
+        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.PAYMENT_ACCOUNT);
@@ -43,11 +43,11 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.PAYMENT_ACCOUNT));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
+        PaymentAccountClassifier classifier =
+                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
 
         // when
-        PaymentAccountClassification result =
-                classifier.classifyAsPaymentAccount(new Provider(), new Account());
+        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.NON_PAYMENT_ACCOUNT);
@@ -58,11 +58,11 @@ public class PaymentAccountClassifierTest {
         List<ClassificationRule<PaymentAccountClassification>> rules = new ArrayList<>();
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
+        PaymentAccountClassifier classifier =
+                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
 
         // when
-        PaymentAccountClassification result =
-                classifier.classifyAsPaymentAccount(new Provider(), new Account());
+        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.NON_PAYMENT_ACCOUNT);
@@ -73,11 +73,11 @@ public class PaymentAccountClassifierTest {
         List<ClassificationRule<PaymentAccountClassification>> rules = new ArrayList<>();
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(ENABLED, PaymentAccountClassification.UNDETERMINED));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
+        PaymentAccountClassifier classifier =
+                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
 
         // when
-        PaymentAccountClassification result =
-                classifier.classifyAsPaymentAccount(new Provider(), new Account());
+        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.UNDETERMINED);
@@ -86,11 +86,11 @@ public class PaymentAccountClassifierTest {
     @Test
     public void shouldClassifyAsUndeterminedIfNoRules() {
         PaymentAccountClassifier classifier =
-                new PaymentAccountClassifier(Collections.emptyList(), metricRegistry);
+                new PaymentAccountClassifier(
+                        Collections.emptyList(), metricRegistry, new Provider());
 
         // when
-        PaymentAccountClassification result =
-                classifier.classifyAsPaymentAccount(new Provider(), new Account());
+        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.UNDETERMINED);
@@ -102,11 +102,11 @@ public class PaymentAccountClassifierTest {
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.UNDETERMINED));
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.PAYMENT_ACCOUNT));
         rules.add(prepareMockedRule(DISABLED, PaymentAccountClassification.NON_PAYMENT_ACCOUNT));
-        PaymentAccountClassifier classifier = new PaymentAccountClassifier(rules, metricRegistry);
+        PaymentAccountClassifier classifier =
+                new PaymentAccountClassifier(rules, metricRegistry, new Provider());
 
         // when
-        PaymentAccountClassification result =
-                classifier.classifyAsPaymentAccount(new Provider(), new Account());
+        PaymentAccountClassification result = classifier.classifyAsPaymentAccount(new Account());
 
         // then
         assertThat(result).isEqualTo(PaymentAccountClassification.UNDETERMINED);
