@@ -17,6 +17,6 @@ public class BunqAgentDeserializationTest {
         Transaction transaction = transactionEntity.toTinkTransaction();
         Assert.assertEquals(
                 transaction.getDescription().trim(),
-                "Topup account NL44BUNQ2025348894Minderhoud\n" + "MJD MINDERHOUD");
+                "MJD MINDERHOUD\n" + "Topup account NL44BUNQ2025348894Minderhoud");
     }
 }
