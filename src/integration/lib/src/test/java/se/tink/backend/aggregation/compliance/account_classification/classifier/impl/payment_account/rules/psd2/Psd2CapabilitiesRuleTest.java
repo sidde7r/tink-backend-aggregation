@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
@@ -16,11 +17,15 @@ public class Psd2CapabilitiesRuleTest {
     public void nonPsd2MarketIsNotApplicable() {
         Psd2CapabilitiesRule rule = new Psd2CapabilitiesRule();
 
-        // Mexico should not be a PSD2 market.
-        Provider provider = prepareMockedProvider(MarketCode.MX, true);
-
-        // The rule should not be applicable for this market.
-        assertThat(rule.isApplicable(provider)).isFalse();
+        // Test all non-PSD2 markets.
+        Arrays.stream(MarketCode.values())
+                .filter(marketCode -> !Psd2Markets.PSD2_MARKETS.contains(marketCode))
+                .map(marketCode -> prepareMockedProvider(marketCode, true))
+                .forEach(
+                        provider -> {
+                            // The rule should not be applicable for this market.
+                            assertThat(rule.isApplicable(provider)).isFalse();
+                        });
     }
 
     @Test
