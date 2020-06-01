@@ -38,7 +38,7 @@ public class PaymentAccountClassifier {
             MetricRegistry metricRegistry,
             Provider provider) {
         this.rules = rules;
-        this.metrics = new PaymentAccountClassificationMetrics(metricRegistry);
+        this.metrics = new PaymentAccountClassificationMetrics(metricRegistry, provider);
         this.provider = provider;
     }
 
@@ -49,7 +49,7 @@ public class PaymentAccountClassifier {
                 collectClassificationResults(account, applicableRules);
 
         PaymentAccountClassification classificationResult = classify(allResults);
-        metrics.finalResult(classificationResult, provider);
+        metrics.finalResult(classificationResult);
         return classificationResult;
     }
 
