@@ -85,7 +85,7 @@ public class TransactionEntity {
 
     private String getTinkDescription() {
         String transactionDescription =
-                Stream.of(description, getDebtor())
+                Stream.of(getDebtor(), description)
                         .filter(str -> !Strings.isNullOrEmpty(str))
                         .reduce("", (s1, s2) -> s1 + "\n" + s2);
         if (transactionDescription.isEmpty()) {
