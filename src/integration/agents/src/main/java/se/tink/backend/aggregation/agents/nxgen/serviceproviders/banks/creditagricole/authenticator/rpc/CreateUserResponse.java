@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc;
 
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -7,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreateUserResponse extends DefaultResponse {
 
     private String serverRefDate;
-    private AuthenticationMethods availableAuthenticationMethods;
+    private List<AuthenticationMethods> availableAuthenticationMethods;
     private PhoneNumber availablePhoneNumber;
 
     public String getServerRefDate() {
@@ -18,12 +19,12 @@ public class CreateUserResponse extends DefaultResponse {
         this.serverRefDate = serverRefDate;
     }
 
-    public AuthenticationMethods getAvailableAuthenticationMethods() {
+    public List<AuthenticationMethods> getAvailableAuthenticationMethods() {
         return availableAuthenticationMethods;
     }
 
     public void setAvailableAuthenticationMethods(
-            AuthenticationMethods availableAuthenticationMethods) {
+            List<AuthenticationMethods> availableAuthenticationMethods) {
         this.availableAuthenticationMethods = availableAuthenticationMethods;
     }
 
