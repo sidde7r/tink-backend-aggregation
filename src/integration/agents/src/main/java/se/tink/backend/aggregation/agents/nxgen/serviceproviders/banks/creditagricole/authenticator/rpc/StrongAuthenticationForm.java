@@ -6,17 +6,17 @@ import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 public class StrongAuthenticationForm extends AbstractForm {
 
     public StrongAuthenticationForm setUserAccountCode(String userAccountCode) {
-        this.put(Form.USER_ACCOUNT_CODE, userAccountCode);
+        this.put(Form.ACCOUNT_CODE, userAccountCode);
         return this;
     }
 
     public StrongAuthenticationForm setUserAccountNumber(String userAccountNumber) {
-        this.put(Form.USER_ACCOUNT_NUMBER, userAccountNumber);
+        this.put(Form.ACCOUNT_NUMBER, userAccountNumber);
         return this;
     }
 
     public StrongAuthenticationForm setLogin(String login) {
-        this.put(Form.LOGIN_EMAIL, login);
+        this.put(Form.EMAIL, login);
         return this;
     }
 }

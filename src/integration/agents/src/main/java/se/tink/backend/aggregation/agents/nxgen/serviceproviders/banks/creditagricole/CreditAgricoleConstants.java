@@ -15,27 +15,7 @@ public class CreditAgricoleConstants {
         public static final String FIND_PROFILES = BASE_URL + "/user/{regionId}/find";
         public static final String CREATE_PROFILE = BASE_URL + "/user/{regionId}/create";
 
-        public static final URL SELECT_REGION =
-                new URL(
-                        BASE_URL
-                                + String.format(
-                                        "/budget5/iphoneservice/vitrine/{%s}/isResetPwdBamActive",
-                                        StorageKey.REGION_ID));
-        public static final URL NUMBER_PAD =
-                new URL(BASE_URL + "/budget5/iphoneservice/authentication/grid");
-        public static final URL SIGN_IN =
-                new URL(
-                        BASE_URL
-                                + String.format(
-                                        "/budget5/iphoneservice/user/{%s}/search",
-                                        StorageKey.REGION_ID));
-        public static final URL USER_AGREEMENT =
-                new URL(
-                        BASE_URL
-                                + String.format(
-                                        "/budget5/iphoneservice/about/{%s}?lastUpdate=0",
-                                        StorageKey.REGION_ID));
-        public static final URL APP_CODE =
+        public static final URL RESTORE_PROFILE =
                 new URL(
                         BASE_URL
                                 + String.format(
@@ -43,18 +23,7 @@ public class CreditAgricoleConstants {
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID));
-        public static final URL STRONG_AUTHENTICATION =
-                new URL(
-                        BASE_URL
-                                + String.format(
-                                        "/budget5/iphoneservice/authentication/{%s}/strong",
-                                        StorageKey.REGION_ID));
-        public static final URL KEEP_ALIVE =
-                new URL(
-                        BASE_URL
-                                + String.format(
-                                        "/budget5/iphoneservice/authentication/{%s}/{%s}/longSessionProfile",
-                                        StorageKey.USER_ID, StorageKey.REGION_ID));
+
         public static final URL CONTRACTS =
                 new URL(
                         BASE_URL
@@ -72,14 +41,6 @@ public class CreditAgricoleConstants {
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID,
                                         StorageKey.ACCOUNT_NUMBER)); // takes query param
-        // startDate={BASIC_ISO_DATE}
-    }
-
-    // This data is used in query params, and may not be changed
-    // without affecting communication with the bank
-    public static class QueryParam {
-        public static final String USER_ACCOUNT_CODE = "accountCode";
-        public static final String USER_ACCOUNT_NUMBER = "accountNumber";
     }
 
     public static class Authorization {
@@ -94,10 +55,10 @@ public class CreditAgricoleConstants {
         public static final String USER_ACCOUNT_NUMBER = "userAccountNumber";
         public static final String USER_ACCOUNT_CODE = "userAccountCode";
         public static final String SHUFFLED_USER_ACCOUNT_CODE = "shuffledAccountCode";
-        public static final String APP_CODE = "appCode";
+        public static final String PROFILE_PIN = "profilePin";
         public static final String PARTNER_ID = "partnerId";
         public static final String USER_ID = "userId";
-        public static final String LOGIN_EMAIL = "login";
+        public static final String EMAIL = "email";
         public static final String SL_TOKEN = "slToken";
         public static final String LL_TOKEN = "llToken";
         public static final String ACCOUNT_NUMBER = "accountNumber";
@@ -109,10 +70,10 @@ public class CreditAgricoleConstants {
     // This data is used in request body forms, and may not be changed
     // without affecting communication with the bank
     public static class Form {
-        public static final String USER_ACCOUNT_CODE = "accountCode";
-        public static final String USER_ACCOUNT_NUMBER = "accountNumber";
-        public static final String APP_CODE = "password";
-        public static final String LOGIN_EMAIL = "login";
+        public static final String ACCOUNT_CODE = "accountCode";
+        public static final String ACCOUNT_NUMBER = "accountNumber";
+        public static final String PASSWORD = "password";
+        public static final String EMAIL = "email";
         public static final String LL_TOKEN = "llToken";
     }
 
