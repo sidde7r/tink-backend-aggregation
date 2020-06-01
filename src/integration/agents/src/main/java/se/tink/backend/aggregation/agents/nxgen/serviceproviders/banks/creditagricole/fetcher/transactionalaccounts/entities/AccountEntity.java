@@ -4,8 +4,11 @@ import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.AccountType;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
@@ -35,23 +38,32 @@ public class AccountEntity {
     private String status;
 
     public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(
-                        getTinkAccountType(), accountNumber, ExactCurrencyAmount.inEUR(balance))
-                .setAccountNumber(accountNumber)
-                .setHolderName(new HolderName(holder))
-                .setName(label)
-                .build();
+        return TransactionalAccount.nxBuilder()
+                .withTypeAndFlagsFrom(AccountType.ACCOUNT_TYPE_MAPPER, label)
+                .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(balance)))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountNumber)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(productType + " " + label)
+                                .addIdentifier(AccountIdentifier.create(Type.IBAN, accountNumber))
+                                .build())
+                .addHolderName(holder)
+                .setApiIdentifier(id)
+                .build()
+                .get();
     }
 
     public boolean isKnownAccountType() {
-        return productType.equalsIgnoreCase(AccountType.CHECKING);
+        return AccountType.CHECKING.equalsIgnoreCase(productType)
+                || AccountType.SAVINGS.equalsIgnoreCase(productType);
     }
 
     private AccountTypes getTinkAccountType() {
-        // Currently only has data on checking accounts, so this
-        // statement is to show how future implementation could look
-        if (productType.equalsIgnoreCase(AccountType.CHECKING)) {
+        if (AccountType.CHECKING.equalsIgnoreCase(productType)) {
             return AccountTypes.CHECKING;
+        } else if (AccountType.SAVINGS.equalsIgnoreCase(productType)) {
+            return AccountTypes.SAVINGS;
         }
         return AccountTypes.OTHER;
     }

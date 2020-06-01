@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-// @Ignore
+@Ignore
 public class CreditAgricoleAgentTest {
 
     private final String USER_ACCOUNT_NUMBER = "123456678901"; // 11 digits

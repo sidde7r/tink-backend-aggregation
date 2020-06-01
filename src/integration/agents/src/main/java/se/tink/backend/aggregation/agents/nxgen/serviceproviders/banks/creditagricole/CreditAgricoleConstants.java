@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole;
 
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class CreditAgricoleConstants {
@@ -77,8 +79,14 @@ public class CreditAgricoleConstants {
         public static final String LL_TOKEN = "llToken";
     }
 
-    public static final class AccountType {
+    public static class AccountType {
         public static final String CHECKING = "Compte courant";
+        public static final String SAVINGS = "Epargne disponible";
+        public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+                AccountTypeMapper.builder()
+                        .put(AccountTypes.SAVINGS, SAVINGS)
+                        .put(AccountTypes.CHECKING, CHECKING)
+                        .build();
     }
 
     public static class ErrorCode {
