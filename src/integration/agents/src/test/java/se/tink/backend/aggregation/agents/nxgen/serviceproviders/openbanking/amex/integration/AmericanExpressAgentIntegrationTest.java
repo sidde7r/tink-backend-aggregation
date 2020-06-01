@@ -43,7 +43,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -164,7 +163,6 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    @Ignore
     public void testTransactionsFetchingWithValidAccessToken() {
         // given
         final CredentialsRequest credentialsRequest = createCredentialsRequest();
@@ -468,6 +466,8 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
     }
 
     private void recordFetchTransactionsResponse(String accessToken1, String accessToken2) {
+        final String expectedEndDateMonth =
+                LocalDate.now().minusMonths(3).minusDays(1).toString().substring(0, 7);
         wireMockRule.stubFor(
                 get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
                         .withQueryParam(
@@ -514,8 +514,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                 get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
                         .withQueryParam(
                                 AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
-                                containing(
-                                        LocalDate.now().minusMonths(3).toString().substring(0, 7)))
+                                containing(expectedEndDateMonth))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken1)))
@@ -536,8 +535,7 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
                 get(urlPathEqualTo(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS))
                         .withQueryParam(
                                 AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
-                                containing(
-                                        LocalDate.now().minusMonths(3).toString().substring(0, 7)))
+                                containing(expectedEndDateMonth))
                         .withHeader(
                                 HttpHeaders.AUTHORIZATION,
                                 matching(createAuthHeaderMatchingPattern(accessToken2)))
