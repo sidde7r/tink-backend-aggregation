@@ -126,7 +126,7 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
                     eInvoicePaymentEntity.getPayee().getId(),
                     sourceAccountId);
         } catch (HttpResponseException hre) {
-            throw convertExceptionIfBadPaymentDate(hre);
+            throw convertExceptionIfBadPayment(hre);
         }
     }
 }

@@ -136,7 +136,7 @@ public class BaseTransferExecutor {
 
     // convert HttpResponseException to TransferExecutionException if response indicates bad date
     // for payment or transfer
-    protected RuntimeException convertExceptionIfBadPaymentDate(HttpResponseException hre)
+    protected RuntimeException convertExceptionIfBadPayment(HttpResponseException hre)
             throws TransferExecutionException {
         HttpResponse httpResponse = hre.getResponse();
         // swedbank doesn't allow payment with due date today
@@ -148,6 +148,12 @@ public class BaseTransferExecutor {
                         .setEndUserMessage(
                                 TransferExecutionException.EndUserMessage
                                         .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY)
+                        .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
+                        .setException(hre)
+                        .build();
+            } else if (errorResponse.hasErrorCode(SwedbankBaseConstants.ErrorField.REFERENCE)) {
+                return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                        .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_OCR)
                         .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
                         .setException(hre)
                         .build();

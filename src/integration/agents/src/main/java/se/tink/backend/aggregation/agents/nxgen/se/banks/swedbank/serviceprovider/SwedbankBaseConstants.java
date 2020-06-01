@@ -355,6 +355,7 @@ public class SwedbankBaseConstants {
         public static final String DATE = "date";
         public static final String USER_ID = "userid";
         public static final String RECIPIENT_NUMBER = "recipientnumber";
+        public static final String REFERENCE = "reference";
         public static final String RESPONSE = "response";
     }
 
