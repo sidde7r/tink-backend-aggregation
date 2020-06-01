@@ -71,6 +71,7 @@ featureFlags:
   esProxy: true
   beProxy: true
   resetSuplementalInformation: true
+  createBeneficiary: false
 
 providerConfigurationServiceConfiguration:
   enabled: true

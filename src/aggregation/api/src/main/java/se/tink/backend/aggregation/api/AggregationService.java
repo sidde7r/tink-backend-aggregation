@@ -179,5 +179,6 @@ public interface AggregationService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     void createBeneficiary(
-            CreateBeneficiaryCredentialsRequest request, @ClientContext ClientInfo clientInfo);
+            CreateBeneficiaryCredentialsRequest request, @ClientContext ClientInfo clientInfo)
+            throws Exception;
 }

@@ -11,6 +11,8 @@ public class CreateBeneficiaryCredentialsRequest extends CredentialsRequest {
 
     private final Beneficiary beneficiary;
 
+    private String refreshId;
+
     public CreateBeneficiaryCredentialsRequest(
             User user, Provider provider, Credentials credentials, Beneficiary beneficiary) {
         super(user, provider, credentials);
@@ -29,5 +31,13 @@ public class CreateBeneficiaryCredentialsRequest extends CredentialsRequest {
     @Override
     public CredentialsRequestType getType() {
         return CredentialsRequestType.CREATE_BENEFICIARY;
+    }
+
+    public String getRefreshId() {
+        return refreshId;
+    }
+
+    public void setRefreshId(String refreshId) {
+        this.refreshId = refreshId;
     }
 }

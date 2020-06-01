@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -73,6 +75,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentWorkerOperationState;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
+import se.tink.backend.aggregation.workers.worker.beneficiary.CreateBeneficiaryAgentWorkerCommandOperation;
 import se.tink.backend.aggregation.workers.worker.conditions.annotation.ShouldAddExtraCommands;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
@@ -1251,6 +1254,40 @@ public class AgentWorkerOperationFactory {
         log.debug("Created migration operation chain for credential");
         return new AgentWorkerOperation(
                 agentWorkerOperationState, metricsName, request, commands, context);
+    }
+
+    public Optional<AgentWorkerOperation> createOperationCreateBeneficiary(
+            CreateBeneficiaryCredentialsRequest request, ClientInfo clientInfo) {
+        // Check if this feature is enabled.
+        if (!agentsServiceConfiguration.isFeatureEnabled("createBeneficiary")) {
+            return Optional.empty();
+        }
+        return Optional.of(
+                CreateBeneficiaryAgentWorkerCommandOperation.createOperationCreateBeneficiary(
+                        request,
+                        clientInfo,
+                        metricRegistry,
+                        coordinationClient,
+                        controllerWrapperProvider.createControllerWrapper(clientInfo.getAppId()),
+                        agentsServiceConfiguration,
+                        aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAppId()),
+                        supplementalInformationController,
+                        providerSessionCacheController,
+                        generateOrGetCorrelationId(request.getRefreshId()),
+                        cryptoConfigurationDao.getCryptoWrapperOfClientName(
+                                clientInfo.getClientName()),
+                        circuitBreakAgentWorkerCommandState,
+                        interProcessSemaphoreMutexFactory,
+                        cacheClient,
+                        reportMetricsAgentWorkerCommandState,
+                        tppSecretsServiceClient,
+                        debugAgentWorkerCommandState,
+                        agentDebugStorageHandler,
+                        instantiateAgentWorkerCommandState,
+                        loginAgentWorkerCommandState,
+                        createCommandMetricState(request),
+                        loginAgentEventProducer,
+                        agentWorkerOperationState));
     }
 
     private static String generateOrGetCorrelationId(String correlationId) {
