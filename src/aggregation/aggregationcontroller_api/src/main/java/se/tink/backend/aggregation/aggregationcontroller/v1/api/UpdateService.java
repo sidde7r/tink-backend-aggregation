@@ -14,8 +14,6 @@ import se.tink.api.annotations.TeamOwnership;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationResponse;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
@@ -34,14 +32,6 @@ public interface UpdateService {
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
     String ping();
-
-    @POST
-    @Path("/credentials/supplementalInformation")
-    @TeamOwnership(Team.AGGREGATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    SupplementalInformationResponse getSupplementalInformation(
-            SupplementalInformationRequest request);
 
     @POST
     @Path("/accounts/update")

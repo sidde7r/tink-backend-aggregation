@@ -7,8 +7,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfigurati
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationResponse;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
@@ -26,9 +24,6 @@ public interface AggregationControllerAggregationClient {
             HostConfiguration hostConfiguration, UpdateTransactionsRequest request);
 
     String ping(HostConfiguration hostConfiguration);
-
-    SupplementalInformationResponse getSupplementalInformation(
-            HostConfiguration hostConfiguration, SupplementalInformationRequest request);
 
     Account updateAccount(HostConfiguration hostConfiguration, UpdateAccountRequest request);
 
