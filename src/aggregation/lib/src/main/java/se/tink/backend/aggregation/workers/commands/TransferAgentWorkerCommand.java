@@ -164,7 +164,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 // will alert on
                 // and register on dashboard as an error.
                 metricAction.cancelled();
-                log.info(transfer, "Could not execute transfer.");
+                log.info(
+                        transfer,
+                        "Could not execute transfer. Transfer has been set CANCELLED due to "
+                                + e.getUserMessage());
             } else {
                 metricAction.failed();
                 log.error(transfer, "Could not execute transfer.", e);
