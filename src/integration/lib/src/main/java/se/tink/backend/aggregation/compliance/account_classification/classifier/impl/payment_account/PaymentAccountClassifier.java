@@ -9,7 +9,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
-import se.tink.backend.aggregation.compliance.account_classification.metrics.PaymentAccountClassificationMetrics;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.metrics.PaymentAccountClassificationMetrics;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 /**
@@ -47,7 +47,7 @@ public class PaymentAccountClassifier {
                 collectClassificationResults(provider, account, applicableRules);
 
         PaymentAccountClassification classificationResult = classify(allResults);
-        metrics.finalResult(classificationResult, provider);
+        metrics.finalResult(provider, account, classificationResult);
         return classificationResult;
     }
 
@@ -68,9 +68,9 @@ public class PaymentAccountClassifier {
             Stream<ClassificationRule<PaymentAccountClassification>> applicableRules) {
         return applicableRules
                 .map(
-                        r -> {
-                            PaymentAccountClassification result = r.classify(provider, account);
-                            metrics.ruleResult(r, result);
+                        rule -> {
+                            PaymentAccountClassification result = rule.classify(provider, account);
+                            metrics.ruleResult(provider, account, rule, result);
                             return result;
                         })
                 .collect(Collectors.toList());
@@ -79,7 +79,7 @@ public class PaymentAccountClassifier {
     private Stream<ClassificationRule<PaymentAccountClassification>> getApplicableRules(
             Provider provider) {
         return Optional.ofNullable(rules).orElse(Collections.emptyList()).stream()
-                .filter(r -> r.isApplicable(provider));
+                .filter(rule -> rule.isApplicable(provider));
     }
 
     private boolean anyMatch(
