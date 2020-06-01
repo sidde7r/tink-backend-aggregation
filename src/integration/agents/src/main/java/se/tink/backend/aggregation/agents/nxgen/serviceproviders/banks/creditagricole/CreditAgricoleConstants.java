@@ -53,7 +53,7 @@ public class CreditAgricoleConstants {
     // This data should only be used internally by us, and changing it
     // should thus not affect communication with the bank
     public static class StorageKey {
-        public static final String REGION_ID = "c";
+        public static final String REGION_ID = "regionId";
         public static final String USER_ACCOUNT_NUMBER = "userAccountNumber";
         public static final String USER_ACCOUNT_CODE = "userAccountCode";
         public static final String SHUFFLED_USER_ACCOUNT_CODE = "shuffledAccountCode";
