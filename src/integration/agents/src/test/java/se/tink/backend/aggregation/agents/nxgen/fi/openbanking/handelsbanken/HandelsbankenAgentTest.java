@@ -11,13 +11,13 @@ public class HandelsbankenAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fi", "fi-handelsbanken-oauth2")
+                new AgentIntegrationTest.Builder("fi", "fi-handelsbanken-ob")
                         .addCredentialField("accessToken", "MV9QUk9GSUxFLUZJX1BSSVZBVEUz")
+                        .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("handelsbanken-fi")
-                        .setAppId("tink")
-                        .expectLoggedIn(false);
+                        .setFinancialInstitutionId("617bcf1569614498920cce658ea05aad")
+                        .setAppId("tink");
     }
 
     @Test
