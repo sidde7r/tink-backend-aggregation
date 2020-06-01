@@ -9,7 +9,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
-import se.tink.backend.aggregation.compliance.account_classification.metrics.PaymentAccountClassificationMetrics;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.metrics.PaymentAccountClassificationMetrics;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 /**

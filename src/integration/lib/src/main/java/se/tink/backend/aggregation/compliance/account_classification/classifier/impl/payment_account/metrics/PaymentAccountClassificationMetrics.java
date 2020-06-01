@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.compliance.account_classification.metrics;
+package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.metrics;
 
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
