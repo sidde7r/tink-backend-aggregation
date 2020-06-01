@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.rpc.AccountSummaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class TargoBankESSessionHandler implements SessionHandler {
@@ -38,9 +39,13 @@ public class TargoBankESSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        AccountSummaryResponse response = apiClient.requestAccounts();
-        Optional.ofNullable(response)
-                .filter(o -> EuroInformationUtils.isSuccess(o.getReturnCode()))
-                .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
+        try {
+            AccountSummaryResponse response = apiClient.requestAccounts();
+            Optional.ofNullable(response)
+                    .filter(o -> EuroInformationUtils.isSuccess(o.getReturnCode()))
+                    .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
+        } catch (HttpResponseException e) {
+            throw SessionError.SESSION_EXPIRED.exception(e);
+        }
     }
 }
