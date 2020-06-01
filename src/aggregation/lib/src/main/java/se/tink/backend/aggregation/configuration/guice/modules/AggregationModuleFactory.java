@@ -11,7 +11,6 @@ import se.tink.libraries.event_producer_service_client.grpc.EventProducerService
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.tracing.generic.configuration.GenericTracingModule;
 import se.tink.libraries.tracing.lib.configuration.TracingModule;
-import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class AggregationModuleFactory {
 
