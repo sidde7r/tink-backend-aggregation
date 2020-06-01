@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.regulatory.psd2;
+package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabi
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.libraries.enums.MarketCode;
 
-public class Psd2RuleTest {
+public class Psd2CapabilitiesRuleTest {
     @Test
     public void nonPsd2MarketIsNotApplicable() {
-        Psd2Rule rule = new Psd2Rule();
+        Psd2CapabilitiesRule rule = new Psd2CapabilitiesRule();
 
         // Mexico should not be a PSD2 market.
         Provider provider = prepareMockedProvider(MarketCode.MX, true);
@@ -25,7 +25,7 @@ public class Psd2RuleTest {
 
     @Test
     public void openBankingProviderInPsd2MarketsShouldReturnPaymentAccount() {
-        Psd2Rule rule = new Psd2Rule();
+        Psd2CapabilitiesRule rule = new Psd2CapabilitiesRule();
 
         Psd2Markets.PSD2_MARKETS.forEach(
                 marketCode -> {
@@ -41,7 +41,7 @@ public class Psd2RuleTest {
 
     @Test
     public void nonOpenBankingWithUnknownCapabilitiesShouldReturnUndetermined() {
-        Psd2Rule rule = new Psd2Rule();
+        Psd2CapabilitiesRule rule = new Psd2CapabilitiesRule();
 
         Provider provider = prepareMockedNonOpenBankingProvider();
         Account account = prepareMockedAccountWithCapabilities(AccountCapabilities.createDefault());
@@ -53,7 +53,7 @@ public class Psd2RuleTest {
 
     @Test
     public void nonOpenBankingWithAllYesCapabilitiesShouldReturnPaymentAccount() {
-        Psd2Rule rule = new Psd2Rule();
+        Psd2CapabilitiesRule rule = new Psd2CapabilitiesRule();
 
         Provider provider = prepareMockedNonOpenBankingProvider();
 
@@ -70,7 +70,7 @@ public class Psd2RuleTest {
 
     @Test
     public void nonOpenBankingWithAnyNoCapabilitiesShouldReturnNonPaymentAccount() {
-        Psd2Rule rule = new Psd2Rule();
+        Psd2CapabilitiesRule rule = new Psd2CapabilitiesRule();
 
         Provider provider = prepareMockedNonOpenBankingProvider();
 
