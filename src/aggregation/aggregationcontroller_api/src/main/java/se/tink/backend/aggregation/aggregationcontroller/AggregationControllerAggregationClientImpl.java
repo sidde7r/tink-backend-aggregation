@@ -25,8 +25,6 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfigurati
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationResponse;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsSensitiveRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
@@ -123,14 +121,6 @@ public class AggregationControllerAggregationClientImpl
     @Override
     public String ping(HostConfiguration hostConfiguration) {
         return requestExecuter(() -> getUpdateService(hostConfiguration).ping(), "Ping");
-    }
-
-    @Override
-    public SupplementalInformationResponse getSupplementalInformation(
-            HostConfiguration hostConfiguration, SupplementalInformationRequest request) {
-        return requestExecuter(
-                () -> getUpdateService(hostConfiguration).getSupplementalInformation(request),
-                "Get Supplemental Information");
     }
 
     @Override
