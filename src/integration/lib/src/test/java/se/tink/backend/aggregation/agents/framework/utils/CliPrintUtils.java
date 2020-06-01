@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework;
+package se.tink.backend.aggregation.agents.framework.utils;
 
 import com.google.common.base.Strings;
 import java.io.PrintStream;

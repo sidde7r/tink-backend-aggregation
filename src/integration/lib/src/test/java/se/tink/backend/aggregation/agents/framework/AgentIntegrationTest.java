@@ -39,7 +39,11 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.agentfactory.iface.AgentFactory;
+import se.tink.backend.aggregation.agents.contractproducer.ContractProducer;
+import se.tink.backend.aggregation.agents.framework.context.NewAgentTestContext;
+import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
 import se.tink.backend.aggregation.agents.framework.modules.production.AgentIntegrationTestModule;
+import se.tink.backend.aggregation.agents.framework.testserverclient.AgentTestServerClient;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
@@ -114,6 +118,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
+    private Boolean dumpContentForContractFile;
 
     protected AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
@@ -129,6 +134,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.refreshableItems = builder.getRefreshableItems();
         this.validator = builder.validator;
         this.redirectUrl = builder.getRedirectUrl();
+        this.dumpContentForContractFile = builder.isDumpContentForContractFile();
 
         this.clusterIdForSecretsService =
                 MoreObjects.firstNonNull(
@@ -658,6 +664,14 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 System.out.println("Could not dump test data: " + e.getMessage());
             }
         }
+
+        if (dumpContentForContractFile) {
+            ContractProducer contractProducer = new ContractProducer();
+            log.info(
+                    "This is the content for building the contract file : \n"
+                            + contractProducer.produceFromContext(context));
+        }
+
         return context;
     }
 
@@ -1048,6 +1062,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private String redirectUrl;
         private String clusterIdForSecretsService = null;
 
+        private boolean dumpContentForContractFile = false;
+
         public Builder(String market, String providerName) {
             ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
@@ -1268,6 +1284,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         public Builder setClusterIdForSecretsService(String clusterIdForSecretsService) {
             this.clusterIdForSecretsService = clusterIdForSecretsService;
             return this;
+        }
+
+        public Builder dumpContentForContractFile() {
+            this.dumpContentForContractFile = true;
+            return this;
+        }
+
+        public boolean isDumpContentForContractFile() {
+            return this.dumpContentForContractFile;
         }
 
         public AgentIntegrationTest build() {

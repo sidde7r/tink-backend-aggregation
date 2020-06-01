@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework;
+package se.tink.backend.aggregation.agents.framework.context;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
@@ -28,6 +28,10 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.framework.dao.AccountDataDao;
+import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
+import se.tink.backend.aggregation.agents.framework.testserverclient.AgentTestServerClient;
+import se.tink.backend.aggregation.agents.framework.utils.CliPrintUtils;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Loan;
@@ -95,7 +99,7 @@ public final class NewAgentTestContext extends AgentContext {
         setAggregatorInfo(AggregatorInfo.getAggregatorForTesting());
     }
 
-    AgentTestServerClient getAgentTestServerClient() {
+    public AgentTestServerClient getAgentTestServerClient() {
         return agentTestServerClient;
     }
 

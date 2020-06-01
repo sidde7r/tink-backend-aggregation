@@ -8,7 +8,7 @@ public class BarrierName {
 
     public enum Prefix {
         SUPPLEMENTAL_INFORMATION("/locks/supplementCredentials/credentials/"),
-        PROVIDER_SESSION_INFORMATION("/locks/providerSession/financialInstitutionId/");
+        PROVIDER_SESSION_INFORMATION("/locks/providerSession/appId:financialInstitutionId/");
 
         private final String prefix;
 

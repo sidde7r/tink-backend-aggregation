@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Assert;
-import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.contractproducer.ContractProducer;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesAsserts;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTest;
@@ -24,6 +26,7 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.modu
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.command.RefreshCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.module.AgentFactoryWireMockModule;
+import se.tink.backend.aggregation.agents.framework.context.NewAgentTestContext;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
@@ -36,8 +39,11 @@ import se.tink.libraries.enums.MarketCode;
 
 public final class AgentWireMockRefreshTest {
 
+    private static final Logger log = LoggerFactory.getLogger(AgentWireMockRefreshTest.class);
+
     private final CompositeAgentTest compositeAgentTest;
     private final WireMockTestServer server;
+    private final boolean dumpContentForContractFile;
 
     private AgentWireMockRefreshTest(
             MarketCode marketCode,
@@ -49,7 +55,8 @@ public final class AgentWireMockRefreshTest {
             TestModule agentTestModule,
             Set<RefreshableItem> refreshableItems,
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
-            boolean httpDebugTrace) {
+            boolean httpDebugTrace,
+            boolean dumpContentForContractFile) {
 
         ImmutableSet<RequestResponseParser> parsers =
                 wireMockFilePaths.stream()
@@ -80,6 +87,7 @@ public final class AgentWireMockRefreshTest {
 
         Injector injector = Guice.createInjector(modules);
         compositeAgentTest = injector.getInstance(CompositeAgentTest.class);
+        this.dumpContentForContractFile = dumpContentForContractFile;
     }
 
     /**
@@ -95,6 +103,12 @@ public final class AgentWireMockRefreshTest {
                 throw new RuntimeException(server.createErrorLogForFailedRequest());
             }
             throw e;
+        }
+        if (dumpContentForContractFile) {
+            ContractProducer contractProducer = new ContractProducer();
+            log.info(
+                    "This is the content for building the contract file : \n"
+                            + contractProducer.produceFromContext(compositeAgentTest.getContext()));
         }
     }
 
@@ -144,6 +158,7 @@ public final class AgentWireMockRefreshTest {
         private final Map<String, String> callbackData;
         private final Set<RefreshableItem> refreshableItems;
         private boolean httpDebugTrace = false;
+        private boolean dumpContentForContractFile = false;
 
         private AgentsServiceConfiguration configuration;
         private TestModule agentTestModule;
@@ -238,6 +253,16 @@ public final class AgentWireMockRefreshTest {
         }
 
         /**
+         * Enables writing content for building a contract file at the end
+         *
+         * @return This builder.
+         */
+        public Builder dumpContentForContractFile() {
+            this.dumpContentForContractFile = true;
+            return this;
+        }
+
+        /**
          * Add AAP file to be used.
          *
          * <p>Can be called multiple times to add several files.
@@ -266,7 +291,8 @@ public final class AgentWireMockRefreshTest {
                     agentTestModule,
                     refreshableItems,
                     of(LoginCommand.class, RefreshCommand.class),
-                    httpDebugTrace);
+                    httpDebugTrace,
+                    dumpContentForContractFile);
         }
     }
 }

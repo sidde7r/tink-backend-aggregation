@@ -8,7 +8,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -43,6 +42,7 @@ import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -58,16 +58,19 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final AmericanExpressV62Storage instanceStorage;
+    private final RandomValueGenerator randomValueGenerator;
 
     public AmericanExpressV62PasswordAuthenticator(
             AmericanExpressV62ApiClient apiClient,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            final AmericanExpressV62Storage instanceStorage) {
+            final AmericanExpressV62Storage instanceStorage,
+            final RandomValueGenerator randomValueGenerator) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.instanceStorage = instanceStorage;
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     @Override
@@ -325,7 +328,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
     }
 
     private String generateUUID() {
-        return UUID.randomUUID().toString().toUpperCase();
+        return randomValueGenerator.getUUID().toString().toUpperCase();
     }
 
     private String createAuthorizationHeaderValue(LogonResponse response) {

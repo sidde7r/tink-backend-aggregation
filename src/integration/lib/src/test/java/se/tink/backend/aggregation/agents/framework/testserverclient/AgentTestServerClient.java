@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.framework;
+package se.tink.backend.aggregation.agents.framework.testserverclient;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -6,6 +6,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.framework.dao.CredentialDataDao;
 import se.tink.backend.aggregation.nxgen.http.LegacyTinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;

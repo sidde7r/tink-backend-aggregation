@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPa
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -40,6 +41,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     private final MultiIpGateway gateway;
     private final AmericanExpressV62Storage instanceStorage;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final RandomValueGenerator randomValueGenerator;
 
     protected AmericanExpressV62Agent(
             AgentComponentProvider componentProvider, AmericanExpressV62Configuration config) {
@@ -60,6 +62,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
         this.instanceStorage = new AmericanExpressV62Storage();
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
+        this.randomValueGenerator = componentProvider.getRandomValueGenerator();
     }
 
     /** @deprecated Use AgentStrategy constructor instead. */
@@ -85,7 +88,11 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
                 new AmericanExpressV62PasswordAuthenticator(
-                        apiClient, persistentStorage, sessionStorage, instanceStorage));
+                        apiClient,
+                        persistentStorage,
+                        sessionStorage,
+                        instanceStorage,
+                        randomValueGenerator));
     }
 
     @Override

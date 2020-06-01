@@ -742,31 +742,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public String getProviderSessionCache() {
-        String financialInstitutionId = request.getProvider().getFinancialInstitutionId();
-        DistributedBarrier lock =
-                new DistributedBarrier(
-                        coordinationClient,
-                        BarrierName.build(
-                                BarrierName.Prefix.PROVIDER_SESSION_INFORMATION,
-                                financialInstitutionId));
-        try {
-            lock.setBarrier();
-            String providerSessionCacheInformation =
-                    providerSessionCacheController.getProviderSessionCache(financialInstitutionId);
-            lock.removeBarrier();
-            return providerSessionCacheInformation;
-
-        } catch (Exception e) {
-            log.error("Caught exception while getting provider session cache information", e);
-        }
-
-        return null;
+        return providerSessionCacheController.getProviderSessionCache(
+                getAppId(), request.getProvider().getFinancialInstitutionId());
     }
 
     @Override
     public void setProviderSessionCache(String value, int expiredTimeInSeconds) {
-        String financialInstitutionId = request.getProvider().getFinancialInstitutionId();
         providerSessionCacheController.setProviderSessionCache(
-                financialInstitutionId, value, expiredTimeInSeconds);
+                getAppId(),
+                request.getProvider().getFinancialInstitutionId(),
+                value,
+                expiredTimeInSeconds);
     }
 }

@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
+import se.tink.backend.aggregation.agents.framework.testserverclient.AgentTestServerClient;
+import se.tink.backend.aggregation.agents.framework.utils.CliPrintUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class AgentTestServerSupplementalRequester implements SupplementalRequester {

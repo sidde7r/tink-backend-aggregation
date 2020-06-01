@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.framework.compositeagenttest.base;
 
 import com.google.inject.Inject;
 import java.util.Set;
-import se.tink.backend.aggregation.agents.framework.NewAgentTestContext;
+import se.tink.backend.aggregation.agents.framework.context.NewAgentTestContext;
 
 public final class CompositeAgentTest {
 
