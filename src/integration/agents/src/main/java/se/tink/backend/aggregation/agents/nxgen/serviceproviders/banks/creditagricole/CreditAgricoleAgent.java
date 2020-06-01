@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.StorageKey;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator2.CreditAgricoleAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.CreditAgricoleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.CreditAgricoleTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -26,7 +26,7 @@ public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
     @Inject
     public CreditAgricoleAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        this.apiClient = new CreditAgricoleApiClient(client, persistentStorage, sessionStorage);
+        this.apiClient = new CreditAgricoleApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
         storeRegionId();
@@ -87,10 +87,9 @@ public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
                     request.getCredentials().getField(Key.USERNAME));
             persistentStorage.put(
                     StorageKey.USER_ACCOUNT_CODE, request.getCredentials().getField(Key.PASSWORD));
+            persistentStorage.put(StorageKey.EMAIL, request.getCredentials().getField(Key.EMAIL));
             persistentStorage.put(
-                    StorageKey.LOGIN_EMAIL, request.getCredentials().getField(Key.EMAIL));
-            persistentStorage.put(
-                    StorageKey.APP_CODE, request.getCredentials().getField(Key.ACCESS_PIN));
+                    StorageKey.PROFILE_PIN, request.getCredentials().getField(Key.ACCESS_PIN));
         }
     }
 

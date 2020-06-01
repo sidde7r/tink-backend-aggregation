@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FindProfilesResponse extends DefaultResponse {
 
     private String idPartenaireCo;
-    private List<ActiveUserList> activeUsersList;
+    private List<ActiveUser> activeUsersList;
     private String numTelMobile;
     private Boolean numTelMobileFiabilise;
 
@@ -20,11 +20,11 @@ public class FindProfilesResponse extends DefaultResponse {
         this.idPartenaireCo = idPartenaireCo;
     }
 
-    public List<ActiveUserList> getActiveUsersList() {
+    public List<ActiveUser> getActiveUsersList() {
         return activeUsersList;
     }
 
-    public void setActiveUsersList(List<ActiveUserList> activeUsersList) {
+    public void setActiveUsersList(List<ActiveUser> activeUsersList) {
         this.activeUsersList = activeUsersList;
     }
 
@@ -45,7 +45,7 @@ public class FindProfilesResponse extends DefaultResponse {
     }
 
     @JsonObject
-    public static class ActiveUserList {
+    public static class ActiveUser {
         private String userId;
         private String partnerId;
         private String userEmail;
