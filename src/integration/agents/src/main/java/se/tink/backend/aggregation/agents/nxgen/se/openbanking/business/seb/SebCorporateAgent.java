@@ -28,8 +28,8 @@ public final class SebCorporateAgent extends SebBaseAgent<SebCorporateApiClient>
     public SebCorporateAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient =
-                new SebCorporateApiClient(client, persistentStorage, request.getCredentials());
+        this.apiClient = new SebCorporateApiClient(client, persistentStorage, request);
+
         this.instanceStorage = new SebStorage();
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         creditCardRefreshController = getCreditCardRefreshController();

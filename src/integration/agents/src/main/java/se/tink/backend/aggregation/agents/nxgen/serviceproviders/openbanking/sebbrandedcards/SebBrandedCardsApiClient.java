@@ -24,8 +24,11 @@ public class SebBrandedCardsApiClient extends SebBaseApiClient {
     private String brandId;
 
     public SebBrandedCardsApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, String brandId) {
-        super(client, persistentStorage);
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            String brandId,
+            boolean isManualRefresh) {
+        super(client, persistentStorage, isManualRefresh);
         this.brandId = brandId;
     }
 
