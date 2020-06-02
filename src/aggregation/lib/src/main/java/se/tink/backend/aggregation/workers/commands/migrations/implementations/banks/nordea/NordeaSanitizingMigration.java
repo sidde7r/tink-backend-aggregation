@@ -58,7 +58,7 @@ public class NordeaSanitizingMigration extends ClusterSafeAgentVersionMigration 
 
     private String getLogSafeString(Credentials credentials) {
 
-        Set<String> sensitiveKeys = credentials.getSensitivePayload().keySet();
+        Set<String> sensitiveKeys = credentials.getSensitivePayloadAsMap().keySet();
         Set<String> fields = credentials.getFields().keySet();
 
         return String.format(

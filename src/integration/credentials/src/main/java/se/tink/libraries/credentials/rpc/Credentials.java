@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.field.rpc.Field;
@@ -49,8 +47,6 @@ public class Credentials implements Cloneable {
     private CredentialsTypes type;
     private Date updated;
     private String userId;
-    @JsonIgnore // Shoudn't be used between containers.
-    private String sensitivePayloadSerialized;
     private int dataVersion;
 
     private void generateIdIfMissing() {
@@ -131,72 +127,6 @@ public class Credentials implements Cloneable {
 
     public Date getSessionExpiryDate() {
         return sessionExpiryDate;
-    }
-
-    public String getSensitivePayloadSerialized() {
-        return sensitivePayloadSerialized;
-    }
-
-    public Map<String, String> getSensitivePayload() {
-        if (Strings.isNullOrEmpty(getSensitivePayloadSerialized())) {
-            return Maps.newHashMap();
-        }
-
-        Map<String, String> sensitivePayload =
-                SerializationUtils.deserializeFromString(
-                        getSensitivePayloadSerialized(),
-                        new TypeReference<HashMap<String, String>>() {});
-
-        // `sensitivePayload` is `null` if we're unable to deserialize the payload
-        if (sensitivePayload == null) {
-            sensitivePayload = Maps.newHashMap();
-        }
-
-        return sensitivePayload;
-    }
-
-    public String getSensitivePayload(String key) {
-        if (getSensitivePayload() == null) {
-            return null;
-        }
-
-        return getSensitivePayload().get(key);
-    }
-
-    public String getSensitivePayload(Field.Key key) {
-        return getSensitivePayload(key.getFieldKey());
-    }
-
-    public <T> Optional<T> getSensitivePayload(Field.Key key, Class<T> cls) {
-        String data = getSensitivePayload(key);
-
-        if (Strings.isNullOrEmpty(data)) {
-            return Optional.empty();
-        }
-
-        return Optional.ofNullable(SerializationUtils.deserializeFromString(data, cls));
-    }
-
-    public <T> Optional<T> getSensitivePayload(Field.Key key, TypeReference<T> typeReference) {
-        String data = getSensitivePayload(key);
-
-        if (Strings.isNullOrEmpty(data)) {
-            return Optional.empty();
-        }
-
-        return Optional.ofNullable(SerializationUtils.deserializeFromString(data, typeReference));
-    }
-
-    public void removeSensitivePayload(Field.Key key) {
-        Map<String, String> sensitivePayload = getSensitivePayload();
-
-        if (sensitivePayload == null) {
-            return;
-        }
-
-        sensitivePayload.remove(key.getFieldKey());
-
-        setSensitivePayload(sensitivePayload);
     }
 
     public CredentialsStatus getStatus() {
@@ -312,24 +242,6 @@ public class Credentials implements Cloneable {
         this.sessionExpiryDate = sessionExpiryDate;
     }
 
-    public void setSensitivePayloadSerialized(String sensitivePayloadSerialized) {
-        this.sensitivePayloadSerialized = sensitivePayloadSerialized;
-    }
-
-    public void setSensitivePayload(Map<String, String> sensitivePayload) {
-        setSensitivePayloadSerialized(SerializationUtils.serializeToString(sensitivePayload));
-    }
-
-    public void setSensitivePayload(String key, String value) {
-        Map<String, String> sensitivePayload = getSensitivePayload();
-        sensitivePayload.put(key, value);
-        setSensitivePayload(sensitivePayload);
-    }
-
-    public void setSensitivePayload(Field.Key key, String value) {
-        setSensitivePayload(key.getFieldKey(), value);
-    }
-
     public void setStatus(CredentialsStatus status) {
         this.status = status;
     }
@@ -389,26 +301,5 @@ public class Credentials implements Cloneable {
                 .add("id", getId())
                 .add("userid", getUserId())
                 .toString();
-    }
-
-    @JsonIgnore
-    public void setPersistentSession(Object object) {
-        if (object == null) {
-            removePersistentSession();
-        }
-
-        setSensitivePayload(
-                Field.Key.PERSISTENT_LOGIN_SESSION_NAME,
-                SerializationUtils.serializeToString(object));
-    }
-
-    public void removePersistentSession() {
-        removeSensitivePayload(Field.Key.PERSISTENT_LOGIN_SESSION_NAME);
-    }
-
-    public void addSensitivePayload(Map<String, String> payload) {
-        for (String key : payload.keySet()) {
-            setSensitivePayload(key, payload.get(key));
-        }
     }
 }

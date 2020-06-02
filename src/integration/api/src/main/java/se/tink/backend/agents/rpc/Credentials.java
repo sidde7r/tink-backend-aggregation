@@ -88,7 +88,7 @@ public class Credentials implements Cloneable {
      * @param provider
      */
     public void clearSensitiveInformation(Provider provider) {
-        setSensitivePayload(null);
+        setSensitivePayloadAsMap(null);
         setFields(separateFields(provider, false));
     }
 
@@ -184,7 +184,7 @@ public class Credentials implements Cloneable {
         return sensitivePayloadSerialized;
     }
 
-    public Map<String, String> getSensitivePayload() {
+    public Map<String, String> getSensitivePayloadAsMap() {
         if (Strings.isNullOrEmpty(getSensitivePayloadSerialized())) {
             return Maps.newHashMap();
         }
@@ -203,11 +203,11 @@ public class Credentials implements Cloneable {
     }
 
     public String getSensitivePayload(String key) {
-        if (getSensitivePayload() == null) {
+        if (getSensitivePayloadAsMap() == null) {
             return null;
         }
 
-        return getSensitivePayload().get(key);
+        return getSensitivePayloadAsMap().get(key);
     }
 
     public Optional<String> getSensitivePayload(Field.Key key) {
@@ -225,7 +225,7 @@ public class Credentials implements Cloneable {
     }
 
     public void removeSensitivePayload(Field.Key key) {
-        Map<String, String> sensitivePayload = getSensitivePayload();
+        Map<String, String> sensitivePayload = getSensitivePayloadAsMap();
 
         if (sensitivePayload == null) {
             return;
@@ -233,7 +233,7 @@ public class Credentials implements Cloneable {
 
         sensitivePayload.remove(key.getFieldKey());
 
-        setSensitivePayload(sensitivePayload);
+        setSensitivePayloadAsMap(sensitivePayload);
     }
 
     public CredentialsStatus getStatus() {
@@ -380,14 +380,14 @@ public class Credentials implements Cloneable {
         this.sensitivePayloadSerialized = sensitivePayloadSerialized;
     }
 
-    public void setSensitivePayload(Map<String, String> sensitivePayload) {
+    public void setSensitivePayloadAsMap(Map<String, String> sensitivePayload) {
         setSensitivePayloadSerialized(SerializationUtils.serializeToString(sensitivePayload));
     }
 
     public void setSensitivePayload(String key, String value) {
-        Map<String, String> sensitivePayload = getSensitivePayload();
+        Map<String, String> sensitivePayload = getSensitivePayloadAsMap();
         sensitivePayload.put(key, value);
-        setSensitivePayload(sensitivePayload);
+        setSensitivePayloadAsMap(sensitivePayload);
     }
 
     public void setSensitivePayload(Field.Key key, String value) {

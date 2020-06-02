@@ -94,7 +94,7 @@ public class CredentialsStringMaskerBuilder implements StringMaskerBuilder {
     }
 
     private Collection<String> getSensitivePayloadValuesNotEmpty() {
-        Map<String, String> sensitivePayload = credentials.getSensitivePayload();
+        Map<String, String> sensitivePayload = credentials.getSensitivePayloadAsMap();
         Collection<String> sensitiveValues = new ArrayList<>();
 
         if (sensitivePayload == null) {

@@ -28,6 +28,16 @@ public class CoreCredentialsMapper {
                                 mapper ->
                                         mapper.skip(
                                                 se.tink.backend.agents.rpc.Credentials
+                                                        ::setSensitivePayloadSerialized))
+                        .addMappings(
+                                mapper ->
+                                        mapper.skip(
+                                                se.tink.backend.agents.rpc.Credentials
+                                                        ::setSensitivePayloadAsMap))
+                        .addMappings(
+                                mapper ->
+                                        mapper.skip(
+                                                se.tink.backend.agents.rpc.Credentials
                                                         ::setPersistentSession))
                         .addMappings(
                                 mapper ->
@@ -37,8 +47,7 @@ public class CoreCredentialsMapper {
         fromAggregationMap =
                 new ModelMapper()
                         .createTypeMap(
-                                se.tink.backend.agents.rpc.Credentials.class, Credentials.class)
-                        .addMappings(mapper -> mapper.skip(Credentials::setPersistentSession));
+                                se.tink.backend.agents.rpc.Credentials.class, Credentials.class);
     }
 
     @VisibleForTesting
