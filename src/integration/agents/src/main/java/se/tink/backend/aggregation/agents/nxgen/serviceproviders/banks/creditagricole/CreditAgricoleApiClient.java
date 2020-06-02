@@ -33,6 +33,7 @@ public class CreditAgricoleApiClient {
     public CreditAgricoleApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.client.disableSignatureRequestHeader();
     }
 
     public AccessibilityGridResponse getAccessibilityGrid() {
