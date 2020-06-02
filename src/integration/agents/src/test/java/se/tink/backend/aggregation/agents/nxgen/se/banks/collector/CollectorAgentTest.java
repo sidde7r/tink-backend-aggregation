@@ -25,7 +25,7 @@ public class CollectorAgentTest {
 
     @Test
     public void test() throws Exception {
-        new AgentIntegrationTest.Builder("se", "se-collector-bankid")
+        new AgentIntegrationTest.Builder("se", "collector-bankid")
                 .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
