@@ -77,7 +77,7 @@ public class RedirectAuthenticationDemoAgentConstants {
         public static final String AUTHORIZE = "AUTHORIZE";
         public static final String SUFFICIENT_FUNDS = "SUFFICIENT_FUNDS";
         public static final String EXECUTE_PAYMENT = "EXECUTE_PAYMENT";
-        public static final String ADD_BENEFICIARY = "ADD_BENEFICIARY";
+        public static final String CREATE_BENEFICIARY = "CREATE_BENEFICIARY";
     }
 
     public static class StaticAccountUK {

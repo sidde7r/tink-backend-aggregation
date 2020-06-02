@@ -6,23 +6,23 @@ import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryAuth
 import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 
-public class AddBeneficiaryController {
-    private final AddBeneficiaryExecutor addBeneficiaryExecutor;
+public class CreateBeneficiaryController {
+    private final CreateBeneficiaryExecutor createBeneficiaryExecutor;
 
-    public AddBeneficiaryController(AddBeneficiaryExecutor addBeneficiaryExecutor) {
-        this.addBeneficiaryExecutor = addBeneficiaryExecutor;
+    public CreateBeneficiaryController(CreateBeneficiaryExecutor createBeneficiaryExecutor) {
+        this.createBeneficiaryExecutor = createBeneficiaryExecutor;
     }
 
-    public AddBeneficiaryResponse createBeneficiary(AddBeneficiaryRequest addBeneficiaryRequest)
-            throws BeneficiaryException {
-        return addBeneficiaryExecutor.createBeneficiary(addBeneficiaryRequest);
+    public CreateBeneficiaryResponse createBeneficiary(
+            CreateBeneficiaryRequest createBeneficiaryRequest) throws BeneficiaryException {
+        return createBeneficiaryExecutor.createBeneficiary(createBeneficiaryRequest);
     }
 
     public CreateBeneficiaryMultiStepResponse sign(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest)
             throws BeneficiaryException {
         try {
-            return addBeneficiaryExecutor.sign(createBeneficiaryMultiStepRequest);
+            return createBeneficiaryExecutor.sign(createBeneficiaryMultiStepRequest);
         } catch (AuthenticationException e) {
             if (e instanceof BankIdException) {
                 BankIdError bankIdError = ((BankIdException) e).getError();

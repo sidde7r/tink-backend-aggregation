@@ -5,16 +5,16 @@ import java.util.List;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.libraries.payment.rpc.AddBeneficiary;
+import se.tink.libraries.payment.rpc.CreateBeneficiary;
 
-public class CreateBeneficiaryMultiStepRequest extends AddBeneficiaryRequest {
+public class CreateBeneficiaryMultiStepRequest extends CreateBeneficiaryRequest {
     private String step;
     private final List<Field> fields;
     private List<String> userInputs;
-    private AddBeneficiary beneficiary;
+    private CreateBeneficiary beneficiary;
 
     public CreateBeneficiaryMultiStepRequest(
-            AddBeneficiary beneficiary,
+            CreateBeneficiary beneficiary,
             Storage storage,
             String step,
             List<Field> fields,
@@ -27,10 +27,10 @@ public class CreateBeneficiaryMultiStepRequest extends AddBeneficiaryRequest {
     }
 
     public static CreateBeneficiaryMultiStepRequest of(
-            AddBeneficiaryResponse addBeneficiaryResponse) {
+            CreateBeneficiaryResponse createBeneficiaryResponse) {
         return new CreateBeneficiaryMultiStepRequest(
-                addBeneficiaryResponse.getBeneficiary(),
-                Storage.copyOf(addBeneficiaryResponse.getStorage()),
+                createBeneficiaryResponse.getBeneficiary(),
+                Storage.copyOf(createBeneficiaryResponse.getStorage()),
                 SigningStepConstants.STEP_INIT,
                 Collections.emptyList(),
                 Collections.emptyList());
