@@ -3,11 +3,24 @@ package se.tink.libraries.payment.rpc;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 
 public class Beneficiary {
     private final String name;
     private final String accountNumber;
     private final AccountIdentifier.Type accountNumberType;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public Type getAccountNumberType() {
+        return accountNumberType;
+    }
 
     private Beneficiary(Builder builder) {
         this.name = builder.name;

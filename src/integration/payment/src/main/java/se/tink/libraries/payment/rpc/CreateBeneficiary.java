@@ -19,6 +19,10 @@ public class CreateBeneficiary {
         this.status = status;
     }
 
+    public Beneficiary getBeneficiary() {
+        return beneficiary;
+    }
+
     public static class Builder {
         private Beneficiary beneficiary;
         private CreateBeneficiaryStatus status;
