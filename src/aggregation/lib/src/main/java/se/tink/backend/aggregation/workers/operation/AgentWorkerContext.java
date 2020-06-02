@@ -364,10 +364,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     private boolean shouldAggregateDataForAccount(Account account) {
-        // TODO: extend filtering by using payment classification information
-        // (For now we discard the result as in the beginning we just want to collect metrics)
-        PaymentAccountClassification paymentAccountClassification =
-                accountClassifier.classifyAsPaymentAccount(request.getProvider(), account);
+        try {
+            // TODO: extend filtering by using payment classification information
+            // (For now we discard the result as in the beginning we just want to collect metrics)
+            PaymentAccountClassification paymentAccountClassification =
+                    accountClassifier.classifyAsPaymentAccount(request.getProvider(), account);
+        } catch (RuntimeException e) {
+            log.error("[classifyAsPaymentAccount] Unexpected exception occurred", e);
+        }
         return accountsToAggregate.stream()
                 .map(Account::getBankId)
                 .collect(Collectors.toList())
