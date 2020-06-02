@@ -17,11 +17,13 @@ public final class CreditAgricoleBaseConstants {
     }
 
     public static class ApiServices {
-        public static final String ACCOUNTS = "/dsp2/v1/accounts";
-        public static final String CONSENTS = "/dsp2/v1/consents";
-        public static final String TRANSACTIONS = "/dsp2/v1/accounts/{accountId}/transactions";
+        public static final String BASE_PATH = "/dsp2/v1";
+        public static final String ACCOUNTS = BASE_PATH + "/accounts";
+        public static final String CONSENTS = BASE_PATH + "/consents";
+        public static final String TRANSACTIONS = ACCOUNTS + "/{accountId}/transactions";
         public static final String TOKEN = "/authentication/v1/openid/token";
-        public static final String FETCH_USER_IDENTITY_DATA = "/dsp2/v1/end-user-identity";
+        public static final String FETCH_USER_IDENTITY_DATA = BASE_PATH + "/end-user-identity";
+        public static final String BENEFICIARIES_PATH = "/trusted-beneficiaries";
     }
 
     public static class StorageKeys {

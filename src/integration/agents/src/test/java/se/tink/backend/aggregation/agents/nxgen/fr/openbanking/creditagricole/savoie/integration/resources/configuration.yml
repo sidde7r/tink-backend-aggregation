@@ -1,0 +1,14 @@
+agentsServiceConfiguration:
+  integrations:
+    f34fb840b716491eb3312a493be3ed1d:
+      tink:
+        clientId: DUMMY_CLIENT_ID
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        certificateId: Tink
+        clientSigningCertificateSerialNumber: Tink
+        psuIpAddress: 127.0.0.1
+        authorizeUrl: https://psd2-portal.credit-agricole.fr/ca-des-savoie/authorize
+        baseUrl: https://psd2-api.ca-des-savoie.fr
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

@@ -5,44 +5,32 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.agents.utils.jersey.interceptor.MessageSignInterceptor;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterOrder;
 import se.tink.backend.aggregation.nxgen.http.filter.engine.FilterPhases;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @FilterOrder(category = FilterPhases.SECURITY, order = 0)
+@RequiredArgsConstructor
 public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterceptor {
 
     private static final String NEW_LINE = "\n";
     private static final String COLON_SPACE = ": ";
 
-    public static final List<String> SIGNATURE_HEADERS =
+    private static final List<String> SIGNATURE_HEADERS =
             ImmutableList.of(
                     CreditAgricoleBaseConstants.HeaderKeys.DIGEST,
                     CreditAgricoleBaseConstants.HeaderKeys.AUTHORIZATION,
                     CreditAgricoleBaseConstants.HeaderKeys.X_REQUEST_ID);
 
-    private CreditAgricoleBaseConfiguration configuration;
-    private EidasProxyConfiguration eidasConf;
-    private EidasIdentity eidasIdentity;
-
-    public CreditAgricoleBaseMessageSignInterceptor(
-            CreditAgricoleBaseConfiguration configuration,
-            EidasProxyConfiguration eidasConf,
-            EidasIdentity eidasIdentity) {
-        this.configuration = configuration;
-        this.eidasConf = eidasConf;
-        this.eidasIdentity = eidasIdentity;
-    }
+    private final CreditAgricoleBaseConfiguration configuration;
+    private final QsealcSigner qsealcSigner;
 
     @Override
     protected void appendAdditionalHeaders(HttpRequest request) {
@@ -102,10 +90,7 @@ public class CreditAgricoleBaseMessageSignInterceptor extends MessageSignInterce
     }
 
     private String signMessage(String toSignString) {
-        QsealcSigner signer =
-                QsealcSignerImpl.build(
-                        eidasConf.toInternalConfig(), QsealcAlg.EIDAS_RSA_SHA256, eidasIdentity);
-        return signer.getSignatureBase64(toSignString.getBytes());
+        return qsealcSigner.getSignatureBase64(toSignString.getBytes());
     }
 
     private String getDigest(Object body) {

@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
@@ -11,20 +16,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.date.DateUtils;
 
+@RequiredArgsConstructor
 public class CreditAgricoleBaseTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
 
+    private static final long MAX_NUM_MONTHS_FOR_FETCH = 13L;
+
     private final CreditAgricoleBaseApiClient apiClient;
     private final PersistentStorage persistentStorage;
-
-    public CreditAgricoleBaseTransactionalAccountFetcher(
-            CreditAgricoleBaseApiClient apiClient, PersistentStorage persistentStorage) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-    }
+    private final Clock clock;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -41,25 +43,38 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
+        final LocalDate fromDateLocal = getLocalDateFromDate(fromDate);
+        final LocalDate toDateLocal = getLocalDateFromDate(toDate);
 
         return isInitialFetch()
-                ? getAllTransactions(account, fromDate, toDate)
-                : get90DaysTransactions(account, toDate);
+                ? getAllTransactions(account, fromDateLocal, toDateLocal)
+                : get90DaysTransactions(account, toDateLocal);
     }
 
     private PaginatorResponse getAllTransactions(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+            TransactionalAccount account, LocalDate fromDate, LocalDate toDate) {
+
+        final LocalDate oldestDateForFetch = getOldestDateForTransactionFetch();
+
+        if (oldestDateForFetch.isAfter(toDate)) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
+
+        final LocalDate limitedFromDate =
+                oldestDateForFetch.isAfter(fromDate) ? oldestDateForFetch : fromDate;
+
         return PaginatorResponseImpl.create(
                 apiClient
-                        .getTransactions(account.getApiIdentifier(), fromDate, toDate)
+                        .getTransactions(account.getApiIdentifier(), limitedFromDate, toDate)
                         .getTinkTransactions());
     }
 
-    private PaginatorResponse get90DaysTransactions(TransactionalAccount account, Date toDate) {
+    private PaginatorResponse get90DaysTransactions(
+            TransactionalAccount account, LocalDate toDate) {
+        final LocalDate fromDate = LocalDate.now(clock).minusDays(89L);
         return PaginatorResponseImpl.create(
                 apiClient
-                        .getTransactions(
-                                account.getApiIdentifier(), DateUtils.addDays(toDate, -89), toDate)
+                        .getTransactions(account.getApiIdentifier(), fromDate, toDate)
                         .getTinkTransactions(),
                 false);
     }
@@ -68,5 +83,15 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
         return persistentStorage
                 .get(StorageKeys.IS_INITIAL_FETCH, Boolean.class)
                 .orElse(Boolean.FALSE);
+    }
+
+    private LocalDate getOldestDateForTransactionFetch() {
+        return LocalDate.now(clock).minusMonths(MAX_NUM_MONTHS_FOR_FETCH);
+    }
+
+    private static LocalDate getLocalDateFromDate(Date date) {
+        return Objects.nonNull(date)
+                ? date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate()
+                : null;
     }
 }

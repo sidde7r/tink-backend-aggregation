@@ -1,0 +1,74 @@
+REQUEST 1
+POST https://psd2-api.ca-des-savoie.fr/authentication/v1/openid/token
+Content-Type: application/x-www-form-urlencoded
+User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+X-Aggregator : Tink Testing
+
+scope=aisp+extended_transaction_history&grant_type=authorization_code&code=DUMMY_AUTH_CODE&redirect_uri=https%3A%2F%2Fapi.tink.com%2Fapi%2Fv1%2Fcredentials%2Fthird-party%2Fcallback&client_id=DUMMY_CLIENT_ID
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"token_type":"Bearer","expires_in":540,"access_token":"DUMMY_ACCESS_TOKEN","last_sca_date":"2020-05-16T18:18:03.000Z"}
+
+REQUEST 2
+GET https://psd2-api.ca-des-savoie.fr/dsp2/v1/accounts
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"accounts":[{"resourceId":"DUMMY_RESOURCE_ID","bicFi":null,"accountId":{"iban":"FR7630004000000000000123400","other":null,"currency":"EUR"},"name":"DUMMY_NAME","details":null,"linkedAccount":null,"usage":"PRIV","cashAccountType":"CACC","product":"COMPTE CHEQUE","balances":[{"name":"Accounting Balance","balanceAmount":{"currency":"EUR","amount":"3821.56"},"balanceType":"CLBD","lastChangeDateTime":null,"referenceDate":"2020-05-16","lastCommittedTransaction":null}],"psuStatus":null,"_links":{"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"transactions":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions","templated":true}}}],"_links":{"self":{"href":"/accounts","templated":false},"endUserIdentity":{"href":"/end-user-identity","templated":false},"beneficiaries":null,"first":null,"last":null,"next":null,"prev":null}}
+
+REQUEST 3
+PUT https://psd2-api.ca-des-savoie.fr/dsp2/v1/consents
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"balances":[{"iban":"FR7630004000000000000123400","other":null}],"transactions":[{"iban":"FR7630004000000000000123400","other":null}],"trustedBeneficiaries":true,"psuIdentity":true}
+
+RESPONSE 3
+201
+Content-Type: application/json
+
+REQUEST 4
+GET https://psd2-api.ca-des-savoie.fr/dsp2/v1/accounts/DUMMY_RESOURCE_ID/transactions
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"_links":{"self":{"href":"/accounts/DUMMY_RESOURCE_ID/transactions","templated":true},"balances":{"href":"/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/accounts","templated":false},"prev":null,"last":null,"next":{"href":null,"templated":true},"first":null},"transactions":[{"resourceId":null,"entryReference":"1234567890123","bookingDate":"2020-05-15","valueDate":"2020-05-15","transactionDate":null,"status":"BOOK","creditDebitIndicator":"DBIT","remittanceInformation":["DUMMY_DESCRIPTION"],"transactionAmount":{"currency":"EUR","amount":"102.56"}}]}
+
+REQUEST 5
+GET https://psd2-api.ca-des-savoie.fr/dsp2/v1/trusted-beneficiaries
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 5 SET BENEFICIARIES_FIRST_PAGE_LOADED
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"id":null,"isTrusted":true,"creditorAccount":{"iban":"FR7612548029981234567890161","other":null},"creditorAgent":{"bicFi":"AXUBFRPP","name":null,"clearingSystemMemberId":null,"postalAddress":null},"creditor":{"name":"DUMMY_NAME","postalAddress":null,"organisationId":null,"privateId":null}}],"_links":{"self":{"href":"/trusted-beneficiaries","templated":false},"parent-list":null,"first":null,"last":null,"next":{"href":"/trusted-beneficiaries?page=2","templated":true},"prev":null}}
+
+REQUEST 6 MATCH BENEFICIARIES_FIRST_PAGE_LOADED
+GET https://psd2-api.ca-des-savoie.fr/dsp2/v1/trusted-beneficiaries?page=2
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"id":null,"isTrusted":true,"creditorAccount":{"iban":"FR7610278001110002007680247","other":null},"creditorAgent":{"bicFi":"AXUBFRPP","name":null,"clearingSystemMemberId":null,"postalAddress":null},"creditor":{"name":"DUMMY_NAME","postalAddress":null,"organisationId":null,"privateId":null}}],"_links":{"self":{"href":"/trusted-beneficiaries","templated":false},"parent-list":null,"first":null,"last":null,"next":null,"prev":null}}

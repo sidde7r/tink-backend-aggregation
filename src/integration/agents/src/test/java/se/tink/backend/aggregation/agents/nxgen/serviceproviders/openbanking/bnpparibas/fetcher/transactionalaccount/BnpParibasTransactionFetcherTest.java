@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class BnpParibasTransactionFetcherTest {
 
-    private static final ZoneId ZONE_ID = ZoneId.systemDefault();
+    private static final ZoneId ZONE_ID = ZoneId.of("UTC");
     private static final Instant NOW = Instant.now();
     private static final LocalDate TODAY = NOW.atZone(ZONE_ID).toLocalDate();
     private static final String ACCOUNT_ID = "DUMMY_ACCOUNT_ID";

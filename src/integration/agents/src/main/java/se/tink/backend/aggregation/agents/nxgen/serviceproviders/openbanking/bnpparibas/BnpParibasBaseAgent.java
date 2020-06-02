@@ -138,7 +138,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 new BnpParibasTransactionalAccountFetcher(apiClient);
 
         BnpParibasTransactionFetcher transactionFetcher =
-                new BnpParibasTransactionFetcher(apiClient, Clock.systemDefaultZone());
+                new BnpParibasTransactionFetcher(apiClient, Clock.systemUTC());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
