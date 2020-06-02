@@ -123,5 +123,6 @@ public final class EnterCardConstants {
         public static final String COOP = "COOP";
         public static final String REMEMBER = "RE:MEMBER";
         public static final String MORE_GOLF = "GOLF";
+        public static final String MERVARDE = "HANDELS";
     }
 }
