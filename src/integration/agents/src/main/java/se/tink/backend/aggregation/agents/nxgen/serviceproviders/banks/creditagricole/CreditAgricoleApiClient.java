@@ -14,8 +14,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.DefaultAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.FindProfilesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthenticationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpInitRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.RestoreProfileForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.AddBeneficiaryRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.AddBeneficiaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.rpc.OperationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
@@ -92,6 +100,91 @@ public class CreditAgricoleApiClient {
 
     public AuthenticateResponse authenticate(AuthenticateRequest request) {
         return createAuthRequest().post(AuthenticateResponse.class, request);
+    }
+
+    public OtpInitResponse otpInit() {
+        OtpInitRequest otpInitRequest =
+                new OtpInitRequest(
+                        Integer.parseInt(persistentStorage.get(StorageKey.USER_ID)),
+                        persistentStorage.get(StorageKey.PARTNER_ID));
+
+        OtpInitResponse otpInitResponse =
+                client.request(
+                                Url.OTP_AUTHENTICATION.parameter(
+                                        StorageKey.REGION_ID,
+                                        persistentStorage.get(StorageKey.REGION_ID)))
+                        .body(otpInitRequest, MediaType.APPLICATION_JSON_TYPE)
+                        .post(OtpInitResponse.class);
+        if (!otpInitResponse.isResponseOK()) {
+            throw new IllegalStateException("Unknown error when initializing OTP authentication");
+        }
+        return otpInitResponse;
+    }
+
+    public OtpAuthenticationResponse otpAuthenticate(String otp) {
+        OtpAuthenticationRequest otpAuthenticationRequest =
+                new OtpAuthenticationRequest(
+                        persistentStorage.get(StorageKey.USER_ID),
+                        persistentStorage.get(StorageKey.PARTNER_ID),
+                        otp);
+        OtpAuthenticationResponse otpAuthenticationResponse =
+                client.request(
+                                Url.OTP_AUTHENTICATION.parameter(
+                                        StorageKey.REGION_ID,
+                                        persistentStorage.get(StorageKey.REGION_ID)))
+                        .body(otpAuthenticationRequest, MediaType.APPLICATION_JSON_TYPE)
+                        .post(OtpAuthenticationResponse.class);
+        if (!otpAuthenticationResponse.isResponseOK()) {
+            throw new IllegalStateException("Unknown error when authenticating OTP: ");
+        }
+        return otpAuthenticationResponse;
+    }
+
+    public IbanValidationResponse validateIban(String iban) {
+        IbanValidationRequest ibanValidationRequest = new IbanValidationRequest(iban);
+        IbanValidationResponse ibanValidationResponse =
+                client.request(
+                                Url.VALIDATE_IBAN
+                                        .parameter(
+                                                StorageKey.USER_ID,
+                                                persistentStorage.get(StorageKey.USER_ID))
+                                        .parameter(
+                                                StorageKey.REGION_ID,
+                                                persistentStorage.get(StorageKey.REGION_ID))
+                                        .parameter(
+                                                StorageKey.PARTNER_ID,
+                                                persistentStorage.get(StorageKey.PARTNER_ID)))
+                        .header(Authorization.HEADER, basicAuth())
+                        .body(ibanValidationRequest, MediaType.APPLICATION_JSON_TYPE)
+                        .post(IbanValidationResponse.class);
+        if (!ibanValidationResponse.isResponseOK()) {
+            throw new IllegalStateException(
+                    "Validate Iban failed; probably supplied with bad iban");
+        }
+        return ibanValidationResponse;
+    }
+
+    public void addBeneficiary(String label, String iban, String bic) {
+        AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(label, iban, bic);
+        AddBeneficiaryResponse addBeneficiaryResponse =
+                client.request(
+                                Url.ADD_BENEFICIARY
+                                        .parameter(
+                                                StorageKey.USER_ID,
+                                                persistentStorage.get(StorageKey.USER_ID))
+                                        .parameter(
+                                                StorageKey.REGION_ID,
+                                                persistentStorage.get(StorageKey.REGION_ID))
+                                        .parameter(
+                                                StorageKey.PARTNER_ID,
+                                                persistentStorage.get(StorageKey.PARTNER_ID)))
+                        .header(Authorization.HEADER, basicAuth())
+                        .body(addBeneficiaryRequest, MediaType.APPLICATION_JSON_TYPE)
+                        .post(AddBeneficiaryResponse.class);
+        // TODO: differentiate if the error is adding an account that is already trusted.
+        if (!addBeneficiaryResponse.isResponseOK()) {
+            throw new IllegalStateException("addBeneficiary: something unexpected went wrong.");
+        }
     }
 
     /* ACCOUNTS AND TRANSACTIONS */

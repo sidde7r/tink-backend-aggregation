@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -9,10 +10,15 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.CreditAgricoleAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.CreditAgricoleAddBeneficiaryExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.CreditAgricoleTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
@@ -101,5 +107,15 @@ public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
                 updateController,
                 transactionalAccountsFetcher,
                 transactionalAccountsFetcher);
+    }
+
+    @Override
+    public Optional<CreateBeneficiaryController> constructCreateBeneficiaryController() {
+        final SupplementalInformationProvider supplementalInformationProvider =
+                new SupplementalInformationProviderImpl(supplementalRequester, request);
+        CreateBeneficiaryExecutor addBeneficiaryExecutor =
+                new CreditAgricoleAddBeneficiaryExecutor(
+                        apiClient, supplementalInformationProvider);
+        return Optional.of(new CreateBeneficiaryController(addBeneficiaryExecutor));
     }
 }

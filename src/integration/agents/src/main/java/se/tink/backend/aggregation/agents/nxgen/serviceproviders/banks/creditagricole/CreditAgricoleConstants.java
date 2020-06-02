@@ -26,7 +26,34 @@ public class CreditAgricoleConstants {
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID));
-
+        public static final URL OTP_AUTHENTICATION =
+                new URL(
+                        BASE_URL
+                                + String.format(
+                                        "/budget5/iphoneservice/otp/{%s}/request",
+                                        StorageKey.REGION_ID));
+        public static final URL VALIDATE_IBAN =
+                new URL(
+                        BASE_URL
+                                + String.format(
+                                        "/budget5/iphoneservice/portfolio/{%s}/{%s}/{%s}/codeBic",
+                                        StorageKey.USER_ID,
+                                        StorageKey.REGION_ID,
+                                        StorageKey.PARTNER_ID));
+        public static final URL ADD_BENEFICIARY =
+                new URL(
+                        BASE_URL
+                                + String.format(
+                                        "budget5/iphoneservice/portfolio/{%s}/{%s}/{%s}/externalAccount",
+                                        StorageKey.USER_ID,
+                                        StorageKey.REGION_ID,
+                                        StorageKey.PARTNER_ID));
+        public static final URL KEEP_ALIVE =
+                new URL(
+                        BASE_URL
+                                + String.format(
+                                        "/budget5/iphoneservice/authentication/{%s}/{%s}/longSessionProfile",
+                                        StorageKey.USER_ID, StorageKey.REGION_ID));
         public static final URL CONTRACTS =
                 new URL(
                         BASE_URL
@@ -77,6 +104,8 @@ public class CreditAgricoleConstants {
         public static final String PASSWORD = "password";
         public static final String EMAIL = "email";
         public static final String LL_TOKEN = "llToken";
+        public static final String ADD_EXTERNAL_IBAN = "add_external_iban";
+        public static final String OTP_GRANT_TYPE = "otp_sms";
     }
 
     public static class AccountType {
@@ -97,6 +126,11 @@ public class CreditAgricoleConstants {
         public static final String SCA_REQUIRED = "fr.mabanque.createuser.scarequired";
         public static final String FUNCTIONAL_ERROR = "FonctionnalError";
         public static final String BAM_AUTH_REQUIRED = "BamAuthenticationRequired";
+    }
+
+    public static class Step {
+        public static final String AUTHORIZE = "AUTHORIZE";
+        public static final String ADD_BENEFICIARY = "ADD_BENEFICIARY";
     }
 
     public static final String DATE_FORMAT = "yyyyMMdd";
