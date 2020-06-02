@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -847,6 +848,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         readConfigurationFile();
         Agent agent = createAgent(credentialsRequest);
         try {
+            login(agent, credentialsRequest);
             if (agent instanceof CreateBeneficiaryControllerable) {
                 log.info("Adding beneficiary.");
                 CreateBeneficiaryController createBeneficiaryController =
@@ -898,7 +900,16 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 CreateBeneficiaryStatus statusResult =
                         createBeneficiaryMultiStepResponse.getBeneficiary().getStatus();
                 Assert.assertEquals(statusResult, CreateBeneficiaryStatus.ADDED);
-                log.info("Done with adding beneficiary.");
+                log.info(
+                        "Done with adding beneficiary, name: {}, type: {}, account number: {}",
+                        beneficiary.getName(),
+                        beneficiary.getAccountNumberType(),
+                        StringUtils.overlay(
+                                beneficiary.getAccountNumber(),
+                                StringUtils.repeat(
+                                        '*', beneficiary.getAccountNumber().length() - 4),
+                                0,
+                                beneficiary.getAccountNumber().length() - 4));
 
             } else {
                 throw new NotImplementedException(agent.getAgentClass().getSimpleName());

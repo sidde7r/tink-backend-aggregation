@@ -35,13 +35,7 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
 
     @Override
     public CreateBeneficiaryResponse createBeneficiary(
-            CreateBeneficiaryRequest createBeneficiaryRequest) throws BeneficiaryException {
-        try {
-            thirdPartyAppAuthenticationController.authenticate(credentials);
-        } catch (AuthenticationException | AuthorizationException e) {
-            e.printStackTrace();
-        }
-
+            CreateBeneficiaryRequest createBeneficiaryRequest) {
         // Do not use the real PersistentStorage because we don't want to overwrite the
         // AIS auth token.
         PersistentStorage dummyStorage = new PersistentStorage();
