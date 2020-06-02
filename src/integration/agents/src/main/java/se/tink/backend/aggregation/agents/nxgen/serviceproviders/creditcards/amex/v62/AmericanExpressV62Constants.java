@@ -66,6 +66,9 @@ public class AmericanExpressV62Constants {
         public static final String INITIALIZATION =
                 "/mobileone/msl/services/accountservicing/v1/initialization";
         public static final String SANE_ID = "/mobileone/msl/services/app/passthrough";
+        public static final String EXTEND_SESSION =
+                "/mobileone/msl/services/accountservicing/v1/extendSession";
+        public static final String LOG_OUT = "/mobileone/msl/services/accountservicing/v1/logoff";
     }
 
     public static class Tags {
