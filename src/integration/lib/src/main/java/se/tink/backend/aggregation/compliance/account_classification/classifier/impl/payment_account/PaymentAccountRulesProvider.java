@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
-import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.Psd2CapabilitiesRule;
-import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.Psd2CheckingAccountRule;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.Psd2CapabilitiesRule;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.Psd2CheckingAccountRule;
 
 public class PaymentAccountRulesProvider {
     // rules are to be processed identically but are split into two collections to just improve

@@ -10,6 +10,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.Psd2CapabilitiesRule;
 import se.tink.libraries.enums.MarketCode;
 
 public class Psd2CapabilitiesRuleTest {

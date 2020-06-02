@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2;
+package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common;
 
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Account;
@@ -6,6 +6,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.Psd2Markets;
 
 public class Psd2CapabilitiesRule implements ClassificationRule<PaymentAccountClassification> {
     @Override
