@@ -1,6 +1,10 @@
 java_library(
     name = "psd2",
-    srcs = glob(["*.java"]),
+    srcs = glob([
+        "*.java",
+        "common/*.java",
+        "market/*.java",
+    ]),
     visibility = [
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/account_classification:__subpackages__",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/compliance/account_classification:__subpackages__",
