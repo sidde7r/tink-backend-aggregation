@@ -58,17 +58,18 @@ public class Psd2CheckingAccountRuleTest {
         Arrays.stream(AccountTypes.values())
                 .filter(accountType -> !accountType.equals(AccountTypes.CHECKING))
                 .map(this::prepareMockedAccountWithType)
+                .forEach(this::expectUndeterminedForAllPsd2MarketsWithAccount);
+    }
+
+    private void expectUndeterminedForAllPsd2MarketsWithAccount(Account account) {
+        Psd2Markets.PSD2_MARKETS.stream()
+                .map(this::prepareMockedProviderWithMarketCode)
                 .forEach(
-                        account ->
-                                Psd2Markets.PSD2_MARKETS.stream()
-                                        .map(this::prepareMockedProviderWithMarketCode)
-                                        .forEach(
-                                                provider ->
-                                                        testRuleForProviderAndAccount(
-                                                                provider,
-                                                                account,
-                                                                PaymentAccountClassification
-                                                                        .UNDETERMINED)));
+                        provider ->
+                                testRuleForProviderAndAccount(
+                                        provider,
+                                        account,
+                                        PaymentAccountClassification.UNDETERMINED));
     }
 
     private Provider prepareMockedProviderWithMarketCode(MarketCode marketCode) {
