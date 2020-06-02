@@ -118,11 +118,11 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
                         createEncryptedAccountCode(),
                         persistentStorage.get(StorageKey.USER_ACCOUNT_NUMBER));
         apiClient.createUser(request);
+        apiClient.requestOtp(new DefaultAuthRequest("create_user"));
         return AuthenticationStepResponse.executeNextStep();
     }
 
     private AuthenticationStepResponse processOtp(String otpCode) {
-        apiClient.requestOtp(new DefaultAuthRequest("create_user"));
         OtpSmsRequest request = new OtpSmsRequest(otpCode);
         OtpAuthResponse response = apiClient.sendOtpCode(request);
         persistentStorage.put(StorageKey.LL_TOKEN, response.getLlToken());
