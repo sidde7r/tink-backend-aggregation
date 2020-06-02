@@ -15,15 +15,11 @@ public class PaymentAccountRulesProvider {
     // readability
     private static final List<ClassificationRule<PaymentAccountClassification>> psd2Rules =
             new ArrayList<>();
-    private static final List<ClassificationRule<PaymentAccountClassification>> marketRules =
-            new ArrayList<>();
 
     private PaymentAccountRulesProvider() {}
 
     public static List<ClassificationRule<PaymentAccountClassification>> getRules() {
-        return Stream.of(psd2Rules, marketRules)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        return Stream.of(psd2Rules).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     static {
