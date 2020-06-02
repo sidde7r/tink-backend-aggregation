@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.regulatory.psd2;
+package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common;
 
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Account;
@@ -6,8 +6,9 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.Psd2Markets;
 
-public class Psd2Rule implements ClassificationRule<PaymentAccountClassification> {
+public class CapabilitiesRule implements ClassificationRule<PaymentAccountClassification> {
     @Override
     public boolean isApplicable(Provider provider) {
         // We only want to classify accounts that are produced by a Provider in a PSD2 market.

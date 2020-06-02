@@ -1,31 +1,37 @@
-package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.regulatory.psd2;
+package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.CapabilitiesRule;
 import se.tink.libraries.enums.MarketCode;
 
-public class Psd2RuleTest {
+public class CapabilitiesRuleTest {
     @Test
     public void nonPsd2MarketIsNotApplicable() {
-        Psd2Rule rule = new Psd2Rule();
+        CapabilitiesRule rule = new CapabilitiesRule();
 
-        // Mexico should not be a PSD2 market.
-        Provider provider = prepareMockedProvider(MarketCode.MX, true);
-
-        // The rule should not be applicable for this market.
-        assertThat(rule.isApplicable(provider)).isFalse();
+        // Test all non-PSD2 markets.
+        Arrays.stream(MarketCode.values())
+                .filter(marketCode -> !Psd2Markets.PSD2_MARKETS.contains(marketCode))
+                .map(marketCode -> prepareMockedProvider(marketCode, true))
+                .forEach(
+                        provider -> {
+                            // The rule should not be applicable for this market.
+                            assertThat(rule.isApplicable(provider)).isFalse();
+                        });
     }
 
     @Test
     public void openBankingProviderInPsd2MarketsShouldReturnPaymentAccount() {
-        Psd2Rule rule = new Psd2Rule();
+        CapabilitiesRule rule = new CapabilitiesRule();
 
         Psd2Markets.PSD2_MARKETS.forEach(
                 marketCode -> {
@@ -41,7 +47,7 @@ public class Psd2RuleTest {
 
     @Test
     public void nonOpenBankingWithUnknownCapabilitiesShouldReturnUndetermined() {
-        Psd2Rule rule = new Psd2Rule();
+        CapabilitiesRule rule = new CapabilitiesRule();
 
         Provider provider = prepareMockedNonOpenBankingProvider();
         Account account = prepareMockedAccountWithCapabilities(AccountCapabilities.createDefault());
@@ -53,7 +59,7 @@ public class Psd2RuleTest {
 
     @Test
     public void nonOpenBankingWithAllYesCapabilitiesShouldReturnPaymentAccount() {
-        Psd2Rule rule = new Psd2Rule();
+        CapabilitiesRule rule = new CapabilitiesRule();
 
         Provider provider = prepareMockedNonOpenBankingProvider();
 
@@ -70,7 +76,7 @@ public class Psd2RuleTest {
 
     @Test
     public void nonOpenBankingWithAnyNoCapabilitiesShouldReturnNonPaymentAccount() {
-        Psd2Rule rule = new Psd2Rule();
+        CapabilitiesRule rule = new CapabilitiesRule();
 
         Provider provider = prepareMockedNonOpenBankingProvider();
 

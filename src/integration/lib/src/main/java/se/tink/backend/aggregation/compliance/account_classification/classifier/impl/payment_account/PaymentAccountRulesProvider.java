@@ -7,29 +7,27 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
-import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.global.GlobalCheckingAccountRule;
-import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.regulatory.psd2.Psd2Rule;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.CapabilitiesRule;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.CheckingAccountRule;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.market.UkCreditCardRule;
 
 public class PaymentAccountRulesProvider {
     // rules are to be processed identically but are split into two collections to just improve
     // readability
-    private static final List<ClassificationRule<PaymentAccountClassification>> globalRules =
-            new ArrayList<>();
-    private static final List<ClassificationRule<PaymentAccountClassification>> regulatoryRules =
-            new ArrayList<>();
-    private static final List<ClassificationRule<PaymentAccountClassification>> marketRules =
+    private static final List<ClassificationRule<PaymentAccountClassification>> psd2Rules =
             new ArrayList<>();
 
     private PaymentAccountRulesProvider() {}
 
     public static List<ClassificationRule<PaymentAccountClassification>> getRules() {
-        return Stream.of(globalRules, regulatoryRules, marketRules)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        return Stream.of(psd2Rules).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     static {
-        globalRules.add(new GlobalCheckingAccountRule());
-        regulatoryRules.add(new Psd2Rule());
+        psd2Rules.add(new CapabilitiesRule());
+        psd2Rules.add(new CheckingAccountRule());
+
+        // Market specific rules:
+        psd2Rules.add(new UkCreditCardRule());
     }
 }
