@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.compliance.account_classification.PaymentAcco
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.CapabilitiesRule;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.CheckingAccountRule;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.market.UkCreditCardRule;
 
 public class PaymentAccountRulesProvider {
     // rules are to be processed identically but are split into two collections to just improve
@@ -25,5 +26,8 @@ public class PaymentAccountRulesProvider {
     static {
         psd2Rules.add(new CapabilitiesRule());
         psd2Rules.add(new CheckingAccountRule());
+
+        // Market specific rules:
+        psd2Rules.add(new UkCreditCardRule());
     }
 }
