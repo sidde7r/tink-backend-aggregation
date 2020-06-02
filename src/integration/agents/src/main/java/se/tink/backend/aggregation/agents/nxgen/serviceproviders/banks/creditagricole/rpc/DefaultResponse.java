@@ -35,4 +35,8 @@ public class DefaultResponse {
                 .map(ErrorEntity::getCode)
                 .collect(Collectors.toList());
     }
+
+    public boolean hasErrors() {
+        return errors.size() > 0;
+    }
 }
