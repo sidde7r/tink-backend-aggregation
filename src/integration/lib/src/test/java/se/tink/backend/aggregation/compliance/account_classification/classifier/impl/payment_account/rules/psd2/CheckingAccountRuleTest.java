@@ -10,13 +10,13 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
-import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.Psd2CheckingAccountRule;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.CheckingAccountRule;
 import se.tink.libraries.enums.MarketCode;
 
-public class Psd2CheckingAccountRuleTest {
+public class CheckingAccountRuleTest {
     @Test
     public void nonPsd2MarketIsNotApplicable() {
-        Psd2CheckingAccountRule rule = new Psd2CheckingAccountRule();
+        CheckingAccountRule rule = new CheckingAccountRule();
 
         // Test all non-PSD2 markets.
         Arrays.stream(MarketCode.values())
@@ -31,7 +31,7 @@ public class Psd2CheckingAccountRuleTest {
 
     private void testRuleForProviderAndAccount(
             Provider provider, Account account, PaymentAccountClassification expectedResult) {
-        Psd2CheckingAccountRule rule = new Psd2CheckingAccountRule();
+        CheckingAccountRule rule = new CheckingAccountRule();
         assertThat(rule.isApplicable(provider)).isTrue();
 
         PaymentAccountClassification result = rule.classify(provider, account);

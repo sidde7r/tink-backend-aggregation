@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.compliance.account_classification.PaymentAcco
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.ClassificationRule;
 import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.Psd2Markets;
 
-public class Psd2CapabilitiesRule implements ClassificationRule<PaymentAccountClassification> {
+public class CapabilitiesRule implements ClassificationRule<PaymentAccountClassification> {
     @Override
     public boolean isApplicable(Provider provider) {
         // We only want to classify accounts that are produced by a Provider in a PSD2 market.
