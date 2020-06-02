@@ -36,6 +36,8 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
+import se.tink.backend.aggregation.compliance.account_classification.classifier.AccountClassifier;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.locks.BarrierName;
@@ -65,6 +67,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
     private ProviderSessionCacheController providerSessionCacheController;
+    private final AccountClassifier accountClassifier;
 
     private static class SupplementalInformationMetrics {
         private static final String CLUSTER_LABEL = "client_cluster";
@@ -127,6 +130,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.updatedAccountsByTinkId = Maps.newHashMap();
         this.updatedAccountUniqueIds = Sets.newHashSet();
         this.accountsToAggregate = Lists.newArrayList();
+        this.accountClassifier = new AccountClassifier(metricRegistry);
 
         this.request = request;
 
@@ -168,12 +172,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         List<Transaction> transactions = Lists.newArrayList();
 
         for (String bankId : transactionsByAccountBankId.keySet()) {
-            Optional<Account> account =
+            Optional<Account> accountOpt =
                     getUpdatedAccounts().stream()
                             .filter(a -> Objects.equals(a.getBankId(), bankId))
                             .findFirst();
 
-            if (!account.isPresent()) {
+            if (!accountOpt.isPresent()) {
                 if (!isWhitelistRefresh) {
                     log.error(
                             "Account not found in updated Accounts list. "
@@ -183,7 +187,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 continue;
             }
 
-            if (!shouldAggregateDataForAccount(account.get())) {
+            Account account = accountOpt.get();
+            if (!shouldAggregateDataForAccount(account)) {
                 // Account marked to not aggregate data from.
                 // Preferably we would not even download the data but this makes sure
                 // we don't process further or store the account's data.
@@ -193,7 +198,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             List<Transaction> accountTransactions = transactionsByAccountBankId.get(bankId);
 
             for (Transaction transaction : accountTransactions) {
-                transaction.setAccountId(account.get().getId());
+                transaction.setAccountId(account.getId());
                 transaction.setCredentialsId(request.getCredentials().getId());
                 transaction.setUserId(request.getCredentials().getUserId());
 
@@ -359,6 +364,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     private boolean shouldAggregateDataForAccount(Account account) {
+        try {
+            // TODO: extend filtering by using payment classification information
+            // (For now we discard the result as in the beginning we just want to collect metrics)
+            PaymentAccountClassification paymentAccountClassification =
+                    accountClassifier.classifyAsPaymentAccount(request.getProvider(), account);
+        } catch (RuntimeException e) {
+            log.error("[classifyAsPaymentAccount] Unexpected exception occurred", e);
+        }
         return accountsToAggregate.stream()
                 .map(Account::getBankId)
                 .collect(Collectors.toList())
