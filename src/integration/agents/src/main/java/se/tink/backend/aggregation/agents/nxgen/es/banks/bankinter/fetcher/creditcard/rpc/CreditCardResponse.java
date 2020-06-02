@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -37,9 +38,13 @@ public class CreditCardResponse extends HtmlResponse {
         cardDetails = parseCardDetails();
 
         // log unknown values
-        if (!CardTypes.ALL.contains(getCardType())) {
-            LOG.warn("Unknown card type: " + getCardType());
-        }
+        getCardType()
+                .ifPresent(
+                        (type) -> {
+                            if (!CardTypes.ALL.contains(type)) {
+                                LOG.warn("Unknown card type: " + type);
+                            }
+                        });
 
         if (!CardState.ALL.contains(getCardState())) {
             LOG.warn("Unknown card state: " + getCardState());
@@ -64,8 +69,9 @@ public class CreditCardResponse extends HtmlResponse {
         return dataValues;
     }
 
-    private String getCardType() {
-        return cardDetails.get(CardDetails.TYPE).toLowerCase();
+    private Optional<String> getCardType() {
+        return Optional.ofNullable(cardDetails.get(CardDetails.TYPE))
+                .map(type -> type.toLowerCase());
     }
 
     private String getCardState() {
@@ -77,7 +83,7 @@ public class CreditCardResponse extends HtmlResponse {
     }
 
     public boolean isCreditCard() {
-        return CardTypes.CREDIT.contains(getCardType());
+        return getCardType().map(type -> CardTypes.CREDIT.contains(type)).orElse(false);
     }
 
     public CreditCardAccount toCreditCardAccount(String accountLink) {
