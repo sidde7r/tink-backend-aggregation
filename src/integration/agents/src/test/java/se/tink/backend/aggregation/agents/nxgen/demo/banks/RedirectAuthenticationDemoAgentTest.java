@@ -10,6 +10,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Beneficiary;
+import se.tink.libraries.payment.rpc.CreateBeneficiary;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -145,14 +146,18 @@ public class RedirectAuthenticationDemoAgentTest {
                         .setAppId("dummy")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
-
-        builder.build()
-                .testCreateBeneficiary(
-                        new Beneficiary.Builder()
-                                .withAccountNumber(ITALY_DESTINATION_ACCOUNT)
-                                .withAccountNumberType(Type.IBAN)
-                                .withName("Test")
-                                .build());
+        Beneficiary beneficiary =
+                new Beneficiary.Builder()
+                        .withAccountNumber(ITALY_DESTINATION_ACCOUNT)
+                        .withAccountNumberType(Type.IBAN)
+                        .withName("Test")
+                        .build();
+        CreateBeneficiary createBeneficiary =
+                new CreateBeneficiary.Builder()
+                        .withBeneficiary(beneficiary)
+                        .withOwnerAccountNumber(ITALY_SOURCE_ACCOUNT)
+                        .build();
+        builder.build().testCreateBeneficiary(createBeneficiary);
     }
 
     @Test

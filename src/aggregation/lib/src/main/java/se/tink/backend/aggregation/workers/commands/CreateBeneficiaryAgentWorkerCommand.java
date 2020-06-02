@@ -102,14 +102,16 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
             CreateBeneficiaryController addBeneficiaryController,
             CreateBeneficiaryCredentialsRequest createBeneficiaryCredentialsRequest)
             throws BeneficiaryException {
-        CreateBeneficiary addBeneficiary =
+        CreateBeneficiary createBeneficiary =
                 new Builder()
                         .withBeneficiary(createBeneficiaryCredentialsRequest.getBeneficiary())
+                        .withOwnerAccountNumber(
+                                createBeneficiaryCredentialsRequest.getOwnerAccountNumber())
                         .withStatus(CreateBeneficiaryStatus.CREATED)
                         .build();
         CreateBeneficiaryResponse addBeneficiaryResponse =
                 addBeneficiaryController.createBeneficiary(
-                        new CreateBeneficiaryRequest(addBeneficiary));
+                        new CreateBeneficiaryRequest(createBeneficiary));
         CreateBeneficiaryMultiStepResponse signCreateBeneficiaryMultiStepResponse =
                 addBeneficiaryController.sign(
                         CreateBeneficiaryMultiStepRequest.of(addBeneficiaryResponse));
