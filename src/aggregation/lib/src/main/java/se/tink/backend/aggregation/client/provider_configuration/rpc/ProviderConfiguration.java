@@ -357,7 +357,9 @@ public class ProviderConfiguration {
         LOANS,
         INVESTMENTS,
         PAYMENTS,
-        IDENTITY_DATA
+        IDENTITY_DATA,
+        LIST_BENEFICIARIES,
+        CREATE_BENEFICIARIES
     }
 
     @JsonProperty("refreshschedule")
