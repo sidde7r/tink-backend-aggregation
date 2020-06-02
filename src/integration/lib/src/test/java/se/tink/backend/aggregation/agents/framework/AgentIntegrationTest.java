@@ -29,7 +29,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.AddBeneficiaryControllerable;
+import se.tink.backend.aggregation.agents.CreateBeneficiaryControllerable;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.PersistentLogin;
@@ -58,11 +58,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.executor.ProgressiveLoginExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.AgentConfigurationController;
 import se.tink.backend.aggregation.nxgen.controllers.configuration.iface.AgentConfigurationControllerable;
-import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -85,10 +85,10 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.payment.enums.AddBeneficiaryStatus;
+import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.rpc.AddBeneficiary;
 import se.tink.libraries.payment.rpc.Beneficiary;
+import se.tink.libraries.payment.rpc.CreateBeneficiary;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -841,28 +841,28 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 .build();
     }
 
-    public void testAddBeneficiary(Beneficiary beneficiary) throws Exception {
+    public void testCreateBeneficiary(Beneficiary beneficiary) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
         Agent agent = createAgent(credentialsRequest);
         try {
-            if (agent instanceof AddBeneficiaryControllerable) {
+            if (agent instanceof CreateBeneficiaryControllerable) {
                 log.info("Adding beneficiary.");
-                AddBeneficiaryController addBeneficiaryController =
-                        ((AddBeneficiaryControllerable) agent)
-                                .getAddBeneficiaryController()
+                CreateBeneficiaryController createBeneficiaryController =
+                        ((CreateBeneficiaryControllerable) agent)
+                                .getCreateBeneficiaryController()
                                 .orElseThrow(
                                         () ->
                                                 new NotImplementedException(
                                                         "Agent does not implement constructAddBeneficiaryController method."));
-                AddBeneficiary addBeneficiary =
-                        new AddBeneficiary.Builder().withBeneficiary(beneficiary).build();
+                CreateBeneficiary createBeneficiary =
+                        new CreateBeneficiary.Builder().withBeneficiary(beneficiary).build();
 
-                AddBeneficiaryResponse beneficiaryResponse =
-                        addBeneficiaryController.createBeneficiary(
-                                new AddBeneficiaryRequest(addBeneficiary));
-                AddBeneficiary retrievedBeneficiary = beneficiaryResponse.getBeneficiary();
+                CreateBeneficiaryResponse beneficiaryResponse =
+                        createBeneficiaryController.createBeneficiary(
+                                new CreateBeneficiaryRequest(createBeneficiary));
+                CreateBeneficiary retrievedBeneficiary = beneficiaryResponse.getBeneficiary();
                 Storage storage = Storage.copyOf(beneficiaryResponse.getStorage());
                 CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest =
                         new CreateBeneficiaryMultiStepRequest(
@@ -872,7 +872,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                 Collections.emptyList(),
                                 Collections.emptyList());
                 CreateBeneficiaryMultiStepResponse createBeneficiaryMultiStepResponse =
-                        addBeneficiaryController.sign(createBeneficiaryMultiStepRequest);
+                        createBeneficiaryController.sign(createBeneficiaryMultiStepRequest);
                 Map<String, String> map;
                 List<Field> fields;
                 String nextStep = createBeneficiaryMultiStepResponse.getStep();
@@ -882,7 +882,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     map = Collections.emptyMap();
 
                     createBeneficiaryMultiStepResponse =
-                            addBeneficiaryController.sign(
+                            createBeneficiaryController.sign(
                                     new CreateBeneficiaryMultiStepRequest(
                                             retrievedBeneficiary,
                                             storage,
@@ -895,9 +895,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     storage = createBeneficiaryMultiStepResponse.getStorage();
                 }
 
-                AddBeneficiaryStatus statusResult =
+                CreateBeneficiaryStatus statusResult =
                         createBeneficiaryMultiStepResponse.getBeneficiary().getStatus();
-                Assert.assertEquals(statusResult, AddBeneficiaryStatus.ADDED);
+                Assert.assertEquals(statusResult, CreateBeneficiaryStatus.ADDED);
                 log.info("Done with adding beneficiary.");
 
             } else {

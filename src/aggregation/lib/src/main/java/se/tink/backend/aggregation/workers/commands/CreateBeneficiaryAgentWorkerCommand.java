@@ -8,17 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.AddBeneficiaryControllerable;
+import se.tink.backend.aggregation.agents.CreateBeneficiaryControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.beneficiary.BeneficiaryException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
 import se.tink.backend.aggregation.workers.commands.metrics.MetricsCommand;
@@ -28,9 +28,9 @@ import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.metrics.core.MetricId;
-import se.tink.libraries.payment.enums.AddBeneficiaryStatus;
-import se.tink.libraries.payment.rpc.AddBeneficiary;
-import se.tink.libraries.payment.rpc.AddBeneficiary.Builder;
+import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
+import se.tink.libraries.payment.rpc.CreateBeneficiary;
+import se.tink.libraries.payment.rpc.CreateBeneficiary.Builder;
 
 public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
@@ -55,15 +55,15 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
     public AgentWorkerCommandResult execute() {
         Agent agent = context.getAgent();
 
-        if (!(agent instanceof AddBeneficiaryControllerable)) {
+        if (!(agent instanceof CreateBeneficiaryControllerable)) {
             log.error("Agent does not support adding beneficiaries");
             return AgentWorkerCommandResult.ABORT;
         }
 
-        AddBeneficiaryControllerable addBeneficiaryControllerable =
-                (AddBeneficiaryControllerable) agent;
-        if (!addBeneficiaryControllerable.getAddBeneficiaryController().isPresent()) {
-            log.error("No AddBeneficiaryController available in agent.");
+        CreateBeneficiaryControllerable addBeneficiaryControllerable =
+                (CreateBeneficiaryControllerable) agent;
+        if (!addBeneficiaryControllerable.getCreateBeneficiaryController().isPresent()) {
+            log.error("No CreateBeneficiaryController available in agent.");
             return AgentWorkerCommandResult.ABORT;
         }
 
@@ -75,8 +75,8 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
 
         // TODO: Implement usage of a new event producer to emit events when creating beneficiaries.
         try {
-            handleAddBeneficiary(
-                    addBeneficiaryControllerable.getAddBeneficiaryController().get(),
+            handleCreateBeneficiary(
+                    addBeneficiaryControllerable.getCreateBeneficiaryController().get(),
                     createBeneficiaryCredentialsRequest);
             metricAction.completed();
             return AgentWorkerCommandResult.CONTINUE;
@@ -98,31 +98,31 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
         }
     }
 
-    private void handleAddBeneficiary(
-            AddBeneficiaryController addBeneficiaryController,
+    private void handleCreateBeneficiary(
+            CreateBeneficiaryController addBeneficiaryController,
             CreateBeneficiaryCredentialsRequest createBeneficiaryCredentialsRequest)
             throws BeneficiaryException {
-        AddBeneficiary addBeneficiary =
+        CreateBeneficiary addBeneficiary =
                 new Builder()
                         .withBeneficiary(createBeneficiaryCredentialsRequest.getBeneficiary())
-                        .withStatus(AddBeneficiaryStatus.CREATED)
+                        .withStatus(CreateBeneficiaryStatus.CREATED)
                         .build();
-        AddBeneficiaryResponse addBeneficiaryResponse =
+        CreateBeneficiaryResponse addBeneficiaryResponse =
                 addBeneficiaryController.createBeneficiary(
-                        new AddBeneficiaryRequest(addBeneficiary));
-        CreateBeneficiaryMultiStepResponse signAddBeneficiaryMultiStepResponse =
+                        new CreateBeneficiaryRequest(addBeneficiary));
+        CreateBeneficiaryMultiStepResponse signCreateBeneficiaryMultiStepResponse =
                 addBeneficiaryController.sign(
                         CreateBeneficiaryMultiStepRequest.of(addBeneficiaryResponse));
         Map<String, String> map;
         List<Field> fields;
-        String nextStep = signAddBeneficiaryMultiStepResponse.getStep();
-        AddBeneficiary beneficiary = signAddBeneficiaryMultiStepResponse.getBeneficiary();
-        Storage storage = signAddBeneficiaryMultiStepResponse.getStorage();
+        String nextStep = signCreateBeneficiaryMultiStepResponse.getStep();
+        CreateBeneficiary beneficiary = signCreateBeneficiaryMultiStepResponse.getBeneficiary();
+        Storage storage = signCreateBeneficiaryMultiStepResponse.getStorage();
 
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-            fields = signAddBeneficiaryMultiStepResponse.getFields();
+            fields = signCreateBeneficiaryMultiStepResponse.getFields();
             map = Collections.emptyMap();
-            signAddBeneficiaryMultiStepResponse =
+            signCreateBeneficiaryMultiStepResponse =
                     addBeneficiaryController.sign(
                             new CreateBeneficiaryMultiStepRequest(
                                     beneficiary,
@@ -130,9 +130,9 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
                                     nextStep,
                                     fields,
                                     new ArrayList<>(map.values())));
-            nextStep = signAddBeneficiaryMultiStepResponse.getStep();
-            beneficiary = signAddBeneficiaryMultiStepResponse.getBeneficiary();
-            storage = signAddBeneficiaryMultiStepResponse.getStorage();
+            nextStep = signCreateBeneficiaryMultiStepResponse.getStep();
+            beneficiary = signCreateBeneficiaryMultiStepResponse.getBeneficiary();
+            storage = signCreateBeneficiaryMultiStepResponse.getStorage();
         }
     }
 

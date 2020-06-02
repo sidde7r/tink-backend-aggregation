@@ -1,40 +1,40 @@
 package se.tink.libraries.payment.rpc;
 
-import se.tink.libraries.payment.enums.AddBeneficiaryStatus;
+import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 
-public class AddBeneficiary {
+public class CreateBeneficiary {
     private Beneficiary beneficiary;
-    private AddBeneficiaryStatus status;
+    private CreateBeneficiaryStatus status;
 
-    private AddBeneficiary(Builder builder) {
+    private CreateBeneficiary(Builder builder) {
         this.beneficiary = builder.beneficiary;
         this.status = builder.status;
     }
 
-    public AddBeneficiaryStatus getStatus() {
+    public CreateBeneficiaryStatus getStatus() {
         return status;
     }
 
-    public void setStatus(AddBeneficiaryStatus status) {
+    public void setStatus(CreateBeneficiaryStatus status) {
         this.status = status;
     }
 
     public static class Builder {
         private Beneficiary beneficiary;
-        private AddBeneficiaryStatus status;
+        private CreateBeneficiaryStatus status;
 
         public Builder withBeneficiary(Beneficiary beneficiary) {
             this.beneficiary = beneficiary;
             return this;
         }
 
-        public Builder withStatus(AddBeneficiaryStatus status) {
+        public Builder withStatus(CreateBeneficiaryStatus status) {
             this.status = status;
             return this;
         }
 
-        public AddBeneficiary build() {
-            return new AddBeneficiary(this);
+        public CreateBeneficiary build() {
+            return new CreateBeneficiary(this);
         }
     }
 }

@@ -137,7 +137,7 @@ public class RedirectAuthenticationDemoAgentTest {
     }
 
     @Test
-    public void testAddBeneficiaryIT() throws Exception {
+    public void testCreateBeneficiaryIT() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("it", "it-test-open-banking-redirect")
                         .expectLoggedIn(false)
@@ -147,7 +147,7 @@ public class RedirectAuthenticationDemoAgentTest {
                         .saveCredentialsAfter(false);
 
         builder.build()
-                .testAddBeneficiary(
+                .testCreateBeneficiary(
                         new Beneficiary.Builder()
                                 .withAccountNumber(ITALY_DESTINATION_ACCOUNT)
                                 .withAccountNumberType(Type.IBAN)

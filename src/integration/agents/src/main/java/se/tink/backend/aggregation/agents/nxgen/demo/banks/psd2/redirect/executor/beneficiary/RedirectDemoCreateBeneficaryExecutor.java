@@ -11,22 +11,22 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.Redirec
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectDemoAgentUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.AddBeneficiaryResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.payment.enums.AddBeneficiaryStatus;
+import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 
-public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor {
+public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryExecutor {
 
     private final ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController;
     private final Credentials credentials;
-    private AddBeneficiaryResponse addBeneficiaryResponse;
+    private CreateBeneficiaryResponse createBeneficiaryResponse;
 
-    public RedirectDemoAddBeneficaryExecutor(
+    public RedirectDemoCreateBeneficaryExecutor(
             Credentials credentials,
             ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController) {
         this.credentials = credentials;
@@ -34,8 +34,8 @@ public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor
     }
 
     @Override
-    public AddBeneficiaryResponse createBeneficiary(AddBeneficiaryRequest addBeneficiaryRequest)
-            throws BeneficiaryException {
+    public CreateBeneficiaryResponse createBeneficiary(
+            CreateBeneficiaryRequest createBeneficiaryRequest) throws BeneficiaryException {
         try {
             thirdPartyAppAuthenticationController.authenticate(credentials);
         } catch (AuthenticationException | AuthorizationException e) {
@@ -46,10 +46,11 @@ public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor
         // AIS auth token.
         PersistentStorage dummyStorage = new PersistentStorage();
 
-        addBeneficiaryResponse =
-                new AddBeneficiaryResponse(addBeneficiaryRequest.getBeneficiary(), dummyStorage);
-        addBeneficiaryResponse.getBeneficiary().setStatus(AddBeneficiaryStatus.CREATED);
-        return this.addBeneficiaryResponse;
+        createBeneficiaryResponse =
+                new CreateBeneficiaryResponse(
+                        createBeneficiaryRequest.getBeneficiary(), dummyStorage);
+        createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.CREATED);
+        return this.createBeneficiaryResponse;
     }
 
     @Override
@@ -61,8 +62,8 @@ public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor
                 return init(createBeneficiaryMultiStepRequest);
             case RedirectAuthenticationDemoAgentConstants.Step.AUTHORIZE:
                 return authorized(createBeneficiaryMultiStepRequest);
-            case RedirectAuthenticationDemoAgentConstants.Step.ADD_BENEFICIARY:
-                return addBeneficiary(createBeneficiaryMultiStepRequest);
+            case RedirectAuthenticationDemoAgentConstants.Step.CREATE_BENEFICIARY:
+                return createBeneficiary(createBeneficiaryMultiStepRequest);
             default:
                 throw new IllegalStateException(
                         String.format(
@@ -70,7 +71,7 @@ public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor
         }
     }
 
-    private CreateBeneficiaryMultiStepResponse addBeneficiary(
+    private CreateBeneficiaryMultiStepResponse createBeneficiary(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
         String providerName = credentials.getProviderName();
         // This block handles PIS only business use case as source-account will be null in request
@@ -81,7 +82,9 @@ public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor
                         createBeneficiaryMultiStepRequest,
                         AuthenticationStepConstants.STEP_FINALIZE,
                         new ArrayList<>());
-        createBeneficiaryMultiStepResponse.getBeneficiary().setStatus(AddBeneficiaryStatus.ADDED);
+        createBeneficiaryMultiStepResponse
+                .getBeneficiary()
+                .setStatus(CreateBeneficiaryStatus.ADDED);
         return createBeneficiaryMultiStepResponse;
     }
 
@@ -109,9 +112,11 @@ public class RedirectDemoAddBeneficaryExecutor implements AddBeneficiaryExecutor
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
         try {
             thirdPartyAppAuthenticationController.authenticate(credentials);
-            this.addBeneficiaryResponse.getBeneficiary().setStatus(AddBeneficiaryStatus.SIGNED);
+            this.createBeneficiaryResponse
+                    .getBeneficiary()
+                    .setStatus(CreateBeneficiaryStatus.SIGNED);
             return new CreateBeneficiaryMultiStepResponse(
-                    createBeneficiaryMultiStepRequest, Step.ADD_BENEFICIARY, new ArrayList<>());
+                    createBeneficiaryMultiStepRequest, Step.CREATE_BENEFICIARY, new ArrayList<>());
         } catch (AuthenticationException | AuthorizationException e) {
             return new CreateBeneficiaryMultiStepResponse(
                     createBeneficiaryMultiStepRequest, Step.AUTHORIZE, new ArrayList<>());
