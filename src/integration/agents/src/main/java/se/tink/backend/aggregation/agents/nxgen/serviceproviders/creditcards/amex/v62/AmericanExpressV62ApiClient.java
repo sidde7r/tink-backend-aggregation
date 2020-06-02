@@ -13,6 +13,7 @@ import org.apache.http.cookie.Cookie;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.ConstantValueHeaders;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.HeadersValue;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.PATTERN;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Tags;
@@ -34,10 +35,8 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmericanExpressV62ApiClient {
-
     private static final String AGENT_ID_COOKIE = "agent-id";
 
     private final TinkHttpClient client;
@@ -59,8 +58,7 @@ public class AmericanExpressV62ApiClient {
 
     protected RequestBuilder createRequest(String uri) {
         final URL url = new URL(AmericanExpressV62Constants.BASE_API + uri);
-        final String date =
-                ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITHOUT_TIMEZONE.format(new Date());
+        final String date = PATTERN.DATE_FORMATTER.format(new Date());
 
         return client.request(url)
                 .header(ConstantValueHeaders.ACCEPT_JSON)
@@ -154,7 +152,7 @@ public class AmericanExpressV62ApiClient {
     // Purpose of this api call is to retrieve a cookie named "SaneId"
     public void fetchSaneIdCookie() {
         client.request(AmericanExpressV62Constants.BASE_API + Urls.SANE_ID)
-                .queryParam(QueryKeys.FACE, QueryValues.FACE_VALUE)
+                .queryParam(QueryKeys.FACE, config.getLocale())
                 .queryParam(QueryKeys.CLIENT_TYPE, QueryValues.CLIENT_TYPE_VALUE)
                 .queryParam(QueryKeys.PAGE, QueryValues.PAGE_VALUE)
                 .queryParam(QueryKeys.VERSION, QueryValues.VERSION_VALUE)

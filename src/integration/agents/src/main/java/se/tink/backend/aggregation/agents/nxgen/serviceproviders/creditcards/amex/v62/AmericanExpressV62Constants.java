@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import java.util.Locale;
+import java.util.TimeZone;
 import se.tink.backend.aggregation.nxgen.http.header.HeaderEnum;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmericanExpressV62Constants {
 
@@ -141,7 +144,6 @@ public class AmericanExpressV62Constants {
 
     public static class QueryValues {
         public static final String PAGE_VALUE = "eula";
-        public static final String FACE_VALUE = "sv_SE";
         public static final String VERSION_VALUE = "23da90ada6b32378654c7c1a88c0e2a808ab3cb3";
         public static final String CLIENT_TYPE_VALUE = "iPhone";
     }
@@ -174,5 +176,14 @@ public class AmericanExpressV62Constants {
     public static class HttpFilters {
         public static final int RETRY_SLEEP_MILLISECONDS = 5000;
         public static final int MAX_NUM_RETRIES = 3;
+    }
+
+    public static class PATTERN {
+        public static final ThreadSafeDateFormat DATE_FORMATTER =
+                new ThreadSafeDateFormat.ThreadSafeDateFormatBuilder(
+                                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                                new Locale("sv", "SE"),
+                                TimeZone.getTimeZone("UTC"))
+                        .build();
     }
 }
