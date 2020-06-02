@@ -123,6 +123,14 @@ public class AmericanExpressV62Constants {
         public static final String CLIENT_ID = "amexpayiospf";
     }
 
+    public static class Cookies {
+        public static final String COOKIE = "Cookie";
+        public static final String TS_0139 = "TS0139a03f";
+        public static final String AGENT_ID = "agent-id";
+        public static final String AKAALB_GLOBAL = "akaalb_global";
+        public static final String SANE_ID = "SaneID";
+    }
+
     public static class RequestValue {
         public static final String TRUE = "true";
         public static final String TIME_ZONE = "GMT+1";
