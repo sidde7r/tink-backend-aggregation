@@ -5,22 +5,44 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.CustomerInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.AccountInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.PositionsResponse;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.identitydata.IdentityData;
 
 public class NordnetApiClient {
 
     private final TinkHttpClient client;
     private String referrer;
+    private final PersistentStorage persistentStorage;
 
-    public NordnetApiClient(TinkHttpClient client) {
+    public NordnetApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
+        this.persistentStorage = persistentStorage;
+    }
+
+    private RequestBuilder createRequestInSession(String url) {
+
+        OAuth2Token token = getTokenFromStorage();
+
+        return createBasicRequest(url).addBearerToken(token);
+    }
+
+    private OAuth2Token getTokenFromStorage() {
+        return persistentStorage
+                .get(NordnetConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
     private RequestBuilder createRequest(String url) {
@@ -75,11 +97,12 @@ public class NordnetApiClient {
         }
     }
 
-    public IdentityData fetchIdentityData() {
-        CustomerInfoResponse customerInfo =
+    public FetchIdentityDataResponse fetchIdentityData() {
+        IdentityData customerInfo =
                 createBasicRequest(NordnetConstants.Urls.GET_CUSTOMER_INFO_URL)
-                        .get(CustomerInfoResponse.class);
-        return customerInfo.toTinkIdentity();
+                        .get(CustomerInfoResponse.class)
+                        .toTinkIdentity();
+        return new FetchIdentityDataResponse(customerInfo);
     }
 
     public void setReferrer(String referrer) {
@@ -92,5 +115,26 @@ public class NordnetApiClient {
         if (!Strings.isNullOrEmpty(nextReferrer)) {
             referrer = NordnetConstants.Urls.BASE_URL + nextReferrer;
         }
+    }
+
+    public AccountResponse fetchAccounts() {
+
+        return createRequestInSession(NordnetConstants.Urls.GET_ACCOUNTS_URL)
+                .get(AccountResponse.class);
+    }
+
+    public AccountInfoResponse fetchAccountInfo(String accountId) {
+
+        return get(
+                String.format(NordnetConstants.Urls.GET_ACCOUNTS_INFO_URL, accountId),
+                AccountInfoResponse.class);
+    }
+
+    public PositionsResponse getPositions(String accountId) {
+
+        return createRequestInSession(
+                        String.format(NordnetConstants.Urls.GET_POSITIONS_URL, accountId))
+                .queryParam(NordnetConstants.QueryKeys.INCLUDE_INSTRUMENT_LOAN, "true")
+                .get(PositionsResponse.class);
     }
 }

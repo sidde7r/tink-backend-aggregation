@@ -95,7 +95,7 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
 
                 OAuth2Token token = completeBankId();
 
-                sessionStorage.put(NordnetConstants.StorageKeys.ACCESS_TOKEN, token);
+                sessionStorage.put(NordnetConstants.StorageKeys.OAUTH_TOKEN, token);
 
                 verifyIdentity();
             }
@@ -110,7 +110,7 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
     }
 
     private void verifyIdentity() throws LoginException {
-        String ssn = apiClient.fetchIdentityData().getSsn();
+        String ssn = apiClient.fetchIdentityData().getIdentityData().getSsn();
         if (!ssn.equalsIgnoreCase(this.givenSsn)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
@@ -123,7 +123,7 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
 
     @Override
     public Optional<OAuth2Token> getAccessToken() {
-        return sessionStorage.get(NordnetConstants.StorageKeys.ACCESS_TOKEN, OAuth2Token.class);
+        return sessionStorage.get(NordnetConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class);
     }
 
     @Override
