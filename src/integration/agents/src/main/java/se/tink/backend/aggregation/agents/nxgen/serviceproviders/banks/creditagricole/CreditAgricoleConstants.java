@@ -14,6 +14,7 @@ public class CreditAgricoleConstants {
                 BASE_URL + "/authentication/accessibility/grid";
         public static final String AUTHENTICATE =
                 BASE_URL + "/authentication/{regionId}/authenticate";
+        public static final String OTP_REQUEST = BASE_URL + "/otp/{regionId}/request";
         public static final String FIND_PROFILES = BASE_URL + "/user/{regionId}/find";
         public static final String CREATE_PROFILE = BASE_URL + "/user/{regionId}/create";
 

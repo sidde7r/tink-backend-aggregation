@@ -45,7 +45,11 @@ public class CreditAgricoleApiClient {
     }
 
     public DefaultResponse requestOtp(DefaultAuthRequest request) {
-        return createAuthRequest().post(DefaultResponse.class, request);
+        URL url =
+                new URL(Url.OTP_REQUEST)
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID));
+        return createRequest(url).post(DefaultResponse.class, request);
     }
 
     public OtpAuthResponse sendOtpCode(OtpSmsRequest request) {
