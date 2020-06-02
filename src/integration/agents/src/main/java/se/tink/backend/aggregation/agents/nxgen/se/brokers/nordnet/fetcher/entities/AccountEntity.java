@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.enti
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +74,13 @@ public class AccountEntity {
     }
 
     @JsonIgnore
+    private PortfolioModule.PortfolioType getPortfolioType() {
+        return NordnetConstants.getPortfolioTypeMapper()
+                .translate(accountCode)
+                .orElse(PortfolioModule.PortfolioType.OTHER);
+    }
+
+    @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(ExactCurrencyAmount balance) {
 
         return TransactionalAccount.nxBuilder()
@@ -86,7 +92,7 @@ public class AccountEntity {
                                 .withUniqueIdentifier(accno)
                                 .withAccountNumber(bankAccno)
                                 .withAccountName(alias)
-                                .addIdentifier(new SwedishIdentifier(accno))
+                                .addIdentifier(new SwedishIdentifier(bankAccno))
                                 .build())
                 .setBankIdentifier(accno)
                 .setApiIdentifier(accno)
@@ -108,7 +114,7 @@ public class AccountEntity {
                                         .withAccountName(alias)
                                         .addIdentifier(
                                                 AccountIdentifier.create(
-                                                        AccountIdentifier.Type.SE, accno))
+                                                        AccountIdentifier.Type.SE, bankAccno))
                                         .build())
                         .build());
     }
@@ -120,34 +126,11 @@ public class AccountEntity {
                 .withType(getPortfolioType())
                 .withUniqueIdentifier(accno)
                 .withCashValue(getCashBalance(accountInfoEntity).getDoubleValue())
-                .withTotalProfit(getTotalProfit(instruments))
+                .withTotalProfit(0) // TODO should we calculate this?
                 .withTotalValue(accountInfoEntity.getFullMarketValue().getDoubleValue())
                 .withInstruments(instruments)
                 .setRawType(accountCode)
                 .build();
-    }
-
-    @JsonIgnore
-    private PortfolioModule.PortfolioType getPortfolioType() {
-        switch (Strings.nullToEmpty(accountCode).toLowerCase()) {
-            case "dep":
-                return PortfolioModule.PortfolioType.DEPOT;
-            case "isk":
-                return PortfolioModule.PortfolioType.ISK;
-            case "kf":
-                return PortfolioModule.PortfolioType.KF;
-            case "tjf":
-                return PortfolioModule.PortfolioType.PENSION;
-            default:
-                return (isTypeOccupationalPension()
-                        ? PortfolioModule.PortfolioType.PENSION
-                        : PortfolioModule.PortfolioType.OTHER);
-        }
-    }
-
-    @JsonIgnore
-    private boolean isTypeOccupationalPension() {
-        return Strings.nullToEmpty(type).toLowerCase().contains("btp1");
     }
 
     /**
@@ -178,16 +161,7 @@ public class AccountEntity {
                         0.0);
 
         return new ExactCurrencyAmount(
-                new BigDecimal(balance + cashCollateral),
+                BigDecimal.valueOf(balance + cashCollateral),
                 accountInfoEntity.getFullMarketValue().getCurrencyCode());
-    }
-
-    @JsonIgnore
-    private double getTotalProfit(List<InstrumentModule> instruments) {
-        return instruments.stream()
-                .filter(a -> a.getProfit() != null)
-                .map(InstrumentModule::getProfit)
-                .mapToDouble(Double::doubleValue)
-                .sum();
     }
 }

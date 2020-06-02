@@ -7,7 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class CompleteBankIdPage {
-    private final Element form;
+    private final Element responseForm;
 
     public CompleteBankIdPage(String html) {
         Preconditions.checkArgument(
@@ -17,11 +17,11 @@ public class CompleteBankIdPage {
         Element form = doc.getElementById("responseForm");
         Preconditions.checkState(form != null, "ResponseForm not present");
 
-        this.form = form;
+        this.responseForm = form;
     }
 
     public String getSamlResponse() {
-        Element input = form.select("input[name=SAMLResponse]").first();
+        Element input = responseForm.select("input[name=SAMLResponse]").first();
         Preconditions.checkState(input != null, "Couldn't find SAMLResponse input field");
 
         String value = input.attr("value");
@@ -32,7 +32,7 @@ public class CompleteBankIdPage {
     }
 
     public String getTarget() {
-        String target = form.attr("action");
+        String target = responseForm.attr("action");
         Preconditions.checkState(!Strings.isNullOrEmpty(target), "No form action available");
 
         return target;

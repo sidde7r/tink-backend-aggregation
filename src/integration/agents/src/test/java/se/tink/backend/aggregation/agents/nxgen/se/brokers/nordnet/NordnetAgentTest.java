@@ -6,12 +6,23 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class NordnetAgentTest {
-    private final ArgumentManager<ArgumentManager.UsernameArgumentEnum> manager =
-            new ArgumentManager<>(ArgumentManager.UsernameArgumentEnum.values());
+    private enum Arg implements ArgumentManager.ArgumentManagerEnum {
+        USERNAME,
+        PASSWORD;
 
-    private AgentIntegrationTest.Builder builder;
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+    }
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    private AgentIntegrationTest.Builder bankIdBuilder;
+    private AgentIntegrationTest.Builder passwordBuilder;
 
     @AfterClass
     public static void afterClass() {
@@ -21,17 +32,31 @@ public class NordnetAgentTest {
     @Before
     public void setup() {
         manager.before();
-        builder =
+        bankIdBuilder =
                 new AgentIntegrationTest.Builder("se", "nxgen-nordnet-bankid")
-                        .addCredentialField(
-                                Field.Key.USERNAME,
-                                manager.get(ArgumentManager.UsernameArgumentEnum.USERNAME))
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true);
+
+        passwordBuilder =
+                new AgentIntegrationTest.Builder("se", "nxgen-nordnet-password")
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true);
     }
 
     @Test
-    public void testRefresh() throws Exception {
-        builder.build().testRefresh();
+    public void testRefreshBankId() throws Exception {
+        bankIdBuilder.build().testRefresh();
+    }
+
+    @Test
+    public void testRefreshPassword() throws Exception {
+        passwordBuilder.build().testRefresh();
     }
 }

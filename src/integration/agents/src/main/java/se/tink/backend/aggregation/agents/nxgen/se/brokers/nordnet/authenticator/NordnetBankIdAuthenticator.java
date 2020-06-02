@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.Nordne
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Objects;
@@ -26,18 +25,18 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.html.CompleteBankIdPage;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.ArtifactRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.ArtifactResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.BankIdCollectRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.BankIdCollectResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.BankIdInitSamlResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.FetchTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.InitBankIdRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.SAMLRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -61,9 +60,7 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
 
         loadLoginPage();
 
-        BankIdInitSamlResponse bankIdInitSamlResponse = getBankIdInitSamlResponse();
-
-        getSamlRequest(bankIdInitSamlResponse);
+        getSamlRequest(getBankIdInitSamlResponse());
 
         BankIdInitResponse bankIdInitResponse = bankIdOrder(ssn);
 
@@ -147,11 +144,20 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
                 NordnetConstants.Urls.LOGIN_BANKID_PAGE_URL, BankIdInitSamlResponse.class);
     }
 
-    private BankIdInitResponse bankIdOrder(String ssn) {
-        return apiClient.post(
-                bankIdUrl.concat(NordnetConstants.Urls.BANKID_ORDER_SUFFIX),
-                BankIdInitResponse.class,
-                new InitBankIdRequest(ssn));
+    private BankIdInitResponse bankIdOrder(String ssn) throws BankIdException {
+        BankIdInitResponse response =
+                apiClient.post(
+                        bankIdUrl.concat(NordnetConstants.Urls.BANKID_ORDER_SUFFIX),
+                        BankIdInitResponse.class,
+                        new InitBankIdRequest(ssn));
+
+        if (response.getError() != null
+                && response.getError()
+                        .getCode()
+                        .equalsIgnoreCase(NordnetConstants.Errors.ALREADY_IN_SESSION)) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        }
+        return response;
     }
 
     private HttpResponse authenticationLogin() {
@@ -187,17 +193,28 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
             return Optional.empty();
         }
 
-        FetchTokenRequest tokenRequest =
-                FetchTokenRequest.from(
-                        NordnetConstants.QueryParamValues.CLIENT_ID,
-                        NordnetConstants.QueryParamValues.CLIENT_SECRET,
-                        authCode);
+        Form formData =
+                Form.builder()
+                        .put(
+                                NordnetConstants.FormKeys.GRANT_TYPE,
+                                NordnetConstants.FormValues.AUTHORIZATION_CODE)
+                        .put(
+                                NordnetConstants.FormKeys.REDIRECT_URI,
+                                NordnetConstants.FormValues.REDIRECT_URI)
+                        .put(
+                                NordnetConstants.FormKeys.CLIENT_ID,
+                                NordnetConstants.QueryParamValues.CLIENT_ID)
+                        .put(
+                                NordnetConstants.FormKeys.CLIENT_SECRET,
+                                NordnetConstants.QueryParamValues.CLIENT_SECRET)
+                        .put(NordnetConstants.FormKeys.CODE, authCode)
+                        .build();
 
         RequestBuilder requestBuilder =
                 apiClient
                         .createBasicRequest(NordnetConstants.Urls.FETCH_TOKEN_URL)
-                        .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .body(tokenRequest);
+                        .type(MediaType.APPLICATION_FORM_URLENCODED)
+                        .body(formData.serialize());
 
         TokenResponse response = apiClient.post(requestBuilder, TokenResponse.class);
         return Optional.ofNullable(response.toTinkToken());
@@ -207,18 +224,9 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
 
         CompleteBankIdPage completeBankIdPage = getCompleteBankIdPage();
 
-        SAMLRequest samlRequest = getSamlRequest(completeBankIdPage);
-
-        String samlArtifact = getSamlArtResponse(completeBankIdPage, samlRequest);
-
-        String ntag = getNtag();
-
-        getArtifactResponse(samlArtifact, ntag);
+        getArtifactResponse(getSamlArtResponse(completeBankIdPage), getNtag());
 
         String code = getCode();
-
-        Preconditions.checkArgument(
-                !code.isEmpty(), "Something went wrong when fetching the authCode");
 
         return fetchToken(code)
                 .orElseThrow(
@@ -239,17 +247,20 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
         return new CompleteBankIdPage(html);
     }
 
-    private SAMLRequest getSamlRequest(CompleteBankIdPage completeBankIdPage) {
-        return SAMLRequest.from(completeBankIdPage);
-    }
+    private String getSamlArtResponse(CompleteBankIdPage completeBankIdPage) {
+        Form formData =
+                Form.builder()
+                        .put(
+                                NordnetConstants.FormKeys.SAML_REQUEST,
+                                completeBankIdPage.getSamlResponse())
+                        .put(NordnetConstants.FormKeys.TARGET, completeBankIdPage.getTarget())
+                        .build();
 
-    private String getSamlArtResponse(
-            CompleteBankIdPage completeBankIdPage, SAMLRequest samlRequest) {
         RequestBuilder requestBuilder =
                 apiClient
                         .createBasicRequest(completeBankIdPage.getTarget())
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .body(samlRequest);
+                        .body(formData.serialize());
 
         HttpResponse response = apiClient.post(requestBuilder, HttpResponse.class);
 
@@ -282,17 +293,15 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
     }
 
     private void getArtifactResponse(String samlArtifact, String ntag) {
-        MultivaluedMapImpl artifactMap = new MultivaluedMapImpl();
-        artifactMap.putSingle(NordnetConstants.BodyKeys.ARTIFACT, samlArtifact);
-
         RequestBuilder request =
                 apiClient
                         .createBasicRequest(NordnetConstants.Urls.AUTHENTICATION_SAML_ARTIFACT)
+                        .type(MediaType.APPLICATION_JSON)
                         .header(NordnetConstants.HeaderKeys.NTAG, ntag)
-                        .body(artifactMap);
+                        .body(new ArtifactRequest(samlArtifact));
         ArtifactResponse artifactResponseBody = apiClient.post(request, ArtifactResponse.class);
 
-        if (!artifactResponseBody.isLogged_in()) {
+        if (!artifactResponseBody.isLoggedIn()) {
             throw BankServiceError.SESSION_TERMINATED.exception();
         }
     }
@@ -304,7 +313,10 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
         return getAuthCodeFrom(
                 response.getHeaders().get(NordnetConstants.HeaderKeys.LOCATION).stream()
                         .findFirst()
-                        .orElse(""));
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Something went wrong when fetching the authCode")));
     }
 
     private String getSamlArtifact(String location) {

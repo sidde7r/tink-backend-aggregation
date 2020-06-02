@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet;
 
 import com.google.common.base.Strings;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.HttpHeaders;
-import org.apache.http.HttpStatus;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.CustomerInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.AccountInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.rpc.AccountResponse;
@@ -16,8 +17,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.identitydata.IdentityData;
 
 public class NordnetApiClient {
@@ -25,24 +26,54 @@ public class NordnetApiClient {
     private final TinkHttpClient client;
     private String referrer;
     private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
+    private final Credentials credentials;
 
-    public NordnetApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public NordnetApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
+            Credentials credentials) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
+        this.credentials = credentials;
+    }
+
+    public boolean isPasswordLogin() {
+        return credentials.getType().equals(CredentialsTypes.PASSWORD);
     }
 
     private RequestBuilder createRequestInSession(String url) {
+        RequestBuilder requestBuilder = createBasicRequest(url);
 
-        OAuth2Token token = getTokenFromStorage();
-
-        return createBasicRequest(url).addBearerToken(token);
+        /* we can use either password authenticator or bankId authenticator. Depending on which one
+        used, the request will either use Basic header or bearer token.*/
+        if (isPasswordLogin()) {
+            String sessionKey = getSessionKeyFromsStorage();
+            return requestBuilder.addBasicAuth(sessionKey);
+        } else {
+            OAuth2Token token = getTokenFromStorage();
+            return requestBuilder.addBearerToken(token);
+        }
     }
 
     private OAuth2Token getTokenFromStorage() {
         return persistentStorage
                 .get(NordnetConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+                        () ->
+                                new IllegalStateException(
+                                        "Error when retrieving token from storage"));
+    }
+
+    private String getSessionKeyFromsStorage() {
+        return sessionStorage
+                .get(NordnetConstants.StorageKeys.SESSION_KEY, String.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Error when retrieving session key from storage"));
     }
 
     private RequestBuilder createRequest(String url) {
@@ -56,6 +87,7 @@ public class NordnetApiClient {
         return client.request(url)
                 .header(HttpHeaders.USER_AGENT, CommonHeaders.DEFAULT_USER_AGENT)
                 .accept(
+                        MediaType.APPLICATION_JSON,
                         MediaType.TEXT_HTML,
                         MediaType.APPLICATION_XHTML_XML,
                         NordnetConstants.HeaderKeys.APPLICATION_XML_Q,
@@ -78,30 +110,28 @@ public class NordnetApiClient {
         return requestBuilder.post(responseClass);
     }
 
-    public boolean authorizeSession(OAuth2Token token) {
-        try {
-            createBasicRequest(NordnetConstants.Urls.ENVIRONMENT_URL)
-                    .addBearerToken(token)
-                    .get(HttpResponse.class);
-            return true;
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED
-                    && e.getResponse()
-                            .getBody(String.class)
-                            .contains(NordnetConstants.Errors.INVALID_SESSION)) {
-                return false;
-            }
+    // bankIdAuthenticator
+    public void authorizeSession(@NotNull OAuth2Token token) {
+        createBasicRequest(NordnetConstants.Urls.ENVIRONMENT_URL)
+                .addBearerToken(token)
+                .get(HttpResponse.class);
+    }
 
-            // Re-throw unknown exception
-            throw e;
-        }
+    // passwordAuthenticator
+    public void authorizeSession(@NotNull String sessionKey) {
+        createBasicRequest(NordnetConstants.Urls.ENVIRONMENT_URL)
+                .addBasicAuth(sessionKey)
+                .get(HttpResponse.class);
     }
 
     public FetchIdentityDataResponse fetchIdentityData() {
-        IdentityData customerInfo =
-                createBasicRequest(NordnetConstants.Urls.GET_CUSTOMER_INFO_URL)
-                        .get(CustomerInfoResponse.class)
-                        .toTinkIdentity();
+        RequestBuilder requestBuilder =
+                createBasicRequest(NordnetConstants.Urls.GET_CUSTOMER_INFO_URL);
+        if (isPasswordLogin()) {
+            requestBuilder.addBasicAuth(getSessionKeyFromsStorage());
+        }
+
+        IdentityData customerInfo = requestBuilder.get(CustomerInfoResponse.class).toTinkIdentity();
         return new FetchIdentityDataResponse(customerInfo);
     }
 
@@ -125,9 +155,9 @@ public class NordnetApiClient {
 
     public AccountInfoResponse fetchAccountInfo(String accountId) {
 
-        return get(
-                String.format(NordnetConstants.Urls.GET_ACCOUNTS_INFO_URL, accountId),
-                AccountInfoResponse.class);
+        return createRequestInSession(
+                        String.format(NordnetConstants.Urls.GET_ACCOUNTS_INFO_URL, accountId))
+                .get(AccountInfoResponse.class);
     }
 
     public PositionsResponse getPositions(String accountId) {

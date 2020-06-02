@@ -1,13 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArtifactResponse {
     private String country;
     private String lang;
-    private boolean logged_in;
-    private String session_type;
+
+    @JsonProperty("logged_in")
+    private boolean loggedIn;
+
+    @JsonProperty("session_type")
+    private String sessionType;
 
     public String getCountry() {
         return country;
@@ -25,19 +30,11 @@ public class ArtifactResponse {
         this.lang = lang;
     }
 
-    public boolean isLogged_in() {
-        return logged_in;
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 
-    public void setLogged_in(boolean logged_in) {
-        this.logged_in = logged_in;
-    }
-
-    public String getSession_type() {
-        return session_type;
-    }
-
-    public void setSession_type(String session_type) {
-        this.session_type = session_type;
+    public String getSessionType() {
+        return sessionType;
     }
 }

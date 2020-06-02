@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.rpc.entities.BankIdErrorEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -27,6 +28,8 @@ public class BankIdInitResponse {
 
     @JsonProperty("expires_in")
     private int expiresIn;
+
+    private BankIdErrorEntity error;
 
     public String getCountry() {
         return country;
@@ -66,5 +69,9 @@ public class BankIdInitResponse {
 
     public String getCollectUrl() {
         return collectUrl;
+    }
+
+    public BankIdErrorEntity getError() {
+        return error;
     }
 }

@@ -1,18 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet;
 
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.NordnetAccountTypes.AKTIE_FONDKONTO;
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.NordnetAccountTypes.INVESTERINGSSPARKONTO;
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.NordnetAccountTypes.IPS;
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.NordnetAccountTypes.KAPITALFORSAKRING;
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.NordnetAccountTypes.PRIVATE_PENSION;
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.NordnetAccountTypes.SPARKONTO;
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.NordnetConstants.NordnetAccountTypes.TJANSTEPENSION;
-
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.portfolio.PortfolioModule;
 
 public class NordnetConstants {
 
@@ -41,6 +34,29 @@ public class NordnetConstants {
         public String getStatusCode() {
             return statusCode;
         }
+    }
+
+    public static class FormKeys {
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+        public static final String SERVICE = "service";
+        public static final String COUNTRY = "country";
+        public static final String SESSION_LANGUAGE = "session_lang";
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String CLIENT_ID = "client_id";
+        public static final String CLIENT_SECRET = "client_secret";
+        public static final String CODE = "code";
+        public static final String SAML_REQUEST = "SAMLResponse";
+        public static final String TARGET = "TARGET";
+    }
+
+    public static class FormValues {
+        public static final String ANONYMOUS = "<<anonymous>>";
+        public static final String COUNTRY_SE = "SE";
+        public static final String LANG_EN = "en";
+        public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REDIRECT_URI = "https://www.nordnet.se/now/mobile/token.html";
     }
 
     public static class Urls {
@@ -127,10 +143,14 @@ public class NordnetConstants {
         public static final String AUTO_START_TOKEN = "autoStartToken";
         public static final String OAUTH_TOKEN = PersistentStorageKeys.OAUTH_2_TOKEN;
         public static final String ACCOUNTS = "accounts";
+        public static final String SESSION_KEY = "session_key";
+        public static final String NTAG = "ntag";
     }
 
     public static class Errors {
         public static final String INVALID_SESSION = "NEXT_INVALID_SESSION";
+        public static final String INVALID_LOGIN_PARAMETER = "NEXT_LOGIN_INVALID_LOGIN_PARAMETER";
+        public static final String ALREADY_IN_SESSION = "ALREADY_IN_PROGRESS";
     }
 
     public static class NordnetAccountTypes {
@@ -141,17 +161,41 @@ public class NordnetConstants {
         public static final String IPS = "IPS";
         public static final String PRIVATE_PENSION = "PP";
         public static final String TJANSTEPENSION = "TJP";
+        public static final String DEPOT = "dep";
+        public static final String TJANSTEPENSION_TJF = "tjf";
+        public static final String TJANSTEPENSION_BTP1 = "btp1";
     }
 
     public static TypeMapper<AccountTypes> getAccountTypeMapper() {
+
         return TypeMapper.<AccountTypes>builder()
                 .put(
                         AccountTypes.INVESTMENT,
-                        AKTIE_FONDKONTO,
-                        INVESTERINGSSPARKONTO,
-                        KAPITALFORSAKRING)
-                .put(AccountTypes.SAVINGS, SPARKONTO)
-                .put(AccountTypes.PENSION, PRIVATE_PENSION, IPS, TJANSTEPENSION)
+                        NordnetAccountTypes.AKTIE_FONDKONTO,
+                        NordnetAccountTypes.INVESTERINGSSPARKONTO,
+                        NordnetAccountTypes.KAPITALFORSAKRING)
+                .put(AccountTypes.SAVINGS, NordnetAccountTypes.SPARKONTO)
+                .put(
+                        AccountTypes.PENSION,
+                        NordnetAccountTypes.PRIVATE_PENSION,
+                        NordnetAccountTypes.IPS,
+                        NordnetAccountTypes.TJANSTEPENSION,
+                        NordnetAccountTypes.TJANSTEPENSION_TJF)
+                .build();
+    }
+
+    public static TypeMapper<PortfolioModule.PortfolioType> getPortfolioTypeMapper() {
+        return TypeMapper.<PortfolioModule.PortfolioType>builder()
+                .put(PortfolioModule.PortfolioType.DEPOT, NordnetAccountTypes.DEPOT)
+                .put(PortfolioModule.PortfolioType.ISK, NordnetAccountTypes.INVESTERINGSSPARKONTO)
+                .put(PortfolioModule.PortfolioType.KF, NordnetAccountTypes.KAPITALFORSAKRING)
+                .put(
+                        PortfolioModule.PortfolioType.PENSION,
+                        NordnetAccountTypes.IPS,
+                        NordnetAccountTypes.TJANSTEPENSION,
+                        NordnetAccountTypes.TJANSTEPENSION_TJF,
+                        NordnetAccountTypes.PRIVATE_PENSION,
+                        NordnetAccountTypes.TJANSTEPENSION_BTP1)
                 .build();
     }
 }

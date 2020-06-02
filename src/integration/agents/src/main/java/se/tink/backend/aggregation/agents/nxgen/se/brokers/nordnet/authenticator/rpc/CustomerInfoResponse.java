@@ -7,12 +7,6 @@ import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 @JsonObject
 public class CustomerInfoResponse {
-    private String address1;
-    private String city;
-    private String country;
-    private String citizen;
-    private String email;
-
     @JsonProperty("first_name")
     private String firstName;
 

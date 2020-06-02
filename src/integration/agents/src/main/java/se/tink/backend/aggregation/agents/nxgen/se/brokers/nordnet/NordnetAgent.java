@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.NordnetBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.authenticator.NordnetPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.investment.NordnetInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.fetcher.transactionalaccount.NordnetTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.nordnet.session.NordnetSessionHandler;
@@ -17,7 +18,9 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
@@ -32,7 +35,7 @@ public class NordnetAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor {
 
     private final SessionStorage sessionStorage;
-    private final NordnetApiClient apiClient;
+    protected final NordnetApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -40,7 +43,8 @@ public class NordnetAgent extends NextGenerationAgent
     public NordnetAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         this.sessionStorage = new SessionStorage();
-        this.apiClient = new NordnetApiClient(client, persistentStorage);
+        this.apiClient =
+                new NordnetApiClient(client, persistentStorage, sessionStorage, credentials);
         this.investmentRefreshController = constructInvestmentRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
@@ -50,16 +54,19 @@ public class NordnetAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new NordnetBankIdAuthenticator(apiClient, sessionStorage),
-                persistentStorage,
-                credentials);
+        return new TypedAuthenticationController(
+                new BankIdAuthenticationController<>(
+                        supplementalRequester,
+                        new NordnetBankIdAuthenticator(apiClient, sessionStorage),
+                        persistentStorage,
+                        credentials),
+                new PasswordAuthenticationController(
+                        new NordnetPasswordAuthenticator(apiClient, sessionStorage)));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new NordnetSessionHandler(apiClient, persistentStorage);
+        return new NordnetSessionHandler(apiClient, persistentStorage, sessionStorage);
     }
 
     @Override
