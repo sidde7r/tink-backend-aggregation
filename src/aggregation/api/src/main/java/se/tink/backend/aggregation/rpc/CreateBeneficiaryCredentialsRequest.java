@@ -10,17 +10,26 @@ import se.tink.libraries.user.rpc.User;
 public class CreateBeneficiaryCredentialsRequest extends CredentialsRequest {
 
     private final Beneficiary beneficiary;
-
+    private final String ownerAccountNumber;
     private String refreshId;
 
     public CreateBeneficiaryCredentialsRequest(
-            User user, Provider provider, Credentials credentials, Beneficiary beneficiary) {
+            User user,
+            Provider provider,
+            Credentials credentials,
+            Beneficiary beneficiary,
+            String ownerAccountNumber) {
         super(user, provider, credentials);
         this.beneficiary = beneficiary;
+        this.ownerAccountNumber = ownerAccountNumber;
     }
 
     public Beneficiary getBeneficiary() {
         return this.beneficiary;
+    }
+
+    public String getOwnerAccountNumber() {
+        return this.ownerAccountNumber;
     }
 
     @Override
@@ -35,9 +44,5 @@ public class CreateBeneficiaryCredentialsRequest extends CredentialsRequest {
 
     public String getRefreshId() {
         return refreshId;
-    }
-
-    public void setRefreshId(String refreshId) {
-        this.refreshId = refreshId;
     }
 }

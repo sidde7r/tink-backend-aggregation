@@ -842,7 +842,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 .build();
     }
 
-    public void testCreateBeneficiary(Beneficiary beneficiary) throws Exception {
+    public void testCreateBeneficiary(CreateBeneficiary createBeneficiary) throws Exception {
         initiateCredentials();
         RefreshInformationRequest credentialsRequest = createRefreshInformationRequest();
         readConfigurationFile();
@@ -858,8 +858,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                         () ->
                                                 new NotImplementedException(
                                                         "Agent does not implement constructAddBeneficiaryController method."));
-                CreateBeneficiary createBeneficiary =
-                        new CreateBeneficiary.Builder().withBeneficiary(beneficiary).build();
 
                 CreateBeneficiaryResponse beneficiaryResponse =
                         createBeneficiaryController.createBeneficiary(
@@ -900,14 +898,22 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 CreateBeneficiaryStatus statusResult =
                         createBeneficiaryMultiStepResponse.getBeneficiary().getStatus();
                 Assert.assertEquals(statusResult, CreateBeneficiaryStatus.ADDED);
+                Beneficiary beneficiary = createBeneficiary.getBeneficiary();
                 log.info(
-                        "Done with adding beneficiary, name: {}, type: {}, account number: {}",
+                        "Done with adding beneficiary, name: {}, type: {}, account number: {}, owner account number: {}",
                         beneficiary.getName(),
                         beneficiary.getAccountNumberType(),
                         StringUtils.overlay(
                                 beneficiary.getAccountNumber(),
                                 StringUtils.repeat(
                                         '*', beneficiary.getAccountNumber().length() - 4),
+                                0,
+                                beneficiary.getAccountNumber().length() - 4),
+                        StringUtils.overlay(
+                                createBeneficiary.getOwnerAccountNumber(),
+                                StringUtils.repeat(
+                                        '*',
+                                        createBeneficiary.getOwnerAccountNumber().length() - 4),
                                 0,
                                 beneficiary.getAccountNumber().length() - 4));
 
