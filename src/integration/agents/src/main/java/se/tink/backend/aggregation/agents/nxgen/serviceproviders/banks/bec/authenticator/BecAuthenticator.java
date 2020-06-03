@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.auth
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
@@ -43,7 +44,8 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
         return AuthenticationStepResponse.executeNextStep();
     }
 
-    private AuthenticationStepResponse fetchScaOptions(String username, String password) {
+    private AuthenticationStepResponse fetchScaOptions(String username, String password)
+            throws LoginException {
         apiClient.scaPrepare(username, password);
         sessionStorage.put(USERNAME_STORAGE_KEY, username);
         sessionStorage.put(PASSWORD_STORAGE_KEY, password);
