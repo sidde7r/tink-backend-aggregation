@@ -79,7 +79,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        apiClient.fetchAccessToken();
+        apiClient.fetchPisAccessToken();
         sessionStorage.put(
                 SocieteGeneraleConstants.QueryKeys.STATE, strongAuthenticationState.getState());
         PaymentType type = getPaymentType(paymentRequest);
