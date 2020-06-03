@@ -101,7 +101,7 @@ public class LoanEntityTest {
     public void equalInterestRate() {
         Loan loan = new Loan();
         LoanTermsEntity loanTermsEntity = new LoanTermsEntity();
-        loanTermsEntity.setInterestRate(0.9);
+        loanTermsEntity.setInterestRate(0.009);
         loan.setInterest(loanTermsEntity.getNormalizedInterestRate());
         assertEquals(0.009, loan.getInterest(), 0.0000001);
     }

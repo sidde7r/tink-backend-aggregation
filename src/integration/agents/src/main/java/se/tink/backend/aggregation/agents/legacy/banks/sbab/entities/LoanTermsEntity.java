@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.banks.sbab.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanTermsEntity {
@@ -112,7 +111,6 @@ public class LoanTermsEntity {
 
     public double getNormalizedInterestRate() {
         BigDecimal interest = BigDecimal.valueOf(interestRate);
-        interest = interest.divide(BigDecimal.valueOf(100)).setScale(6, RoundingMode.HALF_UP);
         return interest.doubleValue();
     }
 
