@@ -16,4 +16,3 @@ public class AddBeneficiaryRequest {
         this.isNew = "true";
     }
 }
-

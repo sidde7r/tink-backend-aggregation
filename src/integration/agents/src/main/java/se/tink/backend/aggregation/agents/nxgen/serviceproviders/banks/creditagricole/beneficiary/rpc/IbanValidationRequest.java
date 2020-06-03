@@ -10,4 +10,3 @@ public class IbanValidationRequest {
         this.iban = iban;
     }
 }
-

@@ -12,4 +12,3 @@ public class IbanValidationResponse extends DefaultResponse {
         return externalAccount.getBic();
     }
 }
-

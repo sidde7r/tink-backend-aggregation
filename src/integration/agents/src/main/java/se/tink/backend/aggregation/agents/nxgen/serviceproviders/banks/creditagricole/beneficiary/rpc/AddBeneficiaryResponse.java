@@ -2,6 +2,4 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditag
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
 
-public class AddBeneficiaryResponse extends DefaultResponse {
-}
-
+public class AddBeneficiaryResponse extends DefaultResponse {}
