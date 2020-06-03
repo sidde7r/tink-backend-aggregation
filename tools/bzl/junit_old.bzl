@@ -1,3 +1,6 @@
+# DEPRECATED: Please consider switching to junit_strict.bzl or similar instead.
+# https://github.com/tink-ab/tink-backend/pull/17171
+
 SUITE_PACKAGE = "se.tink.backend"
 SUITE_SOURCE = """
 package %s;
