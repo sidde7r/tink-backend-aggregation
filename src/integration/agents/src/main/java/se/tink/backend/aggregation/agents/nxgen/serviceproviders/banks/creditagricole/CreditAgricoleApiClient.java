@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole;
 
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Authorization;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Url;
@@ -34,7 +38,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class CreditAgricoleApiClient {
-
+    private static final Logger log = LoggerFactory.getLogger(CreditAgricoleApiClient.class);
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
 
@@ -102,7 +106,7 @@ public class CreditAgricoleApiClient {
         return createAuthRequest().post(AuthenticateResponse.class, request);
     }
 
-    public OtpInitResponse otpInit() {
+    public void otpInit() {
         OtpInitRequest otpInitRequest =
                 new OtpInitRequest(
                         Integer.parseInt(persistentStorage.get(StorageKey.USER_ID)),
@@ -110,18 +114,19 @@ public class CreditAgricoleApiClient {
 
         OtpInitResponse otpInitResponse =
                 client.request(
-                                Url.OTP_AUTHENTICATION.parameter(
-                                        StorageKey.REGION_ID,
-                                        persistentStorage.get(StorageKey.REGION_ID)))
+                                new URL(Url.OTP_REQUEST)
+                                        .parameter(
+                                                StorageKey.REGION_ID,
+                                                persistentStorage.get(StorageKey.REGION_ID)))
                         .body(otpInitRequest, MediaType.APPLICATION_JSON_TYPE)
                         .post(OtpInitResponse.class);
         if (!otpInitResponse.isResponseOK()) {
+            log.info("Unknown error: {}", otpInitResponse);
             throw new IllegalStateException("Unknown error when initializing OTP authentication");
         }
-        return otpInitResponse;
     }
 
-    public OtpAuthenticationResponse otpAuthenticate(String otp) {
+    public void otpAuthenticate(String otp) throws SupplementalInfoException {
         OtpAuthenticationRequest otpAuthenticationRequest =
                 new OtpAuthenticationRequest(
                         persistentStorage.get(StorageKey.USER_ID),
@@ -129,15 +134,16 @@ public class CreditAgricoleApiClient {
                         otp);
         OtpAuthenticationResponse otpAuthenticationResponse =
                 client.request(
-                                Url.OTP_AUTHENTICATION.parameter(
-                                        StorageKey.REGION_ID,
-                                        persistentStorage.get(StorageKey.REGION_ID)))
+                                new URL(Url.AUTHENTICATE)
+                                        .parameter(
+                                                StorageKey.REGION_ID,
+                                                persistentStorage.get(StorageKey.REGION_ID)))
                         .body(otpAuthenticationRequest, MediaType.APPLICATION_JSON_TYPE)
                         .post(OtpAuthenticationResponse.class);
         if (!otpAuthenticationResponse.isResponseOK()) {
-            throw new IllegalStateException("Unknown error when authenticating OTP: ");
+            log.info("Unknown error (probably invalid code): {}", otpAuthenticationResponse);
+            throw new SupplementalInfoException(SupplementalInfoError.NO_VALID_CODE);
         }
-        return otpAuthenticationResponse;
     }
 
     public IbanValidationResponse validateIban(String iban) {
