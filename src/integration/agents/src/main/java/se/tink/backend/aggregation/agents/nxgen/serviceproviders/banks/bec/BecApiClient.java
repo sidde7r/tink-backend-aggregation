@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.Log;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.FetchAccountTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
@@ -75,7 +77,8 @@ public class BecApiClient {
                 .post(EncryptedResponse.class, request);
     }
 
-    public ScaOptionsEncryptedPayload scaPrepare(String username, String password) {
+    public ScaOptionsEncryptedPayload scaPrepare(String username, String password)
+            throws LoginException {
         try {
             BaseBecRequest request = baseRequest();
             EncryptedPayloadAndroidEntity payloadEntity = scaPrepareRequest(username, password);
@@ -89,6 +92,13 @@ public class BecApiClient {
             return mapper.readValue(decryptedRespone, ScaOptionsEncryptedPayload.class);
         } catch (IOException e) {
             throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
+        } catch (HttpResponseException e) {
+            int errorCode = e.getResponse().getStatus();
+            if (errorCode == 400) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(
+                        "CPR no./user no. or PIN code is incorrect. Check in your Netbank that you are registered.");
+            }
+            throw e;
         }
     }
 
