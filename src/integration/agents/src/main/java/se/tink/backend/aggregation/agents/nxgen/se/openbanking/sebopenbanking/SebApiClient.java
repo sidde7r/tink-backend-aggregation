@@ -33,8 +33,9 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class SebApiClient extends SebBaseApiClient {
 
-    public SebApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
-        super(client, persistentStorage);
+    public SebApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, boolean isManualRequest) {
+        super(client, persistentStorage, isManualRequest);
     }
 
     @Override

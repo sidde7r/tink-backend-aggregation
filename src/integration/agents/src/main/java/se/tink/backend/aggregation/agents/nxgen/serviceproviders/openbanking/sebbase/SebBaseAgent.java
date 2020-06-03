@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -42,11 +43,17 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new SebDecoupledAuthenticator(apiClient, sebConfiguration),
-                persistentStorage,
-                credentials);
+        BankIdAuthenticationController bankIdAuthenticationController =
+                new BankIdAuthenticationController<>(
+                        supplementalRequester,
+                        new SebDecoupledAuthenticator(apiClient, sebConfiguration),
+                        persistentStorage,
+                        credentials);
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                bankIdAuthenticationController,
+                bankIdAuthenticationController);
     }
 
     @Override

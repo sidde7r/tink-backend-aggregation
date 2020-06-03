@@ -32,8 +32,10 @@ public abstract class SebBaseApiClient {
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected SebConfiguration configuration;
+    private boolean isManualRequest;
 
-    public SebBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public SebBaseApiClient(
+            TinkHttpClient client, PersistentStorage persistentStorage, boolean isManualRequest) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         client.addFilter(new SebBankFailureFilter());
@@ -41,6 +43,7 @@ public abstract class SebBaseApiClient {
                 new TimeoutRetryFilter(
                         HttpClient.NO_RESPONSE_MAX_RETRIES,
                         HttpClient.NO_RESPONSE_SLEEP_MILLISECONDS));
+        this.isManualRequest = isManualRequest;
     }
 
     public void setConfiguration(SebConfiguration configuration) {
@@ -88,12 +91,18 @@ public abstract class SebBaseApiClient {
     public abstract FetchCardAccountResponse fetchCardAccounts();
 
     protected RequestBuilder createRequestInSession(URL url) {
-        return createRequest(url)
-                .header(SebCommonConstants.HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
-                .header(
-                        SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        SebCommonConstants.getPsuIpAddress())
-                .addBearerToken(getTokenFromStorage());
+        RequestBuilder requestBuilder =
+                createRequest(url)
+                        .header(
+                                SebCommonConstants.HeaderKeys.X_REQUEST_ID,
+                                Psd2Headers.getRequestId())
+                        .addBearerToken(getTokenFromStorage());
+        if (isManualRequest) {
+            requestBuilder.header(
+                    SebCommonConstants.HeaderKeys.PSU_IP_ADDRESS,
+                    SebCommonConstants.getPsuIpAddress());
+        }
+        return requestBuilder;
     }
 
     protected RequestBuilder createRequest(URL url) {

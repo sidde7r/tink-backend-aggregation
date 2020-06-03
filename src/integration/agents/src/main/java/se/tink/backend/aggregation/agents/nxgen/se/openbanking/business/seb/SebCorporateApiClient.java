@@ -25,14 +25,17 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SebCorporateApiClient extends SebBaseApiClient {
     private final Credentials credentials;
 
     public SebCorporateApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
-        super(client, persistentStorage);
-        this.credentials = credentials;
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            CredentialsRequest credentialsRequest) {
+        super(client, persistentStorage, credentialsRequest.isManual());
+        this.credentials = credentialsRequest.getCredentials();
     }
 
     @Override
