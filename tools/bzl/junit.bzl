@@ -1,53 +1,22 @@
-SUITE_PACKAGE = "se.tink.backend"
-SUITE_SOURCE = """
-package %s;
+load("@tink_backend//tools/bzl:junit_strict.bzl", junit_test_backend = "junit_test")
 
-import org.junit.extensions.cpsuite.ClasspathSuite;
-import org.junit.runner.RunWith;
-import org.junit.BeforeClass;
-import io.dropwizard.logging.LoggingFactory;
-import ch.qos.logback.classic.Level;
+def junit_test(**kwargs):
+    _set_default_log_level(kwargs)
 
-@RunWith(ClasspathSuite.class)
-@ClasspathSuite.IncludeJars(true)
-@ClasspathSuite.ClassnameFilters("se.tink.*")
-public class %s {
-    @BeforeClass
-    public static void setLogLevelForTests() {
-        // This overrides the bootstrapping done from
-        // io.dropwizard.Application which is (almost)
-        // always on the classpath.
-        LoggingFactory.bootstrap(Level.INFO);
-    }
-}
-"""
-
-def generate_suite_implementation(ctx):
-    ctx.actions.write(output = ctx.outputs.out, content = SUITE_SOURCE %
-                                                          (SUITE_PACKAGE, ctx.attr.outname))
-
-GenerateSuite = rule(
-    attrs = {
-        "outname": attr.string(),
-    },
-    outputs = {"out": "%{name}.java"},
-    implementation = generate_suite_implementation,
-)
-
-def junit_test(name, srcs, deps, **kwargs):
-    s_name = name.replace("-", "_") + "TestSuite"
-    GenerateSuite(
-        name = s_name,
-        outname = s_name,
-    )
-    native.java_test(
-        name = name,
-        test_class = SUITE_PACKAGE + "." + s_name,
-        srcs = srcs + [":" + s_name],
-        deps = depset(deps + [
-            "//external:cpsuite",
-            "//third_party:ch_qos_logback_logback_classic",
-            "//third_party:io_dropwizard_dropwizard_logging",
-        ]).to_list(),
+    junit_test_backend(
         **kwargs
     )
+
+def _set_default_log_level(kwargs):
+    # Set a modest default log level in all junit_tests rather than having DEBUG everywhere
+    if not "jvm_flags" in kwargs:
+        kwargs["jvm_flags"] = [
+            "-Dlogback.configurationFile=etc/logback-test.xml",
+        ]
+    logging_resource = "//etc:logback_test"
+
+    if "resources" in kwargs:
+        if logging_resource not in kwargs["resources"]:
+            kwargs["resources"] += [logging_resource]
+    else:
+        kwargs["resources"] = [logging_resource]

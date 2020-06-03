@@ -1,4 +1,4 @@
-load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:junit_old.bzl", "junit_test")
 
 java_library(
     name = "request_tracing",
