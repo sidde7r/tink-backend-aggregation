@@ -35,6 +35,8 @@ public class FabricConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String MAPPING =
+                "Cannot map payment status: %s to Tink payment status.";
     }
 
     public static class Urls {
@@ -47,6 +49,14 @@ public class FabricConstants {
         public static final String GET_CONSENT_DETAILS =
                 "/api/fabrick/psd2/v1/consents/{consentId}";
         public static final String API_PSD2_URL = "/api/fabrick/psd2";
+        public static final String INITIATE_A_PAYMENT_URL =
+                "/api/fabrick/psd2/v1/payments/{payment-product}";
+        public static final String CREATE_PIS_AUTHORIZATION_URL =
+                "/api/fabrick/psd2/v1/{paymentType}/{paymentProduct}/{paymentId}/authorisations";
+        public static final String GET_PAYMENT_URL =
+                "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}";
+        public static final String GET_PAYMENT_STATUS_URL =
+                "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}/status";
     }
 
     public static class IdTags {
@@ -56,6 +66,7 @@ public class FabricConstants {
 
     public static class StorageKeys {
         public static final String CONSENT_ID = "CONSENT_ID";
+        public static final String LINK = "link";
     }
 
     public static class QueryKeys {
@@ -85,5 +96,32 @@ public class FabricConstants {
     public static class Accounts {
         public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
         public static final String OTHER = "OTHER";
+    }
+
+    public static class PathParameterKeys {
+        public static final String PAYMENT_PRODUCT = "payment-product";
+        public static final String PAYMENT_ID = "paymentId";
+        public static final String PAYMENT_TYPE = "paymentType";
+    }
+
+    public static class PathParameterValues {
+        public static final String PAYMENT_PRODUCT = "sepa-credit-transfers";
+        public static final String PAYMENT_TYPE = "payments";
+    }
+
+    public static class Timer {
+        public static final long WAITING_FOR_SUPPLEMENTAL_INFORMATION_TIMER = 9l;
+    }
+
+    public static class ScaStatus {
+        public static final String SCA_FAILED = "failed";
+        public static final String IDENTIFICATION_REQUIRED = "psuIdentified";
+        public static final String AUTHENTICATION_REQUIRED = "psuAuthenticated";
+        public static final String SCA_FINALISED = "finalised";
+        public static final String EXEMPTED = "exempted";
+    }
+
+    public static class PaymentStep {
+        public static final String IN_PROGRESS = "IN_PROGRESS";
     }
 }

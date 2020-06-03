@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderKeys;
@@ -15,6 +16,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.configuration.FabricConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
@@ -123,5 +126,48 @@ public class FabricApiClient {
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(TransactionResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+        final String baseUrl = getConfiguration().getBaseUrl();
+        return client.request(
+                        new URL(baseUrl + Urls.INITIATE_A_PAYMENT_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT))
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.TPP_REDIRECT_PREFERED, HeaderValues.TPP_REDIRECT_PREFERED)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(
+                        HeaderKeys.TPP_REDIRECT_URI,
+                        new URL(getConfiguration().getRedirectUrl())
+                                .queryParam(
+                                        QueryKeys.STATE, persistentStorage.get(QueryKeys.STATE)))
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public CreatePaymentResponse getPayment(String paymentId) {
+        final String baseUrl = getConfiguration().getBaseUrl();
+        return client.request(
+                        new URL(baseUrl + Urls.GET_PAYMENT_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId))
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(CreatePaymentResponse.class);
+    }
+
+    public CreatePaymentResponse getPaymentStatus(String paymentId) {
+        final String baseUrl = getConfiguration().getBaseUrl();
+        return client.request(
+                        new URL(baseUrl + Urls.GET_PAYMENT_STATUS_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(CreatePaymentResponse.class);
     }
 }
