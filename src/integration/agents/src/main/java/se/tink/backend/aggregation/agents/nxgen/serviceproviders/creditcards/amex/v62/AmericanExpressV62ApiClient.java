@@ -134,6 +134,7 @@ public class AmericanExpressV62ApiClient {
     }
 
     public KeyExchangeResponse keyExchange(KeyExchangeRequest keyExchangeRequest) {
+        sleep();
         return client.request(AmericanExpressV62Constants.KEY_EXCHANGE_URL)
                 .header(
                         Headers.TRACKING_ID,
@@ -154,6 +155,7 @@ public class AmericanExpressV62ApiClient {
 
     // Purpose of this api call is to retrieve a cookie named "SaneId"
     public void fetchSaneIdCookie() {
+        sleep();
         client.request(AmericanExpressV62Constants.BASE_API + Urls.SANE_ID)
                 .queryParam(QueryKeys.FACE, config.getLocale())
                 .queryParam(QueryKeys.CLIENT_TYPE, QueryValues.CLIENT_TYPE_VALUE)
@@ -168,6 +170,7 @@ public class AmericanExpressV62ApiClient {
     }
 
     public InitializationResponse initialization() {
+        sleep();
         final String initVersion =
                 persistentStorage.getOrDefault(Tags.INIT_VERSION, config.getInitVersion());
         final InitializationRequest request =
@@ -179,6 +182,7 @@ public class AmericanExpressV62ApiClient {
     }
 
     public LogonResponse logon(LogonRequest request) {
+        sleep();
         String rawResponse =
                 createRequest(Urls.LOG_ON)
                         .header(Headers.REQUEST_SEQUENCE, 1)
@@ -189,22 +193,34 @@ public class AmericanExpressV62ApiClient {
     }
 
     public TimelineResponse requestTimeline(TimelineRequest request) {
+        sleep();
         return createRequestInSession(Urls.TIMELINE).post(TimelineResponse.class, request);
     }
 
     public TransactionResponse requestTransaction(TransactionsRequest request) {
-
+        sleep();
         return createRequestInSession(Urls.TRANSACTION).post(TransactionResponse.class, request);
     }
 
     public ExtendResponse requestExtendSession() {
+        sleep();
         return createRequestInSession(AmericanExpressV62Constants.Urls.EXTEND_SESSION)
                 .post(ExtendResponse.class);
     }
 
     public LogoffResponse requestLogoff() {
+        sleep();
         return createRequestInSession(AmericanExpressV62Constants.Urls.LOG_OUT)
                 .post(LogoffResponse.class);
+    }
+
+    // delay to try mimic human behavior
+    private void sleep() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     // Filter out cookies that the app does not send in the logon request.
