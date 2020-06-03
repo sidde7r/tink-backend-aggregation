@@ -37,6 +37,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class AmexApiClient {
 
     private final AmexConfiguration amexConfiguration;
+    private final String redirectUrl;
     private final TinkHttpClient httpClient;
     private final AmexMacGenerator amexMacGenerator;
     private final ObjectMapper objectMapper;
@@ -47,9 +48,7 @@ public class AmexApiClient {
     public URL getAuthorizeUrl(String state) {
         return httpClient
                 .request(amexConfiguration.getGrantAccessJourneyUrl())
-                .queryParam(
-                        AmericanExpressConstants.QueryParams.REDIRECT_URI,
-                        amexConfiguration.getRedirectUrl())
+                .queryParam(AmericanExpressConstants.QueryParams.REDIRECT_URI, redirectUrl)
                 .queryParam(
                         AmericanExpressConstants.QueryParams.CLIENT_ID,
                         amexConfiguration.getClientId())
@@ -65,7 +64,7 @@ public class AmexApiClient {
                 TokenRequest.builder()
                         .scope(AmericanExpressConstants.QueryValues.SCOPE_LIST_FOR_GET_TOKEN)
                         .code(authorizationCode)
-                        .redirectUri(amexConfiguration.getRedirectUrl())
+                        .redirectUri(redirectUrl)
                         .build();
 
         return httpClient

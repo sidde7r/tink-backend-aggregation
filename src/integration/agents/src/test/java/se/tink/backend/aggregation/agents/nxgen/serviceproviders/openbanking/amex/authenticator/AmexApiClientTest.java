@@ -77,7 +77,6 @@ public class AmexApiClientTest {
         final AmexConfiguration amexConfigurationMock = mock(AmexConfiguration.class);
         when(amexConfigurationMock.getServerUrl()).thenReturn(SERVER_URL);
         when(amexConfigurationMock.getClientId()).thenReturn(CLIENT_ID);
-        when(amexConfigurationMock.getRedirectUrl()).thenReturn(REDIRECT_URL);
 
         final AmexMacGenerator amexMacGeneratorMock = mock(AmexMacGenerator.class);
         when(amexMacGeneratorMock.generateAuthMacValue(AmexGrantType.AUTHORIZATION_CODE))
@@ -98,6 +97,7 @@ public class AmexApiClientTest {
         amexApiClient =
                 new AmexApiClient(
                         amexConfigurationMock,
+                        REDIRECT_URL,
                         httpClientMock,
                         amexMacGeneratorMock,
                         new ObjectMapper(),

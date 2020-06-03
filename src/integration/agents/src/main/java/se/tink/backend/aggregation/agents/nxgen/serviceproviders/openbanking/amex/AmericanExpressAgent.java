@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.AmexCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.converter.AmexTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -51,8 +52,9 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
     @Inject
     public AmericanExpressAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-
-        final AmexConfiguration amexConfiguration = getAgentConfiguration();
+        final AgentConfiguration<AmexConfiguration> agentConfiguration = getAgentConfiguration();
+        final AmexConfiguration amexConfiguration = agentConfiguration.getClientConfiguration();
+        final String redirectUrl = agentConfiguration.getRedirectUrl();
         final MacSignatureCreator macSignatureCreator = new MacSignatureCreator();
         final Clock clock = Clock.systemDefaultZone();
         final AmexMacGenerator amexMacGenerator =
@@ -66,6 +68,7 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
         this.amexApiClient =
                 new AmexApiClient(
                         amexConfiguration,
+                        redirectUrl,
                         this.client,
                         amexMacGenerator,
                         this.objectMapper,
@@ -119,8 +122,9 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
                 accessTokenFetcher, thirdPartyAppAuthenticationStepCreator);
     }
 
-    private AmexConfiguration getAgentConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(AmexConfiguration.class);
+    private AgentConfiguration<AmexConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(AmexConfiguration.class);
     }
 
     private CreditCardRefreshController constructCreditCardController() {
