@@ -113,9 +113,11 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
     }
 
     private AuthenticationStepResponse processCreateUser() {
+        String mappedAccountCode =
+                mapAccountCodeToNumpadSequence(persistentStorage.get(StorageKey.USER_ACCOUNT_CODE));
         CreateUserRequest request =
                 new CreateUserRequest(
-                        createEncryptedAccountCode(),
+                        createEncryptedAccountCode(mappedAccountCode),
                         persistentStorage.get(StorageKey.USER_ACCOUNT_NUMBER));
         apiClient.createUser(request);
         apiClient.requestOtp(new DefaultAuthRequest("create_user"));
@@ -178,10 +180,12 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
     }
 
     private void restoreExistingProfile() throws LoginException {
+        String mappedAccountCode =
+                mapAccountCodeToNumpadSequence(persistentStorage.get(StorageKey.USER_ACCOUNT_CODE));
         RestoreProfileForm request =
                 new RestoreProfileForm(
                         persistentStorage.get(StorageKey.USER_ACCOUNT_NUMBER),
-                        persistentStorage.get(StorageKey.USER_ACCOUNT_CODE),
+                        mappedAccountCode,
                         persistentStorage.get(StorageKey.PROFILE_PIN));
         DefaultResponse response = apiClient.restoreProfile(request);
         if (!response.isResponseOK()) {
@@ -191,9 +195,11 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
     }
 
     private AuthenticationStepResponse processPrimaryAuth() {
+        String mappedAccountCode =
+                mapAccountCodeToNumpadSequence(persistentStorage.get(StorageKey.USER_ACCOUNT_CODE));
         AuthenticateRequest request =
                 AuthenticateRequest.createPrimaryAuthRequest(
-                        createEncryptedAccountCode(),
+                        createEncryptedAccountCode(mappedAccountCode),
                         persistentStorage.get(StorageKey.USER_ID),
                         persistentStorage.get(StorageKey.USER_ACCOUNT_NUMBER));
         processFinalLoginStep(request);
@@ -220,9 +226,11 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
     }
 
     private AuthenticationStepResponse processLoginWithAccountCode() {
+        String mappedAccountCode =
+                mapAccountCodeToNumpadSequence(persistentStorage.get(StorageKey.USER_ACCOUNT_CODE));
         AuthenticateRequest request =
                 AuthenticateRequest.createPasswordLoginRequest(
-                        createEncryptedAccountCode(),
+                        createEncryptedAccountCode(mappedAccountCode),
                         persistentStorage.get(StorageKey.USER_ID),
                         persistentStorage.get(StorageKey.USER_ACCOUNT_NUMBER));
         processFinalLoginStep(request);
@@ -237,11 +245,10 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
         persistentStorage.put(StorageKey.USER_ID, response.getUserId());
     }
 
-    private String createEncryptedAccountCode() {
-        String mappedAccountCode =
-                mapAccountCodeToNumpadSequence(persistentStorage.get(StorageKey.USER_ACCOUNT_CODE));
+    private String createEncryptedAccountCode(String mappedUserAccountCode) {
         RSAPublicKey publicKey = getPublicKey();
-        byte[] encryptedAccountCode = RSA.encryptNonePkcs1(publicKey, mappedAccountCode.getBytes());
+        byte[] encryptedAccountCode =
+                RSA.encryptNonePkcs1(publicKey, mappedUserAccountCode.getBytes());
         return EncodingUtils.encodeAsBase64String(encryptedAccountCode);
     }
 

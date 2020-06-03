@@ -57,7 +57,6 @@ public class CreditAgricoleConstants {
         public static final String REGION_ID = "regionId";
         public static final String USER_ACCOUNT_NUMBER = "userAccountNumber";
         public static final String USER_ACCOUNT_CODE = "userAccountCode";
-        public static final String SHUFFLED_USER_ACCOUNT_CODE = "shuffledAccountCode";
         public static final String PROFILE_PIN = "profilePin";
         public static final String PARTNER_ID = "partnerId";
         public static final String USER_ID = "userId";
