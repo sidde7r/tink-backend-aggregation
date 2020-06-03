@@ -5,16 +5,22 @@ class CreditAgricoleBaseTransactionalAccountFetcherTestData {
     static final String ACCOUNT_WITH_ALL_LINKS =
             fromTemplate(
                     "{\"href\": \"/accounts/123123123/transactions\",\"templated\": true\n}",
-                    "{\"href\": \"/end-user-identity\",\"templated\": false}");
+                    "{\"href\": \"/end-user-identity\",\"templated\": false}",
+                    "{\"href\": \"/trusted-beneficiaries\",\"templated\": false}");
 
     static final String ACCOUNTS_WITHOUT_IDENTITY_LINK =
             fromTemplate(
-                    "{\"href\": \"/accounts/123123123/transactions\",\"templated\": true\n}", null);
+                    "{\"href\": \"/accounts/123123123/transactions\",\"templated\": true\n}",
+                    null,
+                    "{\"href\": \"/trusted-beneficiaries\",\"templated\": false}");
 
     static final String ACCOUNT_WITHOUT_TRANSACTIONS_LINK =
-            fromTemplate(null, "{\"href\": \"/end-user-identity\",\"templated\": false}");
+            fromTemplate(
+                    null,
+                    "{\"href\": \"/end-user-identity\",\"templated\": false}",
+                    "{\"href\": \"/trusted-beneficiaries\",\"templated\": false}");
 
-    static final String ACCOUNTS_WITHOUT_LINKS = fromTemplate(null, null);
+    static final String ACCOUNTS_WITHOUT_LINKS = fromTemplate(null, null, null);
 
     private static final String ACCOUNTS_RESPONSE_TEMPLATE =
             "{\n"
@@ -62,7 +68,7 @@ class CreditAgricoleBaseTransactionalAccountFetcherTestData {
                     + "            \"templated\": false\n"
                     + "        },\n"
                     + "        \"endUserIdentity\": %s,\n"
-                    + "        \"beneficiaries\": null,\n"
+                    + "        \"beneficiaries\": %s,\n"
                     + "        \"first\": null,\n"
                     + "        \"last\": null,\n"
                     + "        \"next\": null,\n"
@@ -70,7 +76,12 @@ class CreditAgricoleBaseTransactionalAccountFetcherTestData {
                     + "    }\n"
                     + "}";
 
-    private static String fromTemplate(String transactionsValue, String endUserIdentityValue) {
-        return String.format(ACCOUNTS_RESPONSE_TEMPLATE, transactionsValue, endUserIdentityValue);
+    private static String fromTemplate(
+            String transactionsValue, String endUserIdentityValue, String beneficiariesValue) {
+        return String.format(
+                ACCOUNTS_RESPONSE_TEMPLATE,
+                transactionsValue,
+                endUserIdentityValue,
+                beneficiariesValue);
     }
 }

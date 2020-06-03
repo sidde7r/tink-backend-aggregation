@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Data;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.LinksEntity;
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
+@Data
 public class GetAccountsResponse {
     @JsonProperty("_links")
     private LinksEntity links;
@@ -28,9 +31,10 @@ public class GetAccountsResponse {
     }
 
     public boolean areConsentsNecessary() {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
-                .anyMatch(
-                        account -> isIdentityConsentNecessary() || account.areConsentsNecessary());
+        return CollectionUtils.isNotEmpty(accounts)
+                && (isBeneficiaryConsentNecessary()
+                        || isIdentityConsentNecessary()
+                        || isConsentForAnyAccountNecessary());
     }
 
     public List<AccountIdEntity> getListOfNecessaryConsents() {
@@ -39,7 +43,15 @@ public class GetAccountsResponse {
                 .collect(Collectors.toList());
     }
 
+    private boolean isConsentForAnyAccountNecessary() {
+        return accounts.stream().anyMatch(AccountEntity::areConsentsNecessary);
+    }
+
     private boolean isIdentityConsentNecessary() {
         return links == null || !links.hasEndUserIdentity();
+    }
+
+    private boolean isBeneficiaryConsentNecessary() {
+        return links == null || !links.hasBeneficiaries();
     }
 }

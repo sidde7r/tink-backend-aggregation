@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities;
 
+import lombok.Data;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Data
 public class LinksEntity {
     private LinkDetailsEntity balances;
     private LinkDetailsEntity beneficiaries;
@@ -24,5 +26,9 @@ public class LinksEntity {
 
     public boolean hasEndUserIdentity() {
         return endUserIdentity != null;
+    }
+
+    public boolean hasBeneficiaries() {
+        return beneficiaries != null;
     }
 }
