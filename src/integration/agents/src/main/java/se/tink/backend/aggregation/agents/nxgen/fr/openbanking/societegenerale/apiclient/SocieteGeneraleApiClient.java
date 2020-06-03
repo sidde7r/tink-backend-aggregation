@@ -128,12 +128,13 @@ public class SocieteGeneraleApiClient {
         String reqId = UUID.randomUUID().toString();
         String signature =
                 signatureHeaderProvider.buildSignatureHeader(
-                        persistentStorage.get(SocieteGeneraleConstants.StorageKeys.OAUTH_TOKEN),
+                        persistentStorage.get(
+                                SocieteGeneraleConstants.StorageKeys.PISP_OAUTH_TOKEN),
                         reqId);
 
         return client.request(url)
                 .addBearerToken(
-                        getOauthTokenFromStorage()
+                        getPisOauthTokenFromStorage()
                                 .orElseThrow(
                                         () ->
                                                 new IllegalStateException(
@@ -148,27 +149,27 @@ public class SocieteGeneraleApiClient {
                 .accept(MediaType.APPLICATION_JSON);
     }
 
-    public void fetchAccessToken() {
+    public void fetchPisAccessToken() {
 
-        if (!isTokenValid()) {
-            getAndSaveToken();
+        if (!isPisTokenValid()) {
+            getAndSavePisToken();
         }
     }
 
-    private void getAndSaveToken() {
+    private void getAndSavePisToken() {
         PisTokenRequest request = new PisTokenRequest(configuration.getRedirectUrl());
         TokenResponse getTokenResponse = exchangeAuthorizationCodeOrRefreshToken(request);
         OAuth2Token token = getTokenResponse.toOauthToken();
-        persistentStorage.put(SocieteGeneraleConstants.StorageKeys.OAUTH_TOKEN, token);
+        persistentStorage.put(SocieteGeneraleConstants.StorageKeys.PISP_OAUTH_TOKEN, token);
     }
 
-    private boolean isTokenValid() {
-        return getOauthTokenFromStorage().map(OAuth2TokenBase::isValid).orElse(false);
+    private boolean isPisTokenValid() {
+        return getPisOauthTokenFromStorage().map(OAuth2TokenBase::isValid).orElse(false);
     }
 
-    private Optional<OAuth2Token> getOauthTokenFromStorage() {
+    private Optional<OAuth2Token> getPisOauthTokenFromStorage() {
         return persistentStorage.get(
-                SocieteGeneraleConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class);
+                SocieteGeneraleConstants.StorageKeys.PISP_OAUTH_TOKEN, OAuth2Token.class);
     }
 
     private String getAuthorizationString() {

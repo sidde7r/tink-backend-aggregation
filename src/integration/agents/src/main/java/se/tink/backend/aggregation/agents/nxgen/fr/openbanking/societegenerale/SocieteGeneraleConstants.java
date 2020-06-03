@@ -80,6 +80,7 @@ public final class SocieteGeneraleConstants {
     public static class StorageKeys {
         public static final String TOKEN = "STRING_TOKEN";
         public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
+        public static final String PISP_OAUTH_TOKEN = "PISP_OAUTH_TOKEN";
         public static final String AUTORIZE_URL = "AUTORIZE_URL";
     }
 
