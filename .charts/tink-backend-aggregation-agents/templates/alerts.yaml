@@ -770,46 +770,26 @@ spec:
       who: payments
       priority: P4
     annotations:
-      description: Aggregation service saw fewer than expected minumum number of transfers in 12h time window.
+      description: This is a last resort alert. Try a test payment at demo.tink.com and then check with product if we expect this few transfers. You can find the trend here https://grafana.global-production.tink.network/d/NMhMIXRGz/se-trends-from-aggregation-service-pov?orgId=1&from=now-12h&to=now
       summary: Number of transfers happened in the last 12 hours is below historical threshold.
 
   - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier2Banks
-    expr: sum by (provider, outcome) (tink_agent_transfer_total{market="SE", provider!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}) >= 2
+    expr: sum by (provider, outcome) (increase(tink_agent_transfer_total{market="SE", provider!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 5
     labels:
       severity: urgent
       who: payments
       priority: P4
     annotations:
-      description: We expect to see less than current number of transfers for ( <{ $labels.provider }> ) with outcome ( <{ $labels.outcome }> ).
+      description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/NMhMIXRGz/se-trends-from-aggregation-service-pov?orgId=1&from=now-12h&to=now
       summary: Threshold exceed for ( <{ $labels.provider }> ) for transfers with outcome ( <{ $labels.outcome }> ).
 
   - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier1Banks
-    expr: sum by (provider, outcome) (tink_agent_transfer_total{market="SE", provider=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}) >= 2
+    expr: sum by (provider, outcome) (increase(tink_agent_transfer_total{market="SE", provider=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 5
     labels:
       severity: urgent
       who: payments
       priority: P3
     annotations:
-      description: We expect to see less than current number of transfers for ( <{ $labels.provider }> ) with outcome ( <{ $labels.outcome }> ).
-      summary: Threshold exceed for ( <{ $labels.provider }> ) for transfers with outcome ( <{ $labels.outcome }> ).
-
-  - alert: TransferCancelledOutcomeThresholdIsPassedForSwedenTier2Banks
-    expr: sum by (provider, outcome) (tink_agent_transfer_total{market="SE", provider!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="cancelled"}) >= 6
-    labels:
-      severity: urgent
-      who: payments
-      priority: P4
-    annotations:
-      description: We expect to see less than current number of transfers for ( <{ $labels.provider }> ) with outcome ( <{ $labels.outcome }> ).
-      summary: Threshold exceed for ( <{ $labels.provider }> ) for transfers with outcome ( <{ $labels.outcome }> ).
-
-  - alert: TransferCancelledOutcomeThresholdIsPassedForSwedenTier1Banks
-    expr: sum by (provider, outcome) (tink_agent_transfer_total{market="SE", provider=~".*(nordea|seb|swedbank|handelsbanken).*", outcome="cancelled"}) >= 6
-    labels:
-      severity: urgent
-      who: payments
-      priority: P3
-    annotations:
-      description: We expect to see less than current number of transfers for ( <{ $labels.provider }> ) with outcome ( <{ $labels.outcome }> ).
+      description: Check overall trend for this provider to assess the impact. https://grafana.global-production.tink.network/d/NMhMIXRGz/se-trends-from-aggregation-service-pov?orgId=1&from=now-12h&to=now
       summary: Threshold exceed for ( <{ $labels.provider }> ) for transfers with outcome ( <{ $labels.outcome }> ).
   {{- end }}
