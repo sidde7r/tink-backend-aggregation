@@ -124,8 +124,7 @@ public class AgentInitialisationTest {
         Throwable throwable =
                 catchThrowable(
                         () ->
-                                providers
-                                        .parallelStream()
+                                providers.stream()
                                         .forEach(
                                                 provider -> {
                                                     agentInitialisor.initialiseAgent(provider);

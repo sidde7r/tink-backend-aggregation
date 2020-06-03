@@ -1,11 +1,13 @@
 package se.tink.libraries.concurrency;
 
+import se.tink.libraries.tracing.lib.api.Tracing;
+
 public class NamedRunnable implements Runnable {
     private final Runnable delegate;
     private final String name;
 
     public NamedRunnable(Runnable delegate, String name) {
-        this.delegate = delegate;
+        this.delegate = Tracing.wrapRunnable(delegate);
         this.name = name;
     }
 
