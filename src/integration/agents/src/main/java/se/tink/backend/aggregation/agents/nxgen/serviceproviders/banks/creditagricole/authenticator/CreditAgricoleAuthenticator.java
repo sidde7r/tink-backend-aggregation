@@ -2,9 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditag
 
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.RestoreProfileForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.utils.CreditAgricoleAuthUtil;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -246,30 +243,19 @@ public class CreditAgricoleAuthenticator extends StatelessProgressiveAuthenticat
     }
 
     private String createEncryptedAccountCode(String mappedUserAccountCode) {
-        RSAPublicKey publicKey = getPublicKey();
-        byte[] encryptedAccountCode =
-                RSA.encryptNonePkcs1(publicKey, mappedUserAccountCode.getBytes());
-        return EncodingUtils.encodeAsBase64String(encryptedAccountCode);
+        RSAPublicKey publicKey =
+                CreditAgricoleAuthUtil.getPublicKey(persistentStorage.get(StorageKey.PUBLIC_KEY));
+        return CreditAgricoleAuthUtil.createEncryptedAccountCode(mappedUserAccountCode, publicKey);
     }
 
     private String mapAccountCodeToNumpadSequence(String realAccountCode) {
-        String numpadSequenceWithoutDelimiter =
-                persistentStorage.get(StorageKey.NUMPAD_SEQUENCE).replace(";", "");
-
-        return Arrays.stream(realAccountCode.split(""))
-                .map(numpadSequenceWithoutDelimiter::indexOf)
-                .map(String::valueOf)
-                .collect(Collectors.joining(";"));
+        return CreditAgricoleAuthUtil.mapAccountCodeToNumpadSequence(
+                persistentStorage.get(StorageKey.NUMPAD_SEQUENCE), realAccountCode);
     }
 
     private boolean isDeviceRegistered() {
         return persistentStorage
                 .get(StorageKey.IS_DEVICE_REGISTERED, Boolean.class)
                 .orElse(Boolean.FALSE);
-    }
-
-    private RSAPublicKey getPublicKey() {
-        String publicKey = persistentStorage.get(StorageKey.PUBLIC_KEY);
-        return RSA.getPubKeyFromBytes(EncodingUtils.decodeBase64String(publicKey));
     }
 }
