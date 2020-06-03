@@ -274,8 +274,7 @@ public class AgentCapabilitiesTest {
 
         // when
         Set<Pair<Provider, SetView<String>>> givenButNotExpectedCapabilities =
-                providersForUnignoredAgents
-                        .parallelStream()
+                providersForUnignoredAgents.stream()
                         .map(
                                 provider ->
                                         new Pair<>(
