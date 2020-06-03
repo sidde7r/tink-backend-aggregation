@@ -1,23 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient;
 
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.Urls.BASE_URL;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.Urls.AIS_BASE_URL;
 
 import java.util.Base64;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.rpc.TokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.rpc.PisTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transfer.rpc.TrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -29,7 +36,7 @@ public class SocieteGeneraleApiClient {
     private final SocieteGeneraleConfiguration configuration;
     private final SignatureHeaderProvider signatureHeaderProvider;
 
-    public TokenResponse exchangeAuthorizationCodeOrRefreshToken(TokenRequest request) {
+    public TokenResponse exchangeAuthorizationCodeOrRefreshToken(AbstractForm request) {
         return client.request(new URL(SocieteGeneraleConstants.Urls.TOKEN_PATH))
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
@@ -60,7 +67,7 @@ public class SocieteGeneraleApiClient {
     }
 
     public TrustedBeneficiariesResponse getTrustedBeneficiaries(String path) {
-        return getTrustedBeneficiaries(new URL(BASE_URL + path));
+        return getTrustedBeneficiaries(new URL(AIS_BASE_URL + path));
     }
 
     private TrustedBeneficiariesResponse getTrustedBeneficiaries(URL url) {
@@ -93,6 +100,75 @@ public class SocieteGeneraleApiClient {
 
     private String createAuthorizationBearerHeaderValue() {
         return SocieteGeneraleConstants.HeaderValues.BEARER + " " + getToken();
+    }
+
+    public GetPaymentResponse getPaymentStatus(String uniqueId) {
+        return createRequestInSession(
+                        Urls.FETCH_PAYMENT_STATUS.parameter(
+                                SocieteGeneraleConstants.IdTags.PAYMENT_ID, uniqueId))
+                .header(SocieteGeneraleConstants.HeaderKeys.PAYMENT_REQUEST_ID, uniqueId)
+                .get(GetPaymentResponse.class);
+    }
+
+    public GetPaymentResponse confirmPayment(String uniqueId) {
+        return createRequestInSession(
+                        Urls.CONFIRM_PAYMENT.parameter(
+                                SocieteGeneraleConstants.IdTags.PAYMENT_ID, uniqueId))
+                .header(SocieteGeneraleConstants.HeaderKeys.PAYMENT_REQUEST_ID, uniqueId)
+                .post(GetPaymentResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+
+        return createRequestInSession(SocieteGeneraleConstants.Urls.PAYMENTS_PATH)
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    private RequestBuilder createRequestInSession(URL url) {
+        String reqId = UUID.randomUUID().toString();
+        String signature =
+                signatureHeaderProvider.buildSignatureHeader(
+                        persistentStorage.get(SocieteGeneraleConstants.StorageKeys.OAUTH_TOKEN),
+                        reqId);
+
+        return client.request(url)
+                .addBearerToken(
+                        getOauthTokenFromStorage()
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        SocieteGeneraleConstants.ErrorMessages
+                                                                .NO_ACCESS_TOKEN_IN_STORAGE)))
+                .header(SocieteGeneraleConstants.HeaderKeys.X_REQUEST_ID, reqId)
+                .header(SocieteGeneraleConstants.HeaderKeys.SIGNATURE, signature)
+                .header(SocieteGeneraleConstants.HeaderKeys.CLIENT_ID, configuration.getClientId())
+                .header(
+                        SocieteGeneraleConstants.HeaderKeys.CONTENT_TYPE,
+                        SocieteGeneraleConstants.HeaderValues.CONTENT_TYPE)
+                .accept(MediaType.APPLICATION_JSON);
+    }
+
+    public void fetchAccessToken() {
+
+        if (!isTokenValid()) {
+            getAndSaveToken();
+        }
+    }
+
+    private void getAndSaveToken() {
+        PisTokenRequest request = new PisTokenRequest(configuration.getRedirectUrl());
+        TokenResponse getTokenResponse = exchangeAuthorizationCodeOrRefreshToken(request);
+        OAuth2Token token = getTokenResponse.toOauthToken();
+        persistentStorage.put(SocieteGeneraleConstants.StorageKeys.OAUTH_TOKEN, token);
+    }
+
+    private boolean isTokenValid() {
+        return getOauthTokenFromStorage().map(OAuth2TokenBase::isValid).orElse(false);
+    }
+
+    private Optional<OAuth2Token> getOauthTokenFromStorage() {
+        return persistentStorage.get(
+                SocieteGeneraleConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class);
     }
 
     private String getAuthorizationString() {

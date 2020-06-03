@@ -26,6 +26,7 @@ public class TokenRequest extends AbstractForm {
         private String grant_type;
         private String code;
         private String refreshToken;
+        private String scope;
 
         public Builder setGrantType(String grantType) {
             this.grant_type = grantType;
@@ -34,6 +35,11 @@ public class TokenRequest extends AbstractForm {
 
         public Builder setCode(String code) {
             this.code = code;
+            return this;
+        }
+
+        public Builder setScope(String scope) {
+            this.scope = scope;
             return this;
         }
 

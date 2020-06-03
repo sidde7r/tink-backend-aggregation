@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale;
 
 import com.google.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.SocieteGeneraleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.SocieteGeneralePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
@@ -29,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -44,8 +47,11 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
 
     private final SocieteGeneraleApiClient apiClient;
     private final SocieteGeneraleAuthenticator authenticator;
+
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
+    private final SignatureHeaderProvider signatureHeaderProvider;
+    private final SocieteGeneraleConfiguration societeGeneraleConfiguration;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
@@ -53,8 +59,8 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
-        final SocieteGeneraleConfiguration societeGeneraleConfiguration = getConfiguration();
-        final SignatureHeaderProvider signatureHeaderProvider =
+        societeGeneraleConfiguration = getConfiguration();
+        signatureHeaderProvider =
                 new SignatureHeaderProvider(qsealcSigner, societeGeneraleConfiguration);
 
         apiClient =
@@ -158,5 +164,17 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
     private SocieteGeneraleConfiguration getConfiguration() {
         return getAgentConfigurationController()
                 .getAgentConfiguration(SocieteGeneraleConfiguration.class);
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(
+                new PaymentController(
+                        new SocieteGeneralePaymentExecutor(
+                                apiClient,
+                                societeGeneraleConfiguration.getRedirectUrl(),
+                                sessionStorage,
+                                supplementalInformationHelper,
+                                strongAuthenticationState)));
     }
 }
