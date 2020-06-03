@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTIES;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints.IDENTITY_DATA_ENDPOINT_ACCOUNT_ID_PARTY;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.PartyEndpoints.IDENTITY_DATA_ENDPOINT_PARTY;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.MONZO_ORG_ID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.TINK_UKOPENBANKING_ORGID;
 import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants.UKOB_TAN;
 
@@ -255,6 +256,18 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     private String createPs256Signature(Map<String, Object> payloadClaims) {
+        // Monzo does not work with B64 header hence creating signature with out B64 for now.
+        // Refer : https://openbanking.atlassian.net/wiki/spaces/DZ/pages/1112670669/W007
+        // remove this check once this wavier times out
+        // Monzo organization ID check
+        if (MONZO_ORG_ID.equals(providerConfiguration.getOrganizationId())) {
+            return createPs256SignatureWithoutB64Header(payloadClaims);
+        } else {
+            return createPs256SignatureWithB64Header(payloadClaims);
+        }
+    }
+
+    private String createPs256SignatureWithB64Header(Map<String, Object> payloadClaims) {
 
         Map<String, Object> jwtHeaders = new LinkedHashMap<>();
 
@@ -269,6 +282,23 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         jwtHeaders.put(HEADERS.TAN, UKOB_TAN);
         jwtHeaders.put(
                 HEADERS.CRIT, Arrays.asList(HEADERS.B64, HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
+
+        return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
+    }
+
+    private String createPs256SignatureWithoutB64Header(Map<String, Object> payloadClaims) {
+
+        Map<String, Object> jwtHeaders = new LinkedHashMap<>();
+
+        jwtHeaders.put(HEADERS.IAT, Instant.now().minusSeconds(3600).getEpochSecond());
+        jwtHeaders.put(
+                HEADERS.ISS,
+                new StringBuilder(TINK_UKOPENBANKING_ORGID)
+                        .append("/")
+                        .append(softwareStatement.getSoftwareId())
+                        .toString());
+        jwtHeaders.put(HEADERS.TAN, UKOB_TAN);
+        jwtHeaders.put(HEADERS.CRIT, Arrays.asList(HEADERS.IAT, HEADERS.ISS, HEADERS.TAN));
 
         return signer.sign(Algorithm.PS256, jwtHeaders, payloadClaims, true);
     }
