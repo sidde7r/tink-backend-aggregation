@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.enums;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.enums;
 
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 @AllArgsConstructor
 @Getter
-public enum BnpParibasPaymentStatus {
+public enum BankPaymentStatus {
     ACCEPTED_CUSTOMER_PROFILE("ACCP", PaymentStatus.SIGNED),
     ACCEPTED_SETTLEMENT_COMPLETED("ACSC", PaymentStatus.SIGNED),
     ACCEPTED_SETTLEMENT_IN_PROCESS("ACSP", PaymentStatus.SIGNED),
@@ -23,8 +23,8 @@ public enum BnpParibasPaymentStatus {
     private final String text;
     private final PaymentStatus paymentStatus;
 
-    public static BnpParibasPaymentStatus fromString(String text) {
-        return Arrays.stream(BnpParibasPaymentStatus.values())
+    public static BankPaymentStatus fromString(String text) {
+        return Arrays.stream(BankPaymentStatus.values())
                 .filter(s -> s.text.equalsIgnoreCase(text))
                 .findFirst()
                 .orElse(UNKNOWN);

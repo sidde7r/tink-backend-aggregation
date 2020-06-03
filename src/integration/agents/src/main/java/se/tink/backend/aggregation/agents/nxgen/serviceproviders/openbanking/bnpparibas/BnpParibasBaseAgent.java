@@ -18,8 +18,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.BnpParibasTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transfer.BnpTransferDestinationFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.BnpParibasPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.BnpParibasPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -44,21 +45,37 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     private BnpParibasApiBaseClient apiClient;
     private BnpParibasConfiguration bnpParibasConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private AgentsServiceConfiguration agentsServiceConfiguration;
     private AutoAuthenticationController authenticator;
     private BnpParibasIdentityDataFetcher bnpParibasIdentityDataFetcher;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
+    private final BnpParibasPaymentApiClient paymentApiClient;
 
     public BnpParibasBaseAgent(
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
+        bnpParibasConfiguration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(BnpParibasConfiguration.class);
         BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider =
                 new BnpParibasSignatureHeaderProvider(qsealcSigner);
+
         this.apiClient =
                 new BnpParibasApiBaseClient(
-                        client, sessionStorage, bnpParibasSignatureHeaderProvider);
+                        client,
+                        sessionStorage,
+                        bnpParibasConfiguration,
+                        bnpParibasSignatureHeaderProvider);
+
+        this.paymentApiClient =
+                new BnpParibasPaymentApiClient(
+                        client,
+                        sessionStorage,
+                        bnpParibasConfiguration,
+                        bnpParibasSignatureHeaderProvider);
+
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
         this.bnpParibasIdentityDataFetcher = new BnpParibasIdentityDataFetcher(this.apiClient);
 
         this.transferDestinationRefreshController =
@@ -95,17 +112,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        this.agentsServiceConfiguration = configuration;
-
-        bnpParibasConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(BnpParibasConfiguration.class);
-        apiClient.setConfiguration(bnpParibasConfiguration);
         client.setEidasProxy(configuration.getEidasProxy());
-    }
-
-    public AgentsServiceConfiguration getConfiguration() {
-        return this.agentsServiceConfiguration;
     }
 
     @Override
@@ -158,9 +165,9 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(
                 new PaymentController(
-                        new BnpParibasPaymentExecutor(
-                                apiClient,
-                                bnpParibasConfiguration,
+                        new FrOpenBankingPaymentExecutor(
+                                paymentApiClient,
+                                bnpParibasConfiguration.getRedirectUrl(),
                                 sessionStorage,
                                 strongAuthenticationState,
                                 supplementalInformationHelper)));

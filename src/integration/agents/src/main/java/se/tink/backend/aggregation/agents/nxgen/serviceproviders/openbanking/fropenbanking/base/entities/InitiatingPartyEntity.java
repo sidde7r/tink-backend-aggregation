@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities;
 
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base;
 
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
@@ -15,16 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasApiBaseClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.CreditorEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.enums.BnpParibasPaymentType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditorEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -43,31 +38,35 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 @Slf4j
-public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
+public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
-    private static final String BNP_PAYMENT_POST_SIGN_STATE = "bnp_payment_post_sign_state";
+    static final String PAYMENT_POST_SIGN_STATE = "payment_post_sign_state";
+    static final String PAYMENT_AUTHORIZATION_URL = "payment_authorization_url";
     private static final String CREDITOR_NAME = "Payment Creditor";
+    private static final String STATE = "state";
+
     private static final long WAIT_FOR_MINUTES = 9L;
     private static final long SLEEP_TIME = 10L;
     private static final int RETRY_ATTEMPTS = 60;
 
-    private final BnpParibasApiBaseClient apiClient;
-    private final BnpParibasConfiguration configuration;
+    private final FrOpenBankingPaymentApiClient apiClient;
+    private final String redirectUrl;
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
-    public BnpParibasPaymentExecutor(
-            BnpParibasApiBaseClient apiClient,
-            BnpParibasConfiguration configuration,
+    public FrOpenBankingPaymentExecutor(
+            FrOpenBankingPaymentApiClient apiClient,
+            String redirectUrl,
             SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
-        this.configuration = configuration;
+        this.redirectUrl = redirectUrl;
         this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -75,7 +74,7 @@ public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaym
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-        apiClient.fetchPispToken();
+        apiClient.fetchToken();
 
         AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
@@ -83,10 +82,10 @@ public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaym
 
         Payment payment = paymentRequest.getPayment();
 
-        BnpParibasPaymentType paymentType = BnpParibasPaymentType.SEPA;
-
         LocalDate executionDate =
                 Optional.ofNullable(payment.getExecutionDate()).orElse(LocalDate.now());
+
+        PaymentType paymentType = PaymentType.SEPA;
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -98,18 +97,15 @@ public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaym
                         .withExecutionDate(executionDate)
                         .withCreationDateTime(LocalDateTime.now())
                         .withRedirectUrl(
-                                new URL(configuration.getRedirectUrl())
-                                        .queryParam(
-                                                QueryKeys.STATE,
-                                                strongAuthenticationState.getState()))
+                                new URL(redirectUrl)
+                                        .queryParam(STATE, strongAuthenticationState.getState()))
                         .withRemittanceInformation(payment.getReference().getValue())
                         .build();
 
         CreatePaymentResponse paymentResponse = apiClient.createPayment(createPaymentRequest);
 
         sessionStorage.put(
-                StorageKeys.PAYMENT_AUTHORIZATION_URL,
-                paymentResponse.getLinks().getAuthorizationUrl());
+                PAYMENT_AUTHORIZATION_URL, paymentResponse.getLinks().getAuthorizationUrl());
 
         return paymentResponse.toTinkPaymentResponse(creditor, debtor, amount, paymentType);
     }
@@ -130,17 +126,16 @@ public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaym
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 String authorizationUrl =
-                        Optional.ofNullable(
-                                        sessionStorage.get(StorageKeys.PAYMENT_AUTHORIZATION_URL))
+                        Optional.ofNullable(sessionStorage.get(PAYMENT_AUTHORIZATION_URL))
                                 .orElseThrow(
                                         () ->
                                                 new PaymentAuthenticationException(
                                                         "Payment authentication failed. There is no authorization url!",
                                                         new PaymentRejectedException()));
                 openThirdPartyApp(new URL(authorizationUrl));
-                nextStep = BNP_PAYMENT_POST_SIGN_STATE;
+                nextStep = PAYMENT_POST_SIGN_STATE;
                 break;
-            case BNP_PAYMENT_POST_SIGN_STATE:
+            case PAYMENT_POST_SIGN_STATE:
                 PaymentStatus paymentStatus = getAndVerifyStatus(payment.getUniqueId());
                 payment.setStatus(paymentStatus);
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
@@ -153,9 +148,9 @@ public class BnpParibasPaymentExecutor implements PaymentExecutor, FetchablePaym
         return new PaymentMultiStepResponse(payment, nextStep, Collections.emptyList());
     }
 
-    private void openThirdPartyApp(URL authorizeUrl) {
+    private void openThirdPartyApp(URL authorizationUrl) {
         this.supplementalInformationHelper.openThirdPartyApp(
-                ThirdPartyAppAuthenticationPayload.of(authorizeUrl));
+                ThirdPartyAppAuthenticationPayload.of(authorizationUrl));
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 strongAuthenticationState.getSupplementalKey(), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
     }

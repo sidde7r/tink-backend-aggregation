@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bnpparibas;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.savoie.manual;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,20 +16,20 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
 
-public class BnpParibasAgentPaymentTest {
+public class CreditAgricoleSavoieAgentPaymentTest {
 
     private AgentIntegrationTest.Builder builder;
 
     private final ArgumentManager<ArgumentManager.PsuIdArgumentEnum> manager =
             new ArgumentManager<>(ArgumentManager.PsuIdArgumentEnum.values());
-    private final ArgumentManager<BnpParibasAgentPaymentTest.Arg> creditorDebtorManager =
-            new ArgumentManager<>(BnpParibasAgentPaymentTest.Arg.values());
+    private final ArgumentManager<CreditAgricoleSavoieAgentPaymentTest.Arg> creditorDebtorManager =
+            new ArgumentManager<>(CreditAgricoleSavoieAgentPaymentTest.Arg.values());
 
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("fr", "fr-bnpparibas-ob")
-                        .setFinancialInstitutionId("bnpparibas")
+                new AgentIntegrationTest.Builder("fr", "fr-creditagricolesavoie-ob")
+                        .setFinancialInstitutionId("creditagricolesavoie")
                         .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
@@ -47,11 +47,13 @@ public class BnpParibasAgentPaymentTest {
     private List<Payment> createRealDomesticPayment() {
         AccountIdentifier creditorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(BnpParibasAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
+                        creditorDebtorManager.get(
+                                CreditAgricoleSavoieAgentPaymentTest.Arg.CREDITOR_ACCOUNT));
 
         AccountIdentifier debtorAccountIdentifier =
                 new IbanIdentifier(
-                        creditorDebtorManager.get(BnpParibasAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
+                        creditorDebtorManager.get(
+                                CreditAgricoleSavoieAgentPaymentTest.Arg.DEBTOR_ACCOUNT));
 
         return Collections.singletonList(
                 new Payment.Builder()

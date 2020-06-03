@@ -1,0 +1,20 @@
+java_library(
+    name = "base",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/amount",
+        "//src/integration/lib",
+        "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/integration/payment:enums",
+        "//src/integration/payment:rpc",
+        "//src/libraries/account_identifier",
+        "//third_party:com_github_rholder_guava_retrying",
+        "//third_party:lombok_libs",
+        "//third_party:org_apache_commons_commons_lang",
+        "//third_party:org_slf4j_slf4j_api",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+    ],
+)

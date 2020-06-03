@@ -1,15 +1,21 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.LinksEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.enums.BnpParibasPaymentType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreatePaymentResponse {
 
     @JsonProperty("_links")
@@ -19,11 +25,11 @@ public class CreatePaymentResponse {
             AccountEntity creditor,
             AccountEntity debtor,
             AmountEntity amount,
-            BnpParibasPaymentType paymentType) {
+            PaymentType paymentType) {
         Payment tinkPayment =
                 new Payment.Builder()
                         .withUniqueId(getPaymentId())
-                        .withType(paymentType.getPaymentType())
+                        .withType(paymentType)
                         .withCurrency(amount.getCurrency())
                         .withExactCurrencyAmount(amount.toTinkAmount())
                         .withCreditor(creditor.toTinkCreditor())
@@ -34,10 +40,6 @@ public class CreatePaymentResponse {
     }
 
     private String getPaymentId() {
-        return links.getAuthorizationUrl().split("/?i=")[1];
-    }
-
-    public LinksEntity getLinks() {
-        return links;
+        return links.getAuthorizationUrl().split("=")[1];
     }
 }

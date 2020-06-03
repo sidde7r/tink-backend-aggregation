@@ -24,6 +24,8 @@ public final class CreditAgricoleBaseConstants {
         public static final String TOKEN = "/authentication/v1/openid/token";
         public static final String FETCH_USER_IDENTITY_DATA = BASE_PATH + "/end-user-identity";
         public static final String BENEFICIARIES_PATH = "/trusted-beneficiaries";
+        public static final String CREATE_PAYMENT = "/dsp2/v1/payment-requests";
+        public static final String GET_PAYMENT = "/dsp2/v1/payment-requests/{paymentId}";
     }
 
     public static class StorageKeys {
@@ -55,6 +57,7 @@ public final class CreditAgricoleBaseConstants {
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class BalanceTypes {
