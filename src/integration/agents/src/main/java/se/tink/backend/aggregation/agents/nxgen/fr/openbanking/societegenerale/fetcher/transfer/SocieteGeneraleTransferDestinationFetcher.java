@@ -28,12 +28,7 @@ public class SocieteGeneraleTransferDestinationFetcher implements TransferDestin
 
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
-        final TransferDestinationsResponse transferDestinations =
-                new TransferDestinationsResponse();
-
-        transferDestinations.addDestinations(getTransferAccountDestinations(accounts));
-
-        return transferDestinations;
+        return new TransferDestinationsResponse(getTransferAccountDestinations(accounts));
     }
 
     private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(

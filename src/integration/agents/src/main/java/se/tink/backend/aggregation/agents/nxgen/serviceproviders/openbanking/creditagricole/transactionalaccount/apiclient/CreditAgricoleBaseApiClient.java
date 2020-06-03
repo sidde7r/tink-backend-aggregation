@@ -1,85 +1,72 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient;
 
-import com.google.common.base.Preconditions;
-import java.util.Date;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.ApiServices.BASE_PATH;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.ApiServices.BENEFICIARIES_PATH;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTrustedBeneficiariesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.PutConsentsRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
+@RequiredArgsConstructor
 public class CreditAgricoleBaseApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
-    private final RequestFactory requestFactory;
-    private CreditAgricoleBaseConfiguration configuration;
-
-    public CreditAgricoleBaseApiClient(
-            TinkHttpClient client,
-            PersistentStorage persistentStorage,
-            RequestFactory requestFactory) {
-        this.client = client;
-        this.persistentStorage = persistentStorage;
-        this.requestFactory = requestFactory;
-    }
-
-    public void setConfiguration(CreditAgricoleBaseConfiguration configuration) {
-        this.configuration = Preconditions.checkNotNull(configuration);
-    }
-
-    private CreditAgricoleBaseConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        CreditAgricoleBaseConstants.ErrorMessages
-                                                .MISSING_CONFIGURATION));
-    }
+    private final CreditAgricoleStorage creditAgricoleStorage;
+    private final CreditAgricoleBaseConfiguration configuration;
 
     public TokenResponse getToken(final String code) {
-        TokenResponse response = TokenUtils.get(getConfiguration(), client, code);
-        setInitialFetchState(true);
+        final TokenRequest request = createAuthTokenRequest(code);
+        final TokenResponse response = sendTokenRequest(request);
+
+        creditAgricoleStorage.storeInitialFetchState(Boolean.TRUE);
+
         return response;
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {
-        final TokenResponse tokenResponse =
-                TokenUtils.refresh(getConfiguration(), client, refreshToken);
-        final OAuth2Token oAuth2Token = tokenResponse.toTinkToken();
-        setTokenToSession(oAuth2Token);
-        setInitialFetchState(false);
+        final TokenRequest request = createRefreshTokenRequest(refreshToken);
+        final TokenResponse response = sendTokenRequest(request);
+        final OAuth2Token oAuth2Token = response.toTinkToken();
+
+        creditAgricoleStorage.storeToken(oAuth2Token);
+        creditAgricoleStorage.storeInitialFetchState(Boolean.FALSE);
+
         return oAuth2Token;
     }
 
     public GetAccountsResponse getAccounts() {
-        return AccountsUtils.get(persistentStorage, client, configuration);
+        return createGetRequest(CreditAgricoleBaseConstants.ApiServices.ACCOUNTS)
+                .get(GetAccountsResponse.class);
     }
 
     public void putConsents(final List<AccountIdEntity> accountsToConsent) {
-        ConsentsUtils.put(persistentStorage, client, accountsToConsent, configuration);
+        createPutRequest().type(MediaType.APPLICATION_JSON).put(buildBody(accountsToConsent));
     }
 
     public GetTransactionsResponse getTransactions(
-            final String id, final Date dateFrom, final Date dateTo) {
-
-        HttpRequest request =
-                requestFactory.constructFetchTransactionRequest(
-                        id, dateFrom, dateTo, persistentStorage, configuration);
-
-        HttpResponse response = client.request(HttpResponse.class, request);
+            final String id, final LocalDate dateFrom, final LocalDate dateTo) {
+        final URL requestUrl = constructTransactionsURL(id, dateFrom, dateTo);
+        final HttpResponse response = createGetRequest(requestUrl).get(HttpResponse.class);
 
         if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
             return new GetTransactionsResponse();
@@ -88,14 +75,106 @@ public class CreditAgricoleBaseApiClient {
     }
 
     public EndUserIdentityResponse getEndUserIdentity() {
-        return FetchEndUserIdentityUtils.get(persistentStorage, client, configuration);
+        return createGetRequest(CreditAgricoleBaseConstants.ApiServices.FETCH_USER_IDENTITY_DATA)
+                .get(EndUserIdentityResponse.class);
     }
 
-    private void setTokenToSession(OAuth2Token token) {
-        persistentStorage.put(OAuth2Constants.PersistentStorageKeys.OAUTH_2_TOKEN, token);
+    public Optional<GetTrustedBeneficiariesResponse> getTrustedBeneficiaries() {
+        return getTrustedBeneficiaries(BENEFICIARIES_PATH);
     }
 
-    private void setInitialFetchState(Boolean isInitialFetch) {
-        persistentStorage.put(StorageKeys.IS_INITIAL_FETCH, isInitialFetch);
+    public Optional<GetTrustedBeneficiariesResponse> getTrustedBeneficiaries(String path) {
+        return getTrustedBeneficiaries(new URL(configuration.getBaseUrl() + BASE_PATH + path));
+    }
+
+    private Optional<GetTrustedBeneficiariesResponse> getTrustedBeneficiaries(URL url) {
+        final HttpResponse response = createGetRequest(url).get(HttpResponse.class);
+
+        if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(response.getBody(GetTrustedBeneficiariesResponse.class));
+    }
+
+    private String getBearerAuthHeader() {
+        return "Bearer " + creditAgricoleStorage.getTokenFromStorage();
+    }
+
+    private RequestBuilder createPutRequest() {
+        return createRequest(
+                new URL(
+                        configuration.getBaseUrl()
+                                + CreditAgricoleBaseConstants.ApiServices.CONSENTS));
+    }
+
+    private RequestBuilder createGetRequest(String path) {
+        return createGetRequest(new URL(configuration.getBaseUrl() + path));
+    }
+
+    private RequestBuilder createGetRequest(URL url) {
+        return createRequest(url).accept(MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .header(CreditAgricoleBaseConstants.HeaderKeys.AUTHORIZATION, getBearerAuthHeader())
+                .header(
+                        CreditAgricoleBaseConstants.HeaderKeys.PSU_IP_ADDRESS,
+                        configuration.getPsuIpAddress());
+    }
+
+    private TokenRequest createAuthTokenRequest(String authCode) {
+        return new TokenRequest.TokenRequestBuilder()
+                .scope(CreditAgricoleBaseConstants.QueryValues.SCOPE)
+                .grantType(CreditAgricoleBaseConstants.QueryValues.GRANT_TYPE)
+                .code(authCode)
+                .redirectUri(configuration.getRedirectUrl())
+                .clientId(configuration.getClientId())
+                .build();
+    }
+
+    private TokenRequest createRefreshTokenRequest(String refreshToken) {
+        return new TokenRequest.TokenRequestBuilder()
+                .scope(CreditAgricoleBaseConstants.QueryValues.SCOPE)
+                .grantType(CreditAgricoleBaseConstants.QueryValues.REFRESH_TOKEN)
+                .refreshToken(refreshToken)
+                .redirectUri(configuration.getRedirectUrl())
+                .clientId(configuration.getClientId())
+                .build();
+    }
+
+    private TokenResponse sendTokenRequest(TokenRequest tokenRequest) {
+        return client.request(
+                        configuration.getBaseUrl() + CreditAgricoleBaseConstants.ApiServices.TOKEN)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(
+                        CreditAgricoleBaseConstants.HeaderKeys.CORRELATION_ID,
+                        UUID.randomUUID().toString())
+                .header(
+                        CreditAgricoleBaseConstants.HeaderKeys.CATS_CONSOMMATEUR,
+                        CreditAgricoleBaseConstants.HeaderValues.CATS_CONSOMMATEUR)
+                .header(
+                        CreditAgricoleBaseConstants.HeaderKeys.CATS_CONSOMMATEURORIGINE,
+                        CreditAgricoleBaseConstants.HeaderValues.CATS_CONSOMMATEURORIGINE)
+                .header(
+                        CreditAgricoleBaseConstants.HeaderKeys.CATS_CANAL,
+                        CreditAgricoleBaseConstants.HeaderValues.CATS_CANAL)
+                .post(TokenResponse.class, tokenRequest.toData());
+    }
+
+    private URL constructTransactionsURL(String id, LocalDate dateFrom, LocalDate dateTo) {
+        return new URL(
+                        configuration.getBaseUrl()
+                                + CreditAgricoleBaseConstants.ApiServices.TRANSACTIONS)
+                .parameter(CreditAgricoleBaseConstants.IdTags.ACCOUNT_ID, id)
+                .queryParam(CreditAgricoleBaseConstants.QueryKeys.DATE_FROM, dateFrom.toString())
+                .queryParam(CreditAgricoleBaseConstants.QueryKeys.DATE_TO, dateTo.toString());
+    }
+
+    private static PutConsentsRequest buildBody(
+            final List<AccountIdEntity> listOfNecessaryConsents) {
+        return new PutConsentsRequest(listOfNecessaryConsents, listOfNecessaryConsents, true, true);
     }
 }

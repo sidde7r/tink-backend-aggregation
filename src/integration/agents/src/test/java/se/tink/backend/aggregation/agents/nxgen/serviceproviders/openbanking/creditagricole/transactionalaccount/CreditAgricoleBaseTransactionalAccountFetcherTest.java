@@ -1,23 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.ACCOUNT_ID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -25,19 +28,19 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CreditAgricoleBaseTransactionalAccountFetcherTest {
 
+    private static final ZoneId ZONE_ID = ZoneId.of("UTC");
+    private static final Instant NOW = Instant.now();
+    private static final LocalDate TODAY = NOW.atZone(ZONE_ID).toLocalDate();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private CreditAgricoleBaseApiClient apiClient;
@@ -48,8 +51,11 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
     public void before() {
         persistentStorage = mock(PersistentStorage.class);
         apiClient = mock(CreditAgricoleBaseApiClient.class);
+
+        final Clock clockMock = createClockMock();
         transactionalAccountFetcher =
-                new CreditAgricoleBaseTransactionalAccountFetcher(apiClient, persistentStorage);
+                new CreditAgricoleBaseTransactionalAccountFetcher(
+                        apiClient, persistentStorage, clockMock);
     }
 
     @Test
@@ -142,44 +148,103 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void shouldFetchAllTransactions() {
+    public void shouldGetTransactionsWithin13MonthsLimit() {
         // given
-        TransactionalAccount account = createTransactionalAccount();
-        Date toDate = toDate("2020-02-01");
-        Date fromDate = toDate("2019-11-01");
-        when(apiClient.getTransactions(any(), any(), any()))
-                .thenReturn(new GetTransactionsResponse());
+        final TransactionalAccount account = createAccountMock();
+        final LocalDate todayMinus13Months = TODAY.minusMonths(13L);
+        final LocalDate todayMinus10Months = TODAY.minusMonths(10L);
+        final GetTransactionsResponse expectedResponse = createGetTransactionsResponse();
+
+        when(apiClient.getTransactions(ACCOUNT_ID, todayMinus13Months, todayMinus10Months))
+                .thenReturn(expectedResponse);
+
         when(persistentStorage.get("isInitialFetch", Boolean.class))
                 .thenReturn(Optional.of(Boolean.TRUE));
 
         // when
-        PaginatorResponse response =
-                transactionalAccountFetcher.getTransactionsFor(account, fromDate, toDate);
+        final PaginatorResponse returnedResponse =
+                transactionalAccountFetcher.getTransactionsFor(
+                        account,
+                        convertLocalDateToDate(todayMinus13Months),
+                        convertLocalDateToDate(todayMinus10Months));
 
         // then
-        verify(apiClient, times(1)).getTransactions(account.getApiIdentifier(), fromDate, toDate);
-        assertFalse(response.canFetchMore().isPresent());
+        assertThat(returnedResponse.getTinkTransactions()).isNotEmpty();
+        assertThat(returnedResponse.canFetchMore().isPresent()).isFalse();
+    }
+
+    @Test
+    public void shouldGetTransactionsWhenSomeAreBeyond13MonthsLimit() {
+        // given
+        final TransactionalAccount account = createAccountMock();
+        final LocalDate todayMinus14Months = TODAY.minusMonths(14L);
+        final LocalDate todayMinus13Months = TODAY.minusMonths(13L);
+        final GetTransactionsResponse expectedResponse = createGetTransactionsResponse();
+
+        when(apiClient.getTransactions(ACCOUNT_ID, todayMinus13Months, todayMinus13Months))
+                .thenReturn(expectedResponse);
+
+        when(persistentStorage.get("isInitialFetch", Boolean.class))
+                .thenReturn(Optional.of(Boolean.TRUE));
+
+        // when
+        final PaginatorResponse returnedResponse =
+                transactionalAccountFetcher.getTransactionsFor(
+                        account,
+                        convertLocalDateToDate(todayMinus14Months),
+                        convertLocalDateToDate(todayMinus13Months));
+
+        // then
+        assertThat(returnedResponse.getTinkTransactions()).isNotEmpty();
+        assertThat(returnedResponse.canFetchMore().isPresent()).isFalse();
+    }
+
+    @Test
+    public void shouldGetNoTransactionsWhenAllAreBeyond13MonthsLimit() {
+        // given
+        final TransactionalAccount account = createAccountMock();
+        final LocalDate todayMinus15Months = TODAY.minusMonths(15L);
+        final LocalDate todayMinus14Months = TODAY.minusMonths(14L);
+
+        when(persistentStorage.get("isInitialFetch", Boolean.class))
+                .thenReturn(Optional.of(Boolean.TRUE));
+
+        // when
+        final PaginatorResponse returnedResponse =
+                transactionalAccountFetcher.getTransactionsFor(
+                        account,
+                        convertLocalDateToDate(todayMinus15Months),
+                        convertLocalDateToDate(todayMinus14Months));
+
+        // then
+        assertThat(returnedResponse.getTinkTransactions()).isEmpty();
+        assertThat(returnedResponse.canFetchMore().isPresent()).isTrue();
+        assertThat(returnedResponse.canFetchMore().get()).isFalse();
+
+        verify(apiClient, never()).getTransactions(anyString(), any(), any());
     }
 
     @Test
     public void shouldFetchLast90DaysTransactions() {
         // given
-        TransactionalAccount account = createTransactionalAccount();
-        Date toDate = toDate("2020-02-01");
-        when(apiClient.getTransactions(any(), any(), any()))
-                .thenReturn(new GetTransactionsResponse());
+        final TransactionalAccount account = createAccountMock();
+        final LocalDate todayMinus89Days = TODAY.minusDays(89);
+        final GetTransactionsResponse expectedResponse = createGetTransactionsResponse();
+
+        when(apiClient.getTransactions(ACCOUNT_ID, todayMinus89Days, TODAY))
+                .thenReturn(expectedResponse);
         when(persistentStorage.get("isInitialFetch", Boolean.class))
                 .thenReturn(Optional.of(Boolean.FALSE));
 
         // when
         PaginatorResponse response =
-                transactionalAccountFetcher.getTransactionsFor(account, null, toDate);
+                transactionalAccountFetcher.getTransactionsFor(
+                        account, null, convertLocalDateToDate(TODAY));
 
         // then
-        verify(apiClient, times(1))
-                .getTransactions(account.getApiIdentifier(), toDate("2019-11-04"), toDate);
-        assertTrue(response.canFetchMore().isPresent());
-        assertFalse(response.canFetchMore().get());
+        assertThat(response.canFetchMore().isPresent()).isTrue();
+        assertThat(response.canFetchMore().get()).isFalse();
+        assertThat(response.getTinkTransactions()).isNotEmpty();
     }
 
     private GetAccountsResponse createFromJson(String json) {
@@ -190,25 +255,35 @@ public class CreditAgricoleBaseTransactionalAccountFetcherTest {
         }
     }
 
-    private TransactionalAccount createTransactionalAccount() {
-        return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(
-                        AccountTypeMapperBuilder.build(), "CACC", TransactionalAccountType.OTHER)
-                .withBalance(BalanceModule.of(ExactCurrencyAmount.of(11d, "EUR")))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier("1234567890")
-                                .withAccountNumber("1234567890")
-                                .withAccountName("name")
-                                .addIdentifier(new IbanIdentifier("1234567890"))
-                                .build())
-                .setApiIdentifier("bankId")
-                .build()
-                .get();
+    private GetTransactionsResponse createGetTransactionsResponse() {
+        final TransactionEntity transactionEntityMock = mock(TransactionEntity.class);
+        when(transactionEntityMock.toTinkTransaction()).thenReturn(mock(Transaction.class));
+
+        final GetTransactionsResponse getTransactionsResponse = new GetTransactionsResponse();
+
+        getTransactionsResponse.setTransactions(Collections.singletonList(transactionEntityMock));
+
+        return getTransactionsResponse;
     }
 
-    private Date toDate(String date) {
-        LocalDate localDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(date));
-        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    private static Clock createClockMock() {
+        final Clock clockMock = mock(Clock.class);
+
+        when(clockMock.instant()).thenReturn(NOW);
+        when(clockMock.getZone()).thenReturn(ZONE_ID);
+
+        return clockMock;
+    }
+
+    private static TransactionalAccount createAccountMock() {
+        final TransactionalAccount accountMock = mock(TransactionalAccount.class);
+
+        when(accountMock.getApiIdentifier()).thenReturn(ACCOUNT_ID);
+
+        return accountMock;
+    }
+
+    private static Date convertLocalDateToDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZONE_ID).toInstant());
     }
 }

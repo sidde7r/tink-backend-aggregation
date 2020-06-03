@@ -1,22 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole;
 
+import java.time.Clock;
+import java.util.List;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleBaseAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseClientConfigurationUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.CreditAgricoleBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.RequestFactory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.transfer.CreditAgricoleTransferDestinationFetcher;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -24,39 +29,47 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CreditAgricoleBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshIdentityDataExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final CreditAgricoleBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private CreditAgricoleBaseConfiguration creditAgricoleConfiguration;
+    private final CreditAgricoleBaseConfiguration creditAgricoleConfiguration;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     public CreditAgricoleBaseAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+            AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
+
+        final CreditAgricoleStorage creditAgricoleStorage =
+                new CreditAgricoleStorage(this.persistentStorage);
+
+        this.creditAgricoleConfiguration = getCreditAgricoleConfiguration();
 
         this.apiClient =
-                new CreditAgricoleBaseApiClient(client, persistentStorage, new RequestFactory());
+                new CreditAgricoleBaseApiClient(
+                        this.client, creditAgricoleStorage, this.creditAgricoleConfiguration);
+
+        final CreditAgricoleBaseMessageSignInterceptor creditAgricoleBaseMessageSignInterceptor =
+                new CreditAgricoleBaseMessageSignInterceptor(
+                        this.creditAgricoleConfiguration, qsealcSigner);
+        this.client.setMessageSignInterceptor(creditAgricoleBaseMessageSignInterceptor);
+
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        creditAgricoleConfiguration =
-                CreditAgricoleBaseClientConfigurationUtils.getConfiguration(
-                        configuration,
-                        apiClient,
-                        client,
-                        context,
-                        this.getAgentClass(),
-                        getAgentConfigurationController(),
-                        CreditAgricoleBaseConfiguration.class);
+
+        this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
@@ -77,6 +90,18 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final CreditAgricoleBaseIdentityDataFetcher creditAgricoleBaseIdentityDataFetcher =
+                new CreditAgricoleBaseIdentityDataFetcher(apiClient);
+        return creditAgricoleBaseIdentityDataFetcher.response();
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
     @Override
@@ -103,9 +128,15 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
         return SessionHandler.alwaysFail();
     }
 
+    private CreditAgricoleBaseConfiguration getCreditAgricoleConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentConfiguration(CreditAgricoleBaseConfiguration.class);
+    }
+
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CreditAgricoleBaseTransactionalAccountFetcher accountFetcher =
-                new CreditAgricoleBaseTransactionalAccountFetcher(apiClient, persistentStorage);
+                new CreditAgricoleBaseTransactionalAccountFetcher(
+                        apiClient, persistentStorage, Clock.systemUTC());
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -116,9 +147,8 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                         new TransactionDatePaginationController<>(accountFetcher)));
     }
 
-    public FetchIdentityDataResponse fetchIdentityData() {
-        final CreditAgricoleBaseIdentityDataFetcher creditAgricoleBaseIdentityDataFetcher =
-                new CreditAgricoleBaseIdentityDataFetcher(apiClient);
-        return creditAgricoleBaseIdentityDataFetcher.response();
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new CreditAgricoleTransferDestinationFetcher(apiClient));
     }
 }

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.manual;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
