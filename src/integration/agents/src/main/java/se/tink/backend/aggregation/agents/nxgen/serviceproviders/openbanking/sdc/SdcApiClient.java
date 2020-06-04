@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -45,6 +46,7 @@ public final class SdcApiClient {
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private SdcConfiguration configuration;
+    private String redirectUrl;
 
     public SdcApiClient(
             TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
@@ -58,9 +60,16 @@ public final class SdcApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
     protected void setConfiguration(
-            SdcConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = configuration;
+            AgentConfiguration<SdcConfiguration> agentConfiguration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
@@ -87,7 +96,7 @@ public final class SdcApiClient {
         return createRequest(Urls.AUTHORIZATION)
                 .queryParam(QueryKeys.SCOPE, HeaderValues.SCOPE_AIS)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                .queryParam(QueryKeys.REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
                 .queryParam(QueryKeys.STATE, state)
                 .getUrl();
@@ -99,7 +108,7 @@ public final class SdcApiClient {
                 new TokenRequest(
                         FormValues.AUTHORIZATION_CODE,
                         code,
-                        getConfiguration().getRedirectUrl(),
+                        getRedirectUrl(),
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
                         FormValues.SCOPE_AIS,
@@ -118,7 +127,7 @@ public final class SdcApiClient {
                 new RefreshAccessTokenRequest(
                         FormValues.REFRESH_TOKEN,
                         refreshToken,
-                        getConfiguration().getRedirectUrl(),
+                        getRedirectUrl(),
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
                         FormValues.SCOPE_AIS);
