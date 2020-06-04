@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole;
 
 import javax.ws.rs.core.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Authorization;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Url;
@@ -35,25 +32,25 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class CreditAgricoleApiClient {
-    private static final Logger log = LoggerFactory.getLogger(CreditAgricoleApiClient.class);
+
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
 
-    public CreditAgricoleApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    CreditAgricoleApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.client.disableSignatureRequestHeader();
     }
 
     public AccessibilityGridResponse getAccessibilityGrid() {
-        return createRequest(Url.ACCESSIBILITY_GRID).get(AccessibilityGridResponse.class);
+        return createRequest(new URL(Url.ACCESSIBILITY_GRID)).get(AccessibilityGridResponse.class);
     }
 
     public CreateUserResponse createUser(CreateUserRequest request) {
         return createAuthRequest().post(CreateUserResponse.class, request);
     }
 
-    public DefaultResponse requestOtp(DefaultAuthRequest request) throws LoginException {
+    public DefaultResponse requestOtp(DefaultAuthRequest request) {
         URL url =
                 new URL(Url.OTP_REQUEST)
                         .parameter(
@@ -140,8 +137,7 @@ public class CreditAgricoleApiClient {
                         .parameter(
                                 StorageKey.PARTNER_ID,
                                 persistentStorage.get(StorageKey.PARTNER_ID));
-        return createRequest(url)
-                .header(Authorization.HEADER, basicAuth())
+        return createRequestWithAuthHeader(url)
                 .body(ibanValidationRequest, MediaType.APPLICATION_JSON_TYPE)
                 .post(IbanValidationResponse.class);
     }
@@ -157,13 +153,10 @@ public class CreditAgricoleApiClient {
                         .parameter(
                                 StorageKey.PARTNER_ID,
                                 persistentStorage.get(StorageKey.PARTNER_ID));
-        return createRequest(url)
-                .header(Authorization.HEADER, basicAuth())
+        return createRequestWithAuthHeader(url)
                 .body(addBeneficiaryRequest, MediaType.APPLICATION_JSON_TYPE)
                 .post(DefaultResponse.class);
     }
-
-    /* ACCOUNTS AND TRANSACTIONS */
 
     public ContractsResponse contracts() {
         URL url =
@@ -174,9 +167,8 @@ public class CreditAgricoleApiClient {
                         .parameter(
                                 StorageKey.PARTNER_ID,
                                 persistentStorage.get(StorageKey.PARTNER_ID));
-        return client.request(url)
-                .header(Authorization.HEADER, basicAuth())
-                .get(ContractsResponse.class);
+
+        return createRequestWithAuthHeader(url).get(ContractsResponse.class);
     }
 
     public OperationsResponse operations(String accountNumber) {
@@ -188,24 +180,8 @@ public class CreditAgricoleApiClient {
                         .parameter(
                                 StorageKey.PARTNER_ID, persistentStorage.get(StorageKey.PARTNER_ID))
                         .parameter(StorageKey.ACCOUNT_NUMBER, accountNumber);
-        return client.request(url)
-                .header(Authorization.HEADER, basicAuth())
-                .get(OperationsResponse.class);
-    }
 
-    /* HELPER METHODS */
-
-    private String basicAuth() {
-        return Authorization.BASIC_PREFIX
-                + base64(
-                        String.format(
-                                "%s:%s",
-                                persistentStorage.get(StorageKey.USER_ID),
-                                persistentStorage.get(StorageKey.PROFILE_PIN)));
-    }
-
-    private String base64(String string) {
-        return EncodingUtils.encodeAsBase64String(string);
+        return createRequestWithAuthHeader(url).get(OperationsResponse.class);
     }
 
     private RequestBuilder createAuthRequest() {
@@ -214,6 +190,10 @@ public class CreditAgricoleApiClient {
                         .parameter(
                                 StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID));
         return createRequest(url);
+    }
+
+    private RequestBuilder createRequestWithAuthHeader(URL url) {
+        return createRequest(url).header(Authorization.HEADER, basicAuth());
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -226,13 +206,12 @@ public class CreditAgricoleApiClient {
                 .accept(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createRequest(String url) {
-        return client.request(url)
-                .header("Host", "ibudget.iphone.credit-agricole.fr")
-                .header(
-                        "User-Agent",
-                        "MonBudget_iOS/20.1.0.3 iOS/13.3.1 Apple/iPhone9,3 750x1334/2.00")
-                .header("Content-Type", "application/json; charset=UTF-8")
-                .accept(MediaType.APPLICATION_JSON);
+    private String basicAuth() {
+        String value =
+                persistentStorage.get(StorageKey.USER_ID)
+                        + ":"
+                        + persistentStorage.get(StorageKey.PROFILE_PIN);
+
+        return Authorization.BASIC_PREFIX + EncodingUtils.encodeAsBase64String(value);
     }
 }
