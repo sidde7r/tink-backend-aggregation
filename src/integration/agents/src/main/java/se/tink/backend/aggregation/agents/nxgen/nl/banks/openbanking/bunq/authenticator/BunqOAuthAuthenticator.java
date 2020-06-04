@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.auth
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.CreateSessionPSD2ProviderResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.InstallResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -40,6 +41,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
     private final TemporaryStorage temporaryStorage;
     private final String aggregatorIdentifier;
     private final BunqConfiguration agentConfiguration;
+    private final String redirectUrl;
 
     public BunqOAuthAuthenticator(
             final BunqApiClient apiClient,
@@ -47,13 +49,14 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
             final SessionStorage sessionStorage,
             final TemporaryStorage temporaryStorage,
             final String aggregatorIdentifier,
-            final BunqConfiguration agentConfiguration) {
+            final AgentConfiguration<BunqConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.temporaryStorage = temporaryStorage;
         this.aggregatorIdentifier = aggregatorIdentifier;
-        this.agentConfiguration = agentConfiguration;
+        this.agentConfiguration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     @Override
@@ -101,8 +104,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
         return Urls.AUTHORIZE
                 .queryParam(BunqConstants.QueryParams.RESPONSE_TYPE, BunqConstants.QueryValues.CODE)
                 .queryParam(BunqConstants.QueryParams.CLIENT_ID, agentConfiguration.getClientId())
-                .queryParam(
-                        BunqConstants.QueryParams.REDIRECT_URI, agentConfiguration.getRedirectUrl())
+                .queryParam(BunqConstants.QueryParams.REDIRECT_URI, redirectUrl)
                 .queryParam(BunqConstants.QueryParams.STATE, state);
     }
 
@@ -111,7 +113,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
         TokenExchangeResponse tokenExchangeResponse =
                 apiClient.getAccessToken(
                         code,
-                        agentConfiguration.getRedirectUrl(),
+                        redirectUrl,
                         agentConfiguration.getClientId(),
                         agentConfiguration.getClientSecret());
 

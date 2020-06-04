@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.filter.RabobankFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.filter.RabobankRetryFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -60,10 +61,12 @@ public final class RabobankAgent
         configureHttpClient(client);
         clientName = request.getProvider().getPayload();
 
-        final RabobankConfiguration rabobankConfiguration =
+        final AgentConfiguration<RabobankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(RabobankConfiguration.class);
+                        .getAgentCommonConfiguration(RabobankConfiguration.class);
 
+        final RabobankConfiguration rabobankConfiguration =
+                agentConfiguration.getClientConfiguration();
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
 
@@ -85,8 +88,7 @@ public final class RabobankAgent
         final OAuth2AuthenticationProgressiveController controller =
                 new OAuth2AuthenticationProgressiveController(
                         persistentStorage,
-                        new RabobankAuthenticator(
-                                apiClient, persistentStorage, rabobankConfiguration),
+                        new RabobankAuthenticator(apiClient, persistentStorage, agentConfiguration),
                         credentials,
                         strongAuthenticationState);
 

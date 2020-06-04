@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.f
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.filter.BankErrorResponseFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.filter.VolksbankRetryFilter;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
@@ -59,13 +60,14 @@ public class VolksbankAgent
 
         final VolksbankUrlFactory urlFactory = new VolksbankUrlFactory(Urls.HOST, bankPath);
 
-        final VolksbankConfiguration volksbankConfiguration =
+        final AgentConfiguration<VolksbankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(VolksbankConfiguration.class);
-
+                        .getAgentCommonConfiguration(VolksbankConfiguration.class);
+        final VolksbankConfiguration volksbankConfiguration =
+                agentConfiguration.getClientConfiguration();
         final VolksbankApiClient volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
-        final URL redirectUrl = new URL(volksbankConfiguration.getRedirectUrl());
+        final URL redirectUrl = new URL(agentConfiguration.getRedirectUrl());
         final String clientId = volksbankConfiguration.getClientId();
 
         final ConsentFetcher consentFetcher =

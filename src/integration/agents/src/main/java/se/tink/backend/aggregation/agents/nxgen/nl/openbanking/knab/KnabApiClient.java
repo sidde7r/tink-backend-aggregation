@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuratio
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -45,6 +46,7 @@ public class KnabApiClient {
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private KnabConfiguration configuration;
+    private String redirectUrl;
 
     public KnabApiClient(
             TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
@@ -57,8 +59,9 @@ public class KnabApiClient {
         return configuration;
     }
 
-    public void setConfiguration(KnabConfiguration configuration) {
-        this.configuration = configuration;
+    public void setConfiguration(AgentConfiguration<KnabConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -89,7 +92,7 @@ public class KnabApiClient {
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.SCOPE, scope)
-                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .getUrl();
     }
 
@@ -111,7 +114,7 @@ public class KnabApiClient {
 
         return createRequest(Urls.CONSENT)
                 .addBearerToken(token)
-                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
                 .post(ConsentResponse.class, consentRequest);
     }
 
@@ -131,7 +134,7 @@ public class KnabApiClient {
                         .clientId(configuration.getClientId())
                         .clientSecret(configuration.getClientSecret())
                         .state(state)
-                        .redirectUri(configuration.getRedirectUrl())
+                        .redirectUri(redirectUrl)
                         .build();
 
         return client.request(Urls.TOKEN)

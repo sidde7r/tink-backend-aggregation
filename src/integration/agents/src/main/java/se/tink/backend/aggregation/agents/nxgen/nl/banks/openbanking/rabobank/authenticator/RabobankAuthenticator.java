@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
@@ -30,14 +31,16 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     private final RabobankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final RabobankConfiguration configuration;
+    private final String redirectUrl;
 
     public RabobankAuthenticator(
             final RabobankApiClient apiClient,
             final PersistentStorage persistentStorage,
-            final RabobankConfiguration configuration) {
+            final AgentConfiguration<RabobankConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private RabobankConfiguration getConfiguration() {
@@ -45,16 +48,20 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
     @Override
     public URL buildAuthorizeUrl(final String state) {
-        final String redirectUri = getConfiguration().getRedirectUrl();
         final String clientId = getConfiguration().getClientId();
 
         final Form params =
                 Form.builder()
                         .encodeSpacesWithPercent()
                         .put(QueryParams.RESPONSE_TYPE, QueryValues.CODE)
-                        .put(QueryParams.REDIRECT_URI, redirectUri)
+                        .put(QueryParams.REDIRECT_URI, getRedirectUrl())
                         .put(QueryParams.CLIENT_ID, clientId)
                         .put(QueryParams.SCOPE, QueryValues.SCOPES)
                         .put(QueryParams.STATE, state)
@@ -65,13 +72,12 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(final String code) {
-        final String redirectUri = getConfiguration().getRedirectUrl();
 
         final Form request =
                 Form.builder()
                         .put(QueryParams.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE)
                         .put(QueryParams.CODE, code)
-                        .put(QueryParams.REDIRECT_URI, redirectUri)
+                        .put(QueryParams.REDIRECT_URI, getRedirectUrl())
                         .build();
 
         final TokenResponse tokenResponse = apiClient.exchangeAuthorizationCode(request);
@@ -86,12 +92,10 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
             throws SessionException, BankServiceException {
         logger.info("Got persist refresh token " + refreshToken);
 
-        final String redirectUri = getConfiguration().getRedirectUrl();
-
         final Form request =
                 Form.builder()
                         .put(QueryParams.GRANT_TYPE, QueryValues.REFRESH_TOKEN)
-                        .put(QueryParams.REDIRECT_URI, redirectUri)
+                        .put(QueryParams.REDIRECT_URI, getRedirectUrl())
                         .put(QueryParams.REFRESH_TOKEN, refreshToken)
                         .build();
 

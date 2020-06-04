@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authen
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.BunqPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseAgent;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -19,7 +20,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class BunqAgent extends BunqBaseAgent {
     private final BunqApiClient apiClient;
     private String backendHost;
-    private BunqConfiguration bunqConfiguration;
+    private AgentConfiguration<BunqConfiguration> agentConfiguration;
 
     public BunqAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -40,8 +41,9 @@ public final class BunqAgent extends BunqBaseAgent {
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        bunqConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(BunqConfiguration.class);
+        agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(BunqConfiguration.class);
     }
 
     @Override
@@ -56,7 +58,7 @@ public final class BunqAgent extends BunqBaseAgent {
                                 sessionStorage,
                                 temporaryStorage,
                                 getAggregatorInfo().getAggregatorIdentifier(),
-                                bunqConfiguration),
+                                agentConfiguration),
                         credentials,
                         strongAuthenticationState);
 
