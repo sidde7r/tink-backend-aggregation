@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.BnpParibasPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -44,7 +45,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 RefreshTransferDestinationExecutor {
 
     private BnpParibasApiBaseClient apiClient;
-    private BnpParibasConfiguration bnpParibasConfiguration;
+    private AgentConfiguration<BnpParibasConfiguration> agentConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private AutoAuthenticationController authenticator;
     private BnpParibasIdentityDataFetcher bnpParibasIdentityDataFetcher;
@@ -55,9 +56,9 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
-        bnpParibasConfiguration =
+        agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(BnpParibasConfiguration.class);
+                        .getAgentCommonConfiguration(BnpParibasConfiguration.class);
         BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider =
                 new BnpParibasSignatureHeaderProvider(qsealcSigner);
 
@@ -65,14 +66,15 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 new BnpParibasApiBaseClient(
                         client,
                         sessionStorage,
-                        bnpParibasConfiguration,
+                        agentConfiguration.getClientConfiguration(),
+                        agentConfiguration.getRedirectUrl(),
                         bnpParibasSignatureHeaderProvider);
 
         this.paymentApiClient =
                 new BnpParibasPaymentApiClient(
                         client,
                         sessionStorage,
-                        bnpParibasConfiguration,
+                        agentConfiguration.getClientConfiguration(),
                         bnpParibasSignatureHeaderProvider);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
@@ -97,8 +99,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new BnpParibasAuthenticator(
-                                apiClient, sessionStorage, bnpParibasConfiguration),
+                        new BnpParibasAuthenticator(apiClient, sessionStorage, agentConfiguration),
                         credentials,
                         strongAuthenticationState);
 
@@ -167,7 +168,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
         FrOpenBankingPaymentExecutor paymentExecutor =
                 new FrOpenBankingPaymentExecutor(
                         paymentApiClient,
-                        bnpParibasConfiguration.getRedirectUrl(),
+                        agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper);

@@ -33,6 +33,7 @@ public class BnpParibasApiBaseClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final BnpParibasConfiguration bnpParibasConfiguration;
+    private final String redirectUrl;
     private final BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
 
     public URL getAuthorizeUrl(String state) {
@@ -46,9 +47,7 @@ public class BnpParibasApiBaseClient {
                 .queryParam(
                         BnpParibasBaseConstants.QueryKeys.SCOPE,
                         BnpParibasBaseConstants.QueryValues.FULL_SCOPES)
-                .queryParam(
-                        BnpParibasBaseConstants.QueryKeys.REDIRECT_URI,
-                        bnpParibasConfiguration.getRedirectUrl())
+                .queryParam(BnpParibasBaseConstants.QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParam(BnpParibasBaseConstants.QueryKeys.STATE, state)
                 .getUrl();
     }
@@ -57,6 +56,15 @@ public class BnpParibasApiBaseClient {
         return String.format(
                 "%s:%s",
                 bnpParibasConfiguration.getClientId(), bnpParibasConfiguration.getClientSecret());
+    }
+
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        BnpParibasBaseConstants.ErrorMessages
+                                                .MISSING_CONFIGURATION));
     }
 
     private RequestBuilder createRequestInSession(URL url) {
