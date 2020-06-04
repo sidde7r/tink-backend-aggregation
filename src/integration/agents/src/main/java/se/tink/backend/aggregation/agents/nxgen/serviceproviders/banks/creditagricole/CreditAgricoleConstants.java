@@ -22,16 +22,37 @@ public class CreditAgricoleConstants {
                 new URL(
                         BASE_URL
                                 + String.format(
-                                        "/budget5/iphoneservice/user/{%s}/{%s}/{%s}/restore",
+                                        "/user/{%s}/{%s}/{%s}/restore",
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID));
-
+        public static final URL VALIDATE_IBAN =
+                new URL(
+                        BASE_URL
+                                + String.format(
+                                        "/portfolio/{%s}/{%s}/{%s}/codeBic",
+                                        StorageKey.USER_ID,
+                                        StorageKey.REGION_ID,
+                                        StorageKey.PARTNER_ID));
+        public static final URL ADD_BENEFICIARY =
+                new URL(
+                        BASE_URL
+                                + String.format(
+                                        "/portfolio/{%s}/{%s}/{%s}/externalAccount",
+                                        StorageKey.USER_ID,
+                                        StorageKey.REGION_ID,
+                                        StorageKey.PARTNER_ID));
+        public static final URL KEEP_ALIVE =
+                new URL(
+                        BASE_URL
+                                + String.format(
+                                        "/authentication/{%s}/{%s}/longSessionProfile",
+                                        StorageKey.USER_ID, StorageKey.REGION_ID));
         public static final URL CONTRACTS =
                 new URL(
                         BASE_URL
                                 + String.format(
-                                        "/budget5/iphoneservice/portfolio/{%s}/{%s}/{%s}/contracts",
+                                        "/portfolio/{%s}/{%s}/{%s}/contracts",
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID));
@@ -39,7 +60,7 @@ public class CreditAgricoleConstants {
                 new URL(
                         BASE_URL
                                 + String.format(
-                                        "/budget5/iphoneservice/portfolio/{%s}/{%s}/{%s}/accounts/{%s}/operations",
+                                        "/portfolio/{%s}/{%s}/{%s}/accounts/{%s}/operations",
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID,
@@ -77,6 +98,8 @@ public class CreditAgricoleConstants {
         public static final String PASSWORD = "password";
         public static final String EMAIL = "email";
         public static final String LL_TOKEN = "llToken";
+        public static final String ADD_EXTERNAL_IBAN = "add_external_iban";
+        public static final String OTP_GRANT_TYPE = "otp_sms";
     }
 
     public static class AccountType {
@@ -97,6 +120,11 @@ public class CreditAgricoleConstants {
         public static final String SCA_REQUIRED = "fr.mabanque.createuser.scarequired";
         public static final String FUNCTIONAL_ERROR = "FonctionnalError";
         public static final String BAM_AUTH_REQUIRED = "BamAuthenticationRequired";
+    }
+
+    public static class Step {
+        public static final String AUTHORIZE = "AUTHORIZE";
+        public static final String ADD_BENEFICIARY = "ADD_BENEFICIARY";
     }
 
     public static final String DATE_FORMAT = "yyyyMMdd";

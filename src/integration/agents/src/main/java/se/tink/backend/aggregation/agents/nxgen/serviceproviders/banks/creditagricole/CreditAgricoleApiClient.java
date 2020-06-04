@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole;
 
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Authorization;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Url;
@@ -14,8 +17,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.DefaultAuthRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.FindProfilesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthenticationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.RestoreProfileForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.AddBeneficiaryRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.rpc.OperationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
@@ -26,7 +35,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class CreditAgricoleApiClient {
-
+    private static final Logger log = LoggerFactory.getLogger(CreditAgricoleApiClient.class);
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
 
@@ -44,7 +53,7 @@ public class CreditAgricoleApiClient {
         return createAuthRequest().post(CreateUserResponse.class, request);
     }
 
-    public DefaultResponse requestOtp(DefaultAuthRequest request) {
+    public DefaultResponse requestOtp(DefaultAuthRequest request) throws LoginException {
         URL url =
                 new URL(Url.OTP_REQUEST)
                         .parameter(
@@ -94,37 +103,92 @@ public class CreditAgricoleApiClient {
         return createAuthRequest().post(AuthenticateResponse.class, request);
     }
 
+    public DefaultResponse otpInit() {
+        OtpInitRequest otpInitRequest =
+                new OtpInitRequest(
+                        Integer.parseInt(persistentStorage.get(StorageKey.USER_ID)),
+                        persistentStorage.get(StorageKey.PARTNER_ID));
+
+        URL url =
+                new URL(Url.OTP_REQUEST)
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID));
+        return createRequest(url)
+                .body(otpInitRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(DefaultResponse.class);
+    }
+
+    public OtpAuthenticationResponse otpAuthenticate(String otp) {
+        OtpAuthenticationRequest otpAuthenticationRequest =
+                new OtpAuthenticationRequest(
+                        persistentStorage.get(StorageKey.USER_ID),
+                        persistentStorage.get(StorageKey.PARTNER_ID),
+                        otp);
+        return createAuthRequest()
+                .body(otpAuthenticationRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(OtpAuthenticationResponse.class);
+    }
+
+    public IbanValidationResponse validateIban(String iban) {
+        IbanValidationRequest ibanValidationRequest = new IbanValidationRequest(iban);
+
+        URL url =
+                Url.VALIDATE_IBAN
+                        .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID))
+                        .parameter(
+                                StorageKey.PARTNER_ID,
+                                persistentStorage.get(StorageKey.PARTNER_ID));
+        return createRequest(url)
+                .header(Authorization.HEADER, basicAuth())
+                .body(ibanValidationRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(IbanValidationResponse.class);
+    }
+
+    public DefaultResponse addBeneficiary(String label, String iban, String bic) {
+        AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(label, iban, bic);
+
+        URL url =
+                Url.ADD_BENEFICIARY
+                        .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID))
+                        .parameter(
+                                StorageKey.PARTNER_ID,
+                                persistentStorage.get(StorageKey.PARTNER_ID));
+        return createRequest(url)
+                .header(Authorization.HEADER, basicAuth())
+                .body(addBeneficiaryRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(DefaultResponse.class);
+    }
+
     /* ACCOUNTS AND TRANSACTIONS */
 
     public ContractsResponse contracts() {
-        return client.request(
-                        Url.CONTRACTS
-                                .parameter(
-                                        StorageKey.USER_ID,
-                                        persistentStorage.get(StorageKey.USER_ID))
-                                .parameter(
-                                        StorageKey.REGION_ID,
-                                        persistentStorage.get(StorageKey.REGION_ID))
-                                .parameter(
-                                        StorageKey.PARTNER_ID,
-                                        persistentStorage.get(StorageKey.PARTNER_ID)))
+        URL url =
+                Url.CONTRACTS
+                        .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID))
+                        .parameter(
+                                StorageKey.PARTNER_ID,
+                                persistentStorage.get(StorageKey.PARTNER_ID));
+        return client.request(url)
                 .header(Authorization.HEADER, basicAuth())
                 .get(ContractsResponse.class);
     }
 
     public OperationsResponse operations(String accountNumber) {
-        return client.request(
-                        Url.OPERATIONS
-                                .parameter(
-                                        StorageKey.USER_ID,
-                                        persistentStorage.get(StorageKey.USER_ID))
-                                .parameter(
-                                        StorageKey.REGION_ID,
-                                        persistentStorage.get(StorageKey.REGION_ID))
-                                .parameter(
-                                        StorageKey.PARTNER_ID,
-                                        persistentStorage.get(StorageKey.PARTNER_ID))
-                                .parameter(StorageKey.ACCOUNT_NUMBER, accountNumber))
+        URL url =
+                Url.OPERATIONS
+                        .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID))
+                        .parameter(
+                                StorageKey.PARTNER_ID, persistentStorage.get(StorageKey.PARTNER_ID))
+                        .parameter(StorageKey.ACCOUNT_NUMBER, accountNumber);
+        return client.request(url)
                 .header(Authorization.HEADER, basicAuth())
                 .get(OperationsResponse.class);
     }

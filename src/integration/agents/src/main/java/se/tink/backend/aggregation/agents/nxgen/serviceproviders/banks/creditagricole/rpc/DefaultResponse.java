@@ -35,4 +35,12 @@ public class DefaultResponse {
                 .map(ErrorEntity::getCode)
                 .collect(Collectors.toList());
     }
+
+    public boolean hasErrors() {
+        return errors.size() > 0;
+    }
+
+    public String getErrorString() {
+        return errors.stream().map(ErrorEntity::toString).collect(Collectors.joining("\n"));
+    }
 }
