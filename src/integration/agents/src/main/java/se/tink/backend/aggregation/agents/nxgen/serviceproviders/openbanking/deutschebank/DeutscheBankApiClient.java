@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.account.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.rpc.transactions.TransactionsKeyPaginatorBaseResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -28,14 +29,16 @@ public class DeutscheBankApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final DeutscheBankConfiguration configuration;
+    private final String redirectUrl;
 
     public DeutscheBankApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            DeutscheBankConfiguration configuration) {
+            AgentConfiguration<DeutscheBankConfiguration> agentConfiguration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     public DeutscheBankConfiguration getConfiguration() {
@@ -66,10 +69,10 @@ public class DeutscheBankApiClient {
                 .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
+                        new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
                 .header(
                         HeaderKeys.TPP_NOK_REDIRECT_URI,
-                        new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
+                        new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
                 .type(MediaType.APPLICATION_JSON)
                 .post(ConsentBaseResponse.class, consentBaseRequest);
     }

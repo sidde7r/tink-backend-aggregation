@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -28,11 +29,11 @@ public final class PostbankAgent extends DeutscheBankAgent {
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration);
 
-        DeutscheBankConfiguration postbankConfiguration =
+        final AgentConfiguration<DeutscheBankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(DeutscheBankConfiguration.class);
+                        .getAgentCommonConfiguration(DeutscheBankConfiguration.class);
 
-        apiClient = new PostbankApiClient(client, sessionStorage, postbankConfiguration);
+        apiClient = new PostbankApiClient(client, sessionStorage, agentConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.setEidasProxy(configuration.getEidasProxy());
     }

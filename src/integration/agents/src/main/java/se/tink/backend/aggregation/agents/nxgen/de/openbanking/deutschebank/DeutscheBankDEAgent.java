@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -21,7 +22,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class DeutscheBankDEAgent extends DeutscheBankAgent {
 
-    private final DeutscheBankConfiguration deutscheBankDEConfiguration;
+    private final AgentConfiguration<DeutscheBankConfiguration> agentConfiguration;
     private final DeutscheBankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -31,11 +32,10 @@ public final class DeutscheBankDEAgent extends DeutscheBankAgent {
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration);
 
-        deutscheBankDEConfiguration =
+        agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(DeutscheBankConfiguration.class);
-        apiClient =
-                new DeutscheBankDEApiClient(client, sessionStorage, deutscheBankDEConfiguration);
+                        .getAgentCommonConfiguration(DeutscheBankConfiguration.class);
+        apiClient = new DeutscheBankDEApiClient(client, sessionStorage, agentConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

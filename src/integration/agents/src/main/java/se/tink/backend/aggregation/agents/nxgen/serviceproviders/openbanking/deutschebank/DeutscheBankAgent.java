@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -33,11 +34,11 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration.getSignatureKeyPair());
 
-        DeutscheBankConfiguration deutscheBankConfiguration =
+        final AgentConfiguration<DeutscheBankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(DeutscheBankConfiguration.class);
+                        .getAgentCommonConfiguration(DeutscheBankConfiguration.class);
 
-        apiClient = new DeutscheBankApiClient(client, sessionStorage, deutscheBankConfiguration);
+        apiClient = new DeutscheBankApiClient(client, sessionStorage, agentConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.setEidasProxy(configuration.getEidasProxy());
     }
