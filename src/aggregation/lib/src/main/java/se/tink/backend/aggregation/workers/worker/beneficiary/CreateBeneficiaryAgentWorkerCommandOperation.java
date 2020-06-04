@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerOperation.AgentW
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.backend.integration.tpp_secrets_service.client.iface.TppSecretsServiceClient;
 import se.tink.libraries.cache.CacheClient;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 
 public class CreateBeneficiaryAgentWorkerCommandOperation {
@@ -66,7 +67,6 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             AgentDebugStorageHandler agentDebugStorageHandler,
             InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState,
             LoginAgentWorkerCommandState loginAgentWorkerCommandState,
-            AgentWorkerCommandMetricState commandMetricState,
             LoginAgentEventProducer loginAgentEventProducer,
             AgentWorkerOperationState agentWorkerOperationState) {
         AgentWorkerCommandContext context =
@@ -123,12 +123,20 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                 new LoginAgentWorkerCommand(
                         context,
                         loginAgentWorkerCommandState,
-                        commandMetricState,
+                        createCommandMetricState(request, metricRegistry),
                         loginAgentEventProducer));
         commands.add(
                 new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
-        commands.add(new CreateBeneficiaryAgentWorkerCommand(context, request, commandMetricState));
+        commands.add(
+                new CreateBeneficiaryAgentWorkerCommand(
+                        context, request, createCommandMetricState(request, metricRegistry)));
         return new AgentWorkerOperation(
                 agentWorkerOperationState, metricsName, request, commands, context);
+    }
+
+    private static AgentWorkerCommandMetricState createCommandMetricState(
+            CredentialsRequest request, MetricRegistry metricRegistry) {
+        return new AgentWorkerCommandMetricState(
+                request.getProvider(), request.getCredentials(), metricRegistry, request.getType());
     }
 }

@@ -1287,7 +1287,6 @@ public class AgentWorkerOperationFactory {
                         agentDebugStorageHandler,
                         instantiateAgentWorkerCommandState,
                         loginAgentWorkerCommandState,
-                        createCommandMetricState(request),
                         loginAgentEventProducer,
                         agentWorkerOperationState));
     }

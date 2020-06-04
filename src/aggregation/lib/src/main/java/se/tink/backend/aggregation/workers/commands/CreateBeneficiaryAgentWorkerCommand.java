@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
@@ -47,13 +48,14 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
             AgentWorkerCommandMetricState metricState) {
         this.context = context;
         this.createBeneficiaryCredentialsRequest = createBeneficiaryCredentialsRequest;
-        this.metricState = metricState;
+        this.metricState = metricState.init(this);
         this.statusUpdater = context;
     }
 
     @Override
     public AgentWorkerCommandResult execute() {
         Agent agent = context.getAgent();
+        metricState.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
 
         if (!(agent instanceof CreateBeneficiaryControllerable)) {
             log.error("Agent does not support adding beneficiaries");
@@ -95,6 +97,8 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
             log.error("Unexpected error when adding beneficiary: {}", e.getMessage());
             statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             return AgentWorkerCommandResult.ABORT;
+        } finally {
+            metricState.stop();
         }
     }
 
