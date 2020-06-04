@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.EnterCardPaymentInitiationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.PaymentInitiationRequest;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -39,6 +40,7 @@ public final class EnterCardApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private EnterCardConfiguration configuration;
+    private String redirectUrl;
 
     public EnterCardApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -50,8 +52,14 @@ public final class EnterCardApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(EnterCardConfiguration configuration) {
-        this.configuration = configuration;
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    protected void setConfiguration(AgentConfiguration<EnterCardConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -110,7 +118,7 @@ public final class EnterCardApiClient {
 
     public OAuth2Token getToken(String code) {
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
         final String clientSecret = getConfiguration().getClientSecret();
 
         TokenRequest request =

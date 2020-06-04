@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.enums.EnterCardCurrency;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.rpc.PaymentInitiationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.util.EnterCardPaymentUtil;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -41,15 +42,17 @@ public class EnterCardBasePaymentExecutor implements PaymentExecutor, FetchableP
     private EnterCardApiClient apiClient;
     private ScaRedirectCallbackHandler redirectCallbackHandler;
     private EnterCardConfiguration configuration;
+    private String redirectUrl;
     private StrongAuthenticationState strongAuthenticationState;
 
     public EnterCardBasePaymentExecutor(
             EnterCardApiClient apiClient,
             SupplementalInformationHelper supplementalInformationHelper,
-            EnterCardConfiguration configuration,
+            AgentConfiguration<EnterCardConfiguration> agentConfiguration,
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.redirectCallbackHandler =
                 new ScaRedirectCallbackHandler(supplementalInformationHelper, 30, TimeUnit.SECONDS);
         this.strongAuthenticationState = strongAuthenticationState;
@@ -81,7 +84,7 @@ public class EnterCardBasePaymentExecutor implements PaymentExecutor, FetchableP
                                 EnterCardCurrency.fromString(
                                         paymentRequest.getPayment().getCurrency()))
                         .withRedirectURI(
-                                new URL(configuration.getRedirectUrl())
+                                new URL(redirectUrl)
                                         .queryParam(EnterCardConstants.QueryKeys.STATE, state)
                                         .toString())
                         .build();
