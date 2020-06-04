@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.rpc;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -15,12 +17,13 @@ public class CreateBeneficiaryCredentialsRequest extends CredentialsRequest {
     private final String ownerAccountNumber;
     private String refreshId;
 
+    @JsonCreator
     public CreateBeneficiaryCredentialsRequest(
-            User user,
-            Provider provider,
-            Credentials credentials,
-            Beneficiary beneficiary,
-            String ownerAccountNumber) {
+            @JsonProperty("user") User user,
+            @JsonProperty("provider") Provider provider,
+            @JsonProperty("credentials") Credentials credentials,
+            @JsonProperty("beneficiary") Beneficiary beneficiary,
+            @JsonProperty("ownerAccountNumber") String ownerAccountNumber) {
         super(user, provider, credentials);
         this.beneficiary = beneficiary;
         this.ownerAccountNumber = ownerAccountNumber;
