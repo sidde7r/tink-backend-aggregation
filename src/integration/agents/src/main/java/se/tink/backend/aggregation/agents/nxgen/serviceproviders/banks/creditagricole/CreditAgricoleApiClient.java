@@ -139,7 +139,7 @@ public class CreditAgricoleApiClient {
                         persistentStorage.get(StorageKey.PARTNER_ID));
 
         DefaultResponse otpInitResponse =
-                client.request(
+                createRequest(
                                 new URL(Url.OTP_REQUEST)
                                         .parameter(
                                                 StorageKey.REGION_ID,
@@ -173,7 +173,7 @@ public class CreditAgricoleApiClient {
     public IbanValidationResponse validateIban(String iban) {
         IbanValidationRequest ibanValidationRequest = new IbanValidationRequest(iban);
         IbanValidationResponse ibanValidationResponse =
-                client.request(
+                createRequest(
                                 Url.VALIDATE_IBAN
                                         .parameter(
                                                 StorageKey.USER_ID,
@@ -198,7 +198,7 @@ public class CreditAgricoleApiClient {
     public void addBeneficiary(String label, String iban, String bic) {
         AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(label, iban, bic);
         AddBeneficiaryResponse addBeneficiaryResponse =
-                client.request(
+                createRequest(
                                 Url.ADD_BENEFICIARY
                                         .parameter(
                                                 StorageKey.USER_ID,
