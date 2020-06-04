@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -47,6 +48,7 @@ public class SparebankApiClient {
     private final SessionStorage sessionStorage;
     private final String baseUrl;
     private EidasProxyConfiguration eidasProxyConfiguration;
+    private String redirectUrl;
     private SparebankConfiguration configuration;
     private EidasIdentity eidasIdentity;
 
@@ -58,10 +60,11 @@ public class SparebankApiClient {
     }
 
     public void setConfiguration(
-            final SparebankConfiguration configuration,
+            final AgentConfiguration<SparebankConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration,
             EidasIdentity eidasIdentity) {
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         client.setEidasProxy(eidasProxyConfiguration);
         this.eidasIdentity = eidasIdentity;
@@ -166,8 +169,8 @@ public class SparebankApiClient {
     }
 
     private Map<String, Object> getHeaders(String requestId, Optional<String> digest) {
-        String redirectUrl =
-                new URL(configuration.getRedirectUrl())
+        String tppRedirectUrl =
+                new URL(redirectUrl)
                         .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE))
                         .toString();
 
@@ -177,7 +180,7 @@ public class SparebankApiClient {
         headers.put(
                 HeaderKeys.DATE, ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
         headers.put(HeaderKeys.X_REQUEST_ID, requestId);
-        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, configuration.getCertificate());
         headers.put(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
 
