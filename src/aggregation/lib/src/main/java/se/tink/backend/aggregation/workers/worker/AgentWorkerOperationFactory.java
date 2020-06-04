@@ -1268,9 +1268,11 @@ public class AgentWorkerOperationFactory {
                         clientInfo,
                         metricRegistry,
                         coordinationClient,
-                        controllerWrapperProvider.createControllerWrapper(clientInfo.getAppId()),
+                        controllerWrapperProvider.createControllerWrapper(
+                                clientInfo.getClusterId()),
                         agentsServiceConfiguration,
-                        aggregatorInfoProvider.createAggregatorInfoFor(clientInfo.getAppId()),
+                        aggregatorInfoProvider.createAggregatorInfoFor(
+                                clientInfo.getAggregatorId()),
                         supplementalInformationController,
                         providerSessionCacheController,
                         generateOrGetCorrelationId(request.getRefreshId()),
