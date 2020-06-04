@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.ErrorMessages;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -15,7 +14,6 @@ public class CmcicConfiguration implements ClientConfiguration {
     @Secret private String baseUrl;
     @Secret private String basePath;
     @Secret private String authBaseUrl;
-    @AgentConfigParam private String redirectUrl;
     @Secret private String clientId;
     @SensitiveSecret private String keyId;
 
@@ -41,14 +39,6 @@ public class CmcicConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base Path"));
 
         return basePath;
-    }
-
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
-        return redirectUrl;
     }
 
     public String getBaseUrl() {

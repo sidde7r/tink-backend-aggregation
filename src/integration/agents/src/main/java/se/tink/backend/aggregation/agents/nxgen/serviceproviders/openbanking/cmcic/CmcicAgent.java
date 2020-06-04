@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -40,14 +41,17 @@ public abstract class CmcicAgent extends NextGenerationAgent
 
     private final CmcicApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final AgentConfiguration<CmcicConfiguration> agentConfiguration;
     private final CmcicConfiguration cmcicConfiguration;
     private final CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
 
     public CmcicAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
-        cmcicConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
+        agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(CmcicConfiguration.class);
+        cmcicConfiguration = agentConfiguration.getClientConfiguration();
 
         final CmcicSignatureProvider signatureProvider = new CmcicSignatureProvider(qsealcSigner);
         final CmcicDigestProvider digestProvider = new CmcicDigestProvider();
@@ -77,7 +81,7 @@ public abstract class CmcicAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         return Optional.of(
                 new CmcicPaymentController(
-                        new CmcicPaymentExecutor(apiClient, sessionStorage, cmcicConfiguration),
+                        new CmcicPaymentExecutor(apiClient, sessionStorage, agentConfiguration),
                         supplementalInformationHelper,
                         sessionStorage,
                         strongAuthenticationState));
