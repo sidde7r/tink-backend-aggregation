@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankCons
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.OpBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount.OpBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -36,27 +37,23 @@ public final class OpBankAgent extends NextGenerationAgent
 
         apiClient = new OpBankApiClient(client, persistentStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
-
-        final OpBankConfiguration opBankConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(OpBankConfiguration.class);
         super.setConfiguration(agentsServiceConfiguration);
-
         apiClient.setConfiguration(
-                opBankConfiguration,
+                getAgentConfiguration(),
                 agentsServiceConfiguration.getEidasProxy(),
                 getEidasIdentity());
     }
 
-    protected OpBankConfiguration getClientConfiguration() {
-        OpBankConfiguration opBankConfiguration = null;
+    protected AgentConfiguration<OpBankConfiguration> getAgentConfiguration() {
+        AgentConfiguration<OpBankConfiguration> agentConfiguration = null;
         try {
-            opBankConfiguration =
+            agentConfiguration =
                     getAgentConfigurationController()
-                            .getAgentConfiguration(OpBankConfiguration.class);
+                            .getAgentCommonConfiguration(OpBankConfiguration.class);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION);
         }
-        return opBankConfiguration;
+        return agentConfiguration;
     }
 
     @Override
@@ -66,10 +63,7 @@ public final class OpBankAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new OpBankAuthenticator(
-                                apiClient,
-                                persistentStorage,
-                                credentials,
-                                getClientConfiguration()),
+                                apiClient, persistentStorage, credentials, getAgentConfiguration()),
                         credentials,
                         strongAuthenticationState);
 

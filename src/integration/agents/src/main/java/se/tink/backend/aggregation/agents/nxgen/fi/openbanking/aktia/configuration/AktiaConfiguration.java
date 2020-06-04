@@ -16,7 +16,4 @@ public class AktiaConfiguration implements ClientConfiguration {
     @Secret private String authServerUrl;
 
     @SensitiveSecret private String basicAuthHeaderValue;
-
-    /* TODO: Added temporary. Remove when secrets uploading is fixed. */
-    @AgentConfigParam private String redirectUrl;
 }
