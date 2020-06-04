@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricTransactionFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -64,17 +65,16 @@ public class FabricAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        apiClient.setConfiguration(getClientConfiguration());
+        apiClient.setConfiguration(getAgentConfiguration());
         client.setEidasProxy(configuration.getEidasProxy());
     }
 
-    protected FabricConfiguration getClientConfiguration() {
-        FabricConfiguration fabricConfiguration;
+    protected AgentConfiguration<FabricConfiguration> getAgentConfiguration() {
+        AgentConfiguration<FabricConfiguration> fabricConfiguration;
         try {
             fabricConfiguration =
                     getAgentConfigurationController()
-                            .getAgentConfiguration(FabricConfiguration.class);
+                            .getAgentCommonConfiguration(FabricConfiguration.class);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION);
         }
