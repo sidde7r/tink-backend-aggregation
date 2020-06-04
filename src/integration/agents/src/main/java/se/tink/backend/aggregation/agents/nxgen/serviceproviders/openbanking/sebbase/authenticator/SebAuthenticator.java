@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -19,10 +20,13 @@ public class SebAuthenticator implements OAuth2Authenticator {
 
     private final SebBaseApiClient client;
     private final SebConfiguration configuration;
+    private final String redirectUrl;
 
-    public SebAuthenticator(SebBaseApiClient client, SebConfiguration configuration) {
+    public SebAuthenticator(
+            SebBaseApiClient client, AgentConfiguration<SebConfiguration> agentConfiguration) {
         this.client = client;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     @Override
@@ -34,8 +38,7 @@ public class SebAuthenticator implements OAuth2Authenticator {
                         SebCommonConstants.QueryValues.RESPONSE_TYPE_TOKEN)
                 .queryParam(
                         SebCommonConstants.QueryKeys.SCOPE, SebCommonConstants.QueryValues.SCOPE)
-                .queryParam(
-                        SebCommonConstants.QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
+                .queryParam(SebCommonConstants.QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(SebCommonConstants.QueryKeys.STATE, state)
                 .getUrl();
     }
@@ -46,7 +49,7 @@ public class SebAuthenticator implements OAuth2Authenticator {
                 new TokenRequest(
                         configuration.getClientId(),
                         configuration.getClientSecret(),
-                        configuration.getRedirectUrl(),
+                        redirectUrl,
                         SebCommonConstants.QueryValues.AUTH_CODE_GRANT,
                         code,
                         SebCommonConstants.QueryValues.SCOPE);

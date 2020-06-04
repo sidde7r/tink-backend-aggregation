@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -28,14 +29,17 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
             new AggregationLogger(SebDecoupledAuthenticator.class);
     private final SebBaseApiClient apiClient;
     private final SebConfiguration configuration;
+    private final String redirectUrl;
     private OAuth2Token oAuth2Token;
     private String autoStartToken;
     private String csrfToken;
     private String ssn;
 
-    public SebDecoupledAuthenticator(SebBaseApiClient apiClient, SebConfiguration configuration) {
+    public SebDecoupledAuthenticator(
+            SebBaseApiClient apiClient, AgentConfiguration<SebConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     @Override
@@ -90,8 +94,7 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
 
     private void startAuthorization() {
         AuthorizeResponse response =
-                apiClient.getAuthorization(
-                        configuration.getClientId(), configuration.getRedirectUrl());
+                apiClient.getAuthorization(configuration.getClientId(), redirectUrl);
         final String consentFormVerifier = response.getConsentFormVerifier();
         String code = response.getCode();
         if (!Strings.isNullOrEmpty(consentFormVerifier)) {
@@ -103,7 +106,7 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
                 new TokenRequest(
                         configuration.getClientId(),
                         configuration.getClientSecret(),
-                        configuration.getRedirectUrl(),
+                        redirectUrl,
                         QueryValues.AUTH_CODE_GRANT,
                         code,
                         QueryValues.SCOPE);

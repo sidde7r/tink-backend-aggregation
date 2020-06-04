@@ -43,7 +43,7 @@ public class SebBrandedCardsAgent extends SebBaseAgent<SebBrandedCardsApiClient>
 
     @Override
     protected Authenticator constructAuthenticator() {
-        SebAuthenticator authenticator = new SebAuthenticator(apiClient, sebConfiguration);
+        SebAuthenticator authenticator = new SebAuthenticator(apiClient, agentConfiguration);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
