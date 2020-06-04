@@ -58,7 +58,7 @@ public class CreditAgricoleApiClient {
         CreateUserResponse createUserResponse =
                 createAuthRequest().post(CreateUserResponse.class, request);
         if (createUserResponse.getAllErrorCodes().contains("fr.mabanque.createuser.scarequired")) {
-            // Expected path!
+            // Happy path! They use exception driven development...
             return createUserResponse;
         }
         if (createUserResponse.getAllErrorCodes().contains("fr.mabanque.auth.generic")) {
