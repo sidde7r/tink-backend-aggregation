@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -55,6 +56,7 @@ public final class BankdataApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private BankdataConfiguration configuration;
+    private String redirectUrl;
     private final String baseUrl;
     private final String baseAuthUrl;
 
@@ -73,7 +75,7 @@ public final class BankdataApiClient {
         String consentId = getConsentId();
         authorizeConsent(consentId);
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
@@ -98,7 +100,7 @@ public final class BankdataApiClient {
                         BankdataConstants.FormValues.AUTHORIZATION_CODE,
                         getConfiguration().getClientId(),
                         code,
-                        getConfiguration().getRedirectUrl(),
+                        getRedirectUrl(),
                         sessionStorage.get(StorageKeys.CODE_VERIFIER));
 
         return getTokenResponse(request);
@@ -263,7 +265,7 @@ public final class BankdataApiClient {
         final String codeVerifier = Psd2Headers.generateCodeVerifier();
         final String codeChallenge = Psd2Headers.generateCodeChallenge(codeVerifier);
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
 
         return new URL(baseAuthUrl + Endpoints.AUTHORIZE)
@@ -316,9 +318,16 @@ public final class BankdataApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
     protected void setConfiguration(
-            BankdataConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = configuration;
+            AgentConfiguration<BankdataConfiguration> agentConfiguration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
@@ -345,7 +354,7 @@ public final class BankdataApiClient {
                 new RefreshTokenRequest(
                         FormValues.REFRESH_TOKEN_GRANT_TYPE,
                         refreshToken,
-                        getConfiguration().getRedirectUrl(),
+                        getRedirectUrl(),
                         getConfiguration().getClientId(),
                         sessionStorage.get(StorageKeys.CODE_VERIFIER));
 
