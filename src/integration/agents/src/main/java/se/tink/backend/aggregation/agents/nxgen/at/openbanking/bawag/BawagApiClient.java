@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -33,14 +34,16 @@ public final class BawagApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private BawagConfiguration configuration;
+    private String redirectUrl;
 
     public BawagApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
     }
 
-    protected void setConfiguration(BawagConfiguration configuration) {
-        this.configuration = configuration;
+    protected void setConfiguration(AgentConfiguration<BawagConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -61,7 +64,7 @@ public final class BawagApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TRUE)
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(configuration.getRedirectUrl())
+                        new URL(redirectUrl)
                                 .queryParam(QueryKeys.STATE, state)
                                 .queryParam(QueryKeys.CODE, QueryValues.CODE)
                                 .get())

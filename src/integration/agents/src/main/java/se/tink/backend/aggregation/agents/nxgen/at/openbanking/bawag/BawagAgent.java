@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.configurati
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.BawagPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.fetcher.transactionalaccount.BawagTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.util.BawagUtils;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -41,9 +42,12 @@ public final class BawagAgent extends NextGenerationAgent
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        BawagConfiguration clientConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(BawagConfiguration.class);
-        apiClient.setConfiguration(clientConfiguration);
+        final AgentConfiguration<BawagConfiguration> agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(BawagConfiguration.class);
+        final BawagConfiguration clientConfiguration = agentConfiguration.getClientConfiguration();
+
+        apiClient.setConfiguration(agentConfiguration);
 
         client.setSslClientCertificate(
                 BawagUtils.readFile(clientConfiguration.getKeystorePath()),

@@ -9,17 +9,8 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class BawagConfiguration implements ClientConfiguration {
 
-    private String redirectUrl;
     private String keystorePath;
     private String keystorePassword;
-
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
-        return redirectUrl;
-    }
 
     public String getKeystorePath() {
         Preconditions.checkNotNull(
