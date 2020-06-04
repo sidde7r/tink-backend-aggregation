@@ -93,15 +93,17 @@ public class AccountEntity {
                 .withBalance(BalanceModule.of(getBalance(savingsResponse.getBalance())))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(savingsResponse.getAccountNumber())
+                                .withUniqueIdentifier(accountId)
                                 .withAccountNumber(savingsResponse.getAccountNumber())
-                                .withAccountName(getName())
+                                .withAccountName(name)
                                 .addIdentifier(
                                         AccountIdentifier.create(
-                                                AccountIdentifier.Type.SE,
-                                                savingsResponse.getAccountNumber()))
+                                                AccountIdentifier.Type.SE_PG,
+                                                savingsResponse
+                                                        .getExternalPaymentEntity()
+                                                        .getPlusGiroIdentifier()))
                                 .build())
-                .addHolderName(getName())
+                .addHolderName(name)
                 .setApiIdentifier(savingsResponse.getAccountNumber())
                 .build();
     }
