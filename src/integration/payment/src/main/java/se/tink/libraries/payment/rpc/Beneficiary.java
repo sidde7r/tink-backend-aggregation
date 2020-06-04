@@ -22,6 +22,12 @@ public class Beneficiary {
         return accountNumberType;
     }
 
+    public Beneficiary(String name, String accountNumber, AccountIdentifier.Type accountNumberType) {
+        this.name = name;
+        this.accountNumber = accountNumber;
+        this.accountNumberType = accountNumberType;
+    }
+
     private Beneficiary(Builder builder) {
         this.name = builder.name;
         this.accountNumber = builder.accountNumber;
