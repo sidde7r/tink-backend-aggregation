@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fliter.SbabBadGatewayFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fliter.SbabRetryFilter;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -56,8 +57,7 @@ public final class SbabAgent extends NextGenerationAgent
         apiClient = new SbabApiClient(client, sessionStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        SbabConfiguration sbabConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(sbabConfiguration);
+        apiClient.setConfiguration(getAgentConfiguration());
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         configureHttpClient(this.client);
@@ -79,8 +79,9 @@ public final class SbabAgent extends NextGenerationAgent
         return Optional.of(new PaymentController(sbabPaymentExecutor, sbabPaymentExecutor));
     }
 
-    protected SbabConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(SbabConfiguration.class);
+    protected AgentConfiguration<SbabConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(SbabConfiguration.class);
     }
 
     @Override

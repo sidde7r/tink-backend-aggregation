@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configur
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.SwedbankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -49,14 +50,14 @@ public final class SwedbankAgent extends NextGenerationAgent
                         this.getEidasIdentity());
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        apiClient.setConfiguration(getClientConfiguration());
+        apiClient.setConfiguration(getAgentConfiguration());
         client.setFollowRedirects(false);
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
-    private SwedbankConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(SwedbankConfiguration.class);
+    private AgentConfiguration<SwedbankConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(SwedbankConfiguration.class);
     }
 
     @Override

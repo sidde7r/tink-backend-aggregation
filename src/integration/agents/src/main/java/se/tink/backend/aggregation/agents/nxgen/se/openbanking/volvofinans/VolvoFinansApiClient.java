@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.authe
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.configuration.VolvoFinansConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -34,6 +35,7 @@ public final class VolvoFinansApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private VolvoFinansConfiguration configuration;
+    private String redirectUrl;
 
     public VolvoFinansApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -45,16 +47,22 @@ public final class VolvoFinansApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
     protected void setConfiguration(
-            VolvoFinansConfiguration configuration,
+            AgentConfiguration<VolvoFinansConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
     public URL getAuthorizeUrl(String state) {
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
 
         return createRequest(Urls.AUTH)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
@@ -66,7 +74,7 @@ public final class VolvoFinansApiClient {
     }
 
     public OAuth2Token getToken(String code) {
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
 

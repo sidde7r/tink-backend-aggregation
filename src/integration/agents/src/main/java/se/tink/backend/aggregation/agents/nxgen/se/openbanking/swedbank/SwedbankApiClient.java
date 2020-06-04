@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -62,6 +63,7 @@ public final class SwedbankApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private SwedbankConfiguration configuration;
+    private String redirectUrl;
     private FetchAccountResponse accounts;
     private final AgentsServiceConfiguration agentsServiceConfiguration;
     private final EidasIdentity eidasIdentity;
@@ -77,12 +79,18 @@ public final class SwedbankApiClient {
         this.eidasIdentity = eidasIdentity;
     }
 
-    public void setConfiguration(SwedbankConfiguration configuration) {
-        this.configuration = configuration;
+    public void setConfiguration(AgentConfiguration<SwedbankConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     public SwedbankConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
@@ -157,9 +165,7 @@ public final class SwedbankApiClient {
                         .queryParam(
                                 SwedbankConstants.QueryKeys.SCOPE,
                                 SwedbankConstants.QueryValues.SCOPE_PSD2)
-                        .queryParam(
-                                SwedbankConstants.QueryKeys.REDIRECT_URI,
-                                getConfiguration().getRedirectUrl())
+                        .queryParam(SwedbankConstants.QueryKeys.REDIRECT_URI, getRedirectUrl())
                         .queryParam(SwedbankConstants.QueryKeys.STATE, state)
                         .get(HttpResponse.class);
 
@@ -196,8 +202,8 @@ public final class SwedbankApiClient {
     public ConsentResponse getConsentAccountDetails(List<String> list) {
         return createRequestInSession(SwedbankConstants.Urls.CONSENTS)
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                 .post(ConsentResponse.class, createConsentRequest(list));
     }
 
@@ -219,7 +225,7 @@ public final class SwedbankApiClient {
                 new TokenRequest(
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
-                        getConfiguration().getRedirectUrl(),
+                        getRedirectUrl(),
                         code);
 
         return createRequest(SwedbankConstants.Urls.TOKEN)
@@ -263,15 +269,15 @@ public final class SwedbankApiClient {
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
                         SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                 .post(Response.class);
     }
 
     public ConsentResponse startAuthorization(String endpoint) {
         return createRequestInSessionWithConsent(new URL(Urls.BASE.concat(endpoint)))
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
                 .post(ConsentResponse.class);
     }
 
@@ -289,7 +295,7 @@ public final class SwedbankApiClient {
                         refreshToken,
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
-                        getConfiguration().getRedirectUrl());
+                        getRedirectUrl());
 
         return createRequest(SwedbankConstants.Urls.TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
@@ -299,20 +305,20 @@ public final class SwedbankApiClient {
 
     private RequestBuilder getPaymentRequestBuilder(URL url) {
         return createRequestInSession(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getConfiguration().getRedirectUrl());
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl());
     }
 
     private RequestBuilder getPaymentAuthorizationRequestBuilder(URL url, String state) {
-        String redirectUrl =
-                new URL(getConfiguration().getRedirectUrl())
+        String tppRedirectUrl =
+                new URL(getRedirectUrl())
                         .queryParam(QueryKeys.STATE, state)
                         .queryParam(QueryKeys.CODE, QueryValues.RESPONSE_TYPE_CODE)
                         .toString();
 
         return getPaymentRequestBuilder(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl)
-                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+                .header(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl)
+                .header(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl);
     }
 
     public CreatePaymentResponse createPayment(
@@ -332,7 +338,7 @@ public final class SwedbankApiClient {
                 .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .header(HeaderKeys.DATE, getFormattedDate(date))
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.DIGEST, digest)
                 .header(HeaderKeys.SIGNATURE, generateSignatureHeader(headers))
                 .type(MediaType.APPLICATION_JSON_TYPE)
@@ -404,7 +410,7 @@ public final class SwedbankApiClient {
     }
 
     private Map<String, Object> getHeaders(String requestId, String digest, Date date) {
-        String redirectUrl = new URL(configuration.getRedirectUrl()).toString();
+        String tppRedirectUrl = new URL(getRedirectUrl()).toString();
 
         Map<String, Object> headers = new HashMap<>();
 
@@ -412,7 +418,7 @@ public final class SwedbankApiClient {
         headers.put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT));
         headers.put(HeaderKeys.X_REQUEST_ID, requestId);
         headers.put(HeaderKeys.DATE, getFormattedDate(date));
-        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.DIGEST, digest);
         headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, configuration.getQSealc());
 

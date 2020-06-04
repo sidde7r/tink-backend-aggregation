@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.authentic
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.configuration.SkandiaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.SkandiaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.SkandiaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -38,11 +39,12 @@ public final class SkandiaAgent extends NextGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         apiClient.setConfiguration(
-                getClientConfiguration(), agentsServiceConfiguration.getEidasProxy());
+                getAgentConfiguration(), agentsServiceConfiguration.getEidasProxy());
     }
 
-    protected SkandiaConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(SkandiaConfiguration.class);
+    protected AgentConfiguration<SkandiaConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(SkandiaConfiguration.class);
     }
 
     @Override
@@ -52,7 +54,9 @@ public final class SkandiaAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new SkandiaAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()),
+                                apiClient,
+                                persistentStorage,
+                                getAgentConfiguration().getClientConfiguration()),
                         credentials,
                         strongAuthenticationState);
 
