@@ -72,7 +72,7 @@ public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
     private void storeRegionId() {
         String payload = request.getProvider().getPayload();
         if (StringUtils.isBlank(payload)) {
-            throw new RuntimeException("CA region id need to be configured in provider payload!");
+            throw new IllegalStateException("regionId need to be configured in provider payload!");
         }
 
         persistentStorage.put(StorageKey.REGION_ID, payload);

@@ -90,10 +90,13 @@ public class CreditAgricoleConstants {
     }
 
     public static class ErrorCode {
-        public static String INCORRECT_CREDENTIALS = "fr.mabanque.auth.wrongpassword";
-        public static String PASSWORD_AUTH_REQUIRED =
+        public static final String INCORRECT_CREDENTIALS = "fr.mabanque.auth.wrongpassword";
+        public static final String PASSWORD_AUTH_REQUIRED =
                 "fr.mabanque.login.passwordauthenticationrequired";
-        public static String SCA_REQUIRED = "fr.mabanque.createuser.scarequired";
+        public static final String GENERIC = "fr.mabanque.auth.generic";
+        public static final String SCA_REQUIRED = "fr.mabanque.createuser.scarequired";
+        public static final String FUNCTIONAL_ERROR = "FonctionnalError";
+        public static final String BAM_AUTH_REQUIRED = "BamAuthenticationRequired";
     }
 
     public static final String DATE_FORMAT = "yyyyMMdd";
