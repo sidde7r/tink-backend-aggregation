@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditag
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Authorization;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.StorageKey;
@@ -21,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpInitRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.RestoreProfileForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.AddBeneficiaryRequest;
@@ -53,15 +55,39 @@ public class CreditAgricoleApiClient {
     }
 
     public CreateUserResponse createUser(CreateUserRequest request) {
-        return createAuthRequest().post(CreateUserResponse.class, request);
+        CreateUserResponse createUserResponse =
+                createAuthRequest().post(CreateUserResponse.class, request);
+        if (createUserResponse.getAllErrorCodes().contains("fr.mabanque.createuser.scarequired")) {
+            // Expected path!
+            return createUserResponse;
+        }
+        if (createUserResponse.getAllErrorCodes().contains("fr.mabanque.auth.generic")) {
+            log.info("[createUser] Unexpected error: {}", createUserResponse.getErrors());
+            throw BankServiceError.NO_BANK_SERVICE.exception();
+        }
+        if (!createUserResponse.isResponseOK()) {
+            log.info("[createUser] Unexpected error: {}", createUserResponse.getErrors());
+            throw new IllegalStateException("[createUser] did not succeed!");
+        }
+        return createUserResponse;
     }
 
-    public DefaultResponse requestOtp(DefaultAuthRequest request) {
+    public DefaultResponse requestOtp(DefaultAuthRequest request) throws LoginException {
         URL url =
                 new URL(Url.OTP_REQUEST)
                         .parameter(
                                 StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID));
-        return createRequest(url).post(DefaultResponse.class, request);
+        DefaultResponse defaultResponse = createRequest(url).post(DefaultResponse.class, request);
+
+        if (defaultResponse.getAllErrorCodes().contains("BamAuthenticationRequired")) {
+            throw LoginError.NOT_CUSTOMER.exception(
+                    "Wrong branch used, please verify that you have chosen the correct branch.");
+        }
+        if (!defaultResponse.isResponseOK()) {
+            log.info("[requestOtp] Unexpected error: {}", defaultResponse.getErrors());
+            throw new IllegalStateException("[requestOtp] did not succeed!");
+        }
+        return defaultResponse;
     }
 
     public OtpAuthResponse sendOtpCode(OtpSmsRequest request) {
@@ -112,16 +138,16 @@ public class CreditAgricoleApiClient {
                         Integer.parseInt(persistentStorage.get(StorageKey.USER_ID)),
                         persistentStorage.get(StorageKey.PARTNER_ID));
 
-        OtpInitResponse otpInitResponse =
+        DefaultResponse otpInitResponse =
                 client.request(
                                 new URL(Url.OTP_REQUEST)
                                         .parameter(
                                                 StorageKey.REGION_ID,
                                                 persistentStorage.get(StorageKey.REGION_ID)))
                         .body(otpInitRequest, MediaType.APPLICATION_JSON_TYPE)
-                        .post(OtpInitResponse.class);
+                        .post(DefaultResponse.class);
         if (!otpInitResponse.isResponseOK()) {
-            log.info("Unknown error: {}", otpInitResponse);
+            log.info("[otpInit] Unknown error: {}", otpInitResponse.getErrors());
             throw new IllegalStateException("Unknown error when initializing OTP authentication");
         }
     }
@@ -133,15 +159,13 @@ public class CreditAgricoleApiClient {
                         persistentStorage.get(StorageKey.PARTNER_ID),
                         otp);
         OtpAuthenticationResponse otpAuthenticationResponse =
-                client.request(
-                                new URL(Url.AUTHENTICATE)
-                                        .parameter(
-                                                StorageKey.REGION_ID,
-                                                persistentStorage.get(StorageKey.REGION_ID)))
+                createAuthRequest()
                         .body(otpAuthenticationRequest, MediaType.APPLICATION_JSON_TYPE)
                         .post(OtpAuthenticationResponse.class);
         if (!otpAuthenticationResponse.isResponseOK()) {
-            log.info("Unknown error (probably invalid code): {}", otpAuthenticationResponse);
+            log.info(
+                    "[otpAuthenticate]: Unknown error (probably invalid code): {}",
+                    otpAuthenticationResponse.getErrors());
             throw new SupplementalInfoException(SupplementalInfoError.NO_VALID_CODE);
         }
     }
@@ -164,6 +188,7 @@ public class CreditAgricoleApiClient {
                         .body(ibanValidationRequest, MediaType.APPLICATION_JSON_TYPE)
                         .post(IbanValidationResponse.class);
         if (!ibanValidationResponse.isResponseOK()) {
+            log.info("[ValidateIban] Unknown error: {}", ibanValidationResponse.getErrors());
             throw new IllegalStateException(
                     "Validate Iban failed; probably supplied with bad iban");
         }
@@ -189,6 +214,7 @@ public class CreditAgricoleApiClient {
                         .post(AddBeneficiaryResponse.class);
         // TODO: differentiate if the error is adding an account that is already trusted.
         if (!addBeneficiaryResponse.isResponseOK()) {
+            log.info("[addBeneficiary] Unknown error: {}", addBeneficiaryResponse.getErrors());
             throw new IllegalStateException("addBeneficiary: something unexpected went wrong.");
         }
     }

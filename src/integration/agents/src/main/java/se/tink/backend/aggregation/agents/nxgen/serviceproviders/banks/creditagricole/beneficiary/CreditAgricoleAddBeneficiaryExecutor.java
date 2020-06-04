@@ -99,20 +99,17 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
         }
         try {
             apiClient.otpAuthenticate(otp);
-
-            this.createBeneficiaryResponse
-                    .getBeneficiary()
-                    .setStatus(CreateBeneficiaryStatus.SIGNED);
-            return new CreateBeneficiaryMultiStepResponse(
-                    createBeneficiaryMultiStepRequest,
-                    CreditAgricoleConstants.Step.ADD_BENEFICIARY,
-                    new ArrayList<>());
         } catch (SupplementalInfoException e) {
             return new CreateBeneficiaryMultiStepResponse(
                     createBeneficiaryMultiStepRequest,
                     CreditAgricoleConstants.Step.AUTHORIZE,
                     new ArrayList<>());
         }
+        this.createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.SIGNED);
+        return new CreateBeneficiaryMultiStepResponse(
+                createBeneficiaryMultiStepRequest,
+                CreditAgricoleConstants.Step.ADD_BENEFICIARY,
+                new ArrayList<>());
     }
 
     private CreateBeneficiaryMultiStepResponse addBeneficiary(
