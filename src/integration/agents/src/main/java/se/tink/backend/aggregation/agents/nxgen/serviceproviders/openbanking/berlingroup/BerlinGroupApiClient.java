@@ -27,6 +27,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
     protected final SessionStorage sessionStorage;
 
     @Getter private final TConfiguration configuration;
+    @Getter private final String redirectUrl;
 
     public abstract BerlinGroupAccountResponse fetchAccounts();
 
@@ -64,7 +65,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
                 .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress());
     }

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -30,9 +31,9 @@ public abstract class BerlinGroupAgent<
 
     protected abstract TApiClient createApiClient();
 
-    protected TConfiguration getConfiguration() {
+    protected AgentConfiguration<TConfiguration> getConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(getConfigurationClassDescription());
+                .getAgentCommonConfiguration(getConfigurationClassDescription());
     }
 
     @Override

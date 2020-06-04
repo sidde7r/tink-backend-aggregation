@@ -6,7 +6,6 @@ import java.net.UnknownHostException;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -20,7 +19,6 @@ public class SamlinkConfiguration implements BerlinGroupConfiguration {
     @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String psuIpAddress;
 
     @Override
@@ -31,11 +29,6 @@ public class SamlinkConfiguration implements BerlinGroupConfiguration {
     @Override
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    @Override
-    public String getRedirectUrl() {
-        return redirectUrl;
     }
 
     @Override

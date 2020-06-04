@@ -31,8 +31,9 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
     public SamlinkApiClient(
             final TinkHttpClient client,
             final SessionStorage sessionStorage,
-            SamlinkConfiguration configuration) {
-        super(client, sessionStorage, configuration);
+            final SamlinkConfiguration configuration,
+            final String redirectUrl) {
+        super(client, sessionStorage, configuration, redirectUrl);
     }
 
     public URL getAuthorizeUrl(final String state) {
@@ -44,7 +45,7 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
                         state,
                         consentId,
                         getConfiguration().getClientId(),
-                        getConfiguration().getRedirectUrl())
+                        getRedirectUrl())
                 .getUrl();
     }
 
@@ -69,7 +70,7 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
                 new TokenRequestPost(
                         FormValues.AUTHORIZATION_CODE,
                         code,
-                        getConfiguration().getRedirectUrl(),
+                        getRedirectUrl(),
                         getConfiguration().getClientId(),
                         getConfiguration().getClientSecret(),
                         "");

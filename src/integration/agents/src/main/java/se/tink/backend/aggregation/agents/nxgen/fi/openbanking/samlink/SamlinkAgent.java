@@ -24,7 +24,11 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
 
     @Override
     protected SamlinkApiClient createApiClient() {
-        return new SamlinkApiClient(client, sessionStorage, getConfiguration());
+        return new SamlinkApiClient(
+                client,
+                sessionStorage,
+                getConfiguration().getClientConfiguration(),
+                getConfiguration().getRedirectUrl());
     }
 
     @Override
@@ -46,7 +50,8 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
 
     @Override
     protected BerlinGroupTransactionFetcher getTransactionFetcher() {
-        return new SamlinkTransactionFetcher(apiClient, getConfiguration());
+        return new SamlinkTransactionFetcher(
+                apiClient, getConfiguration().getClientConfiguration());
     }
 
     @Override

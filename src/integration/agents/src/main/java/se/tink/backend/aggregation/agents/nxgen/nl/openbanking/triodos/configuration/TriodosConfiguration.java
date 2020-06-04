@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -21,7 +20,6 @@ public class TriodosConfiguration implements BerlinGroupConfiguration {
     @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @JsonProperty @AgentConfigParam private String redirectUrl;
 
     @Override
     public String getClientId() {
@@ -39,15 +37,6 @@ public class TriodosConfiguration implements BerlinGroupConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
-    }
-
-    @Override
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
-        return redirectUrl;
     }
 
     @Override

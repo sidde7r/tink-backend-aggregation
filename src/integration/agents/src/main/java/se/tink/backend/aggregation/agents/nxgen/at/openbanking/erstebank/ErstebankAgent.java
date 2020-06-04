@@ -26,7 +26,11 @@ public final class ErstebankAgent
 
     @Override
     protected ErstebankApiClient createApiClient() {
-        return new ErstebankApiClient(client, sessionStorage, getConfiguration());
+        return new ErstebankApiClient(
+                client,
+                sessionStorage,
+                getConfiguration().getClientConfiguration(),
+                getConfiguration().getRedirectUrl());
     }
 
     @Override
