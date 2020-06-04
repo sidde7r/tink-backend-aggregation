@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.RestoreProfileForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.AddBeneficiaryRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.AddBeneficiaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.rpc.ContractsResponse;
@@ -147,7 +146,7 @@ public class CreditAgricoleApiClient {
                 .post(IbanValidationResponse.class);
     }
 
-    public AddBeneficiaryResponse addBeneficiary(String label, String iban, String bic) {
+    public DefaultResponse addBeneficiary(String label, String iban, String bic) {
         AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(label, iban, bic);
 
         URL url =
@@ -161,7 +160,7 @@ public class CreditAgricoleApiClient {
         return createRequest(url)
                 .header(Authorization.HEADER, basicAuth())
                 .body(addBeneficiaryRequest, MediaType.APPLICATION_JSON_TYPE)
-                .post(AddBeneficiaryResponse.class);
+                .post(DefaultResponse.class);
     }
 
     /* ACCOUNTS AND TRANSACTIONS */

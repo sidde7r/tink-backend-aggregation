@@ -11,8 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.AccessibilityGridResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.AuthenticateRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.AddBeneficiaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.utils.CreditAgricoleAuthUtil;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
@@ -152,7 +152,7 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
         }
 
         // TODO: differentiate if the error is adding an account that is already trusted.
-        AddBeneficiaryResponse addBeneficiaryResponse =
+        DefaultResponse addBeneficiaryResponse =
                 apiClient.addBeneficiary(
                         beneficiary.getName(),
                         beneficiary.getAccountNumber(),
