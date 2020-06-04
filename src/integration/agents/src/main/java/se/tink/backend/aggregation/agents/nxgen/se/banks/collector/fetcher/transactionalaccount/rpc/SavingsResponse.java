@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.collector.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 
 @JsonObject
 public class SavingsResponse {
@@ -111,6 +112,10 @@ public class SavingsResponse {
 
         public String getPlusgiro() {
             return plusgiro;
+        }
+
+        public String getPlusGiroIdentifier() {
+            return new PlusGiroIdentifier(paymentReference, plusgiro).getIdentifier();
         }
     }
 
