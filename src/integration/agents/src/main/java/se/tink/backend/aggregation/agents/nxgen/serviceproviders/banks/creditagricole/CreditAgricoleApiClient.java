@@ -4,10 +4,6 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
-import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Authorization;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.Url;
@@ -55,21 +51,7 @@ public class CreditAgricoleApiClient {
     }
 
     public CreateUserResponse createUser(CreateUserRequest request) {
-        CreateUserResponse createUserResponse =
-                createAuthRequest().post(CreateUserResponse.class, request);
-        if (createUserResponse.getAllErrorCodes().contains("fr.mabanque.createuser.scarequired")) {
-            // Happy path! They use exception driven development...
-            return createUserResponse;
-        }
-        if (createUserResponse.getAllErrorCodes().contains("fr.mabanque.auth.generic")) {
-            log.info("[createUser] Unexpected error: {}", createUserResponse.getErrors());
-            throw BankServiceError.NO_BANK_SERVICE.exception();
-        }
-        if (!createUserResponse.isResponseOK()) {
-            log.info("[createUser] Unexpected error: {}", createUserResponse.getErrors());
-            throw new IllegalStateException("[createUser] did not succeed!");
-        }
-        return createUserResponse;
+        return createAuthRequest().post(CreateUserResponse.class, request);
     }
 
     public DefaultResponse requestOtp(DefaultAuthRequest request) throws LoginException {
@@ -77,17 +59,7 @@ public class CreditAgricoleApiClient {
                 new URL(Url.OTP_REQUEST)
                         .parameter(
                                 StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID));
-        DefaultResponse defaultResponse = createRequest(url).post(DefaultResponse.class, request);
-
-        if (defaultResponse.getAllErrorCodes().contains("BamAuthenticationRequired")) {
-            throw LoginError.NOT_CUSTOMER.exception(
-                    "Wrong branch used, please verify that you have chosen the correct branch.");
-        }
-        if (!defaultResponse.isResponseOK()) {
-            log.info("[requestOtp] Unexpected error: {}", defaultResponse.getErrors());
-            throw new IllegalStateException("[requestOtp] did not succeed!");
-        }
-        return defaultResponse;
+        return createRequest(url).post(DefaultResponse.class, request);
     }
 
     public OtpAuthResponse sendOtpCode(OtpSmsRequest request) {
@@ -132,124 +104,92 @@ public class CreditAgricoleApiClient {
         return createAuthRequest().post(AuthenticateResponse.class, request);
     }
 
-    public void otpInit() {
+    public DefaultResponse otpInit() {
         OtpInitRequest otpInitRequest =
                 new OtpInitRequest(
                         Integer.parseInt(persistentStorage.get(StorageKey.USER_ID)),
                         persistentStorage.get(StorageKey.PARTNER_ID));
 
-        DefaultResponse otpInitResponse =
-                createRequest(
-                                new URL(Url.OTP_REQUEST)
-                                        .parameter(
-                                                StorageKey.REGION_ID,
-                                                persistentStorage.get(StorageKey.REGION_ID)))
-                        .body(otpInitRequest, MediaType.APPLICATION_JSON_TYPE)
-                        .post(DefaultResponse.class);
-        if (!otpInitResponse.isResponseOK()) {
-            log.info("[otpInit] Unknown error: {}", otpInitResponse.getErrors());
-            throw new IllegalStateException("Unknown error when initializing OTP authentication");
-        }
+        URL url =
+                new URL(Url.OTP_REQUEST)
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID));
+        return createRequest(url)
+                .body(otpInitRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(DefaultResponse.class);
     }
 
-    public void otpAuthenticate(String otp) throws SupplementalInfoException {
+    public OtpAuthenticationResponse otpAuthenticate(String otp) {
         OtpAuthenticationRequest otpAuthenticationRequest =
                 new OtpAuthenticationRequest(
                         persistentStorage.get(StorageKey.USER_ID),
                         persistentStorage.get(StorageKey.PARTNER_ID),
                         otp);
-        OtpAuthenticationResponse otpAuthenticationResponse =
-                createAuthRequest()
-                        .body(otpAuthenticationRequest, MediaType.APPLICATION_JSON_TYPE)
-                        .post(OtpAuthenticationResponse.class);
-        if (!otpAuthenticationResponse.isResponseOK()) {
-            log.info(
-                    "[otpAuthenticate]: Unknown error (probably invalid code): {}",
-                    otpAuthenticationResponse.getErrors());
-            throw new SupplementalInfoException(SupplementalInfoError.NO_VALID_CODE);
-        }
+        return createAuthRequest()
+                .body(otpAuthenticationRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(OtpAuthenticationResponse.class);
     }
 
     public IbanValidationResponse validateIban(String iban) {
         IbanValidationRequest ibanValidationRequest = new IbanValidationRequest(iban);
-        IbanValidationResponse ibanValidationResponse =
-                createRequest(
-                                Url.VALIDATE_IBAN
-                                        .parameter(
-                                                StorageKey.USER_ID,
-                                                persistentStorage.get(StorageKey.USER_ID))
-                                        .parameter(
-                                                StorageKey.REGION_ID,
-                                                persistentStorage.get(StorageKey.REGION_ID))
-                                        .parameter(
-                                                StorageKey.PARTNER_ID,
-                                                persistentStorage.get(StorageKey.PARTNER_ID)))
-                        .header(Authorization.HEADER, basicAuth())
-                        .body(ibanValidationRequest, MediaType.APPLICATION_JSON_TYPE)
-                        .post(IbanValidationResponse.class);
-        if (!ibanValidationResponse.isResponseOK()) {
-            log.info("[ValidateIban] Unknown error: {}", ibanValidationResponse.getErrors());
-            throw new IllegalStateException(
-                    "Validate Iban failed; probably supplied with bad iban");
-        }
-        return ibanValidationResponse;
+
+        URL url =
+                Url.VALIDATE_IBAN
+                        .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID))
+                        .parameter(
+                                StorageKey.PARTNER_ID,
+                                persistentStorage.get(StorageKey.PARTNER_ID));
+        return createRequest(url)
+                .header(Authorization.HEADER, basicAuth())
+                .body(ibanValidationRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(IbanValidationResponse.class);
     }
 
-    public void addBeneficiary(String label, String iban, String bic) {
+    public AddBeneficiaryResponse addBeneficiary(String label, String iban, String bic) {
         AddBeneficiaryRequest addBeneficiaryRequest = new AddBeneficiaryRequest(label, iban, bic);
-        AddBeneficiaryResponse addBeneficiaryResponse =
-                createRequest(
-                                Url.ADD_BENEFICIARY
-                                        .parameter(
-                                                StorageKey.USER_ID,
-                                                persistentStorage.get(StorageKey.USER_ID))
-                                        .parameter(
-                                                StorageKey.REGION_ID,
-                                                persistentStorage.get(StorageKey.REGION_ID))
-                                        .parameter(
-                                                StorageKey.PARTNER_ID,
-                                                persistentStorage.get(StorageKey.PARTNER_ID)))
-                        .header(Authorization.HEADER, basicAuth())
-                        .body(addBeneficiaryRequest, MediaType.APPLICATION_JSON_TYPE)
-                        .post(AddBeneficiaryResponse.class);
-        // TODO: differentiate if the error is adding an account that is already trusted.
-        if (!addBeneficiaryResponse.isResponseOK()) {
-            log.info("[addBeneficiary] Unknown error: {}", addBeneficiaryResponse.getErrors());
-            throw new IllegalStateException("addBeneficiary: something unexpected went wrong.");
-        }
+
+        URL url =
+                Url.ADD_BENEFICIARY
+                        .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID))
+                        .parameter(
+                                StorageKey.PARTNER_ID,
+                                persistentStorage.get(StorageKey.PARTNER_ID));
+        return createRequest(url)
+                .header(Authorization.HEADER, basicAuth())
+                .body(addBeneficiaryRequest, MediaType.APPLICATION_JSON_TYPE)
+                .post(AddBeneficiaryResponse.class);
     }
 
     /* ACCOUNTS AND TRANSACTIONS */
 
     public ContractsResponse contracts() {
-        return client.request(
-                        Url.CONTRACTS
-                                .parameter(
-                                        StorageKey.USER_ID,
-                                        persistentStorage.get(StorageKey.USER_ID))
-                                .parameter(
-                                        StorageKey.REGION_ID,
-                                        persistentStorage.get(StorageKey.REGION_ID))
-                                .parameter(
-                                        StorageKey.PARTNER_ID,
-                                        persistentStorage.get(StorageKey.PARTNER_ID)))
+        URL url =
+                Url.CONTRACTS
+                        .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID))
+                        .parameter(
+                                StorageKey.PARTNER_ID,
+                                persistentStorage.get(StorageKey.PARTNER_ID));
+        return client.request(url)
                 .header(Authorization.HEADER, basicAuth())
                 .get(ContractsResponse.class);
     }
 
     public OperationsResponse operations(String accountNumber) {
-        return client.request(
-                        Url.OPERATIONS
-                                .parameter(
-                                        StorageKey.USER_ID,
-                                        persistentStorage.get(StorageKey.USER_ID))
-                                .parameter(
-                                        StorageKey.REGION_ID,
-                                        persistentStorage.get(StorageKey.REGION_ID))
-                                .parameter(
-                                        StorageKey.PARTNER_ID,
-                                        persistentStorage.get(StorageKey.PARTNER_ID))
-                                .parameter(StorageKey.ACCOUNT_NUMBER, accountNumber))
+        URL url =
+                Url.OPERATIONS
+                        .parameter(StorageKey.USER_ID, persistentStorage.get(StorageKey.USER_ID))
+                        .parameter(
+                                StorageKey.REGION_ID, persistentStorage.get(StorageKey.REGION_ID))
+                        .parameter(
+                                StorageKey.PARTNER_ID, persistentStorage.get(StorageKey.PARTNER_ID))
+                        .parameter(StorageKey.ACCOUNT_NUMBER, accountNumber);
+        return client.request(url)
                 .header(Authorization.HEADER, basicAuth())
                 .get(OperationsResponse.class);
     }

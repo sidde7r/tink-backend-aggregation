@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.AccessibilityGridResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.AuthenticateRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.AddBeneficiaryResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.utils.CreditAgricoleAuthUtil;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProvider;
@@ -122,9 +124,8 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
         } catch (SupplementalInfoException e) {
             throw new BeneficiaryException(e.getMessage(), e);
         }
-        try {
-            apiClient.otpAuthenticate(otp);
-        } catch (SupplementalInfoException e) {
+        OtpAuthenticationResponse otpAuthenticationResponse = apiClient.otpAuthenticate(otp);
+        if (!otpAuthenticationResponse.isResponseOK()) {
             return new CreateBeneficiaryMultiStepResponse(
                     createBeneficiaryMultiStepRequest,
                     CreditAgricoleConstants.Step.AUTHORIZE,
@@ -144,13 +145,21 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
                 createBeneficiaryMultiStepRequest.getBeneficiary().getBeneficiary();
         IbanValidationResponse ibanValidationResponse =
                 apiClient.validateIban(beneficiary.getAccountNumber());
-        try {
-            apiClient.addBeneficiary(
-                    beneficiary.getName(),
-                    beneficiary.getAccountNumber(),
-                    ibanValidationResponse.getBic());
-        } catch (IllegalStateException ise) {
-            throw new BeneficiaryException("addBeneficiary failed", ise);
+        if (!ibanValidationResponse.isResponseOK()) {
+            throw new BeneficiaryException(
+                    "Validate Iban failed; probably supplied with bad iban: "
+                            + ibanValidationResponse.getErrorString());
+        }
+
+        // TODO: differentiate if the error is adding an account that is already trusted.
+        AddBeneficiaryResponse addBeneficiaryResponse =
+                apiClient.addBeneficiary(
+                        beneficiary.getName(),
+                        beneficiary.getAccountNumber(),
+                        ibanValidationResponse.getBic());
+        if (!addBeneficiaryResponse.isResponseOK()) {
+            throw new BeneficiaryException(
+                    "addBeneficiary failed: " + addBeneficiaryResponse.getErrorString());
         }
 
         CreateBeneficiaryMultiStepResponse createBeneficiaryMultiStepResponse =

@@ -39,4 +39,10 @@ public class DefaultResponse {
     public boolean hasErrors() {
         return errors.size() > 0;
     }
+
+    public String getErrorString() {
+        return errors.stream()
+                .map(errorEntity -> errorEntity.getCode() + ": " + errorEntity.getMessage())
+                .collect(Collectors.joining("\n"));
+    }
 }
