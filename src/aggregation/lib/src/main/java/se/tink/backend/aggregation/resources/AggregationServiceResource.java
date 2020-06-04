@@ -367,10 +367,8 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void createBeneficiary(
             CreateBeneficiaryCredentialsRequest request, ClientInfo clientInfo) throws Exception {
-        // This is intentionally left empty as we want the entry point to be present for testing
-        // purposes.
         logger.info(
-                "Transfer Request received from main. beneficiary is: {} and update: {}",
+                "Received create beneficiary request - beneficiary: {}, isUpdate: {}",
                 request.getBeneficiary(),
                 request.isUpdate());
         // Only execute if feature is enabled with feature flag.
@@ -378,6 +376,8 @@ public class AggregationServiceResource implements AggregationService {
                 agentWorkerCommandFactory.createOperationCreateBeneficiary(request, clientInfo);
         if (workerCommand.isPresent()) {
             agentWorker.execute(workerCommand.get());
+        } else {
+            logger.info("No worker command exists for creating beneficiary. Returning.");
         }
     }
 
