@@ -35,7 +35,7 @@ public class BuddybankApiClient extends UnicreditBaseApiClient {
                         .header(HeaderKeys.PSU_ID_TYPE, getConfiguration().getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(getConfiguration().getRedirectUrl())
+                                new URL(getRedirectUrl())
                                         .queryParam(HeaderKeys.STATE, state)
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                         .header(HeaderKeys.TPP_REDIRECT_PREFERED, true)

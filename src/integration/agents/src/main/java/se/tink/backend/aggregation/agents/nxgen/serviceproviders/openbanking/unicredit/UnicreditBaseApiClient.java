@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -55,6 +56,7 @@ public abstract class UnicreditBaseApiClient {
     private final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     private UnicreditConfiguration configuration;
+    private String redirectUrl;
     private final Credentials credentials;
 
     protected final boolean manualRequest;
@@ -108,13 +110,19 @@ public abstract class UnicreditBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    protected String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
     protected Credentials getCredentials() {
         return Optional.ofNullable(credentials)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CREDENTIALS));
     }
 
-    protected void setConfiguration(UnicreditConfiguration configuration) {
-        this.configuration = configuration;
+    protected void setConfiguration(AgentConfiguration<UnicreditConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     protected RequestBuilder createRequest(URL url) {
@@ -162,7 +170,7 @@ public abstract class UnicreditBaseApiClient {
                         .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(getConfiguration().getRedirectUrl())
+                                new URL(getRedirectUrl())
                                         .queryParam(HeaderKeys.STATE, state)
                                         .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                         .header(HeaderKeys.TPP_REDIRECT_PREFERED, true) // true for redirect auth
@@ -246,7 +254,7 @@ public abstract class UnicreditBaseApiClient {
                         .header(HeaderKeys.PSU_ID_TYPE, configuration.getPsuIdType())
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
-                                new URL(getConfiguration().getRedirectUrl())
+                                new URL(getRedirectUrl())
                                         .queryParam(
                                                 HeaderKeys.STATE,
                                                 persistentStorage.get(StorageKeys.STATE))
