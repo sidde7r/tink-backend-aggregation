@@ -1,3 +1,4 @@
+apiVersion: v1
 name: tink-backend-aggregation-demo-bank-cronjob
 version: 1.0.0
 
