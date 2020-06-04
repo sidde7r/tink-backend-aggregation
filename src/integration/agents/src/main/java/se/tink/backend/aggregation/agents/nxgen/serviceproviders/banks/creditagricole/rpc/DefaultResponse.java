@@ -41,8 +41,6 @@ public class DefaultResponse {
     }
 
     public String getErrorString() {
-        return errors.stream()
-                .map(errorEntity -> errorEntity.getCode() + ": " + errorEntity.getMessage())
-                .collect(Collectors.joining("\n"));
+        return errors.stream().map(ErrorEntity::toString).collect(Collectors.joining("\n"));
     }
 }
