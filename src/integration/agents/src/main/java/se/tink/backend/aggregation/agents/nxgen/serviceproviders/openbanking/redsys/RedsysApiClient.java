@@ -52,6 +52,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.filters.ErrorFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -71,6 +72,7 @@ public final class RedsysApiClient {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private RedsysConfiguration configuration;
+    private String redirectUrl;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private X509Certificate clientSigningCertificate;
     private AspspConfiguration aspspConfiguration;
@@ -102,9 +104,16 @@ public final class RedsysApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
     protected void setConfiguration(
-            RedsysConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = configuration;
+            AgentConfiguration<RedsysConfiguration> agentConfiguration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.clientSigningCertificate =
                 RedsysUtils.parseCertificate(configuration.getClientSigningCertificate());
@@ -162,7 +171,7 @@ public final class RedsysApiClient {
 
     public URL getAuthorizeUrl(String state, String codeChallenge) {
         final String clientId = getAuthClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
 
         return client.request(makeAuthUrl(RedsysConstants.Urls.OAUTH))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
@@ -177,7 +186,7 @@ public final class RedsysApiClient {
 
     public OAuth2Token getToken(String code, String codeVerifier) {
         final String clientId = getAuthClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
 
         final String payload =
                 Form.builder()
@@ -262,8 +271,7 @@ public final class RedsysApiClient {
     }
 
     private Map<String, Object> getTppRedirectHeaders(String state) {
-        final URL redirectUrl =
-                new URL(getConfiguration().getRedirectUrl()).queryParam(QueryKeys.STATE, state);
+        final URL redirectUrl = new URL(getRedirectUrl()).queryParam(QueryKeys.STATE, state);
         Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TRUE);
         headers.put(

@@ -6,7 +6,6 @@ import com.google.common.collect.Iterables;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
@@ -17,7 +16,6 @@ public class RedsysConfiguration implements ClientConfiguration {
     @Secret private String baseAuthUrl;
     @Secret private String baseAPIUrl;
     @Secret private String clientId;
-    @AgentConfigParam private String redirectUrl;
     @Secret private List<String> scopes;
     private String clientSigningKeyPath;
     private String clientSigningKeyPassword;
@@ -45,14 +43,6 @@ public class RedsysConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
-    }
-
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
-        return redirectUrl;
     }
 
     public Optional<String> getClientSigningKeyPath() {

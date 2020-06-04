@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.BaseTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -68,9 +69,10 @@ public abstract class RedsysAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final RedsysConfiguration redsysConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(RedsysConfiguration.class);
-        apiClient.setConfiguration(redsysConfiguration, configuration.getEidasProxy());
+        final AgentConfiguration<RedsysConfiguration> agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(RedsysConfiguration.class);
+        apiClient.setConfiguration(agentConfiguration, configuration.getEidasProxy());
         apiClient.setPsuIpAddress(HeaderValues.PSU_IP_ADDRESS);
     }
 
