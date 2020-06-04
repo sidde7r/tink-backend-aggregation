@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.CryptoUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.TimeUtils;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -39,10 +40,13 @@ public final class BelfiusApiClient {
 
     private final TinkHttpClient client;
     private final BelfiusConfiguration configuration;
+    private final String redirectUrl;
 
-    public BelfiusApiClient(TinkHttpClient client, BelfiusConfiguration configuration) {
+    public BelfiusApiClient(
+            TinkHttpClient client, AgentConfiguration<BelfiusConfiguration> agentConfiguration) {
         this.client = client;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -55,7 +59,7 @@ public final class BelfiusApiClient {
 
         return createRequest(url)
                 .header(HeaderKeys.CLIENT_ID, configuration.getClientId())
-                .header(HeaderKeys.REDIRECT_URI, configuration.getRedirectUrl())
+                .header(HeaderKeys.REDIRECT_URI, redirectUrl)
                 .header(HeaderKeys.REQUEST_ID, UUID.randomUUID());
     }
 

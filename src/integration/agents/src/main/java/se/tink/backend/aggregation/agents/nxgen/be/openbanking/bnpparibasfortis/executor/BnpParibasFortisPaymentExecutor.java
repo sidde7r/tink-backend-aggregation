@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.enums.BnpParibasFortisPaymentType;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -40,17 +41,19 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
     private final BnpParibasFortisApiClient apiClient;
     private final BnpParibasFortisPaymentAuthenticator paymentAuthenticator;
     private final BnpParibasFortisConfiguration configuration;
+    private final String redirectUrl;
     private final StrongAuthenticationState strongAuthenticationState;
     private final List<PaymentResponse> createdPaymentsList;
 
     public BnpParibasFortisPaymentExecutor(
             BnpParibasFortisApiClient apiClient,
             BnpParibasFortisPaymentAuthenticator paymentAuthenticator,
-            BnpParibasFortisConfiguration configuration,
+            AgentConfiguration<BnpParibasFortisConfiguration> agentConfiguration,
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.strongAuthenticationState = strongAuthenticationState;
         createdPaymentsList = new ArrayList<>();
     }
@@ -83,7 +86,7 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
                         .withExecutionDate(payment.getExecutionDate())
                         .withCreationDateTime(LocalDateTime.now())
                         .withRedirectUrl(
-                                new URL(configuration.getRedirectUrl())
+                                new URL(redirectUrl)
                                         .queryParam(
                                                 QueryKeys.STATE,
                                                 strongAuthenticationState.getState()))

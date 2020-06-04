@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.configura
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.fetcher.transactionalaccount.ArgentaTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.SignatureHeaderProvider;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
@@ -40,9 +41,13 @@ public final class ArgentaAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        ArgentaConfiguration argentaConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(ArgentaConfiguration.class);
         super.setConfiguration(agentsServiceConfiguration);
+
+        final AgentConfiguration<ArgentaConfiguration> agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(ArgentaConfiguration.class);
+        final ArgentaConfiguration argentaConfiguration =
+                agentConfiguration.getClientConfiguration();
 
         EidasProxyConfiguration eidasProxy = agentsServiceConfiguration.getEidasProxy();
         QsealcSigner qsealcSigner =
@@ -56,7 +61,7 @@ public final class ArgentaAgent extends NextGenerationAgent
         apiClient =
                 new ArgentaApiClient(
                         client,
-                        argentaConfiguration,
+                        agentConfiguration,
                         persistentStorage,
                         sessionStorage,
                         signatureHeaderProvider);
