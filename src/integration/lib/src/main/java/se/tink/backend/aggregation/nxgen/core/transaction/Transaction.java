@@ -16,16 +16,6 @@ public class Transaction extends AggregationTransaction {
     private final boolean pending;
     private final String externalId;
 
-    @Deprecated
-    protected Transaction(Amount amount, Date date, String description, boolean pending) {
-        this(
-                ExactCurrencyAmount.of(amount.toBigDecimal(), amount.getCurrency()),
-                date,
-                description,
-                pending,
-                null);
-    }
-
     protected Transaction(
             ExactCurrencyAmount amount, Date date, String description, boolean pending) {
         this(amount, date, description, pending, null);
