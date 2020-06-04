@@ -16,13 +16,17 @@ public class CapabilitiesRule implements ClassificationRule<PaymentAccountClassi
     }
 
     private boolean areAllCapabilitiesYes(AccountCapabilities accountCapabilities) {
-        return accountCapabilities.getCanMakeAndReceiveTransfer() == AccountCapabilities.Answer.YES
+        return accountCapabilities.getCanMakeDomesticTransfer() == AccountCapabilities.Answer.YES
+                && accountCapabilities.getCanReceiveDomesticTransfer()
+                        == AccountCapabilities.Answer.YES
                 && accountCapabilities.getCanPlaceFunds() == AccountCapabilities.Answer.YES
                 && accountCapabilities.getCanWithdrawFunds() == AccountCapabilities.Answer.YES;
     }
 
     private boolean isAnyCapabilityNo(AccountCapabilities accountCapabilities) {
-        return accountCapabilities.getCanMakeAndReceiveTransfer() == AccountCapabilities.Answer.NO
+        return accountCapabilities.getCanMakeDomesticTransfer() == AccountCapabilities.Answer.NO
+                || accountCapabilities.getCanReceiveDomesticTransfer()
+                        == AccountCapabilities.Answer.NO
                 || accountCapabilities.getCanPlaceFunds() == AccountCapabilities.Answer.NO
                 || accountCapabilities.getCanWithdrawFunds() == AccountCapabilities.Answer.NO;
     }

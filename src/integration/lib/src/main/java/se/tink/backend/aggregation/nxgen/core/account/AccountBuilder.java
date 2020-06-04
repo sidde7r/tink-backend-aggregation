@@ -85,8 +85,14 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     @Override
-    public B canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer) {
-        this.capabilities.setCanMakeAndReceiveTransfer(canMakeAndReceiveTransfer);
+    public B canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer) {
+        this.capabilities.setCanMakeDomesticTransfer(canMakeDomesticTransfer);
+        return buildStep();
+    }
+
+    @Override
+    public B canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer) {
+        this.capabilities.setCanReceiveDomesticTransfer(canReceiveDomesticTransfer);
         return buildStep();
     }
 

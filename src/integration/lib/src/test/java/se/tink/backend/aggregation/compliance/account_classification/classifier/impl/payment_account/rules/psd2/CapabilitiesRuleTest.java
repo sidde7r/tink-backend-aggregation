@@ -65,7 +65,8 @@ public class CapabilitiesRuleTest {
 
         AccountCapabilities capabilities = AccountCapabilities.createDefault();
         capabilities.setCanPlaceFunds(AccountCapabilities.Answer.YES);
-        capabilities.setCanMakeAndReceiveTransfer(AccountCapabilities.Answer.YES);
+        capabilities.setCanMakeDomesticTransfer(AccountCapabilities.Answer.YES);
+        capabilities.setCanReceiveDomesticTransfer(AccountCapabilities.Answer.YES);
         capabilities.setCanWithdrawFunds(AccountCapabilities.Answer.YES);
         Account account = prepareMockedAccountWithCapabilities(capabilities);
 
@@ -82,7 +83,8 @@ public class CapabilitiesRuleTest {
 
         AccountCapabilities capabilities = AccountCapabilities.createDefault();
         capabilities.setCanPlaceFunds(AccountCapabilities.Answer.YES);
-        capabilities.setCanMakeAndReceiveTransfer(AccountCapabilities.Answer.YES);
+        capabilities.setCanMakeDomesticTransfer(AccountCapabilities.Answer.YES);
+        capabilities.setCanReceiveDomesticTransfer(AccountCapabilities.Answer.YES);
         capabilities.setCanWithdrawFunds(AccountCapabilities.Answer.NO);
         Account account = prepareMockedAccountWithCapabilities(capabilities);
 
