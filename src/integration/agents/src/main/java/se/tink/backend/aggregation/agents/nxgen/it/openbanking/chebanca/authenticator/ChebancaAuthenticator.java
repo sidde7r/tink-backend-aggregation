@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenti
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.HttpResponseChecker;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -25,14 +26,17 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
 
     private final ChebancaApiClient apiClient;
     private final ChebancaConfiguration configuration;
+    private final String redirectUrl;
     private AuthorizationURLBuilder authorizationUrlBuilder;
 
     public ChebancaAuthenticator(
             ChebancaApiClient apiClient,
-            ChebancaConfiguration configuration,
+            AgentConfiguration<ChebancaConfiguration> agentConfiguration,
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = requireNonNull(apiClient);
-        this.configuration = requireNonNull(configuration);
+        requireNonNull(agentConfiguration);
+        this.configuration = requireNonNull(agentConfiguration.getClientConfiguration());
+        this.redirectUrl = requireNonNull(agentConfiguration.getRedirectUrl());
         requireNonNull(strongAuthenticationState);
         this.authorizationUrlBuilder =
                 createAuthorizationUrlBuilder(strongAuthenticationState, configuration);
@@ -56,7 +60,7 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
                         configuration.getClientSecret(),
                         code,
                         FormValues.AUTHORIZATION_CODE,
-                        configuration.getRedirectUrl());
+                        redirectUrl);
 
         HttpResponse response = apiClient.createToken(tokenRequest);
         HttpResponseChecker.checkIfSuccessfulResponse(
@@ -89,8 +93,6 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
             StrongAuthenticationState strongAuthenticationState,
             ChebancaConfiguration chebancaConfig) {
         return new AuthorizationURLBuilder(
-                chebancaConfig.getClientId(),
-                chebancaConfig.getRedirectUrl(),
-                strongAuthenticationState.getState());
+                chebancaConfig.getClientId(), redirectUrl, strongAuthenticationState.getState());
     }
 }

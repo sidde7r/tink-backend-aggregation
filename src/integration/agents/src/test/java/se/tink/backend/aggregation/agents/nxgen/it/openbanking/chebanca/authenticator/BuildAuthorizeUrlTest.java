@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.Chebanca
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.exception.UnsuccessfulApiCallException;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -63,12 +64,15 @@ public class BuildAuthorizeUrlTest extends AuthenticatorTestBase {
 
     private void setUpAuthenticatorToBuildAuthUrl(HttpResponse response) {
         ChebancaApiClient apiClient = mock(ChebancaApiClient.class);
+        AgentConfiguration<ChebancaConfiguration> agentConfiguration =
+                mock(AgentConfiguration.class);
         when(apiClient.getLoginUrl(any())).thenReturn(response);
         ChebancaConfiguration config =
-                new ChebancaConfiguration(
-                        CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CERTIFICATE_ID, APP_ID);
+                new ChebancaConfiguration(CLIENT_ID, CLIENT_SECRET, CERTIFICATE_ID, APP_ID);
+        when(agentConfiguration.getClientConfiguration()).thenReturn(config);
+        when(agentConfiguration.getRedirectUrl()).thenReturn(REDIRECT_URL);
         StrongAuthenticationState state = new StrongAuthenticationState(CLIENT_STATE);
-        authenticator = new ChebancaAuthenticator(apiClient, config, state);
+        authenticator = new ChebancaAuthenticator(apiClient, agentConfiguration, state);
     }
 
     private String getLocationRedirectOfLoginEndpoint() {

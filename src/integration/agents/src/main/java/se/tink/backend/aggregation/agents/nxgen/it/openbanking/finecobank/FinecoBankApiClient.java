@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.paymen
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.rpc.GetPaymentStatusResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -43,15 +44,17 @@ public class FinecoBankApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private FinecoBankConfiguration configuration;
+    private final FinecoBankConfiguration configuration;
+    private final String redirectUrl;
 
     public FinecoBankApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            FinecoBankConfiguration finecoBankConfiguration) {
+            AgentConfiguration<FinecoBankConfiguration> agentConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.configuration = finecoBankConfiguration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private FinecoBankConfiguration getConfiguration() {
@@ -59,8 +62,9 @@ public class FinecoBankApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(FinecoBankConfiguration configuration) {
-        this.configuration = configuration;
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -74,8 +78,7 @@ public class FinecoBankApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        (new URL(getConfiguration().getRedirectUrl())
-                                .queryParam(QueryKeys.STATE, state)))
+                        (new URL(getRedirectUrl()).queryParam(QueryKeys.STATE, state)))
                 .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress())
                 .body(postConsentBodyRequest)
                 .post(ConsentResponse.class);
@@ -202,8 +205,7 @@ public class FinecoBankApiClient {
     public CreatePaymentResponse createPayment(
             String paymentProduct, CreatePaymentRequest requestBody) {
         final String state = getStateFromStorage();
-        final URL redirectUrl =
-                new URL(getConfiguration().getRedirectUrl()).queryParam(QueryKeys.STATE, state);
+        final URL tppRedirectUrl = new URL(getRedirectUrl()).queryParam(QueryKeys.STATE, state);
 
         return client.request(
                         Urls.PAYMENT_INITIATION.parameter(
@@ -211,7 +213,7 @@ public class FinecoBankApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID_PAYMENT_INITIATION)
                 .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
-                .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl.toString())
+                .header(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl.toString())
                 .post(CreatePaymentResponse.class, requestBody);
     }
 
