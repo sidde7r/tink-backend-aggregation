@@ -92,7 +92,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         final AgentConfiguration<IngBaseConfiguration> ingBaseConfiguration =
-                getClientConfiguration();
+                getAgentConfiguration();
 
         EidasIdentity eidasIdentity =
                 new EidasIdentity(context.getClusterId(), context.getAppId(), this.getAgentClass());
@@ -108,7 +108,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
         }
     }
 
-    protected AgentConfiguration<IngBaseConfiguration> getClientConfiguration() {
+    protected AgentConfiguration<IngBaseConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
                 .getAgentCommonConfiguration(IngBaseConfiguration.class);
     }
