@@ -35,7 +35,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
-
+    private final FabricPaymentController fabricPaymentController;
     private static final Logger logger = LoggerFactory.getLogger(FabricPaymentExecutor.class);
 
     public FabricPaymentExecutor(
@@ -47,6 +47,9 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
+        this.fabricPaymentController =
+                new FabricPaymentController(
+                        supplementalInformationHelper, strongAuthenticationState, sessionStorage);
     }
 
     @Override
@@ -64,7 +67,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-
+        sessionStorage.put(FabricConstants.QueryKeys.STATE, strongAuthenticationState.getState());
         AccountEntity creditorEntity = AccountEntity.creditorOf(paymentRequest);
         AccountEntity debtorEntity = AccountEntity.debtorOf(paymentRequest);
         InstructedAmountEntity instructedAmountEntity = InstructedAmountEntity.of(paymentRequest);
@@ -78,7 +81,6 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
                         .withRemittanceInformationUnstructured(
                                 paymentRequest.getPayment().getReference().getValue())
                         .build();
-
         CreatePaymentResponse payment = apiClient.createPayment(createPaymentRequest);
         sessionStorage.put(
                 FabricConstants.StorageKeys.LINK, payment.getLinks().getScaRedirect().getHref());
@@ -89,22 +91,20 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException, AuthenticationException {
 
-        FabricPaymentController fabricPaymentController =
-                new FabricPaymentController(
-                        supplementalInformationHelper, strongAuthenticationState, sessionStorage);
+        logger.info(paymentMultiStepRequest.getStep());
+
         String redirectUrl = sessionStorage.get(FabricConstants.StorageKeys.LINK);
         if (redirectUrl != null) {
-            fabricPaymentController.openThirdPartyApp(redirectUrl);
-            fabricPaymentController.waitForSupplementalInformation();
+            fabricPaymentController.redirectSCA(redirectUrl);
+            logger.info("SupplementalInformation received and continue to getPaymentStatus");
+            sessionStorage.put(FabricConstants.StorageKeys.LINK, null);
         }
 
-        logger.info("SupplementalInformation received and continue to getPaymentStatus");
         CreatePaymentResponse createPaymentResponse =
                 apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment().getUniqueId());
         logger.info(
-                "Transaction Status: {} ; Sca Status: {} ",
-                createPaymentResponse.getTransactionStatus(),
-                createPaymentResponse.getScaStatus());
+                "Transaction Status: {} after SCA ", createPaymentResponse.getTransactionStatus());
+
         return fabricPaymentController.response(createPaymentResponse, paymentMultiStepRequest);
     }
 

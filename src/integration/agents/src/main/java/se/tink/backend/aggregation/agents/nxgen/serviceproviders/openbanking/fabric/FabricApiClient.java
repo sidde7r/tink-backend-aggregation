@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class FabricApiClient {
@@ -34,15 +35,18 @@ public class FabricApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
+    private final SessionStorage sessionStorage;
     private FabricConfiguration configuration;
 
     public FabricApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator,
+            SessionStorage sessionStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.randomValueGenerator = randomValueGenerator;
+        this.sessionStorage = sessionStorage;
     }
 
     private FabricConfiguration getConfiguration() {
@@ -141,8 +145,8 @@ public class FabricApiClient {
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(getConfiguration().getRedirectUrl())
-                                .queryParam(
-                                        QueryKeys.STATE, persistentStorage.get(QueryKeys.STATE)))
+                                .queryParam(QueryKeys.CODE, FabricConstants.QueryValues.CODE)
+                                .queryParam(QueryKeys.STATE, sessionStorage.get(QueryKeys.STATE)))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 

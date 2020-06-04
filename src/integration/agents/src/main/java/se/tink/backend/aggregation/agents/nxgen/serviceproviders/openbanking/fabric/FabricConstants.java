@@ -51,8 +51,6 @@ public class FabricConstants {
         public static final String API_PSD2_URL = "/api/fabrick/psd2";
         public static final String INITIATE_A_PAYMENT_URL =
                 "/api/fabrick/psd2/v1/payments/{payment-product}";
-        public static final String CREATE_PIS_AUTHORIZATION_URL =
-                "/api/fabrick/psd2/v1/{paymentType}/{paymentProduct}/{paymentId}/authorisations";
         public static final String GET_PAYMENT_URL =
                 "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}";
         public static final String GET_PAYMENT_STATUS_URL =
@@ -73,6 +71,11 @@ public class FabricConstants {
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
         public static final String STATE = "state";
+        public static final String CODE = "code";
+    }
+
+    public static class QueryValues {
+        public static final String CODE = "code";
     }
 
     public static class HeaderKeys {
@@ -110,15 +113,8 @@ public class FabricConstants {
     }
 
     public static class Timer {
-        public static final long WAITING_FOR_SUPPLEMENTAL_INFORMATION_TIMER = 9l;
-    }
-
-    public static class ScaStatus {
-        public static final String SCA_FAILED = "failed";
-        public static final String IDENTIFICATION_REQUIRED = "psuIdentified";
-        public static final String AUTHENTICATION_REQUIRED = "psuAuthenticated";
-        public static final String SCA_FINALISED = "finalised";
-        public static final String EXEMPTED = "exempted";
+        public static final long WAITING_FOR_SUPPLEMENTAL_INFORMATION_MINUTES = 9l;
+        public static final long WAITING_FOR_QUIT_PENDING_STATUS_MILISEC = 3000l;
     }
 
     public static class PaymentStep {

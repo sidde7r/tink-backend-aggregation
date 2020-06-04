@@ -51,7 +51,10 @@ public class FabricAgent extends NextGenerationAgent
 
         apiClient =
                 new FabricApiClient(
-                        client, persistentStorage, componentProvider.getRandomValueGenerator());
+                        client,
+                        persistentStorage,
+                        componentProvider.getRandomValueGenerator(),
+                        sessionStorage);
         clientName = request.getProvider().getPayload();
         transactionalAccountRefreshController =
                 getTransactionalAccountRefreshController(
