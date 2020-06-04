@@ -44,6 +44,7 @@ public class BpceGroupApiClient {
     private final TinkHttpClient httpClient;
     private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
     private final BpceGroupConfiguration bpceGroupConfiguration;
+    private final String redirectUrl;
     private final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator;
 
     public URL getAuthorizeUrl(String state) {
@@ -52,7 +53,7 @@ public class BpceGroupApiClient {
                 .queryParam("client_id", bpceGroupConfiguration.getClientId())
                 .queryParam("response_type", "code")
                 .queryParam("scope", "aisp")
-                .queryParam("redirect_uri", bpceGroupConfiguration.getRedirectUrl())
+                .queryParam("redirect_uri", redirectUrl)
                 .queryParam("state", state)
                 .getUrl();
     }
@@ -62,7 +63,7 @@ public class BpceGroupApiClient {
                 TokenRequest.builder()
                         .clientId(bpceGroupConfiguration.getClientId())
                         .code(code)
-                        .redirectUri(bpceGroupConfiguration.getRedirectUrl())
+                        .redirectUri(redirectUrl)
                         .build();
 
         final HttpResponse response =

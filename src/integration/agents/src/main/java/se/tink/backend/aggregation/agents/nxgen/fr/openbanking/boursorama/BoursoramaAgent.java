@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -61,34 +62,39 @@ public class BoursoramaAgent extends NextGenerationAgent
                         new GeneratedValueProviderImpl(
                                 new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl())));
 
-        BoursoramaConfiguration agentConfiguration = getAgentConfiguration();
+        AgentConfiguration<BoursoramaConfiguration> agentConfiguration = getAgentConfiguration();
 
         this.apiClient = constructApiClient(agentConfiguration, agentsServiceConfiguration);
-        this.authenticator = new BoursoramaAuthenticator(apiClient, sessionStorage);
+        this.authenticator =
+                new BoursoramaAuthenticator(
+                        apiClient, sessionStorage, agentConfiguration.getRedirectUrl());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    private BoursoramaConfiguration getAgentConfiguration() {
-        BoursoramaConfiguration configuration =
+    private AgentConfiguration<BoursoramaConfiguration> getAgentConfiguration() {
+        AgentConfiguration<BoursoramaConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(BoursoramaConfiguration.class);
+                        .getAgentCommonConfiguration(BoursoramaConfiguration.class);
+        BoursoramaConfiguration configuration = agentConfiguration.getClientConfiguration();
 
         Objects.requireNonNull(configuration.getBaseUrl());
         Objects.requireNonNull(configuration.getClientId());
         Objects.requireNonNull(configuration.getQsealKeyUrl());
-        Objects.requireNonNull(configuration.getRedirectUrl());
+        Objects.requireNonNull(agentConfiguration.getRedirectUrl());
 
-        return configuration;
+        return agentConfiguration;
     }
 
     private BoursoramaApiClient constructApiClient(
-            BoursoramaConfiguration agentConfiguration,
+            AgentConfiguration<BoursoramaConfiguration> agentConfiguration,
             AgentsServiceConfiguration agentsServiceConfiguration) {
 
         BoursoramaMessageSignFilter messageSignFilter =
-                constructMessageSignFilter(agentsServiceConfiguration, agentConfiguration);
+                constructMessageSignFilter(
+                        agentsServiceConfiguration, agentConfiguration.getClientConfiguration());
         client.addFilter(messageSignFilter);
-        return new BoursoramaApiClient(client, agentConfiguration, sessionStorage);
+        return new BoursoramaApiClient(
+                client, agentConfiguration.getClientConfiguration(), sessionStorage);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
@@ -173,14 +179,14 @@ public class BoursoramaAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        BoursoramaConfiguration configuration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(BoursoramaConfiguration.class);
+        final AgentConfiguration<BoursoramaConfiguration> agentConfiguration =
+                getAgentConfiguration();
 
         FrOpenBankingPaymentExecutor paymentExecutor =
                 new FrOpenBankingPaymentExecutor(
-                        new BoursoramaPaymentApiClient(client, configuration),
-                        configuration.getRedirectUrl(),
+                        new BoursoramaPaymentApiClient(
+                                client, agentConfiguration.getClientConfiguration()),
+                        agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper);

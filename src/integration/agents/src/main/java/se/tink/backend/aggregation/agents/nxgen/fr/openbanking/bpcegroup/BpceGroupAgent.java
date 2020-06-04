@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.converter.BpceGroupTransactionalAccountConverter;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -41,9 +42,13 @@ public final class BpceGroupAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        final BpceGroupConfiguration bpceGroupConfiguration = getClientConfiguration();
+        final AgentConfiguration<BpceGroupConfiguration> agentConfiguration =
+                getAgentConfiguration();
+        final BpceGroupConfiguration bpceGroupConfiguration =
+                agentConfiguration.getClientConfiguration();
         final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator =
                 createSignatureHeaderGenerator(agentsServiceConfiguration, bpceGroupConfiguration);
+        final String redirectUrl = agentConfiguration.getRedirectUrl();
 
         this.bpceOAuth2TokenStorage = new BpceOAuth2TokenStorage(this.persistentStorage);
 
@@ -52,6 +57,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         this.client,
                         this.bpceOAuth2TokenStorage,
                         bpceGroupConfiguration,
+                        redirectUrl,
                         bpceGroupSignatureHeaderGenerator);
 
         this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
@@ -116,9 +122,9 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 bpceGroupConfiguration, bpceGroupRequestSigner);
     }
 
-    private BpceGroupConfiguration getClientConfiguration() {
+    private AgentConfiguration<BpceGroupConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(BpceGroupConfiguration.class);
+                .getAgentCommonConfiguration(BpceGroupConfiguration.class);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {

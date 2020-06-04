@@ -17,6 +17,7 @@ public class BoursoramaAuthenticator implements OAuth2Authenticator {
 
     private final BoursoramaApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final String redirectUrl;
 
     @Override
     public URL buildAuthorizeUrl(String state) {
@@ -24,10 +25,10 @@ public class BoursoramaAuthenticator implements OAuth2Authenticator {
         //         configuration.getClientId())
         //                        .queryParam(
         //                                "successRedirect",
-        //                                configuration.getRedirectUrl() + "?state=" + state)
+        //                                redirectUrl + "?state=" + state)
         //                        .queryParam(
         //                                "errorRedirect",
-        //                                configuration.getRedirectUrl()  + "?state=" + state);
+        //                                redirectUrl  + "?state=" + state);
         return new URL("https://127.0.0.1:7357/api/v1/thirdparty/callback?code=123&state=" + state);
     }
 

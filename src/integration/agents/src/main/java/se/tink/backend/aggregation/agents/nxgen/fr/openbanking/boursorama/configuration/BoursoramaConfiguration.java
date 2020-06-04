@@ -10,16 +10,11 @@ public class BoursoramaConfiguration implements ClientConfiguration {
 
     @Secret private String clientId;
 
-    @AgentConfigParam private String redirectUrl;
     @AgentConfigParam private String baseUrl;
     @AgentConfigParam private String qsealKeyUrl;
 
     public String getClientId() {
         return clientId;
-    }
-
-    public String getRedirectUrl() {
-        return redirectUrl;
     }
 
     public String getBaseUrl() {
