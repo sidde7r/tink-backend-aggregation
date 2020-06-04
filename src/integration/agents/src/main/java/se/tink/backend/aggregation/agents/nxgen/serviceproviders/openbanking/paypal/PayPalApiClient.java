@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pay
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.PersonalPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.WipPaymentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.rpc.order.WipPaymentRequestBody;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -38,6 +39,7 @@ public final class PayPalApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private PayPalConfiguration configuration;
+    private String redirectUrl;
 
     public PayPalApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -49,8 +51,14 @@ public final class PayPalApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(PayPalConfiguration configuration) {
-        this.configuration = configuration;
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    protected void setConfiguration(AgentConfiguration<PayPalConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -102,7 +110,7 @@ public final class PayPalApiClient {
                 .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
-                .queryParam(QueryKeys.REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParam(QueryKeys.STATE, state)
                 .getUrl();
     }
