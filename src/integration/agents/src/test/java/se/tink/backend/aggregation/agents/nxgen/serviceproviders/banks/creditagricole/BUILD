@@ -21,5 +21,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
+        "//third_party:com_sun_jersey_jersey_core",
     ],
 )
