@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.utls.CbiGlobeUtils;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -51,6 +52,7 @@ public class CbiGlobeApiClient {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private CbiGlobeConfiguration configuration;
+    private String redirectUrl;
     private boolean requestManual;
     protected TemporaryStorage temporaryStorage;
     protected InstrumentType instrumentType;
@@ -75,8 +77,14 @@ public class CbiGlobeApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(CbiGlobeConfiguration configuration) {
-        this.configuration = configuration;
+    protected String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    protected void setConfiguration(AgentConfiguration<CbiGlobeConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -157,7 +165,7 @@ public class CbiGlobeApiClient {
     }
 
     public String createRedirectUrl(String state, ConsentType consentType) {
-        return new URL(configuration.getRedirectUrl())
+        return new URL(getRedirectUrl())
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CODE, consentType.getCode())
                 .get();
@@ -269,7 +277,7 @@ public class CbiGlobeApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, "true")
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(getConfiguration().getRedirectUrl())
+                        new URL(getRedirectUrl())
                                 .queryParam(QueryKeys.STATE, sessionStorage.get(QueryKeys.STATE))
                                 .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
