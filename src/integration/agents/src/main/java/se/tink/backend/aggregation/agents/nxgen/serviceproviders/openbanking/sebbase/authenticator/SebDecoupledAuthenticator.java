@@ -133,8 +133,7 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
                         refreshToken,
                         configuration.getClientId(),
                         configuration.getClientSecret(),
-                        configuration.getRedirectUrl(),
-                        QueryValues.AUTH_CODE_GRANT);
+                        QueryValues.REFRESH_TOKEN_GRANT);
         return Optional.ofNullable(apiClient.refreshToken(Urls.TOKEN, requestForm));
     }
 }
