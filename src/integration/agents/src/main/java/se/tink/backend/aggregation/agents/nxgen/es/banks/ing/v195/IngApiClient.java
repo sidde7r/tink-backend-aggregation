@@ -50,6 +50,13 @@ public class IngApiClient {
                         PutSessionRequest.create(pinPositions, processId));
     }
 
+    public PutRestSessionResponse putLoginRestSession(String otp, String processId) {
+        return client.request(IngConstants.Url.LOGIN_REST_SESSION)
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .put(PutRestSessionResponse.class, PutSessionRequest.create(otp, processId));
+    }
+
     public boolean postLoginAuthResponse(String ticket) {
 
         client.request(IngConstants.Url.LOGIN_AUTH_RESPONSE)
