@@ -7,7 +7,6 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -41,7 +40,6 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     @JsonSchemaExamples("Key1")
     private String clientSigningCertificateSerialNumber;
 
-    @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
     public String getBaseAPIUrl() {
@@ -73,14 +71,6 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
                         ErrorMessages.INVALID_CONFIGURATION, "Signing Certificate Serial Number"));
 
         return clientSigningCertificateSerialNumber;
-    }
-
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
-        return redirectUrl;
     }
 
     public String getClientSecret() {

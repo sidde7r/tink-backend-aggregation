@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtHeader;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
@@ -50,6 +51,7 @@ public class CrosskeyBaseApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private CrosskeyBaseConfiguration configuration;
+    private String redirectUrl;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private EidasIdentity eidasIdentity;
     private String baseAuthUrl;
@@ -66,12 +68,18 @@ public class CrosskeyBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    public String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
     public void setConfiguration(
-            CrosskeyBaseConfiguration configuration,
+            AgentConfiguration<CrosskeyBaseConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration,
             EidasIdentity eidasIdentity,
             String xFapiFinancialId) {
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
         this.client.setEidasProxy(eidasProxyConfiguration);
@@ -140,7 +148,7 @@ public class CrosskeyBaseApiClient {
     }
 
     public OAuth2Token getToken(String code) {
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
         final URL url = new URL(baseApiUrl + CrosskeyBaseConstants.Urls.TOKEN);
 
         return createTokenRequest(url)
@@ -187,7 +195,7 @@ public class CrosskeyBaseApiClient {
     }
 
     public OAuth2Token getRefreshToken(String refreshToken) {
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
         final URL url = new URL(baseApiUrl + CrosskeyBaseConstants.Urls.TOKEN);
 
         return createTokenRequest(url)
@@ -316,7 +324,7 @@ public class CrosskeyBaseApiClient {
 
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
 
         return client.request(baseAuthUrl + CrosskeyBaseConstants.Urls.OAUTH)
                 .header(HeaderKeys.X_API_KEY, clientSecret)
@@ -334,7 +342,7 @@ public class CrosskeyBaseApiClient {
             String state, String scope, String tokenIdPrefix, String consentId) {
 
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
         final JwtHeader jwtHeader = new JwtHeader(OIDCValues.ALG, OIDCValues.TYP);
         final JwtAuthPayload jwtAuthPayload =
                 new JwtAuthPayload(
