@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.filters.BankSideFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.util.SignatureUtil;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
@@ -56,6 +57,7 @@ public class NordeaBaseApiClient implements TokenInterface {
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected NordeaBaseConfiguration configuration;
+    protected String redirectUrl;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private EidasIdentity eidasIdentity;
 
@@ -75,11 +77,20 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    public String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        NordeaBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
+    }
+
     public void setConfiguration(
-            NordeaBaseConfiguration configuration,
+            AgentConfiguration<NordeaBaseConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration,
             EidasIdentity eidasIdentity) {
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
     }
@@ -138,7 +149,7 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         QueryValues.FETCH_NUMBER_OF_MONTHS)
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.REDIRECT_URI,
-                                        configuration.getRedirectUrl()))
+                                        getRedirectUrl()))
                 .getUrl();
     }
 

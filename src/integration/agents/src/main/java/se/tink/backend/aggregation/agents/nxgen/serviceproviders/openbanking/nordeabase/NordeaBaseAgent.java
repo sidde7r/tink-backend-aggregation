@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -27,14 +28,14 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-
-        final NordeaBaseConfiguration nordeaConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(NordeaBaseConfiguration.class);
-
         apiClient.setConfiguration(
-                nordeaConfiguration, configuration.getEidasProxy(), getEidasIdentity());
+                getAgentConfiguration(), configuration.getEidasProxy(), getEidasIdentity());
         this.client.setEidasProxy(configuration.getEidasProxy());
+    }
+
+    protected AgentConfiguration<NordeaBaseConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(NordeaBaseConfiguration.class);
     }
 
     @Override

@@ -25,7 +25,7 @@ public abstract class NordeaBaseAuthenticator implements OAuth2Authenticator {
                 GetTokenForm.builder()
                         .setCode(code)
                         .setGrantType(NordeaBaseConstants.FormValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(apiClient.getConfiguration().getRedirectUrl())
+                        .setRedirectUri(apiClient.getRedirectUrl())
                         .build();
 
         return apiClient.getToken(form);
