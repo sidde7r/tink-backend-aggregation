@@ -76,7 +76,10 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds);
 
     @Deprecated
-    B canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer);
+    B canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer);
+
+    @Deprecated
+    B canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer);
 
     /**
      * Constructs an account from this builder.

@@ -396,8 +396,14 @@ public abstract class Account {
         }
 
         @Override
-        public B canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer) {
-            this.capabilities.setCanMakeAndReceiveTransfer(canMakeAndReceiveTransfer);
+        public B canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer) {
+            this.capabilities.setCanMakeDomesticTransfer(canMakeDomesticTransfer);
+            return buildStep();
+        }
+
+        @Override
+        public B canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer) {
+            this.capabilities.setCanReceiveDomesticTransfer(canReceiveDomesticTransfer);
             return buildStep();
         }
 
@@ -587,8 +593,13 @@ public abstract class Account {
             return self();
         }
 
-        public T canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer) {
-            this.capabilities.setCanMakeAndReceiveTransfer(canMakeAndReceiveTransfer);
+        public T canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer) {
+            this.capabilities.setCanMakeDomesticTransfer(canMakeDomesticTransfer);
+            return self();
+        }
+
+        public T canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer) {
+            this.capabilities.setCanReceiveDomesticTransfer(canReceiveDomesticTransfer);
             return self();
         }
 

@@ -55,5 +55,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
 
     B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds);
 
-    B canMakeAndReceiveTransfer(AccountCapabilities.Answer canMakeAndReceiveTransfer);
+    B canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer);
+
+    B canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer);
 }

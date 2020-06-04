@@ -11,17 +11,23 @@ public class AccountCapabilities {
 
     private Answer canWithdrawFunds;
     private Answer canPlaceFunds;
-    private Answer canMakeAndReceiveTransfer;
+    private Answer canMakeDomesticTransfer;
+    private Answer canReceiveDomesticTransfer;
 
     private AccountCapabilities(
-            Answer canWithdrawFunds, Answer canPlaceFunds, Answer canMakeAndReceiveTransfer) {
+            Answer canWithdrawFunds,
+            Answer canPlaceFunds,
+            Answer canMakeDomesticTransfer,
+            Answer canReceiveDomesticTransfer) {
         this.canWithdrawFunds = canWithdrawFunds;
         this.canPlaceFunds = canPlaceFunds;
-        this.canMakeAndReceiveTransfer = canMakeAndReceiveTransfer;
+        this.canMakeDomesticTransfer = canMakeDomesticTransfer;
+        this.canReceiveDomesticTransfer = canReceiveDomesticTransfer;
     }
 
     public static AccountCapabilities createDefault() {
-        return new AccountCapabilities(Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
+        return new AccountCapabilities(
+                Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN, Answer.UNKNOWN);
     }
 
     public void setCanWithdrawFunds(Answer canWithdrawFunds) {
@@ -34,9 +40,14 @@ public class AccountCapabilities {
         this.canPlaceFunds = canPlaceFunds;
     }
 
-    public void setCanMakeAndReceiveTransfer(Answer canMakeAndReceiveTransfer) {
-        Preconditions.checkNotNull(canMakeAndReceiveTransfer);
-        this.canMakeAndReceiveTransfer = canMakeAndReceiveTransfer;
+    public void setCanMakeDomesticTransfer(Answer canMakeDomesticTransfer) {
+        Preconditions.checkNotNull(canMakeDomesticTransfer);
+        this.canMakeDomesticTransfer = canMakeDomesticTransfer;
+    }
+
+    public void setCanReceiveDomesticTransfer(Answer canReceiveDomesticTransfer) {
+        Preconditions.checkNotNull(canReceiveDomesticTransfer);
+        this.canReceiveDomesticTransfer = canReceiveDomesticTransfer;
     }
 
     public Answer getCanWithdrawFunds() {
@@ -47,7 +58,11 @@ public class AccountCapabilities {
         return canPlaceFunds;
     }
 
-    public Answer getCanMakeAndReceiveTransfer() {
-        return canMakeAndReceiveTransfer;
+    public Answer getCanMakeDomesticTransfer() {
+        return canMakeDomesticTransfer;
+    }
+
+    public Answer getCanReceiveDomesticTransfer() {
+        return canReceiveDomesticTransfer;
     }
 }
