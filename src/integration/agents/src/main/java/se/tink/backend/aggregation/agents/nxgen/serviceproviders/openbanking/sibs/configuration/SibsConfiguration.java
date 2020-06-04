@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration;
 
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
@@ -10,7 +9,6 @@ public class SibsConfiguration implements ClientConfiguration {
 
     @Secret private String baseUrl;
     @Secret private String clientId;
-    @AgentConfigParam private String redirectUrl;
     @Secret private String clientSigningCertificate;
     @Secret private String clientSigningCertificateSerialNumber;
     @Secret private String aspspCode;
@@ -21,10 +19,6 @@ public class SibsConfiguration implements ClientConfiguration {
 
     public String getClientId() {
         return clientId;
-    }
-
-    public String getRedirectUrl() {
-        return redirectUrl;
     }
 
     public String getClientSigningCertificate() {

@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -48,6 +49,7 @@ public class SibsBaseApiClient {
     private final SibsUserState userState;
     private final TinkHttpClient client;
     private SibsConfiguration configuration;
+    private String redirectUrl;
     private static final Logger log = LoggerFactory.getLogger(SibsBaseApiClient.class);
 
     /*
@@ -67,8 +69,11 @@ public class SibsBaseApiClient {
         this.isPsuInvolved = String.valueOf(isRequestManual);
     }
 
-    protected void setConfiguration(SibsConfiguration configuration) {
-        this.configuration = Preconditions.checkNotNull(configuration);
+    protected void setConfiguration(AgentConfiguration<SibsConfiguration> agentConfiguration) {
+        Preconditions.checkNotNull(agentConfiguration);
+        this.configuration =
+                Preconditions.checkNotNull(agentConfiguration.getClientConfiguration());
+        this.redirectUrl = Preconditions.checkNotNull(agentConfiguration.getRedirectUrl());
     }
 
     public AccountsResponse fetchAccounts() {
@@ -122,7 +127,7 @@ public class SibsBaseApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(
                         SibsConstants.HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
+                        new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
                 .post(ConsentResponse.class, consentRequest);
     }
 
@@ -174,7 +179,7 @@ public class SibsBaseApiClient {
                 .header(HeaderKeys.CONSENT_ID, userState.getConsentId())
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(configuration.getRedirectUrl()).queryParam(QueryKeys.STATE, state))
+                        new URL(redirectUrl).queryParam(QueryKeys.STATE, state))
                 .queryParam(SibsConstants.QueryKeys.TPP_REDIRECT_PREFERRED, TRUE)
                 .post(SibsPaymentInitiationResponse.class, sibsPaymentRequest);
     }

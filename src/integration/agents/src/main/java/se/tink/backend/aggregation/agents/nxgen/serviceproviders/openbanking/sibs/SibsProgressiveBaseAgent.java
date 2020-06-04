@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.progressive.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
@@ -64,10 +65,12 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         userState = new SibsUserState(persistentStorage);
         setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, userState, request.isManual());
-        apiClient.setConfiguration(getClientConfiguration());
+        final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
+        final SibsConfiguration sibsConfiguration = agentConfiguration.getClientConfiguration();
+        apiClient.setConfiguration(agentConfiguration);
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
-                        getClientConfiguration(),
+                        sibsConfiguration,
                         configuration.getEidasProxy(),
                         new EidasIdentity(
                                 context.getClusterId(), context.getAppId(), this.getAgentClass())));
@@ -88,8 +91,9 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         client.addFilter(new RateLimitErrorFilter());
     }
 
-    private SibsConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(SibsConfiguration.class);
+    private AgentConfiguration<SibsConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(SibsConfiguration.class);
     }
 
     @Override
