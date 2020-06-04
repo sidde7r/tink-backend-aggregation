@@ -1,10 +1,14 @@
 package se.tink.libraries.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Beneficiary {
     private final String name;
     private final String accountNumber;
@@ -22,12 +26,15 @@ public class Beneficiary {
         return accountNumberType;
     }
 
-    public Beneficiary(String name, String accountNumber, AccountIdentifier.Type accountNumberType) {
+    @JsonCreator
+    public Beneficiary(
+            String name, String accountNumber, AccountIdentifier.Type accountNumberType) {
         this.name = name;
         this.accountNumber = accountNumber;
         this.accountNumberType = accountNumberType;
     }
 
+    @JsonIgnore
     private Beneficiary(Builder builder) {
         this.name = builder.name;
         this.accountNumber = builder.accountNumber;
