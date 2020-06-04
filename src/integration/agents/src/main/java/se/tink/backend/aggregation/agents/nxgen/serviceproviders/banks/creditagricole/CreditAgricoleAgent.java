@@ -115,7 +115,7 @@ public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
                 new SupplementalInformationProviderImpl(supplementalRequester, request);
         CreateBeneficiaryExecutor addBeneficiaryExecutor =
                 new CreditAgricoleAddBeneficiaryExecutor(
-                        apiClient, supplementalInformationProvider);
+                        apiClient, supplementalInformationProvider, persistentStorage);
         return Optional.of(new CreateBeneficiaryController(addBeneficiaryExecutor));
     }
 }
