@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.AccessibilityGridResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.AuthenticateRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.OtpAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.beneficiary.rpc.IbanValidationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
@@ -94,37 +95,17 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest)
             throws BeneficiaryException {
 
-        AccessibilityGridResponse accessibilityGrid = apiClient.getAccessibilityGrid();
-        RSAPublicKey publicKey =
-                CreditAgricoleAuthUtil.getPublicKey(
-                        persistentStorage.get(CreditAgricoleConstants.StorageKey.PUBLIC_KEY));
+        initBeneficiaryAuthentication();
 
-        String mappedAccountCode =
-                CreditAgricoleAuthUtil.mapAccountCodeToNumpadSequence(
-                        accessibilityGrid.getSequence(),
-                        persistentStorage.get(
-                                CreditAgricoleConstants.StorageKey.USER_ACCOUNT_CODE));
-        AuthenticateRequest request =
-                AuthenticateRequest.createPrimaryAuthRequest(
-                        CreditAgricoleAuthUtil.createEncryptedAccountCode(
-                                mappedAccountCode, publicKey),
-                        persistentStorage.get(CreditAgricoleConstants.StorageKey.USER_ID),
-                        persistentStorage.get(
-                                CreditAgricoleConstants.StorageKey.USER_ACCOUNT_NUMBER));
-
-        apiClient.authenticate(request);
-
-        apiClient.otpInit();
-        String otp;
-        try {
-            otp =
-                    supplementalInformationProvider
-                            .getSupplementalInformationHelper()
-                            .waitForOtpInput();
-        } catch (SupplementalInfoException e) {
-            throw new BeneficiaryException(e.getMessage(), e);
+        DefaultResponse defaultResponse = apiClient.otpInit();
+        if (!defaultResponse.isResponseOK()) {
+            throw new BeneficiaryException("Unknown error: " + defaultResponse.getErrorString());
         }
-        OtpAuthenticationResponse otpAuthenticationResponse = apiClient.otpAuthenticate(otp);
+
+        String beneficiaryOtp = getBeneficiaryOtp();
+
+        OtpAuthenticationResponse otpAuthenticationResponse =
+                apiClient.otpAuthenticate(beneficiaryOtp);
         if (!otpAuthenticationResponse.isResponseOK()) {
             return new CreateBeneficiaryMultiStepResponse(
                     createBeneficiaryMultiStepRequest,
@@ -172,5 +153,42 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
                 .getBeneficiary()
                 .setStatus(CreateBeneficiaryStatus.ADDED);
         return createBeneficiaryMultiStepResponse;
+    }
+
+    private void initBeneficiaryAuthentication() throws BeneficiaryException {
+        // TODO: These calls might not be needed!
+        AccessibilityGridResponse accessibilityGrid = apiClient.getAccessibilityGrid();
+        RSAPublicKey publicKey =
+                CreditAgricoleAuthUtil.getPublicKey(
+                        persistentStorage.get(CreditAgricoleConstants.StorageKey.PUBLIC_KEY));
+
+        String mappedAccountCode =
+                CreditAgricoleAuthUtil.mapAccountCodeToNumpadSequence(
+                        accessibilityGrid.getSequence(),
+                        persistentStorage.get(
+                                CreditAgricoleConstants.StorageKey.USER_ACCOUNT_CODE));
+        AuthenticateRequest request =
+                AuthenticateRequest.createPrimaryAuthRequest(
+                        CreditAgricoleAuthUtil.createEncryptedAccountCode(
+                                mappedAccountCode, publicKey),
+                        persistentStorage.get(CreditAgricoleConstants.StorageKey.USER_ID),
+                        persistentStorage.get(
+                                CreditAgricoleConstants.StorageKey.USER_ACCOUNT_NUMBER));
+
+        AuthenticateResponse authenticateResponse = apiClient.authenticate(request);
+        if (!authenticateResponse.isResponseOK()) {
+            throw new BeneficiaryException(
+                    "Unknown error: " + authenticateResponse.getErrorString());
+        }
+    }
+
+    private String getBeneficiaryOtp() throws BeneficiaryException {
+        try {
+            return supplementalInformationProvider
+                    .getSupplementalInformationHelper()
+                    .waitForOtpInput();
+        } catch (SupplementalInfoException e) {
+            throw new BeneficiaryException(e.getMessage(), e);
+        }
     }
 }
