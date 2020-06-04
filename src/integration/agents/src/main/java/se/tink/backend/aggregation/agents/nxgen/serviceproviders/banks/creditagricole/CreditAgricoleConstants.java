@@ -10,15 +10,13 @@ public class CreditAgricoleConstants {
         private static final String BASE_URL =
                 "https://ibudget.iphone.credit-agricole.fr/budget5/iphoneservice";
 
-        public static final String ACCESSIBILITY_GRID =
-                BASE_URL + "/authentication/accessibility/grid";
-        public static final String AUTHENTICATE =
-                BASE_URL + "/authentication/{regionId}/authenticate";
-        public static final String OTP_REQUEST = BASE_URL + "/otp/{regionId}/request";
-        public static final String FIND_PROFILES = BASE_URL + "/user/{regionId}/find";
-        public static final String CREATE_PROFILE = BASE_URL + "/user/{regionId}/create";
+        static final String ACCESSIBILITY_GRID = BASE_URL + "/authentication/accessibility/grid";
+        static final String AUTHENTICATE = BASE_URL + "/authentication/{regionId}/authenticate";
+        static final String OTP_REQUEST = BASE_URL + "/otp/{regionId}/request";
+        static final String FIND_PROFILES = BASE_URL + "/user/{regionId}/find";
+        static final String CREATE_PROFILE = BASE_URL + "/user/{regionId}/create";
 
-        public static final URL RESTORE_PROFILE =
+        static final URL RESTORE_PROFILE =
                 new URL(
                         BASE_URL
                                 + String.format(
@@ -26,7 +24,7 @@ public class CreditAgricoleConstants {
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID));
-        public static final URL VALIDATE_IBAN =
+        static final URL VALIDATE_IBAN =
                 new URL(
                         BASE_URL
                                 + String.format(
@@ -34,7 +32,7 @@ public class CreditAgricoleConstants {
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID));
-        public static final URL ADD_BENEFICIARY =
+        static final URL ADD_BENEFICIARY =
                 new URL(
                         BASE_URL
                                 + String.format(
@@ -42,13 +40,7 @@ public class CreditAgricoleConstants {
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID));
-        public static final URL KEEP_ALIVE =
-                new URL(
-                        BASE_URL
-                                + String.format(
-                                        "/authentication/{%s}/{%s}/longSessionProfile",
-                                        StorageKey.USER_ID, StorageKey.REGION_ID));
-        public static final URL CONTRACTS =
+        static final URL CONTRACTS =
                 new URL(
                         BASE_URL
                                 + String.format(
@@ -56,7 +48,7 @@ public class CreditAgricoleConstants {
                                         StorageKey.USER_ID,
                                         StorageKey.REGION_ID,
                                         StorageKey.PARTNER_ID));
-        public static final URL OPERATIONS =
+        static final URL OPERATIONS =
                 new URL(
                         BASE_URL
                                 + String.format(
@@ -68,8 +60,8 @@ public class CreditAgricoleConstants {
     }
 
     public static class Authorization {
-        public static String HEADER = "Authorization";
-        public static String BASIC_PREFIX = "Basic ";
+        static String HEADER = "Authorization";
+        static String BASIC_PREFIX = "Basic ";
     }
 
     // This data should only be used internally by us, and changing it
