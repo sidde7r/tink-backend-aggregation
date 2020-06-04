@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.tr
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.rpc.entity.ErrorsEntity;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -43,6 +44,7 @@ public final class AbancaApiClient {
     private final TinkHttpClient client;
     private final Catalog catalog;
     private final AbancaConfiguration configuration;
+    private final String redirectUrl;
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
     private final SupplementalRequester supplementalRequester;
@@ -50,16 +52,27 @@ public final class AbancaApiClient {
     public AbancaApiClient(
             TinkHttpClient client,
             Catalog catalog,
-            AbancaConfiguration abancaConfiguration,
+            AgentConfiguration<AbancaConfiguration> agentConfiguration,
             SessionStorage sessionStorage,
             Credentials credentials,
             SupplementalRequester supplementalRequester) {
         this.client = client;
         this.catalog = catalog;
-        this.configuration = abancaConfiguration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
         this.supplementalRequester = supplementalRequester;
+    }
+
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        String.format(
+                                                AbancaConstants.ErrorMessages.INVALID_CONFIGURATION,
+                                                "Redirect URL")));
     }
 
     private OAuth2Token getTokenFromSession() {
@@ -161,7 +174,7 @@ public final class AbancaApiClient {
                         Urls.AUTHORIZATION.parameter(
                                 UrlParameters.CLIENT_ID, configuration.getClientId()))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
-                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
+                .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParam(QueryKeys.STATE, state)
                 .getUrl();
     }

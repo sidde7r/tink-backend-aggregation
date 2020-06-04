@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.authentica
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.configuration.AbancaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.AbancaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.AbancaTransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -25,19 +26,22 @@ public final class AbancaAgent extends NextGenerationAgent
 
     private final AbancaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final AgentConfiguration<AbancaConfiguration> agentConfiguration;
     private final AbancaConfiguration abancaConfiguration;
 
     @Inject
     public AbancaAgent(final AgentComponentProvider agentComponentProvider) {
         super(agentComponentProvider);
 
-        abancaConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(AbancaConfiguration.class);
+        agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(AbancaConfiguration.class);
+        abancaConfiguration = agentConfiguration.getClientConfiguration();
         apiClient =
                 new AbancaApiClient(
                         client,
                         agentComponentProvider.getContext().getCatalog(),
-                        abancaConfiguration,
+                        agentConfiguration,
                         sessionStorage,
                         credentials,
                         supplementalRequester);

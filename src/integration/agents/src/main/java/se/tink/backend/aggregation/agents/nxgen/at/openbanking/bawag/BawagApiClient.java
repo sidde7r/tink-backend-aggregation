@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.HeaderKeys;
@@ -46,6 +47,16 @@ public final class BawagApiClient {
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        String.format(
+                                                BawagConstants.ErrorMessages.INVALID_CONFIGURATION,
+                                                "Redirect URL")));
+    }
+
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
@@ -64,7 +75,7 @@ public final class BawagApiClient {
                 .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TRUE)
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(redirectUrl)
+                        new URL(getRedirectUrl())
                                 .queryParam(QueryKeys.STATE, state)
                                 .queryParam(QueryKeys.CODE, QueryValues.CODE)
                                 .get())
