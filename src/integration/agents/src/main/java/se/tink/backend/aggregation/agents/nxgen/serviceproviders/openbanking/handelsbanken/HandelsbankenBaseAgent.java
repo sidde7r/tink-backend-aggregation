@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.HandelsbankenBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.filter.HandelsbankenRejectedFilter;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -26,6 +27,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     protected final HandelsbankenBaseApiClient apiClient;
+    protected AgentConfiguration<HandelsbankenBaseConfiguration> agentConfiguration;
     protected HandelsbankenBaseConfiguration handelsbankenBaseConfiguration;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -57,11 +59,11 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        handelsbankenBaseConfiguration =
+        agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(HandelsbankenBaseConfiguration.class);
-
-        apiClient.setConfiguration(handelsbankenBaseConfiguration);
+                        .getAgentCommonConfiguration(HandelsbankenBaseConfiguration.class);
+        handelsbankenBaseConfiguration = agentConfiguration.getClientConfiguration();
+        apiClient.setConfiguration(agentConfiguration);
         this.client.setEidasProxy(configuration.getEidasProxy());
 
         this.client.addFilter(new BankServiceInternalErrorFilter());

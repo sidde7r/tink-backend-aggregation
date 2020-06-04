@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolment.rpc.SubscriptionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolment.rpc.ThirdPartiesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolment.rpc.TokenResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 
@@ -21,9 +22,12 @@ public class HandelsbankenBaseLiveEnrolment {
 
     private final TinkHttpClient client;
     private HandelsbankenBaseConfiguration configuration;
+    private String redirectUrl;
 
-    public void setConfiguration(HandelsbankenBaseConfiguration configuration) {
-        this.configuration = configuration;
+    public void setConfiguration(
+            AgentConfiguration<HandelsbankenBaseConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     public HandelsbankenBaseLiveEnrolment(TinkHttpClient client) {
@@ -115,7 +119,7 @@ public class HandelsbankenBaseLiveEnrolment {
                 getSubscription(
                         thirdPartiesResponse.getClientId(),
                         tokenResponse.getAccessToken(),
-                        configuration.getRedirectUrl());
+                        redirectUrl);
         SubscriptionResponse consents =
                 getAdditionalSubscription(
                         thirdPartiesResponse.getClientId(),
