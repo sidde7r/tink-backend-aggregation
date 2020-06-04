@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.BecPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.executor.payment.BecPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.BecTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -45,17 +46,17 @@ public class BecAgent extends NextGenerationAgent
 
         super.setConfiguration(agentsServiceConfiguration);
 
-        BecConfiguration becConfiguration = getClientConfiguration();
         apiClient.setConfiguration(
-                becConfiguration, agentsServiceConfiguration, this.getEidasIdentity());
+                getAgentConfiguration(), agentsServiceConfiguration, this.getEidasIdentity());
 
         final EidasProxyConfiguration eidasProxyConfiguration = configuration.getEidasProxy();
 
         client.setEidasProxy(eidasProxyConfiguration);
     }
 
-    private BecConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(BecConfiguration.class);
+    private AgentConfiguration<BecConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(BecConfiguration.class);
     }
 
     @Override

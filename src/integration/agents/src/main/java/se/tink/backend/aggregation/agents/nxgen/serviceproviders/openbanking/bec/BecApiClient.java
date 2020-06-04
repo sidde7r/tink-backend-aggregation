@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bec.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -52,6 +53,7 @@ public final class BecApiClient {
     private final PersistentStorage persistentStorage;
     private String state;
     private BecConfiguration becConfiguration;
+    private String redirectUrl;
     private AgentsServiceConfiguration config;
     private EidasIdentity eidasIdentity;
 
@@ -63,27 +65,25 @@ public final class BecApiClient {
     }
 
     public void setConfiguration(
-            BecConfiguration becConfiguration,
+            AgentConfiguration<BecConfiguration> agentConfiguration,
             final AgentsServiceConfiguration configuration,
             EidasIdentity eidasIdentity) {
-        this.becConfiguration = becConfiguration;
+        this.becConfiguration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.config = configuration;
         this.eidasIdentity = eidasIdentity;
     }
 
     private Map<String, Object> getHeaders(String requestId, String digest) {
-        String redirectUrl =
-                new URL(becConfiguration.getRedirectUrl())
-                        .queryParam(QueryKeys.STATE, state)
-                        .toString();
+        String tppRedirectUrl = new URL(redirectUrl).queryParam(QueryKeys.STATE, state).toString();
 
         Map<String, Object> headers = new HashMap<>();
         headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
         headers.put(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID));
         headers.put(HeaderKeys.PSU_IP, HeaderValues.PSU_IP);
         headers.put(HeaderKeys.X_REQUEST_ID, requestId);
-        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
-        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
+        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.DIGEST, digest);
         headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, becConfiguration.getQsealCertificate());
 
@@ -91,16 +91,13 @@ public final class BecApiClient {
     }
 
     private Map<String, Object> getPisHeaders(String requestId, String digest) {
-        String redirectUrl =
-                new URL(becConfiguration.getRedirectUrl())
-                        .queryParam(QueryKeys.STATE, state)
-                        .toString();
+        String tppRedirectUrl = new URL(redirectUrl).queryParam(QueryKeys.STATE, state).toString();
 
         Map<String, Object> headers = new HashMap<>();
         headers.put(HeaderKeys.ACCEPT, MediaType.APPLICATION_JSON);
         headers.put(HeaderKeys.X_REQUEST_ID, requestId);
-        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
-        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
+        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.DIGEST, digest);
         headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, becConfiguration.getQsealCertificate());
 
