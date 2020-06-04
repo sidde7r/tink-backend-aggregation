@@ -7,19 +7,13 @@ public class RefreshRequest {
     private final String refreshToken;
     private final String clientId;
     private final String clientSecret;
-    private final String redirectUri;
     private final String grantType;
 
     public RefreshRequest(
-            String refreshToken,
-            String clientId,
-            String clientSecret,
-            String redirectUri,
-            String grantType) {
+            String refreshToken, String clientId, String clientSecret, String grantType) {
         this.refreshToken = refreshToken;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.redirectUri = redirectUri;
         this.grantType = grantType;
     }
 
@@ -27,7 +21,6 @@ public class RefreshRequest {
         return Form.builder()
                 .put(SebCommonConstants.QueryKeys.CLIENT_ID, clientId)
                 .put(SebCommonConstants.QueryKeys.CLIENT_SECRET, clientSecret)
-                .put(SebCommonConstants.QueryKeys.REDIRECT_URI, redirectUri)
                 .put(SebCommonConstants.QueryKeys.REFRESH_TOKEN, refreshToken)
                 .put(SebCommonConstants.QueryKeys.GRANT_TYPE, grantType)
                 .build()
