@@ -18,8 +18,7 @@ public class BancaSellaAgentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true)
                         .setFinancialInstitutionId("bancasella")
-                        .setAppId("tink")
-                        .setClusterId("oxford-preprod");
+                        .setAppId("tink");
     }
 
     @Test

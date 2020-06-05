@@ -44,6 +44,8 @@ public class FabricConstants {
                 "/api/fabrick/psd2/v1/accounts/{accountId}/transactions";
         public static final String GET_CONSENT_STATUS =
                 "/api/fabrick/psd2/v1/consents/{consentId}/status";
+        public static final String GET_CONSENT_DETAILS =
+                "/api/fabrick/psd2/v1/consents/{consentId}";
         public static final String API_PSD2_URL = "/api/fabrick/psd2";
     }
 

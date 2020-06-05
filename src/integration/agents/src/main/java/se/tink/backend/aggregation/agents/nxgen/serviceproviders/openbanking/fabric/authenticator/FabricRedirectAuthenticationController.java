@@ -88,6 +88,14 @@ public class FabricRedirectAuthenticationController
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT);
         }
         handleErrors(maybeCallbackData.get());
+
+        Optional<String> maybeConsentId =
+                persistentStorage.get(FabricConstants.StorageKeys.CONSENT_ID, String.class);
+        if (maybeConsentId.isPresent()) {
+            authenticator.setSessionExpiryDateBasedOnConsent(maybeConsentId.get());
+        } else {
+            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
+        }
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 

@@ -1,0 +1,130 @@
+REQUEST 1
+POST https://psdgw-sella-ttt.fabrick.com/api/fabrick/psd2/v1/consents
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+TPP-Redirect-Preferred: true
+X-Aggregator: Tink Testing
+
+{"access":{"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"9999-12-31","frequencyPerDay":"4"}
+
+RESPONSE 1
+201
+Date: Thu, 04 Jun 2020 14:17:39 GMT
+Date: Thu, 04 Jun 2020 14:17:40 GMT
+Server: Apache
+Max-Forwards: *** MASKED ***
+Via: 1.0 fbprgtm01 ()
+X-CorrelationID: *** MASKED ***
+ASPSP-SCA-Approach: *** MASKED ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+Content-Length: 269
+
+{"consentStatus":"received","consentId":"25983","_links":{"scaRedirect":{"href":"https://auth.fabrick.com/psdgw?producer=sella&token=ec770190-1500-4e7c-a9b9-af32f80a4e571591280260635"},"self":{"href":"/v1/consents/25983"},"status":{"href":"/v1/consents/25983/status"}}}
+
+REQUEST 2
+GET https://psdgw-sella-ttt.fabrick.com/api/fabrick/psd2/v1/consents/25983
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Date: Thu, 04 Jun 2020 14:18:18 GMT
+Date: Thu, 04 Jun 2020 14:18:18 GMT
+Server: Apache
+Max-Forwards: *** MASKED ***
+Via: 1.0 fbprgtm02 ()
+X-CorrelationID: *** MASKED ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+Content-Length: 253
+
+{"access":{"accounts":[],"balances":[],"transactions":[],"allPsd2":"allAccounts"},"recurringIndicator":true,"validUntil":"2020-09-02","frequencyPerDay":4,"lastActionDate":"2020-06-04","consentStatus":"valid","_links":{"account":{"href":"/v1/accounts"}}}
+
+REQUEST 3
+GET https://psdgw-sella-ttt.fabrick.com/api/fabrick/psd2/v1/accounts
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: 25983
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Thu, 04 Jun 2020 14:18:18 GMT
+Date: Thu, 04 Jun 2020 14:18:19 GMT
+Server: Apache
+Max-Forwards: *** MASKED ***
+Via: 1.0 fbprgtm01 ()
+X-CorrelationID: *** MASKED ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+Content-Length: 250
+
+{"accounts":[{"iban":"IT71U0300203280244168953997","currency":"EUR","name":"JOHN DOE","_links":{"account":{"href":"/v1/accounts/123456"},"balances":{"href":"/v1/accounts/123456/balances"},"transactions":{"href":"/v1/accounts/123456/transactions"}}}]}
+
+REQUEST 4
+GET https://psdgw-sella-ttt.fabrick.com/api/fabrick/psd2/v1/accounts/123456
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: 25983
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Thu, 04 Jun 2020 14:18:20 GMT
+Date: Thu, 04 Jun 2020 14:18:20 GMT
+Server: Apache
+Max-Forwards: *** MASKED ***
+Via: 1.0 fbprgtm01 ()
+X-CorrelationID: *** MASKED ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+Content-Length: 284
+
+{"account":{"resourceId":"123456","iban":"IT71U0300203280244168953997","currency":"EUR","name":"JOHN DOE","usage":"ORGA","_links":{"account":{"href":"/v1/accounts/123456"},"balances":{"href":"/v1/accounts/123456/balances"},"transactions":{"href":"/v1/accounts/123456/transactions"}}}}
+
+REQUEST 5
+GET https://psdgw-sella-ttt.fabrick.com/api/fabrick/psd2/v1/accounts/123456/balances
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: 25983
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Thu, 04 Jun 2020 14:18:21 GMT
+Date: Thu, 04 Jun 2020 14:18:21 GMT
+Server: Apache
+Max-Forwards: *** MASKED ***
+Via: 1.0 fbprgtm02 ()
+X-CorrelationID: *** MASKED ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+Content-Length: 423
+
+{"account":{"iban":"IT71U0300203280244168953997","currency":"EUR"},"balances":[{"balanceAmount":{"currency":"EUR","amount":"123456.0"},"balanceType":"interimBooked","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":"2020-06-04"},{"balanceAmount":{"currency":"EUR","amount":"123456.0"},"balanceType":"interimAvailable","creditLimitIncluded":false,"lastChangeDateTime":null,"referenceDate":"2020-06-04"}]}
+
+REQUEST 6
+GET https://psdgw-sella-ttt.fabrick.com/api/fabrick/psd2/v1/accounts/123456/transactions?dateFrom=1992-01-16&dateTo=1992-04-10
+Accept: application/json
+Content-Type: application/json
+X-Request-ID: 00000000-0000-4000-0000-000000000000
+Consent-ID: 25983
+X-Aggregator: Tink Testing
+
+RESPONSE 6
+200
+Date: Thu, 04 Jun 2020 14:18:22 GMT
+Date: Thu, 04 Jun 2020 14:18:23 GMT
+Server: Apache
+Max-Forwards: *** MASKED ***
+Via: 1.0 fbprgtm01 ()
+X-CorrelationID: *** MASKED ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+Content-Length: 754
+
+{"account": {"currency": "EUR", "iban": "IT71U0300203280244168953997"}, "transactions": {"booked": [{"bookingDate": "2020-06-04", "creditorName": "", "endToEndId": "5867856785", "proprietaryBankTransactionCode": "48", "remittanceInformationUnstructured": "Some random remittance information", "transactionAmount": {"amount": "-11234.0", "currency": "EUR"}, "transactionId": "20000105323444", "valueDate": "2020-06-04"}, {"bookingDate": "2020-05-14", "creditorName": "", "endToEndId": "1234634545", "proprietaryBankTransactionCode": "ZL", "remittanceInformationUnstructured": "askjdhfkjhzxckjvhjkzhxcjkh", "transactionAmount": {"amount": "1235252.0", "currency": "EUR"}, "transactionId": "200000555557405", "valueDate": "2020-05-14"} ], "pending": [] } }

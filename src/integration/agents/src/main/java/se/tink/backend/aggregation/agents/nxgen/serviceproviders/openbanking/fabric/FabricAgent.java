@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -36,9 +37,13 @@ public class FabricAgent extends NextGenerationAgent
     public FabricAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        apiClient = new FabricApiClient(client, persistentStorage);
+        apiClient =
+                new FabricApiClient(
+                        client, persistentStorage, componentProvider.getRandomValueGenerator());
         clientName = request.getProvider().getPayload();
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        transactionalAccountRefreshController =
+                getTransactionalAccountRefreshController(
+                        componentProvider.getLocalDateTimeSource());
     }
 
     @Override
@@ -67,7 +72,7 @@ public class FabricAgent extends NextGenerationAgent
                 new FabricRedirectAuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new FabricAuthenticator(apiClient, persistentStorage),
+                        new FabricAuthenticator(apiClient, persistentStorage, credentials),
                         strongAuthenticationState);
 
         return new AutoAuthenticationController(
@@ -98,7 +103,8 @@ public class FabricAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
-    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+    protected TransactionalAccountRefreshController getTransactionalAccountRefreshController(
+            LocalDateTimeSource localDateTimeSource) {
         final FabricAccountFetcher accountFetcher = new FabricAccountFetcher(apiClient);
 
         final FabricTransactionFetcher transactionFetcher = new FabricTransactionFetcher(apiClient);
@@ -110,7 +116,7 @@ public class FabricAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(
-                                transactionFetcher, 4, 85, ChronoUnit.DAYS)));
+                                transactionFetcher, 4, 85, ChronoUnit.DAYS, localDateTimeSource)));
     }
 
     @Override

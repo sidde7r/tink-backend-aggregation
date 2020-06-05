@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderKeys;
@@ -11,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentResponse;
@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.TransactionResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -29,11 +30,16 @@ public class FabricApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final RandomValueGenerator randomValueGenerator;
     private FabricConfiguration configuration;
 
-    public FabricApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public FabricApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            RandomValueGenerator randomValueGenerator) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.randomValueGenerator = randomValueGenerator;
     }
 
     private FabricConfiguration getConfiguration() {
@@ -47,16 +53,14 @@ public class FabricApiClient {
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
         final String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
-
-        return createRequest(url)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(HeaderKeys.CONSENT_ID, consentId);
+        return createRequest(url).header(HeaderKeys.CONSENT_ID, consentId);
     }
 
     public CreateConsentResponse getConsent(String state) {
@@ -66,19 +70,26 @@ public class FabricApiClient {
 
         return client.request(new URL(baseUrl + Urls.CONSENT))
                 .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.X_REQUEST_ID, randomValueGenerator.getUUID().toString())
                 .header(HeaderKeys.TPP_REDIRECT_URI, redirectUri.toString())
                 .header(HeaderKeys.TPP_REDIRECT_PREFERED, HeaderValues.TPP_REDIRECT_PREFERED)
                 .post(CreateConsentResponse.class, new CreateConsentRequest());
     }
 
-    public CreateConsentResponse getConsent() {
+    public ConsentStatusResponse getConsentStatus(String consentId) {
         final String baseUrl = getConfiguration().getBaseUrl();
+        return createRequest(
+                        new URL(baseUrl + Urls.GET_CONSENT_STATUS)
+                                .parameter(IdTags.CONSENT_ID, consentId))
+                .get(ConsentStatusResponse.class);
+    }
 
-        return client.request(new URL(baseUrl + Urls.CONSENT))
-                .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .post(CreateConsentResponse.class, new CreateConsentRequest());
+    public ConsentDetailsResponse getConsentDetails(String consentId) {
+        final String baseUrl = getConfiguration().getBaseUrl();
+        return createRequest(
+                        new URL(baseUrl + Urls.GET_CONSENT_DETAILS)
+                                .parameter(IdTags.CONSENT_ID, consentId))
+                .get(ConsentDetailsResponse.class);
     }
 
     public AccountResponse fetchAccounts() {
@@ -112,15 +123,5 @@ public class FabricApiClient {
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(TransactionResponse.class);
-    }
-
-    public ConsentStatusResponse getConsentStatus(String consentId) {
-        final String baseUrl = getConfiguration().getBaseUrl();
-
-        return client.request(
-                        new URL(baseUrl + Urls.GET_CONSENT_STATUS)
-                                .parameter(IdTags.CONSENT_ID, consentId))
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .get(ConsentStatusResponse.class);
     }
 }

@@ -5,6 +5,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.LocalDateTimeSource;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
@@ -27,6 +29,7 @@ public class TransactionDatePaginationController<A extends Account>
     private final int consecutiveEmptyPagesLimit;
     private final ChronoUnit unitToFetch;
     private final int amountToFetch;
+    private final LocalDateTimeSource localDateTimeSource;
 
     public TransactionDatePaginationController(TransactionDatePaginator<A> paginator) {
         this(paginator, DEFAULT_MAX_CONSECUTIVE_EMPTY_PAGES);
@@ -42,10 +45,25 @@ public class TransactionDatePaginationController<A extends Account>
             int consecutiveEmptyPagesLimit,
             int amountToFetch,
             ChronoUnit unitToFetch) {
+        this(
+                paginator,
+                consecutiveEmptyPagesLimit,
+                amountToFetch,
+                unitToFetch,
+                new ActualLocalDateTimeSource());
+    }
+
+    public TransactionDatePaginationController(
+            TransactionDatePaginator<A> paginator,
+            int consecutiveEmptyPagesLimit,
+            int amountToFetch,
+            ChronoUnit unitToFetch,
+            LocalDateTimeSource localDateTimeSource) {
         this.paginator = Preconditions.checkNotNull(paginator);
         this.consecutiveEmptyPagesLimit = consecutiveEmptyPagesLimit;
         this.unitToFetch = unitToFetch;
         this.amountToFetch = amountToFetch;
+        this.localDateTimeSource = localDateTimeSource;
         Preconditions.checkState(amountToFetch >= 1, "Amount to fetch must be 1 or more.");
         Preconditions.checkState(
                 unitToFetch == ChronoUnit.DAYS
@@ -100,7 +118,7 @@ public class TransactionDatePaginationController<A extends Account>
 
     private Date calculateToDate() {
         if (toDate == null) {
-            return new Date(); // Today
+            return Date.from(localDateTimeSource.getInstant());
         }
 
         return DateUtils.addDays(fromDate, -1); // Day before the previous fromDate

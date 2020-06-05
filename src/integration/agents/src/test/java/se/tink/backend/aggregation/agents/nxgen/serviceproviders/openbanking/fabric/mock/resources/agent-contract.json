@@ -1,0 +1,60 @@
+{
+  "accounts": [
+    {
+      "accountExclusion": "NONE",
+      "accountNumber": "IT71U0300203280244168953997",
+      "availableBalance": null,
+      "balance": 123456.0,
+      "bankId": "IT71U0300203280244168953997",
+      "certainDate": null,
+      "closed": false,
+      "credentialsId": null,
+      "currencyCode": "EUR",
+      "details": null,
+      "exactBalance": {
+        "currencyCode": "EUR",
+        "doubleValue": 123456.0,
+        "exactValue": 123456.0,
+        "scale": 1,
+        "unscaledValue": 1234560
+      },
+      "excluded": false,
+      "favored": false,
+      "flags": "[]",
+      "holderName": null,
+      "identifiers": "[\"iban://IT71U0300203280244168953997\"]",
+      "name": "JOHN DOE",
+      "ownership": 1.0,
+      "payload": null,
+      "type": "OTHER"
+    }
+  ],
+  "transactions": [
+    {
+      "amount": -11234.0,
+      "credentialsId": null,
+      "date": 1591264800000,
+      "description": "Some random remittance information",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    },
+    {
+      "amount": 1235252.0,
+      "credentialsId": null,
+      "date": 1589450400000,
+      "description": "askjdhfkjhzxckjvhjkzhxcjkh",
+      "internalPayload": {},
+      "originalAmount": 0.0,
+      "payload": {},
+      "pending": false,
+      "timestamp": 0,
+      "type": "DEFAULT",
+      "upcoming": false
+    }
+  ]
+}
