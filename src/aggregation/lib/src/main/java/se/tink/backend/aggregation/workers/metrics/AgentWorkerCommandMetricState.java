@@ -130,7 +130,7 @@ public class AgentWorkerCommandMetricState {
         actions = Lists.newArrayList(actions);
 
         for (MetricAction action : actions) {
-            log.warn(String.format("Found unclosed MetricAction: %s", action));
+            log.warn(String.format("Found unclosed MetricAction: %s", action.getActionName()));
             action.stop();
         }
 
