@@ -71,7 +71,6 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
                 metricState.buildAction(
                         new MetricId.MetricLabels().add("action", MetricName.ADD_BENEFICIARY));
         log.info("Adding beneficiary.");
-        metricAction.start();
 
         // TODO: Implement usage of a new event producer to emit events when creating beneficiaries.
         try {
