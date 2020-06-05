@@ -80,4 +80,8 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
     public void useAccessToken(OAuth2Token accessToken) {
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
     }
+
+    public void invalidateToken() {
+        persistentStorage.remove(StorageKeys.OAUTH_TOKEN);
+    }
 }

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Data
 @AllArgsConstructor
@@ -12,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class OAuth2TokenBase {
 
     static final int REFRESH_TOKEN_EXPIRES_NOT_SPECIFIED = 0;
+    private static final Logger logger = LoggerFactory.getLogger(OAuth2TokenBase.class);
 
     private String tokenType;
     private String accessToken;
@@ -26,7 +29,13 @@ public abstract class OAuth2TokenBase {
 
     public boolean hasAccessExpired() {
         final long currentTime = getCurrentEpoch();
-        return currentTime >= (issuedAt + expiresInSeconds);
+        final long validFor = (issuedAt + expiresInSeconds) - currentTime;
+        if (validFor > 0) {
+            String logMessage =
+                    "Access token is valid for %s seconds (issuedAtEpoch: %s, expiresIn: %s)";
+            logger.info(String.format(logMessage, validFor, issuedAt, expiresInSeconds));
+        }
+        return validFor <= 0;
     }
 
     private boolean hasRefreshExpired() {
