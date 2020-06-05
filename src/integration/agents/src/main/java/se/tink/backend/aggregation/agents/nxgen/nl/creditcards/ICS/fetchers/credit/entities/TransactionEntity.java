@@ -74,8 +74,7 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(
-                        ExactCurrencyAmount.of(Double.parseDouble(billingAmount), billingCurrency))
+                .setAmount(toTinkAmount())
                 .setDescription(transactionInformation)
                 .setDate(toTransactionDate())
                 .setPayload(
@@ -94,5 +93,13 @@ public class TransactionEntity {
         return Optional.ofNullable(merchantDetails)
                 .map(MerchantEntity::getMerchantName)
                 .orElse("N/A");
+    }
+
+    private ExactCurrencyAmount toTinkAmount() {
+
+        ExactCurrencyAmount result =
+                ExactCurrencyAmount.of(Double.parseDouble(billingAmount), billingCurrency);
+
+        return result.negate();
     }
 }
