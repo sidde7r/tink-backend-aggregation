@@ -26,6 +26,14 @@ public class ServiceBlockedFilter extends Filter {
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
+
+        // this is due to the response sometimes can be 503 with a html body.
+        // If that is the case, we will throw a BankServiceException to inform the user and suggest
+        // them to try again
+        if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+
         ErrorResponse body = response.getBody(ErrorResponse.class);
         if (response.getStatus() == HttpStatus.SC_FORBIDDEN && body.isAnyServiceBlocked()) {
             if (credentials.getType() == CredentialsTypes.PASSWORD) {
