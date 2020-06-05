@@ -97,6 +97,16 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
         Transfer transfer = transferRequest.getTransfer();
         SignableOperation signableOperation = transferRequest.getSignableOperation();
+        if (transfer.getRemittanceInformation() != null) {
+            log.info(
+                    transfer,
+                    "RemittanceInformation:"
+                            + transfer.getRemittanceInformation().toString()
+                            + ", desitnation message"
+                            + transfer.getDestinationMessage());
+        } else {
+            log.info(transfer, "RemittanceInformation is null");
+        }
 
         signableOperation.setStatus(SignableOperationStatuses.EXECUTING);
         context.updateSignableOperation(signableOperation);
