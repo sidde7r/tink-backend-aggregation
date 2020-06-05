@@ -1,0 +1,38 @@
+{
+    "accounts": [],
+    "transactions": [],
+    "identityData": {
+        "nameElements": [
+            {
+                "type": "FIRST_NAME",
+                "value": "FULANO"
+            },
+            {
+                "type": "SURNAME",
+                "value": "DE TAL"
+            },
+            {
+                "type": "SURNAME",
+                "value": "Y CUAL"
+            }
+        ],
+        "dateOfBirth": {
+            "year": 1912,
+            "month": "DECEMBER",
+            "monthValue": 12,
+            "dayOfMonth": 12,
+            "dayOfWeek": "THURSDAY",
+            "leapYear": true,
+            "dayOfYear": 347,
+            "chronology": {
+                "calendarType": "iso8601",
+                "id": "ISO"
+            },
+            "era": "CE"
+        },
+        "nieNumber": null,
+        "nifNumber": "1234567X",
+        "passportNumber": null,
+        "otherDocumentNumber": null
+    }
+}

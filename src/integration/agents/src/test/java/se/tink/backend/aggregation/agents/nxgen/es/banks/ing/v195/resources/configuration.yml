@@ -1,0 +1,3 @@
+agentsServiceConfiguration:
+  testConfiguration:
+    debugOutput: true
