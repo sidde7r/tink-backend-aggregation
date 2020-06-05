@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.S
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.LoginStep;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.OtpStep;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.PushStep;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -42,7 +43,8 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
 
     @Override
     public List<? extends AuthenticationStep> authenticationSteps() {
-        final Map<Integer, String> scaStepMapper = ImmutableMap.of(ScaMethod.SMS, OtpStep.STEP_ID);
+        final Map<Integer, String> scaStepMapper =
+                ImmutableMap.of(ScaMethod.SMS, OtpStep.STEP_ID, ScaMethod.PUSH, PushStep.STEP_ID);
         return ImmutableList.of(
                 new LoginStep(
                         apiClient,
@@ -50,7 +52,8 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
                         getDeviceId(),
                         scaStepMapper,
                         isManualAuthentication(credentialsRequest)),
-                new OtpStep(apiClient, sessionStorage, supplementalInformationHelper));
+                new OtpStep(apiClient, sessionStorage, supplementalInformationHelper),
+                new PushStep(apiClient, sessionStorage, supplementalInformationHelper));
     }
 
     @Override

@@ -34,6 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
 
 public class IngAgent extends SubsequentProgressiveGenerationAgent
@@ -54,7 +55,8 @@ public class IngAgent extends SubsequentProgressiveGenerationAgent
     @Inject
     public IngAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
-        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+
+        configureHttpClient(this.client);
         this.ingApiClient = new IngApiClient(this.client);
 
         this.authenticator =
@@ -74,6 +76,13 @@ public class IngAgent extends SubsequentProgressiveGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+    }
+
+    private void configureHttpClient(TinkHttpClient client) {
+        /* SCA status polling takes up to 60s */
+        client.setTimeout(61000);
+
+        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
     }
 
     @Override
