@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities;
 
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -20,7 +21,9 @@ public class AccountEntity {
     }
 
     public static AccountEntity debtorOf(PaymentRequest paymentRequest) {
-        return new AccountEntity(paymentRequest.getPayment().getDebtor().getAccountNumber());
+        return Optional.ofNullable(paymentRequest.getPayment().getDebtor())
+                .map(debtor -> new AccountEntity(debtor.getAccountNumber()))
+                .orElse(new AccountEntity());
     }
 
     public Creditor toTinkCreditor() {
@@ -28,6 +31,10 @@ public class AccountEntity {
     }
 
     public Debtor toTinkDebtor() {
+        if (iban == null) {
+            return null;
+        }
+
         return new Debtor(new IbanIdentifier(iban));
     }
 }
