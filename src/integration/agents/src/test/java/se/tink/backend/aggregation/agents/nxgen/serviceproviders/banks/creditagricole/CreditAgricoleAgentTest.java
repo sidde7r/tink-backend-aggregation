@@ -20,6 +20,7 @@ public class CreditAgricoleAgentTest {
                 .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .expectLoggedIn(false)
                 .build()
                 .testRefresh();
     }
