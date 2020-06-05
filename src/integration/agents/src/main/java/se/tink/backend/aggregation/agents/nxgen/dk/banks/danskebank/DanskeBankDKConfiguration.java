@@ -121,7 +121,7 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
                 // log-in via www to the bank and under account check that it has option to make
                 // transfers (incl international transfers)
                 .put("13X", AccountCapabilities.Answer.YES)
-                .put("055", AccountCapabilities.Answer.YES)
+                .put("055", AccountCapabilities.Answer.NO)
                 .put("12J", AccountCapabilities.Answer.YES)
                 .put("19C", AccountCapabilities.Answer.YES)
                 .build()
@@ -131,10 +131,9 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     @Override
     public AccountCapabilities.Answer canReceiveDomesticTransfer(String productCode) {
         return ImmutableMap.<String, AccountCapabilities.Answer>builder()
-                // no history available to determine this capability
-                .put("12J", AccountCapabilities.Answer.UNKNOWN)
-                .put("055", AccountCapabilities.Answer.UNKNOWN)
-                // see transfer history
+                // see transfer history & and saved recipients/payees
+                .put("12J", AccountCapabilities.Answer.YES)
+                .put("055", AccountCapabilities.Answer.YES)
                 .put("13X", AccountCapabilities.Answer.YES)
                 .put("19C", AccountCapabilities.Answer.YES)
                 .build()
@@ -144,11 +143,18 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     @Override
     public AccountCapabilities.Answer canPlaceFunds(String productCode) {
         return ImmutableMap.<String, AccountCapabilities.Answer>builder()
-                // don't know how to interpret this capability...
-                .put("13X", AccountCapabilities.Answer.UNKNOWN)
-                .put("055", AccountCapabilities.Answer.UNKNOWN)
-                .put("12J", AccountCapabilities.Answer.UNKNOWN)
-                .put("19C", AccountCapabilities.Answer.UNKNOWN)
+                // our current understanding is that canPlaceFunds is fulfilled if one of the
+                // following is true:
+                // - canReceiveDomesticTransfer is true or
+                // - you can make a physical deposit at a bank office or by depositing through a
+                // depositing box/machine
+                //
+                // see saved recipients/payees to see confirm which accounts can receive transfer
+                // directly
+                .put("13X", AccountCapabilities.Answer.YES)
+                .put("055", AccountCapabilities.Answer.YES)
+                .put("12J", AccountCapabilities.Answer.YES)
+                .put("19C", AccountCapabilities.Answer.YES)
                 .build()
                 .getOrDefault(productCode, AccountCapabilities.Answer.UNKNOWN);
     }
