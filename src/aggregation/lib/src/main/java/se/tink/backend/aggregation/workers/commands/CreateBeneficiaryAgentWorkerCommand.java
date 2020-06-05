@@ -97,7 +97,7 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
         }
     }
 
-    private void handleCreateBeneficiary(
+    void handleCreateBeneficiary(
             CreateBeneficiaryController addBeneficiaryController,
             CreateBeneficiaryCredentialsRequest createBeneficiaryCredentialsRequest)
             throws BeneficiaryException {
@@ -148,7 +148,7 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
     }
 
     static class MetricName {
-        private static final String NAME = "agent_add_beneficiary";
-        private static final String ADD_BENEFICIARY = "add-beneficiary";
+        static final String NAME = "agent_add_beneficiary";
+        static final String ADD_BENEFICIARY = "add-beneficiary";
     }
 }
