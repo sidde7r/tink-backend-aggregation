@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class NordnetPasswordAuthenticator implements PasswordAuthenticator {
@@ -40,7 +41,8 @@ public class NordnetPasswordAuthenticator implements PasswordAuthenticator {
 
         RequestBuilder requestBuilder =
                 apiClient
-                        .createBasicRequest(NordnetConstants.Urls.AUTHENTICATION_BASIC_LOGIN_URL)
+                        .createBasicRequest(
+                                new URL(NordnetConstants.Urls.AUTHENTICATION_BASIC_LOGIN_URL))
                         .type(MediaType.APPLICATION_JSON)
                         .addBasicAuth(anonymousLoginPasswordResponse.toBasicAuthHeader())
                         .body(loginRequest);
@@ -101,7 +103,8 @@ public class NordnetPasswordAuthenticator implements PasswordAuthenticator {
 
         RequestBuilder requestBuilder =
                 apiClient
-                        .createBasicRequest(NordnetConstants.Urls.INIT_LOGIN_SESSION_URL_PASSWORD)
+                        .createBasicRequest(
+                                new URL(NordnetConstants.Urls.INIT_LOGIN_SESSION_URL_PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
                         .type(MediaType.APPLICATION_FORM_URLENCODED)
                         .body(formData.serialize());

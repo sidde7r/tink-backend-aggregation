@@ -61,56 +61,57 @@ public class NordnetConstants {
 
     public static class Urls {
 
+        public static final String BASE_URL = "https://classic.nordnet.se";
         public static final String BANKID_ORDER_SUFFIX = "order";
-        public static final String BANKID_COLLECT_SUFFIX = "collect";
         public static final String BANKID_COMPLETE_SUFFIX = "complete";
-
-        static final String BASE_URL = "https://classic.nordnet.se";
+        public static final String BASE_OAUTH2_AUTHORIZE = BASE_URL + "/oauth2/authorize";
+        public static final String BASE_API_2 = BASE_URL + "/api/2";
+        public static final String BASE_API_2_AUTHENTICATION = BASE_API_2 + "/authentication";
         public static final String AUTHENTICATION_BASIC_LOGIN_URL =
-                BASE_URL + "/api/2/authentication/basic/login";
+                BASE_API_2_AUTHENTICATION + "/basic/login";
         public static final String AUTHENTICATION_SAML_ARTIFACT =
-                BASE_URL + "/api/2/authentication/eid/saml/artifact";
-        public static final String OAUTH2_AUTHORIZE_URL =
-                BASE_URL
-                        + "/oauth2/authorize?client_id="
-                        + QueryParamValues.CLIENT_ID
-                        + "&response_type=code&redirect_uri=https://www.nordnet.se/now/mobile/token.html";
-        public static final String INIT_LOGIN_SESSION_URL_PASSWORD = BASE_URL + "/api/2/login";
+                BASE_API_2_AUTHENTICATION + "/eid/saml/artifact";
+        public static final String INIT_LOGIN_SESSION_URL_PASSWORD = BASE_API_2 + "/login";
         public static final String INIT_LOGIN_SESSION_URL_BANKID =
                 INIT_LOGIN_SESSION_URL_PASSWORD + "/anonymous";
-        public static final String LOGIN_PAGE_URL =
-                BASE_URL
-                        + "/oauth2/authorize?"
-                        + QueryKeys.AUTH_TYPE
-                        + QueryParamValues.SIGN_IN
-                        + "&"
-                        + QueryKeys.CLIENT_ID
-                        + QueryParamValues.CLIENT_ID
-                        + "&response_type=code&redirect_uri=nordnet-react://oauth2/authorize-callback";
         public static final String LOGIN_BANKID_PAGE_URL =
-                BASE_URL + "/api/2/authentication/eid/saml/request?eid_method=sbidAnother";
+                BASE_API_2_AUTHENTICATION + "/eid/saml/request";
         public static final String FETCH_TOKEN_URL = BASE_URL + "/oauth2/token";
-        public static final String ENVIRONMENT_URL = BASE_URL + "/api/2/system/environment";
+        public static final String ENVIRONMENT_URL = BASE_API_2 + "/system/environment";
+        public static final String GET_ACCOUNTS_URL = BASE_API_2 + "/accounts";
+        public static final String GET_ACCOUNTS_INFO_URL_2 =
+                BASE_API_2 + "/accounts/{account-id}/info";
+        public static final String GET_POSITIONS_URL_2 =
+                BASE_API_2 + "/accounts/{positions-id}/positions";
+        public static final String GET_CUSTOMER_INFO_URL = BASE_API_2 + "/customers/contact_info";
+    }
 
-        public static final String GET_ACCOUNTS_SUMMARY_URL = BASE_URL + "/api/2/accounts/summary";
-        public static final String GET_ACCOUNTS_URL = BASE_URL + "/api/2/accounts";
-        public static final String GET_ACCOUNTS_INFO_URL = BASE_URL + "/api/2/accounts/%s/info";
-        public static final String GET_POSITIONS_URL = BASE_URL + "/api/2/accounts/%s/positions";
-        public static final String GET_CUSTOMER_INFO_URL =
-                BASE_URL + "/api/2/customers/contact_info";
+    public static class IdTags {
+        public static final String ACCOUNT_ID = "account-id";
+        public static final String POSITIONS_ID = "positions-id";
+        public static final String CLIENT_ID = "client-id";
     }
 
     public static class QueryKeys {
-        public static final String CLIENT_ID = "client_id=";
-        public static final String CLIENT_SECRET = "client_secret=";
-        public static final String AUTH_TYPE = "authType=";
+        public static final String AUTH_TYPE = "authType";
+        public static final String CLIENT_ID = "client_id";
+        public static final String CLIENT_SECRET = "client_secret";
+        public static final String EID_METHOD = "eid_method";
         public static final String INCLUDE_INSTRUMENT_LOAN = "include_instrument_loans";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String REDIRECT_URI_LOGIN = "redirect_uri";
     }
 
     public static class QueryParamValues {
         public static final String CLIENT_ID = "MOBILE_IOS_2";
         public static final String CLIENT_SECRET = "6C2B9862-7FEE-CBACE053-3757570ADDEF";
         public static final String SIGN_IN = "signin";
+        public static final String RESPONSE_TYPE = "code";
+        public static final String REDIRECT_URI = "https://www.nordnet.se/now/mobile/token.html";
+        public static final String REDIRECT_URI_LOGIN = "nordnet-react://oauth2/authorize-callback";
+        public static final String EID_METHOD = "sbidAnother";
+        public static final String INCLUDE_INSTRUMENT_LOAN = "true";
     }
 
     public static final class HeaderKeys {
@@ -122,20 +123,12 @@ public class NordnetConstants {
         public static final String GENERIC_MEDIA_TYPE = "*/*;q=0.8";
     }
 
-    public static final class HeaderValues {
-        public static final String KEEP_ALIVE = "keep-alive";
-    }
-
     public static class Patterns {
         public static final Pattern FIND_CODE_FROM_URI = Pattern.compile("\\?code=([a-zA-Z\\d]*)$");
         public static final Pattern FIND_SAMLART_FROM_URI = Pattern.compile("SAMLart=([^&]*)");
         public static final Pattern FIND_BANKID_URL =
                 Pattern.compile(
                         "https://nneid\\.nordnet\\.se/std/method/nordnet\\.se/[a-zA-Z\\d]*/");
-    }
-
-    public static final class BodyKeys {
-        public static final String ARTIFACT = "artifact";
     }
 
     public static class StorageKeys {

@@ -45,7 +45,7 @@ public class NordnetTransactionalAccountFetcher
     private Optional<TransactionalAccount> toTinkAccount(AccountEntity account) {
 
         ExactCurrencyAmount balance =
-                apiClient.fetchAccountInfo(account.getAccid()).stream()
+                apiClient.fetchAccountInfo(account.getAccountId()).stream()
                         .findFirst()
                         .orElseThrow(() -> new IllegalStateException("Could not fetch balance"))
                         .getAccountSum();

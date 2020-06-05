@@ -51,9 +51,9 @@ public class NordnetInvestmentFetcher
 
     private Optional<InvestmentAccount> toTinkInvestmentAccount(AccountEntity account) {
 
-        AccountInfoEntity accountInfoEntity = fetchAccountInfo(account.getAccid());
+        AccountInfoEntity accountInfoEntity = fetchAccountInfo(account.getAccountId());
 
-        List<InstrumentModule> instruments = getInstruments(account.getAccid());
+        List<InstrumentModule> instruments = getInstruments(account.getAccountId());
 
         PortfolioModule portfolio = account.toPortfolioModule(accountInfoEntity, instruments);
 

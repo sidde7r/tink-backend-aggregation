@@ -26,7 +26,7 @@ public class AccountEntity {
     private boolean jsonMemberDefault;
 
     @JsonProperty("bank_accno")
-    private String bankAccno;
+    private String bankAccountNumber;
 
     @JsonProperty("account_code")
     private String accountCode;
@@ -35,16 +35,18 @@ public class AccountEntity {
 
     private String role;
 
-    private String accno;
+    @JsonProperty("accno")
+    private String accountNumber;
 
-    private String accid;
+    @JsonProperty("accid")
+    private String accountId;
 
     private String alias;
 
     private String type;
 
-    public String getAccid() {
-        return accid;
+    public String getAccountId() {
+        return accountId;
     }
 
     @JsonIgnore
@@ -85,17 +87,17 @@ public class AccountEntity {
 
         return TransactionalAccount.nxBuilder()
                 .withType(convertAccountType())
-                .withoutFlags() // TODO unsure about this
+                .withoutFlags()
                 .withBalance(BalanceModule.of(balance))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(accno)
-                                .withAccountNumber(bankAccno)
+                                .withUniqueIdentifier(accountNumber)
+                                .withAccountNumber(bankAccountNumber)
                                 .withAccountName(alias)
-                                .addIdentifier(new SwedishIdentifier(bankAccno))
+                                .addIdentifier(new SwedishIdentifier(bankAccountNumber))
                                 .build())
-                .setBankIdentifier(accno)
-                .setApiIdentifier(accno)
+                .setBankIdentifier(accountNumber)
+                .setApiIdentifier(accountNumber)
                 .build();
     }
 
@@ -109,12 +111,16 @@ public class AccountEntity {
                         .withCashBalance(getCashBalance(accountInfoEntity))
                         .withId(
                                 IdModule.builder()
-                                        .withUniqueIdentifier(accno)
-                                        .withAccountNumber(bankAccno == null ? accno : bankAccno)
+                                        .withUniqueIdentifier(accountNumber)
+                                        .withAccountNumber(
+                                                bankAccountNumber == null
+                                                        ? accountNumber
+                                                        : bankAccountNumber)
                                         .withAccountName(alias)
                                         .addIdentifier(
                                                 AccountIdentifier.create(
-                                                        AccountIdentifier.Type.SE, bankAccno))
+                                                        AccountIdentifier.Type.SE,
+                                                        bankAccountNumber))
                                         .build())
                         .build());
     }
@@ -124,9 +130,9 @@ public class AccountEntity {
             AccountInfoEntity accountInfoEntity, List<InstrumentModule> instruments) {
         return PortfolioModule.builder()
                 .withType(getPortfolioType())
-                .withUniqueIdentifier(accno)
+                .withUniqueIdentifier(accountNumber)
                 .withCashValue(getCashBalance(accountInfoEntity).getDoubleValue())
-                .withTotalProfit(0) // TODO should we calculate this?
+                .withTotalProfit(0)
                 .withTotalValue(accountInfoEntity.getFullMarketValue().getDoubleValue())
                 .withInstruments(instruments)
                 .setRawType(accountCode)

@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
@@ -131,7 +132,21 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
     private HttpResponse loadLoginPage() {
         RequestBuilder requestBuilder =
                 apiClient
-                        .createBasicRequest(NordnetConstants.Urls.LOGIN_PAGE_URL)
+                        .createBasicRequest(
+                                new URL(NordnetConstants.Urls.BASE_OAUTH2_AUTHORIZE)
+                                        .queryParam(
+                                                NordnetConstants.QueryKeys.AUTH_TYPE,
+                                                NordnetConstants.QueryParamValues.SIGN_IN)
+                                        .queryParam(
+                                                NordnetConstants.QueryKeys.CLIENT_ID,
+                                                NordnetConstants.QueryParamValues.CLIENT_ID)
+                                        .queryParam(
+                                                NordnetConstants.QueryKeys.RESPONSE_TYPE,
+                                                NordnetConstants.QueryParamValues.RESPONSE_TYPE)
+                                        .queryParam(
+                                                NordnetConstants.QueryKeys.REDIRECT_URI_LOGIN,
+                                                NordnetConstants.QueryParamValues
+                                                        .REDIRECT_URI_LOGIN))
                         .type(MediaType.APPLICATION_JSON_TYPE);
 
         HttpResponse response = apiClient.get(requestBuilder, HttpResponse.class);
@@ -141,7 +156,11 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
 
     private BankIdInitSamlResponse getBankIdInitSamlResponse() {
         return apiClient.get(
-                NordnetConstants.Urls.LOGIN_BANKID_PAGE_URL, BankIdInitSamlResponse.class);
+                new URL(NordnetConstants.Urls.LOGIN_BANKID_PAGE_URL)
+                        .queryParam(
+                                NordnetConstants.QueryKeys.EID_METHOD,
+                                NordnetConstants.QueryParamValues.EID_METHOD),
+                BankIdInitSamlResponse.class);
     }
 
     private BankIdInitResponse bankIdOrder(String ssn) throws BankIdException {
@@ -167,12 +186,14 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
 
     private void getSamlRequest(BankIdInitSamlResponse bankIdInitSamlResponse) {
         HttpResponse response =
-                apiClient.get(bankIdInitSamlResponse.getRequestUrl(), HttpResponse.class);
+                apiClient.get(new URL(bankIdInitSamlResponse.getRequestUrl()), HttpResponse.class);
         response =
                 apiClient.get(
-                        response.getHeaders().get(NordnetConstants.HeaderKeys.LOCATION).stream()
-                                .findFirst()
-                                .get(),
+                        new URL(
+                                response.getHeaders().get(NordnetConstants.HeaderKeys.LOCATION)
+                                        .stream()
+                                        .findFirst()
+                                        .get()),
                         HttpResponse.class);
         String url = response.getBody(String.class);
         Matcher matcher = FIND_BANKID_URL.matcher(url);
@@ -212,7 +233,7 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
 
         RequestBuilder requestBuilder =
                 apiClient
-                        .createBasicRequest(NordnetConstants.Urls.FETCH_TOKEN_URL)
+                        .createBasicRequest(new URL(NordnetConstants.Urls.FETCH_TOKEN_URL))
                         .type(MediaType.APPLICATION_FORM_URLENCODED)
                         .body(formData.serialize());
 
@@ -258,7 +279,7 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
 
         RequestBuilder requestBuilder =
                 apiClient
-                        .createBasicRequest(completeBankIdPage.getTarget())
+                        .createBasicRequest(new URL(completeBankIdPage.getTarget()))
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .body(formData.serialize());
 
@@ -295,7 +316,8 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
     private void getArtifactResponse(String samlArtifact, String ntag) {
         RequestBuilder request =
                 apiClient
-                        .createBasicRequest(NordnetConstants.Urls.AUTHENTICATION_SAML_ARTIFACT)
+                        .createBasicRequest(
+                                new URL(NordnetConstants.Urls.AUTHENTICATION_SAML_ARTIFACT))
                         .type(MediaType.APPLICATION_JSON)
                         .header(NordnetConstants.HeaderKeys.NTAG, ntag)
                         .body(new ArtifactRequest(samlArtifact));
@@ -308,7 +330,18 @@ public class NordnetBankIdAuthenticator implements BankIdAuthenticator<BankIdIni
 
     private String getCode() {
         HttpResponse response =
-                apiClient.get(NordnetConstants.Urls.OAUTH2_AUTHORIZE_URL, HttpResponse.class);
+                apiClient.get(
+                        new URL(NordnetConstants.Urls.BASE_OAUTH2_AUTHORIZE)
+                                .queryParam(
+                                        NordnetConstants.QueryKeys.CLIENT_ID,
+                                        NordnetConstants.QueryParamValues.CLIENT_ID)
+                                .queryParam(
+                                        NordnetConstants.QueryKeys.RESPONSE_TYPE,
+                                        NordnetConstants.QueryParamValues.RESPONSE_TYPE)
+                                .queryParam(
+                                        NordnetConstants.QueryKeys.REDIRECT_URI,
+                                        NordnetConstants.QueryParamValues.REDIRECT_URI),
+                        HttpResponse.class);
 
         return getAuthCodeFrom(
                 response.getHeaders().get(NordnetConstants.HeaderKeys.LOCATION).stream()
