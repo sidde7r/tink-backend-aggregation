@@ -15,9 +15,16 @@ import se.tink.libraries.user.rpc.User;
 public final class RefreshRequestModule extends AbstractModule {
 
     private final Set<RefreshableItem> refreshableItems;
+    private final boolean requestFlagManual;
+    private final boolean requestFlagCreate;
+    private final boolean requestFlagUpdate;
 
-    public RefreshRequestModule(Set<RefreshableItem> refreshableItems) {
+    public RefreshRequestModule(
+            Set<RefreshableItem> refreshableItems, boolean manual, boolean create, boolean update) {
         this.refreshableItems = refreshableItems;
+        this.requestFlagManual = manual;
+        this.requestFlagCreate = create;
+        this.requestFlagUpdate = update;
     }
 
     @Override
@@ -34,7 +41,13 @@ public final class RefreshRequestModule extends AbstractModule {
     protected RefreshInformationRequest provideRefreshInformationRequest(
             User user, Credentials credential, Provider provider) {
         RefreshInformationRequest refreshInformationRequest =
-                new RefreshInformationRequest(user, provider, credential, true);
+                new RefreshInformationRequest(
+                        user,
+                        provider,
+                        credential,
+                        requestFlagManual,
+                        requestFlagCreate,
+                        requestFlagUpdate);
         refreshInformationRequest.setItemsToRefresh(refreshableItems);
         return refreshInformationRequest;
     }
