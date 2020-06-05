@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import com.google.common.base.Strings;
 import javax.annotation.Nonnull;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -29,7 +28,7 @@ public class BankdataNemIdAuthenticator implements NemIdAuthenticatorV2 {
     }
 
     @Override
-    public NemIdParametersV2 getNemIdParameters() throws AuthenticationException {
+    public NemIdParametersV2 getNemIdParameters() {
 
         // Generate new keys for a new nemid instantiation
         final String keyPairId = UUIDUtils.generateUUID();
@@ -49,9 +48,7 @@ public class BankdataNemIdAuthenticator implements NemIdAuthenticatorV2 {
     }
 
     @Override
-    public String exchangeNemIdToken(String nemIdToken)
-            throws AuthenticationException, AuthorizationException {
-
+    public String exchangeNemIdToken(String nemIdToken) {
         bankClient.eventDoContinue(nemIdToken);
         return bankClient.completeEnrollment(cryptoHelper).getInstallId();
     }

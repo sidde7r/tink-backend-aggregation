@@ -15,7 +15,6 @@ import org.jsoup.nodes.Document;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.CookieName;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants.UrlParam;
@@ -194,10 +193,6 @@ public class BankdataApiClient {
     }
 
     public NemIdParametersV2 fetchNemIdParameters(HttpResponse httpResponse) {
-        if (!httpResponse.hasBody()) {
-            // todo: Handle this, it should have a body!
-        }
-
         String responseString = httpResponse.getBody(String.class);
         Document responseBody = Jsoup.parse(responseString);
         String launcher =
@@ -231,7 +226,7 @@ public class BankdataApiClient {
             final String pinCode,
             final String installId,
             final CryptoHelper cryptoHelper)
-            throws SessionException, LoginException, AuthorizationException {
+            throws LoginException, AuthorizationException {
 
         LoginInstalledRequest installedEntity =
                 new LoginInstalledRequest(userId, pinCode, installId);

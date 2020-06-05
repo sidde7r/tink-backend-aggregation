@@ -104,7 +104,7 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
         String sessionId = nemIdParamsResponse.getSessionId();
         sessionStorage.put(StorageKeys.SESSION_ID, sessionId);
         ObjectMapper mapper = new ObjectMapper();
-        String params = null;
+        String params;
         try {
             params = mapper.writeValueAsString(nemIdParamsResponse.getNemidParams());
         } catch (JsonProcessingException e) {
