@@ -257,22 +257,20 @@ public class ClientConfigurationValidatorTest {
                         .add("sensitiveSecret1")
                         .add("sensitiveSecret2")
                         .add("sensitiveSecret3")
-                        .add("redirectUrls")
                         .build();
 
         Set<String> excludedSensitiveSecretsNames =
-                ImmutableSet.<String>builder().add("sensitiveSecret3").build();
+                ImmutableSet.<String>builder().add("sensitiveSecret3").add("redirectUrl").build();
 
         Set<String> agentConfigParamNames =
                 ImmutableSet.<String>builder()
                         .add("agentConfigParam1")
                         .add("agentConfigParam2")
                         .add("agentConfigParam3")
-                        .add("redirectUrls")
                         .build();
 
         Set<String> excludedAgentConfigParamNames =
-                ImmutableSet.<String>builder().add("agentConfigParam3").build();
+                ImmutableSet.<String>builder().add("agentConfigParam3").add("redirectUrls").build();
 
         SecretsNamesValidationResponse response =
                 clientConfigurationValidator.validate(
@@ -364,6 +362,9 @@ public class ClientConfigurationValidatorTest {
 
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
                 .thenCallRealMethod();
+        when(mockClientConfigurationMetaInfoHandler.inverseMapSpecialConfigClassFieldNames(
+                        any(Set.class)))
+                .thenCallRealMethod();
 
         return new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
     }
@@ -394,6 +395,9 @@ public class ClientConfigurationValidatorTest {
                                 .add("redirectUrl")
                                 .build());
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
+                .thenCallRealMethod();
+        when(mockClientConfigurationMetaInfoHandler.inverseMapSpecialConfigClassFieldNames(
+                        any(Set.class)))
                 .thenCallRealMethod();
 
         return new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
@@ -429,6 +433,9 @@ public class ClientConfigurationValidatorTest {
                                 .build());
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
                 .thenCallRealMethod();
+        when(mockClientConfigurationMetaInfoHandler.inverseMapSpecialConfigClassFieldNames(
+                        any(Set.class)))
+                .thenCallRealMethod();
 
         return new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
     }
@@ -453,6 +460,9 @@ public class ClientConfigurationValidatorTest {
                                 .add("redirectUrl")
                                 .build());
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
+                .thenCallRealMethod();
+        when(mockClientConfigurationMetaInfoHandler.inverseMapSpecialConfigClassFieldNames(
+                        any(Set.class)))
                 .thenCallRealMethod();
 
         return new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
@@ -484,6 +494,9 @@ public class ClientConfigurationValidatorTest {
                                 .add("redirectUrl")
                                 .build());
         when(mockClientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(any(Set.class)))
+                .thenCallRealMethod();
+        when(mockClientConfigurationMetaInfoHandler.inverseMapSpecialConfigClassFieldNames(
+                        any(Set.class)))
                 .thenCallRealMethod();
 
         return new ClientConfigurationValidator(mockClientConfigurationMetaInfoHandler);
