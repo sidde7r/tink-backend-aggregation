@@ -145,9 +145,7 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
             case ACWC:
             case ACWP:
                 paymentMultiStepResponse =
-                        handleSignedPayment(
-                                createPaymentResponse,
-                                paymentMultiStepRequest.getPayment().getType());
+                        handleSignedPayment(paymentMultiStepRequest, createPaymentResponse);
                 break;
                 // Before signing PIS
             case RCVD:
@@ -243,23 +241,26 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
     }
 
     private PaymentMultiStepResponse handleSignedPayment(
-            CreatePaymentResponse createPaymentResponse, PaymentType paymentType) {
+            PaymentMultiStepRequest paymentMultiStepRequest,
+            CreatePaymentResponse createPaymentResponse) {
 
         if (CbiGlobeConstants.PSUAuthenticationStatus.AUTHENTICATED.equalsIgnoreCase(
                         createPaymentResponse.getPsuAuthenticationStatus())
                 && CbiGlobeConstants.PSUAuthenticationStatus.VERIFIED.equalsIgnoreCase(
                         createPaymentResponse.getScaStatus())) {
             return new PaymentMultiStepResponse(
-                    createPaymentResponse.toTinkPaymentResponse(paymentType),
+                    createPaymentResponse.toTinkPaymentResponse(
+                            paymentMultiStepRequest.getPayment().getType()),
                     AuthenticationStepConstants.STEP_FINALIZE,
                     new ArrayList<>());
         } else {
-            return handleIntermediatePaymentStates(createPaymentResponse, paymentType);
+            return handleIntermediatePaymentStates(paymentMultiStepRequest, createPaymentResponse);
         }
     }
 
     private PaymentMultiStepResponse handleIntermediatePaymentStates(
-            CreatePaymentResponse createPaymentResponse, PaymentType paymentType) {
+            PaymentMultiStepRequest paymentMultiStepRequest,
+            CreatePaymentResponse createPaymentResponse) {
 
         String redirectURL = null;
         if (createPaymentResponse.getLinks() != null) {
@@ -284,11 +285,11 @@ public class CbiGlobePaymentExecutor implements PaymentExecutor, FetchablePaymen
         sessionStorage.put(
                 StorageKeys.LINK,
                 redirectURL); // redirectURL should be set to null to avoid multiple redirect to
-        // same old URL
-        createPaymentResponse.getLinks().getScaRedirect().getHref();
 
         return new PaymentMultiStepResponse(
-                createPaymentResponse.toTinkPaymentResponse(paymentType),
+                createPaymentResponse.toTinkPaymentResponse(
+                        paymentMultiStepRequest.getPayment().getUniqueId(),
+                        paymentMultiStepRequest.getPayment().getType()),
                 CbiGlobeConstants.PaymentStep.IN_PROGRESS,
                 new ArrayList<>());
     }
