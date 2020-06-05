@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,18 +7,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.BeneficiaryEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.CreditTransferTransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.CreditorEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.InitiatingPartyEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.PaymentIdEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.PaymentTypeInformationEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities.SupplementaryDataEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.enums.BnpParibasPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.BeneficiaryEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditTransferTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.CreditorEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.InitiatingPartyEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.PaymentIdEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.PaymentTypeInformationEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities.SupplementaryDataEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.payment.enums.PaymentType;
 
 @JsonObject
 public class CreatePaymentRequest {
@@ -39,7 +39,8 @@ public class CreatePaymentRequest {
         requestedExecutionDate = builder.requestedExecutionDate;
         numberOfTransactions = 1;
         initiatingParty = new InitiatingPartyEntity("TINK");
-        paymentTypeInformation = new PaymentTypeInformationEntity(builder.paymentType.toString());
+        paymentTypeInformation =
+                new PaymentTypeInformationEntity(builder.paymentType.toString().toUpperCase());
         debtorAccount = builder.debtorAccount;
         beneficiary = new BeneficiaryEntity(builder.creditorEntity, builder.creditorAccount);
         creditTransferTransaction =
@@ -51,22 +52,21 @@ public class CreatePaymentRequest {
         supplementaryData = new SupplementaryDataEntity(builder.redirectUrl);
     }
 
-    public String getPaymentId() {
-        return paymentInformationId;
-    }
-
     public static class Builder {
+        private static final DateTimeFormatter DATE_TIME_FORMATTER =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
         private String creationDateTime;
         private String requestedExecutionDate;
         private CreditorEntity creditorEntity;
         private AccountEntity creditorAccount;
         private AccountEntity debtorAccount;
         private AmountEntity amount;
-        private BnpParibasPaymentType paymentType;
+        private PaymentType paymentType;
         private String redirectUrl;
         private String remittanceInformation;
 
-        public Builder withPaymentType(BnpParibasPaymentType paymentType) {
+        public Builder withPaymentType(PaymentType paymentType) {
             this.paymentType = paymentType;
             return this;
         }
@@ -92,16 +92,14 @@ public class CreatePaymentRequest {
         }
 
         public Builder withCreationDateTime(LocalDateTime dateTime) {
-            this.creationDateTime =
-                    dateTime.atZone(ZoneId.of("CET"))
-                            .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            this.creationDateTime = dateTime.atZone(ZoneId.of("CET")).format(DATE_TIME_FORMATTER);
             return this;
         }
 
         public Builder withExecutionDate(LocalDate date) {
+            // some banks don't accept date at start day, adding one minute solves the issue
             requestedExecutionDate =
-                    date.atStartOfDay(ZoneId.of("CET"))
-                            .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                    date.atStartOfDay(ZoneId.of("CET")).plusMinutes(1).format(DATE_TIME_FORMATTER);
             return this;
         }
 

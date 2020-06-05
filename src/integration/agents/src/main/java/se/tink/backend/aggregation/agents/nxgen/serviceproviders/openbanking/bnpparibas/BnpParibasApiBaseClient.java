@@ -10,10 +10,8 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.PispTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
@@ -21,33 +19,30 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.utils.BnpParibasSignatureHeaderProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BnpParibasApiBaseClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
-    private BnpParibasConfiguration bnpParibasConfiguration;
+    private final BnpParibasConfiguration bnpParibasConfiguration;
 
     public BnpParibasApiBaseClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
+            BnpParibasConfiguration bnpParibasConfiguration,
             BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.bnpParibasConfiguration = bnpParibasConfiguration;
         this.bnpParibasSignatureHeaderProvider = bnpParibasSignatureHeaderProvider;
     }
 
@@ -75,40 +70,20 @@ public class BnpParibasApiBaseClient {
                 bnpParibasConfiguration.getClientId(), bnpParibasConfiguration.getClientSecret());
     }
 
-    public BnpParibasConfiguration getBnpParibasConfiguration() {
-        return bnpParibasConfiguration;
-    }
-
     private RequestBuilder createRequestInSession(URL url) {
-        return createRequestInSession(url, getTokenFromSession());
-    }
-
-    private RequestBuilder createPispRequestInSession(URL url) {
-        return createRequestInSession(url, getPispTokenFromSession());
-    }
-
-    private Optional<OAuth2Token> getTokenFromSession() {
-        return sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN, OAuth2Token.class);
-    }
-
-    private Optional<OAuth2Token> getPispTokenFromSession() {
-        return sessionStorage.get(
-                BnpParibasBaseConstants.StorageKeys.PISP_TOKEN, OAuth2Token.class);
-    }
-
-    private RequestBuilder createRequestInSession(URL url, Optional<OAuth2Token> token) {
         String reqId = UUID.randomUUID().toString();
         String signature =
                 bnpParibasSignatureHeaderProvider.buildSignatureHeader(
-                        sessionStorage.get(StorageKeys.TOKEN), reqId, getBnpParibasConfiguration());
+                        sessionStorage.get(StorageKeys.TOKEN), reqId, bnpParibasConfiguration);
 
         return client.request(url)
                 .addBearerToken(
-                        token.orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                BnpParibasBaseConstants.ErrorMessages
-                                                        .MISSING_TOKEN)))
+                        getTokenFromSession()
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalArgumentException(
+                                                        BnpParibasBaseConstants.ErrorMessages
+                                                                .MISSING_TOKEN)))
                 .header(BnpParibasBaseConstants.HeaderKeys.SIGNATURE, signature)
                 .header(BnpParibasBaseConstants.HeaderKeys.X_REQUEST_ID, reqId)
                 .accept(MediaType.APPLICATION_JSON)
@@ -117,28 +92,8 @@ public class BnpParibasApiBaseClient {
                         MediaType.APPLICATION_JSON);
     }
 
-    public void fetchPispToken() {
-        if (!isPispTokenValid()) {
-            getAndSavePispToken();
-        }
-    }
-
-    private boolean isPispTokenValid() {
-        return sessionStorage
-                .get(StorageKeys.PISP_TOKEN, OAuth2Token.class)
-                .map(OAuth2TokenBase::isValid)
-                .orElse(false);
-    }
-
-    private void getAndSavePispToken() {
-        PispTokenRequest request =
-                new PispTokenRequest(
-                        bnpParibasConfiguration.getClientId(),
-                        QueryValues.CLIENT_CREDENTIALS,
-                        QueryValues.PISP_SCOPE);
-        TokenResponse getTokenResponse = exchangeAuthorizationToken(request);
-        OAuth2Token token = getTokenResponse.toOauthToken();
-        sessionStorage.put(BnpParibasBaseConstants.StorageKeys.PISP_TOKEN, token);
+    private Optional<OAuth2Token> getTokenFromSession() {
+        return sessionStorage.get(BnpParibasBaseConstants.StorageKeys.TOKEN, OAuth2Token.class);
     }
 
     public TokenResponse exchangeAuthorizationToken(AbstractForm request) {
@@ -174,10 +129,6 @@ public class BnpParibasApiBaseClient {
         return extractBody(httpResponse, AccountsResponse.class).orElse(new AccountsResponse());
     }
 
-    public void setConfiguration(BnpParibasConfiguration bnpParibasConfiguration) {
-        this.bnpParibasConfiguration = bnpParibasConfiguration;
-    }
-
     public BalanceResponse getBalance(String resourceId) {
         HttpResponse httpResponse =
                 createRequestInSession(
@@ -211,19 +162,6 @@ public class BnpParibasApiBaseClient {
                                 bnpParibasConfiguration.getBaseUrl()
                                         + BnpParibasBaseConstants.Urls.FETCH_USER_IDENTITY_DATA))
                 .get(EndUserIdentityResponse.class);
-    }
-
-    public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
-        return createPispRequestInSession(
-                        new URL(bnpParibasConfiguration.getBaseUrl() + Urls.CREATE_PAYMENT))
-                .post(CreatePaymentResponse.class, SerializationUtils.serializeToString(request));
-    }
-
-    public GetPaymentResponse getPayment(String paymentId) {
-        return createPispRequestInSession(
-                        new URL(bnpParibasConfiguration.getBaseUrl() + Urls.GET_PAYMENT)
-                                .parameter(IdTags.PAYMENT_ID, paymentId))
-                .get(GetPaymentResponse.class);
     }
 
     private <T> Optional<T> extractBody(HttpResponse response, Class<T> clazz) {

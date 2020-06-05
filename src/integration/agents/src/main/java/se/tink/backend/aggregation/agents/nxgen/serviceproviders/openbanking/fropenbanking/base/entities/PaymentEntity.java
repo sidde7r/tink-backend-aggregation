@@ -1,9 +1,13 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.payment.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.entities;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentEntity {
     private String paymentInformationStatus;
     private PaymentTypeInformationEntity paymentTypeInformation;
