@@ -40,7 +40,7 @@ public class AccountEntity {
 
     public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
-                .withTypeAndFlagsFrom(AccountType.ACCOUNT_TYPE_MAPPER, label)
+                .withTypeAndFlagsFrom(AccountType.ACCOUNT_TYPE_MAPPER, productType)
                 .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(balance)))
                 .withId(
                         IdModule.builder()
