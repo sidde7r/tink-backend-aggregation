@@ -174,7 +174,7 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
-                // checking accounts are heaving by default the following 4 capabilities
+                // checking accounts are having by default the following 4 capabilities
                 // but you can confirm that easily the same way as done for other account types
                 .canMakeDomesticTransfer(AccountCapabilities.Answer.YES)
                 .canReceiveDomesticTransfer(AccountCapabilities.Answer.YES)
