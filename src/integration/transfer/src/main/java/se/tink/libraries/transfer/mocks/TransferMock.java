@@ -7,6 +7,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferMock {
@@ -96,6 +97,11 @@ public class TransferMock {
 
         public T withSourceMessage(String sourceMessage) {
             transfer.setSourceMessage(sourceMessage);
+            return (T) this;
+        }
+
+        public T withRemittanceInformation(RemittanceInformation remittanceInformation) {
+            transfer.setRemittanceInformation(remittanceInformation);
             return (T) this;
         }
 

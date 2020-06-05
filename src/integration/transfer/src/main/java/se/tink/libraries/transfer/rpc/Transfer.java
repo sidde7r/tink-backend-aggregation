@@ -367,8 +367,8 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
         this.remittanceInformation = remittanceInformation;
     }
 
-    public Optional<RemittanceInformation> getRemittanceInformation() {
-        return Optional.ofNullable(this.remittanceInformation);
+    public RemittanceInformation getRemittanceInformation() {
+        return this.remittanceInformation;
     }
 
     @JsonIgnore
@@ -433,5 +433,10 @@ public class Transfer implements UuidIdentifiable, Serializable, Cloneable {
     @JsonIgnore
     public boolean isOfType(TransferType type) {
         return getType() != null && getType().equals(type);
+    }
+
+    @JsonIgnore
+    public boolean isRemittanceInformationGenerated() {
+        return isMessageGenerated(remittanceInformation.getValue());
     }
 }
