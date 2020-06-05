@@ -19,6 +19,9 @@ redirectUrls-description: |2
     is not present, the request will fail. If no redirectUrl is included in the
     request, the first one from the list will be used.
 
+    It is optional if a list of allowed redirectUrls has been specified in the common
+    configuration.
+
 redirectUrls-example: |2
     ["https://api.tink.se/api/v1/credentials/third-party/callback", "https://main.staging.fakeenvironment.tink.se/api/v1/credentials/third-party/callback"]
 
