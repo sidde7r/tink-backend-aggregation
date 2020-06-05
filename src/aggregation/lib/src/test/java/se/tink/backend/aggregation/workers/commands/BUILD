@@ -37,6 +37,7 @@ junit_test(
         "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
+        "@com_google_http_client_google_http_client",
         "@com_google_protobuf//:protobuf_java",
         "@com_tink_api_grpc//event_producer_service:event_producer_service_proto",
         "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
