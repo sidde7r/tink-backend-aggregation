@@ -136,7 +136,7 @@ public class DanskeBankDKAgent extends DanskeBankAgent
                 this.metricRefreshController,
                 this.updateController,
                 new DanskeBankCreditCardFetcher(
-                        this.apiClient, this.configuration.getLanguageCode()),
+                        this.apiClient, this.configuration.getLanguageCode(), this.configuration),
                 createTransactionFetcherController());
     }
 

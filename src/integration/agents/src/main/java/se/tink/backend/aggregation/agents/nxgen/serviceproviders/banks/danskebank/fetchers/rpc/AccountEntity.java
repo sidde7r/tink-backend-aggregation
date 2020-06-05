@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -134,15 +136,20 @@ public class AccountEntity {
         return balance;
     }
 
-    public LoanAccount toLoanAccount() {
+    public LoanAccount toLoanAccount(DanskeBankConfiguration configuration) {
         return LoanAccount.builder(accountNoInt, ExactCurrencyAmount.of(balance, currency))
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
+                .canMakeDomesticTransfer(configuration.canMakeDomesticTransfer(accountProduct))
+                .canReceiveDomesticTransfer(
+                        configuration.canReceiveDomesticTransfer(accountProduct))
+                .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
+                .canWithdrawFunds(configuration.canWithdrawFunds(accountProduct))
                 .build();
     }
 
-    public CreditCardAccount toCreditCardAccount() {
+    public CreditCardAccount toCreditCardAccount(DanskeBankConfiguration configuration) {
         return CreditCardAccount.builder(
                         accountNoInt,
                         ExactCurrencyAmount.of(balance, currency),
@@ -150,6 +157,11 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
+                .canMakeDomesticTransfer(configuration.canMakeDomesticTransfer(accountProduct))
+                .canReceiveDomesticTransfer(
+                        configuration.canReceiveDomesticTransfer(accountProduct))
+                .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
+                .canWithdrawFunds(configuration.canWithdrawFunds(accountProduct))
                 .build();
     }
 
@@ -162,11 +174,17 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
+                // checking accounts are heaving by default the following 4 capabilities
+                // but you can confirm that easily the same way as done for other account types
+                .canMakeDomesticTransfer(AccountCapabilities.Answer.YES)
+                .canReceiveDomesticTransfer(AccountCapabilities.Answer.YES)
+                .canPlaceFunds(AccountCapabilities.Answer.YES)
+                .canWithdrawFunds(AccountCapabilities.Answer.YES)
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
     }
 
-    public TransactionalAccount toSavingsAccount() {
+    public TransactionalAccount toSavingsAccount(DanskeBankConfiguration configuration) {
         return SavingsAccount.builder(
                         AccountTypes.SAVINGS,
                         accountNoInt,
@@ -174,6 +192,11 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
+                .canMakeDomesticTransfer(configuration.canMakeDomesticTransfer(accountProduct))
+                .canReceiveDomesticTransfer(
+                        configuration.canReceiveDomesticTransfer(accountProduct))
+                .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
+                .canWithdrawFunds(configuration.canWithdrawFunds(accountProduct))
                 .build();
     }
 

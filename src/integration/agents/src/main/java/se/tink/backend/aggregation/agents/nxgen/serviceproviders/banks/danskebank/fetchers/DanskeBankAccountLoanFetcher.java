@@ -43,7 +43,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
 
         return listAccounts.getAccounts().stream()
                 .filter(AccountEntity::isLoanAccount)
-                .map(AccountEntity::toLoanAccount)
+                .map(account -> account.toLoanAccount(configuration))
                 .distinct()
                 .collect(Collectors.toList());
     }

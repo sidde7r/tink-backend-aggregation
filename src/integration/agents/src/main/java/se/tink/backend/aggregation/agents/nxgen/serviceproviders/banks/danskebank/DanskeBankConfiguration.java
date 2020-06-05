@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public interface DanskeBankConfiguration extends ClientConfiguration {
@@ -32,6 +33,22 @@ public interface DanskeBankConfiguration extends ClientConfiguration {
     List<String> getCheckingAccountTypes();
 
     List<String> getSavingsAccountTypes();
+
+    default AccountCapabilities.Answer canMakeDomesticTransfer(String productCode) {
+        return AccountCapabilities.Answer.UNKNOWN;
+    }
+
+    default AccountCapabilities.Answer canReceiveDomesticTransfer(String productCode) {
+        return AccountCapabilities.Answer.UNKNOWN;
+    }
+
+    default AccountCapabilities.Answer canPlaceFunds(String productCode) {
+        return AccountCapabilities.Answer.UNKNOWN;
+    }
+
+    default AccountCapabilities.Answer canWithdrawFunds(String productCode) {
+        return AccountCapabilities.Answer.UNKNOWN;
+    }
 
     Map<String, Loan.Type> getLoanAccountTypes();
 

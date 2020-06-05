@@ -41,7 +41,9 @@ public class DanskeBankTransactionalAccountFetcher implements AccountFetcher<Tra
                 .addAll(
                         listAccounts.toTinkCheckingAccounts(
                                 configuration.getCheckingAccountTypes()))
-                .addAll(listAccounts.toTinkSavingsAccounts(configuration.getSavingsAccountTypes()))
+                .addAll(
+                        listAccounts.toTinkSavingsAccounts(
+                                configuration.getSavingsAccountTypes(), configuration))
                 .build();
     }
 
