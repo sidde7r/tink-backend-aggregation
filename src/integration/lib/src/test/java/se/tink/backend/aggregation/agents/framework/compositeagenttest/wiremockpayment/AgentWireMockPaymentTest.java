@@ -65,7 +65,8 @@ public final class AgentWireMockPaymentTest {
                                 loginDetails,
                                 null,
                                 callbackData),
-                        new RefreshRequestModule(RefreshableItem.REFRESHABLE_ITEMS_ALL),
+                        new RefreshRequestModule(
+                                RefreshableItem.REFRESHABLE_ITEMS_ALL, true, false, false),
                         new PaymentRequestModule(paymentList),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),

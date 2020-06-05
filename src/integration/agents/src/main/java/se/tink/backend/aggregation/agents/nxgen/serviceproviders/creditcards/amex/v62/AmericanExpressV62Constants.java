@@ -66,6 +66,9 @@ public class AmericanExpressV62Constants {
         public static final String INITIALIZATION =
                 "/mobileone/msl/services/accountservicing/v1/initialization";
         public static final String SANE_ID = "/mobileone/msl/services/app/passthrough";
+        public static final String EXTEND_SESSION =
+                "/mobileone/msl/services/accountservicing/v1/extendSession";
+        public static final String LOG_OUT = "/mobileone/msl/services/accountservicing/v1/logoff";
     }
 
     public static class Tags {
@@ -118,6 +121,14 @@ public class AmericanExpressV62Constants {
         public static final String APP_BLOCK =
                 "com.americanexpress.mobilepayments.ios.paymentframework:1.0";
         public static final String CLIENT_ID = "amexpayiospf";
+    }
+
+    public static class Cookies {
+        public static final String COOKIE = "Cookie";
+        public static final String TS_0139 = "TS0139a03f";
+        public static final String AGENT_ID = "agent-id";
+        public static final String AKAALB_GLOBAL = "akaalb_global";
+        public static final String SANE_ID = "SaneID";
     }
 
     public static class RequestValue {

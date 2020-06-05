@@ -56,7 +56,10 @@ public final class AgentWireMockRefreshTest {
             Set<RefreshableItem> refreshableItems,
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace,
-            boolean dumpContentForContractFile) {
+            boolean dumpContentForContractFile,
+            boolean requestFlagManual,
+            boolean requestFlagCreate,
+            boolean requestFlagUpdate) {
 
         ImmutableSet<RequestResponseParser> parsers =
                 wireMockFilePaths.stream()
@@ -77,7 +80,11 @@ public final class AgentWireMockRefreshTest {
                                 loginDetails,
                                 null,
                                 callbackData),
-                        new RefreshRequestModule(refreshableItems),
+                        new RefreshRequestModule(
+                                refreshableItems,
+                                requestFlagManual,
+                                requestFlagCreate,
+                                requestFlagUpdate),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
                                 callbackData,
@@ -159,6 +166,9 @@ public final class AgentWireMockRefreshTest {
         private final Set<RefreshableItem> refreshableItems;
         private boolean httpDebugTrace = false;
         private boolean dumpContentForContractFile = false;
+        private boolean requestManual = true;
+        private boolean requestCreate = false;
+        private boolean requestUpdate = false;
 
         private AgentsServiceConfiguration configuration;
         private TestModule agentTestModule;
@@ -275,6 +285,39 @@ public final class AgentWireMockRefreshTest {
             return this;
         }
 
+        /**
+         * Set the manual flag on the credentials request.
+         *
+         * @param manual Value for the request's manual flag.
+         * @return This builder.
+         */
+        public Builder withRequestFlagManual(boolean manual) {
+            this.requestManual = manual;
+            return this;
+        }
+
+        /**
+         * Set the create flag on the credentials request.
+         *
+         * @param create Value for the request's create flag.
+         * @return This builder.
+         */
+        public Builder withRequestFlagCreate(boolean create) {
+            this.requestCreate = create;
+            return this;
+        }
+
+        /**
+         * Set the update flag on the credentials request.
+         *
+         * @param update Value for the request's update flag.
+         * @return This builder.
+         */
+        public Builder withRequestFlagUpdate(boolean update) {
+            this.requestUpdate = update;
+            return this;
+        }
+
         public AgentWireMockRefreshTest build() {
             if (refreshableItems.isEmpty()) {
                 refreshableItems.addAll(
@@ -292,7 +335,10 @@ public final class AgentWireMockRefreshTest {
                     refreshableItems,
                     of(LoginCommand.class, RefreshCommand.class),
                     httpDebugTrace,
-                    dumpContentForContractFile);
+                    dumpContentForContractFile,
+                    requestManual,
+                    requestCreate,
+                    requestUpdate);
         }
     }
 }
