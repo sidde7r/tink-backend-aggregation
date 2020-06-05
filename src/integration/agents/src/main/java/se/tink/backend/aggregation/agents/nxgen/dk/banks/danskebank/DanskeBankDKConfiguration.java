@@ -8,6 +8,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 
 public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "en-GB";
@@ -112,6 +113,63 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
                 .add("542")
                 .add("471")
                 .build();
+    }
+
+    @Override
+    public AccountCapabilities.Answer canMakeDomesticTransfer(String productCode) {
+        return ImmutableMap.<String, AccountCapabilities.Answer>builder()
+                // log-in via www to the bank and under account check that it has option to make
+                // transfers (incl international transfers)
+                .put("13X", AccountCapabilities.Answer.YES)
+                .put("055", AccountCapabilities.Answer.NO)
+                .put("12J", AccountCapabilities.Answer.YES)
+                .put("19C", AccountCapabilities.Answer.YES)
+                .build()
+                .getOrDefault(productCode, AccountCapabilities.Answer.UNKNOWN);
+    }
+
+    @Override
+    public AccountCapabilities.Answer canReceiveDomesticTransfer(String productCode) {
+        return ImmutableMap.<String, AccountCapabilities.Answer>builder()
+                // see transfer history & and saved recipients/payees
+                .put("12J", AccountCapabilities.Answer.YES)
+                .put("055", AccountCapabilities.Answer.YES)
+                .put("13X", AccountCapabilities.Answer.YES)
+                .put("19C", AccountCapabilities.Answer.YES)
+                .build()
+                .getOrDefault(productCode, AccountCapabilities.Answer.UNKNOWN);
+    }
+
+    @Override
+    public AccountCapabilities.Answer canPlaceFunds(String productCode) {
+        return ImmutableMap.<String, AccountCapabilities.Answer>builder()
+                // our current understanding is that canPlaceFunds is fulfilled if one of the
+                // following is true:
+                // - canReceiveDomesticTransfer is true or
+                // - you can make a physical deposit at a bank office or by depositing through a
+                // depositing box/machine
+                //
+                // see saved recipients/payees to see confirm which accounts can receive transfer
+                // directly
+                .put("13X", AccountCapabilities.Answer.YES)
+                .put("055", AccountCapabilities.Answer.YES)
+                .put("12J", AccountCapabilities.Answer.YES)
+                .put("19C", AccountCapabilities.Answer.YES)
+                .build()
+                .getOrDefault(productCode, AccountCapabilities.Answer.UNKNOWN);
+    }
+
+    @Override
+    public AccountCapabilities.Answer canWithdrawFunds(String productCode) {
+        return ImmutableMap.<String, AccountCapabilities.Answer>builder()
+                // log-in via www to the bank and see:
+                // Card & currency -> Card overview -> Card limits -> info about limits for ATM
+                .put("13X", AccountCapabilities.Answer.YES)
+                .put("055", AccountCapabilities.Answer.YES)
+                .put("12J", AccountCapabilities.Answer.YES)
+                .put("19C", AccountCapabilities.Answer.YES)
+                .build()
+                .getOrDefault(productCode, AccountCapabilities.Answer.UNKNOWN);
     }
 
     @Override

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankPredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractBankIdResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -40,20 +41,20 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
     }
 
     public List<TransactionalAccount> toTinkSavingsAccounts(
-            List<String> knownSavingsAccountProducts) {
+            List<String> knownSavingsAccountProducts, DanskeBankConfiguration configuration) {
         return this.accounts.stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
                 .filter(
                         DanskeBankPredicates.knownSavingsAccountProducts(
                                 knownSavingsAccountProducts))
-                .map(AccountEntity::toSavingsAccount)
+                .map(account -> account.toSavingsAccount(configuration))
                 .collect(Collectors.toList());
     }
 
-    public List<CreditCardAccount> toTinkCreditCardAccounts() {
+    public List<CreditCardAccount> toTinkCreditCardAccounts(DanskeBankConfiguration configuration) {
         return this.accounts.stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS)
-                .map(AccountEntity::toCreditCardAccount)
+                .map(account -> account.toCreditCardAccount(configuration))
                 .collect(Collectors.toList());
     }
 }

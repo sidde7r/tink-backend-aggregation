@@ -129,7 +129,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                 this.metricRefreshController,
                 this.updateController,
                 new DanskeBankCreditCardFetcher(
-                        this.apiClient, this.configuration.getLanguageCode()),
+                        this.apiClient, this.configuration.getLanguageCode(), this.configuration),
                 createTransactionFetcherController());
     }
 
