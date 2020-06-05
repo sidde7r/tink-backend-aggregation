@@ -35,12 +35,11 @@ public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
         this.apiClient = new CreditAgricoleApiClient(client, persistentStorage);
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
-        storeRegionId();
-        storeUserInput();
     }
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
+        prepareAuthData();
         if (authenticator == null) {
             authenticator =
                     new CreditAgricoleAuthenticator(
@@ -75,6 +74,13 @@ public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
         return SessionHandler.alwaysFail();
     }
 
+    private void prepareAuthData() {
+        if (!persistentStorage.get(StorageKey.IS_DEVICE_REGISTERED, Boolean.class).orElse(false)) {
+            storeRegionId();
+            storeUserInput();
+        }
+    }
+
     private void storeRegionId() {
         String payload = request.getProvider().getPayload();
         if (StringUtils.isBlank(payload)) {
@@ -85,18 +91,10 @@ public class CreditAgricoleAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private void storeUserInput() {
-        if (!persistentStorage
-                .get(StorageKey.IS_DEVICE_REGISTERED, Boolean.class)
-                .orElse(Boolean.FALSE)) {
-            persistentStorage.put(
-                    StorageKey.USER_ACCOUNT_NUMBER,
-                    request.getCredentials().getField(Key.USERNAME));
-            persistentStorage.put(
-                    StorageKey.USER_ACCOUNT_CODE, request.getCredentials().getField(Key.PASSWORD));
-            persistentStorage.put(StorageKey.EMAIL, request.getCredentials().getField(Key.EMAIL));
-            persistentStorage.put(
-                    StorageKey.PROFILE_PIN, request.getCredentials().getField(Key.ACCESS_PIN));
-        }
+        persistentStorage.put(
+                StorageKey.USER_ACCOUNT_NUMBER, request.getCredentials().getField(Key.USERNAME));
+        persistentStorage.put(
+                StorageKey.USER_ACCOUNT_CODE, request.getCredentials().getField(Key.PASSWORD));
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
