@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.metrics;
 
 import com.google.common.base.Preconditions;
 import java.util.List;
+import java.util.Optional;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.metrics.types.timers.Timer;
@@ -78,5 +79,9 @@ public class MetricAction implements MetricActionIface {
         private String getMetricName() {
             return name().toLowerCase();
         }
+    }
+
+    public String getActionName() {
+        return Optional.ofNullable(metricPath.getLabels().get("action")).orElse("Unknown action");
     }
 }
