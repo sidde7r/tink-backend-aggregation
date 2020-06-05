@@ -1,0 +1,17 @@
+{
+  "userInfo": {
+    "birthDate": 34300800000,
+    "email": "jan.kowalski@gmail.com",
+    "firstName": "Jan",
+    "gender": "MALE",
+    "id": "77f43b0f-0000-ffff-aaaa-64d98b4d6523",
+    "kycFirstName": "Jan Janusz Zbigniew Maria",
+    "kycLastName": "Kowalski Nowak",
+    "lastName": "Kowalski",
+    "mobilePhoneNumber": "+33xxxxx1234",
+    "nationality": "FRA",
+    "shadowID": "9d589c9c-0000-ffff-aaaa-78f00bd3f7e5",
+    "signupCompleted": false,
+    "title": ""
+  }
+}

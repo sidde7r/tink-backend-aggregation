@@ -1,0 +1,40 @@
+{
+  "spaces": [
+    {
+      "accountId": "2b81039b-1baf-4ee0-9d31-0e366d006c01",
+      "backgroundImageUrl": "https://cdn.number26.de/spaces/background-images/account_cards_background.jpg?version=1",
+      "balance": {
+        "availableBalance": 1.99,
+        "currency": "EUR"
+      },
+      "id": "37bea370-dd35-4706-90c1-be2aa7442fd2",
+      "imageUrl": "https://cdn.number26.de/spaces/default-images/account_cards.jpg?version=1",
+      "isCardAttached": true,
+      "isHiddenFromBalance": false,
+      "isLocked": false,
+      "isPrimary": true,
+      "name": "Compte courant"
+    },
+    {
+      "accountId": "08e298f5-5de9-4d5c-8728-8aa07a0b663f",
+      "backgroundImageUrl": "https://cdn.number26.de/spaces/background-images/saving_piggy_background.jpg?version=1",
+      "balance": {
+        "availableBalance": 1.99,
+        "currency": "EUR"
+      },
+      "id": "68e4d4b1-b2d0-427c-a19e-dc46ccd08e77",
+      "imageUrl": "https://cdn.number26.de/spaces/default-images/saving_piggy.jpg?version=1",
+      "isCardAttached": false,
+      "isHiddenFromBalance": false,
+      "isLocked": false,
+      "isPrimary": false,
+      "name": "Savings"
+    }
+  ],
+  "totalBalance": 1.99,
+  "userFeatures": {
+    "availableSpaces": 1,
+    "canUpgrade": true
+  },
+  "visibleBalance": 1.99
+}

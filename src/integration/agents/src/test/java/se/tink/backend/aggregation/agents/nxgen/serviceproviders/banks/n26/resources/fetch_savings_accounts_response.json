@@ -1,0 +1,15 @@
+{
+  "totalBalance" : 99.99,
+  "accounts" : [
+    {
+      "id" : "013c8f14-0acd-4e5b-93b1-c4b2c213b7a6",
+      "name" : "Kapitan Bomba savings",
+      "balance" : 98.99
+    },
+    {
+      "id" : "355fe9f2-f503-4843-ae05-023a1e89096c",
+      "name" : "Chorazy Torpeda savings",
+      "balance" : 1.00
+    }
+  ]
+}

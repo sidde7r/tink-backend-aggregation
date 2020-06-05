@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentBaseError;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.session.utils.UnknownError;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -61,7 +63,15 @@ public class N26Utils {
                         HttpResponseException.class,
                         ex -> {
                             if (ex.getResponse().getStatus() == 500) {
-                                Try.failure(BankServiceError.BANK_SIDE_FAILURE.exception(ex));
+                                return Try.failure(
+                                        BankServiceError.BANK_SIDE_FAILURE.exception(ex));
+                            }
+                            if (incorrectCredentials(ex)) {
+                                return Try.failure(LoginError.INCORRECT_CREDENTIALS.exception(ex));
+                            }
+                            if (incorrectOtp(ex)) {
+                                return Try.failure(
+                                        LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(ex));
                             }
                             final ErrorResponse errResponse =
                                     ex.getResponse().getBody(ErrorResponse.class);
@@ -73,6 +83,16 @@ public class N26Utils {
                                                             e.exception(ex)))
                                     .orElseGet(() -> Try.success(Either.left(errResponse)));
                         });
+    }
+
+    private static boolean incorrectOtp(HttpResponseException ex) {
+        return ex.getResponse().getStatus() == 400
+                && "OTP is invalid".equals(ex.getResponse().getBody(Map.class).get("detail"));
+    }
+
+    private static boolean incorrectCredentials(HttpResponseException ex) {
+        return ex.getResponse().getStatus() == 400
+                && "Bad credentials".equals(ex.getResponse().getBody(Map.class).get("detail"));
     }
 
     public static <T> T getFromStorage(Storage storage, String tag, Class<T> className) {
