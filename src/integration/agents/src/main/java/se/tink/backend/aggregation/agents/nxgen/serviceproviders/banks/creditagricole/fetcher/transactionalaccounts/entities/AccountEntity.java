@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.entities;
 
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.AccountType;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -37,7 +38,7 @@ public class AccountEntity {
     private String subAccountNumber;
     private String status;
 
-    public TransactionalAccount toTinkAccount() {
+    public Optional<TransactionalAccount> toTinkAccount() {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(AccountType.ACCOUNT_TYPE_MAPPER, label)
                 .withBalance(BalanceModule.of(ExactCurrencyAmount.inEUR(balance)))
@@ -50,8 +51,7 @@ public class AccountEntity {
                                 .build())
                 .addHolderName(holder)
                 .setApiIdentifier(id)
-                .build()
-                .get();
+                .build();
     }
 
     public boolean isKnownAccountType() {
