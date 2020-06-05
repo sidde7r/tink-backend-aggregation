@@ -24,4 +24,9 @@ public class RemittanceInformation {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "RemittanceInformation{" + "type=" + type + ", value='" + value + '\'' + '}';
+    }
 }
