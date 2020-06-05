@@ -1,0 +1,9 @@
+agentsServiceConfiguration:
+  integrations:
+    4bb3f4fe4a4c416bae5051cce41fde9c:
+      tink:
+        baseUrl: https://psdgw-sella-ttt.fabrick.com
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

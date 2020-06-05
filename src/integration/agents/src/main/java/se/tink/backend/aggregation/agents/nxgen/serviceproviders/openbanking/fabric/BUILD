@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/amount",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/lib:annotations",
