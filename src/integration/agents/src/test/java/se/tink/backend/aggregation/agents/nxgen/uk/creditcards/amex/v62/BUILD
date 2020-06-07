@@ -61,13 +61,8 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/enums",
-        "//src/integration/identity_data",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh",
-        "//src/integration/models",
         "//third_party:com_google_guava_guava",
     ],
 )
