@@ -10,7 +10,6 @@ java_library(
     deps = [
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/core",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/rpc",
-        "//src/integration/account/src/main/java/se/tink/libraries/account/rpc",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/rpc",
         "//third_party:com_sun_jersey_jersey_core",
