@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataPaymentAccountCapabilities;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -45,8 +46,21 @@ public class BankdataAccountEntity {
     private long accountOwnerRefNo;
 
     public TransactionalAccount toTinkAccount() {
+        System.out.println(
+                "!! Checking/Savings - name: "
+                        + name
+                        + ", "
+                        + ", accountType: "
+                        + accountType
+                        + ", iban: "
+                        + iban
+                        + ", accountNo: "
+                        + accountNo
+                        + ", getType(): "
+                        + getType());
+        AccountTypes accountType = getType();
         return CheckingAccount.builder(
-                        getType(),
+                        accountType,
                         constructUniqueIdentifier(),
                         ExactCurrencyAmount.of(balance, currencyCode))
                 .setAccountNumber(iban)
@@ -54,6 +68,15 @@ public class BankdataAccountEntity {
                 .setBankIdentifier(constructUniqueIdentifier())
                 .putInTemporaryStorage(REGISTRATION_NUMBER_TEMP_STORAGE_KEY, regNo)
                 .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY, accountNo)
+                .canMakeDomesticTransfer(
+                        BankdataPaymentAccountCapabilities.canMakeDomesticTransfer(
+                                name, accountType))
+                .canReceiveDomesticTransfer(
+                        BankdataPaymentAccountCapabilities.canReceiveDomesticTransfer(
+                                name, accountType))
+                .canWithdrawFunds(
+                        BankdataPaymentAccountCapabilities.canWithdrawFunds(name, accountType))
+                .canPlaceFunds(BankdataPaymentAccountCapabilities.canPlaceFunds(name, accountType))
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                 .build();
