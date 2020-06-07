@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -21,9 +23,12 @@ public class Xs2aDevelopersTransactionalAccountFetcher
                 TransactionDatePaginator<TransactionalAccount> {
 
     private final Xs2aDevelopersApiClient apiClient;
+    private final Xs2aDevelopersAuthenticator authenticator;
 
-    public Xs2aDevelopersTransactionalAccountFetcher(Xs2aDevelopersApiClient apiClient) {
+    public Xs2aDevelopersTransactionalAccountFetcher(
+            Xs2aDevelopersApiClient apiClient, Xs2aDevelopersAuthenticator authenticator) {
         this.apiClient = apiClient;
+        this.authenticator = authenticator;
     }
 
     @Override
@@ -48,13 +53,24 @@ public class Xs2aDevelopersTransactionalAccountFetcher
             return PaginatorResponseImpl.create(
                     apiClient.getTransactions(account, fromDate, toDate).toTinkTransactions());
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == Transactions.ERROR_CODE_MAX_ACCESS_EXCEEDED
-                    || e.getResponse().getStatus() == Transactions.ERROR_CODE_SERVICE_UNAVAILABLE
-                    || e.getResponse().getStatus() == Transactions.ERROR_CODE_CONSENT_INVALID) {
+            if (isNoMoreTransactionsAvailableToFetchException(e)) {
                 return PaginatorResponseImpl.createEmpty(false);
-            } else {
-                throw e;
+            } else if (isConsentTimeoutException(e)) {
+                authenticator.invalidateToken();
+                throw BankServiceError.CONSENT_EXPIRED.exception(e.getMessage());
             }
+            throw e;
         }
+    }
+
+    private boolean isNoMoreTransactionsAvailableToFetchException(HttpResponseException ex) {
+        return ex.getResponse().getStatus() == Transactions.ERROR_CODE_MAX_ACCESS_EXCEEDED
+                || ex.getResponse().getStatus() == Transactions.ERROR_CODE_SERVICE_UNAVAILABLE
+                || ex.getResponse().getStatus() == Transactions.ERROR_CODE_CONSENT_INVALID;
+    }
+
+    private boolean isConsentTimeoutException(HttpResponseException ex) {
+        return ex.getResponse().getStatus() == 400
+                && ex.getResponse().getBody(String.class).contains("CONSENT_TIME_OUT_EXPIRED");
     }
 }

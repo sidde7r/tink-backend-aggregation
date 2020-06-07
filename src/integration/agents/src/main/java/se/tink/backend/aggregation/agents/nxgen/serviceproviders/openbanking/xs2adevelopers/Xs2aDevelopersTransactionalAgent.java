@@ -30,6 +30,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
 
     protected final TransactionalAccountRefreshController transactionalAccountRefreshController;
     protected Xs2aDevelopersApiClient apiClient;
+    protected Xs2aDevelopersAuthenticator oauth2Authenticator;
 
     protected Xs2aDevelopersTransactionalAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -38,6 +39,9 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         Xs2aDevelopersConfiguration xs2aDevelopersConfiguration = getClientConfiguration();
         apiClient =
                 new Xs2aDevelopersApiClient(client, persistentStorage, xs2aDevelopersConfiguration);
+        oauth2Authenticator =
+                new Xs2aDevelopersAuthenticator(
+                        apiClient, persistentStorage, getClientConfiguration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -58,8 +62,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new Xs2aDevelopersAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()),
+                        oauth2Authenticator,
                         credentials,
                         strongAuthenticationState);
 
@@ -93,7 +96,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
 
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final Xs2aDevelopersTransactionalAccountFetcher accountFetcher =
-                new Xs2aDevelopersTransactionalAccountFetcher(apiClient);
+                new Xs2aDevelopersTransactionalAccountFetcher(apiClient, oauth2Authenticator);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
