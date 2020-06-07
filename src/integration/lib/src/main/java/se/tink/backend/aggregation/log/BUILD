@@ -3,8 +3,6 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/account/src/main/java/se/tink/libraries/account/iface",
-        "//src/integration/generic_application",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/utils/log",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/transfer/src/main/java/se/tink/libraries/transfer/iface",
