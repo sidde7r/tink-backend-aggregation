@@ -6,7 +6,6 @@ java_library(
         "//third_party:org_apache_httpcomponents_httpclient",
     ],
     deps = [
-        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
         "//third_party:lombok_plugin",
         "@lombok//:org_projectlombok_lombok",
         "@org_slf4j_slf4j_api",
