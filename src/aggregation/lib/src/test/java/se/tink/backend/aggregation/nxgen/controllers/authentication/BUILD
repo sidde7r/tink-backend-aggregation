@@ -14,7 +14,6 @@ junit_test(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/progressive/executor",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/utils",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/request",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
