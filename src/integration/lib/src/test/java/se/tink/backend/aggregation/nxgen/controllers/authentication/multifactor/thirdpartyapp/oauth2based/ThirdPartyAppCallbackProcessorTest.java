@@ -68,7 +68,7 @@ public class ThirdPartyAppCallbackProcessorTest {
     public void shouldValidateThatThirdPartyLoginWasSuccessful() {
         // given
         final Map<String, String> callbackData = new HashMap<>();
-        callbackData.put("key1", "value1");
+        callbackData.put(CALLBACK_DATA_AUTH_CODE_KEY, "value1");
 
         // when
         final boolean returnedStatus =

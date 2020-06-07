@@ -36,8 +36,11 @@ public class ThirdPartyAppCallbackProcessor {
         final Optional<String> maybeError =
                 getCallbackElement(callbackData, OAuth2Constants.CallbackParams.ERROR);
 
-        final boolean isSuccessful =
-                !maybeError.map(err -> processError(err, callbackData)).isPresent();
+        final boolean hasAuthCode =
+                callbackData.containsKey(
+                        oAuth2ThirdPartyAppRequestParamsProvider.getCallbackDataAuthCodeKey());
+        final boolean hasError = maybeError.map(err -> processError(err, callbackData)).isPresent();
+        final boolean isSuccessful = hasAuthCode && !hasError;
 
         if (isSuccessful) {
             log.info("OAuth2 callback success.");
