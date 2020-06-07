@@ -14,7 +14,6 @@ junit_test(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/debug",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/commands",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/concurrency",
-        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/context",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/operation",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker/conditions/annotation",
