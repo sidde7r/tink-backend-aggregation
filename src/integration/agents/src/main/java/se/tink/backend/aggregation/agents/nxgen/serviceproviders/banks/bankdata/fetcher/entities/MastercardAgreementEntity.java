@@ -1,16 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
 import com.google.common.base.Preconditions;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataPaymentAccountCapabilities;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @JsonObject
 public class MastercardAgreementEntity {
@@ -81,19 +81,10 @@ public class MastercardAgreementEntity {
                                 .setAccountNumber(mastercardEntity.getCardNo())
                                 .setName(mastercardEntity.getCardName())
                                 .setBankIdentifier(constructUniqueIdentifier())
-                                .canMakeDomesticTransfer(
-                                        BankdataPaymentAccountCapabilities.canMakeDomesticTransfer(
-                                                null, AccountTypes.CREDIT_CARD))
-                                .canReceiveDomesticTransfer(
-                                        BankdataPaymentAccountCapabilities
-                                                .canReceiveDomesticTransfer(
-                                                        null, AccountTypes.CREDIT_CARD))
-                                .canWithdrawFunds(
-                                        BankdataPaymentAccountCapabilities.canWithdrawFunds(
-                                                null, AccountTypes.CREDIT_CARD))
-                                .canPlaceFunds(
-                                        BankdataPaymentAccountCapabilities.canPlaceFunds(
-                                                null, AccountTypes.CREDIT_CARD))
+                                .canMakeDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
+                                .canReceiveDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
+                                .canWithdrawFunds(AccountCapabilities.Answer.UNKNOWN)
+                                .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
                                 .build());
     }
 

@@ -27,8 +27,8 @@ public class BankdataAccountEntity {
     private String iban;
     private String name;
     private boolean overdraft;
-    private boolean transfersToAllowed;
-    private boolean transfersFromAllowed;
+    private Boolean transfersToAllowed;
+    private Boolean transfersFromAllowed;
     private boolean editNameAllowed;
     private double yearToDayPayout;
     private double yearToDayDeposit;
@@ -46,18 +46,6 @@ public class BankdataAccountEntity {
     private long accountOwnerRefNo;
 
     public TransactionalAccount toTinkAccount() {
-        System.out.println(
-                "!! Checking/Savings - name: "
-                        + name
-                        + ", "
-                        + ", accountType: "
-                        + accountType
-                        + ", iban: "
-                        + iban
-                        + ", accountNo: "
-                        + accountNo
-                        + ", getType(): "
-                        + getType());
         AccountTypes accountType = getType();
         return CheckingAccount.builder(
                         accountType,
@@ -70,13 +58,14 @@ public class BankdataAccountEntity {
                 .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY, accountNo)
                 .canMakeDomesticTransfer(
                         BankdataPaymentAccountCapabilities.canMakeDomesticTransfer(
-                                name, accountType))
+                                name, accountType, this))
                 .canReceiveDomesticTransfer(
                         BankdataPaymentAccountCapabilities.canReceiveDomesticTransfer(
-                                name, accountType))
+                                name, accountType, this))
                 .canWithdrawFunds(
                         BankdataPaymentAccountCapabilities.canWithdrawFunds(name, accountType))
-                .canPlaceFunds(BankdataPaymentAccountCapabilities.canPlaceFunds(name, accountType))
+                .canPlaceFunds(
+                        BankdataPaymentAccountCapabilities.canPlaceFunds(name, accountType, this))
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .addIdentifier(AccountIdentifier.create(Type.IBAN, iban))
                 .build();
@@ -130,11 +119,11 @@ public class BankdataAccountEntity {
         return overdraft;
     }
 
-    public boolean isTransfersToAllowed() {
+    public Boolean isTransfersToAllowed() {
         return transfersToAllowed;
     }
 
-    public boolean isTransfersFromAllowed() {
+    public Boolean isTransfersFromAllowed() {
         return transfersFromAllowed;
     }
 
