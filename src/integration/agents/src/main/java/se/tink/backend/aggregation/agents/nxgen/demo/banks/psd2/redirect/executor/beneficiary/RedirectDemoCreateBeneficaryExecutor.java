@@ -49,7 +49,7 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
         createBeneficiaryResponse =
                 new CreateBeneficiaryResponse(
                         createBeneficiaryRequest.getBeneficiary(), dummyStorage);
-        createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.CREATED);
+        createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.INITIATED);
         log.info("Done with Creating beneficiary step");
         return this.createBeneficiaryResponse;
     }
@@ -92,7 +92,7 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
                 createBeneficiaryMultiStepResponse.getBeneficiary().getBeneficiary();
         createBeneficiaryMultiStepResponse
                 .getBeneficiary()
-                .setStatus(CreateBeneficiaryStatus.ADDED);
+                .setStatus(CreateBeneficiaryStatus.CREATED);
         log.info(
                 "Done with adding beneficiary, name: {}, type: {}, account number: {}, owner account number: {}",
                 beneficiary.getName(),
@@ -126,7 +126,7 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
             throws BeneficiaryAuthorizationException {
         log.info("Init step");
         switch (createBeneficiaryMultiStepRequest.getBeneficiary().getStatus()) {
-            case CREATED:
+            case INITIATED:
                 log.info("Init step created");
                 return new CreateBeneficiaryMultiStepResponse(
                         createBeneficiaryMultiStepRequest, Step.AUTHORIZE, new ArrayList<>());
