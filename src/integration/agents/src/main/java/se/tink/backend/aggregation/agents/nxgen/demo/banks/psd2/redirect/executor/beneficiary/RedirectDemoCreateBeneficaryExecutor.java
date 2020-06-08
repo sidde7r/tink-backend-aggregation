@@ -92,7 +92,7 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
                 createBeneficiaryMultiStepResponse.getBeneficiary().getBeneficiary();
         createBeneficiaryMultiStepResponse
                 .getBeneficiary()
-                .setStatus(CreateBeneficiaryStatus.ADDED);
+                .setStatus(CreateBeneficiaryStatus.CREATED);
         log.info(
                 "Done with adding beneficiary, name: {}, type: {}, account number: {}, owner account number: {}",
                 beneficiary.getName(),

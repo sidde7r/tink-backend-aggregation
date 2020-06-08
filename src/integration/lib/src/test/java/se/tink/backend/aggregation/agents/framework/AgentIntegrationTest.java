@@ -897,7 +897,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
                 CreateBeneficiaryStatus statusResult =
                         createBeneficiaryMultiStepResponse.getBeneficiary().getStatus();
-                Assert.assertEquals(statusResult, CreateBeneficiaryStatus.ADDED);
+                Assert.assertEquals(statusResult, CreateBeneficiaryStatus.CREATED);
                 Beneficiary beneficiary = createBeneficiary.getBeneficiary();
                 log.info(
                         "Done with adding beneficiary, name: {}, type: {}, account number: {}, owner account number: {}",

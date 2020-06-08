@@ -151,7 +151,7 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
 
         createBeneficiaryMultiStepResponse
                 .getBeneficiary()
-                .setStatus(CreateBeneficiaryStatus.ADDED);
+                .setStatus(CreateBeneficiaryStatus.CREATED);
         return createBeneficiaryMultiStepResponse;
     }
 

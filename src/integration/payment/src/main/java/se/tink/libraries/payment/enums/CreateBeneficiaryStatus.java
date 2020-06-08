@@ -4,5 +4,5 @@ public enum CreateBeneficiaryStatus {
     INITIATED,
     SIGNED,
     REJECTED,
-    ADDED,
+    CREATED,
 }
