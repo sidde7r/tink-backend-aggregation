@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.api.CreditSafeService;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.libraries.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;
 import se.tink.libraries.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.libraries.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
 import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
@@ -19,11 +18,10 @@ import se.tink.libraries.creditsafe.consumermonitoring.api.RemoveMonitoredConsum
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 
-
 /*
-    CreditSafe installed a weak server cert, it will fail to initialize this class in build.
-    This class should be removed completely.
- */
+   CreditSafe installed a weak server cert, it will fail to initialize this class in build.
+   This class should be removed completely.
+*/
 public class CreditSafeServiceResource implements CreditSafeService {
 
     private static final ImmutableList<String> VALID_CLUSTERS =
@@ -37,8 +35,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
                 configuration.getCreditSafe().isLogConsumerMonitoringTraffic());
     }
 
-    CreditSafeServiceResource(String user, String pass, boolean logTraffic) {
-    }
+    CreditSafeServiceResource(String user, String pass, boolean logTraffic) {}
 
     @Override
     public void removeConsumerMonitoring(
@@ -50,7 +47,6 @@ public class CreditSafeServiceResource implements CreditSafeService {
         if (!socialSecurityNumber.isValid()) {
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
-
     }
 
     @Override
