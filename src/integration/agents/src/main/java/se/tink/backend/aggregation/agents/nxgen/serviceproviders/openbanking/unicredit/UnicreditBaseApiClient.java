@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.entity.UnicreditConsentAccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
@@ -31,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uni
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.executor.payment.rpc.UnicreditCreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -180,6 +182,14 @@ public abstract class UnicreditBaseApiClient {
                 .get(ConsentStatusResponse.class);
     }
 
+    public ConsentDetailsResponse getConsentDetails() throws SessionException {
+        return createRequest(
+                        new URL(getConfiguration().getBaseUrl() + Endpoints.CONSENT_DETAILS)
+                                .parameter(PathParameters.CONSENT_ID, getConsentIdFromStorage()))
+                .header(HeaderKeys.X_REQUEST_ID, Psd2Headers.getRequestId())
+                .get(ConsentDetailsResponse.class);
+    }
+
     public String getConsentIdFromStorage() throws SessionException {
         return persistentStorage
                 .get(StorageKeys.CONSENT_ID, String.class)
@@ -196,6 +206,13 @@ public abstract class UnicreditBaseApiClient {
                         new URL(getConfiguration().getBaseUrl() + Endpoints.BALANCES)
                                 .parameter(PathParameters.ACCOUNT_ID, accountId))
                 .get(BalancesResponse.class);
+    }
+
+    public AccountDetailsResponse fetchAccountDetails(String accountId) {
+        return createRequestInSession(
+                        new URL(getConfiguration().getBaseUrl() + Endpoints.ACCOUNT_DETAILS)
+                                .parameter(PathParameters.ACCOUNT_ID, accountId))
+                .get(AccountDetailsResponse.class);
     }
 
     public PaginatorResponse getTransactionsFor(TransactionalAccount account) {

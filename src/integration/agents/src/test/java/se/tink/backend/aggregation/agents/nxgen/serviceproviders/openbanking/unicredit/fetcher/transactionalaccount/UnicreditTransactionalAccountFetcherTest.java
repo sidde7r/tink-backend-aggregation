@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.account.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -45,14 +46,20 @@ public class UnicreditTransactionalAccountFetcherTest {
     @Test
     public void fetchAccountsWhenApiReturnsAccount() {
         // given
+        AccountEntity accountDetailsEntity = mock(AccountEntity.class);
         ExactCurrencyAmount balanceAmount = mock(ExactCurrencyAmount.class);
         // and
         TransactionalAccount transactionalAccount = mock(TransactionalAccount.class);
         // and
         AccountEntity accountEntity =
-                mockAccountEntity("sample resource id", balanceAmount, transactionalAccount);
+                mockAccountEntity(
+                        "sample resource id",
+                        accountDetailsEntity,
+                        balanceAmount,
+                        transactionalAccount);
         // and
         mockAccountsResponse(accountEntity);
+        mockAccountDetailsResponse("sample resource id", accountDetailsEntity);
         mockBalancesResponse("sample resource id", balanceAmount);
 
         // when
@@ -64,11 +71,12 @@ public class UnicreditTransactionalAccountFetcherTest {
 
     private AccountEntity mockAccountEntity(
             final String resourceId,
+            final AccountEntity accountDetailsEntity,
             final ExactCurrencyAmount balanceAmount,
             final TransactionalAccount transactionalAccount) {
         AccountEntity accountEntity = mock(AccountEntity.class);
         given(accountEntity.getResourceId()).willReturn(resourceId);
-        given(accountEntity.toTinkAccount(balanceAmount))
+        given(accountEntity.toTinkAccount(accountDetailsEntity, balanceAmount))
                 .willReturn(Optional.of(transactionalAccount));
         return accountEntity;
     }
@@ -78,6 +86,14 @@ public class UnicreditTransactionalAccountFetcherTest {
         given(accountsResponse.getAccounts()).willReturn(Collections.singletonList(accountEntity));
         given(apiClient.fetchAccounts()).willReturn(accountsResponse);
         return accountsResponse;
+    }
+
+    private AccountDetailsResponse mockAccountDetailsResponse(
+            final String resourceId, final AccountEntity accountDetailsEntity) {
+        AccountDetailsResponse accountDetailsResponse = mock(AccountDetailsResponse.class);
+        given(accountDetailsResponse.getAccount()).willReturn(accountDetailsEntity);
+        given(apiClient.fetchAccountDetails(resourceId)).willReturn(accountDetailsResponse);
+        return accountDetailsResponse;
     }
 
     private BalancesResponse mockBalancesResponse(

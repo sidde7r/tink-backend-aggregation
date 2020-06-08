@@ -27,7 +27,9 @@ public class UnicreditTransactionalAccountFetcher implements AccountFetcher<Tran
     }
 
     public Optional<TransactionalAccount> toTinkAccount(AccountEntity accountEntity) {
+        String resourceId = accountEntity.getResourceId();
         return accountEntity.toTinkAccount(
-                apiClient.fetchAccountBalance(accountEntity.getResourceId()).getBalance());
+                apiClient.fetchAccountDetails(resourceId).getAccount(),
+                apiClient.fetchAccountBalance(resourceId).getBalance());
     }
 }

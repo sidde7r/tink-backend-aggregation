@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -41,7 +42,8 @@ public class UnicreditAuthenticationController
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference) throws SessionException {
+    public ThirdPartyAppResponse<String> collect(String reference)
+            throws SessionException, ThirdPartyAppException {
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 strongAuthenticationState.getSupplementalKey(),
@@ -49,8 +51,10 @@ public class UnicreditAuthenticationController
                 TimeUnit.MINUTES);
 
         if (!authenticator.isConsentValid()) {
-            throw new IllegalStateException("Authorization failed");
+            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.AUTHENTICATION_ERROR);
         }
+
+        authenticator.setSessionExpiryDateBasedOnConsent();
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
