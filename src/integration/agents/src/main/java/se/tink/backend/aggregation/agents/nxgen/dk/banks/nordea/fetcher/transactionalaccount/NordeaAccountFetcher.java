@@ -28,6 +28,7 @@ public class NordeaAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return bankClient.getAccounts().getAccounts().stream()
+                .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

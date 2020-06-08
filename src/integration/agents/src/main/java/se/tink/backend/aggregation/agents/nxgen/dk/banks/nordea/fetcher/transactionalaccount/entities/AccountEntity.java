@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -21,6 +24,7 @@ public class AccountEntity {
     private String displayAccountNumber;
     private String productCode;
     private String productName;
+    private String category;
     private Double bookedBalance;
     private Double availableBalance;
     private Double creditLimit;
@@ -38,13 +42,14 @@ public class AccountEntity {
                         .withAccountName(nickname)
                         .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                         .build();
+        TransactionalAccountType accountType = getTinkAccountType();
         return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
+                .withType(accountType)
                 .withInferredAccountFlags()
                 .withBalance(balanceModule)
                 .withId(idModule)
                 .setApiIdentifier(accountId)
-                .putInTemporaryStorage("product_code", productCode)
+                .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
     }
 
@@ -53,6 +58,27 @@ public class AccountEntity {
             return ExactCurrencyAmount.of(availableBalance, "DKK");
         }
         return ExactCurrencyAmount.of(bookedBalance, "DKK");
+    }
+
+    @JsonIgnore
+    private TransactionalAccountType getTinkAccountType() {
+        return TransactionalAccountType.from(
+                        NordeaDkConstants.ACCOUNT_TYPE_MAPPER
+                                .translate(category)
+                                .orElse(AccountTypes.OTHER))
+                .orElse(TransactionalAccountType.OTHER);
+    }
+
+    @JsonIgnore
+    public boolean isTransactionalAccount() {
+        switch (getTinkAccountType()) {
+            case CHECKING:
+            case OTHER:
+            case SAVINGS:
+                return true;
+            default:
+                return false;
+        }
     }
 
     public String getAccountId() {

@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+
 public class NordeaDkConstants {
 
     public static class URLs {
@@ -129,4 +132,12 @@ public class NordeaDkConstants {
     }
 
     public static final String CURRENCY = "DKK";
+
+    public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "transaction")
+                    .put(AccountTypes.SAVINGS, "savings")
+                    .put(AccountTypes.CREDIT_CARD, "credit", "combined")
+                    .put(AccountTypes.LOAN, "mortgage")
+                    .build();
 }
