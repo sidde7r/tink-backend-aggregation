@@ -19,11 +19,15 @@ import se.tink.libraries.creditsafe.consumermonitoring.api.RemoveMonitoredConsum
 import se.tink.libraries.http.utils.HttpResponseHelper;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 
+
+/*
+    CreditSafe installed a weak server cert, it will fail to initialize this class in build.
+    This class should be removed completely.
+ */
 public class CreditSafeServiceResource implements CreditSafeService {
 
     private static final ImmutableList<String> VALID_CLUSTERS =
             ImmutableList.of("oxford-production", "oxford-staging", "local-development");
-    private ConsumerMonitoringWrapper consumerMonitoringWrapper;
 
     @Inject
     CreditSafeServiceResource(AgentsServiceConfiguration configuration) {
@@ -33,9 +37,7 @@ public class CreditSafeServiceResource implements CreditSafeService {
                 configuration.getCreditSafe().isLogConsumerMonitoringTraffic());
     }
 
-    // SHOULD NOT BE USED for creditsafe installed a weak server cert, disable to let the build pass
     CreditSafeServiceResource(String user, String pass, boolean logTraffic) {
-        //consumerMonitoringWrapper = new ConsumerMonitoringWrapper(user, pass, logTraffic);
     }
 
     @Override
@@ -49,7 +51,6 @@ public class CreditSafeServiceResource implements CreditSafeService {
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
 
-        consumerMonitoringWrapper.removeMonitoring(request);
     }
 
     @Override
@@ -62,28 +63,27 @@ public class CreditSafeServiceResource implements CreditSafeService {
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
 
-        consumerMonitoringWrapper.addMonitoring(request);
         return HttpResponseHelper.ok();
     }
 
     @Override
     public PortfolioListResponse listPortfolios(@ClientContext ClientInfo clientInfo) {
         validateCluster(clientInfo);
-        return consumerMonitoringWrapper.listPortfolios();
+        return null;
     }
 
     @Override
     public PageableConsumerCreditSafeResponse listChangedConsumers(
             ChangedConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo) {
         validateCluster(clientInfo);
-        return consumerMonitoringWrapper.listChangedConsumers(request);
+        return null;
     }
 
     @Override
     public PageableConsumerCreditSafeResponse listMonitoredConsumers(
             PageableConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo) {
         validateCluster(clientInfo);
-        return consumerMonitoringWrapper.listMonitoredConsumers(request);
+        return null;
     }
 
     private static void validateCluster(ClientInfo clientInfo) {
