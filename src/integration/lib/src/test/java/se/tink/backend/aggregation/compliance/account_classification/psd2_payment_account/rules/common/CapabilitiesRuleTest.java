@@ -42,7 +42,7 @@ public class CapabilitiesRuleTest {
                             rule.classify(provider, new Account());
 
                     assertThat(result)
-                            .isEqualTo(Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT);
+                            .isEqualTo(Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT);
                 });
     }
 
@@ -56,8 +56,7 @@ public class CapabilitiesRuleTest {
         Psd2PaymentAccountClassificationResult result = rule.classify(provider, account);
 
         assertThat(result)
-                .isEqualTo(
-                        Psd2PaymentAccountClassificationResult.PSD2_UNDETERMINED_PAYMENT_ACCOUNT);
+                .isEqualTo(Psd2PaymentAccountClassificationResult.UNDETERMINED_PAYMENT_ACCOUNT);
     }
 
     @Test
@@ -75,7 +74,7 @@ public class CapabilitiesRuleTest {
 
         Psd2PaymentAccountClassificationResult result = rule.classify(provider, account);
 
-        assertThat(result).isEqualTo(Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT);
+        assertThat(result).isEqualTo(Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT);
     }
 
     @Test
@@ -93,8 +92,7 @@ public class CapabilitiesRuleTest {
 
         Psd2PaymentAccountClassificationResult result = rule.classify(provider, account);
 
-        assertThat(result)
-                .isEqualTo(Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT);
+        assertThat(result).isEqualTo(Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT);
     }
 
     private Provider prepareMockedNonOpenBankingProvider() {

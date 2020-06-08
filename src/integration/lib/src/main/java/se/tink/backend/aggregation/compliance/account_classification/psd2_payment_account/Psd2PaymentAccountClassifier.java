@@ -121,14 +121,14 @@ public class Psd2PaymentAccountClassifier
 
     private Psd2PaymentAccountClassificationResult pickResult(
             List<Psd2PaymentAccountClassificationResult> allResults) {
-        if (anyMatch(allResults, Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT)) {
-            return Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT;
+        if (anyMatch(allResults, Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT)) {
+            return Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT;
         }
-        if (anyMatch(allResults, Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT)) {
-            return Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT;
+        if (anyMatch(allResults, Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT)) {
+            return Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT;
         }
 
-        return Psd2PaymentAccountClassificationResult.PSD2_UNDETERMINED_PAYMENT_ACCOUNT;
+        return Psd2PaymentAccountClassificationResult.UNDETERMINED_PAYMENT_ACCOUNT;
     }
 
     private boolean anyMatch(

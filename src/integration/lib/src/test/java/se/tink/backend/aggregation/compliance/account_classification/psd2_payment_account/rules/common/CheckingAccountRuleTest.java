@@ -51,8 +51,7 @@ public class CheckingAccountRuleTest {
                                 testRuleForProviderAndAccount(
                                         provider,
                                         account,
-                                        Psd2PaymentAccountClassificationResult
-                                                .PSD2_PAYMENT_ACCOUNT));
+                                        Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT));
     }
 
     @Test
@@ -73,7 +72,7 @@ public class CheckingAccountRuleTest {
                                         provider,
                                         account,
                                         Psd2PaymentAccountClassificationResult
-                                                .PSD2_UNDETERMINED_PAYMENT_ACCOUNT));
+                                                .UNDETERMINED_PAYMENT_ACCOUNT));
     }
 
     private Provider prepareMockedProviderWithMarketCode(MarketCode marketCode) {

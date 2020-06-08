@@ -26,13 +26,12 @@ public class Psd2PaymentAccountClassifierTest {
                         prepareMockedRule(
                                 ENABLED,
                                 Psd2PaymentAccountClassificationResult
-                                        .PSD2_UNDETERMINED_PAYMENT_ACCOUNT),
+                                        .UNDETERMINED_PAYMENT_ACCOUNT),
+                        prepareMockedRule(
+                                ENABLED, Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT),
                         prepareMockedRule(
                                 ENABLED,
-                                Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT),
-                        prepareMockedRule(
-                                ENABLED,
-                                Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT));
+                                Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT));
 
         Psd2PaymentAccountClassifier classifier =
                 Psd2PaymentAccountClassifier.createWithRules(rules);
@@ -43,8 +42,7 @@ public class Psd2PaymentAccountClassifierTest {
 
         // then
         assertThat(result)
-                .isEqualTo(
-                        Optional.of(Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT));
+                .isEqualTo(Optional.of(Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT));
     }
 
     @Test
@@ -54,13 +52,12 @@ public class Psd2PaymentAccountClassifierTest {
                         prepareMockedRule(
                                 ENABLED,
                                 Psd2PaymentAccountClassificationResult
-                                        .PSD2_UNDETERMINED_PAYMENT_ACCOUNT),
+                                        .UNDETERMINED_PAYMENT_ACCOUNT),
                         prepareMockedRule(
-                                DISABLED,
-                                Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT),
+                                DISABLED, Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT),
                         prepareMockedRule(
                                 ENABLED,
-                                Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT));
+                                Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT));
 
         Psd2PaymentAccountClassifier classifier =
                 Psd2PaymentAccountClassifier.createWithRules(rules);
@@ -71,9 +68,7 @@ public class Psd2PaymentAccountClassifierTest {
 
         // then
         assertThat(result)
-                .isEqualTo(
-                        Optional.of(
-                                Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT));
+                .isEqualTo(Optional.of(Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT));
     }
 
     @Test
@@ -83,10 +78,10 @@ public class Psd2PaymentAccountClassifierTest {
                         prepareMockedRule(
                                 ENABLED,
                                 Psd2PaymentAccountClassificationResult
-                                        .PSD2_UNDETERMINED_PAYMENT_ACCOUNT),
+                                        .UNDETERMINED_PAYMENT_ACCOUNT),
                         prepareMockedRule(
                                 ENABLED,
-                                Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT));
+                                Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT));
 
         Psd2PaymentAccountClassifier classifier =
                 Psd2PaymentAccountClassifier.createWithRules(rules);
@@ -97,9 +92,7 @@ public class Psd2PaymentAccountClassifierTest {
 
         // then
         assertThat(result)
-                .isEqualTo(
-                        Optional.of(
-                                Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT));
+                .isEqualTo(Optional.of(Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT));
     }
 
     @Test
@@ -109,11 +102,11 @@ public class Psd2PaymentAccountClassifierTest {
                         prepareMockedRule(
                                 ENABLED,
                                 Psd2PaymentAccountClassificationResult
-                                        .PSD2_UNDETERMINED_PAYMENT_ACCOUNT),
+                                        .UNDETERMINED_PAYMENT_ACCOUNT),
                         prepareMockedRule(
                                 ENABLED,
                                 Psd2PaymentAccountClassificationResult
-                                        .PSD2_UNDETERMINED_PAYMENT_ACCOUNT));
+                                        .UNDETERMINED_PAYMENT_ACCOUNT));
 
         Psd2PaymentAccountClassifier classifier =
                 Psd2PaymentAccountClassifier.createWithRules(rules);
@@ -127,7 +120,7 @@ public class Psd2PaymentAccountClassifierTest {
                 .isEqualTo(
                         Optional.of(
                                 Psd2PaymentAccountClassificationResult
-                                        .PSD2_UNDETERMINED_PAYMENT_ACCOUNT));
+                                        .UNDETERMINED_PAYMENT_ACCOUNT));
     }
 
     @Test
@@ -153,13 +146,12 @@ public class Psd2PaymentAccountClassifierTest {
                         prepareMockedRule(
                                 DISABLED,
                                 Psd2PaymentAccountClassificationResult
-                                        .PSD2_UNDETERMINED_PAYMENT_ACCOUNT),
+                                        .UNDETERMINED_PAYMENT_ACCOUNT),
+                        prepareMockedRule(
+                                DISABLED, Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT),
                         prepareMockedRule(
                                 DISABLED,
-                                Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT),
-                        prepareMockedRule(
-                                DISABLED,
-                                Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT));
+                                Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT));
 
         Psd2PaymentAccountClassifier classifier =
                 Psd2PaymentAccountClassifier.createWithRules(rules);

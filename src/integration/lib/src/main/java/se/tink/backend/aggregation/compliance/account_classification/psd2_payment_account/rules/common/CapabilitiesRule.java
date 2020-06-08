@@ -42,23 +42,23 @@ public class CapabilitiesRule
     public Psd2PaymentAccountClassificationResult classify(Provider provider, Account account) {
         if (provider.isOpenBanking()) {
             // Anything produced from an OpenBanking provider is considered a PaymentAccount.
-            return Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT;
+            return Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT;
         }
 
         // Evaluate the Account.capabilities based on the PSD2 RTS.
         AccountCapabilities accountCapabilities = account.getCapabilities();
         if (Objects.isNull(accountCapabilities)) {
-            return Psd2PaymentAccountClassificationResult.PSD2_UNDETERMINED_PAYMENT_ACCOUNT;
+            return Psd2PaymentAccountClassificationResult.UNDETERMINED_PAYMENT_ACCOUNT;
         }
 
         if (areAllCapabilitiesYes(accountCapabilities)) {
-            return Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT;
+            return Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT;
         }
 
         if (isAnyCapabilityNo(accountCapabilities)) {
-            return Psd2PaymentAccountClassificationResult.PSD2_NON_PAYMENT_ACCOUNT;
+            return Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT;
         }
 
-        return Psd2PaymentAccountClassificationResult.PSD2_UNDETERMINED_PAYMENT_ACCOUNT;
+        return Psd2PaymentAccountClassificationResult.UNDETERMINED_PAYMENT_ACCOUNT;
     }
 }

@@ -17,8 +17,8 @@ public class CheckingAccountRule
     @Override
     public Psd2PaymentAccountClassificationResult classify(Provider provider, Account account) {
         if (account.getType() == AccountTypes.CHECKING) {
-            return Psd2PaymentAccountClassificationResult.PSD2_PAYMENT_ACCOUNT;
+            return Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT;
         }
-        return Psd2PaymentAccountClassificationResult.PSD2_UNDETERMINED_PAYMENT_ACCOUNT;
+        return Psd2PaymentAccountClassificationResult.UNDETERMINED_PAYMENT_ACCOUNT;
     }
 }
