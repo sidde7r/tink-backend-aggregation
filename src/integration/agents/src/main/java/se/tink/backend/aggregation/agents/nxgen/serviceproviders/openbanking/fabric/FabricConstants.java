@@ -40,6 +40,10 @@ public class FabricConstants {
     }
 
     public static class Urls {
+        // test: https://test-psd2gateway.fabrick.com
+        // sandbox: https://sandbox-psdgw-sella.fabrick.com
+        public static final String BASE_URL = "https://psdgw-sella.fabrick.com";
+
         public static final String CONSENT = "/api/fabrick/psd2/v1/consents";
         public static final String GET_ACCOUNTS = "/api/fabrick/psd2/v1/accounts";
         public static final String GET_TRANSACTIONS =
@@ -50,11 +54,17 @@ public class FabricConstants {
                 "/api/fabrick/psd2/v1/consents/{consentId}";
         public static final String API_PSD2_URL = "/api/fabrick/psd2";
         public static final String INITIATE_A_PAYMENT_URL =
-                "/api/fabrick/psd2/v1/payments/{payment-product}";
+                BASE_URL + "/api/fabrick/psd2/v1/payments/{payment-product}";
         public static final String GET_PAYMENT_URL =
-                "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}";
+                BASE_URL + "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}";
         public static final String GET_PAYMENT_STATUS_URL =
-                "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}/status";
+                BASE_URL + "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}/status";
+        public static final String GET_PAYMENT_AUTHORIZATIONS_URL =
+                BASE_URL
+                        + "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}/authorisations";
+        public static final String GET_PAYMENT_AUTHORIZATION_STATUS_URL =
+                BASE_URL
+                        + "/api/fabrick/psd2/v1/payments/{payment-product}/{paymentId}/authorisations/{authorisationId}";
     }
 
     public static class IdTags {
@@ -65,6 +75,8 @@ public class FabricConstants {
     public static class StorageKeys {
         public static final String CONSENT_ID = "CONSENT_ID";
         public static final String LINK = "link";
+        public static final String PAYMENT_ID = "paymentId";
+        public static final String PAYMENT_AUTHORIZATION_ID = "paymentAuthorizationId";
     }
 
     public static class QueryKeys {
@@ -105,6 +117,7 @@ public class FabricConstants {
         public static final String PAYMENT_PRODUCT = "payment-product";
         public static final String PAYMENT_ID = "paymentId";
         public static final String PAYMENT_TYPE = "paymentType";
+        public static final String PAYMENT_AUTHORIZATION_ID = "authorisationId";
     }
 
     public static class PathParameterValues {

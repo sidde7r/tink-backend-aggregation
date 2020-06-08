@@ -18,6 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.configuration.FabricConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
@@ -133,9 +135,8 @@ public class FabricApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
-        final String baseUrl = getConfiguration().getBaseUrl();
         return client.request(
-                        new URL(baseUrl + Urls.INITIATE_A_PAYMENT_URL)
+                        new URL(Urls.INITIATE_A_PAYMENT_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                                         FabricConstants.PathParameterValues.PAYMENT_PRODUCT))
@@ -151,9 +152,8 @@ public class FabricApiClient {
     }
 
     public CreatePaymentResponse getPayment(String paymentId) {
-        final String baseUrl = getConfiguration().getBaseUrl();
         return client.request(
-                        new URL(baseUrl + Urls.GET_PAYMENT_URL)
+                        new URL(Urls.GET_PAYMENT_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                                         FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
@@ -164,14 +164,44 @@ public class FabricApiClient {
     }
 
     public CreatePaymentResponse getPaymentStatus(String paymentId) {
-        final String baseUrl = getConfiguration().getBaseUrl();
         return client.request(
-                        new URL(baseUrl + Urls.GET_PAYMENT_STATUS_URL)
+                        new URL(Urls.GET_PAYMENT_STATUS_URL)
                                 .parameter(
                                         FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
                                         FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
                                 .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .get(CreatePaymentResponse.class);
+    }
+
+    public PaymentAuthorizationsResponse getPaymentAuthorizations(String paymentId) {
+        PaymentAuthorizationsResponse result =
+                client.request(
+                                new URL(Urls.GET_PAYMENT_AUTHORIZATIONS_URL)
+                                        .parameter(
+                                                FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                                FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                        .parameter(
+                                                FabricConstants.PathParameterKeys.PAYMENT_ID,
+                                                paymentId))
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                        .get(PaymentAuthorizationsResponse.class);
+        sessionStorage.put(
+                StorageKeys.PAYMENT_AUTHORIZATION_ID, result.getAuthorisationIds().get(0));
+        return result;
+    }
+
+    public PaymentAuthorizationStatus getPaymentAuthorizationStatus(String paymentId) {
+        return client.request(
+                        new URL(Urls.GET_PAYMENT_AUTHORIZATION_STATUS_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_AUTHORIZATION_ID,
+                                        sessionStorage.get(StorageKeys.PAYMENT_AUTHORIZATION_ID)))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(PaymentAuthorizationStatus.class);
     }
 }

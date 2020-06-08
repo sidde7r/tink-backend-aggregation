@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.entities.InstructedAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -32,7 +33,6 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
 
     private final FabricApiClient apiClient;
     private final List<PaymentResponse> paymentResponses = new ArrayList<>();
-    private final SupplementalInformationHelper supplementalInformationHelper;
     private final SessionStorage sessionStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final FabricPaymentController fabricPaymentController;
@@ -44,7 +44,6 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
             SessionStorage sessionStorage,
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
-        this.supplementalInformationHelper = supplementalInformationHelper;
         this.sessionStorage = sessionStorage;
         this.strongAuthenticationState = strongAuthenticationState;
         this.fabricPaymentController =
@@ -84,6 +83,8 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         CreatePaymentResponse payment = apiClient.createPayment(createPaymentRequest);
         sessionStorage.put(
                 FabricConstants.StorageKeys.LINK, payment.getLinks().getScaRedirect().getHref());
+        sessionStorage.put(FabricConstants.StorageKeys.PAYMENT_ID, payment.getPaymentId());
+
         return payment.toTinkPaymentResponse(PaymentType.SEPA);
     }
 
@@ -94,17 +95,20 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         logger.info(paymentMultiStepRequest.getStep());
 
         String redirectUrl = sessionStorage.get(FabricConstants.StorageKeys.LINK);
+
         if (redirectUrl != null) {
             fabricPaymentController.redirectSCA(redirectUrl);
             logger.info("SupplementalInformation received and continue to getPaymentStatus");
             sessionStorage.put(FabricConstants.StorageKeys.LINK, null);
         }
-
-        CreatePaymentResponse createPaymentResponse =
-                apiClient.getPaymentStatus(paymentMultiStepRequest.getPayment().getUniqueId());
+        String paymentId = sessionStorage.get(FabricConstants.StorageKeys.PAYMENT_ID);
+        apiClient.getPaymentAuthorizations(paymentId);
+        PaymentAuthorizationStatus authorizationStatus =
+                apiClient.getPaymentAuthorizationStatus(paymentId);
+        logger.info(String.format("scaStatus: %s", authorizationStatus.getScaStatus()));
+        CreatePaymentResponse createPaymentResponse = apiClient.getPaymentStatus(paymentId);
         logger.info(
                 "Transaction Status: {} after SCA ", createPaymentResponse.getTransactionStatus());
-
         return fabricPaymentController.response(createPaymentResponse, paymentMultiStepRequest);
     }
 
