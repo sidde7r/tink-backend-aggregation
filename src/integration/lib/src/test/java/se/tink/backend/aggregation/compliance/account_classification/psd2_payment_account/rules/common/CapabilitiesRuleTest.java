@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2;
+package se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.rules.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -9,8 +9,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
-import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
-import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.CapabilitiesRule;
+import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.result.Psd2PaymentAccountClassificationResult;
 import se.tink.libraries.enums.MarketCode;
 
 public class CapabilitiesRuleTest {
@@ -39,9 +38,11 @@ public class CapabilitiesRuleTest {
 
                     assertThat(rule.isApplicable(provider)).isTrue();
 
-                    PaymentAccountClassification result = rule.classify(provider, new Account());
+                    Psd2PaymentAccountClassificationResult result =
+                            rule.classify(provider, new Account());
 
-                    assertThat(result).isEqualTo(PaymentAccountClassification.PAYMENT_ACCOUNT);
+                    assertThat(result)
+                            .isEqualTo(Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT);
                 });
     }
 
@@ -52,9 +53,10 @@ public class CapabilitiesRuleTest {
         Provider provider = prepareMockedNonOpenBankingProvider();
         Account account = prepareMockedAccountWithCapabilities(AccountCapabilities.createDefault());
 
-        PaymentAccountClassification result = rule.classify(provider, account);
+        Psd2PaymentAccountClassificationResult result = rule.classify(provider, account);
 
-        assertThat(result).isEqualTo(PaymentAccountClassification.UNDETERMINED);
+        assertThat(result)
+                .isEqualTo(Psd2PaymentAccountClassificationResult.UNDETERMINED_PAYMENT_ACCOUNT);
     }
 
     @Test
@@ -70,9 +72,9 @@ public class CapabilitiesRuleTest {
         capabilities.setCanWithdrawFunds(AccountCapabilities.Answer.YES);
         Account account = prepareMockedAccountWithCapabilities(capabilities);
 
-        PaymentAccountClassification result = rule.classify(provider, account);
+        Psd2PaymentAccountClassificationResult result = rule.classify(provider, account);
 
-        assertThat(result).isEqualTo(PaymentAccountClassification.PAYMENT_ACCOUNT);
+        assertThat(result).isEqualTo(Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT);
     }
 
     @Test
@@ -88,9 +90,9 @@ public class CapabilitiesRuleTest {
         capabilities.setCanWithdrawFunds(AccountCapabilities.Answer.NO);
         Account account = prepareMockedAccountWithCapabilities(capabilities);
 
-        PaymentAccountClassification result = rule.classify(provider, account);
+        Psd2PaymentAccountClassificationResult result = rule.classify(provider, account);
 
-        assertThat(result).isEqualTo(PaymentAccountClassification.NON_PAYMENT_ACCOUNT);
+        assertThat(result).isEqualTo(Psd2PaymentAccountClassificationResult.NON_PAYMENT_ACCOUNT);
     }
 
     private Provider prepareMockedNonOpenBankingProvider() {

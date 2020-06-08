@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2;
+package se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.rules.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -9,8 +9,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
-import se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2.common.CheckingAccountRule;
+import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.result.Psd2PaymentAccountClassificationResult;
 import se.tink.libraries.enums.MarketCode;
 
 public class CheckingAccountRuleTest {
@@ -30,11 +29,13 @@ public class CheckingAccountRuleTest {
     }
 
     private void testRuleForProviderAndAccount(
-            Provider provider, Account account, PaymentAccountClassification expectedResult) {
+            Provider provider,
+            Account account,
+            Psd2PaymentAccountClassificationResult expectedResult) {
         CheckingAccountRule rule = new CheckingAccountRule();
         assertThat(rule.isApplicable(provider)).isTrue();
 
-        PaymentAccountClassification result = rule.classify(provider, account);
+        Psd2PaymentAccountClassificationResult result = rule.classify(provider, account);
 
         assertThat(result).isEqualTo(expectedResult);
     }
@@ -50,7 +51,7 @@ public class CheckingAccountRuleTest {
                                 testRuleForProviderAndAccount(
                                         provider,
                                         account,
-                                        PaymentAccountClassification.PAYMENT_ACCOUNT));
+                                        Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT));
     }
 
     @Test
@@ -70,7 +71,8 @@ public class CheckingAccountRuleTest {
                                 testRuleForProviderAndAccount(
                                         provider,
                                         account,
-                                        PaymentAccountClassification.UNDETERMINED));
+                                        Psd2PaymentAccountClassificationResult
+                                                .UNDETERMINED_PAYMENT_ACCOUNT));
     }
 
     private Provider prepareMockedProviderWithMarketCode(MarketCode marketCode) {

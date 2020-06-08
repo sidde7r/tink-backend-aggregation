@@ -36,8 +36,8 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.compliance.account_classification.PaymentAccountClassification;
-import se.tink.backend.aggregation.compliance.account_classification.classifier.AccountClassifier;
+import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.Psd2PaymentAccountClassifier;
+import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.result.Psd2PaymentAccountClassificationResult;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.locks.BarrierName;
@@ -67,7 +67,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
     private ProviderSessionCacheController providerSessionCacheController;
-    private final AccountClassifier accountClassifier;
+    private final Psd2PaymentAccountClassifier psd2PaymentAccountClassifier;
 
     private static class SupplementalInformationMetrics {
         private static final String CLUSTER_LABEL = "client_cluster";
@@ -130,7 +130,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         this.updatedAccountsByTinkId = Maps.newHashMap();
         this.updatedAccountUniqueIds = Sets.newHashSet();
         this.accountsToAggregate = Lists.newArrayList();
-        this.accountClassifier = new AccountClassifier(metricRegistry);
+        this.psd2PaymentAccountClassifier =
+                Psd2PaymentAccountClassifier.createWithMetrics(metricRegistry);
 
         this.request = request;
 
@@ -367,8 +368,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         try {
             // TODO: extend filtering by using payment classification information
             // (For now we discard the result as in the beginning we just want to collect metrics)
-            PaymentAccountClassification paymentAccountClassification =
-                    accountClassifier.classifyAsPaymentAccount(request.getProvider(), account);
+            Optional<Psd2PaymentAccountClassificationResult> paymentAccountClassification =
+                    psd2PaymentAccountClassifier.classify(request.getProvider(), account);
         } catch (RuntimeException e) {
             log.error("[classifyAsPaymentAccount] Unexpected exception occurred", e);
         }

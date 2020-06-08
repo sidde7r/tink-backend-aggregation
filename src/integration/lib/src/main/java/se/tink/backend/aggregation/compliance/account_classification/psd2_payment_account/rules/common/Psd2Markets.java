@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.compliance.account_classification.classifier.impl.payment_account.rules.psd2;
+package se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.rules.common;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
