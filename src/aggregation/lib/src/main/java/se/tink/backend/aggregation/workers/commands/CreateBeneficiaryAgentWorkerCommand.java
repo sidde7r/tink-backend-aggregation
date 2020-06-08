@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.payment.enums.CreateBeneficiaryStatus;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
-import se.tink.libraries.payment.rpc.CreateBeneficiary.Builder;
 
 public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
         implements MetricsCommand {
@@ -102,11 +101,11 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
             CreateBeneficiaryCredentialsRequest createBeneficiaryCredentialsRequest)
             throws BeneficiaryException {
         CreateBeneficiary createBeneficiary =
-                new Builder()
-                        .withBeneficiary(createBeneficiaryCredentialsRequest.getBeneficiary())
-                        .withOwnerAccountNumber(
+                CreateBeneficiary.builder()
+                        .beneficiary(createBeneficiaryCredentialsRequest.getBeneficiary())
+                        .ownerAccountNumber(
                                 createBeneficiaryCredentialsRequest.getOwnerAccountNumber())
-                        .withStatus(CreateBeneficiaryStatus.INITIATED)
+                        .status(CreateBeneficiaryStatus.INITIATED)
                         .build();
         CreateBeneficiaryResponse addBeneficiaryResponse =
                 addBeneficiaryController.createBeneficiary(

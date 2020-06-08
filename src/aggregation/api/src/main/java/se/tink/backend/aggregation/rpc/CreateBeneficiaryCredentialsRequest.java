@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.rpc;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -11,6 +12,7 @@ import se.tink.libraries.payment.rpc.Beneficiary;
 import se.tink.libraries.user.rpc.User;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
 public class CreateBeneficiaryCredentialsRequest extends CredentialsRequest {
 
     private final Beneficiary beneficiary;
@@ -29,14 +31,6 @@ public class CreateBeneficiaryCredentialsRequest extends CredentialsRequest {
         this.ownerAccountNumber = ownerAccountNumber;
     }
 
-    public Beneficiary getBeneficiary() {
-        return this.beneficiary;
-    }
-
-    public String getOwnerAccountNumber() {
-        return this.ownerAccountNumber;
-    }
-
     @Override
     public boolean isManual() {
         return true;
@@ -45,10 +39,6 @@ public class CreateBeneficiaryCredentialsRequest extends CredentialsRequest {
     @Override
     public CredentialsRequestType getType() {
         return CredentialsRequestType.CREATE_BENEFICIARY;
-    }
-
-    public String getRefreshId() {
-        return refreshId;
     }
 
     public void setRefreshId(String refreshId) {

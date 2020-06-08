@@ -33,6 +33,7 @@ java_library(
         "//third_party:commons_codec_commons_codec",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:javax_validation_validation_api",
+        "//third_party:lombok_libs",
         "//third_party:org_hibernate_hibernate_annotations",
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

@@ -16,6 +16,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/date",
         "//src/libraries/pair",
+        "//third_party:lombok_libs",
         "@tink_backend//src/libraries/uuid",
     ],
 )
