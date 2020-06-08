@@ -9,7 +9,6 @@ junit_test(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/startupchecks",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/worker",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/controllers",
-        "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/draining",
         "//src/libraries/queue_lib",
         "//third_party:com_google_inject_guice",
