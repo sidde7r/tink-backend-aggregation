@@ -44,13 +44,10 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
         // Do not use the real PersistentStorage because we don't want to overwrite the
         // AIS auth token.
         PersistentStorage dummyStorage = new PersistentStorage();
-
-        log.info("Creating beneficiary step");
         createBeneficiaryResponse =
                 new CreateBeneficiaryResponse(
                         createBeneficiaryRequest.getBeneficiary(), dummyStorage);
         createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.INITIATED);
-        log.info("Done with Creating beneficiary step");
         return this.createBeneficiaryResponse;
     }
 
@@ -58,16 +55,12 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
     public CreateBeneficiaryMultiStepResponse sign(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest)
             throws BeneficiaryException, AuthenticationException {
-        log.info("Signing beneficiary step");
         switch (createBeneficiaryMultiStepRequest.getStep()) {
             case SigningStepConstants.STEP_INIT:
-                log.info("Signing init");
                 return init(createBeneficiaryMultiStepRequest);
             case RedirectAuthenticationDemoAgentConstants.Step.AUTHORIZE:
-                log.info("Signing authorize");
                 return authorized(createBeneficiaryMultiStepRequest);
             case RedirectAuthenticationDemoAgentConstants.Step.CREATE_BENEFICIARY:
-                log.info("Signing create");
                 return createBeneficiary(createBeneficiaryMultiStepRequest);
             default:
                 throw new IllegalStateException(
@@ -94,7 +87,7 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
                 .getBeneficiary()
                 .setStatus(CreateBeneficiaryStatus.CREATED);
         log.info(
-                "Done with adding beneficiary, name: {}, type: {}, account number: {}, owner account number: {}",
+                "Done with beneficiary creation, name: {}, type: {}, account number: {}, owner account number: {}",
                 beneficiary.getName(),
                 beneficiary.getAccountNumberType(),
                 StringUtils.overlay(
@@ -124,10 +117,8 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
     private CreateBeneficiaryMultiStepResponse init(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest)
             throws BeneficiaryAuthorizationException {
-        log.info("Init step");
         switch (createBeneficiaryMultiStepRequest.getBeneficiary().getStatus()) {
             case INITIATED:
-                log.info("Init step created");
                 return new CreateBeneficiaryMultiStepResponse(
                         createBeneficiaryMultiStepRequest, Step.AUTHORIZE, new ArrayList<>());
             case REJECTED:
@@ -145,12 +136,11 @@ public class RedirectDemoCreateBeneficaryExecutor implements CreateBeneficiaryEx
     private CreateBeneficiaryMultiStepResponse authorized(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
         try {
-            log.info("Authorize step");
+            log.info("Signing beneficiary request.");
             thirdPartyAppAuthenticationController.authenticate(credentials);
             this.createBeneficiaryResponse
                     .getBeneficiary()
                     .setStatus(CreateBeneficiaryStatus.SIGNED);
-            log.info("Done authorizing");
             return new CreateBeneficiaryMultiStepResponse(
                     createBeneficiaryMultiStepRequest, Step.CREATE_BENEFICIARY, new ArrayList<>());
         } catch (AuthenticationException | AuthorizationException e) {
