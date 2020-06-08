@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.signing.SigningStepConstants;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.rpc.CreateBeneficiary;
 
+@Getter
 public class CreateBeneficiaryMultiStepRequest extends CreateBeneficiaryRequest {
     private String step;
     private final List<Field> fields;
@@ -34,13 +36,5 @@ public class CreateBeneficiaryMultiStepRequest extends CreateBeneficiaryRequest 
                 SigningStepConstants.STEP_INIT,
                 Collections.emptyList(),
                 Collections.emptyList());
-    }
-
-    public String getStep() {
-        return step;
-    }
-
-    public List<String> getUserInputs() {
-        return userInputs;
     }
 }

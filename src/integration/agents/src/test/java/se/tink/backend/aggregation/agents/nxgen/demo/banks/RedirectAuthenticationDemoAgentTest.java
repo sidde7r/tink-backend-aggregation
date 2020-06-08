@@ -147,15 +147,15 @@ public class RedirectAuthenticationDemoAgentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
         Beneficiary beneficiary =
-                new Beneficiary.Builder()
-                        .withAccountNumber(ITALY_DESTINATION_ACCOUNT)
-                        .withAccountNumberType(Type.IBAN)
-                        .withName("Test")
+                Beneficiary.builder()
+                        .accountNumber(ITALY_DESTINATION_ACCOUNT)
+                        .accountNumberType(Type.IBAN)
+                        .name("Test")
                         .build();
         CreateBeneficiary createBeneficiary =
-                new CreateBeneficiary.Builder()
-                        .withBeneficiary(beneficiary)
-                        .withOwnerAccountNumber(ITALY_SOURCE_ACCOUNT)
+                CreateBeneficiary.builder()
+                        .beneficiary(beneficiary)
+                        .ownerAccountNumber(ITALY_SOURCE_ACCOUNT)
                         .build();
         builder.build().testCreateBeneficiary(createBeneficiary);
     }

@@ -21,6 +21,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/pair",
         "//src/libraries/uuid",
+        "//third_party:lombok_libs",
         "//third_party:org_iban4j_iban4j",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
