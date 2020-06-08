@@ -17,12 +17,25 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.mocks.TransferMock;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @RunWith(Enclosed.class)
 public class TransferMessageFormatterTest {
+
+    private static final String TINK_GENERATED_MESSAGE_FORMAT = "TinkGenerated://";
+
+    private static RemittanceInformation getRemittanceInformation(
+            RemittanceInformationType type, String value) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue(value);
+        remittanceInformation.setType(type);
+        return remittanceInformation;
+    }
+
     public static class MessageLength {
         private TransferMessageLengthConfig lengthConfig =
                 TransferMessageLengthConfig.createWithMaxLength(25, 12, 25);
@@ -43,16 +56,25 @@ public class TransferMessageFormatterTest {
         public void setup() {
             transfer.setType(TransferType.BANK_TRANSFER);
             transfer.setSourceMessage(VALID_SOURCE_MESSAGE);
-            transfer.setDestinationMessage(VALID_DESTINATION_MESSAGE);
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED, VALID_DESTINATION_MESSAGE));
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED, VALID_DESTINATION_MESSAGE));
         }
 
         @Test
         public void
                 ensureGeneratedMessages_areTrimmed_whenMessagesAreTooLong_forInternalTransfers() {
             transfer.setGeneratedSourceMessage(LONG_MESSAGE);
-            transfer.setGeneratedDestinationMessage(LONG_MESSAGE);
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED,
+                            TINK_GENERATED_MESSAGE_FORMAT + LONG_MESSAGE));
 
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, true);
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, true);
 
             assertTrue(messages.getSourceMessage().length() == 25);
             assertTrue(messages.getDestinationMessage().length() == 25);
@@ -62,9 +84,13 @@ public class TransferMessageFormatterTest {
         public void
                 ensureGeneratedMessages_areTrimmed_whenMessagesAreTooLong_forExternalTransfers() {
             transfer.setGeneratedSourceMessage(LONG_MESSAGE);
-            transfer.setGeneratedDestinationMessage(LONG_MESSAGE);
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED,
+                            TINK_GENERATED_MESSAGE_FORMAT + LONG_MESSAGE));
 
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, false);
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, false);
 
             assertEquals(25, messages.getSourceMessage().length());
             assertEquals(12, messages.getDestinationMessage().length());
@@ -74,9 +100,13 @@ public class TransferMessageFormatterTest {
         public void
                 ensureGeneratedMessages_areNotTrimmed_whenMessagesWithinRange_forInternalTransfers() {
             transfer.setGeneratedSourceMessage(VALID_SOURCE_MESSAGE);
-            transfer.setGeneratedDestinationMessage(VALID_SOURCE_MESSAGE);
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED,
+                            TINK_GENERATED_MESSAGE_FORMAT + VALID_SOURCE_MESSAGE));
 
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, true);
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, true);
 
             assertEquals(VALID_SOURCE_MESSAGE, messages.getSourceMessage());
             assertEquals(VALID_SOURCE_MESSAGE, messages.getDestinationMessage());
@@ -97,8 +127,9 @@ public class TransferMessageFormatterTest {
             expectTransferMessageException_withUserMessage(
                     TransferMessageFormatter.EndUserMessage.DESTINATION_MESSAGE_TO_LONG, 12);
 
-            transfer.setDestinationMessage(LONG_MESSAGE);
-            formatter.getDestinationMessage(transfer, false);
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(RemittanceInformationType.UNSTRUCTURED, LONG_MESSAGE));
+            formatter.getDestinationMessageFromRemittanceInformation(transfer, false);
         }
 
         @Test
@@ -107,8 +138,9 @@ public class TransferMessageFormatterTest {
             expectTransferMessageException_withUserMessage(
                     TransferMessageFormatter.EndUserMessage.DESTINATION_MESSAGE_TO_LONG, 25);
 
-            transfer.setDestinationMessage(LONG_MESSAGE);
-            formatter.getDestinationMessage(transfer, true);
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(RemittanceInformationType.UNSTRUCTURED, LONG_MESSAGE));
+            formatter.getDestinationMessageFromRemittanceInformation(transfer, true);
         }
 
         @Test
@@ -120,8 +152,9 @@ public class TransferMessageFormatterTest {
                     TransferMessageFormatter.EndUserMessage.DESTINATION_MESSAGE_TO_LONG, 12);
 
             transfer.setSourceMessage(LONG_MESSAGE);
-            transfer.setDestinationMessage(LONG_MESSAGE);
-            formatter.getMessages(transfer, false);
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(RemittanceInformationType.UNSTRUCTURED, LONG_MESSAGE));
+            formatter.getMessagesFromRemittanceInformation(transfer, false);
         }
 
         private void expectTransferMessageException_withUserMessage(
@@ -135,7 +168,8 @@ public class TransferMessageFormatterTest {
         @Test
         public void
                 ensureMessagesIsReturned_whenUserProvidedMessages_forExternalTransfer_isWithinLimit() {
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, false);
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, false);
 
             assertEquals(VALID_DESTINATION_MESSAGE, messages.getDestinationMessage());
             assertEquals(VALID_SOURCE_MESSAGE, messages.getSourceMessage());
@@ -144,9 +178,13 @@ public class TransferMessageFormatterTest {
         @Test
         public void
                 ensureMessageIsReturned_whenUserProvidedDestinationMessage_forInternalTransfer_isWithinLimit() {
-            transfer.setDestinationMessage(VALID_SOURCE_MESSAGE);
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED,
+                            TINK_GENERATED_MESSAGE_FORMAT + VALID_SOURCE_MESSAGE));
 
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, true);
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, true);
 
             assertEquals(VALID_SOURCE_MESSAGE, messages.getSourceMessage());
             assertEquals(VALID_SOURCE_MESSAGE, messages.getDestinationMessage());
@@ -162,7 +200,7 @@ public class TransferMessageFormatterTest {
         public void
                 ensureGetDestinationMessageThrowsException_whenTransferType_isNot_BANK_TRANSFER() {
             transfer.setType(TransferType.EINVOICE);
-            formatter.getDestinationMessage(transfer, false);
+            formatter.getDestinationMessageFromRemittanceInformation(transfer, false);
         }
     }
 
@@ -178,10 +216,14 @@ public class TransferMessageFormatterTest {
             Transfer transfer =
                     TransferMock.bankTransfer()
                             .withSourceMessage("source:123åäöüÅÄÖÜ$©@£")
-                            .withDestinationMessage("dest:123åäöüÅÄÖÜ$©@£")
+                            .withRemittanceInformation(
+                                    getRemittanceInformation(
+                                            RemittanceInformationType.UNSTRUCTURED,
+                                            "dest:123åäöüÅÄÖÜ$©@£"))
                             .build();
 
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, false);
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, false);
 
             assertThat(messages.getSourceMessage()).isEqualTo("source:123åäöüÅÄÖÜ$©@£");
             assertThat(messages.getDestinationMessage()).isEqualTo("dest:123åäöüÅÄÖÜ$©@£");
@@ -194,9 +236,12 @@ public class TransferMessageFormatterTest {
 
             Transfer transfer = TransferMock.bankTransfer().build();
             transfer.setGeneratedSourceMessage("source:123åäöüÅÄÖÜ$©@£");
-            transfer.setGeneratedDestinationMessage("dest:123åäöüÅÄÖÜ$©@£");
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED, "dest:123åäöüÅÄÖÜ$©@£"));
 
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, false);
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, false);
 
             assertThat(messages.getSourceMessage()).isEqualTo("source:123åäöüÅÄÖÜ$©@£");
             assertThat(messages.getDestinationMessage()).isEqualTo("dest:123åäöüÅÄÖÜ$©@£");
@@ -210,9 +255,12 @@ public class TransferMessageFormatterTest {
 
             Transfer transfer = TransferMock.bankTransfer().build();
             transfer.setGeneratedSourceMessage("source:123åäöüÅÄÖÜ$©@£^");
-            transfer.setGeneratedDestinationMessage("dest:123åäöüÅÄÖÜ$©@£");
-
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, false);
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED,
+                            TINK_GENERATED_MESSAGE_FORMAT + "dest:123åäöüÅÄÖÜ$©@£"));
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, false);
 
             assertThat(messages.getSourceMessage()).isEqualTo("source:123åäöuÅÄÖU");
             assertThat(messages.getDestinationMessage()).isEqualTo("dest:123åäöuÅÄÖU");
@@ -254,10 +302,13 @@ public class TransferMessageFormatterTest {
 
                 Transfer transfer =
                         TransferMock.bankTransfer()
-                                .withDestinationMessage("dest:123åäöüÅÄÖÜ$©@£^è")
+                                .withRemittanceInformation(
+                                        getRemittanceInformation(
+                                                RemittanceInformationType.UNSTRUCTURED,
+                                                "dest:123åäöüÅÄÖÜ$©@£^è"))
                                 .build();
 
-                formatter.getDestinationMessage(transfer, false);
+                formatter.getDestinationMessageFromRemittanceInformation(transfer, false);
             } catch (TransferExecutionException e) {
                 // The user message should contain the incorrect characters
                 assertThat(e.getUserMessage()).contains("ü Ü $ © @ £ ^ è");
@@ -276,16 +327,23 @@ public class TransferMessageFormatterTest {
             Transfer transfer = new Transfer();
             transfer.setType(TransferType.BANK_TRANSFER);
             transfer.setGeneratedSourceMessage("Till A  B");
-            transfer.setGeneratedDestinationMessage("Från B  C");
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED,
+                            TINK_GENERATED_MESSAGE_FORMAT + "Från B  C"));
 
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, false);
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, false);
             assertEquals("Till A B", messages.getSourceMessage());
             assertEquals("Från B C", messages.getDestinationMessage());
 
             transfer.setGeneratedSourceMessage("Till A & B");
-            transfer.setGeneratedDestinationMessage("Från B & C");
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED,
+                            TINK_GENERATED_MESSAGE_FORMAT + "Från B & C"));
 
-            messages = formatter.getMessages(transfer, false);
+            messages = formatter.getMessagesFromRemittanceInformation(transfer, false);
             assertEquals("Till A B", messages.getSourceMessage());
             assertEquals("Från B C", messages.getDestinationMessage());
         }
@@ -298,16 +356,23 @@ public class TransferMessageFormatterTest {
             Transfer transfer = new Transfer();
             transfer.setType(TransferType.BANK_TRANSFER);
             transfer.setGeneratedSourceMessage(" Till A ");
-            transfer.setGeneratedDestinationMessage(" Från B ");
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED,
+                            TINK_GENERATED_MESSAGE_FORMAT + " Från B "));
 
-            TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, false);
+            TransferMessageFormatter.Messages messages =
+                    formatter.getMessagesFromRemittanceInformation(transfer, false);
             assertEquals("Till A", messages.getSourceMessage());
             assertEquals("Från B", messages.getDestinationMessage());
 
             transfer.setGeneratedSourceMessage(" Till A & ");
-            transfer.setGeneratedDestinationMessage(" Från B & ");
+            transfer.setRemittanceInformation(
+                    getRemittanceInformation(
+                            RemittanceInformationType.UNSTRUCTURED,
+                            TINK_GENERATED_MESSAGE_FORMAT + " Från B & "));
 
-            messages = formatter.getMessages(transfer, false);
+            messages = formatter.getMessagesFromRemittanceInformation(transfer, false);
             assertEquals("Till A", messages.getSourceMessage());
             assertEquals("Från B", messages.getDestinationMessage());
         }

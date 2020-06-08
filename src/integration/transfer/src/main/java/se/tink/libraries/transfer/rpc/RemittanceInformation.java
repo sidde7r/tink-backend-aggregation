@@ -1,7 +1,9 @@
 package se.tink.libraries.transfer.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
 import se.tink.libraries.transfer.enums.RemittanceInformationType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -22,7 +24,29 @@ public class RemittanceInformation {
     }
 
     public void setValue(String value) {
+        Preconditions.checkNotNull(value, "The value for remittance information is missing.");
         this.value = value;
+    }
+
+    @JsonIgnore
+    public boolean isOfType(RemittanceInformationType type) {
+        return type.equals(this.type);
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof RemittanceInformation)) {
+            return false;
+        }
+
+        RemittanceInformation otherRemittanceInformation = (RemittanceInformation) other;
+        return this.isOfType(otherRemittanceInformation.getType())
+                && this.value.equals(otherRemittanceInformation.getValue());
     }
 
     @Override
