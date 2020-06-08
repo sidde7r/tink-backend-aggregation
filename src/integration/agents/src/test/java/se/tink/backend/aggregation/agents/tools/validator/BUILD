@@ -10,7 +10,6 @@ junit_test(
     resources = [
         "//src/integration/agents/src/main/resources:config-templates",
     ],
-    tags = ["manual"],
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//src/integration/agents",

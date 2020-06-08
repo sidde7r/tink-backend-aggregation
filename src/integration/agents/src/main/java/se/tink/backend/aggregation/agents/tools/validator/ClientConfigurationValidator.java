@@ -123,6 +123,9 @@ public class ClientConfigurationValidator {
             Set<String> secretFieldsNamesFromConfigurationClass) {
         Set<String> mappedSecretsNames =
                 clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(secretsNames);
+        Set<String> mappedExcludedSecretsNames =
+                clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(
+                        excludedSecretsNames);
 
         ImmutableSet<String> missingSecretsFields =
                 secretFieldsNamesFromConfigurationClass.stream()
@@ -136,7 +139,7 @@ public class ClientConfigurationValidator {
                         // Do not count as missing those that are excluded.
                         .filter(
                                 missingSecretFieldNameFromConfiguration ->
-                                        !excludedSecretsNames.contains(
+                                        !mappedExcludedSecretsNames.contains(
                                                 missingSecretFieldNameFromConfiguration))
                         .collect(ImmutableSet.toImmutableSet());
 
@@ -151,6 +154,9 @@ public class ClientConfigurationValidator {
             Set<String> secretFieldsNamesFromConfigurationClass) {
         Set<String> mappedSecretsNames =
                 clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(secretsNames);
+        Set<String> mappedExcludedSecretsNames =
+                clientConfigurationMetaInfoHandler.mapSpecialConfigClassFieldNames(
+                        excludedSecretsNames);
 
         ImmutableSet<String> invalidSecretsFields =
                 mappedSecretsNames.stream()
@@ -163,7 +169,8 @@ public class ClientConfigurationValidator {
                         // Do not count as invalid those that are excluded from validation.
                         .filter(
                                 invalidSecretFieldName ->
-                                        !excludedSecretsNames.contains(invalidSecretFieldName))
+                                        !mappedExcludedSecretsNames.contains(
+                                                invalidSecretFieldName))
                         .collect(ImmutableSet.toImmutableSet());
 
         return clientConfigurationMetaInfoHandler.inverseMapSpecialConfigClassFieldNames(
