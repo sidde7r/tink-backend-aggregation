@@ -106,7 +106,7 @@ public class CreateBeneficiaryAgentWorkerCommand extends AgentWorkerCommand
                         .withBeneficiary(createBeneficiaryCredentialsRequest.getBeneficiary())
                         .withOwnerAccountNumber(
                                 createBeneficiaryCredentialsRequest.getOwnerAccountNumber())
-                        .withStatus(CreateBeneficiaryStatus.CREATED)
+                        .withStatus(CreateBeneficiaryStatus.INITIATED)
                         .build();
         CreateBeneficiaryResponse addBeneficiaryResponse =
                 addBeneficiaryController.createBeneficiary(

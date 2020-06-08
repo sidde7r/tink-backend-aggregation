@@ -1,7 +1,7 @@
 package se.tink.libraries.payment.enums;
 
 public enum CreateBeneficiaryStatus {
-    CREATED,
+    INITIATED,
     SIGNED,
     REJECTED,
     ADDED,

@@ -47,7 +47,7 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
             CreateBeneficiaryRequest createBeneficiaryRequest) throws BeneficiaryException {
         createBeneficiaryResponse =
                 new CreateBeneficiaryResponse(createBeneficiaryRequest.getBeneficiary());
-        createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.CREATED);
+        createBeneficiaryResponse.getBeneficiary().setStatus(CreateBeneficiaryStatus.INITIATED);
 
         return createBeneficiaryResponse;
     }
@@ -74,7 +74,7 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest)
             throws BeneficiaryAuthorizationException {
         switch (createBeneficiaryMultiStepRequest.getBeneficiary().getStatus()) {
-            case CREATED:
+            case INITIATED:
                 return new CreateBeneficiaryMultiStepResponse(
                         createBeneficiaryMultiStepRequest,
                         CreditAgricoleConstants.Step.AUTHORIZE,
