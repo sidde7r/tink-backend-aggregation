@@ -23,12 +23,12 @@ public class N26SmsAuthenticator implements SmsOtpAuthenticatorPassword<String> 
     @Override
     public String init(String username, String password)
             throws AuthenticationException, AuthorizationException {
-        apiClient.loginWithPassword(username, password);
-
+        String mfaToken = apiClient.loginWithPassword(username, password);
+        sessionStorage.put(N26Constants.Storage.MFA_TOKEN, mfaToken);
         // TODO: Figure out how to set timeout
         MultiFactorSmsResponse multiFactorSmsResponse =
                 apiClient.initiate2fa(
-                        N26Constants.Body.MultiFactor.SMS, MultiFactorSmsResponse.class);
+                        N26Constants.Body.MultiFactor.SMS, MultiFactorSmsResponse.class, mfaToken);
         return multiFactorSmsResponse.getObfuscatedPhoneNumber();
     }
 

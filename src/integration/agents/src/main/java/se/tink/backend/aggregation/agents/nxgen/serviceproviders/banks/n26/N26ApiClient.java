@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.SavingsSpaceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.SpaceTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.TransactionResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -35,9 +34,8 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.identitydata.IdentityData;
 
-public class N26ApiClient implements IdentityDataFetcher {
+public class N26ApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
@@ -86,7 +84,7 @@ public class N26ApiClient implements IdentityDataFetcher {
         return new URL(N26Constants.URLS.HOST + resource);
     }
 
-    public void loginWithPassword(String username, String password) throws LoginException {
+    public String loginWithPassword(String username, String password) throws LoginException {
         String deviceId =
                 persistentStorage
                         .get(N26Constants.Storage.DEVICE_TOKEN, String.class)
@@ -115,7 +113,7 @@ public class N26ApiClient implements IdentityDataFetcher {
                         .get()
                         .fold(l -> l.getMfaToken(), r -> r.getMfaToken());
 
-        sessionStorage.put(N26Constants.Storage.MFA_TOKEN, mfaToken);
+        return mfaToken;
     }
 
     public AccountResponse fetchAccounts() {
@@ -168,14 +166,11 @@ public class N26ApiClient implements IdentityDataFetcher {
                 .get(SavingsAccountResponse.class);
     }
 
-    @Override
-    public IdentityData fetchIdentityData() {
+    public MeResponse fetchIdentityData() {
         TokenEntity token = getToken();
         String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
 
-        return getRequest(URLS.ME, MediaType.APPLICATION_JSON_TYPE, bearer)
-                .get(MeResponse.class)
-                .toTinkIdentity();
+        return getRequest(URLS.ME, MediaType.APPLICATION_JSON_TYPE, bearer).get(MeResponse.class);
     }
 
     public HttpResponse logout() {
@@ -217,10 +212,8 @@ public class N26ApiClient implements IdentityDataFetcher {
         }
     }
 
-    public <T> T initiate2fa(String secondFactor, Class<T> className) {
-        String mfaToken =
-                N26Utils.getFromStorage(
-                        sessionStorage, N26Constants.Storage.MFA_TOKEN, String.class);
+    public <T> T initiate2fa(String secondFactor, Class<T> className, String mfaToken) {
+
         String deviceToken =
                 N26Utils.getFromStorage(
                         persistentStorage, N26Constants.Storage.DEVICE_TOKEN, String.class);

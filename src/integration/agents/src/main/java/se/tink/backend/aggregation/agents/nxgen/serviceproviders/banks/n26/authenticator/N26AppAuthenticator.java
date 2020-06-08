@@ -38,7 +38,8 @@ public class N26AppAuthenticator implements ExternalAppAuthenticator<String> {
         String mfaToken =
                 N26Utils.getFromStorage(
                         sessionStorage, N26Constants.Storage.MFA_TOKEN, String.class);
-        apiClient.initiate2fa(N26Constants.Body.MultiFactor.APP, MultiFactorAppResponse.class);
+        apiClient.initiate2fa(
+                N26Constants.Body.MultiFactor.APP, MultiFactorAppResponse.class, mfaToken);
 
         return ExternalThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING, mfaToken);
     }

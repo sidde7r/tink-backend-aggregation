@@ -1,0 +1,6 @@
+{
+  "challengeType": "otp",
+  "obfuscatedPhoneNumber": "+33xxxxx1234",
+  "remainingResendCodeCount": 5,
+  "waitingTimeInSeconds": 30
+}

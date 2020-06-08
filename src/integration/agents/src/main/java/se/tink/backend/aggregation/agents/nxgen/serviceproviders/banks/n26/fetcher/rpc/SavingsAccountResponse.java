@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,17 +11,16 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class SavingsAccountResponse {
     private double totalBalance;
 
-    @JsonProperty("accounts")
-    private List<SavingsAccountEntity> savingsAccountList;
+    private List<SavingsAccountEntity> accounts;
 
     private boolean isEmpty() {
-        return savingsAccountList == null || savingsAccountList.isEmpty();
+        return accounts == null || accounts.isEmpty();
     }
 
     public List<TransactionalAccount> toSavingsAccounts() {
         return isEmpty()
                 ? Collections.emptyList()
-                : savingsAccountList.stream()
+                : accounts.stream()
                         .filter(SavingsAccountEntity::isValid)
                         .map(SavingsAccountEntity::toSavingsAccount)
                         .collect(Collectors.toList());

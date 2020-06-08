@@ -6,7 +6,7 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class Balance {
-    private int availableBalance;
+    private String availableBalance;
     private String currency;
 
     public ExactCurrencyAmount getAvailableBalance() {

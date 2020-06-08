@@ -1,17 +1,12 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "n26",
-    srcs = glob(
-        ["**/*.java"],
-        exclude = ["agent/**/*.java"],
-    ),
-    data = [
-        "//:agent_test_data",
-        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/n26/resources",
-    ],
+    name = "n26_agent_tests",
+    srcs = glob(["**/*.java"]),
+    data = ["//:agent_test_data"],
     tags = [
         "external",
+        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -24,8 +19,6 @@ junit_test(
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/models",
         "//src/libraries/serialization",
-        "//third_party:io_vavr",
-        "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_slf4j_slf4j_api",
     ],

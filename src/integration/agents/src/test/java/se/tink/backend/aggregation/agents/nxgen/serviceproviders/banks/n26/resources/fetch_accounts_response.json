@@ -1,0 +1,22 @@
+{
+  "availableBalance": 100.00,
+  "bankBalance": 100.00,
+  "bankName": "N26 Bank",
+  "bic": "NTSBDEB1XXX",
+  "currency": "EUR",
+  "externalId": {
+    "iban": "DE12345678901234567890"
+  },
+  "iban": "DE12345678901234567890",
+  "id": "2b81039b-1baf-4ee0-9d31-0e366d006c01",
+  "legalEntity": "EU",
+  "physicalBalance": null,
+  "seized": false,
+  "usableBalance": 100.00,
+  "users": [
+    {
+      "userId": "77f43b0f-06f5-4d1b-a35f-64d98b4d6523",
+      "userRole": "OWNER"
+    }
+  ]
+}

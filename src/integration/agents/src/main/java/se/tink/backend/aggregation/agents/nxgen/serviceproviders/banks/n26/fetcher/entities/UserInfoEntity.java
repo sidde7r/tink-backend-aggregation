@@ -26,8 +26,12 @@ public class UserInfoEntity {
         return firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getBirthNames() {
+        return kycFirstName;
+    }
+
+    public String getLastNames() {
+        return kycLastName;
     }
 
     public LocalDate getBirthDate() {

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;
