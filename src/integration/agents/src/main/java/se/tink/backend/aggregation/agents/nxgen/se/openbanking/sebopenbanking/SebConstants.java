@@ -22,7 +22,7 @@ public abstract class SebConstants {
                 BASE_CREDIT_CARD_ACCOUNTS + "/card-accounts/{accountId}/transactions";
 
         // Url for PIS
-        private static final String BASE_PIS = "/tpp/pis/v5/identified2/payments";
+        private static final String BASE_PIS = "/tpp/pis/v6/identified2/payments";
         public static final String CREATE_PAYMENT = BASE_PIS + "/{paymentProduct}";
         public static final String GET_PAYMENT = BASE_PIS + "/{paymentProduct}/{paymentId}";
         public static final String GET_PAYMENT_STATUS =
