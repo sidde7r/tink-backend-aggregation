@@ -44,7 +44,7 @@ public class AccountEntity {
                 .withBalance(balanceModule)
                 .withId(idModule)
                 .setApiIdentifier(accountId)
-                .putInTemporaryStorage("product_code", productCode)
+                .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
     }
 
