@@ -19,6 +19,7 @@ import se.tink.io.dropwizard.configuration.SubstitutingSourceProvider;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
+import se.tink.libraries.queue.QueueConsumer;
 
 public class AggregationServiceContainer extends Application<AggregationServiceConfiguration> {
 
@@ -67,6 +68,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
 
         environment.lifecycle().manage(injector.getInstance(ManagedTppSecretsServiceClient.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
+        environment.lifecycle().manage(injector.getInstance(QueueConsumer.class));
         environment
                 .lifecycle()
                 .manage(injector.getInstance(AgentDataAvailabilityTrackerClient.class));

@@ -6,7 +6,6 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.RateLimiter;
 import com.google.inject.Inject;
-import io.dropwizard.lifecycle.Managed;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.libraries.queue.QueueConsumer;
 import se.tink.libraries.queue.QueueProducer;
 
-public class SqsConsumer implements Managed, QueueConsumer {
+public class SqsConsumer implements QueueConsumer {
 
     private final AbstractExecutionThreadService service;
     private final SqsQueue sqsQueue;
@@ -100,14 +99,18 @@ public class SqsConsumer implements Managed, QueueConsumer {
 
     @Override
     public void start() throws Exception {
-        running.set(true);
-        service.startAsync();
-        service.awaitRunning(1, TimeUnit.MINUTES);
+        if (sqsQueue.isAvailable()) {
+            running.set(true);
+            service.startAsync();
+            service.awaitRunning(1, TimeUnit.MINUTES);
+        }
     }
 
     @Override
     public void stop() throws Exception {
-        service.awaitTerminated(30, TimeUnit.SECONDS);
+        if (service.isRunning()) {
+            service.awaitTerminated(30, TimeUnit.SECONDS);
+        }
         running.set(false);
     }
 }

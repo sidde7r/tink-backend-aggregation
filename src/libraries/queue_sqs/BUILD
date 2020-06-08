@@ -29,3 +29,8 @@ java_library(
         "@aggregation//:com_google_guava_guava",
     ],
 )
+
+alias(
+    name = "queue_sqs_test",
+    actual = "//src/libraries/queue_sqs/src/test/java/se/tink/libraries/queue/sqs",
+)
