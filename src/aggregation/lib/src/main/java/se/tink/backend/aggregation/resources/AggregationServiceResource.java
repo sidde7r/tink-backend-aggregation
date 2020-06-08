@@ -367,17 +367,14 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public void createBeneficiary(
             CreateBeneficiaryCredentialsRequest request, ClientInfo clientInfo) throws Exception {
-        logger.info(
-                "Received create beneficiary request - beneficiary: {}, isUpdate: {}",
-                request.getBeneficiary(),
-                request.isUpdate());
+        logger.info("Received create beneficiary request");
         // Only execute if feature is enabled with feature flag.
         Optional<AgentWorkerOperation> workerCommand =
                 agentWorkerCommandFactory.createOperationCreateBeneficiary(request, clientInfo);
         if (workerCommand.isPresent()) {
             agentWorker.execute(workerCommand.get());
         } else {
-            logger.info("No worker command exists for creating beneficiary. Returning.");
+            logger.warn("Feature is not enabled/implemented.");
         }
     }
 
