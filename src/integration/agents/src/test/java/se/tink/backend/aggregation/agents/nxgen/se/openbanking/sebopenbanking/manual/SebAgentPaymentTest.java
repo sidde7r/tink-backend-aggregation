@@ -39,7 +39,6 @@ public class SebAgentPaymentTest {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-seb-ob")
                         .setAppId("tink")
-                        .setFinancialInstitutionId("seb")
                         .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(true)
                         .loadCredentialsBefore(false)
