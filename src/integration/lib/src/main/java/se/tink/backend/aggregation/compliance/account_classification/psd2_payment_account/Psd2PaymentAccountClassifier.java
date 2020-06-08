@@ -34,7 +34,7 @@ import se.tink.libraries.metrics.registry.MetricRegistry;
  * <p>Please note: no assumptions should be made on the order of rule evaluation
  */
 public class Psd2PaymentAccountClassifier
-        extends AccountClassifier<Psd2PaymentAccountClassificationResult> {
+        implements AccountClassifier<Psd2PaymentAccountClassificationResult> {
     private static final ImmutableList<
                     AccountClassificationRule<Psd2PaymentAccountClassificationResult>>
             defaultRules =

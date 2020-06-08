@@ -4,10 +4,10 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 
-public abstract class AccountClassifier<ClassificationResult> {
+public interface AccountClassifier<ClassificationResult> {
     public abstract Optional<ClassificationResult> classify(Provider provider, Account account);
 
-    public boolean isClassifiedAs(
+    public default boolean isClassifiedAs(
             Provider provider, Account account, ClassificationResult expectedClassification) {
         return classify(provider, account)
                 .map(result -> result == expectedClassification)
