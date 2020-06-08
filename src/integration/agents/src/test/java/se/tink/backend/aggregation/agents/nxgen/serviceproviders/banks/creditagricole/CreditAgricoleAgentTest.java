@@ -4,7 +4,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.payment.rpc.Beneficiary;
+import se.tink.libraries.payment.rpc.CreateBeneficiary;
 
 @Ignore
 public class CreditAgricoleAgentTest {
@@ -25,7 +28,31 @@ public class CreditAgricoleAgentTest {
                 .testRefresh();
     }
 
+    @Test
+    public void testCreateBeneficiary() throws Exception {
+        final String USER_ACCOUNT = "";
+        final String BENEFICIARY_ACCOUNT = "FR7630056005020502000363678"; // Fondation de France
+
+        new AgentIntegrationTest.Builder("fr", Providers.IDF)
+                .expectLoggedIn(false)
+                .addCredentialField(Key.USERNAME, USER_ACCOUNT_NUMBER)
+                .addCredentialField(Key.PASSWORD, USER_ACCOUNT_CODE)
+                .loadCredentialsBefore(true)
+                .saveCredentialsAfter(true)
+                .build()
+                .testCreateBeneficiary(
+                        CreateBeneficiary.builder()
+                                .ownerAccountNumber(USER_ACCOUNT)
+                                .beneficiary(
+                                        Beneficiary.builder()
+                                                .accountNumber(BENEFICIARY_ACCOUNT)
+                                                .accountNumberType(AccountIdentifier.Type.IBAN)
+                                                .name("Tink Tester")
+                                                .build())
+                                .build());
+    }
+
     private static class Providers {
-        private static final String IDF = "fr-creditagricolecentreest-password";
+        private static final String IDF = "fr-creditagricolesavoie-password";
     }
 }
