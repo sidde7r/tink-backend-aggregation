@@ -156,30 +156,34 @@ public class CreditAgricoleAddBeneficiaryExecutor implements CreateBeneficiaryEx
     }
 
     private void initBeneficiaryAuthentication() throws BeneficiaryException {
-        // TODO: These calls might not be needed!
         AccessibilityGridResponse accessibilityGrid = apiClient.getAccessibilityGrid();
-        RSAPublicKey publicKey =
-                CreditAgricoleAuthUtil.getPublicKey(
-                        persistentStorage.get(CreditAgricoleConstants.StorageKey.PUBLIC_KEY));
+        RSAPublicKey publicKey = preparePublicKey(accessibilityGrid.getPublicKey());
+        String mappedAccountCode = mapAccountCode(accessibilityGrid.getSequence());
+        AuthenticateRequest request = createPrimaryAuthRequest(mappedAccountCode, publicKey);
 
-        String mappedAccountCode =
-                CreditAgricoleAuthUtil.mapAccountCodeToNumpadSequence(
-                        accessibilityGrid.getSequence(),
-                        persistentStorage.get(
-                                CreditAgricoleConstants.StorageKey.USER_ACCOUNT_CODE));
-        AuthenticateRequest request =
-                AuthenticateRequest.createPrimaryAuthRequest(
-                        CreditAgricoleAuthUtil.createEncryptedAccountCode(
-                                mappedAccountCode, publicKey),
-                        persistentStorage.get(CreditAgricoleConstants.StorageKey.USER_ID),
-                        persistentStorage.get(
-                                CreditAgricoleConstants.StorageKey.USER_ACCOUNT_NUMBER));
-
-        AuthenticateResponse authenticateResponse = apiClient.authenticate(request);
-        if (!authenticateResponse.isResponseOK()) {
-            throw new BeneficiaryException(
-                    "Unknown error: " + authenticateResponse.getErrorString());
+        AuthenticateResponse response = apiClient.authenticate(request);
+        if (!response.isResponseOK()) {
+            throw new BeneficiaryException("Unknown error: " + response.getErrorString());
         }
+    }
+
+    private RSAPublicKey preparePublicKey(String publicKey) {
+        persistentStorage.put(CreditAgricoleConstants.StorageKey.PUBLIC_KEY, publicKey);
+        return CreditAgricoleAuthUtil.getPublicKey(publicKey);
+    }
+
+    private String mapAccountCode(String numpadSequence) {
+        return CreditAgricoleAuthUtil.mapAccountCodeToNumpadSequence(
+                numpadSequence,
+                persistentStorage.get(CreditAgricoleConstants.StorageKey.USER_ACCOUNT_CODE));
+    }
+
+    private AuthenticateRequest createPrimaryAuthRequest(
+            String mappedAccountCode, RSAPublicKey publicKey) {
+        return AuthenticateRequest.createPrimaryAuthRequest(
+                CreditAgricoleAuthUtil.createEncryptedAccountCode(mappedAccountCode, publicKey),
+                persistentStorage.get(CreditAgricoleConstants.StorageKey.USER_ID),
+                persistentStorage.get(CreditAgricoleConstants.StorageKey.USER_ACCOUNT_NUMBER));
     }
 
     private String getBeneficiaryOtp() throws BeneficiaryException {
