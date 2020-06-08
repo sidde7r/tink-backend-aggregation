@@ -37,7 +37,7 @@ public class Psd2PaymentAccountClassifier
         implements AccountClassifier<Psd2PaymentAccountClassificationResult> {
     private static final ImmutableList<
                     AccountClassificationRule<Psd2PaymentAccountClassificationResult>>
-            defaultRules =
+            registeredRules =
                     ImmutableList.of(
                             new CapabilitiesRule(),
                             new CheckingAccountRule(),
@@ -61,11 +61,11 @@ public class Psd2PaymentAccountClassifier
 
     public static Psd2PaymentAccountClassifier createWithMetrics(MetricRegistry metricRegistry) {
         return new Psd2PaymentAccountClassifier(
-                new AccountClassificationMetrics<>(metricRegistry), defaultRules);
+                new AccountClassificationMetrics<>(metricRegistry), registeredRules);
     }
 
     public static Psd2PaymentAccountClassifier create() {
-        return new Psd2PaymentAccountClassifier(null, defaultRules);
+        return new Psd2PaymentAccountClassifier(null, registeredRules);
     }
 
     // Used in testing.
