@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -89,9 +88,9 @@ public class CreditAgricoleBaseTransactionalAccountFetcher
         return LocalDate.now(clock).minusMonths(MAX_NUM_MONTHS_FOR_FETCH);
     }
 
-    private static LocalDate getLocalDateFromDate(Date date) {
+    private LocalDate getLocalDateFromDate(Date date) {
         return Objects.nonNull(date)
-                ? date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate()
+                ? date.toInstant().atZone(clock.getZone()).toLocalDate()
                 : null;
     }
 }

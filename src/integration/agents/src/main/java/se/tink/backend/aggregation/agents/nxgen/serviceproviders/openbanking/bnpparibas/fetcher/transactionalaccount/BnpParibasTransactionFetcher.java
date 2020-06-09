@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bn
 
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasApiBaseClient;
@@ -39,6 +38,6 @@ public class BnpParibasTransactionFetcher
     private Date getOldestDateForTransactionFetch() {
         final LocalDate localDate = LocalDate.now(clock).minusMonths(NUM_MONTHS_FOR_FETCH);
 
-        return Date.from(localDate.atStartOfDay(ZoneId.of("UTC")).toInstant());
+        return Date.from(localDate.atStartOfDay(clock.getZone()).toInstant());
     }
 }

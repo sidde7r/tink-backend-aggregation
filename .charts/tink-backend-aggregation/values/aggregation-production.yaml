@@ -445,7 +445,7 @@ featureFlags:
   esProxy: true
   beProxy: false
   resetSuplementalInformation: false
-  createBeneficiary: false
+  createBeneficiary: true
 
 providerConfigurationServiceConfiguration:
   enabled: true

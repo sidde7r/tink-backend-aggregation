@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole;
 
 import java.time.Clock;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -140,7 +141,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         final CreditAgricoleBaseTransactionalAccountFetcher accountFetcher =
                 new CreditAgricoleBaseTransactionalAccountFetcher(
-                        apiClient, persistentStorage, Clock.systemUTC());
+                        apiClient, persistentStorage, Clock.system(ZoneId.of("CET")));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
