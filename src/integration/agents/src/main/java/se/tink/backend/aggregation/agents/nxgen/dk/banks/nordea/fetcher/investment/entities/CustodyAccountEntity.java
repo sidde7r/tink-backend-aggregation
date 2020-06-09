@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -63,6 +64,10 @@ public class CustodyAccountEntity {
                 .withPortfolios(portfolioModule)
                 .withCashBalance(ExactCurrencyAmount.of(cashAmount, currency))
                 .withId(idModule)
+                .canPlaceFunds(AccountCapabilities.Answer.NO)
+                .canWithdrawFunds(AccountCapabilities.Answer.NO)
+                .canReceiveDomesticTransfer(AccountCapabilities.Answer.NO)
+                .canMakeDomesticTransfer(AccountCapabilities.Answer.NO)
                 .build();
     }
 }
