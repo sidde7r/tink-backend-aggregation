@@ -1181,16 +1181,21 @@ public class LansforsakringarAgent extends AbstractAgent
             String errorCode = createTransferResponse.getHeaders().getFirst("Error-Code");
 
             if (!Strings.isNullOrEmpty(errorCode)) {
-                if ("502203".equals(errorCode)) { // Destination account incorrect
-                    throw cancelTransfer(EndUserMessage.INVALID_DESTINATION);
+                switch (errorCode) {
+                    case "502203":
+                        throw cancelTransfer(EndUserMessage.INVALID_DESTINATION);
+                    case "502204":
+                        throw cancelTransfer(EndUserMessage.EXCESS_AMOUNT);
+                    default:
+                        throw failTransferWithMessage(
+                                String.format(
+                                        "Transfer failed with error code: %s and message: %s",
+                                        errorCode,
+                                        createTransferResponse
+                                                .getHeaders()
+                                                .getFirst("Error-Message")),
+                                EndUserMessage.TRANSFER_EXECUTE_FAILED);
                 }
-
-                throw failTransferWithMessage(
-                        String.format(
-                                "Transfer failed with error code: %s and message: %s",
-                                errorCode,
-                                createTransferResponse.getHeaders().getFirst("Error-Message")),
-                        EndUserMessage.TRANSFER_EXECUTE_FAILED);
             }
 
             throw failTransfer(EndUserMessage.TRANSFER_EXECUTE_FAILED);
