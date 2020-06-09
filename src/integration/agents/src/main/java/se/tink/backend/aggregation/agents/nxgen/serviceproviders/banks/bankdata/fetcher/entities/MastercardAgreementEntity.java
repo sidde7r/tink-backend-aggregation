@@ -1,16 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
 import com.google.common.base.Preconditions;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @JsonObject
 public class MastercardAgreementEntity {
