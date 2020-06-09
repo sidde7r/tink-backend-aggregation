@@ -41,7 +41,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private static final String LOCK_FORMAT_BANKID_REFRESH =
             "/locks/aggregation/%s/bankid"; // % (userId)
-    private boolean weHavePreviouslyLoggedInSuccessfully = false;
+    private CredentialsStatus initialCredentialStatus;
 
     static class MetricName {
         static final String METRIC = "agent_login";
@@ -123,6 +123,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
         agent = context.getAgent();
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
+        initialCredentialStatus = credentials.getStatus();
 
         AgentWorkerCommandResult result;
 
@@ -165,10 +166,6 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                             credentials.getStatusPayload()));
             log.info(
                     String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
-        }
-
-        if (Objects.equals(result, AgentWorkerCommandResult.CONTINUE)) {
-            weHavePreviouslyLoggedInSuccessfully = true;
         }
 
         log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
@@ -335,10 +332,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     @Override
     public void postProcess() throws Exception {
 
-        // If we did not successfully execute, there's no point in doing anything here.
-        // Note: Are we sure about the comment above? We need to investigate it further...
-        // For now we implement a custom logic for Fortis CardReader agent to persist the
-        // storage even if login attempt is not successful
+        // If we did not successfully execute in case when credentials has been just created,
+        // there's no point in doing anything here.
 
         log.info(
                 String.format(
@@ -350,8 +345,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                         credentials.getStatusPayload()));
         log.info(String.format("Credentials contain - status: {}: %s", credentials.getStatus()));
 
-        if ((!weHavePreviouslyLoggedInSuccessfully || agent == null)
-                && !context.getRequest().getProvider().getName().equals("be-fortis-cardreader")) {
+        if (agent == null || initialCredentialStatus == CredentialsStatus.CREATED) {
             return;
         }
 
