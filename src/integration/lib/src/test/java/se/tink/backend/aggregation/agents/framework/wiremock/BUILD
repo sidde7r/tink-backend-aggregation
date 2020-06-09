@@ -10,10 +10,7 @@ junit_test(
     deps = [
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/entities",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/comparor",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/logmasker",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/form",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/fakelogmasker",

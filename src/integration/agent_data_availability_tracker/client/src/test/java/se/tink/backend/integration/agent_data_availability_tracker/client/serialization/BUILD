@@ -7,7 +7,6 @@ junit_test(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller",
         "//src/aggregation/aggregationcontroller_api/src/main/java/se/tink/backend/aggregation/aggregationcontroller/v1/rpc",
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
         "//src/integration/agent_data_availability_tracker/client",
