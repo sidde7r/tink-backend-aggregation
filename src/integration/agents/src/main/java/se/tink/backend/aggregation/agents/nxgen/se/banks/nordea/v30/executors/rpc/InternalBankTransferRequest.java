@@ -76,9 +76,13 @@ public class InternalBankTransferRequest {
     private String getInternalTransferMessage(
             Transfer transfer, TransferMessageFormatter transferMessageFormatter) {
         return Optional.ofNullable(transfer)
-                .map(Transfer::getDestinationMessage)
+                .map(t -> t.getRemittanceInformation().getValue())
                 .filter(not(Strings::isNullOrEmpty))
-                .map(s -> transferMessageFormatter.getDestinationMessage(transfer, true))
+                .map(
+                        s ->
+                                transferMessageFormatter
+                                        .getDestinationMessageFromRemittanceInformation(
+                                                transfer, true))
                 .orElse("");
     }
 }
