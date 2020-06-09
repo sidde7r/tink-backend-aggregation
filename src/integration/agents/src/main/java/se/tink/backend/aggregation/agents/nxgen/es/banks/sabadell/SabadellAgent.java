@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.SabadellAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SabadellSessionData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.SabadellCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.SabadellCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.SabadellInvestmentFetcher;
@@ -152,8 +152,9 @@ public class SabadellAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return sessionStorage
-                .get(Storage.SESSION_KEY, SessionResponse.class)
+                .get(Storage.SESSION_KEY, SabadellSessionData.class)
                 .orElseThrow(IllegalStateException::new)
+                .getSessionResponse()
                 .getUser()
                 .toTinkIdentity();
     }
