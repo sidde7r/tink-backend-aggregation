@@ -76,8 +76,11 @@ public class BankdataPoolAccountEntity {
                 .setBankIdentifier(getAccountNumber())
                 .setName(name)
                 .setPortfolios(Collections.singletonList(portfolio))
-                .canMakeDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
+                // As the capabilities are meant to signify "instant/direct" result we
+                // - don't have an option to make and receive a transfer
+                .canMakeDomesticTransfer(AccountCapabilities.Answer.NO)
                 .canReceiveDomesticTransfer(AccountCapabilities.Answer.NO)
+                // lack of information to determine the following
                 .canWithdrawFunds(AccountCapabilities.Answer.UNKNOWN)
                 .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
                 .build();

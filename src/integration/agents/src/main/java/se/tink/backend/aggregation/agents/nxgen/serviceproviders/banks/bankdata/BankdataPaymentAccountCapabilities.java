@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata;
 
-import com.google.common.collect.ImmutableMap;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.BankdataAccountEntity;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class BankdataPaymentAccountCapabilities {
 
@@ -12,24 +12,24 @@ public class BankdataPaymentAccountCapabilities {
             AccountTypes accountType,
             BankdataAccountEntity bankdataAccountEntity) {
         Boolean canMakeDomesticTransfer = bankdataAccountEntity.isTransfersFromAllowed();
-        if (Boolean.TRUE.equals(canMakeDomesticTransfer)) {
-            return AccountCapabilities.Answer.YES;
-        } else if (Boolean.FALSE.equals(canMakeDomesticTransfer)) {
-            return AccountCapabilities.Answer.NO;
+        AccountCapabilities.Answer answer =
+                AccountCapabilities.Answer.From(canMakeDomesticTransfer);
+        if (answer == AccountCapabilities.Answer.YES || answer == AccountCapabilities.Answer.NO) {
+            return answer;
         }
 
         // by default checking accounts are having this capability
         if (accountType == AccountTypes.CHECKING) {
             return AccountCapabilities.Answer.YES;
         }
-        return ImmutableMap.<String, AccountCapabilities.Answer>builder()
-                // can be verified e.g. by looking at account history and/or
-                // verifying if another ambassador's account is able to make a transfer to this
-                // account (check saved
-                // recipients in the first place)
-                .put("Opsparing", AccountCapabilities.Answer.YES)
+        // can be verified e.g. by looking at account history and/or verifying if another
+        // ambassador's account is able to make a transfer to this
+        // account (check saved recipients in the first place)
+        return TypeMapper.<AccountCapabilities.Answer>builder()
+                .put(AccountCapabilities.Answer.YES, "Opsparing")
                 .build()
-                .getOrDefault(productName, AccountCapabilities.Answer.UNKNOWN);
+                .translate(productName)
+                .orElse(AccountCapabilities.Answer.UNKNOWN);
     }
 
     public static AccountCapabilities.Answer canReceiveDomesticTransfer(
@@ -37,24 +37,24 @@ public class BankdataPaymentAccountCapabilities {
             AccountTypes accountType,
             BankdataAccountEntity bankdataAccountEntity) {
         Boolean canReceiveDomesticTransfer = bankdataAccountEntity.isTransfersToAllowed();
-        if (Boolean.TRUE.equals(canReceiveDomesticTransfer)) {
-            return AccountCapabilities.Answer.YES;
-        } else if (Boolean.FALSE.equals(canReceiveDomesticTransfer)) {
-            return AccountCapabilities.Answer.NO;
+        AccountCapabilities.Answer answer =
+                AccountCapabilities.Answer.From(canReceiveDomesticTransfer);
+        if (answer == AccountCapabilities.Answer.YES || answer == AccountCapabilities.Answer.NO) {
+            return answer;
         }
         // by default checking accounts are having this capability
         // but can be verified exactly the same way as below (for non-checking accounts)
         if (accountType == AccountTypes.CHECKING) {
             return AccountCapabilities.Answer.YES;
         }
-        return ImmutableMap.<String, AccountCapabilities.Answer>builder()
-                // can be verified e.g. by looking at account history and/or
-                // verifying if another ambassador's account is able to make a transfer to this
-                // account (check saved
-                // recipients in the first place)
-                .put("Opsparing", AccountCapabilities.Answer.YES)
+        // can be verified e.g. by looking at account history and/or verifying if another
+        // ambassador's account is able to make a transfer to this
+        // account (check saved recipients in the first place)
+        return TypeMapper.<AccountCapabilities.Answer>builder()
+                .put(AccountCapabilities.Answer.YES, "Opsparing")
                 .build()
-                .getOrDefault(productName, AccountCapabilities.Answer.UNKNOWN);
+                .translate(productName)
+                .orElse(AccountCapabilities.Answer.UNKNOWN);
     }
 
     public static AccountCapabilities.Answer canWithdrawFunds(
@@ -64,14 +64,13 @@ public class BankdataPaymentAccountCapabilities {
         if (accountType == AccountTypes.CHECKING) {
             return AccountCapabilities.Answer.YES;
         }
-        return ImmutableMap.<String, AccountCapabilities.Answer>builder()
-                // can be verified e.g. by looking at account history
+        return TypeMapper.<AccountCapabilities.Answer>builder()
                 .put(
-                        "Opsparing",
-                        AccountCapabilities.Answer
-                                .UNKNOWN) // no history about withdrawals available
+                        AccountCapabilities.Answer.UNKNOWN,
+                        "Opsparing") // no history about withdrawals available
                 .build()
-                .getOrDefault(productName, AccountCapabilities.Answer.UNKNOWN);
+                .translate(productName)
+                .orElse(AccountCapabilities.Answer.UNKNOWN);
     }
 
     public static AccountCapabilities.Answer canPlaceFunds(
@@ -79,11 +78,11 @@ public class BankdataPaymentAccountCapabilities {
             AccountTypes accountType,
             BankdataAccountEntity bankdataAccountEntity) {
 
-        // our current understanding is that canPlaceFunds is fulfilled if one of the
-        // following is true:
+        // our current understanding is that canPlaceFunds is fulfilled if one of the following is
+        // true:
         // - canReceiveDomesticTransfer is true or
-        // - you can make a physical deposit at a bank office or by depositing through a
-        // depositing box/machine
+        // - you can make a physical deposit at a bank office or by depositing through a depositing
+        // box/machine
         AccountCapabilities.Answer canReceiveDomesticTransfer =
                 canReceiveDomesticTransfer(productName, accountType, bankdataAccountEntity);
         if (canReceiveDomesticTransfer == AccountCapabilities.Answer.YES
@@ -94,10 +93,11 @@ public class BankdataPaymentAccountCapabilities {
         if (accountType == AccountTypes.CHECKING) {
             return AccountCapabilities.Answer.YES;
         }
-        return ImmutableMap.<String, AccountCapabilities.Answer>builder()
-                // can be verified e.g. by looking at account history
-                .put("Opsparing", AccountCapabilities.Answer.YES)
+        // can be verified e.g. by looking at account history
+        return TypeMapper.<AccountCapabilities.Answer>builder()
+                .put(AccountCapabilities.Answer.UNKNOWN, "Opsparing")
                 .build()
-                .getOrDefault(productName, AccountCapabilities.Answer.UNKNOWN);
+                .translate(productName)
+                .orElse(AccountCapabilities.Answer.YES);
     }
 }

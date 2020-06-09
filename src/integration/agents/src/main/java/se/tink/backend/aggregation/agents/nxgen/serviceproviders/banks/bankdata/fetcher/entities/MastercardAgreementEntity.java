@@ -83,7 +83,7 @@ public class MastercardAgreementEntity {
                                 .canMakeDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
                                 .canReceiveDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
                                 .canWithdrawFunds(AccountCapabilities.Answer.UNKNOWN)
-                                .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
+                                .canPlaceFunds(AccountCapabilities.Answer.From(canDeposit))
                                 .build());
     }
 
