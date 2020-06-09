@@ -27,9 +27,11 @@ public class AccountEntityTest {
         // and
         ExactCurrencyAmount balanceAmount =
                 new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR");
+        AccountEntity accountDetailsEntity = accountAsJson(accountDetailsEntityProps());
 
         // when
-        Optional<TransactionalAccount> result = entity.toTinkAccount(balanceAmount);
+        Optional<TransactionalAccount> result =
+                entity.toTinkAccount(accountDetailsEntity, balanceAmount);
 
         // then
         assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
@@ -38,6 +40,33 @@ public class AccountEntityTest {
         assertThat(result.get().getExactBalance())
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR"));
         assertThat(result.get().getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        assertThat(result.get().getHolderName().toString())
+                .isEqualTo("test-owner-name-from-details");
+    }
+
+    @Test
+    public void shouldTakeThingsFromDetailsEntityIfMissingInBase() {
+        // given
+        AccountEntity entity = accountAsJson(accountEntityMinimalProps());
+        // and
+        ExactCurrencyAmount balanceAmount =
+                new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR");
+        AccountEntity accountDetailsEntity = accountAsJson(accountDetailsEntityProps());
+
+        // when
+        Optional<TransactionalAccount> result =
+                entity.toTinkAccount(accountDetailsEntity, balanceAmount);
+
+        // then
+        assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
+        assertThat(result.get().getIdentifiers())
+                .contains(new IbanIdentifier("test-iban-from-details"));
+        assertThat(result.get().getApiIdentifier()).isEqualTo("test-resource-id");
+        assertThat(result.get().getExactBalance())
+                .isEqualTo(new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR"));
+        assertThat(result.get().getAccountFlags()).contains(AccountFlag.PSD2_PAYMENT_ACCOUNT);
+        assertThat(result.get().getHolderName().toString())
+                .isEqualTo("test-owner-name-from-details");
     }
 
     private Properties accountEntityProps() {
@@ -47,6 +76,23 @@ public class AccountEntityTest {
         account.setProperty("currency", "test-currency");
         account.setProperty("cashAccountType", "test-cash-account-type");
         account.setProperty("name", "test-name");
+        return account;
+    }
+
+    private Properties accountEntityMinimalProps() {
+        Properties account = new Properties();
+        account.setProperty("resourceId", "test-resource-id");
+        return account;
+    }
+
+    private Properties accountDetailsEntityProps() {
+        Properties account = new Properties();
+        account.setProperty("resourceId", "test-resource-id-from-details");
+        account.setProperty("iban", "test-iban-from-details");
+        account.setProperty("currency", "test-currency-from-details");
+        account.setProperty("cashAccountType", "test-cash-account-type-from-details");
+        account.setProperty("name", "test-name-from-details");
+        account.setProperty("ownerName", "test-owner-name-from-details");
         return account;
     }
 
