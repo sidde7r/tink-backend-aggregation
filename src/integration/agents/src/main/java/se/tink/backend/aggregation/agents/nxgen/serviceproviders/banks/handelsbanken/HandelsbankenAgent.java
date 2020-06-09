@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.HandelsbankenLoanFetcher;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
@@ -29,6 +30,27 @@ public abstract class HandelsbankenAgent<
     private final Config handelsbankenConfiguration;
 
     private final LoanRefreshController loanRefreshController;
+
+    public HandelsbankenAgent(
+            AgentComponentProvider agentComponentProvider, Config handelsbankenConfiguration) {
+        super(agentComponentProvider);
+        this.handelsbankenConfiguration = handelsbankenConfiguration;
+        this.handelsbankenPersistentStorage =
+                new HandelsbankenPersistentStorage(
+                        this.persistentStorage, credentials.getSensitivePayloadAsMap());
+        this.bankClient = constructApiClient(handelsbankenConfiguration);
+        this.handelsbankenSessionStorage =
+                new HandelsbankenSessionStorage(handelsbankenConfiguration);
+
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new HandelsbankenLoanFetcher(
+                                this.bankClient,
+                                this.handelsbankenSessionStorage,
+                                this.credentials));
+    }
 
     public HandelsbankenAgent(
             CredentialsRequest request,
