@@ -1,0 +1,548 @@
+
+REQUEST 1
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/init/3.0
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+{"bidDevice":"same"}
+
+RESPONSE 1 SET POLLED_1
+200
+Date: Fri, 17 Apr 2020 11:14:02 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=UTF-8
+Content-Language: sv
+Connection: close
+
+{"autoStartToken":"13fa1fb0-1fac-cc5f-1234-c532e4fa5066","initialSleepTime":3000,"_links":{"authenticate":{"href":"https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0","hints":{"allow":["POST"]}},"getChallenge":{"href":"https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/getChallenge/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0","hints":{"allow":["POST"]}},"cancel":{"href":"https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/cancel/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0","hints":{"allow":["POST"]}}}}
+
+REQUEST 2 MATCH POLLED_1
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2 SET POLLED_2
+200
+Date: Fri, 17 Apr 2020 11:14:02 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=UTF-8
+Content-Language: sv
+Connection: close
+
+{"result":"NO_CLIENT_STARTED","iterationSleepTime":2000}
+
+REQUEST 3 MATCH POLLED_2
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 3 SET POLLED_3
+200
+Date: Fri, 17 Apr 2020 11:14:04 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=UTF-8
+Content-Language: sv
+Connection: close
+
+{"result":"NO_CLIENT_STARTED","iterationSleepTime":2000}
+
+REQUEST 4 MATCH POLLED_3
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 4 SET POLLED_4
+200
+Date: Fri, 17 Apr 2020 11:14:06 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=UTF-8
+Content-Language: sv
+Connection: close
+
+{"result":"NO_CLIENT_STARTED","iterationSleepTime":2000}
+
+REQUEST 5 MATCH POLLED_4
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 5 SET POLLED_5
+200
+Date: Fri, 17 Apr 2020 11:14:30 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=UTF-8
+Content-Language: sv
+Connection: close
+
+{"result":"IN_PROGRESS","iterationSleepTime":2000}
+
+REQUEST 6 MATCH POLLED_5
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 6 SET POLLED_6
+200
+Date: Fri, 17 Apr 2020 11:14:32 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=UTF-8
+Content-Language: sv
+Connection: close
+
+{"result":"IN_PROGRESS","iterationSleepTime":2000}
+
+REQUEST 7 MATCH POLLED_6
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authenticate/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 7 SET POLLED_7
+200
+Date: Fri, 17 Apr 2020 11:14:34 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=UTF-8
+Content-Language: sv
+Connection: close
+
+{"result":"AUTHENTICATED","iterationSleepTime":0,"_links":{"authorize":{"href":"https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authorize/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0","hints":{"allow":["POST"]}}}}
+
+REQUEST 8 MATCH POLLED_7
+POST https://m2.handelsbanken.se/bb/gls3/aa/privmobbidse/authorize/3.0?sessionId=43facb12-435b-46c7-5943-7357bf4eaab0
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+Content-Type: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 8
+200
+Date: Fri, 17 Apr 2020 11:14:34 GMT
+X-Powered-By: Servlet/3.0
+Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: application/json; charset=UTF-8
+Content-Language: sv
+Connection: close
+
+{"result":"AUTHORIZED","mandates":[{"customerName":"John Doe","customerNmbr":"900102-0304","agreementNmbr":"8796134245"}],"links":[{"rel":"application-entry-point","href":"https://m2.handelsbanken.se/priv/session"},{"rel":"application-exit-point","href":"https://m2.handelsbanken.se/priv/session?nextURI=https%3A%2F%2Fm2.handelsbanken.se%2Fbb%2Fglss%2Faa%2Fglobal%2FdoLogout%2F1.0"}],"_links":{"application-entry-point":{"href":"https://m2.handelsbanken.se/priv/session","hints":{"allow":[],"formats":[]}},"application-exit-point":{"href":"https://m2.handelsbanken.se/priv/session?nextURI=https%3A%2F%2Fm2.handelsbanken.se%2Fbb%2Fglss%2Faa%2Fglobal%2FdoLogout%2F1.0","hints":{"allow":[],"formats":[]}}}}
+
+REQUEST 9
+GET https://m2.handelsbanken.se/priv/session
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 9
+200
+Date: Fri, 17 Apr 2020 11:14:34 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Transfer-Encoding: chunked
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"transfer-context":{"href":"https://m2.handelsbanken.se/app/priv/transfer/v2/context?showPuff=true&authToken=ad37b1423d54","title":"Ny överföring","gaScreenName":"pay transfer / new transfer"},"cards":{"href":"https://m2.handelsbanken.se/app/priv/cards/v3?authToken=ad37b1423d54","gaScreenName":"cards"},"swish-enrolled":{"href":"https://m2.handelsbanken.se/app/priv/swish/enrolled?authToken=ad37b1423d54"},"analysis-and-news":{"href":"https://m2.handelsbanken.se/app/priv/market/v2/analysis/analysisAndNews?authToken=ad37b1423d54","gaScreenName":"Savings / Analysis and news"},"market-news":{"href":"https://m2.handelsbanken.se/app/priv/market/v2/news?authToken=ad37b1423d54"},"pfm-quiz":{"href":"https://m2.handelsbanken.se/app/priv/pfm/quiz?authToken=ad37b1423d54","title":"Quiz - Koll på din ekonomi","gaScreenName":"my finances / quiz 2019"},"keepalive":{"href":"https://m2.handelsbanken.se/app/priv/transfer/v2/context?showPuff=true&authToken=ad37b1423d54"},"user-setting-context":{"href":"https://m2.handelsbanken.se/app/priv/usersetting/context?authToken=ad37b1423d54"},"pfm-widget-context":{"href":"https://m2.handelsbanken.se/app/priv/pfm/widgetContext?authToken=ad37b1423d54","title":"Mina utgifter","gaScreenName":"my finances widget"},"swish-base-info":{"href":"https://m2.handelsbanken.se/app/priv/swish/context?authToken=ad37b1423d54","title":"Swish","gaScreenName":"pay transfer / swish"},"market-summary":{"href":"https://m2.handelsbanken.se/app/priv/market/v2/marketSummary?authToken=ad37b1423d54","gaScreenName":"Savings / Fund- and market overview"},"my-branch-overview":{"href":"https://m2.handelsbanken.se/app/priv/branch/overview?authToken=ad37b1423d54"},"loan-guide":{"href":"https://m2.handelsbanken.se/app/priv/loan/guide?authToken=ad37b1423d54","title":"Guide till bolån","gaScreenName":"loans / guide to mortgage loans"},"kyc-codes":{"href":"https://m2.handelsbanken.se/app/priv/codes?authToken=ad37b1423d54"},"isk-context":{"href":"https://m2.handelsbanken.se/app/priv/openaccount/00014/context-isk?authToken=ad37b1423d54","gaScreenName":"Accounts / Open ISK account / Create"},"entrypoint":{"href":"https://m2.handelsbanken.se/app/priv/session/entrypoint?authToken=ad37b1423d54"},"loan-context-private":{"href":"https://m2.handelsbanken.se/app/priv/loan/context?type=PRIVATE&authToken=ad37b1423d54","gaScreenName":"loans / apply for a loan / private loan"},"payment-context":{"href":"https://m2.handelsbanken.se/app/priv/payment/context?includeRecipients=true&authToken=ad37b1423d54","gaScreenName":"pay transfer / new payment"},"standing-order":{"href":"https://m2.handelsbanken.se/app/priv/standingOrders?authToken=ad37b1423d54","gaScreenName":"pay transfer / standing order"},"user-list":{"href":"https://m2.handelsbanken.se/app/priv/market/v2/instruments/userList?authToken=ad37b1423d54","gaScreenName":"Savings / My monitor list"},"pfm-context":{"href":"https://m2.handelsbanken.se/app/priv/pfm/v2/context?authToken=ad37b1423d54","title":"Min ekonomi","gaScreenName":"my finances"},"saving-guide":{"href":"https://m2.handelsbanken.se/app/priv/saving-guide/fundselector?authToken=ad37b1423d54","title":"Sparguiden","gaScreenName":"save invest / savings guide"},"analysis-list":{"href":"https://m2.handelsbanken.se/app/priv/market/v2/analysis?authToken=ad37b1423d54","gaScreenName":"Savings / Analysis and news / Company analysis"},"loan-context-mortgage":{"href":"https://m2.handelsbanken.se/app/priv/loan/context?type=MORTGAGE&authToken=ad37b1423d54","gaScreenName":"loans / apply for a loan / mortgage loan"},"user-list-conversion":{"href":"https://m2.handelsbanken.se/app/priv/market/v2/instruments/userList/migrate?authToken=ad37b1423d54"},"market-funds":{"href":"https://m2.handelsbanken.se/app/priv/market/funds/lists?authToken=ad37b1423d54"},"pfm-settings":{"href":"https://m2.handelsbanken.se/app/priv/pfm/settings?authToken=ad37b1423d54","title":"Inställningar","gaScreenName":"my finances / settings"},"todo-duediligence":{"href":"https://m2.handelsbanken.se/app/priv/todo/notifications?authToken=ad37b1423d54","title":"Todo notification check"},"pending-transactions":{"href":"https://m2.handelsbanken.se/app/priv/pending-transactions?user=&authToken=ad37b1423d54","gaScreenName":"pay transfer / pending transactions"},"savings-guide-summary":{"href":"https://m2.handelsbanken.se/app/priv/market/savingsGuide?authToken=ad37b1423d54","gaScreenName":"Savings / Savings guide"},"loans":{"href":"https://m2.handelsbanken.se/app/priv/loan?authToken=ad37b1423d54","gaScreenName":"loans"},"pension-overview":{"href":"https://m2.handelsbanken.se/app/priv/pension?authToken=ad37b1423d54","gaScreenName":"pension"},"securities-search-purchase":{"href":"https://m2.handelsbanken.se/app/priv/market/v2/marketSummary/searchPurchase?authToken=ad37b1423d54","gaScreenName":"Savings / Search and purchase"},"due-diligence-context":{"href":"https://m2.handelsbanken.se/app/priv/duediligence?authToken=ad37b1423d54","title":"Available customers"},"isk-advance-information-info":{"href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/a_spara_och_placera_forhandsinfo_bilaga/$file/forhandsinfo_bilaga.pdf","type":"application/pdf","title":"Förhandsinformation"},"prepaid-context":{"href":"https://m2.handelsbanken.se/app/priv/prepaid/context?authToken=ad37b1423d54","gaScreenName":"Payments Transfers / Prepaid / Create"},"payment-status":{"href":"https://m2.handelsbanken.se/app/priv/payment/status?authToken=ad37b1423d54"},"einvoice-pending":{"href":"https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken=ad37b1423d54","gaScreenName":"pay transfer / e-invoices"},"market-about":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qD1243AC04DFBB547B1257F453448B851","type":"text/html"},"get-due-diligence":{"href":"https://m2.handelsbanken.se/app/priv/duediligence/{encryptedReferenceNumber}?authToken=ad37b1423d54","title":""},"interest-indicator":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qEF4C2CD8F25A1625C1257B5C004AC9EB?OpenDocument","type":"text/html"},"fund-holdings":{"href":"https://m2.handelsbanken.se/app/priv/fund/fundHoldings/get?includeMinors=true&authToken=ad37b1423d54"},"startpage-context":{"href":"https://m2.handelsbanken.se/app/priv/startpage/context?authToken=ad37b1423d54"},"securities-holdings":{"href":"https://m2.handelsbanken.se/app/priv/securities/holdingsSummary/V3?authToken=ad37b1423d54","gaScreenName":"save invest"},"accounts":{"href":"https://m2.handelsbanken.se/app/priv/accounts?authToken=ad37b1423d54","gaScreenName":"accounts"},"no-einvoice-agreement":{"href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_e-faktura","type":"text/html"},"my-office":{"href":"https://m2.handelsbanken.se/app/priv/branch?authToken=ad37b1423d54"},"usertask":{"href":"https://m2.handelsbanken.se/app/priv/usertask?authToken=ad37b1423d54"}},"links":[{"rel":"startpage-context","href":"https://m2.handelsbanken.se/app/priv/startpage/context?authToken=ad37b1423d54","type":"application/json"},{"rel":"user-setting-context","href":"https://m2.handelsbanken.se/app/priv/usersetting/context?authToken=ad37b1423d54","type":"application/json"},{"rel":"accounts","href":"https://m2.handelsbanken.se/app/priv/accounts?authToken=ad37b1423d54","type":"application/json","gaScreenName":"accounts"},{"rel":"my-office","href":"https://m2.handelsbanken.se/app/priv/branch?authToken=ad37b1423d54","type":"application/json"},{"rel":"my-branch-overview","href":"https://m2.handelsbanken.se/app/priv/branch/overview?authToken=ad37b1423d54","type":"application/json"},{"rel":"cards","href":"https://m2.handelsbanken.se/app/priv/cards/v3?authToken=ad37b1423d54","type":"application/json","gaScreenName":"cards"},{"rel":"einvoice-pending","href":"https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken=ad37b1423d54","type":"application/json","gaScreenName":"pay transfer / e-invoices"},{"rel":"loans","href":"https://m2.handelsbanken.se/app/priv/loan?authToken=ad37b1423d54","type":"application/json","gaScreenName":"loans"},{"rel":"interest-indicator","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qEF4C2CD8F25A1625C1257B5C004AC9EB?OpenDocument","type":"text/html"},{"rel":"loan-context-private","href":"https://m2.handelsbanken.se/app/priv/loan/context?type=PRIVATE&authToken=ad37b1423d54","type":"application/json","gaScreenName":"loans / apply for a loan / private loan"},{"rel":"loan-context-mortgage","href":"https://m2.handelsbanken.se/app/priv/loan/context?type=MORTGAGE&authToken=ad37b1423d54","type":"application/json","gaScreenName":"loans / apply for a loan / mortgage loan"},{"rel":"loan-guide","href":"https://m2.handelsbanken.se/app/priv/loan/guide?authToken=ad37b1423d54","type":"application/json","title":"Guide till bolån","gaScreenName":"loans / guide to mortgage loans"},{"rel":"pfm-context","href":"https://m2.handelsbanken.se/app/priv/pfm/v2/context?authToken=ad37b1423d54","type":"application/json","title":"Min ekonomi","gaScreenName":"my finances"},{"rel":"pfm-settings","href":"https://m2.handelsbanken.se/app/priv/pfm/settings?authToken=ad37b1423d54","type":"application/json","title":"Inställningar","gaScreenName":"my finances / settings"},{"rel":"pfm-widget-context","href":"https://m2.handelsbanken.se/app/priv/pfm/widgetContext?authToken=ad37b1423d54","type":"application/json","title":"Mina utgifter","gaScreenName":"my finances widget"},{"rel":"pfm-quiz","href":"https://m2.handelsbanken.se/app/priv/pfm/quiz?authToken=ad37b1423d54","type":"application/json","title":"Quiz - Koll på din ekonomi","gaScreenName":"my finances / quiz 2019"},{"rel":"isk-context","href":"https://m2.handelsbanken.se/app/priv/openaccount/00014/context-isk?authToken=ad37b1423d54","type":"application/json","gaScreenName":"Accounts / Open ISK account / Create"},{"rel":"isk-advance-information-info","href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/a_spara_och_placera_forhandsinfo_bilaga/$file/forhandsinfo_bilaga.pdf","type":"application/pdf","title":"Förhandsinformation"},{"rel":"payment-context","href":"https://m2.handelsbanken.se/app/priv/payment/context?includeRecipients=true&authToken=ad37b1423d54","type":"application/json","gaScreenName":"pay transfer / new payment"},{"rel":"payment-status","href":"https://m2.handelsbanken.se/app/priv/payment/status?authToken=ad37b1423d54","type":"application/json"},{"rel":"no-einvoice-agreement","href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_e-faktura","type":"text/html"},{"rel":"pension-overview","href":"https://m2.handelsbanken.se/app/priv/pension?authToken=ad37b1423d54","type":"application/json","gaScreenName":"pension"},{"rel":"prepaid-context","href":"https://m2.handelsbanken.se/app/priv/prepaid/context?authToken=ad37b1423d54","type":"application/json","gaScreenName":"Payments Transfers / Prepaid / Create"},{"rel":"swish-base-info","href":"https://m2.handelsbanken.se/app/priv/swish/context?authToken=ad37b1423d54","type":"application/json","title":"Swish","gaScreenName":"pay transfer / swish"},{"rel":"swish-enrolled","href":"https://m2.handelsbanken.se/app/priv/swish/enrolled?authToken=ad37b1423d54","type":"application/json"},{"rel":"standing-order","href":"https://m2.handelsbanken.se/app/priv/standingOrders?authToken=ad37b1423d54","type":"application/json","gaScreenName":"pay transfer / standing order"},{"rel":"pending-transactions","href":"https://m2.handelsbanken.se/app/priv/pending-transactions?user=&authToken=ad37b1423d54","type":"application/json","gaScreenName":"pay transfer / pending transactions"},{"rel":"transfer-context","href":"https://m2.handelsbanken.se/app/priv/transfer/v2/context?showPuff=true&authToken=ad37b1423d54","type":"application/json","title":"Ny överföring","gaScreenName":"pay transfer / new transfer"},{"rel":"due-diligence-context","href":"https://m2.handelsbanken.se/app/priv/duediligence?authToken=ad37b1423d54","type":"application/json","title":"Available customers"},{"rel":"todo-duediligence","href":"https://m2.handelsbanken.se/app/priv/todo/notifications?authToken=ad37b1423d54","type":"application/json","title":"Todo notification check"},{"rel":"get-due-diligence","href":"https://m2.handelsbanken.se/app/priv/duediligence/{encryptedReferenceNumber}?authToken=ad37b1423d54","type":"application/json","title":""},{"rel":"kyc-codes","href":"https://m2.handelsbanken.se/app/priv/codes?authToken=ad37b1423d54","type":"application/json"},{"rel":"saving-guide","href":"https://m2.handelsbanken.se/app/priv/saving-guide/fundselector?authToken=ad37b1423d54","type":"application/json","title":"Sparguiden","gaScreenName":"save invest / savings guide"},{"rel":"savings-guide-summary","href":"https://m2.handelsbanken.se/app/priv/market/savingsGuide?authToken=ad37b1423d54","type":"application/json","gaScreenName":"Savings / Savings guide"},{"rel":"user-list","href":"https://m2.handelsbanken.se/app/priv/market/v2/instruments/userList?authToken=ad37b1423d54","type":"application/json","gaScreenName":"Savings / My monitor list"},{"rel":"market-summary","href":"https://m2.handelsbanken.se/app/priv/market/v2/marketSummary?authToken=ad37b1423d54","type":"application/json","gaScreenName":"Savings / Fund- and market overview"},{"rel":"analysis-list","href":"https://m2.handelsbanken.se/app/priv/market/v2/analysis?authToken=ad37b1423d54","type":"application/json","gaScreenName":"Savings / Analysis and news / Company analysis"},{"rel":"analysis-and-news","href":"https://m2.handelsbanken.se/app/priv/market/v2/analysis/analysisAndNews?authToken=ad37b1423d54","type":"application/json","gaScreenName":"Savings / Analysis and news"},{"rel":"market-news","href":"https://m2.handelsbanken.se/app/priv/market/v2/news?authToken=ad37b1423d54","type":"application/json"},{"rel":"market-about","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qD1243AC04DFBB547B1257F453448B851","type":"text/html"},{"rel":"securities-search-purchase","href":"https://m2.handelsbanken.se/app/priv/market/v2/marketSummary/searchPurchase?authToken=ad37b1423d54","type":"application/json","gaScreenName":"Savings / Search and purchase"},{"rel":"market-funds","href":"https://m2.handelsbanken.se/app/priv/market/funds/lists?authToken=ad37b1423d54","type":"application/json"},{"rel":"fund-holdings","href":"https://m2.handelsbanken.se/app/priv/fund/fundHoldings/get?includeMinors=true&authToken=ad37b1423d54","type":"application/json"},{"rel":"securities-holdings","href":"https://m2.handelsbanken.se/app/priv/securities/holdingsSummary/V3?authToken=ad37b1423d54","type":"application/json","gaScreenName":"save invest"},{"rel":"user-list-conversion","href":"https://m2.handelsbanken.se/app/priv/market/v2/instruments/userList/migrate?authToken=ad37b1423d54","type":"application/json"},{"rel":"keepalive","href":"https://m2.handelsbanken.se/app/priv/session/keepalive?authToken=ad37b1423d54","type":"application/json"},{"rel":"entrypoint","href":"https://m2.handelsbanken.se/app/priv/session/entrypoint?authToken=ad37b1423d54","type":"application/json"},{"rel":"usertask","href":"https://m2.handelsbanken.se/app/priv/usertask?authToken=ad37b1423d54","type":"application/json"}],"authToken":"ad37b1423d54","embedded":{"analytics-config":{"gaTrackingID":"UA-41125123-8","gaExceptions":true,"gaScreenTracking":true,"gaSampleRate":"100","shbMarket":"se","shbCustomerType":"private","shbClearingNo":"6025","shbAgreementType":"PRIVATE","shbLoggedIn":"yes","shbGroup":"4"},"feature-toogles":{"newNavigation":{"enabled":true,"subFeatures":{"pfmWidget":false,"cardWidget":true,"retroMenuWidget":false,"temporaryUnavailable":false,"accountWidget":true}}},"user-settings":{"startpageShortcuts":0,"startpageAccounts":0,"startpageAccountsExpanded":0,"startpageCards":0,"startpageCardsExpanded":0,"menu":[{"rel":"start","title":"Start"},{"rel":"accounts","title":"Konton"},{"rel":"payment-transfers","title":"Betala"},{"rel":"securities-holdings","title":"Spara"},{"rel":"cards","title":"Kort"},{"rel":"loans","title":"Lån"},{"rel":"pension-overview","title":"Pension"},{"rel":"pfm-context","title":"Ekonomi"}],"onboarding":{"completed":false,"shown":true}}},"_embedded":{"analytics-config":{"gaTrackingID":"UA-41125123-8","gaExceptions":true,"gaScreenTracking":true,"gaSampleRate":"100","shbMarket":"se","shbCustomerType":"private","shbClearingNo":"6055","shbAgreementType":"PRIVATE","shbLoggedIn":"yes","shbGroup":"4"},"feature-toogles":{"newNavigation":{"enabled":true,"subFeatures":{"pfmWidget":false,"cardWidget":true,"retroMenuWidget":false,"temporaryUnavailable":false,"accountWidget":true}}},"user-settings":{"startpageShortcuts":0,"startpageAccounts":0,"startpageAccountsExpanded":0,"startpageCards":0,"startpageCardsExpanded":0,"menu":[{"rel":"start","title":"Start"},{"rel":"accounts","title":"Konton"},{"rel":"payment-transfers","title":"Betala"},{"rel":"securities-holdings","title":"Spara"},{"rel":"cards","title":"Kort"},{"rel":"loans","title":"Lån"},{"rel":"pension-overview","title":"Pension"},{"rel":"pfm-context","title":"Ekonomi"}],"onboarding":{"completed":false,"shown":true}}}}
+
+REQUEST 10
+GET https://m2.handelsbanken.se/app/priv/accounts?authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 10 SET TRANSACTIONS_1
+200
+Date: Fri, 17 Apr 2020 11:14:34 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"open-account":{"href":"https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=ad37b1423d54","gaScreenName":"accounts / open account"}},"links":[{"rel":"open-account","href":"https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=ad37b1423d54","type":"application/json","gaScreenName":"accounts / open account"}],"ownAccountGroupTitle":"","othersAccountGroupTitle":null,"externalAccountGroupTitle":null,"accountGroups":[{"title":null,"bic":null,"type":"OWN_ACCOUNT","accounts":[{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/512351234/transactions?isCard=false&authToken=ad37b1423d54","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/512351234/transactions?isCard=false&authToken=ad37b1423d54","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Allkonto","number":"512351234","numberFormatted":"512 351 234","balance":{"amount":2244.40,"amountFormatted":"2 244,40","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"isCard":false,"amountAvailable":{"amount":2244.40,"amountFormatted":"2 244,40","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/612312456/transactions?isCard=false&authToken=ad37b1423d54","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/612312456/transactions?isCard=false&authToken=ad37b1423d54","type":"application/json","gaScreenName":"accounts / account details"}],"name":"e-Kapitalkonto","number":"612312456","numberFormatted":"612 312 456","balance":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"isCard":false,"amountAvailable":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/747851694/transactions?isCard=false&authToken=ad37b1423d54","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/747851694/transactions?isCard=false&authToken=ad37b1423d54","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Sparkonto","number":"747851694","numberFormatted":"747 851 694","balance":{"amount":57000.61,"amountFormatted":"57 000,61","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"isCard":false,"amountAvailable":{"amount":57000.61,"amountFormatted":"57 000,61","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null}]}]}
+
+REQUEST 11 MATCH TRANSACTIONS_1
+GET https://m2.handelsbanken.se/app/priv/accounts/512351234/transactions?isCard=false&authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 11 SET TRANSACTIONS_2
+200
+Date: Fri, 17 Apr 2020 11:14:34 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Transfer-Encoding: chunked
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"account":{"_links":{"account-info":{"gaScreenName":"accounts / account details / account information and settings","href":"https://m2.handelsbanken.se/app/priv/accounts/512351234/account-info?hasBalance=true&authToken=ad37b1423d54","title":"Kontoinformation och inställningar"}},"amountAvailable":null,"balance":{"amount":2244.40,"amountFormatted":"2 244,40","currency":"SEK","unit":"kr"},"clearingNumber":"6025","displayBalance":true,"holderName":null,"isCard":false,"links":[{"gaScreenName":"accounts / account details / account information and settings","href":"https://m2.handelsbanken.se/app/priv/accounts/512351234/account-info?hasBalance=true&authToken=ad37b1423d54","rel":"account-info","title":"Kontoinformation och inställningar","type":"application/json"}],"name":"Allkonto","number":"512351234","numberFormatted":"512 351 234","overDraft":false,"warningTextLong":null,"warningTextShort":null},"cardInvoiceInfo":null,"transactions":[{"amount":{"amount":null,"amountFormatted":"-38,00"},"dueDate":"2020-01-15","recipient":{"additionalInfo":"Prel KONDITOR","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-90,00"},"dueDate":"2020-01-14","recipient":{"additionalInfo":"Prel KONDITOR","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-138,00"},"dueDate":"2020-01-14","recipient":{"additionalInfo":"Prel COOP","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-10,00"},"dueDate":"2020-01-14","recipient":{"additionalInfo":"Prel MCDONALD","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-70,00"},"dueDate":"2020-01-14","recipient":{"additionalInfo":"Lottoland","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-300,00"},"dueDate":"2020-01-14","recipient":{"additionalInfo":"HAIRCENTER","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-12,00"},"dueDate":"2020-01-14","recipient":{"additionalInfo":"CIRCLE K","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-102,80"},"dueDate":"2020-01-13","recipient":{"additionalInfo":"COOP","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-25,00"},"dueDate":"2020-01-13","recipient":{"additionalInfo":"IDROTTSHALLEN","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-30,00"},"dueDate":"2020-01-13","recipient":{"additionalInfo":"IDROTTSHALLEN","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-109,00"},"dueDate":"2020-01-12","recipient":{"additionalInfo":"TEAM SPORTIA","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-45,00"},"dueDate":"2020-01-12","recipient":{"additionalInfo":"SKOR","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-69,80"},"dueDate":"2020-01-10","recipient":{"additionalInfo":"COOP","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-14,00"},"dueDate":"2020-01-10","recipient":{"additionalInfo":"COOP","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-45,00"},"dueDate":"2020-01-09","recipient":{"additionalInfo":"VALBO HOCKEY C","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-180,00"},"dueDate":"2020-01-09","recipient":{"additionalInfo":"ASIA GARDEN","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-56,80"},"dueDate":"2020-01-09","recipient":{"additionalInfo":"WILLYS HEMMA V","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-57,50"},"dueDate":"2020-01-09","recipient":{"additionalInfo":"Easypark","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-25,00"},"dueDate":"2020-01-08","recipient":{"additionalInfo":"APOTEKET","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"6 300,00"},"dueDate":"2020-01-08","recipient":{"additionalInfo":"Scandic","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-125,35"},"dueDate":"2020-01-07","recipient":{"additionalInfo":"COOP","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-100,00"},"dueDate":"2020-01-07","recipient":{"additionalInfo":"MCDONALDS","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-321,89"},"dueDate":"2020-01-06","recipient":{"additionalInfo":"COOP","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-110,00"},"dueDate":"2020-01-06","recipient":{"additionalInfo":"WILLYS HEMMA V","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-115,00"},"dueDate":"2020-01-06","recipient":{"additionalInfo":"RUSTA","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-175,00"},"dueDate":"2020-01-05","recipient":{"additionalInfo":"MCD","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-6,75"},"dueDate":"2020-01-05","recipient":{"additionalInfo":"Easypark","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-77,00"},"dueDate":"2020-01-04","recipient":{"additionalInfo":"Scandic Hotels","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-45,00"},"dueDate":"2020-01-04","recipient":{"additionalInfo":"iZ *Hanhals If","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-85,00"},"dueDate":"2020-01-04","recipient":{"additionalInfo":"Hanhals IF, ca","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-36,00"},"dueDate":"2020-01-03","recipient":{"additionalInfo":"Scandic Hotels","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-3 600,00"},"dueDate":"2020-01-03","recipient":{"additionalInfo":"Scandic Hotels","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-3 080,00"},"dueDate":"2020-01-03","recipient":{"additionalInfo":"Scandic Hotels","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-32,00"},"dueDate":"2020-01-03","recipient":{"additionalInfo":"Partille Hocke","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-30,00"},"dueDate":"2020-01-03","recipient":{"additionalInfo":"Partille Hocke","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-200,00"},"dueDate":"2020-01-03","recipient":{"additionalInfo":"AB SVENSKA SPE","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-1 155,00"},"dueDate":"2020-01-03","recipient":{"additionalInfo":"SVEDEA AB","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-66,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"Scandic Hotels","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-15,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"Partille Hocke","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-1 170,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"BANK NORWEGIAN","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-1 173,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"MEDMERA BANK A","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-2 502,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"Ecster/Handels","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-2 160,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"Ecster/Handels","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-1 174,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"FALUN ENERGI A","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-241,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"FALUN VATTEN A","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-1 118,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"SWEDBANK AB","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-114,00"},"dueDate":"2020-01-02","recipient":{"additionalInfo":"SVENSKA CENTRA","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-211,00"},"dueDate":"2020-01-01","recipient":{"additionalInfo":"MCD STOCKHOLM","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-225,00"},"dueDate":"2020-01-01","recipient":{"additionalInfo":"FRIGGA PIZZERI","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-30,00"},"dueDate":"2020-01-01","recipient":{"additionalInfo":"SHELL","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"5 000,00"},"dueDate":"2020-01-01","recipient":{"additionalInfo":"Overf Mobil","name":null,"reference":null}}]}
+
+REQUEST 12 MATCH TRANSACTIONS_2
+GET https://m2.handelsbanken.se/app/priv/accounts/512351234/account-info?hasBalance=true&authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 12 SET TRANSACTIONS_3
+200
+Date: Fri, 17 Apr 2020 11:14:35 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"deposit-protection":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qFF2BFDD8A98D38F9C1257FB5005853D3","type":"text/html","title":"Insättningsgarantin","gaScreenName":"accounts / account details / account information and settings / deposit guarantee"},"update-context":{"href":"https://m2.handelsbanken.se/app/priv/accounts/512351234/update-context?name=Allkonto&chosen=&authToken=ad37b1423d54","title":"Byt namn på kontot","gaScreenName":"accounts / account details / account information and settings / change account name"}},"links":[{"rel":"deposit-protection","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qFF2BFDD8A98D38F9C1257FB5005853D3","type":"text/html","title":"Insättningsgarantin","gaScreenName":"accounts / account details / account information and settings / deposit guarantee"},{"rel":"update-context","href":"https://m2.handelsbanken.se/app/priv/accounts/512351234/update-context?name=Allkonto&chosen=&authToken=ad37b1423d54","type":"application/json","title":"Byt namn på kontot","gaScreenName":"accounts / account details / account information and settings / change account name"}],"heading":"Allkonto","items":[{"label":"Kontonummer","value":"6025 - 512 351 234"},{"label":"Kontohavare","value":"John Doe"},{"label":"IBAN","value":"SE51 2000 0000 0005 1235 1234"},{"label":"BIC (Nationellt bankID)","value":"HANDSESS"}]}
+
+REQUEST 13 MATCH TRANSACTIONS_3
+GET https://m2.handelsbanken.se/app/priv/accounts/612312456/transactions?isCard=false&authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 13 SET TRANSACTIONS_4
+200
+Date: Fri, 17 Apr 2020 11:14:37 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"account":{"_links":{"account-info":{"href":"https://m2.handelsbanken.se/app/priv/accounts/612312456/account-info?hasBalance=false&authToken=ad37b1423d54","title":"Kontoinformation och inställningar","gaScreenName":"accounts / account details / account information and settings"}},"links":[{"rel":"account-info","href":"https://m2.handelsbanken.se/app/priv/accounts/612312456/account-info?hasBalance=false&authToken=ad37b1423d54","type":"application/json","title":"Kontoinformation och inställningar","gaScreenName":"accounts / account details / account information and settings"}],"name":"e-Kapitalkonto","number":"612312456","numberFormatted":"612 312 456","balance":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"holderName":null,"displayBalance":true,"isCard":false,"amountAvailable":null,"clearingNumber":"6025","overDraft":false,"warningTextShort":null,"warningTextLong":null},"transactions":[{"recipient":{"name":null,"reference":null,"additionalInfo":"Overf Internet"},"amount":{"amount":null,"amountFormatted":"-1 000,00"},"dueDate":"2019-04-29"}],"cardInvoiceInfo":null}
+
+REQUEST 14 MATCH TRANSACTIONS_4
+GET https://m2.handelsbanken.se/app/priv/accounts/612312456/account-info?hasBalance=false&authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 14 SET TRANSACTIONS_5
+200
+Date: Fri, 17 Apr 2020 11:14:39 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"deposit-protection":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qFF2BFDD8A98D38F9C1257FB5005853D3","type":"text/html","title":"Insättningsgarantin","gaScreenName":"accounts / account details / account information and settings / deposit guarantee"},"update-context":{"href":"https://m2.handelsbanken.se/app/priv/accounts/612312456/update-context?name=e-Kapitalkonto&chosen=&authToken=ad37b1423d54","title":"Byt namn på kontot","gaScreenName":"accounts / account details / account information and settings / change account name"}},"links":[{"rel":"deposit-protection","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qFF2BFDD8A98D38F9C1257FB5005853D3","type":"text/html","title":"Insättningsgarantin","gaScreenName":"accounts / account details / account information and settings / deposit guarantee"},{"rel":"update-context","href":"https://m2.handelsbanken.se/app/priv/accounts/612312456/update-context?name=e-Kapitalkonto&chosen=&authToken=ad37b1423d54","type":"application/json","title":"Byt namn på kontot","gaScreenName":"accounts / account details / account information and settings / change account name"}],"heading":"e-Kapitalkonto","items":[{"label":"Kontonummer","value":"6025 - 612 312 456"},{"label":"Kontohavare","value":"John Doe"},{"label":"IBAN","value":"SE33 2000 0000 0006 1231 2345"},{"label":"BIC (Nationellt bankID)","value":"HANDSESS"}]}
+
+REQUEST 15 MATCH TRANSACTIONS_5
+GET https://m2.handelsbanken.se/app/priv/accounts/747851694/transactions?isCard=false&authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 15 SET TRANSACTIONS_6
+200
+Date: Fri, 17 Apr 2020 11:14:39 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"account":{"_links":{"account-info":{"gaScreenName":"accounts / account details / account information and settings","href":"https://m2.handelsbanken.se/app/priv/accounts/747851694/account-info?hasBalance=true&authToken=ad37b1423d54","title":"Kontoinformation och inställningar"}},"amountAvailable":null,"balance":{"amount":57000.61,"amountFormatted":"57 000,61","currency":"SEK","unit":"kr"},"clearingNumber":"6025","displayBalance":true,"holderName":null,"isCard":false,"links":[{"gaScreenName":"accounts / account details / account information and settings","href":"https://m2.handelsbanken.se/app/priv/accounts/747851694/account-info?hasBalance=true&authToken=ad37b1423d54","rel":"account-info","title":"Kontoinformation och inställningar","type":"application/json"}],"name":"Sparkonto","number":"747851694","numberFormatted":"747 851 694","overDraft":false,"warningTextLong":null,"warningTextShort":null},"cardInvoiceInfo":null,"transactions":[{"amount":{"amount":null,"amountFormatted":"5 000,00"},"dueDate":"2020-03-25","recipient":{"additionalInfo":"Overf Mobil","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"5 000,00"},"dueDate":"2020-03-25","recipient":{"additionalInfo":"Overf Mobil","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-1 000,00"},"dueDate":"2020-03-17","recipient":{"additionalInfo":"Overf Mobil","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"3 000,00"},"dueDate":"2020-02-25","recipient":{"additionalInfo":"Overf Mobil","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-2 000,00"},"dueDate":"2020-02-22","recipient":{"additionalInfo":"Overf Mobil","name":null,"reference":null}},{"amount":{"amount":null,"amountFormatted":"-1 000,00"},"dueDate":"2020-02-17","recipient":{"additionalInfo":"Overf Mobil","name":null,"reference":null}}]}
+
+REQUEST 16 MATCH TRANSACTIONS_6
+GET https://m2.handelsbanken.se/app/priv/accounts/747851694/account-info?hasBalance=true&authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 16 SET TRANSACTIONS_7
+200
+Date: Fri, 17 Apr 2020 11:14:40 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"deposit-protection":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qFF2BFDD8A98D38F9C1257FB5005853D3","type":"text/html","title":"Insättningsgarantin","gaScreenName":"accounts / account details / account information and settings / deposit guarantee"},"update-context":{"href":"https://m2.handelsbanken.se/app/priv/accounts/747851694/update-context?name=Sparkonto&chosen=&authToken=ad37b1423d54","title":"Byt namn på kontot","gaScreenName":"accounts / account details / account information and settings / change account name"}},"links":[{"rel":"deposit-protection","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qFF2BFDD8A98D38F9C1257FB5005853D3","type":"text/html","title":"Insättningsgarantin","gaScreenName":"accounts / account details / account information and settings / deposit guarantee"},{"rel":"update-context","href":"https://m2.handelsbanken.se/app/priv/accounts/747851694/update-context?name=Sparkonto&chosen=&authToken=ad37b1423d54","type":"application/json","title":"Byt namn på kontot","gaScreenName":"accounts / account details / account information and settings / change account name"}],"heading":"Sparkonto","items":[{"label":"Kontonummer","value":"6025 - 747 851 694"},{"label":"Kontohavare","value":"John Doe"},{"label":"IBAN","value":"SE61 2000 0000 0007 4785 1694"},{"label":"BIC (Nationellt bankID)","value":"HANDSESS"}]}
+
+REQUEST 17 MATCH TRANSACTIONS_7
+GET https://m2.handelsbanken.se/app/priv/accounts?authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 17
+200
+Date: Fri, 17 Apr 2020 11:14:40 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"open-account":{"href":"https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=ad37b1423d54","gaScreenName":"accounts / open account"}},"links":[{"rel":"open-account","href":"https://m2.handelsbanken.se/app/priv/openaccount/typelist?authToken=ad37b1423d54","type":"application/json","gaScreenName":"accounts / open account"}],"ownAccountGroupTitle":"","othersAccountGroupTitle":null,"externalAccountGroupTitle":null,"accountGroups":[{"title":null,"bic":null,"type":"OWN_ACCOUNT","accounts":[{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/512351234/transactions?isCard=false&authToken=ad37b1423d54","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/512351234/transactions?isCard=false&authToken=ad37b1423d54","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Allkonto","number":"512351234","numberFormatted":"512 351 234","balance":{"amount":2244.40,"amountFormatted":"2 244,40","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"isCard":false,"amountAvailable":{"amount":2244.40,"amountFormatted":"2 244,40","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/612312456/transactions?isCard=false&authToken=ad37b1423d54","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/612312456/transactions?isCard=false&authToken=ad37b1423d54","type":"application/json","gaScreenName":"accounts / account details"}],"name":"e-Kapitalkonto","number":"612312456","numberFormatted":"612 312 456","balance":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"isCard":false,"amountAvailable":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null},{"_links":{"transactions":{"href":"https://m2.handelsbanken.se/app/priv/accounts/747851694/transactions?isCard=false&authToken=ad37b1423d54","gaScreenName":"accounts / account details"}},"links":[{"rel":"transactions","href":"https://m2.handelsbanken.se/app/priv/accounts/747851694/transactions?isCard=false&authToken=ad37b1423d54","type":"application/json","gaScreenName":"accounts / account details"}],"name":"Sparkonto","number":"747851694","numberFormatted":"747 851 694","balance":{"amount":57000.61,"amountFormatted":"57 000,61","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"isCard":false,"amountAvailable":{"amount":57000.61,"amountFormatted":"57 000,61","unit":"kr","currency":"SEK"},"clearingNumber":null,"overDraft":false,"warningTextShort":null,"warningTextLong":null}]}]}
+
+REQUEST 18
+GET https://m2.handelsbanken.se/app/priv/cards/v3?authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 18
+200
+Date: Fri, 17 Apr 2020 11:14:40 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"emptyDisclaimer":null,"cvcInfo":"Fyll i CVC/CVV-koden nedan. Du hittar koden på kortets baksida (tre siffror).","cards":[{"_links":{"block-status":{"href":"https://m2.handelsbanken.se/app/priv/cards/TCPcHV7hF5a4rGzq3by_DXE1HF8EG5WRj4wS0rPftV3/block-status?authToken=ad37b1423d54","gaScreenName":"cards / block card"},"card-activation":{"href":"https://m2.handelsbanken.se/app/priv/cards/sign/TCPcHV7hF5a4rGzq3by_DXE1HF8EG5WRj4wS0rPftV3/Ta3EHV9OJQQEIZWT1cySR2/5FIrb-G6dG4EvFZgFWSdnG4/X1dlBigfu7ddeNIpgMTVfHEvHhTEte6Vj4dY0HPUte4/IDO4GTR081skzs4gK22Iork0scor6cANxKTe1fORn1a/activate?cardHolder=bnDRFs4qDvD54sGPfFGfXa&authToken=ad37b1423d54","title":"Aktivera kort","gaScreenName":"cards / activate / confirm"}},"links":[{"rel":"block-status","href":"https://m2.handelsbanken.se/app/priv/cards/TCPcHV7hF5a4rGzq3by_DXE1HF8EG5WRj4wS0rPftV3/block-status?authToken=ad37b1423d54","type":"application/json","gaScreenName":"cards / block card"},{"rel":"card-activation","href":"https://m2.handelsbanken.se/app/priv/cards/sign/TCPcHV7hF5a4rGzq3by_DXE1HF8EG5WRj4wS0rPftV3/Ta3EHV9OJQQEIZWT1cySR2/5FIrb-G6dG4EvFZgFWSdnG4/X1dlBigfu7ddeNIpgMTVfHEvHhTEte6Vj4dY0HPUte4/IDO4GTR081skzs4gK22Iork0scor6cANxKTe1fORn1a/activate?cardHolder=bnDRFs4qDvD54sGPfFGfXa&authToken=ad37b1423d54","type":"application/json","title":"Aktivera kort","gaScreenName":"cards / activate / confirm"}],"name":"Bankkort","arrangementName":"Bankkort","numberMasked":"6143 **** **** 1323","amountAvailable":null,"balance":null,"statusText":"Ej aktivt kort","internetOpen":false,"abroadOpen":false,"blocked":false,"typeCode":"","dueDate":"2022-08","newCard":true,"items":[{"label":"Kort","value":"Bankkort","type":"STRING"},{"label":"Kortnummer","value":"6143 **** **** 1323","type":"STRING"},{"label":"Giltigt t o m","value":"2022-08","type":"STRING"}],"blockCreditCardDetails":null,"emptyDisclaimer":null},{"_links":{"change-internet-state":{"href":"https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=vfrFdg5FzgBmfeNoSFvPTn5vFMTV5WV54wf04PkTF4f&internetOpen=false&abroadOpen=false&isNewCardList=dFGS4Gfg5g4GT6gsr_4GS5&authToken=ad37b1423d54"},"change-abroad-state":{"href":"https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=vfrFdg5FzgBmfeNoSFvPTn5vFMTV5WV54wf04PkTF4f&internetOpen=true&abroadOpen=true&isNewCardList=dFGS4Gfg5g4GT6gsr_4GS5&authToken=ad37b1423d54"},"block-status":{"href":"https://m2.handelsbanken.se/app/priv/cards/vfrFdg5FzgBmfeNoSFvPTn5vFMTV5WV54wf04PkTF4f/block-status?authToken=ad37b1423d54","gaScreenName":"cards / block card"},"card-offer":{"href":"https://m2.handelsbanken.se/app/priv/cards/offer?cardType=BANKKORT_VISA&authToken=ad37b1423d54","type":"application/pdf","title":"Erbjudanden Bankkort"}},"links":[{"rel":"block-status","href":"https://m2.handelsbanken.se/app/priv/cards/vfrFdg5FzgBmfeNoSFvPTn5vFMTV5WV54wf04PkTF4f/block-status?authToken=ad37b1423d54","type":"application/json","gaScreenName":"cards / block card"},{"rel":"change-internet-state","href":"https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=vfrFdg5FzgBmfeNoSFvPTn5vFMTV5WV54wf04PkTF4f&internetOpen=false&abroadOpen=false&isNewCardList=dFGS4Gfg5g4GT6gsr_4GS5&authToken=ad37b1423d54","type":"application/json"},{"rel":"change-abroad-state","href":"https://m2.handelsbanken.se/app/priv/cards/change-state?openCloseKey=vfrFdg5FzgBmfeNoSFvPTn5vFMTV5WV54wf04PkTF4f&internetOpen=true&abroadOpen=true&isNewCardList=dFGS4Gfg5g4GT6gsr_4GS5&authToken=ad37b1423d54","type":"application/json"},{"rel":"card-offer","href":"https://m2.handelsbanken.se/app/priv/cards/offer?cardType=BANKKORT_VISA&authToken=ad37b1423d54","type":"application/pdf","title":"Erbjudanden Bankkort"}],"name":"Bankkort Visa","arrangementName":null,"numberMasked":"6346 **** **** 1574","amountAvailable":{"amount":2244.40,"amountFormatted":"2 244,40","unit":"SEK","currency":"SEK"},"balance":{"amount":0,"amountFormatted":"0,00","unit":"SEK","currency":"SEK"},"statusText":null,"internetOpen":true,"abroadOpen":false,"blocked":false,"typeCode":"6","dueDate":null,"newCard":false,"items":null,"blockCreditCardDetails":null,"emptyDisclaimer":null}],"extraCards":[{"title":null,"heading":"Vill du ansöka om kort?","subHeading":[{"label":null,"value":"Ansök om våra kort i internetbanken."},{"label":null,"value":"Eller ring oss så hjälper vi dig."}],"contact":{"type":"PHONE","description":"Kontakta oss","contact":"+46771778899","specialText":null}}],"cardOffers":[{"_links":{"card-offer":{"href":"https://europe.priceless.com/sv-se/shb","type":"text/html","gaScreenName":"cards / card offer / private"}},"links":[{"rel":"card-offer","href":"https://europe.priceless.com/sv-se/shb","type":"text/html","gaScreenName":"cards / card offer / private"}],"heading":"För dig med kort","title":"Förmåner och erbjudanden","offerType":"PRIVATE"}]}
+
+REQUEST 19
+GET https://m2.handelsbanken.se/app/priv/loan?authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 19
+200
+Date: Fri, 17 Apr 2020 11:14:40 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"inet-loan-information":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q7703A85157017989C1257B5C004BB10D","type":"text/html","gaScreenName":"loans / loan details / about loan details"},"inet-interest-distribution":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q4401D5CDA9E943B0C1257B5C004C4432?OpenDocument","type":"text/html","gaScreenName":"loans / my risk allocation of interest"},"inet-about-loan-protection-old":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q601606C5684AE980C1257F000057027E","type":"text/html","gaScreenName":"loans / about loan protection"},"inet-about-loan-protection-with-security-capital":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/b1G37589G0242926A1C8253F01011745BC","type":"text/html","gaScreenName":"loans / about loan protection"},"inet-unpaid-avi":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q87A84F33FD3CD46DC1257B5C004BEFE6?OpenDocument","type":"text/html"}},"links":[{"rel":"inet-loan-information","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q7703A85157017989C1257B5C004BB10D","type":"text/html","gaScreenName":"loans / loan details / about loan details"},{"rel":"inet-unpaid-avi","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q87A84F33FD3CD46DC1257B5C004BEFE6?OpenDocument","type":"text/html"},{"rel":"inet-interest-distribution","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q4401D5CDA9E943B0C1257B5C004C4432?OpenDocument","type":"text/html","gaScreenName":"loans / my risk allocation of interest"},{"rel":"inet-about-loan-protection-old","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q601606C5684AE980C1257F000057027E","type":"text/html","gaScreenName":"loans / about loan protection"},{"rel":"inet-about-loan-protection-with-security-capital","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/b1G37589G0242926A1C8253F01011745BC","type":"text/html","gaScreenName":"loans / about loan protection"}],"noLoan":true,"noLoanText":"Det finns inga lån att visa","totalAnnouncedPayment":null,"totalAnnouncedPaymentFormatted":null,"totalDebtSEK":null,"totalDebtSEKFormatted":null,"sekCurrencyCode":null,"totalDebtEUR":null,"totalDebtEURFormatted":null,"eurCurrencyCode":null,"unpaidAviText":null,"loans":null,"interestDistribution":null,"aboutMyInterestDistributionText":null,"aboutMyInterestDistributionThinkAboutHeader":null,"aboutMyInterestDistributionThinkAboutText":null,"loanProtectionType":"NONE","loanCampaign":null,"noLoanContents":[{"_links":{"loan-context-mortgage":{"href":"https://m2.handelsbanken.se/app/priv/loan/context?type=MORTGAGE&authToken=ad37b1423d54","title":"Ansök","gaScreenName":"loans / apply for a loan / mortgage loan"}},"links":[{"rel":"loan-context-mortgage","href":"https://m2.handelsbanken.se/app/priv/loan/context?type=MORTGAGE&authToken=ad37b1423d54","type":"application/json","title":"Ansök","gaScreenName":"loans / apply for a loan / mortgage loan"}],"title":null,"heading":"Ska du köpa bostad?","subHeading":[{"label":null,"value":"Visning i helgen? Med ett lånelöfte vet du hur långt du kan gå i budgivningen. Ansök direkt och få svar inom 24 timmar."}]}],"loanConditionText":null}
+
+REQUEST 20
+GET https://m2.handelsbanken.se/app/priv/securities/holdingsSummary/V3?authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 20
+200
+Date: Fri, 17 Apr 2020 11:14:40 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"marketValue":null,"performance":null,"performanceAmountDisclaimer":null,"performanceAmountDisclaimerText":null,"custodyAccounts":[],"missingAccountTypeDisclaimer":null,"othersWithCustodyAccounts":[],"noHoldingsContents":[{"_links":{"saving-guide":{"href":"https://m2.handelsbanken.se/app/priv/saving-guide/fundselector?authToken=ad37b1423d54","title":"Testa Sparguiden","gaScreenName":"save invest / savings guide"}},"links":[{"rel":"saving-guide","href":"https://m2.handelsbanken.se/app/priv/saving-guide/fundselector?authToken=ad37b1423d54","type":"application/json","title":"Testa Sparguiden","gaScreenName":"save invest / savings guide"}],"title":null,"heading":null,"subHeading":[{"label":null,"value":"I snitt tar det mindre än 3 minuter att starta ett fondsparande i Sparguiden."}]}],"contentStrings":{"accountTypeCustodyAccount":"Depå","accountTypeEndowmentInsurance":"Kapitalförsäkring","accountTypeFundHoldings":"Fondinnehav","accountTypeIsk":"Investeringssparkonto","holdingsSummaryMarketValue":"Marknadsvärde","holdingsSummaryValuePerformance":"Värdeutveckling","myHoldingsHeading":"Mitt innehav","savingsGuideBannerText":"Fondspara snabbt och enkelt","savingsGuideBannerTitle":"Sparguiden","userListBannerTextMoreThanOneItem":"Du har X st bevakningar.","userListBannerTextOneItem":"Du har 1 st bevakning.","userListBannerTextZeroItems":"Du har 0 bevakningar.","userListBannerTitle":"Mina bevakningar"}}
+
+REQUEST 21
+GET https://m2.handelsbanken.se/app/priv/pending-transactions?user=&authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 21
+200
+Date: Fri, 17 Apr 2020 11:14:40 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"pending-transactions-filter":{"href":"https://m2.handelsbanken.se/app/priv/pending-transactions/filter?user=&transfers=true&authToken=ad37b1423d54","title":"filter"},"pending-transactions-about":{"href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_kommande","type":"text/html"}},"links":[{"rel":"pending-transactions-about","href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_kommande","type":"text/html"},{"rel":"pending-transactions-filter","href":"https://m2.handelsbanken.se/app/priv/pending-transactions/filter?user=&transfers=true&authToken=ad37b1423d54","type":"application/json","title":"filter"}],"title":"","transactionGroups":[],"amountTotal":{"amount":0,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"numberOfTransactions":{"quantityFormatted":"0","unit":"st","header":"Antal betalningar:"},"otherTransactionHolders":[],"datePicker":{"firstDate":"2020-04-17","lastDate":"2022-08-17","disableSaturdays":false,"disableSundays":false,"selectedDate":"2020-05-17"}}
+
+REQUEST 22
+GET https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 22
+200
+Date: Fri, 17 Apr 2020 11:14:41 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"einvoice-agreement-pdf":{"href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/y_bankarenden_privat_villkor_e-faktura/$file/villkorefaktura.pdf","type":"application/pdf","title":"Villkor e-faktura","gaScreenName":"Payments Transfers / E-invoices / Agreement / PDF"},"einvoice-archive-list":{"href":"https://m2.handelsbanken.se/app/priv/einvoice/archive?authToken=ad37b1423d54","title":"Arkiv","gaScreenName":"pay transfer / e-invoices / archive"},"faq":{"href":"https://m2.handelsbanken.se/app/priv/einvoice/faq?authToken=ad37b1423d54","title":"Vanliga frågor","gaScreenName":"pay transfer / e-invoices / faq"},"self":{"href":"https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken=ad37b1423d54","title":""},"einvoice-recipients-context":{"href":"https://m2.handelsbanken.se/app/priv/einvoice/recipients?authToken=ad37b1423d54","title":"Ändra och lägg till mottagare","gaScreenName":"Payments Transfers / E-Invoice / Recipients"}},"links":[{"rel":"einvoice-recipients-context","href":"https://m2.handelsbanken.se/app/priv/einvoice/recipients?authToken=ad37b1423d54","type":"application/json","title":"Ändra och lägg till mottagare","gaScreenName":"Payments Transfers / E-Invoice / Recipients"},{"rel":"einvoice-archive-list","href":"https://m2.handelsbanken.se/app/priv/einvoice/archive?authToken=ad37b1423d54","type":"application/json","title":"Arkiv","gaScreenName":"pay transfer / e-invoices / archive"},{"rel":"faq","href":"https://m2.handelsbanken.se/app/priv/einvoice/faq?authToken=ad37b1423d54","type":"application/json","title":"Vanliga frågor","gaScreenName":"pay transfer / e-invoices / faq"},{"rel":"einvoice-agreement-pdf","href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/y_bankarenden_privat_villkor_e-faktura/$file/villkorefaktura.pdf","type":"application/pdf","title":"Villkor e-faktura","gaScreenName":"Payments Transfers / E-invoices / Agreement / PDF"},{"rel":"self","href":"https://m2.handelsbanken.se/app/priv/einvoice/v4/pending?authToken=ad37b1423d54","type":"application/json","title":""}],"eInvoicesGrouped":[],"contentComponentList":null,"textForGettingEinvoice":null}
+
+REQUEST 23
+GET https://m2.handelsbanken.se/app/priv/transfer/v2/context?showPuff=true&authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 23
+200
+Date: Fri, 17 Apr 2020 11:14:41 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"create":{"href":"https://m2.handelsbanken.se/app/priv/transfer/sign/create?showPuff=true&authToken=ad37b1423d54","title":"Ny överföring","gaScreenName":"pay transfer / new transfer / confirm"},"inet-account-transfer-information":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q24CC17BA2F40B7FAC1257EB3002BD0CB","type":"text/html","gaScreenName":"Payments Transfers / Transfer other recipient / About account numbers"},"validate-recipient":{"href":"https://m2.handelsbanken.se/app/priv/transfer/v2/recipient/?showPuff=true&authToken=ad37b1423d54","gaScreenName":"Payments Transfers / Transfer other recipient / Validate recipient"},"inet-transfer-information":{"href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qC7E0326C8C9CA666C1257EB3002DCE01","type":"text/html","gaScreenName":"pay transfer / new transfer / about new transfer"}},"links":[{"rel":"validate-recipient","href":"https://m2.handelsbanken.se/app/priv/transfer/v2/recipient/?showPuff=true&authToken=ad37b1423d54","type":"application/json","gaScreenName":"Payments Transfers / Transfer other recipient / Validate recipient"},{"rel":"inet-transfer-information","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/qC7E0326C8C9CA666C1257EB3002DCE01","type":"text/html","gaScreenName":"pay transfer / new transfer / about new transfer"},{"rel":"inet-account-transfer-information","href":"https://www.handelsbanken.se/shb/Inet/ICentSv.nsf/default/q24CC17BA2F40B7FAC1257EB3002BD0CB","type":"text/html","gaScreenName":"Payments Transfers / Transfer other recipient / About account numbers"},{"rel":"create","href":"https://m2.handelsbanken.se/app/priv/transfer/sign/create?showPuff=true&authToken=ad37b1423d54","type":"application/json","title":"Ny överföring","gaScreenName":"pay transfer / new transfer / confirm"}],"fromAccounts":{"title":"Från konto","type":"FROM_ACCOUNTS","accountGroups":[{"title":"Eget konto","bic":null,"type":"OWN_ACCOUNT","accounts":[{"name":"Allkonto","number":"512351234","numberFormatted":"512 351 234","balance":{"amount":2244.40,"amountFormatted":"2 244,40","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"restrictionText":""},{"name":"e-Kapitalkonto","number":"612312456","numberFormatted":"612 312 456","balance":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"restrictionText":""},{"name":"Sparkonto","number":"747851694","numberFormatted":"747 851 694","balance":{"amount":57000.61,"amountFormatted":"57 000,61","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"restrictionText":""}]}]},"toAccounts":{"title":"Till konto","type":"TO_ACCOUNTS","accountGroups":[{"title":"Eget konto","bic":null,"type":"OWN_ACCOUNT","accounts":[{"name":"Allkonto","number":"512351234","numberFormatted":"512 351 234","balance":{"amount":2244.40,"amountFormatted":"2 244,40","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"restrictionText":""},{"name":"e-Kapitalkonto","number":"612312456","numberFormatted":"612 312 456","balance":{"amount":0.00,"amountFormatted":"0,00","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"restrictionText":""},{"name":"Sparkonto","number":"747851694","numberFormatted":"747 851 694","balance":{"amount":57000.61,"amountFormatted":"57 000,61","unit":"kr","currency":"SEK"},"holderName":"John Doe","displayBalance":true,"restrictionText":""}]},{"title":"Sparade mottagare","bic":null,"type":"OTHER_RECIPIENT_ACCOUNT","accounts":[{"name":"Collector","number":"84289035717","numberFormatted":"8428-9035717","balance":null,"holderName":"Collector","displayBalance":false,"restrictionText":""}]}]},"datePicker":{"firstDate":"2020-04-17","lastDate":"2022-08-16","disableSaturdays":false,"disableSundays":false}}
+
+REQUEST 24
+GET https://m2.handelsbanken.se/app/priv/payment/context?includeRecipients=true&authToken=ad37b1423d54
+Accept: application/json,application/xml
+X-SHB-DEVICE-NAME: iOS;Tink;Tink
+X-SHB-DEVICE-MODEL: IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV
+X-SHB-DEVICE-CLASS: APP
+X-SHB-APP-VERSION: 3.5:9.6
+X-Aggregator: Tink Testing
+
+RESPONSE 24
+200
+Date: Fri, 17 Apr 2020 11:14:41 GMT
+Server: Apache
+Cache-Control: private, no-cache, no-store, no-transform, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+Vary: Accept-Encoding
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{"_links":{"ocr-info":{"href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_info_ocr","type":"text/html"},"lookup-recipient":{"href":"https://m2.handelsbanken.se/app/priv/payment/recipient/{bgPgNumber}?authToken=ad37b1423d54","gaScreenName":"Payments Transfers / Payment / Lookup other recipient"},"recipient-info":{"href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_betalningsmottagare","type":"text/html"},"create":{"href":"https://m2.handelsbanken.se/app/priv/payment/sign/create?authToken=ad37b1423d54","title":"Ny betalning","gaScreenName":"pay transfer / new payment / confirm"}},"links":[{"rel":"lookup-recipient","href":"https://m2.handelsbanken.se/app/priv/payment/recipient/{bgPgNumber}?authToken=ad37b1423d54","type":"application/json","gaScreenName":"Payments Transfers / Payment / Lookup other recipient"},{"rel":"create","href":"https://m2.handelsbanken.se/app/priv/payment/sign/create?authToken=ad37b1423d54","type":"application/json","title":"Ny betalning","gaScreenName":"pay transfer / new payment / confirm"},{"rel":"recipient-info","href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_betalningsmottagare","type":"text/html"},{"rel":"ocr-info","href":"https://www.handelsbanken.se/shb/inet/icentsv.nsf/vlookuppics/mobila_sidor_info_ocr","type":"text/html"}],"fromAccounts":{"title":"Från konto","type":"FROM_ACCOUNTS","accountGroups":[{"title":null,"bic":null,"type":"OWN_ACCOUNT","accounts":[{"name":"Allkonto","number":"512351234","numberFormatted":"512 351 234","balance":{"amount":2244.40,"amountFormatted":"2 244,40","unit":"kr","currency":"SEK"},"holderName":null,"displayBalance":true}]}]},"recipients":[{"name":"BOSTADSFÖRMEDLINGEN I STO","reference":"Plusgiro 4811600-8","additionalInfo":null,"id":"4811600-8","type":4,"ocrCheck":{"type":"OCR_FIXED_LENGTH","refLength1":17,"refLength2":17}}],"firstPayDate":"2020-04-20","lastPayDate":"2022-08-16","nonBankingDays":["2020-05-01","2020-05-21","2020-06-06","2020-06-19","2020-12-24","2020-12-25","2020-12-26","2020-12-31"],"disableOcrScanning":false,"ocrNumber":""}
