@@ -111,7 +111,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
         paymentRequest.setFrom(sourceAccount);
         paymentRequest.setBankName(destinationAccount);
         paymentRequest.setTo(destinationAccount);
-        paymentRequest.setMessage(transfer.getDestinationMessage());
+        paymentRequest.setMessage(transfer.getRemittanceInformation().getValue());
         paymentRequest.setDue(NordeaDateUtil.getTransferDateForBgPg(transfer.getDueDate()));
         paymentRequest.setType(executorHelper.getPaymentType(transfer.getDestination()));
         paymentRequest.setToAccountNumberType(
