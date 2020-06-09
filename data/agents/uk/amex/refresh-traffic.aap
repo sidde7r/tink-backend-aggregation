@@ -21,7 +21,7 @@ Vary: Accept-Encoding
 Date: Mon, 11 May 2020 13:24:13 GMT
 Connection: keep-alive
 
-{"status_code_type":"success","status_code":"success","encrypted_keys":"utb0yy/UWSXH5YzUzvnUf/cwu8+obDZKMBsBXfM8aDKzTOMLWI1d3MdA45m9qXVSGi9sV+BYsPQgEz6IfyQqIMu8CCJjZrDdQmyaPuQY7b0K+8s5FTv2l5Q4iQxZZ5FAz5iw9698whrfM9JFThX5w/F0DQH5SjtBA3pdVKy2hnFJ6Ms/JhYr96FmqYb3YVtdHVuF9ptBNYFVWLS03Kp5zXV6eRkytaxBvkNTBYglUMUSLaAEonO1njx/fJmt3SMrkHqoPp/+kxOP0dxel35x1HfR7stqtRvoyo0uog3/On2upC+JV5tHUPL/Afph1MKfk5sSyhu/VH75kLjyv9gUZnEJKh/Bren1pAS7est8m6PYBn5jq403EH/VWH5aNYEmpEIfPqGY2m6v5B2f+T8Qxfu+8EPoE/GPSRTwdQ5XWWIxfLuQcjFVylKh1ou5cvvbfK7Ch7wCb8rzY1wN7Z5L5S0i2msDB0fxU1uLPo2wH2wr9C4q7YKVrrKjCQDS9w4uualToc7YD5zuGxptp6942oVyr5P+Z2qxGjh0hIhept3WJ8LydmmoiIZoAweJkhfTPmmdd3eIes4Vj1BPt3r2/xXk4pZ0MVMkdRNhKk50liejZMTq6+r/weBJunOOxzazRjfbzyohqupAkN91bvlgQz6Lp6wI4ZvCmSGwEb/eBeYfrzmNQsE+Ymy8IYvc3xqmdUeHr7M1QWvGNxcJe/dADi7AfC3WN6yAwRho1Jw+ImzZ7K3wPQxcA8jtmf91kHpvQdp7rETSeWTY5SiV8ip5FKfS39fvNvjmL0UG9jOSHEOv+lq34iGAAzNpGVzzgTxZVW9gjGH6elU4mUlcpB1XgA/LAA/e6E7SXRYIyxE6QuSv/zp09wrYppAoQq1h1nYQTGQGvUfrYwUnZNLNq3+RvteUhvtSw8RXcEA+ZoK9ciyzIxfAqPcod6+byo7VpgkAYecUszRGoKdvRcRSJl/bP1LwSCyBaAojhVVP6QTyc/6Sl5LAqytn28wh9iSBlQ6e01z99xYMKkpcekNuJOrCinJBfl0qcbZvEsJ0xmUbIXT+UP2W9ta/gRpPYGB1HXrKw2ZBUhjfzM6045mL63/zB0cuSlGRA/AtBb/d8B2nmNmDclx/VHoo8fBHqAshSw4vWtkQT6Xp/BZRXGUacHJ+Ij7fgNrLEz65BohM6CNK7SM=","device_key_version":"1.0"}
+{"status_code_type":"success","status_code":"success","encrypted_keys":"eTtQYBDjzwWmU4NYFCfmOGlYvIbKF7p20BkyBSkniHdPFA1ajqhS7q6kv92Hl7ZORDH+TmMZrV+kQM2pzpHPoFwNDAIj7rbMqNlzZkdh6sUTcBjBelVYOTygqgD6thTnIQqN3RTxH28r7l7hCZN1zNmGCPoCgC1PYMbr+05D+SXI7d9kUSZyUK3jmUz4KrgqJQtwzQjL485D0L3vb1aU/O9YaFLN64DE5ViCclF2d721E/dPgQX6reC9xBjqVLLL2uX80Vkxx2zfl3adN9t536pXHv48ZCnnCkwxsv/HMmFVpuKPCr7lgZ71TOpcnX4Ts1hwkxwADBVowQ1Qsi9sS//ntr8KWfUv1zv9+TReoQ0n3QAlw9xaK5LBkcaNViiw4K+XlAm8GVl9Hi8/NA3HrIW7B3jJG+JmwdyljLz7UakSy+YIyrCz4E6FrkNidndIfdDE44cEia/8QLA+oaCjIz2jaKe682DCiIyYSB6qb+N4a514ZJhtK128PZK5jUwjprTOwA6Di3V4KkcBj9np/ARMtxMf7NvRphcAgKrlN9wWnoLabVS33/QiQ6H3IlqNzbioZm62ng0Ry161NCGAsgHfhzU7f2WzJGpIR1qRgC8bV6XWyU3GVyHEHY8Un5bnctIm0GycEEH3rDYGouTW1mQTXHNxEqSYPduqr9ssFrtK+J0SAtUAPc/FcSqDXEaJvBDNWFsYmugwV3GC81gRZBm021ef6RQcrWFUsQVebLel/AJMwaxlTxEsZkguX8nJQaivY/iENx2Yg4xxqrDSk8+UII6VanI+dpe+ginRqObtY1lDJ0TzDcyAmHnxrm0GQs5eVSFXY9rQLUZkprh9YByEvcmxqaoNzdBQah5CWpYWsygIxMVgyDfuz4SF/3eF5NUAAmP0HFkNYPhMU8FgE5b+Q/rTDCoYAHTPu63KDrXhzr2BmN6H7PU+Umgl/M+Qfk4HbaOY3lfpXjnzVuKmkpiQoiDH4gub/CXzCpLpffC95W6dtDYn/UACazz1w+RmEa+i+zMtE6pw+BB+NMzN61FUX+0SKy3LzmBXTkD4c1o96ui8W0j4THKK5LglT+mlpCAoLqnyWNiD0xnrvD3+0489KFJVDuI0nE8f0fdtml3HmBKSwGPucxwnoeFdT4FfTd3hKuxey0bRoI2/I4a/1khis74qWmB8tAo73wMhXcw=","device_key_version":"1.0"}
 
 REQUEST 2
 GET https://global.americanexpress.com/mobileone/msl/services/app/passthrough
@@ -798,7 +798,7 @@ x-axp-locale: en_GB
 # TODO: Include cookie headers for the assertions
 #Cookie: agent-id=
 
-{"cardArtRequest":[{"minimumWidth":"1260","tag":"big-image"}],"loginCredentials":{"userIdLogin":{"rememberMeFlag":true,"userId":"testuser","password":"testPassword"}}}
+{"cardArtRequest":[{"minimumWidth":"1490","tag":"big-image"}],"checkSmsRedundancy":false,"loginCredentials":{"userIdLogin":{"password":"testPassword","rememberMeFlag":true,"userId":"testuser"}}}
 
 RESPONSE 4
 200
