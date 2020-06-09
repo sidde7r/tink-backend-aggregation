@@ -67,7 +67,7 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
                 executorHelper.getPaymentAccountType(transfer.getDestination()));
         request.setAmount(transfer.getAmount());
         request.setDue(transfer.getDueDate());
-        request.setMessage(transfer.getDestinationMessage());
+        request.setMessage(transfer.getRemittanceInformation().getValue());
         return request;
     }
 
@@ -81,7 +81,7 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
             throw ErrorResponse.eInvoiceUpdateDueNotAllowed();
         }
         if (!eInvoice.getPermissions().canModifyMessage()
-                && !Strings.nullToEmpty(transfer.getDestinationMessage())
+                && !Strings.nullToEmpty(transfer.getRemittanceInformation().getValue())
                         .equals(Strings.nullToEmpty(eInvoice.getMessage()))) {
             throw ErrorResponse.eInvoiceUpdateMessageNotAllowed();
         }
