@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas;
 
 import java.time.Clock;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -145,7 +146,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 new BnpParibasTransactionalAccountFetcher(apiClient);
 
         BnpParibasTransactionFetcher transactionFetcher =
-                new BnpParibasTransactionFetcher(apiClient, Clock.systemUTC());
+                new BnpParibasTransactionFetcher(apiClient, Clock.system(ZoneId.of("CET")));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
