@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc;
 
+import com.google.api.client.repackaged.com.google.common.base.Objects;
+import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -64,22 +67,35 @@ public class TransactionsResponse extends JsfUpdateResponse {
     }
 
     private Transaction rowToTransaction(Node row) {
-        // transaction rows have 4 cells: date (fecha valor), description, amount, account balance
+        // transaction rows have 5 cells: date (hidden accessibility cell), (fecha valor),
+        // description, amount, account balance
         final Double numberOfColumns = evaluateXPath(row, "count(td)", Double.class);
-        if (null == numberOfColumns || numberOfColumns.intValue() != 4) {
+        if (null == numberOfColumns || numberOfColumns.intValue() != 5) {
             throw new IllegalStateException(
-                    "Transaction row should have 4 columns, but has " + numberOfColumns);
+                    "Transaction row should have 5 columns, but has " + numberOfColumns);
         }
 
         Transaction.Builder builder = Transaction.builder();
 
-        final String date =
+        final String thisRowsDate =
                 evaluateXPath(
-                        row,
-                        "../../preceding::td[text() != '' and ./following-sibling::td[@colspan='4']][1]",
-                        String.class);
-        final String description = evaluateXPath(row, "td[2]", String.class).trim();
-        final String amount = evaluateXPath(row, "td[3]", String.class);
+                                row,
+                                "th[starts-with(@id,'FechaContable') and not(contains(@class,'empty'))]",
+                                String.class)
+                        .trim();
+
+        final String lastDate =
+                evaluateXPath(
+                                row,
+                                "preceding::th[starts-with(@id,'FechaContable') and not(contains(@class,'empty'))][1]",
+                                String.class)
+                        .trim();
+
+        final String date =
+                Objects.firstNonNull(
+                        Strings.emptyToNull(thisRowsDate), Strings.emptyToNull(lastDate));
+        final String description = evaluateXPath(row, "td[3]/span[1]", String.class).trim();
+        final String amount = evaluateXPath(row, "td[4]", String.class);
 
         return builder.setDate(parseTransactionDate(date))
                 .setDescription(description)
@@ -87,12 +103,16 @@ public class TransactionsResponse extends JsfUpdateResponse {
                 .build();
     }
 
+    private boolean hasNoTransactionsIndicator() {
+        return evaluateXPath(transactions, "//tr[contains(@class,'sinMov')]", Node.class) != null;
+    }
+
     private NodeList getTransactionRows() {
         if (null == transactionRows) {
             transactionRows =
                     evaluateXPath(
                             transactions,
-                            "//table/tr[contains(@class,'movilDetalleMovimiento')]",
+                            "//table//tr[contains(@class,'movilDetalleMovimiento')]",
                             NodeList.class);
         }
         return transactionRows;
@@ -104,6 +124,9 @@ public class TransactionsResponse extends JsfUpdateResponse {
         for (int i = 0; i < transactionRows.getLength(); i++) {
             transactions.add(rowToTransaction(transactionRows.item(i)));
         }
+        Preconditions.checkState(
+                transactions.size() > 0 || hasNoTransactionsIndicator(),
+                "No transactions and no empty list indicator. HTML changed?");
         return transactions;
     }
 }

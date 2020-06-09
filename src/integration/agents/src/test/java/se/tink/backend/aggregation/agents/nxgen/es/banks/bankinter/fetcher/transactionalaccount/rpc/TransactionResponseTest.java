@@ -25,50 +25,27 @@ public class TransactionResponseTest {
         List<Transaction> transactions =
                 transactionsResponse.toTinkTransactions().stream().collect(Collectors.toList());
 
-        assertEquals(13, transactions.size());
+        assertEquals(8, transactions.size());
 
         assertThat(
                 transactions.get(0),
-                matchesTransaction("10/06/2019", "Pago Bizum De Mengano;ramirez;tal", 3.5));
+                matchesTransaction("29/04/2020", "Transf Nomin Otr En /inclam Sa", 1051.67));
         assertThat(
                 transactions.get(1),
-                matchesTransaction("10/06/2019", "Pago Bizum De Maria Luisa;garcia", 3.5));
-        assertThat(
-                transactions.get(2),
-                matchesTransaction("07/06/2019", "Pago Bizum De Hermangarda;perez De", 3.5));
+                matchesTransaction("28/04/2020", "Nintendo Of Europe Gmbh", -7.49));
+        assertThat(transactions.get(2), matchesTransaction("21/04/2020", "TestCase", 7.5));
         assertThat(
                 transactions.get(3),
-                matchesTransaction("07/06/2019", "Pago Bizum De Manuel Francisco;gon", 3.5));
-        assertThat(
-                transactions.get(4),
-                matchesTransaction("07/06/2019", "Pago Bizum De David;marin", 3.5));
+                matchesTransaction("14/04/2020", "Transf Nomin Otr En /inclam Sa", 450.72));
+        assertThat(transactions.get(4), matchesTransaction("13/04/2020", "Masked", -29.99));
         assertThat(
                 transactions.get(5),
-                matchesTransaction("07/06/2019", "Pago Bizum De Samuel;delgad", 3.5));
-        assertThat(
-                transactions.get(6),
-                matchesTransaction("07/06/2019", "Pago Bizum De Marina;soler;v", 3.5));
-        assertThat(
-                transactions.get(7),
-                matchesTransaction("05/06/2019", "Trans /ministerio de Educacion", 3019.21));
-        assertThat(
-                transactions.get(8),
-                matchesTransaction("04/06/2019", "Recibo Visa Clasica", -238.12));
-        assertThat(
-                transactions.get(9),
-                matchesTransaction("04/06/2019", "Trans /perez De tal Z", (double) 500));
-        assertThat(
-                transactions.get(10),
-                matchesTransaction("04/06/2019", "Trans /ministerio de Educacion", 1337.42));
-        assertThat(
-                transactions.get(11),
-                matchesTransaction("03/06/2019", "Recib /c.p. Rufino Blanco 42", -312.25));
-        assertThat(
-                transactions.get(12),
-                matchesTransaction("03/06/2019", "Recibo /qualitas", -115.12));
+                matchesTransaction("06/04/2020", "Pago Bizum A Anders;Andersson", -165.00));
+        assertThat(transactions.get(6), matchesTransaction("06/04/2020", "TestCase", -200.00));
+        assertThat(transactions.get(7), matchesTransaction("06/04/2020", "TestCase", 200.00));
 
         final PaginationKey nextKey = transactionsResponse.getNextKey(0);
-        assertEquals("j_id374401928_5f006346:j_id374401928_5f006392", nextKey.getSource());
+        assertEquals("j_id1111011110_5f006392", nextKey.getSource());
     }
 
     @Test
@@ -82,6 +59,6 @@ public class TransactionResponseTest {
 
         final PaginationKey nextKey = transactionsResponse.getNextKey(0);
         assertEquals(1, nextKey.getConsecutiveEmptyReplies());
-        assertEquals("j_id374401928_5f006346:j_id374401928_5f006392", nextKey.getSource());
+        assertEquals("j_id1111011110_5f006392", nextKey.getSource());
     }
 }

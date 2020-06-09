@@ -1,71 +1,70 @@
-<?xml version="1.0" encoding="utf-8"?>
-<partial-response>
-  <changes>
-    <update id="movimientos-nav">
-      <![CDATA[<div id="movimientos-nav" class="navMov"><form novalidate="novalidate" id="j_id374401928_5f006346" name="j_id374401928_5f006346" method="post" action="/extracto/secure/movimientos_cuenta.xhtml" enctype="application/x-www-form-urlencoded"><script type="text/javascript"><!--
-      verMovimientosAnterior = function() {PrimeFaces.ab({formId:'j_id374401928_5f006346',source:'j_id374401928_5f006346:j_id374401928_5f006392',process:'@all',update:'listado-movimientos movimientos-nav',params:arguments[0]});}
+<?xml version="1.0" encoding="utf-8"?><partial-response><changes><update id="movimientos_espera"><![CDATA[<span id="movimientos_espera"></span>]]></update><update id="movimientos-nav"><![CDATA[<div id="movimientos-nav" class="navMov"><form novalidate="novalidate" id="j_id1111011110_5f006346" name="j_id1111011110_5f006346" method="post" action="/extracto/secure/movimientos_cuenta.xhtml" enctype="application/x-www-form-urlencoded"><script type="text/javascript"><!--
+verMovimientosAnterior = function() {PrimeFaces.ab({formId:'j_id1111011110_5f006346',source:'j_id1111011110_5f006392',process:'@all',update:'listado-movimientos movimientos-nav',oncomplete:function(xhr, status, args){focoMovimientosAnteriores();},params:arguments[0]});}
 
-      //--></script><script type="text/javascript"><!--
-      getMovPosterior = function() {PrimeFaces.ab({formId:'j_id374401928_5f006346',source:'j_id374401928_5f006346:j_id374401928_5f006381',process:'@all',update:'listado-movimientos movimientos-nav',params:arguments[0]});}
+//--></script><script type="text/javascript"><!--
+getMovPosterior = function() {PrimeFaces.ab({formId:'j_id1111011110_5f006346',source:'j_id1111011110_5f006381',process:'@all',update:'listado-movimientos movimientos-nav',oncomplete:function(xhr, status, args){focoMovimientosSiguientes();},params:arguments[0]});}
 
-      //--></script>
+//--></script>
 
-                          <ul>
-                              <li><a id="j_id374401928_5f006346:j_id374401928_5f0063b4" href="#" class="ui-commandlink textLink_new withIcon" onclick="clickGtmInteraccionMovimientosCuentas('Mes Anterior');;PrimeFaces.ab({formId:'j_id374401928_5f006346',source:'j_id374401928_5f006346:j_id374401928_5f0063b4',process:'@all',update:'listado-movimientos movimientos-nav',oncomplete:function(xhr, status, args){verMovimientosAnterior();;}});return false;">
-                                      <span class="pictoDSL-arrow-left-16 pictoDSL-24" aria-hidden="true"></span>
-                                      <span class="hidden-xs">OCTUBRE</span></a>
-                              </li>
-                              <li>Noviembre 2017
-                              </li>
-                              <li class="hidden-xs hidden-sm">
-                                  <p>Ingresos <span>+0,00€</span></p>
+                    <ul>
+                        <li><a id="botonMovimientosAnteriores" href="#" class="ui-commandlink textLink_new withIcon" onclick="clickGtmInteraccionMovimientosCuentas('Mes Anterior'); ;PrimeFaces.ab({formId:'j_id44900000_000000000',source:'botonMovimientosAnteriores',process:'@all',update:'listado-movimientos movimientos-nav',oncomplete:function(xhr, status, args){verMovimientosAnterior();;}});return false;">
+                                <span class="pictoDSL-arrow-left-16 pictoDSL-24" aria-hidden="true"></span>
+                                <span class="hidden-xs">JUNIO</span></a>
+                        </li>
+                        <li>Julio 2018
+                        </li>
+                        <li class="hidden-xs hidden-sm">
+                            <p>Ingresos <span>+0,00€</span></p>
 
-                                  <p><strong>Gastos</strong> <span>-0,00€</span></p>
-                              </li>
-                              <li><a id="j_id374401928_5f006346:j_id374401928_5f006242" href="#" class="ui-commandlink textLink_new withIcon" onclick="clickGtmInteraccionMovimientosCuentas('Mes Siguiente');;PrimeFaces.ab({formId:'j_id374401928_5f006346',source:'j_id374401928_5f006346:j_id374401928_5f006242',process:'@all',update:'listado-movimientos movimientos-nav',oncomplete:function(xhr, status, args){getMovPosterior();;}});return false;">
-                                      <span class="hidden-xs">DICIEMBRE</span>
-                                      <span class="pictoDSL-arrow-right-16 pictoDSL-24" aria-hidden="true"></span></a>
-                              </li>
-                          </ul><input type="hidden" name="j_id374401928_5f006346_SUBMIT" value="1" /></form></div>]]>
-    </update>
-    <update id="listado-movimientos">
-      <![CDATA[<div id="listado-movimientos" class="tablaMov tablaMovGen tablaCc"><form novalidate="novalidate" id="j_id1901184285_47bdaf53" name="j_id1901184285_47bdaf53" method="post" action="/extracto/secure/movimientos_cuenta.xhtml" enctype="application/x-www-form-urlencoded">
+                            <p><strong>Gastos</strong> <span>-0,00€</span></p>
+                        </li>
+                        <li><a id="botonMovimientosSiguientes" href="#" class="ui-commandlink textLink_new withIcon" onclick="clickGtmInteraccionMovimientosCuentas('Mes Siguiente');;PrimeFaces.ab({formId:'j_id44900000_000000000',source:'botonMovimientosSiguientes',process:'@all',update:'listado-movimientos movimientos-nav',oncomplete:function(xhr, status, args){getMovPosterior();;}});return false;">
+                                <span class="hidden-xs">AGOSTO</span>
+                                <span class="pictoDSL-arrow-right-16 pictoDSL-24" aria-hidden="true"></span></a>
+                        </li>
+                    </ul><input type="hidden" name="j_id44900000_000000000_SUBMIT" value="1" /></form></div>]]></update><update id="listado-movimientos"><![CDATA[<div id="listado-movimientos" class="tablaMov tablaMovAcc"><form novalidate="novalidate" id="tablaMovimientos" name="tablaMovimientos" method="post" action="/extracto/secure/movimientos_cuenta.xhtml" enctype="application/x-www-form-urlencoded">
 
+    <script type="text/javascript"><!--
 
-          <table class="tableSlide">
-              <caption class="sr-only">Movimientos de Cuentas</caption>
-              <thead class="hidden-xs">
-              <tr>
-                  <th class="hidden-sm hidden-xs"><script type="text/javascript"><!--
-      doReverseList = function() {PrimeFaces.ab({formId:'j_id1901184285_47bdaf53',source:'j_id1901184285_47bdaf53:j_id1585565273_33173223_1',process:'@all',update:'listado-movimientos resultado-busqueda',params:arguments[0]});}
+        function enterDoReverselist(e){
+            if (e.keyCode === 13) {
+                doReverseList();
+            }
+        }
+        function clickDetalle(index){
+            document.getElementsByClassName('cargarDetalleMovimiento'+index)[0].click();
+        }
+        function enterVerDetalle(e, index){
+            if (e.keyCode === 13) {
+                clickDetalle(index);
+            }
+        }
 
-      //--></script>
-                      <a onclick="doReverseList();">Fecha Contable
-                      	<span class="pictoDSL-24 pictoDSL-arrow-down-16"></span>
-                      </a>
-                  </th>
-                  <th class="hidden-lg hidden-md">Fecha<span class="pictoDSL-24 pictoDSL-arrow-down-16"></span></th>
-                  <th class="hidden-sm">Fecha Valor</th>
-                  <th>Concepto</th>
-                  <th>Importe</th>
-                      <th>Saldo</th>
-              </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td colspan="5" class="sinMov">
-      						<span class="pictoDSL-warning-16 pictoDSL-64"></span>
+//--></script>
 
-                          	<p>No tienes movimientos en el periodo seleccionado, si lo deseas selecciona otro mes.</p>
+    <table class="tableSlide">
+        <caption class="sr-only">Movimientos de Cuentas</caption>
+        <tbody>
+            <tr>
+                <th class="hidden-sm hidden-xs" scope="col" id="AccesibilidadFechaContable" onkeypress="enterDoReverselist(event);"><script type="text/javascript"><!--
+doReverseList = function() {PrimeFaces.ab({formId:'tablaMovimientos',source:'tablaMovimientos:j_id44900000_0000000e_1',process:'@all',update:'listado-movimientos resultado-busqueda',params:arguments[0]});}
 
-                      </td>
-                  </tr>
+//--></script>
+                    <a onclick="doReverseList();" tabindex="-1" aria-label="Ordenar tabla">Fecha Contable<span class="pictoDSL-24 pictoDSL-arrow-down-16"></span></a>
+                </th>
+                <th class="hidden-lg hidden-md" scope="col" id="AccesibilidadFechaOculta" aria-hidden="true">Fecha<span class="pictoDSL-24 pictoDSL-arrow-down-16"></span></th>
+                <th class="hidden-sm" scope="col" id="AccesibilidadFechavalor">Fecha Valor</th>
+                <th scope="col" id="AccesibilidadConcepto">Concepto</th>
+                <th scope="col" id="AccesibilidadImporte">Importe</th>
+                    <th scope="col" id="AccesibilidadSaldo">Saldo</th>
+            </tr>
+        <tr class="sinMov">
+            <td colspan="6">
+                    <span class="pictoDSL-warning-16 pictoDSL-64"></span>
 
-              </tbody>
-          </table><input type="hidden" name="j_id1901184285_47bdaf53_SUBMIT" value="1" /></form></div>]]>
-    </update>
-    <update id="javax.faces.ViewState">
-      <![CDATA[ZjuB0KptRbfNF4DKrvH5dKHPsxsuj6gf8lqwhCbcDh9fIcdLYvwaVC0iYcWy/rGxjmy07cqY0sMRZ4GXmD86nlqQthjSop8w2VllBnDCi0PZsjV2GDHpckCyKO+tS9Ur0MpswozTahadc3/kmh5xieFElU6lPMClURliCSmlgmKDlFuq]]>
-    </update>
-  </changes>
-</partial-response>
+                    <p>No tienes movimientos en el periodo seleccionado, si lo deseas selecciona otro mes.</p>
+            </td>
+        </tr>
+
+        </tbody>
+    </table><input type="hidden" name="tablaMovimientos_SUBMIT" value="1" /></form></div>]]></update><update id="javax.faces.ViewState"><![CDATA[ZjuB0KptRbfNF4DKrvH5dKHPsxsuj6gf8lqwhCbcDh9fIcdLYvwaVC0iYcWy/rGxjmy07cqY0sNzrxHqLY1XMlqQthjSop8w2VllBnDCi0PZsjV2GDHpckCyKO+tS9Ur4Uc53unFucSdc3/kmh5xiZYbSOHigf5+lwFOxscEMoSksPZC]]></update></changes></partial-response>
