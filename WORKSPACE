@@ -712,6 +712,7 @@ maven_install(
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-afterburner:2.9.9",
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.9",
+        "com.fasterxml.jackson.module:jackson-module-jsonSchema:2.9.9",
         "com.fasterxml.uuid:java-uuid-generator:3.1.5",
         "com.fasterxml:classmate:1.0.0",
         "com.flipkart.zjsonpatch:zjsonpatch:0.2.1",
