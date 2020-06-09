@@ -165,6 +165,13 @@ public interface AggregationService {
             @DefaultValue("true") @QueryParam("includeExamples") boolean includeExamples,
             @ClientContext ClientInfo clientInfo);
 
+    @GET
+    @Path("secrets-json-schema/{providerName}")
+    @TeamOwnership(Team.AGGREGATION_THIRD_PARTY_ACCESS)
+    @Produces(MediaType.APPLICATION_JSON)
+    String getSecretsJsonSchema(
+            @PathParam("providerName") String providerName, @ClientContext ClientInfo clientInfo);
+
     @POST
     @Path("validate-secrets-names")
     @TeamOwnership(Team.INTEGRATION)

@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.tools.ClientConfigurationJsonSchemaBuilder;
 import se.tink.backend.aggregation.agents.tools.ClientConfigurationTemplateBuilder;
 import se.tink.backend.aggregation.agents.tools.validator.ClientConfigurationValidator;
 import se.tink.backend.aggregation.api.AggregationService;
@@ -280,29 +281,18 @@ public class AggregationServiceResource implements AggregationService {
             boolean includeDescriptions,
             boolean includeExamples,
             ClientInfo clientInfo) {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(providerName), "providerName cannot be empty/null.");
-
-        List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
-
-        List<ProviderConfiguration> filteredProviders =
-                allProviders.stream()
-                        .filter(prv -> Objects.equals(providerName, prv.getName()))
-                        .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
-                        // Trying to get rid of possible sandbox providers if they exist.
-                        .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
-                        .collect(Collectors.toList());
-
-        Preconditions.checkState(
-                filteredProviders.size() == 1,
-                String.format(
-                        "Trying to get secrets template. Should find 1 provider for providerName : %s, but found instead : %d",
-                        providerName, filteredProviders.size()));
-
-        Provider provider = Provider.of(filteredProviders.get(0));
         return new ClientConfigurationTemplateBuilder(
-                        provider, includeDescriptions, includeExamples)
+                        this.getProviderFromName(providerName),
+                        includeDescriptions,
+                        includeExamples)
                 .buildTemplate();
+    }
+
+    @Override
+    public String getSecretsJsonSchema(String providerName, ClientInfo clientInfo) {
+
+        return new ClientConfigurationJsonSchemaBuilder(this.getProviderFromName(providerName))
+                .buildJsonSchema();
     }
 
     @Override
@@ -393,5 +383,28 @@ public class AggregationServiceResource implements AggregationService {
                         .limit(2)
                         .count()
                 == 1;
+    }
+
+    private Provider getProviderFromName(String providerName) {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(providerName), "providerName cannot be empty/null.");
+
+        List<ProviderConfiguration> allProviders = providerConfigurationService.listAll();
+
+        List<ProviderConfiguration> filteredProviders =
+                allProviders.stream()
+                        .filter(prv -> Objects.equals(providerName, prv.getName()))
+                        .filter(prv -> prv.getAccessType() == AccessType.OPEN_BANKING)
+                        // Trying to get rid of possible sandbox providers if they exist.
+                        .filter(prv -> !StringUtils.containsIgnoreCase(prv.getName(), "sandbox"))
+                        .collect(Collectors.toList());
+
+        Preconditions.checkState(
+                filteredProviders.size() == 1,
+                String.format(
+                        "Trying to get secrets template. Should find 1 provider for providerName : %s, but found instead : %d",
+                        providerName, filteredProviders.size()));
+
+        return Provider.of(filteredProviders.get(0));
     }
 }

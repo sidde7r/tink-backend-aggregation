@@ -14,5 +14,7 @@ java_library(
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:org_yaml_snakeyaml",
+        "@aggregation//:com_fasterxml_jackson_module_jackson_module_jsonSchema",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_core",
     ],
 )
