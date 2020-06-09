@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
