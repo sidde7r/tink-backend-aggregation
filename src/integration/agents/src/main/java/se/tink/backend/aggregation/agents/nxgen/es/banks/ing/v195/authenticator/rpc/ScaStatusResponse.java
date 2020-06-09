@@ -19,4 +19,8 @@ public class ScaStatusResponse {
     public String getTicket() {
         return ticket;
     }
+
+    public String getRememberMeToken() {
+        return rememberMeToken;
+    }
 }

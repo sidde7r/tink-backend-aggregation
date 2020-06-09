@@ -118,6 +118,7 @@ public class IngConstants {
 
     public static class Storage {
         public static final String DEVICE_ID = "deviceId";
+        public static final String CREDENTIALS_TOKEN = "credentialsToken";
         public static final String LOGIN_PROCESS_ID = "loginProcessId";
     }
 

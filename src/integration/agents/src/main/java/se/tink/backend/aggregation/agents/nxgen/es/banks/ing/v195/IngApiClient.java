@@ -30,13 +30,7 @@ public class IngApiClient {
         this.client = client;
     }
 
-    public CreateSessionResponse postLoginRestSession(
-            String username, int usernameType, String dob, String deviceId) {
-
-        LocalDate birthday = LocalDate.parse(dob, IngUtils.BIRTHDAY_INPUT);
-        CreateSessionRequest request =
-                CreateSessionRequest.create(username, usernameType, birthday, deviceId);
-
+    public CreateSessionResponse postLoginRestSession(CreateSessionRequest request) {
         return client.request(IngConstants.Url.LOGIN_REST_SESSION)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

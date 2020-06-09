@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps;
 
+import com.google.api.client.util.Preconditions;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -26,13 +28,17 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.E
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Logging;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.ScaConfig;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutRestSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.ErrorResponse;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AbstractAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.identitydata.countries.EsIdentityDocumentType;
 
@@ -44,19 +50,22 @@ public class LoginStep extends AbstractAuthenticationStep {
 
     private final IngApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private final String deviceId;
+    private final PersistentStorage persistentStorage;
+    private final RandomValueGenerator randomValueGenerator;
     private final Map<Integer, String> scaTypeToStepId;
     private final boolean isManualRequest;
 
     public LoginStep(
             IngApiClient apiClient,
             SessionStorage sessionStorage,
-            String deviceId,
+            PersistentStorage persistentStorage,
+            RandomValueGenerator randomValueGenerator,
             Map<Integer, String> scaTypeToStepId,
             boolean isManualRequest) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.deviceId = deviceId;
+        this.persistentStorage = persistentStorage;
+        this.randomValueGenerator = randomValueGenerator;
         this.scaTypeToStepId = scaTypeToStepId;
         this.isManualRequest = isManualRequest;
     }
@@ -65,24 +74,13 @@ public class LoginStep extends AbstractAuthenticationStep {
     public AuthenticationStepResponse execute(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         final Credentials credentials = request.getCredentials();
-        final String username = credentials.getField(Field.Key.USERNAME);
-        final String dob = credentials.getField(IngConstants.DATE_OF_BIRTH);
-        final String password = credentials.getField(Field.Key.PASSWORD);
-
-        if (Strings.isNullOrEmpty(username)
-                || Strings.isNullOrEmpty(dob)
-                || Strings.isNullOrEmpty(password)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-
         final CreateSessionResponse response;
         try {
-            response =
-                    apiClient.postLoginRestSession(
-                            username, getUsernameType(username), dob, this.deviceId);
+            response = apiClient.postLoginRestSession(createSessionRequest(credentials));
             // process ID can be used in SCA steps
             sessionStorage.put(Storage.LOGIN_PROCESS_ID, response.getProcessId());
         } catch (HttpResponseException hre) {
+            persistentStorage.remove(Storage.CREDENTIALS_TOKEN);
             handlePostSessionErrors(hre);
             throw hre;
         }
@@ -91,9 +89,12 @@ public class LoginStep extends AbstractAuthenticationStep {
             // When the app receives a response with no pinpad and "view":"OTHERS", it does a POST
             // to /genoma_login/rest/pin-recovery/ and returns to the initial view
             LOGGER.error("Response did not contain pinpad");
+            persistentStorage.remove(Storage.CREDENTIALS_TOKEN);
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
 
+        final String password = Strings.emptyToNull(credentials.getField(Field.Key.PASSWORD));
+        Preconditions.checkNotNull(password);
         final List<Integer> pinPositions =
                 getPinPositionsForPassword(
                         getPasswordStringAsIntegerList(password),
@@ -106,6 +107,8 @@ public class LoginStep extends AbstractAuthenticationStep {
                     apiClient.putLoginRestSession(pinPositions, response.getProcessId());
             if (!Strings.isNullOrEmpty(putSessionResponse.getTicket())) {
                 // Success
+                persistentStorage.put(
+                        Storage.CREDENTIALS_TOKEN, putSessionResponse.getRememberMeToken());
                 apiClient.postLoginAuthResponse(putSessionResponse.getTicket());
                 return AuthenticationStepResponse.authenticationSucceeded();
             } else if (putSessionResponse.getResultCode() == ScaConfig.NEXT_STEP
@@ -265,5 +268,32 @@ public class LoginStep extends AbstractAuthenticationStep {
                     ex);
             throw LoginError.INCORRECT_CREDENTIALS.exception(ex);
         }
+    }
+
+    private CreateSessionRequest createSessionRequest(Credentials credentials)
+            throws LoginException {
+        if (persistentStorage.containsKey(Storage.CREDENTIALS_TOKEN)) {
+            return CreateSessionRequest.fromCredentialsToken(
+                    persistentStorage.get(Storage.CREDENTIALS_TOKEN), getDeviceId());
+        }
+
+        final String username = Strings.emptyToNull(credentials.getField(Field.Key.USERNAME));
+        final String dateOfBirth =
+                Strings.emptyToNull(credentials.getField(IngConstants.DATE_OF_BIRTH));
+
+        Preconditions.checkNotNull(username);
+        Preconditions.checkNotNull(dateOfBirth);
+
+        final LocalDate birthday = LocalDate.parse(dateOfBirth, IngUtils.BIRTHDAY_INPUT);
+        return CreateSessionRequest.fromUsername(
+                username, getUsernameType(username), birthday, getDeviceId());
+    }
+
+    private String getDeviceId() {
+        if (!persistentStorage.containsKey(Storage.DEVICE_ID)) {
+            persistentStorage.put(
+                    Storage.DEVICE_ID, randomValueGenerator.generateRandomHexEncoded(20));
+        }
+        return persistentStorage.get(Storage.DEVICE_ID);
     }
 }

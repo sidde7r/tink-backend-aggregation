@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AbstractAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OtpStep extends AbstractAuthenticationStep {
@@ -21,15 +22,18 @@ public class OtpStep extends AbstractAuthenticationStep {
     public static final String STEP_ID = "IngOtpStep";
     private final IngApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
     public OtpStep(
             IngApiClient apiClient,
             SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper) {
         super(STEP_ID);
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
@@ -51,6 +55,7 @@ public class OtpStep extends AbstractAuthenticationStep {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
         }
 
+        persistentStorage.put(Storage.CREDENTIALS_TOKEN, putSessionResponse.getRememberMeToken());
         apiClient.postLoginAuthResponse(putSessionResponse.getTicket());
         return AuthenticationStepResponse.authenticationSucceeded();
     }

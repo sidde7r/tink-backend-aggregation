@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
@@ -8,33 +10,37 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonInclude(Include.NON_NULL)
 public class CreateSessionRequest {
 
-    @JsonProperty("device")
-    private String device = IngConstants.Default.MOBILE_PHONE;
+    @JsonProperty private String credentialsToken;
 
-    @JsonProperty("loginDocument")
-    private LoginDocument loginDocument;
+    @JsonProperty private String device = IngConstants.Default.MOBILE_PHONE;
 
-    @JsonProperty("birthday")
-    private LocalDate birthday;
+    @JsonProperty private LoginDocument loginDocument;
 
-    @JsonProperty("deviceId")
-    private String deviceId;
+    @JsonProperty private LocalDate birthday;
 
-    private CreateSessionRequest(LoginDocument loginDocument, LocalDate birthday, String deviceId) {
-        this.loginDocument = loginDocument;
-        this.birthday = birthday;
-        this.deviceId = deviceId;
+    @JsonProperty private String deviceId;
+
+    public static CreateSessionRequest fromUsername(
+            String username, int usernameType, LocalDate birthday, String deviceId) {
+        CreateSessionRequest request = new CreateSessionRequest();
+        request.loginDocument = LoginDocument.create(username, usernameType);
+        request.birthday = birthday;
+        request.deviceId = deviceId;
+        return request;
     }
 
-    public static CreateSessionRequest create(
-            String username, int usernameType, LocalDate birthday, String deviceId) {
-        return new CreateSessionRequest(
-                LoginDocument.create(username, usernameType), birthday, deviceId);
+    public static CreateSessionRequest fromCredentialsToken(
+            String credentialsToken, String deviceId) {
+        CreateSessionRequest request = new CreateSessionRequest();
+        request.credentialsToken = credentialsToken;
+        request.deviceId = deviceId;
+        return request;
     }
 
     public String getBirthday() {
-        return IngUtils.DATE_FORMATTER.format(birthday);
+        return birthday == null ? null : IngUtils.DATE_FORMATTER.format(birthday);
     }
 }

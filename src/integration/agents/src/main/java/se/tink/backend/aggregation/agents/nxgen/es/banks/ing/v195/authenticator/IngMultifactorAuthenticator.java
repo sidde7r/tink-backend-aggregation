@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.ScaMethod;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.LoginStep;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.OtpStep;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.steps.PushStep;
@@ -49,23 +48,24 @@ public class IngMultifactorAuthenticator extends StatelessProgressiveAuthenticat
                 new LoginStep(
                         apiClient,
                         sessionStorage,
-                        getDeviceId(),
+                        persistentStorage,
+                        randomValueGenerator,
                         scaStepMapper,
                         isManualAuthentication(credentialsRequest)),
-                new OtpStep(apiClient, sessionStorage, supplementalInformationHelper),
-                new PushStep(apiClient, sessionStorage, supplementalInformationHelper));
+                new OtpStep(
+                        apiClient,
+                        sessionStorage,
+                        persistentStorage,
+                        supplementalInformationHelper),
+                new PushStep(
+                        apiClient,
+                        sessionStorage,
+                        persistentStorage,
+                        supplementalInformationHelper));
     }
 
     @Override
     public boolean isManualAuthentication(CredentialsRequest request) {
         return request.isCreate() || request.isUpdate();
-    }
-
-    private String getDeviceId() {
-        if (!persistentStorage.containsKey(Storage.DEVICE_ID)) {
-            persistentStorage.put(
-                    Storage.DEVICE_ID, randomValueGenerator.generateRandomHexEncoded(20));
-        }
-        return persistentStorage.get(Storage.DEVICE_ID);
     }
 }

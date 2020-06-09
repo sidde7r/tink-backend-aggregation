@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AbstractAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class PushStep extends AbstractAuthenticationStep {
@@ -20,15 +21,18 @@ public class PushStep extends AbstractAuthenticationStep {
     public static final String STEP_ID = "IngPushStep";
     private final IngApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
     public PushStep(
             IngApiClient apiClient,
             SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper) {
         super(STEP_ID);
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
@@ -46,6 +50,8 @@ public class PushStep extends AbstractAuthenticationStep {
             final ScaStatusResponse scaStatus = apiClient.getScaStatus(getProcessId(), true);
 
             if (!Strings.isNullOrEmpty(scaStatus.getTicket())) {
+                LOGGER.info("SCA successful.");
+                persistentStorage.put(Storage.CREDENTIALS_TOKEN, scaStatus.getRememberMeToken());
                 apiClient.postLoginAuthResponse(scaStatus.getTicket());
                 return AuthenticationStepResponse.authenticationSucceeded();
             }
