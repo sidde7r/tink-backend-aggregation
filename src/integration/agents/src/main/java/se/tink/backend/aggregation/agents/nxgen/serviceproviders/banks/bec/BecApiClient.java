@@ -45,11 +45,11 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class BecApiClient {
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    public static final String JSON_PROCESSING_FAILED = "Json processing failed";
+    private static final String JSON_PROCESSING_FAILED = "Json processing failed";
     private BecSecurityHelper securityHelper;
     private final TinkHttpClient apiClient;
     private final BecUrlConfiguration agentUrl;
-    private static final AggregationLogger LOGGER = new AggregationLogger(BecApiClient.class);
+    private static final AggregationLogger log = new AggregationLogger(BecApiClient.class);
 
     public BecApiClient(
             BecSecurityHelper securityHelper, TinkHttpClient client, BecUrlConfiguration url) {
@@ -84,12 +84,12 @@ public class BecApiClient {
             EncryptedPayloadAndroidEntity payloadEntity = scaPrepareRequest(username, password);
             request.setEncryptedPayload(
                     securityHelper.encrypt(mapper.writeValueAsString(payloadEntity).getBytes()));
-            EncryptedResponse respone =
+            EncryptedResponse response =
                     createRequest(this.agentUrl.getPrepareSca())
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .post(EncryptedResponse.class, request);
-            String decryptedRespone = securityHelper.decrypt(respone.getEncryptedPayload());
-            return mapper.readValue(decryptedRespone, ScaOptionsEncryptedPayload.class);
+            String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
+            return mapper.readValue(decryptedResponse, ScaOptionsEncryptedPayload.class);
         } catch (IOException e) {
             throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
         } catch (HttpResponseException e) {
@@ -108,11 +108,11 @@ public class BecApiClient {
             EncryptedPayloadAndroidEntity payloadEntity = scaPrepare2Request(username, password);
             request.setEncryptedPayload(
                     securityHelper.encrypt(mapper.writeValueAsString(payloadEntity).getBytes()));
-            EncryptedResponse respone =
+            EncryptedResponse response =
                     createRequest(this.agentUrl.getPrepareSca())
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .post(EncryptedResponse.class, request);
-            String decryptedResponse = securityHelper.decrypt(respone.getEncryptedPayload());
+            String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
             return mapper.readValue(decryptedResponse, CodeAppTokenEncryptedPayload.class);
         } catch (IOException e) {
             throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
@@ -120,6 +120,7 @@ public class BecApiClient {
     }
 
     public NemIdPollResponse pollNemId(String token) {
+        log.info("Poll for 2fa prove.");
         return createRequest(this.agentUrl.getNemIdPoll())
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .queryParam("token", token)
@@ -245,26 +246,21 @@ public class BecApiClient {
 
     public List<CardEntity> fetchCards() {
         try {
-            List<CardEntity> response =
-                    createRequest(this.agentUrl.getFetchCard())
-                            .queryParam(
-                                    BecConstants.Header.QUERY_PARAM_ICONTYPE_KEY,
-                                    BecConstants.Header.QUERY_PARAM_ICONTYPE_VALUE)
-                            .get(FetchCardResponse.class)
-                            .getCardArray();
-            return response;
+            return createRequest(this.agentUrl.getFetchCard())
+                    .queryParam(
+                            BecConstants.Header.QUERY_PARAM_ICONTYPE_KEY,
+                            BecConstants.Header.QUERY_PARAM_ICONTYPE_VALUE)
+                    .get(FetchCardResponse.class)
+                    .getCardArray();
         } catch (HttpResponseException ex) {
-            /**
+            /*
              * Some banks that are part of BEC (such as PFA) throws error (403) when the agent tries
              * to fetch credit cards. We suspect that this happens because those banks actually do
              * not provide credit card service at all. If this is the case, only PFA (and other
              * pension banks) should have this error. We will keep logs and see which banks have
              * issue with credit card
              */
-            LOGGER.errorExtraLong(
-                    String.format("Could not fetch credit card list"),
-                    Log.CREDIT_CARD_FETCH_ERROR,
-                    ex);
+            log.errorExtraLong("Could not fetch credit card list", Log.CREDIT_CARD_FETCH_ERROR, ex);
             return new ArrayList<>();
         }
     }
@@ -304,15 +300,12 @@ public class BecApiClient {
     }
 
     public InstrumentDetailsEntity fetchInstrumentDetails(String urlDetails, String accountId) {
-
-        InstrumentDetailsEntity response =
-                createRequest(this.agentUrl.getBaseUrl() + urlDetails)
-                        .queryParam(
-                                BecConstants.Header.QUERY_PARAM_VERSION_KEY,
-                                BecConstants.Header.QUERY_PARAM_FETCH_INSTRUMENTS_VERSION_VALUE)
-                        .queryParam(BecConstants.Header.QUERY_PARAM_ACCOUNT_ID_KEY, accountId)
-                        .get(InstrumentDetailsEntity.class);
-        return response;
+        return createRequest(this.agentUrl.getBaseUrl() + urlDetails)
+                .queryParam(
+                        BecConstants.Header.QUERY_PARAM_VERSION_KEY,
+                        BecConstants.Header.QUERY_PARAM_FETCH_INSTRUMENTS_VERSION_VALUE)
+                .queryParam(BecConstants.Header.QUERY_PARAM_ACCOUNT_ID_KEY, accountId)
+                .get(InstrumentDetailsEntity.class);
     }
 
     public void logout() {
