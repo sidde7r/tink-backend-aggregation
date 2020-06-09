@@ -45,16 +45,18 @@ public class TransactionEntity extends AbstractExecutorTransactionEntity {
 
         ErrorDetailsEntity errorDetails = rejectionCauses.get(0);
 
-        // Currently only known rejection cause is due to insufficient funds.
-        if (SwedbankBaseConstants.ErrorCode.INSUFFICIENT_FUNDS.equalsIgnoreCase(
-                errorDetails.getCode())) {
-            return Optional.of(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT);
+        switch (errorDetails.getCode()) {
+            case SwedbankBaseConstants.ErrorCode.INSUFFICIENT_FUNDS:
+                return Optional.of(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT);
+            case SwedbankBaseConstants.ErrorCode.DUPLICATION:
+                return Optional.of(
+                        TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS);
+            default:
+                log.warn(
+                        "Unknown transfer rejection cause. Code: {}, message {}",
+                        errorDetails.getCode(),
+                        errorDetails.getMessage());
+                return Optional.empty();
         }
-
-        log.warn(
-                "Unknown transfer rejection cause. Code: {}, message {}",
-                errorDetails.getCode(),
-                errorDetails.getMessage());
-        return Optional.empty();
     }
 }
