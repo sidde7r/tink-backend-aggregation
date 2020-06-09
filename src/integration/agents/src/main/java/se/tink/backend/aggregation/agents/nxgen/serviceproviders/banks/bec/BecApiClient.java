@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants.Log;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities.FetchAccountTransactionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.rpc.CardDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.rpc.FetchCardResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecSecurityHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.BaseBecRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppScaEntity;
@@ -92,17 +95,14 @@ public class BecApiClient {
             return mapper.readValue(decryptedResponse, ScaOptionsEncryptedPayload.class);
         } catch (IOException e) {
             throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
-        } catch (HttpResponseException e) {
-            int errorCode = e.getResponse().getStatus();
-            if (errorCode == 400) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(
-                        "CPR no./user no. or PIN code is incorrect. Check in your Netbank that you are registered.");
-            }
-            throw e;
+        } catch (BecAuthenticationException e) {
+            log.error("SCA prepare respond with error: " + e.getMessage());
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
         }
     }
 
-    public CodeAppTokenEncryptedPayload scaPrepare2(String username, String password) {
+    public CodeAppTokenEncryptedPayload scaPrepare2(String username, String password)
+            throws LoginException {
         try {
             BaseBecRequest request = baseRequest();
             EncryptedPayloadAndroidEntity payloadEntity = scaPrepare2Request(username, password);
@@ -116,6 +116,9 @@ public class BecApiClient {
             return mapper.readValue(decryptedResponse, CodeAppTokenEncryptedPayload.class);
         } catch (IOException e) {
             throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
+        } catch (BecAuthenticationException e) {
+            log.error("SCA prepare 2 respond with error: " + e.getMessage());
+            throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
         }
     }
 
@@ -127,7 +130,7 @@ public class BecApiClient {
                 .get(NemIdPollResponse.class);
     }
 
-    public void sca(String username, String password, String token) {
+    public void sca(String username, String password, String token) throws ThirdPartyAppException {
 
         try {
             BaseBecRequest request = baseRequest();
@@ -140,6 +143,9 @@ public class BecApiClient {
 
         } catch (IOException e) {
             throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
+        } catch (BecAuthenticationException e) {
+            log.error("SCA respond with error: " + e.getMessage());
+            throw ThirdPartyAppError.TIMED_OUT.exception(e.getMessage());
         }
     }
 

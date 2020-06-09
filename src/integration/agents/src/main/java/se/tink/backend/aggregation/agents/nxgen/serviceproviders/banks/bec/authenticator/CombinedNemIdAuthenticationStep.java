@@ -7,6 +7,8 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppTokenEncryptedPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
@@ -59,7 +61,7 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
         supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
-    private void sendNemIdRequest(final Credentials credentials) {
+    private void sendNemIdRequest(final Credentials credentials) throws LoginException {
         CodeAppTokenEncryptedPayload payload =
                 apiClient.scaPrepare2(
                         credentials.getField(Field.Key.USERNAME),
@@ -71,7 +73,7 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
         apiClient.pollNemId(sessionStorage.get(TOKEN_STORAGE_KEY));
     }
 
-    private void finalizeAuth() {
+    private void finalizeAuth() throws ThirdPartyAppException {
         String username = sessionStorage.get(BecAuthenticator.USERNAME_STORAGE_KEY);
         String password = sessionStorage.get(BecAuthenticator.PASSWORD_STORAGE_KEY);
         String token = sessionStorage.get(TOKEN_STORAGE_KEY);
