@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fa
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricConstants.HeaderKeys;
@@ -15,6 +16,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.authenticator.rpc.CreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.configuration.FabricConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.executor.payment.rpc.PaymentAuthorizationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
@@ -24,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class FabricApiClient {
@@ -31,15 +37,18 @@ public class FabricApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final RandomValueGenerator randomValueGenerator;
+    private final SessionStorage sessionStorage;
     private FabricConfiguration configuration;
 
     public FabricApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
-            RandomValueGenerator randomValueGenerator) {
+            RandomValueGenerator randomValueGenerator,
+            SessionStorage sessionStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
         this.randomValueGenerator = randomValueGenerator;
+        this.sessionStorage = sessionStorage;
     }
 
     private FabricConfiguration getConfiguration() {
@@ -123,5 +132,76 @@ public class FabricApiClient {
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(TransactionResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+        return client.request(
+                        new URL(Urls.INITIATE_A_PAYMENT_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT))
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.TPP_REDIRECT_PREFERED, HeaderValues.TPP_REDIRECT_PREFERED)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(
+                        HeaderKeys.TPP_REDIRECT_URI,
+                        new URL(getConfiguration().getRedirectUrl())
+                                .queryParam(QueryKeys.CODE, FabricConstants.QueryValues.CODE)
+                                .queryParam(QueryKeys.STATE, sessionStorage.get(QueryKeys.STATE)))
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public CreatePaymentResponse getPayment(String paymentId) {
+        return client.request(
+                        new URL(Urls.GET_PAYMENT_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId))
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(CreatePaymentResponse.class);
+    }
+
+    public CreatePaymentResponse getPaymentStatus(String paymentId) {
+        return client.request(
+                        new URL(Urls.GET_PAYMENT_STATUS_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(CreatePaymentResponse.class);
+    }
+
+    public PaymentAuthorizationsResponse getPaymentAuthorizations(String paymentId) {
+        PaymentAuthorizationsResponse result =
+                client.request(
+                                new URL(Urls.GET_PAYMENT_AUTHORIZATIONS_URL)
+                                        .parameter(
+                                                FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                                FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                        .parameter(
+                                                FabricConstants.PathParameterKeys.PAYMENT_ID,
+                                                paymentId))
+                        .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                        .get(PaymentAuthorizationsResponse.class);
+        sessionStorage.put(
+                StorageKeys.PAYMENT_AUTHORIZATION_ID, result.getAuthorisationIds().get(0));
+        return result;
+    }
+
+    public PaymentAuthorizationStatus getPaymentAuthorizationStatus(String paymentId) {
+        return client.request(
+                        new URL(Urls.GET_PAYMENT_AUTHORIZATION_STATUS_URL)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_PRODUCT,
+                                        FabricConstants.PathParameterValues.PAYMENT_PRODUCT)
+                                .parameter(FabricConstants.PathParameterKeys.PAYMENT_ID, paymentId)
+                                .parameter(
+                                        FabricConstants.PathParameterKeys.PAYMENT_AUTHORIZATION_ID,
+                                        sessionStorage.get(StorageKeys.PAYMENT_AUTHORIZATION_ID)))
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .get(PaymentAuthorizationStatus.class);
     }
 }
