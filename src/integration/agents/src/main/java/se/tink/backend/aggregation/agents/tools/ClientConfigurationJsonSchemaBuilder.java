@@ -1,16 +1,15 @@
 package se.tink.backend.aggregation.agents.tools;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
-import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.agents.rpc.Provider;
@@ -23,9 +22,13 @@ public class ClientConfigurationJsonSchemaBuilder {
     private static final String KEY_FIN_ID = "financialInstitutionId";
     private static final String KEY_SECRETS = "secrets";
     private static final String KEY_ENCRYPTED_SECRETS = "encryptedSecrets";
+    private static final String KEY_PROPERTIES = "properties";
 
     private final String financialInstitutionId;
     private final ClientConfigurationMetaInfoHandler clientConfigurationMetaInfoHandler;
+
+    private Set<String> secretsFieldName = new HashSet<>();
+    private Set<String> encryptedSecretsFieldName = new HashSet<>();
 
     public ClientConfigurationJsonSchemaBuilder(Provider provider) {
         this.financialInstitutionId = provider.getFinancialInstitutionId();
@@ -33,6 +36,15 @@ public class ClientConfigurationJsonSchemaBuilder {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(this.financialInstitutionId),
                 "financialInstitutionId in requested provider cannot be null.");
+        Set<Field> secrets = clientConfigurationMetaInfoHandler.getSecretFields();
+        for (Field field : secrets) {
+            secretsFieldName.add(clientConfigurationMetaInfoHandler.fieldToFieldName.apply(field));
+        }
+        Set<Field> encryptedSecrets = clientConfigurationMetaInfoHandler.getSensitiveSecretFields();
+        for (Field field : encryptedSecrets) {
+            encryptedSecretsFieldName.add(
+                    clientConfigurationMetaInfoHandler.fieldToFieldName.apply(field));
+        }
     }
 
     public String buildJsonSchema() {
@@ -40,55 +52,69 @@ public class ClientConfigurationJsonSchemaBuilder {
                 clientConfigurationMetaInfoHandler.findClosestClientConfigurationClass();
 
         ObjectMapper mapper = new ObjectMapper();
-        JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(mapper);
 
         try {
-            JsonSchema schema = schemaGen.generateSchema(clientConfigurationClassForProvider);
-            StringSchema finIdSchema = new StringSchema();
-            finIdSchema.setPattern(this.financialInstitutionId);
+            JsonSchemaGenerator jsonSchemaGenerator = new JsonSchemaGenerator(mapper);
+            JsonNode flatSchemaFromConf =
+                    jsonSchemaGenerator.generateJsonSchema(clientConfigurationClassForProvider);
 
-            Set<Field> secretFieldsSet = clientConfigurationMetaInfoHandler.getSecretFields();
-            ObjectSchema secretSchema = processSecretsSchemaBlock(secretFieldsSet);
+            Iterator<String> fieldNames = flatSchemaFromConf.fieldNames();
+            ObjectNode finalNode = mapper.createObjectNode();
+            finalNode.put("id", this.financialInstitutionId);
+            JsonNode propertiesNode = null;
 
-            Set<Field> encryptedSecretFieldsSet =
-                    clientConfigurationMetaInfoHandler.getSensitiveSecretFields();
-            ObjectSchema encryptedSecretSchema =
-                    processSecretsSchemaBlock(encryptedSecretFieldsSet);
+            // put fields other than properties to finalNode
+            while (fieldNames.hasNext()) {
+                String field = fieldNames.next();
+                JsonNode fieldValue = flatSchemaFromConf.get(field);
+                if (!KEY_PROPERTIES.equals(field)) {
+                    finalNode.set(field, fieldValue);
+                } else {
+                    propertiesNode = fieldValue;
+                }
+            }
+            constructSecretsSchema(propertiesNode, finalNode);
 
-            final ObjectSchema finalSchema = new ObjectSchema();
-            finalSchema.putProperty(KEY_FIN_ID, finIdSchema);
-            finalSchema.putProperty(KEY_SECRETS, secretSchema);
-            finalSchema.putProperty(KEY_ENCRYPTED_SECRETS, encryptedSecretSchema);
-            finalSchema.setId(schema.getId());
-            finalSchema.setDescription(
-                    String.format(
-                            "This is the json schema for TPP credential of financial institution %s",
-                            schema.getId()));
-            finalSchema.setTitle("TPP Credential");
-
-            String jsonSchemaResult =
-                    mapper.writerWithDefaultPrettyPrinter().writeValueAsString(finalSchema);
-
-            return replaceUnwantedCharacters(jsonSchemaResult);
+            return replaceUnwantedCharacters(mapper.writeValueAsString(finalNode));
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Json schema mapping failed", e);
         }
     }
 
-    private ObjectSchema processSecretsSchemaBlock(Set<Field> fieldsSet) {
+    private void constructSecretsSchema(JsonNode root, ObjectNode finalNode) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode secretsPropertiesNode = mapper.createObjectNode();
+        ObjectNode encryptedSecretsPropertiesNode = mapper.createObjectNode();
+        ObjectNode finalPropertiesNode = mapper.createObjectNode();
+        ObjectNode secretsNode = initWithTypeObject(mapper);
+        ObjectNode encryptedSecretsNode = initWithTypeObject(mapper);
 
-        final Map<String, JsonSchema> secretsProperties = new HashMap<>();
-        // TODO add more logic in defining schema
-        for (Field field : fieldsSet) {
-            if (field.getType() == String.class) {
-                StringSchema secrets = new StringSchema();
-                secrets.setDescription(field.getName());
-                secretsProperties.put(field.getName(), secrets);
+        Iterator<String> fieldNames = root.fieldNames();
+
+        while (fieldNames.hasNext()) {
+            String fieldName = fieldNames.next();
+            JsonNode fieldValue = root.get(fieldName);
+
+            if (secretsFieldName.contains(fieldName)) {
+                secretsPropertiesNode.set(fieldName, fieldValue);
+            } else if (encryptedSecretsFieldName.contains(fieldName)) {
+                encryptedSecretsPropertiesNode.set(fieldName, fieldValue);
             }
         }
-        final ObjectSchema objectSchema = new ObjectSchema();
-        objectSchema.setProperties(secretsProperties);
-        return objectSchema;
+
+        secretsNode.set(KEY_PROPERTIES, secretsPropertiesNode);
+        encryptedSecretsNode.set(KEY_PROPERTIES, encryptedSecretsPropertiesNode);
+
+        finalPropertiesNode.set(KEY_SECRETS, secretsNode);
+        finalPropertiesNode.set(KEY_ENCRYPTED_SECRETS, encryptedSecretsNode);
+
+        finalNode.set(KEY_PROPERTIES, finalPropertiesNode);
+    }
+
+    private ObjectNode initWithTypeObject(ObjectMapper mapper) {
+        ObjectNode node = mapper.createObjectNode();
+        node.put("type", "object");
+        return node;
     }
 
     private String replaceUnwantedCharacters(String jsonString) {
