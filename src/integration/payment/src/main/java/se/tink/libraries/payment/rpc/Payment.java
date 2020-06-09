@@ -124,7 +124,7 @@ public class Payment {
     }
 
     public ExactCurrencyAmount getExactCurrencyAmount() {
-        return new ExactCurrencyAmount(new BigDecimal(amount.getValue()), amount.getCurrency());
+        return new ExactCurrencyAmount(BigDecimal.valueOf(amount.getValue()), amount.getCurrency());
     }
 
     // TODO: This will be renamed to `getAmount` after we refactored every agent
