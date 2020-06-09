@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.exception.UnsupportedCurrencyException;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -63,6 +64,14 @@ public class CreditCardDetailsResponse {
                 .withCardDetails(cardModule)
                 .withInferredAccountFlags()
                 .withId(idModule)
+                // Withdraw funds at ATM
+                .canWithdrawFunds(AccountCapabilities.Answer.YES)
+                // The `permissions` object does not contain any useful information for these
+                // fields.
+                // Setting to UNKNOWN for the time being
+                .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
+                .canReceiveDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
+                .canMakeDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .setApiIdentifier(cardId)
                 .build();
     }

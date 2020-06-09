@@ -1,12 +1,19 @@
 package se.tink.backend.aggregation.compliance.account_capabilities;
 
 import com.google.common.base.Preconditions;
+import java.util.Optional;
 
 public class AccountCapabilities {
     public enum Answer {
         YES,
         NO,
-        UNKNOWN
+        UNKNOWN;
+
+        public static Answer From(Boolean value) {
+            return Optional.ofNullable(value)
+                    .map(v -> Boolean.TRUE.equals(v) ? Answer.YES : Answer.NO)
+                    .orElse(Answer.UNKNOWN);
+        }
     }
 
     private Answer canWithdrawFunds;

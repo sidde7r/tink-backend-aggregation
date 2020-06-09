@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.fetcher.transac
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -28,6 +30,7 @@ public class AccountEntity {
     private Double bookedBalance;
     private Double availableBalance;
     private Double creditLimit;
+    private PermissionsEntity permissions;
 
     public Optional<TransactionalAccount> toTinkAccount() {
         BalanceModule balanceModule =
@@ -48,6 +51,10 @@ public class AccountEntity {
                 .withInferredAccountFlags()
                 .withBalance(balanceModule)
                 .withId(idModule)
+                .canPlaceFunds(canPlaceFunds())
+                .canWithdrawFunds(canTransferFromAccount())
+                .canMakeDomesticTransfer(canTransferFromAccount())
+                .canReceiveDomesticTransfer(canTransferToAccount())
                 .setApiIdentifier(accountId)
                 .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
@@ -79,6 +86,33 @@ public class AccountEntity {
             default:
                 return false;
         }
+    }
+
+    @JsonIgnore
+    private AccountCapabilities.Answer canPlaceFunds() {
+        if (Objects.isNull(permissions)) {
+            return AccountCapabilities.Answer.UNKNOWN;
+        }
+
+        return AccountCapabilities.Answer.From(permissions.getCanDepositToAccount());
+    }
+
+    @JsonIgnore
+    private AccountCapabilities.Answer canTransferFromAccount() {
+        if (Objects.isNull(permissions)) {
+            return AccountCapabilities.Answer.UNKNOWN;
+        }
+
+        return AccountCapabilities.Answer.From(permissions.getCanTransferFromAccount());
+    }
+
+    @JsonIgnore
+    private AccountCapabilities.Answer canTransferToAccount() {
+        if (Objects.isNull(permissions)) {
+            return AccountCapabilities.Answer.UNKNOWN;
+        }
+
+        return AccountCapabilities.Answer.From(permissions.getCanTransferToAccount());
     }
 
     public String getAccountId() {

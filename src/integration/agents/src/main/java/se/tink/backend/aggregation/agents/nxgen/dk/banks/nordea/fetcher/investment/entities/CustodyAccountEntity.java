@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -63,6 +64,12 @@ public class CustodyAccountEntity {
                 .withPortfolios(portfolioModule)
                 .withCashBalance(ExactCurrencyAmount.of(cashAmount, currency))
                 .withId(idModule)
+                // You can place and withdraw funds from an Investment account (e.g. `cashAmount`),
+                // but not make or receive domestic transfers.
+                .canPlaceFunds(AccountCapabilities.Answer.YES)
+                .canWithdrawFunds(AccountCapabilities.Answer.YES)
+                .canReceiveDomesticTransfer(AccountCapabilities.Answer.NO)
+                .canMakeDomesticTransfer(AccountCapabilities.Answer.NO)
                 .build();
     }
 }
