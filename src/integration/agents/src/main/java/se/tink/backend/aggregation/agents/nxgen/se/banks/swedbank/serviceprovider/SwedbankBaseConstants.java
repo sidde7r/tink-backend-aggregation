@@ -349,6 +349,7 @@ public class SwedbankBaseConstants {
         public static final String INSUFFICIENT_FUNDS = "INSUFFICIENT_FUNDS";
         public static final String STRONGER_AUTHENTICATION_NEEDED =
                 "STRONGER_AUTHENTICATION_NEEDED";
+        public static final String DUPLICATION = "DUPLICATE";
     }
 
     public static class ErrorField {
