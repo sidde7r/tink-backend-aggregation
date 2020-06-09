@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc.CustodyContentResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -32,6 +33,17 @@ public class SdcCustodyDetailsModel {
                                 .map(SdcCustodyDetailsAccount::getId)
                                 .orElse(null))
                 .setPortfolios(bankClient.fetchCustodyContent(this).toPortfolios())
+                // We don't have any "properties" or "permissions" to look at for
+                // InvestmentAccounts.
+                // Instead we assume the following:
+                // - We can place funds onto the cash part of the account.
+                // - We can withdraw funds from the cash part of the account.
+                // - We cannot make a domestic transfer.
+                // - We cannot receive a domestic transfer.
+                .canPlaceFunds(AccountCapabilities.Answer.YES)
+                .canWithdrawFunds(AccountCapabilities.Answer.YES)
+                .canMakeDomesticTransfer(AccountCapabilities.Answer.NO)
+                .canReceiveDomesticTransfer(AccountCapabilities.Answer.NO)
                 .build();
     }
 
