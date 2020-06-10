@@ -65,7 +65,6 @@ public class BnpParibasWireMockTest {
                 AgentWireMockPaymentTest.builder(
                                 MarketCode.FR, "fr-bnpparibas-ob", wireMockFilePath)
                         .withConfigurationFile(configuration)
-                        .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPayment(createMockedDomesticPayment())
                         .withAgentModule(new BnpParibasWireMockTestModule())
                         .buildWithoutLogin();
