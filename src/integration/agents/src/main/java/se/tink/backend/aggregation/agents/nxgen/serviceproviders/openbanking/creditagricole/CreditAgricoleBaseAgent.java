@@ -163,14 +163,14 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                 getAgentConfigurationController()
                         .getAgentConfiguration(CreditAgricoleBaseConfiguration.class);
 
-        return Optional.of(
-                new PaymentController(
-                        new FrOpenBankingPaymentExecutor(
-                                new CreditAgricolePaymentApiClient(
-                                        client, sessionStorage, configuration),
-                                configuration.getRedirectUrl(),
-                                sessionStorage,
-                                strongAuthenticationState,
-                                supplementalInformationHelper)));
+        FrOpenBankingPaymentExecutor paymentExecutor =
+                new FrOpenBankingPaymentExecutor(
+                        new CreditAgricolePaymentApiClient(client, sessionStorage, configuration),
+                        configuration.getRedirectUrl(),
+                        sessionStorage,
+                        strongAuthenticationState,
+                        supplementalInformationHelper);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }
