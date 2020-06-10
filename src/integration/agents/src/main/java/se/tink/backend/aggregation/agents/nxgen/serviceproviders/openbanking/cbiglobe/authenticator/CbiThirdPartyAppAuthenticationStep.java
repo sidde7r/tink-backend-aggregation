@@ -65,6 +65,9 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
             try {
                 if (consentManager.isConsentAccepted()) {
                     userState.finishManualAuthenticationStep();
+                    if (ConsentType.ACCOUNT.equals(consentType)) {
+                        consentManager.storeConsentValidUntilDateInCredentials();
+                    }
                 } else {
                     throw new SessionException(SessionError.SESSION_EXPIRED);
                 }

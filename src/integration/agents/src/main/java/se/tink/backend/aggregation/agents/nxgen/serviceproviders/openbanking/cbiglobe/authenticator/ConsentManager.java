@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
+import static se.tink.libraries.date.ThreadSafeDateFormat.FORMATTER_DAILY;
+
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -219,5 +223,18 @@ public class ConsentManager {
                 .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.MILLISECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
                 .build();
+    }
+
+    public void storeConsentValidUntilDateInCredentials() throws SessionException {
+        Date expiryDate = null;
+        try {
+            expiryDate =
+                    FORMATTER_DAILY.parse(
+                            apiClient.getConsentDetails(StorageKeys.CONSENT_ID).getValidUntil());
+        } catch (ParseException e) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        userState.storeConsentExpiryDateInCredentials(expiryDate);
     }
 }

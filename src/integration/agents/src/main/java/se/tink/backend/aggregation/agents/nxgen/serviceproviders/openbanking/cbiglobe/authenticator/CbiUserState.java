@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.Date;
 import java.util.List;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ScaMethodEntity;
@@ -18,11 +20,15 @@ public class CbiUserState {
 
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
+    private final Credentials credentials;
 
     public CbiUserState(
-            final PersistentStorage persistentStorage, final SessionStorage sessionStorage) {
+            final PersistentStorage persistentStorage,
+            final SessionStorage sessionStorage,
+            final Credentials credentials) {
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
+        this.credentials = credentials;
     }
 
     public String getConsentId() {
@@ -75,5 +81,9 @@ public class CbiUserState {
         return sessionStorage
                 .get(SCA_METHODS, new TypeReference<List<ScaMethodEntity>>() {})
                 .orElseThrow(() -> new IllegalStateException("Cannot find sca methods"));
+    }
+
+    public void storeConsentExpiryDateInCredentials(Date expiryDate) {
+        credentials.setSessionExpiryDate(expiryDate);
     }
 }
