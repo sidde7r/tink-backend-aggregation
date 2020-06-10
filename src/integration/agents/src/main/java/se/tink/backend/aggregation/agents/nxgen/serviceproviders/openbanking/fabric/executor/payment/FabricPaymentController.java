@@ -20,23 +20,19 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class FabricPaymentController {
 
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final StrongAuthenticationState strongAuthenticationState;
-    private final SessionStorage sessionStorage;
     private long startPointPollingPendingStatus;
     private static final Logger logger = LoggerFactory.getLogger(FabricPaymentController.class);
 
     FabricPaymentController(
             SupplementalInformationHelper supplementalInformationHelper,
-            StrongAuthenticationState strongAuthenticationState,
-            SessionStorage sessionStorage) {
+            StrongAuthenticationState strongAuthenticationState) {
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.strongAuthenticationState = strongAuthenticationState;
-        this.sessionStorage = sessionStorage;
     }
 
     void redirectSCA(String redirectUrl) {
@@ -77,13 +73,13 @@ public class FabricPaymentController {
             case ACTC:
             case ACWC:
             case ACWP:
+            case PDNG:
                 return new PaymentMultiStepResponse(
                         createPaymentResponse.toTinkPaymentResponse(
                                 paymentMultiStepRequest.getPayment().getType()),
                         AuthenticationStepConstants.STEP_FINALIZE,
                         new ArrayList<>());
             case RCVD:
-            case PDNG:
                 return responsePendingPayment(paymentMultiStepRequest, createPaymentResponse);
             case RJCT:
             case CANC:

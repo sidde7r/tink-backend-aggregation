@@ -40,7 +40,7 @@ public class FabricApiClient {
     private final SessionStorage sessionStorage;
     private FabricConfiguration configuration;
 
-    public FabricApiClient(
+    FabricApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             RandomValueGenerator randomValueGenerator,
@@ -186,8 +186,7 @@ public class FabricApiClient {
                                                 paymentId))
                         .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                         .get(PaymentAuthorizationsResponse.class);
-        sessionStorage.put(
-                StorageKeys.PAYMENT_AUTHORIZATION_ID, result.getAuthorisationIds().get(0));
+        sessionStorage.put(StorageKeys.PAYMENT_AUTHORIZATION_ID, result.getLastAuthorisationId());
         return result;
     }
 
