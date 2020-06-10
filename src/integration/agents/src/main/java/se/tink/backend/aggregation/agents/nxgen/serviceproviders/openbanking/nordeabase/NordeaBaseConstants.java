@@ -75,6 +75,7 @@ public final class NordeaBaseConstants {
         public static final String COUNTRY = "country";
         public static final String SCOPE = "scope";
         public static final String REDIRECT_URI = "redirect_uri";
+        public static final String MAX_TX_HISTORY = "max_tx_history";
     }
 
     public static class QueryValues {
@@ -85,6 +86,7 @@ public final class NordeaBaseConstants {
         public static final String SCOPE =
                 "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,"
                         + "ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,PAYMENTS_MULTIPLE";
+        public static final String FETCH_NUMBER_OF_MONTHS = "12";
     }
 
     public static class HeaderKeys {

@@ -18,6 +18,8 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ApiService;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
@@ -132,6 +134,9 @@ public class NordeaBaseApiClient implements TokenInterface {
                                         NordeaBaseConstants.QueryValues.DURATION_MINUTES)
                                 .queryParam(NordeaBaseConstants.QueryKeys.COUNTRY, country)
                                 .queryParam(NordeaBaseConstants.QueryKeys.SCOPE, getScopes())
+                                .queryParam(
+                                        QueryKeys.MAX_TX_HISTORY,
+                                        QueryValues.FETCH_NUMBER_OF_MONTHS)
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.REDIRECT_URI,
                                         configuration.getRedirectUrl()))
