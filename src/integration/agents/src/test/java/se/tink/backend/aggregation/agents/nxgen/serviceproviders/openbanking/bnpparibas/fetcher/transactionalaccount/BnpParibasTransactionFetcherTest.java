@@ -26,6 +26,7 @@ public class BnpParibasTransactionFetcherTest {
     private static final Instant NOW = Instant.now();
     private static final LocalDate TODAY = NOW.atZone(ZONE_ID).toLocalDate();
     private static final String ACCOUNT_ID = "DUMMY_ACCOUNT_ID";
+    private static final String RESOURCE_ID = "DUMMY_RESOURCE_ID";
 
     private BnpParibasTransactionFetcher bnpParibasTransactionFetcher;
 
@@ -47,7 +48,7 @@ public class BnpParibasTransactionFetcherTest {
         final Date todayMinus10Months = convertLocalDateToDate(TODAY.minusMonths(10L));
         final TransactionsResponse expectedResponse = mock(TransactionsResponse.class);
 
-        when(apiClientMock.getTransactions(ACCOUNT_ID, todayMinus13Months, todayMinus10Months))
+        when(apiClientMock.getTransactions(RESOURCE_ID, todayMinus13Months, todayMinus10Months))
                 .thenReturn(expectedResponse);
 
         // when
@@ -67,7 +68,7 @@ public class BnpParibasTransactionFetcherTest {
         final Date todayMinus13Months = convertLocalDateToDate(TODAY.minusMonths(13L));
         final TransactionsResponse expectedResponse = mock(TransactionsResponse.class);
 
-        when(apiClientMock.getTransactions(ACCOUNT_ID, todayMinus13Months, todayMinus13Months))
+        when(apiClientMock.getTransactions(RESOURCE_ID, todayMinus13Months, todayMinus13Months))
                 .thenReturn(expectedResponse);
 
         // when
@@ -103,6 +104,7 @@ public class BnpParibasTransactionFetcherTest {
         final TransactionalAccount accountMock = mock(TransactionalAccount.class);
 
         when(accountMock.getAccountNumber()).thenReturn(ACCOUNT_ID);
+        when(accountMock.getApiIdentifier()).thenReturn(RESOURCE_ID);
 
         return accountMock;
     }

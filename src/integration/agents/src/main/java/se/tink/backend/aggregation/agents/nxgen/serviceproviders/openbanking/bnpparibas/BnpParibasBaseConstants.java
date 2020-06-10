@@ -62,7 +62,6 @@ public final class BnpParibasBaseConstants {
     public class StorageKeys {
         public static final String TOKEN = "OAUTH_TOKEN";
         public static final String PISP_TOKEN = "PISP_OAUTH_TOKEN";
-        public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String PAYMENT_AUTHORIZATION_URL = "PAYMENT_AUTHORIZATION_URL";
     }
 
