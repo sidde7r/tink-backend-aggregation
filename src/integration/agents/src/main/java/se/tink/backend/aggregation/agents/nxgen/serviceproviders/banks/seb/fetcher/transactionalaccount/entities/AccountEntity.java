@@ -86,7 +86,10 @@ public class AccountEntity {
 
     @JsonIgnore
     private String getHolderName() {
-        return StringUtils.firstLetterUppercaseFormatting(holderName);
+        // For business accounts, KHAV is empty while KTOBEN_TXT is the company name
+        return !Strings.isNullOrEmpty(holderName)
+                ? StringUtils.firstLetterUppercaseFormatting(holderName)
+                : accountName;
     }
 
     @JsonIgnore
