@@ -22,9 +22,8 @@ public class LansforsakringarAgentTest {
                         .addCredentialField(Field.Key.USERNAME, manager.get(SsnArgumentEnum.SSN))
                         .setFinancialInstitutionId("lansforsakringar")
                         .setAppId("tink")
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .expectLoggedIn(false);
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
     }
 
     @Test
