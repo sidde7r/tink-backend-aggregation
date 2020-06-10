@@ -22,7 +22,7 @@ public class NordeaSeAgentTest {
         ssnManager.before();
         loadBeforeSaveAfterManager.before();
         builder =
-                new AgentIntegrationTest.Builder("SE", "se-nordea-oauth2")
+                new AgentIntegrationTest.Builder("SE", "se-nordea-ob")
                         .addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                         .expectLoggedIn(false)
                         .setFinancialInstitutionId("nordea")
