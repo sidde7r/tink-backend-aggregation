@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -17,6 +18,7 @@ import se.tink.libraries.payment.rpc.Reference;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class CreditTransferTransactionEntity {
 
     private PaymentId paymentId;
@@ -39,43 +41,11 @@ public class CreditTransferTransactionEntity {
         RemittanceInformationEntity remittanceInformationEntity = new RemittanceInformationEntity();
         remittanceInformationEntity.setUnstructured(remittanceInformation);
         transactions.add(
-                new CreditTransferTransactionEntity.Builder()
-                        .withPaymentId(paymentId)
-                        .withInstructedAmount(instructedAmount)
-                        .withRemittanceInformation(remittanceInformationEntity)
+                CreditTransferTransactionEntity.builder()
+                        .paymentId(paymentId)
+                        .instructedAmount(instructedAmount)
+                        .remittanceInformation(remittanceInformationEntity)
                         .build());
         return transactions;
-    }
-
-    private CreditTransferTransactionEntity(Builder builder) {
-        this.paymentId = builder.paymentId;
-        this.instructedAmount = builder.instructedAmount;
-        this.remittanceInformation = builder.remittanceInformation;
-    }
-
-    public static class Builder {
-        private PaymentId paymentId;
-        private InstructedAmountEntity instructedAmount;
-        private RemittanceInformationEntity remittanceInformation;
-
-        public Builder withPaymentId(PaymentId paymentId) {
-            this.paymentId = paymentId;
-            return this;
-        }
-
-        public Builder withInstructedAmount(InstructedAmountEntity instructedAmount) {
-            this.instructedAmount = instructedAmount;
-            return this;
-        }
-
-        public Builder withRemittanceInformation(
-                RemittanceInformationEntity remittanceInformation) {
-            this.remittanceInformation = remittanceInformation;
-            return this;
-        }
-
-        public CreditTransferTransactionEntity build() {
-            return new CreditTransferTransactionEntity(this);
-        }
     }
 }

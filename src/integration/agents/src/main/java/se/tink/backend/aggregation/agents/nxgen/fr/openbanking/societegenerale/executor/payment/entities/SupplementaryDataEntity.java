@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class SupplementaryDataEntity {
     private List<String> acceptedAuthenticationApproach;
     private String successfulReportUrl;
@@ -22,42 +24,10 @@ public class SupplementaryDataEntity {
     public static SupplementaryDataEntity of(PaymentRequest paymentRequest, String redirectUrl) {
         List<String> authenticationApproach = new ArrayList<>();
         authenticationApproach.add("REDIRECT");
-        return new SupplementaryDataEntity.Builder()
-                .withAcceptedAuthenticationApproach(authenticationApproach)
-                .withSuccessfulReportUrl(redirectUrl)
-                .withUnsuccessfulReportUrl(redirectUrl)
+        return SupplementaryDataEntity.builder()
+                .acceptedAuthenticationApproach(authenticationApproach)
+                .successfulReportUrl(redirectUrl)
+                .unsuccessfulReportUrl(redirectUrl)
                 .build();
-    }
-
-    private SupplementaryDataEntity(Builder builder) {
-        this.acceptedAuthenticationApproach = builder.acceptedAuthenticationApproach;
-        this.successfulReportUrl = builder.successfulReportUrl;
-        this.unsuccessfulReportUrl = builder.unsuccessfulReportUrl;
-    }
-
-    public static class Builder {
-        private List<String> acceptedAuthenticationApproach;
-        private String successfulReportUrl;
-        private String unsuccessfulReportUrl;
-
-        public Builder withAcceptedAuthenticationApproach(
-                List<String> acceptedAuthenticationApproach) {
-            this.acceptedAuthenticationApproach = acceptedAuthenticationApproach;
-            return this;
-        }
-
-        public Builder withSuccessfulReportUrl(String successfulReportUrl) {
-            this.successfulReportUrl = successfulReportUrl;
-            return this;
-        }
-
-        public Builder withUnsuccessfulReportUrl(String unsuccessfulReportUrl) {
-            this.unsuccessfulReportUrl = unsuccessfulReportUrl;
-            return this;
-        }
-
-        public SupplementaryDataEntity build() {
-            return new SupplementaryDataEntity(this);
-        }
     }
 }
