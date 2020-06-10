@@ -117,8 +117,7 @@ public class SebApiClient extends SebBaseApiClient {
     }
 
     public TransactionDetailsEntity fetchTransactionDetails(String urlAddress) {
-        return createRequestInSession(
-                        new URL(SebConstants.Urls.BASE_TRANSACTION_DETAILS).concat(urlAddress))
+        return createRequestInSession(new URL(SebConstants.Urls.BASE_AIS).concat(urlAddress))
                 .get(TransactionDetailsEntity.class);
     }
 

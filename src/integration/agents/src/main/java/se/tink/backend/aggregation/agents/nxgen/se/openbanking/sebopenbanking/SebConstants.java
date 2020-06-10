@@ -1,18 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
-
 public abstract class SebConstants {
     public static final String MARKET = "SE";
 
     public static class Urls {
-        public static final String BASE_AIS = "/tpp/ais/v5/identified2";
+        public static final String BASE_AIS = "/tpp/ais/v6/identified2";
 
         // Urls for Checking accounts
         public static final String ACCOUNTS = BASE_AIS + "/accounts";
         public static final String TRANSACTIONS = BASE_AIS + "/accounts/{accountId}/transactions";
-        public static final String BASE_TRANSACTION_DETAILS =
-                SebCommonConstants.Urls.BASE_URL + "/tpp/ais/v6/identified2";
 
         // Urls for Credit cards
         private static final String BASE_CREDIT_CARD_ACCOUNTS = "/tpp/ais/v2/identified2";

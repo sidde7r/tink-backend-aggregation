@@ -164,14 +164,14 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(
-                new PaymentController(
-                        new FrOpenBankingPaymentExecutor(
-                                paymentApiClient,
-                                bnpParibasConfiguration.getRedirectUrl(),
-                                sessionStorage,
-                                strongAuthenticationState,
-                                supplementalInformationHelper)));
+        FrOpenBankingPaymentExecutor paymentExecutor =
+                new FrOpenBankingPaymentExecutor(
+                        paymentApiClient,
+                        bnpParibasConfiguration.getRedirectUrl(),
+                        sessionStorage,
+                        strongAuthenticationState,
+                        supplementalInformationHelper);
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 
     @Override
