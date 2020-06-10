@@ -79,6 +79,8 @@ public class BecAgent extends SubsequentProgressiveGenerationAgent
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
+
+        this.client.setResponseStatusHandler(new BecResponseStatusHandler());
     }
 
     @Override
