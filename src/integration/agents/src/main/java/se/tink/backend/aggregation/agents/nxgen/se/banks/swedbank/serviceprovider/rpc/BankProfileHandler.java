@@ -80,18 +80,13 @@ public class BankProfileHandler {
         Map<String, MenuItemLinkEntity> menuItems = getMenuItems();
         Preconditions.checkNotNull(menuItemKey);
         Preconditions.checkNotNull(menuItems);
-        try {
-            Preconditions.checkState(
-                    menuItems.containsKey(menuItemKey.getKey()),
-                    String.format(
-                            "Unable to check state for the missing key: %s", menuItemKey.getKey()));
-        } catch (IllegalStateException e) {
-            log.warn(e.getMessage(), e);
+        if (menuItems.containsKey(menuItemKey.getKey())) {
+            MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
+            return menuItem.isAuthorized();
+        } else {
+            log.warn(String.format("Could not find key: %s", menuItemKey.getKey()));
             return false;
         }
-        MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
-
-        return menuItem.isAuthorized();
     }
 
     public Map<String, MenuItemLinkEntity> getMenuItems() {
