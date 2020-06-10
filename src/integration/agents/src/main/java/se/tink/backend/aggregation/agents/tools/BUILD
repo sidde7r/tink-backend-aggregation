@@ -14,7 +14,7 @@ java_library(
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
         "@aggregation//:com_google_code_gson_gson",
         "@aggregation//:com_google_guava_guava",
-        "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_13",
+        "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@aggregation//:org_yaml_snakeyaml",
     ],
 )
