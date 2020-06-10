@@ -17,10 +17,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationCancelledByUserException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
+import se.tink.backend.aggregation.agents.exceptions.payment.*;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.apiclient.SocieteGeneraleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.BeneficiaryEntity;
@@ -50,6 +47,8 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.i18n.LocalizableEnum;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -88,12 +87,15 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
         String authorizeUrl =
                 Optional.ofNullable(paymentResponse.getLinks().getConsentApproval().getHref())
                         .orElseThrow(
-                                () ->
-                                        new PaymentAuthenticationException(
-                                                "Payment authentication failed. There is no authorization url!",
-                                                new PaymentRejectedException()));
+                                () -> {
+                                    logger.error(
+                                            "Payment authorization failed. There is no authentication url!");
+                                    return new PaymentAuthorizationException(
+                                            "Payment authorization failed.",
+                                            new PaymentRejectedException());
+                                });
 
-        sessionStorage.put(SocieteGeneraleConstants.StorageKeys.AUTORIZE_URL, authorizeUrl);
+        sessionStorage.put(SocieteGeneraleConstants.StorageKeys.AUTH_URL, authorizeUrl);
 
         return paymentResponse.toTinkPaymentResponse(type);
     }
@@ -108,9 +110,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 openThirdPartyApp(
-                        new URL(
-                                sessionStorage.get(
-                                        SocieteGeneraleConstants.StorageKeys.AUTORIZE_URL)));
+                        new URL(sessionStorage.get(SocieteGeneraleConstants.StorageKeys.AUTH_URL)));
                 waitForSupplementalInformation();
                 paymentMultiStepResponse =
                         new PaymentMultiStepResponse(payment, POST_SIGN_STEP, new ArrayList<>());
@@ -129,9 +129,10 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                                 AuthenticationStepConstants.STEP_FINALIZE);
                 break;
             default:
-                throw new PaymentException(
-                        "Payment failed due to unknown sign step "
-                                + paymentMultiStepRequest.getStep());
+                logger.error(
+                        "Payment failed due to unknown sign step{} ",
+                        paymentMultiStepRequest.getStep());
+                throw new PaymentException("Payment failed.");
         }
         return paymentMultiStepResponse;
     }
@@ -148,7 +149,8 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                             "Payment confirmation failed, psuAuthenticationStatus={}",
                             societeGeneralePaymentStatus);
                     throw new PaymentAuthenticationException(
-                            "Payment confirmation failed.", new PaymentRejectedException());
+                            UserMessage.PAYMENT_CONFIRMATION_FAILED.getKey().get(),
+                            new PaymentRejectedException());
                 }
             case PDNG:
             case ACSC:
@@ -179,7 +181,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                 logger.error(
                         "Payment failed. Invalid Payment status returned by Societe Generale Bank,Status={}",
                         societeGeneralePaymentStatus);
-                throw new PaymentException("Payment failed");
+                throw new PaymentException("Payment failed.");
         }
         return paymentMultiStepResponse;
     }
@@ -231,14 +233,15 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
             throws PaymentRejectedException {
         String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
         logger.error("Payment Rejected by the bank with error ={}", error);
-        throw new PaymentRejectedException();
+        throw new PaymentRejectedException(UserMessage.PAYMENT_REJECTED.getKey().get());
     }
 
     private void handleCancelled(StatusReasonInformationEntity rejectStatus)
-            throws PaymentAuthorizationCancelledByUserException {
+            throws PaymentAuthenticationException {
         String error = StatusReasonInformationEntity.mapRejectStatusToError(rejectStatus);
         logger.error("Authorisation of payment was cancelled with bank status={}", error);
-        throw new PaymentAuthorizationCancelledByUserException();
+        throw new PaymentAuthenticationException(
+                UserMessage.PAYMENT_CANCELLED.getKey().get(), new PaymentCancelledException());
     }
 
     private GetPaymentResponse fetchPaymentStatus(String paymentId) {
@@ -303,5 +306,23 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
                         ZonedDateTime.now(DEFAULT_ZONE_ID)
                                 .plusMinutes(1)
                                 .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+    }
+
+    private enum UserMessage implements LocalizableEnum {
+        PAYMENT_REJECTED(new LocalizableKey("The payment was rejected by the bank.")),
+        PAYMENT_CANCELLED(new LocalizableKey("The payment was cancelled by the user.")),
+        PAYMENT_CONFIRMATION_FAILED(
+                new LocalizableKey("An error occurred while confirming the payment."));
+
+        private LocalizableKey userMessage;
+
+        UserMessage(LocalizableKey userMessage) {
+            this.userMessage = userMessage;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return userMessage;
+        }
     }
 }

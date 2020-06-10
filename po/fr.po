@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-03-19 10:18+0000\n"
-"PO-Revision-Date: 2020-03-19 10:18+0000\n"
+"POT-Creation-Date: 2020-06-10 10:12+0000\n"
+"PO-Revision-Date: 2020-06-10 10:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -1456,3 +1456,21 @@ msgstr "Le consentement a été révoqué par l'utilisateur. "
 
 msgid "The consent has been revoked by the bank. "
 msgstr "Le consentement a été révoqué par la banque. "
+
+msgid "Payment authentication failed."
+msgstr "L'authentification du paiement a échoué."
+
+msgid "Payment authorization failed."
+msgstr "Échec de l'autorisation de paiement."
+
+msgid "Payment failed."
+msgstr "Paiement échoué."
+
+msgid "The payment was rejected by the bank."
+msgstr "Le paiement a été rejeté par la banque."
+
+msgid "The payment was cancelled by the user."
+msgstr "Le paiement a été annulé par l'utilisateur."
+
+msgid "An error occurred when confirming the payment."
+msgstr "Une erreur s'est produite lors de la confirmation du paiement."

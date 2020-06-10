@@ -81,7 +81,7 @@ public final class SocieteGeneraleConstants {
         public static final String TOKEN = "STRING_TOKEN";
         public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
         public static final String PISP_OAUTH_TOKEN = "PISP_OAUTH_TOKEN";
-        public static final String AUTORIZE_URL = "AUTORIZE_URL";
+        public static final String AUTH_URL = "AUTH_URL";
     }
 
     public static class SignatureKeys {
