@@ -62,7 +62,7 @@ public class SebResponse {
             return false;
         }
 
-        if (Objects.isNull(d) || Objects.isNull(d.VODB)) {
+        if (Objects.isNull(d) || Objects.isNull(d.VODB) || Objects.isNull(d.VODB.accountEntities)) {
             return false;
         }
         return true;
