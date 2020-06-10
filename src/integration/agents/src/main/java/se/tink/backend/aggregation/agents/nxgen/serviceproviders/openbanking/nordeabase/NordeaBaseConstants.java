@@ -75,6 +75,7 @@ public final class NordeaBaseConstants {
         public static final String COUNTRY = "country";
         public static final String SCOPE = "scope";
         public static final String REDIRECT_URI = "redirect_uri";
+        public static final String MAX_TX_HISTORY = "max_tx_history";
     }
 
     public static class QueryValues {
@@ -85,6 +86,7 @@ public final class NordeaBaseConstants {
         public static final String SCOPE =
                 "ACCOUNTS_BALANCES,ACCOUNTS_BASIC,"
                         + "ACCOUNTS_DETAILS,ACCOUNTS_TRANSACTIONS,PAYMENTS_MULTIPLE";
+        public static final String FETCH_NUMBER_OF_MONTHS = "12";
     }
 
     public static class HeaderKeys {
@@ -95,13 +97,10 @@ public final class NordeaBaseConstants {
         public static final String DIGEST = "digest";
         public static final String ORIGINATING_DATE = "X-Nordea-Originating-Date";
         public static final String ORIGINATING_HOST = "X-Nordea-Originating-Host";
-        public static final String MAX_TX_HISTORY = "max_tx_history";
     }
 
     public static class HeaderValues {
         public static final String HOST = "open.nordea.com";
-        // Default=2 months. range: 1 to 12 months
-        public static final Integer FETCH_NUMBER_OF_MONTHS = 12;
     }
 
     public static class Signature {
