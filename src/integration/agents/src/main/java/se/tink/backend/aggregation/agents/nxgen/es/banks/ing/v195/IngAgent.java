@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -11,8 +12,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngMultifactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngInvestmentAccountFetcher;
@@ -20,9 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngLoa
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.session.IngSessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -34,10 +34,10 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.ServiceUnavailableBankServiceErrorFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IngAgent extends NextGenerationAgent
+public class IngAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
@@ -50,28 +50,44 @@ public class IngAgent extends NextGenerationAgent
     private final LoanRefreshController loanRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final IngMultifactorAuthenticator authenticator;
 
-    public IngAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    @Inject
+    public IngAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
-        super(request, context, signatureKeyPair);
-        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+        configureHttpClient(this.client);
         this.ingApiClient = new IngApiClient(this.client);
 
-        IngInvestmentAccountFetcher accountFetcher = new IngInvestmentAccountFetcher(ingApiClient);
+        this.authenticator =
+                new IngMultifactorAuthenticator(
+                        ingApiClient,
+                        componentProvider.getRandomValueGenerator(),
+                        sessionStorage,
+                        persistentStorage,
+                        componentProvider.getCredentialsRequest(),
+                        componentProvider.getSupplementalInformationHelper());
         this.investmentRefreshController =
                 new InvestmentRefreshController(
-                        metricRefreshController, updateController, accountFetcher);
-
+                        metricRefreshController,
+                        updateController,
+                        new IngInvestmentAccountFetcher(ingApiClient));
         this.loanRefreshController = constructLoanRefreshController();
         this.creditCardRefreshController = constructCreditCardRefreshController();
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
     }
 
+    private void configureHttpClient(TinkHttpClient client) {
+        /* SCA status polling takes up to 60s */
+        client.setTimeout(61000);
+
+        client.addFilter(new ServiceUnavailableBankServiceErrorFilter());
+    }
+
     @Override
-    protected Authenticator constructAuthenticator() {
-        return new IngAuthenticator(this.ingApiClient, persistentStorage);
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        return authenticator;
     }
 
     @Override

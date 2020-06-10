@@ -70,7 +70,7 @@ public final class MockSupplementalInformationHelper implements SupplementalInfo
     @Override
     public void waitAndShowLoginDescription(final String description)
             throws SupplementalInfoException {
-        throw new UnsupportedOperationException("Not implemented");
+        // NOOP
     }
 
     @Override

@@ -4,12 +4,15 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Query;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CommunicationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutRestSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutSessionRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ScaStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.MovementsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.ProductsResponse;
@@ -27,13 +30,7 @@ public class IngApiClient {
         this.client = client;
     }
 
-    public CreateSessionResponse postLoginRestSession(
-            String username, int usernameType, String dob, String deviceId) {
-
-        LocalDate birthday = LocalDate.parse(dob, IngUtils.BIRTHDAY_INPUT);
-        CreateSessionRequest request =
-                CreateSessionRequest.create(username, usernameType, birthday, deviceId);
-
+    public CreateSessionResponse postLoginRestSession(CreateSessionRequest request) {
         return client.request(IngConstants.Url.LOGIN_REST_SESSION)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -48,6 +45,20 @@ public class IngApiClient {
                 .put(
                         PutRestSessionResponse.class,
                         PutSessionRequest.create(pinPositions, processId));
+    }
+
+    public ScaStatusResponse getScaStatus(String processId, boolean isLogin) {
+        return client.request(Url.LOGIN_SCA_STATUS)
+                .queryParam(Query.SEC_PROCESS_ID, processId)
+                .queryParam(Query.IS_LOGIN, isLogin ? Query.TRUE : Query.FALSE)
+                .get(ScaStatusResponse.class);
+    }
+
+    public PutRestSessionResponse putLoginRestSession(String otp, String processId) {
+        return client.request(IngConstants.Url.LOGIN_REST_SESSION)
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .put(PutRestSessionResponse.class, PutSessionRequest.create(otp, processId));
     }
 
     public boolean postLoginAuthResponse(String ticket) {

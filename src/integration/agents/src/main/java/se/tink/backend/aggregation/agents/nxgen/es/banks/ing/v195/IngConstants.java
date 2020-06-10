@@ -20,6 +20,7 @@ public class IngConstants {
         public static final String LOGIN_REST_SESSION = URL_BASE + "/genoma_login/rest/session";
         public static final String LOGIN_AUTH_RESPONSE =
                 URL_BASE + "/genoma_api/login/auth/response";
+        public static final String LOGIN_SCA_STATUS = URL_BASE + "/genoma_login/rest/getScaStatus";
 
         // user information
         public static final String API_REST_CLIENT = URL_BASE + "/genoma_api/rest/client";
@@ -42,6 +43,10 @@ public class IngConstants {
         public static final String TO_DATE = "toDate";
         public static final String LIMIT = "limit";
         public static final String OFFSET = "offset";
+        public static final String SEC_PROCESS_ID = "secProcessId";
+        public static final String IS_LOGIN = "isLogin";
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
     }
 
     public static final class UsernameTypes {
@@ -113,11 +118,32 @@ public class IngConstants {
 
     public static class Storage {
         public static final String DEVICE_ID = "deviceId";
+        public static final String CREDENTIALS_TOKEN = "credentialsToken";
+        public static final String LOGIN_PROCESS_ID = "loginProcessId";
     }
 
     public static class ErrorCodes {
         public static final String LOGIN_DOCUMENT_FIELD = "loginDocument";
         public static final String MOBILE_VALIDATION_ENROLLMENT_REQUIRED = "19902";
+        public static final String INVALID_PIN = "403001";
         public static final String GENERIC_LOCK = "403002";
+    }
+
+    public static class ScaConfig {
+        public static final int CONFIRM = 0;
+        public static final int TIME_OUT_ERROR = 11187;
+        public static final int GENERIC_ERROR = 10013;
+        public static final int NEXT_STEP = 11141;
+        public static final int NOT_CORRECT_CODE_ERROR = 11188;
+    }
+
+    public static class ScaStatus {
+        public static final int IN_PROGRESS = 1;
+        public static final int APPROVED = 2;
+    }
+
+    public static class ScaMethod {
+        public static final int SMS = 5;
+        public static final int PUSH = 12;
     }
 }

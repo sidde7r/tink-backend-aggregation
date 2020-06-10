@@ -1,0 +1,146 @@
+REQUEST 1 MATCH Started
+GET https://ing.ingdirect.es/genoma_api/rest/client
+
+RESPONSE 1
+410
+Content-Type: application/json; charset=UTF-8
+
+{
+    "code": 400002,
+    "Description": "UNAUTHORIZED"
+}
+
+REQUEST 2
+POST https://ing.ingdirect.es/genoma_login/rest/session
+Content-Type: application/json
+
+{"device":"mobilePhone","loginDocument":{"document":"1234567X","documentType":2},"birthday":"12/12/2012","deviceId":"0000000000000000000000000000000000000000"}
+
+RESPONSE 2
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"pinPositions": [
+		1,
+		2,
+		5
+	],
+	"pinPadNumbers": [
+		1, 2, 3, 4, 6,
+		7, 8, 9, 0, 5
+	],
+	"lastConnection": "18/05/2020 16:46",
+	"lastDeviceConnection": "desktop",
+	"numFails": 0,
+	"registeredFingerprint": false,
+	"password": false,
+	"validEmail": true,
+	"processId": "0000011111111222222222333333333",
+	"pinpad": [
+		"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"
+	]
+}
+
+REQUEST 3
+PUT https://ing.ingdirect.es/genoma_login/rest/session
+Content-Type: application/json
+
+{"pinPositions":[0,1,9],"processId":"0000011111111222222222333333333"}
+
+RESPONSE 3
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"personId": "11112222",
+	"resultCode": 11141,
+	"resultMessage": "Pending validations",
+	"nextValMethod": 5,
+	"nextValMethodMessage": "Te hemos enviado un SMS a tu telefono movil terminado en ****1337 con un codigo valido durante un ratito.",
+	"isSameDevice": false
+}
+
+REQUEST 4
+PUT https://ing.ingdirect.es/genoma_login/rest/session
+Content-Type: application/json
+
+{"otp":"13371337","processId":"0000011111111222222222333333333"}
+
+RESPONSE 4
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"isSameDevice": false,
+	"personId": "11112222",
+	"rememberMeToken": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+	"ticket": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB==",
+	"timeoutInSeconds": 600
+}
+
+REQUEST 5
+POST https://ing.ingdirect.es/genoma_api/login/auth/response
+Content-Type: application/x-www-form-urlencoded
+
+ticket=BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB%3D%3D&device=mobilePhone
+
+RESPONSE 5 SET LoggedIn
+200
+Content-Type: application/json; charset=UTF-8
+
+{}
+
+REQUEST 6
+GET https://ing.ingdirect.es/genoma_api/rest/products
+
+RESPONSE 6
+200
+Content-Type: application/json; charset=UTF-8
+
+[]
+
+REQUEST 7 MATCH LoggedIn
+GET https://ing.ingdirect.es/genoma_api/rest/client
+
+RESPONSE 7
+200
+Content-Type: application/json; charset=UTF-8
+
+{
+	"birthDate": "12/12/1912",
+	"createClientDate": "01/01/1991",
+	"documentNumber": "1234567X",
+	"documentType": 0,
+	"firstSurname": "DE TAL",
+	"genderCode": "H",
+	"genderDesc": "HOMBRE",
+	"id": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+	"name": "FULANO",
+	"nationality": "ESPAÑA",
+	"nativeCountry": "ESPAÑA",
+	"personId": 11112222,
+	"preferences": {
+		"hidden-products": [
+			"[]"
+		],
+		"new-query-filter": "1",
+		"overall-expenses-graph": "bars",
+		"overall-help-layer": "36910"
+	},
+	"retail": "1",
+	"secondSurname": "Y CUAL",
+	"selfResFiscal": "ESPAÑA",
+	"sme": "0",
+	"typeCode": "5",
+	"typeDescription": "Operativo"
+}
