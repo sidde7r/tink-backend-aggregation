@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_NO_ACCOUNTS_RETURNED_CASE_REGEX;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_ONLY_SAVINGS_AND_CHECKING_REGEX;
+import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.DEMO_PROVIDER_OTP_BENEFICIARY_REGEX;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_PREPROD_CALLBACK;
 import static se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.OXFORD_STAGING;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.Redirec
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.LoanAccount;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgentConstants.StaticAccountUK;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.beneficiary.OtpDemoCreateBeneficaryExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.beneficiary.RedirectDemoCreateBeneficaryExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.executor.transfer.RedirectDemoTransferExecutor;
@@ -45,7 +47,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -207,10 +208,21 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent
         ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(
                         controller, supplementalInformationHelper);
-        CreateBeneficiaryExecutor createBeneficiaryExecutor =
-                new RedirectDemoCreateBeneficaryExecutor(
-                        credentials, thirdPartyAppAuthenticationController);
-        return Optional.of(new CreateBeneficiaryController(createBeneficiaryExecutor));
+        if (this.provider.matches(DEMO_PROVIDER_OTP_BENEFICIARY_REGEX)) {
+            return Optional.of(
+                    new CreateBeneficiaryController(
+                            new OtpDemoCreateBeneficaryExecutor(
+                                    credentials,
+                                    thirdPartyAppAuthenticationController,
+                                    supplementalInformationHelper)));
+        } else {
+            return Optional.of(
+                    new CreateBeneficiaryController(
+                            new RedirectDemoCreateBeneficaryExecutor(
+                                    credentials,
+                                    thirdPartyAppAuthenticationController,
+                                    supplementalInformationHelper)));
+        }
     }
 
     @Override

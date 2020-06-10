@@ -21,6 +21,9 @@ public class RedirectAuthenticationDemoAgentConstants {
     public static final String DEMO_PROVIDER_PAYMENT_CANCEL_CASE_REGEX =
             ".*-test-open-banking-redirect-payment-cancelled";
 
+    static final String DEMO_PROVIDER_OTP_BENEFICIARY_REGEX =
+            ".*-test-open-banking-redirect-beneficiary-otp";
+
     public static final String OXFORD_PREPROD = "oxford-preprod";
     public static final String OXFORD_PREPROD_CALLBACK =
             "https://api.preprod.oxford.tink.com/api/v1/credentials/third-party/callback";
