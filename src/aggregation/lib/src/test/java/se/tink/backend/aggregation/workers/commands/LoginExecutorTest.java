@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.Any;
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,9 +22,9 @@ import se.tink.backend.aggregation.workers.commands.login.LoginExecutor;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
+import se.tink.backend.eventproducerservice.grpc.BatchEventAck;
 import se.tink.backend.eventproducerservice.grpc.EventAck;
 import se.tink.backend.eventproducerservice.grpc.EventAckAsync;
-import se.tink.backend.eventproducerservice.grpc.PostEventRequest;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent.LoginResult;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -47,12 +48,7 @@ public class LoginExecutorTest {
         }
 
         @Override
-        public ListenableFuture<EventAckAsync> postEventFireAndForget(PostEventRequest request) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public ListenableFuture<EventAck> postEventAsync(PostEventRequest request) {
+        public ListenableFuture<BatchEventAck> postEventsBatchAsync(List<Any> data) {
             throw new UnsupportedOperationException();
         }
 

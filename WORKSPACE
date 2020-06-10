@@ -164,7 +164,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "3648c1fc08318c140391428ec42d68e2cc61b4bb",
+    commit = "d344b43f1141fa285aa15e0e800f53554aa96f9a",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1586908800 +0000",
 )
@@ -620,7 +620,7 @@ http_archive(
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@tink_backend//third_party/maven:deps.bzl", "maven_deps")
 
-maven_deps("@tink_backend//third_party/maven:maven_install.json", IO_NETTY_VERSION, IO_NETTY_BORINGSSL_VERSION)
+maven_deps("//third_party/maven:maven_install.json", IO_NETTY_VERSION, IO_NETTY_BORINGSSL_VERSION, artifact_versions={"javax.validation:validation-api": "2.0.1.Final"})
 
 load("@maven//:defs.bzl", "pinned_maven_install")
 
@@ -683,9 +683,9 @@ maven_install(
         "aopalliance:aopalliance:1.0",
         "asm:asm:3.3.1",
         "c3p0:c3p0:0.9.1.1",
-        "ch.qos.logback.contrib:logback-jackson:jar:0.1.5",
-        "ch.qos.logback.contrib:logback-json-classic:jar:0.1.5",
-        "ch.qos.logback.contrib:logback-json-core:jar:0.1.5",
+        "ch.qos.logback.contrib:logback-jackson:0.1.5",
+        "ch.qos.logback.contrib:logback-json-classic:0.1.5",
+        "ch.qos.logback.contrib:logback-json-core:0.1.5",
         "ch.qos.logback:logback-classic:1.1.11",
         "ch.qos.logback:logback-core:1.1.11",
         "com.codahale.metrics:metrics-annotation:3.0.2",
@@ -738,6 +738,7 @@ maven_install(
         "com.googlecode.gettext-commons:gettext-commons:0.9.8",
         "com.jayway.jsonpath:json-path:2.0.0",
         "com.jcraft:jzlib:1.1.3",
+        "com.kjetland:mbknor-jackson-jsonschema_2.12:1.0.34",
         "com.lambdaworks:scrypt:1.3.2",
         "com.netflix.governator:governator-api:1.17.2",
         "com.netflix.governator:governator-core:1.17.2",
@@ -805,7 +806,7 @@ maven_install(
         "javax.inject:javax.inject:1",
         "javax.servlet:javax.servlet-api:4.0.1",
         "javax.transaction:jta:1.1",
-        "javax.validation:validation-api:1.1.0.Final",
+        "javax.validation:validation-api:2.0.1.Final",
         "javax.xml.bind:jaxb-api:2.2.7",
         "javax.xml.stream:stax-api:1.0-2",
         "jline:jline:0.9.94",
@@ -875,7 +876,7 @@ maven_install(
         "org.reflections:reflections:0.9.11",
         "org.slf4j:jcl-over-slf4j:1.7.6",
         "org.slf4j:jul-to-slf4j:1.7.6",
-        "org.slf4j:slf4j-api:1.7.22",
+        "org.slf4j:slf4j-api:1.7.26",
         "org.slf4j:slf4j-log4j12:1.7.5",
         "org.w3c.css:sac:1.3",
         "org.xerial.snappy:snappy-java:1.0.5-M2",
