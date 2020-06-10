@@ -243,4 +243,14 @@ public class LFUtilsTest {
                 "Mottagarkontot är inte giltigt",
                 Catalog.getCatalog("sv_SE").getString("Invalid destination account"));
     }
+
+    @Test
+    public void ensureValidOCR_forValidValue() {
+        Assert.assertTrue(LFUtils.isValidOCR("50000038393"));
+    }
+
+    @Test
+    public void ensureInvalidOCR_forInvalidValue() {
+        Assert.assertFalse(LFUtils.isValidOCR("12345"));
+    }
 }
