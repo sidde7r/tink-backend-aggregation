@@ -14,7 +14,7 @@ public class AmericanExpressAgentTest {
                 new AgentIntegrationTest.Builder("uk", "uk-amex-ob")
                         .setFinancialInstitutionId("amex")
                         .setAppId("tink")
-                        .expectLoggedIn(false)
+                        .doLogout(true)
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);
     }

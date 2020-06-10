@@ -40,4 +40,9 @@ public class HmacMultiTokenStorage implements AccessTokenStorage<HmacMultiToken>
     public void rotateToken(HmacMultiToken hmacMultiToken) {
         persistentStorage.rotateStorageValue(HMAC_MULTI_TOKEN_KEY, hmacMultiToken);
     }
+
+    @Override
+    public void clearToken() {
+        persistentStorage.remove(HMAC_MULTI_TOKEN_KEY);
+    }
 }

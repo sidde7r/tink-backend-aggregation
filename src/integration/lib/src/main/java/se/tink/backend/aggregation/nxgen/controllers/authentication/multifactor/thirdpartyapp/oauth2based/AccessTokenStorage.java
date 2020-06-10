@@ -13,4 +13,6 @@ public interface AccessTokenStorage<T> {
     void storeTokenInSession(T token);
 
     void rotateToken(T token);
+
+    void clearToken();
 }

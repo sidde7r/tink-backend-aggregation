@@ -41,4 +41,9 @@ public class OAuth2TokenStorage implements AccessTokenStorage<OAuth2Token> {
     public void rotateToken(OAuth2Token oAuth2Token) {
         persistentStorage.rotateStorageValue(OAUTH_2_TOKEN_KEY, oAuth2Token);
     }
+
+    @Override
+    public void clearToken() {
+        persistentStorage.remove(OAUTH_2_TOKEN_KEY);
+    }
 }
