@@ -161,6 +161,30 @@ public class RedirectAuthenticationDemoAgentTest {
     }
 
     @Test
+    public void testCreateBeneficiaryFrOtp() throws Exception {
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder(
+                                "fr", "fr-test-open-banking-redirect-beneficiary-otp")
+                        .expectLoggedIn(false)
+                        .setFinancialInstitutionId("dummy")
+                        .setAppId("dummy")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
+        Beneficiary beneficiary =
+                Beneficiary.builder()
+                        .accountNumber(FRANCE_DESTINATION_ACCOUNT)
+                        .accountNumberType(Type.IBAN)
+                        .name("Test")
+                        .build();
+        CreateBeneficiary createBeneficiary =
+                CreateBeneficiary.builder()
+                        .beneficiary(beneficiary)
+                        .ownerAccountNumber(FRANCE_SOURCE_ACCOUNT)
+                        .build();
+        builder.build().testCreateBeneficiary(createBeneficiary);
+    }
+
+    @Test
     public void testPaymentFR() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("fr", "fr-test-open-banking-redirect")
