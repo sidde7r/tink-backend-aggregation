@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-15 16:52+0200\n"
+"POT-Creation-Date: 2020-06-10 12:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1364,4 +1364,16 @@ msgid ""
 msgstr ""
 
 msgid "Could not save new recipient, check that the information is correct"
+msgstr ""
+
+msgid "The payment was rejected by the bank."
+msgstr ""
+
+msgid "The payment was cancelled by the user."
+msgstr ""
+
+msgid "An error occurred when confirming the payment."
+msgstr ""
+
+msgid "An error occurred while confirming the payment."
 msgstr ""

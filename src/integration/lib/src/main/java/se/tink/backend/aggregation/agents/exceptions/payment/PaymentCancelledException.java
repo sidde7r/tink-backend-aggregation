@@ -4,10 +4,11 @@ public class PaymentCancelledException extends PaymentException {
 
     public static final String MESSAGE = "The payment was cancelled by the user.";
 
-    public PaymentCancelledException(String message){
+    public PaymentCancelledException(String message) {
         super(message);
     }
-    public PaymentCancelledException(){
+
+    public PaymentCancelledException() {
         this(MESSAGE);
     }
 }
