@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Objects;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -30,7 +32,6 @@ public class SdcAccount {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount(final AccountNumberToIbanConverter converter) {
-
         AccountTypes accountTypes = convertAccountType();
 
         Builder<?, ?> builder =
@@ -40,7 +41,11 @@ public class SdcAccount {
                                 amount.toExactCurrencyAmount())
                         .setAccountNumber(id)
                         .setName(name)
-                        .setBankIdentifier(normalizedBankId());
+                        .setBankIdentifier(normalizedBankId())
+                        .canPlaceFunds(canPlaceFunds())
+                        .canWithdrawFunds(canWithdrawFunds())
+                        .canMakeDomesticTransfer(canMakeDomesticTransfer())
+                        .canReceiveDomesticTransfer(canReceiveDomesticTransfer());
 
         if (accountTypes.equals(AccountTypes.CHECKING)
                 || accountTypes.equals(AccountTypes.SAVINGS)) {
@@ -57,6 +62,10 @@ public class SdcAccount {
                 .setAccountNumber(localizedAccountId)
                 .setName(name)
                 .setBankIdentifier(normalizedBankId())
+                .canPlaceFunds(canPlaceFunds())
+                .canWithdrawFunds(canWithdrawFunds())
+                .canMakeDomesticTransfer(canMakeDomesticTransfer())
+                .canReceiveDomesticTransfer(canReceiveDomesticTransfer())
                 .build();
     }
 
@@ -72,6 +81,46 @@ public class SdcAccount {
         }
         LOGGER.info("Found unknown productElementType: " + productElementType);
         return AccountTypes.OTHER;
+    }
+
+    @JsonIgnore
+    public AccountCapabilities.Answer canPlaceFunds() {
+        if (Objects.isNull(accountProperties)) {
+            return AccountCapabilities.Answer.UNKNOWN;
+        }
+
+        // We can place funds if we can debit the account.
+        return AccountCapabilities.Answer.From(accountProperties.isDebitable());
+    }
+
+    @JsonIgnore
+    public AccountCapabilities.Answer canWithdrawFunds() {
+        if (Objects.isNull(accountProperties)) {
+            return AccountCapabilities.Answer.UNKNOWN;
+        }
+
+        // We can withdraw funds if we can credit the account.
+        return AccountCapabilities.Answer.From(accountProperties.isCreditable());
+    }
+
+    @JsonIgnore
+    public AccountCapabilities.Answer canMakeDomesticTransfer() {
+        if (Objects.isNull(accountProperties)) {
+            return AccountCapabilities.Answer.UNKNOWN;
+        }
+
+        // We can make a domestic transfer if we can credit the account.
+        return AccountCapabilities.Answer.From(accountProperties.isCreditable());
+    }
+
+    @JsonIgnore
+    public AccountCapabilities.Answer canReceiveDomesticTransfer() {
+        if (Objects.isNull(accountProperties)) {
+            return AccountCapabilities.Answer.UNKNOWN;
+        }
+
+        // We can receive a domestic transfer if we can debit the account.
+        return AccountCapabilities.Answer.From(accountProperties.isDebitable());
     }
 
     @JsonIgnore

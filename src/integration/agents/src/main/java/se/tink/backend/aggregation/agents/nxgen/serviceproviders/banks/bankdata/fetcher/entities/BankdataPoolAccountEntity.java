@@ -5,6 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -75,6 +76,13 @@ public class BankdataPoolAccountEntity {
                 .setBankIdentifier(getAccountNumber())
                 .setName(name)
                 .setPortfolios(Collections.singletonList(portfolio))
+                // As the capabilities are meant to signify "instant/direct" result we
+                // - don't have an option to make and receive a transfer
+                .canMakeDomesticTransfer(AccountCapabilities.Answer.NO)
+                .canReceiveDomesticTransfer(AccountCapabilities.Answer.NO)
+                // lack of information to determine the following
+                .canWithdrawFunds(AccountCapabilities.Answer.UNKNOWN)
+                .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
                 .build();
     }
 }

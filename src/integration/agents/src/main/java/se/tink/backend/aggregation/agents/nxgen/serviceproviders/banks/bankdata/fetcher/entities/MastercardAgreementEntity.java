@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.strings.StringUtils;
@@ -79,6 +80,10 @@ public class MastercardAgreementEntity {
                                 .setAccountNumber(mastercardEntity.getCardNo())
                                 .setName(mastercardEntity.getCardName())
                                 .setBankIdentifier(constructUniqueIdentifier())
+                                .canMakeDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
+                                .canReceiveDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
+                                .canWithdrawFunds(AccountCapabilities.Answer.UNKNOWN)
+                                .canPlaceFunds(AccountCapabilities.Answer.From(canDeposit))
                                 .build());
     }
 

@@ -1,44 +1,44 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities;
 
 public class SdcAccountProperties {
-    private boolean canRename;
-    private boolean showAvailableAmount;
-    private boolean debitable;
-    private boolean creditable;
-    private boolean mayQuery;
-    private boolean loan;
-    private boolean favorite;
-    private boolean likvidityZone;
+    private Boolean canRename;
+    private Boolean showAvailableAmount;
+    private Boolean debitable;
+    private Boolean creditable;
+    private Boolean mayQuery;
+    private Boolean loan;
+    private Boolean favorite;
+    private Boolean likvidityZone;
 
-    public boolean isCanRename() {
+    public Boolean isCanRename() {
         return canRename;
     }
 
-    public boolean isShowAvailableAmount() {
+    public Boolean isShowAvailableAmount() {
         return showAvailableAmount;
     }
 
-    public boolean isDebitable() {
+    public Boolean isDebitable() {
         return debitable;
     }
 
-    public boolean isCreditable() {
+    public Boolean isCreditable() {
         return creditable;
     }
 
-    public boolean isMayQuery() {
+    public Boolean isMayQuery() {
         return mayQuery;
     }
 
-    public boolean isLoan() {
+    public Boolean isLoan() {
         return loan;
     }
 
-    public boolean isFavorite() {
+    public Boolean isFavorite() {
         return favorite;
     }
 
-    public boolean isLikvidityZone() {
+    public Boolean isLikvidityZone() {
         return likvidityZone;
     }
 }
