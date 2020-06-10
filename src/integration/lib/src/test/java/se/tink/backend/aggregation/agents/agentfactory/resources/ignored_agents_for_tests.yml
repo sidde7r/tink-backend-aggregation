@@ -70,6 +70,7 @@ ignoredAgentsForCapabilityTest:
   - nxgen.fr.openbanking.hellobank.HelloBankAgent
   - nxgen.fr.openbanking.ing.IngAgent
   - nxgen.it.openbanking.ing.IngAgent
+  - nxgen.nl.banks.abnamro.AbnAmroAgent
   - nxgen.nl.banks.openbanking.volksbank.VolksbankAgent
   - nxgen.nl.openbanking.abnamro.AbnAmroAgent
   - nxgen.nl.openbanking.ing.IngAgent
