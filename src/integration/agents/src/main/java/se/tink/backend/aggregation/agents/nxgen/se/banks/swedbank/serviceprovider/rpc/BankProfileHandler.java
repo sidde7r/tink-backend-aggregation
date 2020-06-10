@@ -9,6 +9,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
@@ -17,6 +18,7 @@ public class BankProfileHandler {
     private List<BankProfile> bankProfiles = new ArrayList<>();
     private BankProfile activeBankProfile;
     private Map<String, MenuItemLinkEntity> menuItems;
+    private final AggregationLogger log = new AggregationLogger(BankProfileHandler.class);
 
     public BankProfileHandler setActiveBankProfile(BankProfile activeBankProfile) {
         this.activeBankProfile = activeBankProfile;
@@ -78,10 +80,13 @@ public class BankProfileHandler {
         Map<String, MenuItemLinkEntity> menuItems = getMenuItems();
         Preconditions.checkNotNull(menuItemKey);
         Preconditions.checkNotNull(menuItems);
-        Preconditions.checkState(menuItems.containsKey(menuItemKey.getKey()));
-        MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
-
-        return menuItem.isAuthorized();
+        if (menuItems.containsKey(menuItemKey.getKey())) {
+            MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
+            return menuItem.isAuthorized();
+        } else {
+            log.warn(String.format("Could not find key: %s", menuItemKey.getKey()));
+            return false;
+        }
     }
 
     public Map<String, MenuItemLinkEntity> getMenuItems() {
