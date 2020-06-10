@@ -81,6 +81,7 @@ public class BecAgent extends SubsequentProgressiveGenerationAgent
                 constructTransactionalAccountRefreshController();
 
         this.client.setResponseStatusHandler(new BecResponseStatusHandler());
+        client.setTimeout(60 * 1000); // increase standard 30sec into 1 minute
     }
 
     @Override

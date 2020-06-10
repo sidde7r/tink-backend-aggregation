@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class BecApiClient {
+    private static final String ACCEPTED_2FA = "1";
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final String JSON_PROCESSING_FAILED = "Json processing failed";
@@ -92,7 +93,11 @@ public class BecApiClient {
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .post(EncryptedResponse.class, request);
             String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
-            return mapper.readValue(decryptedResponse, ScaOptionsEncryptedPayload.class);
+            ScaOptionsEncryptedPayload payload =
+                    mapper.readValue(decryptedResponse, ScaOptionsEncryptedPayload.class);
+            log.info(
+                    String.format("Available login options: %s", payload.getSecondFactorOptions()));
+            return payload;
         } catch (IOException e) {
             throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
         } catch (BecAuthenticationException e) {
@@ -122,12 +127,17 @@ public class BecApiClient {
         }
     }
 
-    public NemIdPollResponse pollNemId(String token) {
+    public void pollNemId(String token) throws ThirdPartyAppException {
         log.info("Poll for 2fa prove.");
-        return createRequest(this.agentUrl.getNemIdPoll())
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .queryParam("token", token)
-                .get(NemIdPollResponse.class);
+        NemIdPollResponse response =
+                createRequest(this.agentUrl.getNemIdPoll())
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .queryParam("token", token)
+                        .get(NemIdPollResponse.class);
+        log.info(String.format("The 2fa response: %s", response));
+        if (!ACCEPTED_2FA.equals(response.getState())) {
+            throw ThirdPartyAppError.TIMED_OUT.exception("NemID TIMEOUT.");
+        }
     }
 
     public void sca(String username, String password, String token) throws ThirdPartyAppException {
