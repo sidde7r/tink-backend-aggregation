@@ -11,6 +11,13 @@ public class PendingEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
 
+    private String transactionId;
+    private String creditorAccount;
+    private String descriptiveText;
+    private String pendingTypeDetailed;
+    private String remittanceInformationUnstructured;
+    private long remittanceInformationStructuredReference;
+    private String ownNotes;
     private String creditorName;
 
     private TransactionAmountEntity transactionAmount;

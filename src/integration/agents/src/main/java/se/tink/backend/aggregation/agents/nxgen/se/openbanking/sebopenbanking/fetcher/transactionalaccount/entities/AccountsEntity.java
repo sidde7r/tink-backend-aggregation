@@ -18,42 +18,27 @@ import se.tink.libraries.amount.ExactCurrencyAmount;
 @JsonObject
 public class AccountsEntity {
     private String resourceId;
-
     private String iban;
-
     private String bban;
-
     private String currency;
-
     private OwnerNameEntity owner;
-
     private String ownerName;
-
+    private String OwnerId;
     private List<BalancesEntity> balances;
-
     private String creditLine;
-
     private String product;
-
     private String name;
-
     private String status;
-
     private String statusDate;
-
     private String bic;
-
     private String bicAddress;
-
     private String accountInterest;
-
     private boolean cardLinkedToTheAccount;
-
     private boolean paymentService;
-
     private String bankgiroNumber;
-
     private OwnerNameEntity accountOwners;
+    private List<AliasesEntity> aliases;
+    private LimitsEntity limits;
 
     @JsonProperty("_links")
     private LinksEntity links;

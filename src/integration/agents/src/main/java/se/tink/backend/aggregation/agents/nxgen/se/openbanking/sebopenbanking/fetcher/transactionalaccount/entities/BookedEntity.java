@@ -24,6 +24,8 @@ public class BookedEntity {
 
     private TransactionAmountEntity transactionAmount;
 
+    private String balanceAfterTransaction;
+
     private int proprietaryBankTransactionCode;
 
     private String proprietaryBankTransactionCodeText;
