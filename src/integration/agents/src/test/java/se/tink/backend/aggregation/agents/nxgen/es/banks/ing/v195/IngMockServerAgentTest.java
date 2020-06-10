@@ -53,7 +53,7 @@ public class IngMockServerAgentTest {
     }
 
     @Test
-    public void testLoginWithoutOtp() throws Exception {
+    public void testLoginWithoutSca() throws Exception {
         // Given
         final String wireMockServerFilePath = RESOURCES_PATH + "ing-login.aap";
         final String wireMockContractFilePath = RESOURCES_PATH + "login-agent-contract.json";
@@ -70,6 +70,37 @@ public class IngMockServerAgentTest {
                         .addCredentialField(Key.DATE_OF_BIRTH.getFieldKey(), DATE_OF_BIRTH)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .withConfigurationFile(
+                                AgentsServiceConfigurationReader.read(
+                                        RESOURCES_PATH + "configuration.yml"))
+                        .build();
+
+        // When
+        agentWireMockRefreshTest.executeRefresh();
+
+        // Then
+        agentWireMockRefreshTest.assertExpectedData(expected);
+    }
+
+    @Test
+    public void testLoginWithPush() throws Exception {
+        // Given
+        final String wireMockServerFilePath = RESOURCES_PATH + "ing-login-with-push.aap";
+        final String wireMockContractFilePath = RESOURCES_PATH + "login-agent-contract.json";
+
+        final AgentContractEntity expected =
+                new AgentContractEntitiesJsonFileParser()
+                        .parseContractOnBasisOfFile(wireMockContractFilePath);
+
+        final AgentWireMockRefreshTest agentWireMockRefreshTest =
+                AgentWireMockRefreshTest.builder(
+                                MarketCode.ES, PROVIDER_NAME, wireMockServerFilePath)
+                        .addCredentialField(Key.USERNAME.getFieldKey(), USERNAME)
+                        .addCredentialField(Key.PASSWORD.getFieldKey(), PASSWORD)
+                        .addCredentialField(Key.DATE_OF_BIRTH.getFieldKey(), DATE_OF_BIRTH)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .withRequestFlagCreate(true)
                         .withConfigurationFile(
                                 AgentsServiceConfigurationReader.read(
                                         RESOURCES_PATH + "configuration.yml"))
