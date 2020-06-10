@@ -120,6 +120,6 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new LansforsakringarSessionHandler(apiClient, persistentStorage, sessionStorage);
     }
 }
