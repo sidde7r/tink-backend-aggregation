@@ -48,7 +48,7 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
         this.strongAuthenticationState = strongAuthenticationState;
         this.fabricPaymentController =
                 new FabricPaymentController(
-                        supplementalInformationHelper, strongAuthenticationState, sessionStorage);
+                        supplementalInformationHelper, strongAuthenticationState);
     }
 
     @Override
@@ -102,10 +102,17 @@ public class FabricPaymentExecutor implements PaymentExecutor, FetchablePaymentE
             sessionStorage.put(FabricConstants.StorageKeys.LINK, null);
         }
         String paymentId = sessionStorage.get(FabricConstants.StorageKeys.PAYMENT_ID);
-        apiClient.getPaymentAuthorizations(paymentId);
-        PaymentAuthorizationStatus authorizationStatus =
-                apiClient.getPaymentAuthorizationStatus(paymentId);
-        logger.info(String.format("scaStatus: %s", authorizationStatus.getScaStatus()));
+
+        List<String> authorisationIdList =
+                apiClient.getPaymentAuthorizations(paymentId).getAuthorisationIds();
+        if (authorisationIdList.isEmpty()) {
+            logger.warn("Payment does not have authorisation resources");
+        } else {
+            PaymentAuthorizationStatus authorizationStatus =
+                    apiClient.getPaymentAuthorizationStatus(paymentId);
+            logger.info(String.format("scaStatus: %s", authorizationStatus.getScaStatus()));
+        }
+
         CreatePaymentResponse createPaymentResponse = apiClient.getPaymentStatus(paymentId);
         logger.info(
                 "Transaction Status: {} after SCA ", createPaymentResponse.getTransactionStatus());

@@ -861,16 +861,21 @@ public class LansforsakringarAgent extends AbstractAgent
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setAmount(transfer.getAmount().getValue());
         paymentRequest.setToBgPg(formattedDestination);
-        paymentRequest.setReference(transfer.getDestinationMessage());
+
         paymentRequest.setElectronicInvoiceId("");
         paymentRequest.setFromAccount(source.getIdentifier(DEFAULT_FORMATTER));
         paymentRequest.setPaymentDate(
                 LansforsakringarDateUtil.getNextPossiblePaymentDateForBgPg(transfer.getDueDate()));
         if (Objects.equal(recipientNameResponse.getOcrType(), "OCR_REQUIRED")) {
-            paymentRequest.setReferenceType("OCR");
+            if (!LFUtils.isValidOCR(transfer.getDestinationMessage())) {
+                cancelTransfer(TransferExecutionException.EndUserMessage.INVALID_OCR);
+            } else {
+                paymentRequest.setReferenceType("OCR");
+            }
         } else {
             paymentRequest.setReferenceType("MESSAGE");
         }
+        paymentRequest.setReference(transfer.getDestinationMessage());
 
         validatePaymentAndValidateResponse(paymentRequest);
         createPaymentAndValidateResponse(paymentRequest);

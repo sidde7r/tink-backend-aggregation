@@ -18,12 +18,14 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentEn
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.PaymentRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.TransferRequest;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionEntity;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 
 public class LFUtils {
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
@@ -162,5 +164,11 @@ public class LFUtils {
 
     private static long flattenDate(long date) {
         return DateUtils.flattenTime(new Date(date)).getTime();
+    }
+
+    public static boolean isValidOCR(String message) {
+        GiroMessageValidator giroValidator =
+                GiroMessageValidator.create(OcrValidationConfiguration.hardOcrVariableLength());
+        return giroValidator.validate(message).getValidOcr().isPresent();
     }
 }
