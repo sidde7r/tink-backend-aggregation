@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 
 import com.google.inject.Inject;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterIds;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterSpecificCallbacks;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ProviderNameRegex;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankNoBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankTransactionalAccountFetcher;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -76,9 +78,13 @@ public class DemobankAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        // Check if this can be done in a better way than using condition on provider-name
+        if (CredentialsTypes.MOBILE_BANKID.equals(provider.getCredentialsType())
+                && "NO".equals(provider.getMarket())) {
 
-        if (credentials.getProviderName().matches(ProviderNameRegex.PASSWORD_PROVIDER)) {
+            return new BankIdAuthenticationControllerNO(
+                    supplementalRequester, new DemobankNoBankIdAuthenticator(apiClient));
+
+        } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())) {
             return new PasswordAuthenticationController(
                     new DemobankPasswordAuthenticator(apiClient));
         } else {

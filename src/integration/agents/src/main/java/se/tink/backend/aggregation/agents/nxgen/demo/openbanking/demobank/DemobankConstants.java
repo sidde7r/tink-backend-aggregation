@@ -8,6 +8,10 @@ public class DemobankConstants {
         public static final String OAUTH_AUTHORIZE = "/oauth/authorize";
         public static final String ACCOUNTS = "/api/accounts";
         public static final String TRANSACTIONS = "/api/account/{accountId}/transactions";
+
+        // Norwegian BankID mocks
+        public static final String NO_BANKID_INIT = "/auth/no/init";
+        public static final String NO_BANKID_COLLECT = "/auth/no/collect";
     }
 
     public static class QueryParams {
@@ -32,10 +36,6 @@ public class DemobankConstants {
 
     public static class StorageKeys {
         public static final String OAUTH2_TOKEN = "oAuth2Token";
-    }
-
-    public static class ProviderNameRegex {
-        public static final String PASSWORD_PROVIDER = "^.*-demobank-password";
     }
 
     public static class ClusterIds {
