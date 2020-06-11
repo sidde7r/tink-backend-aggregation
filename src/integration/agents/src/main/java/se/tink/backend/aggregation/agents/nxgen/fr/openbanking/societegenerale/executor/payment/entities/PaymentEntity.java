@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities;
 
 import java.util.List;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @Getter
