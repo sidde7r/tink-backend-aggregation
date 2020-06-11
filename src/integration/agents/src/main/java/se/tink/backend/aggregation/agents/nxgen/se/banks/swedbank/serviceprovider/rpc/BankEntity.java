@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -12,7 +13,7 @@ public class BankEntity {
     private String url;
     private String bankId;
     private PrivateProfileEntity privateProfile;
-    @JsonIgnore String orgNumber;
+    @JsonIgnore private String orgNumber;
 
     @JsonProperty("corporateProfiles")
     private List<BusinessProfileEntity> businessProfiles = new ArrayList<>();
@@ -47,5 +48,13 @@ public class BankEntity {
                                                 .contains(orgNumber.replace("-", "")))
                 .findAny()
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    @JsonIgnore
+    public String getHolderName() {
+        // For business, activeProfileName is set to company name
+        return Strings.isNullOrEmpty(getProfile().getActiveProfileName())
+                ? getProfile().getCustomerName()
+                : getProfile().getActiveProfileName();
     }
 }
