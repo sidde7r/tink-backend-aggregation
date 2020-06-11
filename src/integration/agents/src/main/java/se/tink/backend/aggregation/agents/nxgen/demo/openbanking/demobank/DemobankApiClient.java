@@ -34,31 +34,21 @@ public class DemobankApiClient {
         this.callbackUri = callbackUri;
     }
 
-    public OAuth2Token getToken(String code) {
-        return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
-                .post(TokenEntity.class, new RedirectLoginRequest(code, callbackUri).toData())
-                .toOAuth2Token();
-    }
-
     public void setTokenToSession(OAuth2Token accessToken) {
         sessionStorage.put(StorageKeys.OAUTH2_TOKEN, accessToken);
     }
 
-    public OAuth2Token refreshToken(String refreshToken) {
-        return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
-                .post(TokenEntity.class, new RedirectRefreshTokenRequest(refreshToken).toData())
-                .toOAuth2Token();
+    public OAuth2Token getOauth2TokenFromStorage() {
+        return sessionStorage
+                .get(StorageKeys.OAUTH2_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Couldn't find token from session storage"));
     }
 
-    public FetchAccountResponse fetchAccounts() {
-        final URL url = fetchBaseUrl().concat(Urls.ACCOUNTS);
-
-        return createRequestInSession(url, getOauth2TokenFromStorage())
-                .get(FetchAccountResponse.class);
+    public URL fetchBaseUrl() {
+        return new URL(BASE_URL);
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -71,8 +61,20 @@ public class DemobankApiClient {
         return createRequest(url).addBearerToken(token);
     }
 
-    public URL fetchBaseUrl() {
-        return new URL(BASE_URL);
+    public OAuth2Token getToken(String code) {
+        return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
+                .post(TokenEntity.class, new RedirectLoginRequest(code, callbackUri).toData())
+                .toOAuth2Token();
+    }
+
+    public OAuth2Token refreshToken(String refreshToken) {
+        return createRequest(fetchBaseUrl().concat(Urls.OAUTH_TOKEN))
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
+                .post(TokenEntity.class, new RedirectRefreshTokenRequest(refreshToken).toData())
+                .toOAuth2Token();
     }
 
     public OAuth2Token login(String username, String password) {
@@ -82,6 +84,13 @@ public class DemobankApiClient {
                 .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
                 .post(TokenEntity.class, new PasswordLoginRequest(username, password).toData())
                 .toOAuth2Token();
+    }
+
+    public FetchAccountResponse fetchAccounts() {
+        final URL url = fetchBaseUrl().concat(Urls.ACCOUNTS);
+
+        return createRequestInSession(url, getOauth2TokenFromStorage())
+                .get(FetchAccountResponse.class);
     }
 
     public FetchTransactionsResponse fetchTransactions(
@@ -98,14 +107,5 @@ public class DemobankApiClient {
                                 ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate));
         return createRequestInSession(url, getOauth2TokenFromStorage())
                 .get(FetchTransactionsResponse.class);
-    }
-
-    public OAuth2Token getOauth2TokenFromStorage() {
-        return sessionStorage
-                .get(StorageKeys.OAUTH2_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Couldn't find token from session storage"));
     }
 }
