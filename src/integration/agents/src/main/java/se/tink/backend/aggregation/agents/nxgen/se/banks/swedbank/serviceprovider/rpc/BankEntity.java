@@ -12,6 +12,7 @@ public class BankEntity {
     private String url;
     private String bankId;
     private PrivateProfileEntity privateProfile;
+    @JsonIgnore String orgNumber;
 
     @JsonProperty("corporateProfiles")
     private List<BusinessProfileEntity> businessProfiles = new ArrayList<>();
@@ -29,7 +30,12 @@ public class BankEntity {
     }
 
     @JsonIgnore
-    public PrivateProfileEntity getProfile(String orgNumber) {
+    public void setOrgNumber(String orgNumber) {
+        this.orgNumber = orgNumber;
+    }
+
+    @JsonIgnore
+    public PrivateProfileEntity getProfile() {
         if (businessProfiles.isEmpty()) {
             return privateProfile;
         }
