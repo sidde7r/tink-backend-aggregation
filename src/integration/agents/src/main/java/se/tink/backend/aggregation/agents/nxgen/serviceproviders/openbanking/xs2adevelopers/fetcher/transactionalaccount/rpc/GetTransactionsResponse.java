@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.TransactionsEntity;
@@ -20,7 +20,7 @@ public class GetTransactionsResponse {
     private TransactionsEntity transactions;
 
     @JsonIgnore
-    public Collection<? extends Transaction> toTinkTransactions() {
+    public List<? extends Transaction> toTinkTransactions() {
         return Optional.ofNullable(transactions)
                 .orElse(new TransactionsEntity())
                 .toTinkTransactions();

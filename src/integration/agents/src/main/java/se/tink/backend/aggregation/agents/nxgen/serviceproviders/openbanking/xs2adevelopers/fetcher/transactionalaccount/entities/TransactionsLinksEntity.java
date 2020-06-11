@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -21,51 +20,33 @@ public class TransactionsLinksEntity {
     @JsonProperty("first")
     private JsonNode firstInternal;
 
-    private String account;
-    private String first;
-    private String last;
-    private String next;
-    private String transactionDetails;
+    private LinkHrefType account;
+    private LinkHrefType first;
+    private LinkHrefType last;
+    private LinkHrefType next;
+    private LinkHrefType transactionDetails;
 
-    public String getAccount() {
-        if (account == null && accountInternal != null) {
-            return getUrlFromNode(accountInternal);
-        }
-        return account;
+    public Optional<String> getAccount() {
+        return getUrlFromHrefType(account);
     }
 
-    public String getFirst() {
-        if (first == null && firstInternal != null) {
-            return getUrlFromNode(firstInternal);
-        }
-        return first;
+    public Optional<String> getFirst() {
+        return getUrlFromHrefType(first);
     }
 
-    public String getLast() {
-        if (last == null && lastInternal != null) {
-            return getUrlFromNode(lastInternal);
-        }
-        return last;
+    public Optional<String> getLast() {
+        return getUrlFromHrefType(last);
     }
 
-    public String getNext() {
-        if (next == null && nextInternal != null) {
-            return getUrlFromNode(nextInternal);
-        }
-        return next;
+    public Optional<String> getNext() {
+        return getUrlFromHrefType(next);
     }
 
-    private String getUrlFromNode(JsonNode node) {
-        if (node.isObject()) {
-            return node.get(Transactions.HREF).asText();
-        } else if (node.isTextual()) {
-            return node.asText();
-        } else {
-            throw new IllegalStateException(ErrorMessages.PARSING_URL);
-        }
+    private Optional<String> getUrlFromHrefType(LinkHrefType hrefType) {
+        return Optional.ofNullable(hrefType).map(v -> v.getHref());
     }
 
-    public String getTransactionDetails() {
-        return transactionDetails;
+    public Optional<String> getTransactionDetails() {
+        return getUrlFromHrefType(transactionDetails);
     }
 }

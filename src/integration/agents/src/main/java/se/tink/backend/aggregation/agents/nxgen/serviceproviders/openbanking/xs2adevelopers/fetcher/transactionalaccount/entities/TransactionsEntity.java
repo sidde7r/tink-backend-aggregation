@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,7 @@ public class TransactionsEntity {
     private List<TransactionEntity> pending;
 
     @JsonIgnore
-    public Collection<? extends Transaction> toTinkTransactions() {
+    public List<? extends Transaction> toTinkTransactions() {
         return Stream.concat(
                         Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
                                 .map(TransactionEntity::toBookedTinkTransaction),
