@@ -89,7 +89,7 @@ public class SocieteGeneralePaymentExecutor implements PaymentExecutor {
         CreatePaymentRequest request = buildPaymentRequest(paymentRequest);
         CreatePaymentResponse paymentResponse = apiClient.createPayment(request);
         String authorizeUrl =
-                Optional.ofNullable(paymentResponse.getLinks().getConsentApproval().getHref())
+                Optional.ofNullable(paymentResponse.getLinks().getConsentApproval().getUrl())
                         .orElseThrow(
                                 () -> {
                                     logger.error(

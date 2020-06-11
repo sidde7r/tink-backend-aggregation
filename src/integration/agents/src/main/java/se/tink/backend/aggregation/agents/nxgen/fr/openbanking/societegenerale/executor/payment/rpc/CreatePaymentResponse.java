@@ -2,16 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentRequestLinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonObject
 public class CreatePaymentResponse {
-
-    private String appliedAuthenticationApproach;
 
     @JsonProperty("_links")
     private PaymentRequestLinkEntity links;
@@ -27,7 +29,7 @@ public class CreatePaymentResponse {
     }
 
     private String getPaymentId() {
-        String url = links.getConsentApproval().getHref();
+        String url = links.getConsentApproval().getUrl();
         return url.substring(url.lastIndexOf("/") + 1);
     }
 

@@ -61,14 +61,12 @@ public class SocieteGeneraleAgentPaymentTest {
 
         Amount amount = Amount.inEUR(1);
         LocalDate executionDate = LocalDate.now();
-        String currency = "EUR";
         return Collections.singletonList(
                 new Payment.Builder()
                         .withCreditor(creditor)
                         .withDebtor(debtor)
                         .withAmount(amount)
                         .withExecutionDate(executionDate)
-                        .withCurrency(currency)
                         .withReference(reference)
                         .withUniqueId(UUID.randomUUID().toString())
                         .build());
