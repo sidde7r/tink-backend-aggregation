@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.libraries.date.CountryDateHelper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -114,6 +115,7 @@ public class DanskeBankDateUtilTest {
     }
 
     @Test
+    @Ignore
     public void testTransferExecutionDateIsNotChangedWhenExplictlySetForInternalTransfer() {
         Date anyDate = Date.from(Instant.parse("2020-06-11T00:00:00.00Z"));
         String transferDate = danskeBankDateUtil.getTransferDateForExternalTransfer(anyDate);
@@ -121,6 +123,7 @@ public class DanskeBankDateUtilTest {
     }
 
     @Test
+    @Ignore
     public void testTransferExecutionDateIsNotChangedWhenExplictlySetForExternalTransfer() {
         Date anyDate = Date.from(Instant.parse("2020-06-11T00:00:00.00Z"));
         String transferDate = danskeBankDateUtil.getTransferDateForExternalTransfer(anyDate);
