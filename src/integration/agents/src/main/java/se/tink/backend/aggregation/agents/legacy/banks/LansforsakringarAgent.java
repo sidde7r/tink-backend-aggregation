@@ -1091,6 +1091,8 @@ public class LansforsakringarAgent extends AbstractAgent
                                             .BANKID_TRANSFER_FAILED);
                         }
                 }
+            } else if (status == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             } else {
                 throw failTransfer(TransferExecutionException.EndUserMessage.BANKID_FAILED);
             }
