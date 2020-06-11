@@ -319,6 +319,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/swedbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/volvofinans",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/avanza",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/brokers/nordnet",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/business/handelsbanken",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/business/nordea",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/business/seb",
