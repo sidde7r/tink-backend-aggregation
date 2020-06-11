@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 
 @RequiredArgsConstructor
+@Slf4j
 public class AmexSessionHandler implements SessionHandler {
 
     private final AmexApiClient amexApiClient;
@@ -26,6 +28,8 @@ public class AmexSessionHandler implements SessionHandler {
                     .ifPresent(token -> amexApiClient.revokeAccessToken(token.getAccessToken()));
 
             hmacMultiTokenStorage.clearToken();
+
+            log.info("Revoking access token and removing it from storage");
         }
     }
 
