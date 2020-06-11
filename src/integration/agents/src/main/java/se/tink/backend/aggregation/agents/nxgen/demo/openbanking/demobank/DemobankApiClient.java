@@ -9,6 +9,10 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.Demoba
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdCollectRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdCollectResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdInitRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.PasswordLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectRefreshTokenRequest;
@@ -84,6 +88,20 @@ public class DemobankApiClient {
                 .addBasicAuth(OAuth2Params.CLIENT_ID, OAuth2Params.CLIENT_SECRET)
                 .post(TokenEntity.class, new PasswordLoginRequest(username, password).toData())
                 .toOAuth2Token();
+    }
+
+    public NoBankIdInitResponse initBankIdNo(String ssn, String mobilenumber) {
+        return createRequest(fetchBaseUrl().concat(Urls.NO_BANKID_INIT))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(NoBankIdInitResponse.class, new NoBankIdInitRequest(ssn, mobilenumber));
+    }
+
+    public NoBankIdCollectResponse collectBankIdNo(String ssn, String sessionId) {
+        return createRequest(fetchBaseUrl().concat(Urls.NO_BANKID_COLLECT))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(NoBankIdCollectResponse.class, new NoBankIdCollectRequest(ssn, sessionId));
     }
 
     public FetchAccountResponse fetchAccounts() {
