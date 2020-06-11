@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,11 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
 public class BankProfileHandler {
-    private List<BankProfile> bankProfiles = new ArrayList<>();
-    private BankProfile activeBankProfile;
-    private Map<String, MenuItemLinkEntity> menuItems;
+    @JsonProperty private List<BankProfile> bankProfiles = new ArrayList<>();
+    @JsonProperty private BankProfile activeBankProfile;
+    @JsonProperty private Map<String, MenuItemLinkEntity> menuItems;
+
+    @JsonIgnore
     private final AggregationLogger log = new AggregationLogger(BankProfileHandler.class);
 
     public BankProfileHandler setActiveBankProfile(BankProfile activeBankProfile) {
