@@ -1,16 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities;
 
 import java.util.List;
-import lombok.Data;
+import lombok.*;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonObject
 public class PaymentEntity {
     private String resourceId;
-    private String paymentInformationId;
-    private String creationDateTime;
-    private int numberOfTransactions;
     private BeneficiaryEntity beneficiary;
     private PaymentInformationStatusCodeEntity paymentInformationStatus;
     private StatusReasonInformationEntity statusReasonInformation;

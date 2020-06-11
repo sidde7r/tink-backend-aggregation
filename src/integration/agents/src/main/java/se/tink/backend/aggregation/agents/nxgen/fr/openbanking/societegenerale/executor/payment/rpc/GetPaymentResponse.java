@@ -2,9 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.GetPaymentLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.InstructedAmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.executor.payment.entities.PaymentEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -17,13 +18,12 @@ import se.tink.libraries.payment.rpc.Payment;
 @JsonObject
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class GetPaymentResponse {
 
     @JsonProperty("paymentRequest")
     private PaymentEntity payment;
-
-    @JsonProperty("_links")
-    private GetPaymentLinksEntity links;
 
     @JsonIgnore
     public PaymentResponse toTinkPaymentResponse() {
