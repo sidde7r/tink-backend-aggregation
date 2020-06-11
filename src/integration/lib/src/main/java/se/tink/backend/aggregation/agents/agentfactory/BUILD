@@ -307,6 +307,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/pt/openbanking/unicre",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/ro/banks/raiffeisen",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/alandsbanken",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/collector",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/danskebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/handelsbanken",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/icabanken",
