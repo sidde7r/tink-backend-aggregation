@@ -1186,6 +1186,11 @@ agentsServiceConfiguration:
         keyPath: data/test/cryptography/fiducia/test.key
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
         tppId: SE-FINA-44059
+    a0991c8030654404b2f12cbdd24bbc46:
+      tink:
+        clientId: dummyClientId
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        clientSecret: dummyClientSecret
     a3235c56c1a64dc38f16184a4669f3e9:
       tink:
         authorizeUrl: ''
@@ -1305,6 +1310,12 @@ agentsServiceConfiguration:
         clientSigningCertificate: ''
         clientSigningCertificateSerialNumber: ''
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    ae45a3cb1d1a4a839aa13620fd02d5b5:
+      tink:
+        clientId: dummyClientId
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        baseUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        qsealKeyUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
     aggregationWorker:
       collectorSubscriptionKey: ASK_JOHANNES
     ahoisandbox:
