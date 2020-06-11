@@ -327,6 +327,8 @@ public class SwedbankBaseConstants {
         public static final String CONNECT_TIMEOUT = "connect timed out";
         public static final String CHALLENGE_NO_RESPONSE =
                 "Transfer or payment was not signed with security token device";
+        public static final String OCR_NOT_ALLOWED =
+                "Den valda mottagaren tillåter inte betalningar med OCR-nummer, vänligen välj meddelande.";
     }
 
     public static class UserMessage {

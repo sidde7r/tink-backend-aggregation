@@ -31,6 +31,17 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean hasErrorMessage(String errorMessage) {
+        if (errorMessages != null && errorMessages.getFields() != null) {
+            return errorMessages.getFields().stream()
+                    .anyMatch(
+                            fieldEntity -> fieldEntity.getMessage().equalsIgnoreCase(errorMessage));
+        }
+
+        return false;
+    }
+
+    @JsonIgnore
     public String getAllErrors() {
 
         String msg = "";
