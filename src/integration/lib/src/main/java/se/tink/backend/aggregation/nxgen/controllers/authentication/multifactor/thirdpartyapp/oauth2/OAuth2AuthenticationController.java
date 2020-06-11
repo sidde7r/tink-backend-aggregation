@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBa
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -98,33 +99,19 @@ public class OAuth2AuthenticationController
 
         if (oAuth2Token.hasAccessExpired()) {
             if (!oAuth2Token.canRefresh()) {
+                invalidateToken();
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            // Refresh token is not always present, if it's absent we fall back to the manual
-            // authentication.
-            String refreshToken =
-                    oAuth2Token
-                            .getRefreshToken()
-                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-
-            OAuth2Token refreshedOAuth2Token = authenticator.refreshAccessToken(refreshToken);
-            if (!refreshedOAuth2Token.isValid()) {
-                throw SessionError.SESSION_EXPIRED.exception();
+            try {
+                refreshToken(oAuth2Token);
+                // Store the new access token on the persistent storage again.
+                persistentStorage.rotateStorageValue(
+                        PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
+            } catch (SessionException ex) {
+                invalidateToken();
+                throw ex;
             }
-
-            if (refreshedOAuth2Token.hasRefreshExpire()) {
-                credentials.setSessionExpiryDate(
-                        OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
-                                refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
-            }
-
-            oAuth2Token = refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
-
-            // Store the new access token on the persistent storage again.
-            persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
-
-            // Fall through.
         }
 
         // Tell the authenticator which access token it can use.
@@ -241,5 +228,33 @@ public class OAuth2AuthenticationController
 
         throw new IllegalStateException(
                 String.format("Unknown error: %s:%s.", errorType, errorDescription.orElse("")));
+    }
+
+    private OAuth2Token refreshToken(OAuth2Token oAuth2Token) throws SessionException {
+        // Refresh token is not always present, if it's absent we fall back to the manual
+        // authentication.
+        String refreshToken =
+                oAuth2Token.getRefreshToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        try {
+            OAuth2Token refreshedOAuth2Token = authenticator.refreshAccessToken(refreshToken);
+
+            if (!refreshedOAuth2Token.isValid()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            if (refreshedOAuth2Token.hasRefreshExpire()) {
+                credentials.setSessionExpiryDate(
+                        OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                                refreshedOAuth2Token, tokenLifetime, tokenLifetimeUnit));
+            }
+
+            return refreshedOAuth2Token.updateTokenWithOldToken(oAuth2Token);
+        } catch (HttpResponseException ex) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    private void invalidateToken() {
+        persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
     }
 }

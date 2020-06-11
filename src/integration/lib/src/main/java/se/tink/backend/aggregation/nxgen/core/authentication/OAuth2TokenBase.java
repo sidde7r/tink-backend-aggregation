@@ -63,7 +63,7 @@ public abstract class OAuth2TokenBase {
     }
 
     public boolean canRefresh() {
-        return !hasRefreshExpired() && StringUtils.isNotEmpty(refreshToken);
+        return getRefreshToken().isPresent() && !hasRefreshExpired();
     }
 
     public boolean hasRefreshExpire() {
