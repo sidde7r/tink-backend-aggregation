@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities;
 
+import lombok.EqualsAndHashCode;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@EqualsAndHashCode
 public class PayloadAndroidEntity {
     private String appType;
     private String appVersion;
