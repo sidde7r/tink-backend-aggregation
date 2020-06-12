@@ -1,15 +1,18 @@
 package se.tink.libraries.credentials.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Set;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.user.rpc.User;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty private boolean manual;
     private Set<RefreshableItem> itemsToRefresh;
     private String refreshId;
+    private DataFetchingPolicy dataFetchingPolicy;
 
     public RefreshInformationRequest() {}
 
@@ -60,5 +63,13 @@ public class RefreshInformationRequest extends CredentialsRequest {
 
     public void setRefreshId(String refreshId) {
         this.refreshId = refreshId;
+    }
+
+    public DataFetchingPolicy getDataFetchingPolicy() {
+        return dataFetchingPolicy;
+    }
+
+    public void setDataFetchingPolicy(DataFetchingPolicy dataFetchingPolicy) {
+        this.dataFetchingPolicy = dataFetchingPolicy;
     }
 }
