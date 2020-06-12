@@ -4,9 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -38,6 +42,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.BecErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.FetchUpcomingPaymentsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -46,7 +52,12 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class BecApiClient {
-    private static final String ACCEPTED_2FA = "1";
+
+    interface NemIdStateConsumer {
+        void accept() throws AuthenticationException;
+    }
+
+    private Map<String, NemIdStateConsumer> nemIdStateMap = new HashMap<>();
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final String JSON_PROCESSING_FAILED = "Json processing failed";
@@ -60,6 +71,19 @@ public class BecApiClient {
         this.securityHelper = securityHelper;
         this.apiClient = client;
         this.agentUrl = url;
+
+        nemIdStateMap.put("1", () -> {});
+        nemIdStateMap.put(
+                "2",
+                () -> {
+                    throw ThirdPartyAppError.CANCELLED.exception("NemID was rejected.");
+                });
+        nemIdStateMap.put(
+                "4",
+                () -> {
+                    throw new NemIdException(NemIdError.TIMEOUT);
+                });
+        nemIdStateMap = Collections.unmodifiableMap(nemIdStateMap);
     }
 
     public void appSync() {
@@ -127,7 +151,7 @@ public class BecApiClient {
         }
     }
 
-    public void pollNemId(String token) throws ThirdPartyAppException {
+    public void pollNemId(String token) throws AuthenticationException {
         log.info("Poll for 2fa prove.");
         NemIdPollResponse response =
                 createRequest(this.agentUrl.getNemIdPoll())
@@ -135,9 +159,15 @@ public class BecApiClient {
                         .queryParam("token", token)
                         .get(NemIdPollResponse.class);
         log.info(String.format("The 2fa response: %s", response));
-        if (!ACCEPTED_2FA.equals(response.getState())) {
-            throw ThirdPartyAppError.TIMED_OUT.exception("NemID TIMEOUT.");
-        }
+
+        nemIdStateMap
+                .getOrDefault(
+                        response.getState(),
+                        () -> {
+                            throw ThirdPartyAppError.AUTHENTICATION_ERROR.exception(
+                                    "Unknown error occured.");
+                        })
+                .accept();
     }
 
     public void sca(String username, String password, String token) throws ThirdPartyAppException {
