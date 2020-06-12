@@ -148,19 +148,21 @@ public class OAuth2AuthenticationController
         return payload;
     }
 
+    protected Map<String, String> getCallbackData() throws AuthenticationException {
+        return supplementalInformationHelper
+                .waitForSupplementalInformation(
+                        strongAuthenticationStateSupplementalKey,
+                        ThirdPartyAppConstants.WAIT_FOR_MINUTES,
+                        TimeUnit.MINUTES)
+                .orElseThrow(
+                        LoginError.INCORRECT_CREDENTIALS::exception); // todo: change this exception
+    }
+
     @Override
     public ThirdPartyAppResponse<String> collect(String reference)
             throws AuthenticationException, AuthorizationException {
 
-        Map<String, String> callbackData =
-                supplementalInformationHelper
-                        .waitForSupplementalInformation(
-                                strongAuthenticationStateSupplementalKey,
-                                ThirdPartyAppConstants.WAIT_FOR_MINUTES,
-                                TimeUnit.MINUTES)
-                        .orElseThrow(
-                                LoginError.INCORRECT_CREDENTIALS
-                                        ::exception); // todo: change this exception
+        Map<String, String> callbackData = getCallbackData();
 
         handleErrors(callbackData);
 
