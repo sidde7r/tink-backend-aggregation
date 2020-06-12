@@ -60,7 +60,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
         LansforsakringarAuthenticator lansforsakringarAuthenticator =
                 new LansforsakringarAuthenticator(apiClient, sessionStorage, persistentStorage);
         OAuth2AuthenticationController oAuth2AuthenticationController =
-                new OAuth2AuthenticationController(
+                new LansforsakringarAuthController(
                         persistentStorage,
                         supplementalInformationHelper,
                         lansforsakringarAuthenticator,
