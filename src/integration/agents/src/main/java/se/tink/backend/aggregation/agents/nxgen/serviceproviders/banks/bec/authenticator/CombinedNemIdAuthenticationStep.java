@@ -11,19 +11,25 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppTokenEncryptedPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.retrypolicy.RetryCallback;
+import se.tink.libraries.retrypolicy.RetryExecutor;
+import se.tink.libraries.retrypolicy.RetryPolicy;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
 
     private static final String TOKEN_STORAGE_KEY = "token";
+    private static final int POLL_NEMID_MAX_ATTEMPTS = 10;
 
     private final SessionStorage sessionStorage;
     private final BecApiClient apiClient;
     private final SupplementalRequester supplementalRequester;
+    private final RetryExecutor retryExecutor = new RetryExecutor();
 
     CombinedNemIdAuthenticationStep(
             SessionStorage sessionStorage,
@@ -32,6 +38,9 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
         this.supplementalRequester = supplementalRequester;
+
+        retryExecutor.setRetryPolicy(
+                new RetryPolicy(POLL_NEMID_MAX_ATTEMPTS, NemIdException.class));
     }
 
     @Override
@@ -70,7 +79,12 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
     }
 
     private void pollNemId() throws AuthenticationException {
-        apiClient.pollNemId(sessionStorage.get(TOKEN_STORAGE_KEY));
+        retryExecutor.execute(
+                (RetryCallback<Void, AuthenticationException>)
+                        () -> {
+                            apiClient.pollNemId(sessionStorage.get(TOKEN_STORAGE_KEY));
+                            return null;
+                        });
     }
 
     private void finalizeAuth() throws ThirdPartyAppException {
