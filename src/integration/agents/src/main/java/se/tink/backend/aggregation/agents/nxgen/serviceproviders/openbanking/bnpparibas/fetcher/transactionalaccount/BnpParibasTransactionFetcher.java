@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class BnpParibasTransactionFetcher
         implements TransactionDatePaginator<TransactionalAccount> {
 
-    private static final long NUM_MONTHS_FOR_FETCH = 13L;
+    private static final long MAX_NUM_MONTHS_FOR_FETCH = 13L;
 
     private final BnpParibasApiBaseClient apiClient;
     private final Clock clock;
@@ -23,21 +23,26 @@ public class BnpParibasTransactionFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
-        final Date oldestDateForFetch = getOldestDateForTransactionFetch();
+        final LocalDate fromDateLocal = getLocalDateFromDate(fromDate);
+        final LocalDate toDateLocal = getLocalDateFromDate(toDate);
 
-        if (oldestDateForFetch.after(toDate)) {
+        final LocalDate oldestDateForFetch = getOldestDateForTransactionFetch();
+
+        if (oldestDateForFetch.isAfter(toDateLocal)) {
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        final Date limitedFromDate =
-                oldestDateForFetch.after(fromDate) ? oldestDateForFetch : fromDate;
+        final LocalDate limitedFromDate =
+                oldestDateForFetch.isAfter(fromDateLocal) ? oldestDateForFetch : fromDateLocal;
 
-        return apiClient.getTransactions(account.getApiIdentifier(), limitedFromDate, toDate);
+        return apiClient.getTransactions(account.getApiIdentifier(), limitedFromDate, toDateLocal);
     }
 
-    private Date getOldestDateForTransactionFetch() {
-        final LocalDate localDate = LocalDate.now(clock).minusMonths(NUM_MONTHS_FOR_FETCH);
+    private LocalDate getOldestDateForTransactionFetch() {
+        return LocalDate.now(clock).minusMonths(MAX_NUM_MONTHS_FOR_FETCH);
+    }
 
-        return Date.from(localDate.atStartOfDay(clock.getZone()).toInstant());
+    private LocalDate getLocalDateFromDate(Date date) {
+        return date.toInstant().atZone(clock.getZone()).toLocalDate();
     }
 }

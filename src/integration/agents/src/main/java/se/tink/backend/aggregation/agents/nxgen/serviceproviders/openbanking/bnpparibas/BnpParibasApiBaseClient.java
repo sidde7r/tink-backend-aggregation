@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Base64;
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.lang.time.DateFormatUtils;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.BnpParibasBaseConstants.QueryKeys;
@@ -28,23 +27,13 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@RequiredArgsConstructor
 public class BnpParibasApiBaseClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
     private final BnpParibasConfiguration bnpParibasConfiguration;
-
-    public BnpParibasApiBaseClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            BnpParibasConfiguration bnpParibasConfiguration,
-            BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
-        this.bnpParibasConfiguration = bnpParibasConfiguration;
-        this.bnpParibasSignatureHeaderProvider = bnpParibasSignatureHeaderProvider;
-    }
+    private final BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider;
 
     public URL getAuthorizeUrl(String state) {
         return client.request(new URL(bnpParibasConfiguration.getAuthorizeUrl()))
@@ -139,17 +128,16 @@ public class BnpParibasApiBaseClient {
         return extractBody(httpResponse, BalanceResponse.class).orElse(new BalanceResponse());
     }
 
-    public TransactionsResponse getTransactions(String resourceId, Date dateFrom, Date dateTo) {
-        SimpleDateFormat sdf = new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
-
+    public TransactionsResponse getTransactions(
+            String resourceId, LocalDate dateFrom, LocalDate dateTo) {
         HttpResponse httpResponse =
                 createRequestInSession(
                                 new URL(
                                                 bnpParibasConfiguration.getBaseUrl()
                                                         + Urls.TRANSACTIONS_PATH)
                                         .parameter(IdTags.ACCOUNT_RESOURCE_ID, resourceId))
-                        .queryParam(QueryKeys.DATE_FROM, sdf.format(dateFrom))
-                        .queryParam(QueryKeys.DATE_TO, sdf.format(dateTo))
+                        .queryParam(QueryKeys.DATE_FROM, dateFrom.toString())
+                        .queryParam(QueryKeys.DATE_TO, dateTo.toString())
                         .get(HttpResponse.class);
 
         return extractBody(httpResponse, TransactionsResponse.class)
