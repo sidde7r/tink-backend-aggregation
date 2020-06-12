@@ -34,9 +34,6 @@ public class ResultInfoMessage {
                     .put(
                             "2000",
                             "Transfer validation: To protect your money from fraudulent attempts, we have blocked this transfer. We can help you transfer the money by calling us at 0771-365 365.")
-                    .put(
-                            "PCB046H",
-                            "The date when the money should reach the recipient is too close in time. Please select a later date.")
                     .build();
 
     public String TableName;
