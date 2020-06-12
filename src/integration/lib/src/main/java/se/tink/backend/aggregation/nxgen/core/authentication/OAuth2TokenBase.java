@@ -29,7 +29,7 @@ public abstract class OAuth2TokenBase {
 
     public boolean hasAccessExpired() {
         final long currentTime = getCurrentEpoch();
-        final long validFor = (issuedAt + expiresInSeconds) - currentTime;
+        final long validFor = getValidForSecondsTimeLeft();
         if (validFor > 0) {
             String logMessage =
                     "Access token is valid for %s seconds (issuedAtEpoch: %s, expiresIn: %s)";
@@ -79,6 +79,10 @@ public abstract class OAuth2TokenBase {
     }
 
     public abstract boolean isTokenTypeValid();
+
+    public long getValidForSecondsTimeLeft() {
+        return (issuedAt + expiresInSeconds) - getCurrentEpoch();
+    }
 
     static long getCurrentEpoch() {
         return System.currentTimeMillis() / 1000L;
