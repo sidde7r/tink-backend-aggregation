@@ -98,6 +98,7 @@ public class SebConstants {
         public static final String SSN = "ssn";
         public static final String ACCOUNT_CUSTOMER_ID = "customerId";
         public static final String CREDIT_CARD_ACCOUNT_HANDLE_PREFIX = "card_handle:";
+        public static final String COMPANY_NAME = "companyName";
     }
 
     public static class SystemCode {

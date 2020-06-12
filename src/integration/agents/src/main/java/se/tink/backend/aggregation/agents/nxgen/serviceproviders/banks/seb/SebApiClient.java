@@ -117,8 +117,7 @@ public class SebApiClient {
         }
     }
 
-    private UserInformation activateSession()
-            throws AuthorizationException, AuthenticationException {
+    private Response activateSession() throws AuthorizationException, AuthenticationException {
         final Request request =
                 new Request.Builder()
                         .addComponent(new HardwareInformation())
@@ -155,9 +154,7 @@ public class SebApiClient {
             }
         }
 
-        final UserInformation userInformation = response.getUserInformation();
-        Preconditions.checkNotNull(userInformation);
-        return userInformation;
+        return response;
     }
 
     public Response fetchAccounts(String customerId, String accountType) {
@@ -253,7 +250,9 @@ public class SebApiClient {
             throw e;
         }
 
-        final UserInformation userInformation = activateSession();
+        final Response activateSessionResponse = activateSession();
+        final UserInformation userInformation = activateSessionResponse.getUserInformation();
+        Preconditions.checkNotNull(userInformation);
 
         // Check that the SSN from the credentials matches the logged in user. For business agent,
         // we cannot verify this since there is no SSN in the response
@@ -262,5 +261,9 @@ public class SebApiClient {
         }
 
         sessionStorage.putUserInformation(userInformation);
+
+        if (sebConfiguration.isBusinessAgent()) {
+            sessionStorage.putCompanyInformation(activateSessionResponse.getCompanyInformation());
+        }
     }
 }
