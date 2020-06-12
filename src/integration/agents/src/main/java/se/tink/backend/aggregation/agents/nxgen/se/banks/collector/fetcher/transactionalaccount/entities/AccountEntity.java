@@ -54,8 +54,8 @@ public class AccountEntity {
         return titleEntity;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public Optional<String> getAccountId() {
+        return Optional.ofNullable(accountId);
     }
 
     public String getBackground() {
