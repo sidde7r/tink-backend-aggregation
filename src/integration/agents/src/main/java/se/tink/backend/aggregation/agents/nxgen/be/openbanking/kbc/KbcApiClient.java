@@ -108,8 +108,7 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
     }
 
     public URL getAuthorizeUrl(final String state) {
-        final String consentId = getConsentId();
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
+        final String consentId = rotateConsentId();
         final String authUrl = Urls.BASE_AUTH_URL + Urls.AUTH;
         return getAuthorizeUrlWithCode(
                         authUrl,
@@ -142,6 +141,7 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
 
     @Override
     public OAuth2Token refreshToken(final String token) {
+        rotateConsentId();
         final RefreshTokenRequest refreshTokenRequest =
                 new RefreshTokenRequest(
                         FormValues.REFRESH_TOKEN_GRANT_TYPE,
@@ -156,6 +156,12 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
                 .body(refreshTokenRequest.toData(), MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenBaseResponse.class)
                 .toTinkToken();
+    }
+
+    private String rotateConsentId() {
+        final String consentId = getConsentId();
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
+        return consentId;
     }
 
     @Override

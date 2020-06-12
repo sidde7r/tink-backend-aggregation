@@ -259,7 +259,12 @@ public class OAuth2AuthenticationController
     }
 
     private void useAccessToken(OAuth2Token token) {
-        logger.info(String.format("Use a token valid for %s seconds. (issued at: %s s.; lifetime: %s s.)", token.getValidForSecondsTimeLeft(), token.getIssuedAt(), token.getExpiresInSeconds()));
+        logger.info(
+                String.format(
+                        "Use a token valid for %s seconds. (issued at: %s s.; lifetime: %s s.)",
+                        token.getValidForSecondsTimeLeft(),
+                        token.getIssuedAt(),
+                        token.getExpiresInSeconds()));
         authenticator.useAccessToken(token);
     }
 }
