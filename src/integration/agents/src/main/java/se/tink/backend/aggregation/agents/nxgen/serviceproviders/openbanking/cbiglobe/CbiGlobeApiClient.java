@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.ConsentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.entities.MessageCodes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator.rpc.ConsentStatus;
@@ -245,6 +246,13 @@ public class CbiGlobeApiClient {
                                 IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)))
                 .get(ConsentResponse.class)
                 .getConsentStatus();
+    }
+
+    public ConsentDetailsResponse getConsentDetails(String consentType) throws SessionException {
+        return createRequestInSession(
+                        Urls.CONSENTS_STATUS.parameter(
+                                IdTags.CONSENT_ID, getConsentIdFromStorage(consentType)))
+                .get(ConsentDetailsResponse.class);
     }
 
     private String getConsentIdFromStorage(String consentType) throws SessionException {

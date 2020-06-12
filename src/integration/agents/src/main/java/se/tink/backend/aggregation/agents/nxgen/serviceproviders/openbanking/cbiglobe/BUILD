@@ -22,6 +22,7 @@ java_library(
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
+        "//src/libraries/date",
         "//src/libraries/pair",
         "//src/libraries/serialization",
         "//third_party:com_github_rholder_guava_retrying",
