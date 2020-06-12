@@ -36,7 +36,7 @@ public class ProfileResponse {
                 Optional.ofNullable(banks).orElseThrow(IllegalStateException::new);
         return bankList.stream()
                 .filter(SwedbankBasePredicates.filterBankId(bankId))
-                .map(be -> be.getProfile(orgNumber))
+                .map(be -> be.getProfile())
                 .map(PrivateProfileEntity::getLinks)
                 .map(LinksEntity::getNext)
                 .filter(Objects::nonNull)

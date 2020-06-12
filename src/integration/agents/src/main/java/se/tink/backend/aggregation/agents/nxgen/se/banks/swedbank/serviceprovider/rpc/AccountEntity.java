@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
@@ -90,6 +91,7 @@ public abstract class AccountEntity extends AbstractAccountEntity {
                                 links != null ? links.getNext() : null)
                         .putInTemporaryStorage(
                                 SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
+                        .setHolderName(new HolderName(bankProfile.getBank().getHolderName()))
                         .build());
     }
 }

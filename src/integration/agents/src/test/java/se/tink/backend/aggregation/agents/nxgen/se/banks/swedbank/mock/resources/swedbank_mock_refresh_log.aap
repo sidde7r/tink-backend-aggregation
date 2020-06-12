@@ -1,7 +1,6 @@
 
 REQUEST 1
 GET https://auth.api.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/identification/touch?dsid=AAAAAAAA
-X-Aggregator: Tink
 Accept: application/json
 
 RESPONSE 1

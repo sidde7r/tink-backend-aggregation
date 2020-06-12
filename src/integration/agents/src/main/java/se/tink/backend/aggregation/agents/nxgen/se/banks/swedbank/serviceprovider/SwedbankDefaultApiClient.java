@@ -608,12 +608,7 @@ public class SwedbankDefaultApiClient {
     private BankProfile activateProfile(BankProfile bankProfile) {
 
         Map<String, MenuItemLinkEntity> profileMenuItems =
-                fetchProfile(
-                        bankProfile
-                                .getBank()
-                                .getProfile(organizationNumber)
-                                .getLinks()
-                                .getNextOrThrow());
+                fetchProfile(bankProfile.getBank().getProfile().getLinks().getNextOrThrow());
 
         getBankProfileHandler().setActiveBankProfile(bankProfile);
 
@@ -625,9 +620,10 @@ public class SwedbankDefaultApiClient {
         bankProfileHandler = new BankProfileHandler();
 
         for (BankEntity bank : profileResponse.getBanks()) {
+            bank.setOrgNumber(organizationNumber);
             // fetch all profile details
             Map<String, MenuItemLinkEntity> menuItems =
-                    fetchProfile(bank.getProfile(organizationNumber).getLinks().getNextOrThrow());
+                    fetchProfile(bank.getProfile().getLinks().getNextOrThrow());
             bankProfileHandler.setMenuItems(menuItems);
             EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
             PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();

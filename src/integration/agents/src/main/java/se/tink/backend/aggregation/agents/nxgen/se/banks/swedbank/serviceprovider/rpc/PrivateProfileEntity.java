@@ -6,6 +6,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PrivateProfileEntity extends ProfileEntity {
     private String id;
     private LinksEntity links;
+    private String activeProfileName;
+
+    public String getActiveProfileName() {
+        return activeProfileName;
+    }
 
     public String getId() {
         return id;
