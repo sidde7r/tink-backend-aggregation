@@ -36,10 +36,19 @@ public class CollectorTransactionalAccountsFetcher implements AccountFetcher<Tra
     }
 
     private Optional<TransactionalAccount> getAccountInfo(AccountEntity accountEntity) {
-        SavingsResponse savingsResponse = apiClient.getAccountInfo(accountEntity.getAccountId());
+        return Optional.of(accountEntity.getAccountId())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(apiClient::getAccountInfo)
+                .map(this::storeSavingsResponse)
+                .map(accountEntity::toTinkAccount)
+                .get();
+    }
+
+    private SavingsResponse storeSavingsResponse(SavingsResponse savingsResponse) {
         sessionStorage.put(
                 CollectorConstants.Storage.TRANSACTIONS.concat(savingsResponse.getAccountNumber()),
                 savingsResponse);
-        return accountEntity.toTinkAccount(savingsResponse);
+        return savingsResponse;
     }
 }
