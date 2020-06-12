@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb;
 
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.SebConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.BusinessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.UserInformation;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.identitydata.IdentityData;
@@ -44,6 +45,20 @@ public class SebSessionStorage {
             }
             sessionStorage.put(StorageKeys.SSN, ssn);
         }
+    }
+
+    public void putCompanyInformation(BusinessEntity companyInformation) {
+        final String companyName = StringUtils.trimToNull(companyInformation.getCompanyName());
+        if (Strings.isNullOrEmpty(companyName)) {
+            throw new IllegalStateException("Did not get company name.");
+        }
+        sessionStorage.put(StorageKeys.COMPANY_NAME, companyName);
+
+        final String companyNumber = StringUtils.trimToNull(companyInformation.getCompanyNumber());
+        if (Strings.isNullOrEmpty(companyNumber)) {
+            throw new IllegalStateException("Did not get company number.");
+        }
+        sessionStorage.put(StorageKeys.CUSTOMER_NUMBER, companyNumber);
     }
 
     public void putCardHandle(String uniqueId, String handle) {

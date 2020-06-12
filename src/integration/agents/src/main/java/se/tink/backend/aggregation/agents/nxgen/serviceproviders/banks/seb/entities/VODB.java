@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JsonInclude(Include.NON_NULL)
 class VODB {
+
     @JsonProperty("DEVID01")
     public DeviceIdentification deviceIdentification;
 
@@ -33,6 +34,10 @@ class VODB {
     // User info returned after activation, also sent as null now and then
     @JsonProperty("USRINF01")
     public UserInformation userInformation;
+
+    // Company(ies) information in case the user has business engagements
+    @JsonProperty("CBEW501")
+    public List<BusinessEntity> businessEntities;
 
     @JsonProperty("RESULTO01")
     public InitResult initResult;

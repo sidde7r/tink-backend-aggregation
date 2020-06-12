@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.BusinessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.Payload;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.ResultInfoMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.entities.SystemStatus;
@@ -89,6 +90,12 @@ public class Response {
     @JsonIgnore
     public UserInformation getUserInformation() {
         return payload.getUserInformation();
+    }
+
+    @JsonIgnore
+    public BusinessEntity getCompanyInformation() {
+        // For now, the policy is to use the first company in the list
+        return payload.getBusinessEntities().get(0);
     }
 
     @JsonIgnore
