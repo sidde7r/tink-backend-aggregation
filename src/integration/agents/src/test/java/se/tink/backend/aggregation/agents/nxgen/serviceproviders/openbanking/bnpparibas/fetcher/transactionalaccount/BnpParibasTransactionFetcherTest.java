@@ -44,8 +44,8 @@ public class BnpParibasTransactionFetcherTest {
     public void shouldGetTransactionsWithin13MonthsLimit() {
         // given
         final TransactionalAccount account = createAccountMock();
-        final Date todayMinus13Months = convertLocalDateToDate(TODAY.minusMonths(13L));
-        final Date todayMinus10Months = convertLocalDateToDate(TODAY.minusMonths(10L));
+        final LocalDate todayMinus13Months = TODAY.minusMonths(13L);
+        final LocalDate todayMinus10Months = TODAY.minusMonths(10L);
         final TransactionsResponse expectedResponse = mock(TransactionsResponse.class);
 
         when(apiClientMock.getTransactions(RESOURCE_ID, todayMinus13Months, todayMinus10Months))
@@ -54,7 +54,9 @@ public class BnpParibasTransactionFetcherTest {
         // when
         final PaginatorResponse returnedResponse =
                 bnpParibasTransactionFetcher.getTransactionsFor(
-                        account, todayMinus13Months, todayMinus10Months);
+                        account,
+                        convertLocalDateToDate(todayMinus13Months),
+                        convertLocalDateToDate(todayMinus10Months));
 
         // then
         assertThat(returnedResponse).isEqualTo(expectedResponse);
@@ -64,8 +66,8 @@ public class BnpParibasTransactionFetcherTest {
     public void shouldGetTransactionsWhenSomeAreBeyond13MonthsLimit() {
         // given
         final TransactionalAccount account = createAccountMock();
-        final Date todayMinus14Months = convertLocalDateToDate(TODAY.minusMonths(14L));
-        final Date todayMinus13Months = convertLocalDateToDate(TODAY.minusMonths(13L));
+        final LocalDate todayMinus14Months = TODAY.minusMonths(14L);
+        final LocalDate todayMinus13Months = TODAY.minusMonths(13L);
         final TransactionsResponse expectedResponse = mock(TransactionsResponse.class);
 
         when(apiClientMock.getTransactions(RESOURCE_ID, todayMinus13Months, todayMinus13Months))
@@ -74,7 +76,9 @@ public class BnpParibasTransactionFetcherTest {
         // when
         final PaginatorResponse returnedResponse =
                 bnpParibasTransactionFetcher.getTransactionsFor(
-                        account, todayMinus14Months, todayMinus13Months);
+                        account,
+                        convertLocalDateToDate(todayMinus14Months),
+                        convertLocalDateToDate(todayMinus13Months));
 
         // then
         assertThat(returnedResponse).isEqualTo(expectedResponse);
@@ -84,13 +88,15 @@ public class BnpParibasTransactionFetcherTest {
     public void shouldGetNoTransactionsWhenAllAreBeyond13MonthsLimit() {
         // given
         final TransactionalAccount account = createAccountMock();
-        final Date todayMinus15Months = convertLocalDateToDate(TODAY.minusMonths(15L));
-        final Date todayMinus14Months = convertLocalDateToDate(TODAY.minusMonths(14L));
+        final LocalDate todayMinus15Months = TODAY.minusMonths(15L);
+        final LocalDate todayMinus14Months = TODAY.minusMonths(14L);
 
         // when
         final PaginatorResponse returnedResponse =
                 bnpParibasTransactionFetcher.getTransactionsFor(
-                        account, todayMinus15Months, todayMinus14Months);
+                        account,
+                        convertLocalDateToDate(todayMinus15Months),
+                        convertLocalDateToDate(todayMinus14Months));
 
         // then
         assertThat(returnedResponse.getTinkTransactions()).isEmpty();
