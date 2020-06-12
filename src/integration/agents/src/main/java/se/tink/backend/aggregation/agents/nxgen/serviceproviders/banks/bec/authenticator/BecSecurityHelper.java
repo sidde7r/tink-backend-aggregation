@@ -21,7 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
-public final class BecSecurityHelper {
+public class BecSecurityHelper {
 
     private final PublicKey publicKey;
     private final byte[] symmetricKey;
