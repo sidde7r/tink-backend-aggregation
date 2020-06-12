@@ -104,10 +104,9 @@ public class OAuth2AuthenticationController
             }
 
             try {
-                refreshToken(oAuth2Token);
                 // Store the new access token on the persistent storage again.
                 persistentStorage.rotateStorageValue(
-                        PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
+                        PersistentStorageKeys.OAUTH_2_TOKEN, refreshToken(oAuth2Token));
             } catch (SessionException ex) {
                 invalidateToken();
                 throw ex;
