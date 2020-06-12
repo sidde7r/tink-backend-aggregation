@@ -20,7 +20,9 @@ public class BecResponseStatusHandler implements HttpResponseStatusHandler {
 
     @Override
     public void handleResponse(HttpRequest httpRequest, HttpResponse httpResponse) {
-        if (httpResponse.getStatus() == 400) {
+        if (httpResponse.getStatus() == 400
+                && (httpRequest.getUrl().get().endsWith("/logon/SCAprepare")
+                        || httpRequest.getUrl().get().endsWith("/logon/SCA"))) {
 
             LoginErrorResponse baem =
                     SerializationUtils.deserializeFromString(

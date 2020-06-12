@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authe
 import se.tink.backend.aggregation.nxgen.http.DefaultResponseStatusHandler;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class BecResponseStatusHandlerTest {
 
@@ -41,10 +42,12 @@ public class BecResponseStatusHandlerTest {
     }
 
     @Test
-    public void handle400ResponseShouldThrowExceptionWithMessageTakenFromBody() {
+    public void handle400ResponseAndScaRequestShouldThrowExceptionWithMessageTakenFromBody() {
         // given
         HttpRequest httpRequest = mock(HttpRequest.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
+        // and
+        given(httpRequest.getUrl()).willReturn(new URL("/samplepath/logon/SCA"));
         // and
         given(httpResponse.getStatus()).willReturn(400);
         given(httpResponse.getBody(String.class))
@@ -66,10 +69,65 @@ public class BecResponseStatusHandlerTest {
     }
 
     @Test
-    public void handle400ResponseShouldThrowExceptionWithUnknownErrorWhenCannotParseResponseBody() {
+    public void
+            handle400ResponseAndScaPrepareRequestShouldThrowExceptionWithMessageTakenFromBody() {
         // given
         HttpRequest httpRequest = mock(HttpRequest.class);
         HttpResponse httpResponse = mock(HttpResponse.class);
+        // and
+        given(httpRequest.getUrl()).willReturn(new URL("/samplepath/logon/SCAprepare"));
+        // and
+        given(httpResponse.getStatus()).willReturn(400);
+        given(httpResponse.getBody(String.class))
+                .willReturn(
+                        "{\"action\":"
+                                + "\"R\","
+                                + "\"message\":"
+                                + "\"CPR no./user no. or PIN code is incorrect. "
+                                + "Check in your Netbank that you are registered.\"}");
+
+        // when
+        Throwable t = catchThrowable(() -> handler.handleResponse(httpRequest, httpResponse));
+
+        // then
+        assertThat(t)
+                .isInstanceOf(BecAuthenticationException.class)
+                .hasMessage(
+                        "CPR no./user no. or PIN code is incorrect. Check in your Netbank that you are registered.");
+    }
+
+    @Test
+    public void handle400ResponseAndNonSca() {
+        // given
+        HttpRequest httpRequest = mock(HttpRequest.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        // and
+        given(httpRequest.getUrl()).willReturn(new URL("/samplepath/non_sca"));
+        // and
+        given(httpResponse.getStatus()).willReturn(400);
+        given(httpResponse.getBody(String.class))
+                .willReturn(
+                        "{\"action\":"
+                                + "\"R\","
+                                + "\"message\":"
+                                + "\"CPR no./user no. or PIN code is incorrect. "
+                                + "Check in your Netbank that you are registered.\"}");
+
+        // when
+        handler.handleResponse(httpRequest, httpResponse);
+
+        // then
+        verify(defaultHandler).handleResponse(httpRequest, httpResponse);
+    }
+
+    @Test
+    public void
+            handle400ResponseFromScaEndpointShouldThrowExceptionWithUnknownErrorWhenCannotParseResponseBody() {
+        // given
+        HttpRequest httpRequest = mock(HttpRequest.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        // and
+        given(httpRequest.getUrl()).willReturn(new URL("/samplepath/logon/SCA"));
         // and
         given(httpResponse.getStatus()).willReturn(400);
         given(httpResponse.getBody(String.class)).willReturn(null);
