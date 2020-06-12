@@ -32,7 +32,7 @@ public class BnpParibasTransactionFetcher
         final Date limitedFromDate =
                 oldestDateForFetch.after(fromDate) ? oldestDateForFetch : fromDate;
 
-        return apiClient.getTransactions(account.getAccountNumber(), limitedFromDate, toDate);
+        return apiClient.getTransactions(account.getApiIdentifier(), limitedFromDate, toDate);
     }
 
     private Date getOldestDateForTransactionFetch() {

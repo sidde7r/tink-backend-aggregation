@@ -78,14 +78,13 @@ public class AccountsItemEntity {
                 .withBalance(BalanceModule.of(getAvailableBalance(balanceResponse)))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(resourceId)
-                                .withAccountNumber(resourceId)
+                                .withUniqueIdentifier(accountId.getIban())
+                                .withAccountNumber(accountId.getIban())
                                 .withAccountName(name)
                                 .addIdentifier(new IbanIdentifier(bicFi, accountId.getIban()))
                                 .build())
                 .addHolderName(name)
                 .setApiIdentifier(resourceId)
-                .putInTemporaryStorage(BnpParibasBaseConstants.StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
     }
 
