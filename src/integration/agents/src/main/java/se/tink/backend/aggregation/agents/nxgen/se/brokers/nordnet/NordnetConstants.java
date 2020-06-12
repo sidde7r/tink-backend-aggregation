@@ -157,6 +157,7 @@ public class NordnetConstants {
         public static final String DEPOT = "dep";
         public static final String TJANSTEPENSION_TJF = "tjf";
         public static final String TJANSTEPENSION_BTP1 = "btp1";
+        public static final String TJANSTEPENSION_BTP = "btp";
     }
 
     public static TypeMapper<AccountTypes> getAccountTypeMapper() {
@@ -173,7 +174,8 @@ public class NordnetConstants {
                         NordnetAccountTypes.PRIVATE_PENSION,
                         NordnetAccountTypes.IPS,
                         NordnetAccountTypes.TJANSTEPENSION,
-                        NordnetAccountTypes.TJANSTEPENSION_TJF)
+                        NordnetAccountTypes.TJANSTEPENSION_TJF,
+                        NordnetAccountTypes.TJANSTEPENSION_BTP)
                 .build();
     }
 
@@ -188,7 +190,8 @@ public class NordnetConstants {
                         NordnetAccountTypes.TJANSTEPENSION,
                         NordnetAccountTypes.TJANSTEPENSION_TJF,
                         NordnetAccountTypes.PRIVATE_PENSION,
-                        NordnetAccountTypes.TJANSTEPENSION_BTP1)
+                        NordnetAccountTypes.TJANSTEPENSION_BTP1,
+                        NordnetAccountTypes.TJANSTEPENSION_BTP)
                 .build();
     }
 }
