@@ -5,22 +5,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Psd2DataFetchingPolicy {
     /**
-     * This value decides if accounts classified as PSD2 Payment Accounts should be filtered
+     * This value decides if accounts classified as PSD2 Payment Accounts should be filtered out
      * (removed) from the results or not.
      */
-    boolean filterPaymentAccounts;
+    boolean filterOutPaymentAccounts;
     /**
      * This configuration lets Applications decide if PSD2 Undetermined accounts should be filtered
      * in the same way PSD2 Payment accounts are (@see filterPaymentAccounts).
      */
     boolean treatUndeterminedAccountsAsPaymentAccounts;
 
-    public boolean isFilterPaymentAccounts() {
-        return filterPaymentAccounts;
+    public boolean isFilterOutPaymentAccounts() {
+        return filterOutPaymentAccounts;
     }
 
-    public void setFilterPaymentAccounts(boolean filterPaymentAccounts) {
-        this.filterPaymentAccounts = filterPaymentAccounts;
+    public void setFilterOutPaymentAccounts(boolean filterOutPaymentAccounts) {
+        this.filterOutPaymentAccounts = filterOutPaymentAccounts;
     }
 
     public boolean isTreatUndeterminedAccountsAsPaymentAccounts() {
