@@ -74,7 +74,7 @@ public class CbiThirdPartyAppAuthenticationStep implements AuthenticationStep {
             } catch (SessionException e) {
                 throw new AuthorizationException(
                         AuthorizationError.UNAUTHORIZED,
-                        "Authorization failed, consents status is not accepted.");
+                        "Authorization failed, problem with consents.");
             }
         }
     }

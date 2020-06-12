@@ -232,6 +232,7 @@ public class ConsentManager {
                     FORMATTER_DAILY.parse(
                             apiClient.getConsentDetails(StorageKeys.CONSENT_ID).getValidUntil());
         } catch (ParseException e) {
+            log.error("Could not parse the consent validUntil field to expected format.");
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
