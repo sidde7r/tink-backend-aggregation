@@ -69,7 +69,7 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
         sessionStorage.put(TOKEN_STORAGE_KEY, payload.getCodeappTokenDetails().getToken());
     }
 
-    private void pollNemId() throws ThirdPartyAppException {
+    private void pollNemId() throws AuthenticationException {
         apiClient.pollNemId(sessionStorage.get(TOKEN_STORAGE_KEY));
     }
 

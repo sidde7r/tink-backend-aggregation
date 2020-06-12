@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.ArgumentMatcher;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
@@ -30,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.EncryptedResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.rpc.NemIdPollResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.BecErrorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
@@ -119,7 +121,7 @@ public class BecApiClientTest {
     }
 
     @Test
-    public void pollNemIdShouldSucceed() throws ThirdPartyAppException {
+    public void pollNemIdShouldSucceed() throws AuthenticationException {
         // given
         given(requestBuilder.queryParam(TOKEN_KEY, TOKEN_VALUE)).willReturn(requestBuilder);
         // and
@@ -140,7 +142,7 @@ public class BecApiClientTest {
     }
 
     @Test
-    public void pollNemIdShouldThrowTimeOutExceptionWhenReturnedStateDifferentThan1() {
+    public void pollNemIdShouldThrowTimeOutExceptionWhenUserRejectsNemid() {
         // given
         given(requestBuilder.queryParam(TOKEN_KEY, TOKEN_VALUE)).willReturn(requestBuilder);
         // and
@@ -159,7 +161,55 @@ public class BecApiClientTest {
         verify(requestBuilder).queryParam(TOKEN_KEY, TOKEN_VALUE);
         verify(requestBuilder).get(NemIdPollResponse.class);
         // and
-        assertThat(t).isInstanceOf(ThirdPartyAppException.class).hasMessage("NemID TIMEOUT.");
+        assertThat(t).isInstanceOf(ThirdPartyAppException.class).hasMessage("NemID was rejected.");
+    }
+
+    @Test
+    public void pollNemIdShouldThrowNemIdExceptionWhenRequestsTimeout() {
+        // given
+        given(requestBuilder.queryParam(TOKEN_KEY, TOKEN_VALUE)).willReturn(requestBuilder);
+        // and
+        given(requestBuilder.get(NemIdPollResponse.class))
+                .willReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\"state\":4}", NemIdPollResponse.class));
+        // when
+        Throwable t = catchThrowable(() -> becApiClient.pollNemId(TOKEN_VALUE));
+
+        // then
+        verify(client).request(NEM_ID_POLL_URL);
+        verify(requestBuilder)
+                .header(BecConstants.Header.PRAGMA_KEY, BecConstants.Header.PRAGMA_VALUE);
+        verify(requestBuilder).type(MediaType.APPLICATION_JSON_TYPE);
+        verify(requestBuilder).queryParam(TOKEN_KEY, TOKEN_VALUE);
+        verify(requestBuilder).get(NemIdPollResponse.class);
+        // and
+        assertThat(t).isInstanceOf(NemIdException.class).hasMessage("Cause: NemIdError.TIMEOUT");
+    }
+
+    @Test
+    public void pollNemIdShouldThrowTimeOutExceptionWhenResponseContainsUnknownState() {
+        // given
+        given(requestBuilder.queryParam(TOKEN_KEY, TOKEN_VALUE)).willReturn(requestBuilder);
+        // and
+        given(requestBuilder.get(NemIdPollResponse.class))
+                .willReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\"state\":345}", NemIdPollResponse.class));
+        // when
+        Throwable t = catchThrowable(() -> becApiClient.pollNemId(TOKEN_VALUE));
+
+        // then
+        verify(client).request(NEM_ID_POLL_URL);
+        verify(requestBuilder)
+                .header(BecConstants.Header.PRAGMA_KEY, BecConstants.Header.PRAGMA_VALUE);
+        verify(requestBuilder).type(MediaType.APPLICATION_JSON_TYPE);
+        verify(requestBuilder).queryParam(TOKEN_KEY, TOKEN_VALUE);
+        verify(requestBuilder).get(NemIdPollResponse.class);
+        // and
+        assertThat(t)
+                .isInstanceOf(ThirdPartyAppException.class)
+                .hasMessage("Unknown error occured.");
     }
 
     @Test
