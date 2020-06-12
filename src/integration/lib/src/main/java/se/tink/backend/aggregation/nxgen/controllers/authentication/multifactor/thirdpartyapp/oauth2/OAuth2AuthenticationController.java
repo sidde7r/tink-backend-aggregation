@@ -115,7 +115,7 @@ public class OAuth2AuthenticationController
         }
 
         // Tell the authenticator which access token it can use.
-        authenticator.useAccessToken(oAuth2Token);
+        useAccessToken(oAuth2Token);
     }
 
     @Override
@@ -187,7 +187,7 @@ public class OAuth2AuthenticationController
         persistentStorage.put(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
 
         // Tell the authenticator which access token it can use.
-        authenticator.useAccessToken(oAuth2Token);
+        useAccessToken(oAuth2Token);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
@@ -256,5 +256,15 @@ public class OAuth2AuthenticationController
 
     private void invalidateToken() {
         persistentStorage.remove(PersistentStorageKeys.OAUTH_2_TOKEN);
+    }
+
+    private void useAccessToken(OAuth2Token token) {
+        logger.info(
+                String.format(
+                        "Use a token valid for %s seconds. (issued at: %s s.; lifetime: %s s.)",
+                        token.getValidForSecondsTimeLeft(),
+                        token.getIssuedAt(),
+                        token.getExpiresInSeconds()));
+        authenticator.useAccessToken(token);
     }
 }
