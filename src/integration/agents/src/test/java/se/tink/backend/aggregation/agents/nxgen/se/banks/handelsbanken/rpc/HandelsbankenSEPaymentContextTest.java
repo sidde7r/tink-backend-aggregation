@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmTransferResponse;
@@ -22,12 +23,14 @@ public class HandelsbankenSEPaymentContextTest {
     }
 
     @Test
-    public void testMessag() {
+    public void testMessageable() {
         ConfirmTransferResponse messageable =
                 SerializationUtils.deserializeFromString(TEST_DATA, ConfirmTransferResponse.class);
         assertEquals("10573", messageable.getCode());
     }
 
-    static String TEST_DATA =
-            "{\"type\":\"http://schemas.shbmain.shb.biz/http/status/clientError\",\"status\":403,\"detail\":\"Du måste ha fyllt 16 år för att kunna utföra denna tjänst.\",\"code\":\"10573\"}";
+    private static String TEST_DATA =
+            "{\"type\":\"http://schemas.shbmain.shb.biz/http/status/clientError\","
+                    + "\"status\":403,\"detail\":\"Du måste ha fyllt 16 år för att kunna utföra denna tjänst.\","
+                    + "\"code\":\"10573\"}";
 }
