@@ -21,6 +21,7 @@ junit_test(
         "//src/libraries/account_identifier",
         "//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",
         "//src/libraries/date",
+        "//src/libraries/serialization",
         "//src/libraries/social_security_number/src/test/java/se/tink/libraries/social/security/time",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_sun_jersey_jersey_client",
