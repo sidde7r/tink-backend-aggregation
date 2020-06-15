@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-05-15 09:50+0000\n"
-"PO-Revision-Date: 2020-05-15 09:50+0000\n"
+"POT-Creation-Date: 2020-06-15 08:49+0000\n"
+"PO-Revision-Date: 2020-06-15 08:49+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -11,17 +11,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid ""
-"In order to add new recipients you need to activate Mobile BankID for "
-"extended use. You can find more information on how to extend your Mobile "
-"BankID in your Internet bank."
-msgstr ""
-"För att kunna lägga till en ny mottagare behöver du aktivera utökad "
-"användning av Mobilt BankID. Mer information om hur du utökar användning av "
-"Mobilt BankID hittar du i din Internetbank."
+msgid "An error occurred while confirming the payment."
+msgstr "Ett fel uppstod när betalningen skulle bekräftas."
+
+msgid "Input the code from your code card"
+msgstr "Ange koden från ditt kodkort"
+
+msgid "Key card index"
+msgstr "Nyckelkortsindex"
+
+msgid "Key card code"
+msgstr "Nyckelkortskod"
 
 msgid "Verification code"
 msgstr "Verifikationskod"
+
+msgid "SMS code"
+msgstr "SMS-kod"
+
+msgid "You lack the sufficient permissions for this service."
+msgstr "Du har inte tillräckligt med behörigheter för denna tjänst."
 
 msgid "You need to activate your BankID in the Handelsbanken app."
 msgstr "Du behöver aktivera ditt BankID i Handelsbankens app."
@@ -40,6 +49,13 @@ msgstr ""
 "Om du har ändrat din e-faktura hos ICA Banken behöver du först göra en "
 "uppdatering av din ICA Banken-anslutning."
 
+msgid ""
+"Another BankId authentication was initiated while signing the transfer. "
+"Please try again."
+msgstr ""
+"En annan BankID-autentisering startades när överföringen skulle signeras. "
+"Vänligen försök igen."
+
 msgid "Unsupported transfer type"
 msgstr "Överföringstypen stöds inte"
 
@@ -49,6 +65,119 @@ msgid ""
 msgstr ""
 "Ingen bank kunde hittas för det angivna mottagarkontot. Kontrollera "
 "kontonumret och försök igen."
+
+msgid "The card number you have entered is incorrect. Please try again."
+msgstr "Det kortnummer du har angett är felaktigt. Vänligen försök igen."
+
+msgid "The provided credentials are not for KBC."
+msgstr "Angivna uppgifter är inte ämnade för KBC."
+
+msgid "Originator name must be specified."
+msgstr "Grundarens namn måste anges."
+
+msgid "Beneficiary name must be specified."
+msgstr "Mottagarens namn måste anges."
+
+msgid "Due date must be within a year from today"
+msgstr "Förfallodatumet måste ligga inom ett år från idag"
+
+msgid "Reference must be max {} characters."
+msgstr "Referensen måste bestå av max {} tecken."
+
+msgid "Transfer amount can't be less than {}."
+msgstr "Överföringsbeloppet kan inte vara mindre än {}."
+
+msgid ""
+"Check if your authentication parameters are correct:\n"
+"1. ING ID from your bank card\n"
+"2. Card ID from your bank card\n"
+"3. \"RESPONSE\" from the ING Card Reader"
+msgstr ""
+"Kontrollera om dina autentiseringsparametrar är korrekta:\n"
+"1. ING ID från ditt bankkort\n"
+"2. Kort-ID från ditt bankkort\n"
+"3. \"RESPONSE\" från ING-kortläsaren"
+
+msgid ""
+"The amount of this transaction exceeds your transfer limits. Please log in "
+"to Home'Bank to check your transfer limits."
+msgstr ""
+"Beloppet i denna transaktion överskrider dina överföringsbegränsningar. "
+"Logga in på HomeBank för att kontrollera dina överföringsgränser."
+
+msgid ""
+"Transfers to accounts from other banks is not allowed from this account."
+msgstr ""
+"Det är inte tillåtet att genomföra överföringar till konton från andra "
+"banker."
+
+msgid "Execution date have to be a business day, choose another date."
+msgstr "Utförandedatumet måste vara en vardag. Vänligen välj ett annat datum."
+
+msgid "Destination name have to be supplied for third party transfers."
+msgstr "Destinationsnamnet måste anges för tredjepartsöverföringar."
+
+msgid "Transfer validation failed."
+msgstr "Validering av överföring misslyckades."
+
+msgid "Transfer execution failed."
+msgstr "Överföringen misslyckades"
+
+msgid "Activation code"
+msgstr "Aktiveringskod"
+
+msgid ""
+"Have you received a new mobile phone, made changes to your mobile "
+"subscription or have a new SIM card? In that case, you must delete BankID "
+"Mobile and re-enable the service."
+msgstr ""
+"Har du någonsin fått en ny mobiltelefon, gjort ändringar i ditt "
+"mobilabonnemang eller fått ett nytt SIM-kort? I det fallet måste du ta bort "
+"BankID Mobil och återaktivera tjänsten."
+
+msgid "Error Code: C161. "
+msgstr "Felkod: C161. "
+
+msgid "Error Code C176. "
+msgstr "Felkod: C176. "
+
+msgid "Error Code C30F. "
+msgstr "Felkod C30F. "
+
+msgid ""
+"Error Code C307. Your BankID is blocked due to incorrect PINLog in to the "
+"internet bank in another way and reset BankID on mobile."
+msgstr ""
+"Felkod C307. Ditt BankID är spärrat på grund av felaktig PIN-kod. Logga in u "
+"internetbanken på ett annat sätt och nollställ BankID på mobil."
+
+msgid "Error Code C202. "
+msgstr "Felkod C202. "
+
+msgid ""
+"Error Code C131. This error indicates that your mobile operator has trouble "
+"or a process is running on your phone number. Restart your phone and try "
+"again in 5 minutes."
+msgstr ""
+"Felkod C131. Detta fel anger att din mobiloperatör har problem eller att en "
+"process håller på att köras på ditt nummer. Starta om din telefon och försök "
+"igen om 5 minuter."
+
+msgid ""
+"Error code C308. There was a timeout due to slow response time. This can "
+"happen if there are weak or unstable signals or if the mobile operator is "
+"having trouble. Please try again in 5 minutes."
+msgstr ""
+"Felkod C308. Ett avbrott uppstod på grund av lång svarstid. Detta kan "
+"inträffa om det finns svaga eller instabila signaler eller om "
+"mobiloperatören har problem. Försök igen om 5 minuter."
+
+msgid ""
+"Error code C302. This error occurs when you have switched mobile networks, "
+"for example, if you have just been abroad. Restart your phone and try again."
+msgstr ""
+"Felkod C302: Detta fel inträffar när du har bytt mobilnätverk, till exempel "
+"om du nyligen varit utomlands. Starta om din telefon och försök igen."
 
 msgid ""
 "Your personal code has been locked. Contact Nordea customer services "
@@ -72,6 +201,13 @@ msgstr ""
 "Vi kunde inte hitta något godkänt avtal för internetbanken. Om du loggar in "
 "till Nordeas internetbank med e-kod (kortläsare) så kan du godkänna avtalet "
 "för internet- och telefonbanken."
+
+msgid ""
+"Your personal code has been locked. Contact Nordea customer services (0200 "
+"70 000) to order a new code, or contact your local Nordea office."
+msgstr ""
+"Din personliga kod har låsts. Kontakta Nordeas kundtjänst (0200 70 000) för "
+"att beställa en ny kod eller kontakta ditt lokala Nordea-kontor."
 
 msgid ""
 "You do not have any accounts at Swedbank. Use Sparbankerna (Mobile BankID) "
@@ -103,6 +239,24 @@ msgstr "Du kan endast göra betalningar till svenska mottagare"
 msgid "You can only make transfers to Swedish accounts"
 msgstr "Du kan endast göra överföringar till svenska konton"
 
+msgid "Invalid username or password"
+msgstr "Ogiltigt användarnamn eller lösenord"
+
+msgid "Contract is missing."
+msgstr "Kontrakt saknas"
+
+msgid "Contract has been transferred to other bank."
+msgstr "Kontraktet har överförts till en annan bank."
+
+msgid "User account is locked. Please contact your bank."
+msgstr "Användarkontot är låst. Kontakta din bank."
+
+msgid "User account is blocked. Please contact your bank."
+msgstr "Användarkontot är spärrat. Kontakta din bank."
+
+msgid "Too many devices registered. Please contact your bank."
+msgstr "För många enheter är registrerade. Kontakta din bank."
+
 msgid ""
 "Are you trying to use your charge card to login? Please use your login card "
 "for BankID. The response should be 9 figures."
@@ -116,6 +270,16 @@ msgid ""
 msgstr ""
 "Du måste aktivera din personliga kod för telefon- och mobiltjänster på "
 "internetbanken."
+
+msgid ""
+"You need to activate your mobile app credentials and generate a 4-digit pin "
+"code via the Handelsbanken app."
+msgstr ""
+"Du måste aktivera dina uppgifter i mobilappen och generera en fyrsiffrig kod "
+"via Handelsbanken-appen."
+
+msgid "You have used incorrect credentials. Please try again."
+msgstr "Du har använt ogiltiga uppgifter. Försök igen."
 
 msgid ""
 "Incorrect answer code. The challenge code is only active for four minutes. "
@@ -155,6 +319,45 @@ msgstr ""
 "att Handelsbankens app inte använts på den här enheten på 90 dagar. För att "
 "logga in behöver du aktivera appen på nytt."
 
+msgid "Wrong challenge response input - Will retry login."
+msgstr "Fel kontrollsvar - inloggning kommer att genomföras igen."
+
+msgid "Download Nordea Codes"
+msgstr "Ladda ner Nordea Codes"
+
+msgid "You need to download the Nordea Codes app in order to continue."
+msgstr "Du måste ladda ner Nordea Codes-appen för att kunna fortsätta."
+
+msgid "Upgrade Nordea Codes"
+msgstr "Uppgradera Nordea Codes"
+
+msgid "You need to upgrade the Nordea Codes app in order to continue."
+msgstr "Du måste uppgradera Nordea Codes-appen för att kunna fortsätta."
+
+msgid "Authentication cancelled by the Codes app. Please try again."
+msgstr "Autentisering avbröts av Codes-appen. Försök igen."
+
+msgid "Authentication timed out."
+msgstr "Autentiseringen avbröts."
+
+msgid "Another client is already trying to sign in."
+msgstr "En annan klient försöker redan att logga in."
+
+msgid "You need to change your password at S-Pankki before you can login."
+msgstr "Du måste byta ditt lösenord på S-Pankki innan du kan logga in."
+
+msgid ""
+"Your current password has expired and you have to create a new one. You can "
+"do this in Ålandsbanken's app if you have a registered device, if not, "
+"please contact Ålandsbanken at: 0204 292 910."
+msgstr ""
+"Ditt befintliga lösenord har utgått och du måste skapa ett nytt. Du kan göra "
+"detta i Ålandsbankens app om du har en registrerad enhet. Om inte, kontakta "
+"Ålansbanken på 0204 292 910."
+
+msgid "Login is blocked. Contact your bank's customer service."
+msgstr "Inloggning är blockerad. Kontakta din banks kundtjänst."
+
 msgid "No response from Mobile BankID. Have you opened the app?"
 msgstr "Inget svar från Mobilt BankID. Har du öppnat appen?"
 
@@ -166,6 +369,58 @@ msgstr "Du avbröt BankID. Vänligen försök igen."
 
 msgid "The BankID authentication failed"
 msgstr "Autentiseringen med BankID misslyckades"
+
+msgid "Download Mobile Banking"
+msgstr "Ladda ner Mobile Banking"
+
+msgid "You need to download the Mobile Banking in order to continue."
+msgstr "Du måste ladda ner Mobile Banking för att kunna fortsätta."
+
+msgid "Upgrade Mobile Banking"
+msgstr "Uppgradera Mobile Banking"
+
+msgid "You need to upgrade the Mobile Banking in order to continue."
+msgstr "Du måste uppgradera Mobile Banking för att kunna fortsätta."
+
+#, java-format
+msgid ""
+"No transactions are available for credit card {0}. Please go to ‘Settings’ > "
+"‘Accounts’ in the Mobile Banking app to add this credit card. If your credit "
+"card transactions are displayed in Mobile Banking, they will also be "
+"available for Grip."
+msgid_plural ""
+"No transactions are available for credit cards {0}. Please go to ‘Settings’ "
+"> ‘Accounts’ in the Mobile Banking app to add these credit cards. If your "
+"credit cards transactions are displayed in Mobile Banking, they will also be "
+"available for Grip."
+msgstr[0] ""
+"Det finns inga transaktioner för kreditkort {0}. Gå till \"Inställningar\" > "
+"\"Konton\" i Mobile Banking-appen för att lägga till detta kreditkort. Om "
+"dina kreditkortstransaktioner visas i Mobile Banking kommer de också att "
+"vara tillgängliga för Grip."
+msgstr[1] ""
+"Det finns inga transaktioner för kreditkorten {0}. Gå till \"Inställningar\" "
+"> \"Konton\" i Mobile Banking-appen för att lägga till detta kreditkort. Om "
+"dina kreditkortstransaktioner visas i Mobile Banking kommer de också att "
+"vara tillgängliga för Grip."
+
+#, java-format
+msgid ""
+"A temporary error occurred in the communication between ABN and ICS for the "
+"credit card {0}. We will automatically refresh data as soon as the "
+"connection is available."
+msgid_plural ""
+"A temporary error occurred in the communication between ABN and ICS for the "
+"credit cards {0}. We will automatically refresh data as soon as the "
+"connection is available."
+msgstr[0] ""
+"Ett tillfälligt fel inträffade i kommunikationen mellan ABN och ICS fö "
+"kreditkort {0}. Vi kommer automatiskt att ladda om data så fort det finns en "
+"anslutning."
+msgstr[1] ""
+"Ett tillfälligt fel inträffade i kommunikationen mellan ABN och ICS fö "
+"kreditkorten {0}. Vi kommer automatiskt att ladda om data så fort det finns "
+"en anslutning."
 
 msgid "and"
 msgstr "och"
@@ -207,6 +462,20 @@ msgstr "emigrerad"
 msgid "changed person number"
 msgstr "har ändrat personnummer"
 
+msgid ""
+"For safety reasons you have been logged out. Please login again to continue."
+msgstr ""
+"Av säkerhetsskäl har du loggats ut. Vänligen logga in igen för att fortsätta."
+
+msgid "There is already an active session on this account. Please try again."
+msgstr "Det finns redan en aktiv session på detta konto. Försök igen."
+
+msgid "You have not entered a valid code. Please try again"
+msgstr "Du har inte angett en giltig kod. Försök igen"
+
+msgid "The mobile BankID session timed out. Please try again."
+msgstr "Mobilt BankID-sessionen har avbrutits. Försök igen."
+
 msgid "Something went wrong with the BankId authentication."
 msgstr "Något gick fel vid identifieringen via mobilt BankID."
 
@@ -216,11 +485,57 @@ msgstr "Du har inte behörighet att använda denna tjänst."
 msgid "You do not have a valid profile."
 msgstr "Du har ingen giltig profil."
 
+msgid ""
+"Could not login to your bank. The access could be blocked. Please activate "
+"it in your bank app or contact your bank."
+msgstr ""
+"Kunde inte logga in på din bank. Eventuellt är dina åtkomstmöjligheter "
+"spärrade. Aktivera den i din bank-app eller kontakta din bank."
+
 msgid "You don't have any commitments in the selected bank."
 msgstr "Du har inga åtaganden i den valda banken."
 
+msgid ""
+"The authentication needed to login to your bank is not supported at the "
+"moment. If possible please try another option."
+msgstr ""
+"Den autentisering som behövs för att logga in på din bank stöds inte för "
+"tillfället. Om möjligt, välj ett annat alternativ."
+
 msgid "Incorrect login credentials. Please try again."
 msgstr "Felaktiga inloggningsuppgifter. Var god försök igen."
+
+msgid "Incorrect challenge response. Please try again."
+msgstr "Fel kontrollsvar. Försök igen."
+
+msgid "Your credentials could not be verified. Please try again."
+msgstr "Dina uppgifter kunde inte verifieras. Försök igen."
+
+msgid ""
+"Please ensure that you have entered the correct mobile number and date of "
+"birth. Also make sure that you have activated bankID on mobile in your "
+"internet bank."
+msgstr ""
+"Kontrollera att du har angett rätt mobilnummer och födelsedatum. Kontrollera "
+"också att du har aktiverat BankID på mobilen i din internetbank."
+
+msgid "There is an error with your mobile operator. Please try again later."
+msgstr "Det har uppstått ett fel med din mobiloperatör. Försök igen senare."
+
+msgid ""
+"Your device could not be registered. This could be due to restrictions in "
+"the number of devices your bank allows you to register. Please try again "
+"later or reach out to your bank."
+msgstr ""
+"Din enhet kunde inte registreras. Detta kan bero på begränsningar i antalet "
+"enheter som din bank tillåter dig att registrera. Försök igen senare eller "
+"kontakta din bank."
+
+msgid "The bank service is offline, please try again later."
+msgstr "Banktjänsten är inte i drift. Försök igen senare."
+
+msgid "The bank service has temporarily failed, please try again later."
+msgstr "Banktjänsten kan inte nås för tillfället. Försök igen senare."
 
 msgid ""
 "Another BankId authentication was initiated while authenticating. Please try "
@@ -245,6 +560,15 @@ msgstr ""
 msgid "Something went wrong with the BankId authentication"
 msgstr "Något gick fel vid identifieringen via mobilt BankID."
 
+msgid ""
+"The mobile operator you use may have blocked BankID on mobile. To resolve "
+"this, log in to the internet bank using another authentication method and "
+"reorder BankID on mobile."
+msgstr ""
+"Den mobiloperatör du har använt kan ha blockerat BankID på mobilen. För att "
+"lösa detta, logga in på internetbanken genom att använda en annan "
+"autentiseringsmetod och beställ BankID igen på mobilen."
+
 msgid "The social security number has been updated, please try again"
 msgstr "Personnumret har uppdaterats, vänligen försök igen"
 
@@ -253,6 +577,9 @@ msgstr "Felaktig BankID-signatur. Loggade du in med fel personnummer?"
 
 msgid "Failed to sign transfer with BankID"
 msgstr "Det gick inte att signa överföringen med BankID"
+
+msgid "Failed to sign transfer"
+msgstr "Kunde inte signera överföring"
 
 msgid "Transfer or payment was not signed with security token device"
 msgstr "Överföringen eller betalningen signerades inte med kodboxen"
@@ -375,12 +702,68 @@ msgstr "Det gick inte att skapa betalningen"
 msgid "Could not update payment"
 msgstr "Det gick inte att uppdatera betalningen"
 
+msgid "It's not possible to modify this payment"
+msgstr "Det går inte att ändra denna betalning"
+
+msgid "It's not possible to modify the amount of this payment"
+msgstr "Det går inte att ändra beloppet i denna betalning"
+
+msgid "It's not possible to modify the destination of this payment"
+msgstr "Det går inte att ändra destinationen för denna betalning"
+
+msgid "It's not possible to modify the source account of this payment"
+msgstr "Det går inte att ändra källkontot i denna betalning"
+
+msgid "It's not possible to modify the payment date of this payment"
+msgstr "Det går inte att ändra betalningsdatumet för denna betalning"
+
+msgid "It's not possible to modify OCR/message of this payment"
+msgstr "Det går inte att ändra OCR/meddelandet i denna betalning"
+
+msgid "It's not possible to modify the source message of this payment"
+msgstr "Det går inte att ändra källmeddelandet i denna betalning"
+
+msgid "Missing message type"
+msgstr "Meddelandetyp saknas"
+
+msgid "The entered structured message is invalid"
+msgstr "Det angivna strukturerade meddelandet är ogiltigt"
+
 #, java-format
 msgid "The message length exceeds maximum of {0} letters."
 msgstr "Meddelandets längd är längre än det maximala, {0} tecken."
 
+msgid "Could not get recipient name from user"
+msgstr "Kunde inte hämta mottagarnamn från användare"
+
+msgid "Could not save new recipient"
+msgstr ""
+"Det gick inte att spara ny mottagare, kontrollera att informationen är "
+"korrekt"
+
+msgid "Check that the information is correct"
+msgstr "Kontrollera att informationen är korrekt"
+
+msgid "N/A"
+msgstr "Ej tillgänglig"
+
 msgid "Something went wrong."
 msgstr "Något gick fel."
+
+msgid "Payment was not accepted at Nordea"
+msgstr "Betalningen godkändes inte av Nordea"
+
+msgid "Waiting on Mobile Bank Id"
+msgstr "Väntar på Mobilt BankID"
+
+msgid "Did not receive a identification code"
+msgstr "Ingen identifikationskod mottogs"
+
+msgid "Payment was not signed"
+msgstr "Betalningen signerades inte"
+
+msgid "Next unused code"
+msgstr "Nästa oanvända kod"
 
 msgid ""
 "The first time you use your mobile BankId you have to verify it with your "
@@ -440,6 +823,16 @@ msgstr ""
 "Felaktigt personnummer eller servicekod. Var god försök igen eller "
 "kontrollera din servicekod i Hembanken, under Mobila tjänster."
 
+msgid ""
+"We encountered problems signing the payment/transfer with your bank. Please "
+"log in to your bank app and validate the payment/transfer."
+msgstr ""
+"Vi påträffade problem när betalningen/överföringen skulle signeras av din "
+"bank. Logga in på din bank-app och validerade betalningen/överföringen."
+
+msgid "Failed to sign using BankID, please try again later"
+msgstr "Kunde inte logga med BankID. Försök igen senare."
+
 msgid "Failed to sign payment using BankID"
 msgstr "Signering av betalning med BankID misslyckades"
 
@@ -453,6 +846,25 @@ msgid ""
 msgstr ""
 "För valt avsändarkonto kan meddelandet till mottagaren inte vara längre än "
 "{0} tecken. Justera meddelandet och försök igen."
+
+#, java-format
+msgid ""
+"For the selected source, messages cannot contain some of the typed "
+"characters:\n"
+"\n"
+"{0}\n"
+"\n"
+"Valid characters:\n"
+"\n"
+"{1}"
+msgstr ""
+"För vald källa kan inte meddelanden innehålla vissa av angivna tecken:\n"
+"\n"
+"{0}\n"
+"\n"
+"Giltiga tecken:\n"
+"\n"
+"{1}"
 
 msgid "Error from"
 msgstr "Fel från"
@@ -640,6 +1052,13 @@ msgid ""
 msgstr ""
 "Vi har för närvarande tekniska problem med {0}. Vänligen försök igen senare."
 
+msgid ""
+"Invalid credentials status. Update the credentials before retrying the "
+"operation."
+msgstr ""
+"Ogiltig status för uppgifter. Uppdatera uppgifterna innan åtgärden genomförs "
+"igen."
+
 msgid "BankID session already in progress, please try again."
 msgstr "Mobilt BankID är upptaget, vänta någon minut och testa igen."
 
@@ -656,8 +1075,30 @@ msgstr ""
 "Observera att om du kryssar för den här rutan kommer historiken för dina "
 "konton att raderas"
 
+msgid ""
+"The transfer amount will exceed the total allowed weekly limit for the "
+"beneficiary."
+msgstr ""
+"Överföringsbeloppet kommer att överskrida mottagarens totala veckogräns."
+
+msgid ""
+"The transfer has been sent to your bank and will be executed when funds are "
+"available"
+msgstr ""
+"Överföringen har skickats till din bank och kommer att genomföras när "
+"pengarna är tillgängliga."
+
 msgid "Password"
 msgstr "Lösenord"
+
+msgid "Card number"
+msgstr "Kortnummer"
+
+msgid "Card ID"
+msgstr "Kort-ID"
+
+msgid "Number of your bank card"
+msgstr "Bankkortsnummer"
 
 msgid "PIN"
 msgstr "PIN-kod"
@@ -770,6 +1211,47 @@ msgstr ""
 "istället för Mobilt BankID."
 
 msgid ""
+"1. Insert your card into the card reader and press (M1)\n"
+"2. 'CHALLENGE?' is displayed.Enter []"
+msgstr ""
+"1. För in ditt kort i kortläsaren och tryck på (M1)\n"
+"2. \"CHALLENGE?\" visas. Ange []"
+
+msgid ""
+"3. 'PIN?' is displayed.\n"
+"Enter your PIN and press (OK)\n"
+"4. The e-signature is displayed.\n"
+"Enter the e-signature"
+msgstr ""
+"3. \"PIN\"? visas.\n"
+"Ange din PIN-kod och tryck på (OK)\n"
+"4. E-signaturen visas.\n"
+"Ange e-signaturen"
+
+msgid "Challenge"
+msgstr "Kontrollkod"
+
+msgid "Input"
+msgstr "Inmatning"
+
+msgid ""
+"Incorrect login credentials. You have one more attempt before your account "
+"will be locked."
+msgstr ""
+"Felaktiga inloggningsuppgifter. Du har ett försök kvar innan ditt konto "
+"spärras."
+
+msgid "Cannot schedule future transfers."
+msgstr "Kan inte schemalägga framtida överföringar."
+
+msgid ""
+"Another client is already trying to sign in. \n"
+"Please close the Codes app and try again."
+msgstr ""
+"En annan klient försöker redan att logga in.\n"
+"Stäng Codes-appen och försök igen."
+
+msgid ""
 "To be able to refresh your accounts you need to update your customer info in "
 "your bank app."
 msgstr ""
@@ -777,11 +1259,80 @@ msgstr ""
 "information i din bank-app."
 
 msgid ""
+"Message from bank: You have used the service too many times today, please "
+"try again tomorrow."
+msgstr ""
+"Meddelande från banken: du har använt tjänsten för många gånger idag. Försök "
+"igen imorgon."
+
+msgid "Code app authentication timed out."
+msgstr "Code-appens autentisering avbröts."
+
+msgid "Code app authentication was rejected by user."
+msgstr "Code-appens autentisering nekades av användaren."
+
+msgid ""
+"Because of repeated attempts the authentication request has been cancelled. "
+"Please try again later."
+msgstr ""
+"På grund av upprepade försök har autentiseringsanropet avbrutits. Försök "
+"igen senare."
+
+msgid "You do not have access to mobile banking. Please contact your bank."
+msgstr "Du har inte åtkomst till mobilbanktjänsten. Kontakta din bank."
+
+msgid "The bank service is offline; please try again later."
+msgstr "Banktjänsten är inte i drift. Försök igen senare."
+
+msgid "The bank service has temporarily failed; please try again later."
+msgstr "Banktjänsten kan inte nås just nu. Försök igen senare."
+
+msgid ""
+"The maximum allowed number of requests to the bank service has been "
+"exceeded; please try again later."
+msgstr ""
+"Det högsta antalet anrop till banktjänsten har överskridits. Försök igen "
+"senare."
+
+msgid "Authenticating with Mobile BankID timed out. Have you opened the app?"
+msgstr "Autentisering via mobilt BankID har avbrutits. Har du öppnat appen?"
+
+msgid ""
 "To continue using this app you must answer some questions from your bank. "
 "Please log in with your bank's app or website."
 msgstr ""
 "För att fortsätta använda den här appen måste du svara på några frågor från "
 "din bank. Var god och logga in på din banks app eller hemsida."
+
+msgid "Download Caixadirecta"
+msgstr "Ladda ner Caixadirecta"
+
+msgid "You need to download the Caixadirecta app in order to continue."
+msgstr "Du måste ladda ner Caixadirecta-appen för att kunna fortsätta."
+
+msgid ""
+"Please enter this code into your token generator and write the generated "
+"response code here."
+msgstr ""
+"Ange denna kod i din igenkänningsteckengenerator och ange den genererade "
+"svarskoden här."
+
+msgid "Security Token"
+msgstr "Säkerhetsigenkänningstecken"
+
+msgid ""
+"Start your code generator and write your PIN code. When APPLI is shown on "
+"the display press the key labeled 1 on your generator. Write the response "
+"code shown on the display in the field below."
+msgstr ""
+"Starta din kodgenerator och ange din PIN-kod här. När APPLI visas i "
+"fönstret, tryck på knappen som markerats med 1 på din dosa. Ange den "
+"svarskod som visas i fönstret i fältet nedan."
+
+msgid ""
+"The consent given to us to access your data has been revoked by the bank. "
+msgstr ""
+"Det tillstånd vi fått att komma åt dina uppgifter har återkallats av banken. "
 
 msgid ""
 "You were automatically logged out because you logged in to another channel; "
@@ -799,14 +1350,286 @@ msgstr ""
 "är inte tillåtet av banken. Vänligen kontakta banken för att åtgärda "
 "problemet."
 
+msgid ""
+"We currently only support photo TAN with QR code scanning, which is not "
+"available for your user."
+msgstr ""
+"Just nu stöder vi enbart photoTAN med QR-kodskanning, vilket inte är "
+"tillgängligt för din användare."
+
+msgid "Scan the QR code with the photoTAN app."
+msgstr "Skanna QR-koden med photoTAN-appen."
+
+msgid "TAN"
+msgstr "TAN"
+
+msgid "Enter the TAN from the photoTAN app."
+msgstr "Ange TAN från photoTAN-appen."
+
+msgid "Unknown error"
+msgstr "Okänt fel"
+
+msgid ""
+"You have reached the maximum number of mobile device registrations. Please "
+"check if you can unregister some devices using the bank's web portal, or "
+"contact the bank."
+msgstr ""
+"Du har nått maximalt antal mobila enhetsregistreringar. Kontrollera om du "
+"kan avregistrera vissa enheter med hjälp av bankens webbportal eller "
+"kontakta banken."
+
+msgid "You have reached maximum number of tries. Please try again later"
+msgstr "Du har nått maximalt antal försök. Försök igen senare."
+
+msgid ""
+"Your password has changed. Please enter the latest password in all other "
+"devices."
+msgstr ""
+"Ditt lösenord har ändrats. Ange det senaste lösenordet i alla andra enheter."
+
+msgid "The consent has been expired. "
+msgstr "Samtycket har utgått. "
+
+msgid "The consent is invalid. "
+msgstr "Samtycket är ogiltigt. "
+
+msgid "The consent has been revoked by the user. "
+msgstr "Samtycket har återkallats av användaren. "
+
+msgid "The consent has been revoked by the bank. "
+msgstr "Samtycket har återkallats av banken. "
+
 msgid "Recipient accounts missing from accounts ledger"
 msgstr "Mottagarkonton saknas i kontolistan"
 
 msgid "Transfer rejected by the Bank"
 msgstr "Överföringen nekades av banken"
 
+msgid "Could not validate the destination account."
+msgstr "Kunde inte validera destinationskontot."
+
+msgid "Could not validate the date you entered for the payment."
+msgstr "Kunde inte validera det datum du angett för betalningen."
+
+msgid "Could not execute payment due to insufficient funds."
+msgstr "Kunde inte genomföra betalningen på grund av otillräckligt med pengar."
+
+msgid "Could not validate the account, you are trying to pay from."
+msgstr "Kunde inte validera kontot som du försöker betala med."
+
+msgid "The reference you provided for the payment is not valid."
+msgstr "Den referens du angett för betalningen är inte giltig."
+
+msgid "Payment authentication failed."
+msgstr "Betalningsautentisering misslyckades."
+
+msgid "Payment authorization failed."
+msgstr "Betalningsauktorisering misslyckades."
+
+msgid "Payment validation failed."
+msgstr "Betalningsvalidering misslyckades."
+
+msgid "Payment failed."
+msgstr "Betalning misslyckades."
+
+msgid "CodigoAlfa"
+msgstr "CodigoAlfa"
+
+msgid "CodigoFamilia"
+msgstr "CodigoFamilia"
+
+msgid "CodigoSubFamilia"
+msgstr "CodigoSubFamilia"
+
+msgid "Codigo"
+msgstr "Codigo"
+
+msgid "Valor"
+msgstr "Valor"
+
+msgid "CodigoMoeda"
+msgstr "CodigoMoeda"
+
+msgid "DescricaoTitulo"
+msgstr "DescricaoTitulo"
+
+msgid "NumeroOperacao"
+msgstr "NumeroOperacao"
+
+msgid "Nome"
+msgstr "Nome"
+
+msgid "ValorLimite"
+msgstr "ValorLimite"
+
+msgid "DataInicio"
+msgstr "DataInicio"
+
+msgid "DataFim"
+msgstr "DataFim"
+
+msgid "uuid"
+msgstr "uuid"
+
+msgid "MontanteTransaccao"
+msgstr "MontanteTransaccao"
+
+msgid "DataTransaccao"
+msgstr "DataTransaccao"
+
+msgid "DescricaoTransaccao"
+msgstr "DescricaoTransaccao"
+
+msgid "saldoContabilisticoConta"
+msgstr "saldoContabilisticoConta"
+
+msgid "dataMovimento"
+msgstr "dataMovimento"
+
+msgid "descricao"
+msgstr "descricao"
+
+msgid "valorMoedaConta"
+msgstr "valorMoedaConta"
+
+msgid "moedaOperacao"
+msgstr "moedaOperacao"
+
+msgid "NIP"
+msgstr "NIP"
+
+msgid "ContaFormatada"
+msgstr "ContaFormatada"
+
+msgid "ClienteContaId"
+msgstr "ClienteContaId"
+
+msgid "Moeda"
+msgstr "Moeda"
+
+msgid "nuc"
+msgstr "nuc"
+
+msgid "tipo"
+msgstr "tipo"
+
+msgid "ordem"
+msgstr "ordem"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "UUID"
+msgstr "UUID"
+
+msgid "TokenDefinition"
+msgstr "TokenDefinition"
+
+msgid "mobilePhoneNumber"
+msgstr "mobilePhoneNumber"
+
+msgid "processedOn"
+msgstr "processedOn"
+
+msgid "replywith"
+msgstr "replywith"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "versionToken"
+msgstr "versionToken"
+
+msgid "Could not initiate login session."
+msgstr "Kunde inte starta inloggningssession."
+
+msgid "Error message: "
+msgstr "Felmeddelande: "
+
+msgid ""
+"Another authentication attempt was initiated while authenticating. Please "
+"try again."
+msgstr ""
+"Ett till autentiseringsförsök genomfördes under autentisering. Försök igen."
+
+msgid "Your session has been terminated by the bank."
+msgstr "Din session har avslutats av banken."
+
+msgid "Please ensure that you have entered the correct mobile number"
+msgstr "Kontrollera att du har angett rätt mobilnummer."
+
 msgid "Source and destination account must not be the same."
 msgstr "Avsändarkonto och mottagarkonto kan inte vara samma."
 
+msgid "Invalid username type"
+msgstr "Ogiltig typ av användarnamn"
+
 msgid "The transfer amount, less than 1 SEK is not supported."
 msgstr "Överföringsbelopp på mindre än 1 kr stöds inte."
+
+msgid "This type of payment is unavailable for you"
+msgstr "Denna typ av betalning är inte tillgänglig för dig"
+
+msgid "The code you entered is not valid"
+msgstr "Den kod du har angett är inte giltig"
+
+msgid "Enter the code you received from the bank"
+msgstr "Ange den kod du fick från banken"
+
+msgid "Failed to read user input"
+msgstr "Kunde inte läsa användarinmatning"
+
+msgid ""
+"The first time you use your BankId, you need to accept the terms and "
+"conditions. Please login to the Länsförsäkringar with your moible BankId to "
+"do this"
+msgstr ""
+"Första gången du använder BankID måste du godkänna villkoren och "
+"bestämmelserna. Logga in hos Länsförsäkringar med ditt mobila BankID för att "
+"göra detta"
+
+msgid ""
+"We currently only support push PhotoTAN method, which is not available for "
+"your user."
+msgstr ""
+"Vi stöder för närvarande endast push PhotoTAN-metoden som inte är "
+"tillgänglig för din användare."
+
+msgid "Authenticating with Mobile BankID timed out. Please try again."
+msgstr "Autentisering med mobilt BankID har avbrutits. Försök igen."
+
+msgid ""
+"Your existing credentials have been invalidated, Please delete this "
+"credentials and create a new one."
+msgstr ""
+"Dina befintliga uppgifter har ogiltigförklarats. Ta bort dessa uppgifter och "
+"skapa nypa."
+
+msgid "Password change is required."
+msgstr "Lösenordet måste ändras."
+
+msgid "User must accept terms in other channel."
+msgstr "Användaren måste godkänna villkoren i en annan kanal."
+
+msgid ""
+"In order to add new recipients you need to activate Mobile BankID for "
+"extended use. You can find more information on how to extend your Mobile "
+"BankID in your Internet bank."
+msgstr ""
+"För att kunna lägga till en ny mottagare behöver du aktivera utökad "
+"användning av Mobilt BankID. Mer information om hur du utökar användning av "
+"Mobilt BankID hittar du i din Internetbank."
+
+msgid "Could not save new recipient, check that the information is correct"
+msgstr ""
+"Det gick inte att spara ny mottagare, kontrollera att informationen är "
+"korrekt"
+
+msgid "The payment was rejected by the bank."
+msgstr "Betalningen nekades av banken."
+
+msgid "The payment was cancelled by the user."
+msgstr "Betalningen avbröts av användaren."
+
+msgid "An error occurred when confirming the payment."
+msgstr "Ett fel inträffade när betalningen skulle bekräftas."
