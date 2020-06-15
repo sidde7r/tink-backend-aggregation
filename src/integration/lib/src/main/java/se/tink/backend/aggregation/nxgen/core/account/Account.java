@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -59,7 +60,7 @@ public abstract class Account {
     protected ExactCurrencyAmount exactCreditLimit;
     protected Map<String, String> payload;
     protected AccountCapabilities capabilities;
-    protected List<Holder> holders;
+    protected final List<Holder> holders;
     protected AccountHolderType holderType;
 
     protected Account(AccountBuilder<? extends Account, ?> builder, BalanceModule balanceModule) {
@@ -270,6 +271,16 @@ public abstract class Account {
         account.setCreditLimit(this.exactCreditLimit);
         account.setCapabilities(this.capabilities);
 
+        if (holders.size() > 0 || java.util.Objects.nonNull(holderType)) {
+            AccountHolder accountHolder = new AccountHolder();
+            accountHolder.setType(
+                    Optional.ofNullable(holderType)
+                            .orElse(AccountHolderType.PERSONAL)
+                            .toSystemType());
+            accountHolder.setIdentities(
+                    holders.stream().map(Holder::toSystemHolder).collect(Collectors.toList()));
+            account.setAccountHolder(accountHolder);
+        }
         return account;
     }
 

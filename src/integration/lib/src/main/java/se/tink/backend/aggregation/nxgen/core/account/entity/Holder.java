@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.nxgen.core.account.entity;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Objects;
+import java.util.Optional;
 import javax.annotation.Nonnull;
+import se.tink.backend.agents.rpc.HolderIdentity;
+import se.tink.backend.agents.rpc.HolderRole;
 
 public class Holder {
     private String name;
@@ -49,8 +52,25 @@ public class Holder {
         return "Holder{" + "name='" + name + '\'' + ", role=" + role + '}';
     }
 
+    public HolderIdentity toSystemHolder() {
+        HolderIdentity systemHolder = new HolderIdentity();
+        systemHolder.setName(name);
+        systemHolder.setRole(Optional.ofNullable(role).map(Role::toSystemRole).orElse(null));
+        return systemHolder;
+    }
+
     public enum Role {
-        HOLDER,
-        AUTHORIZED_USER;
+        HOLDER(HolderRole.HOLDER),
+        AUTHORIZED_USER(HolderRole.AUTHORIZED_USER);
+
+        private final HolderRole systemRole;
+
+        Role(HolderRole systemRole) {
+            this.systemRole = systemRole;
+        }
+
+        public HolderRole toSystemRole() {
+            return systemRole;
+        }
     }
 }
