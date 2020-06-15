@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.AccountNumberToIbanConverter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.DummyConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.converter.SparbankenSydAccountNumberToIbanConverter;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -54,7 +54,7 @@ public class SdcSeAgent extends SdcAgent
 
     @Override
     protected AccountNumberToIbanConverter getIbanConverter() {
-        return new DummyConverter();
+        return new SparbankenSydAccountNumberToIbanConverter();
     }
 
     @Override
