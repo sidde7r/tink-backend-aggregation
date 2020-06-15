@@ -122,7 +122,7 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
         return Arrays.asList(credentials.getField(Field.Key.IBAN).split(","));
     }
 
-    private ConsentResponse initializeProcess(List<String> ibans) {
+    private ConsentResponse initializeProcess(List<String> ibans) throws LoginException {
         ConsentResponse consentResponse = apiClient.createConsent(ibans);
         persistentStorage.saveConsentId(consentResponse.getConsentId());
         return consentResponse;

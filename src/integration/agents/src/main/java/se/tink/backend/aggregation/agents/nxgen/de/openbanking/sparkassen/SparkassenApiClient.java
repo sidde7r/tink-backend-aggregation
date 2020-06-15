@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.IBAN_INVALID;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.ErrorMessages.PSU_CREDENTIALS_INVALID;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -7,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
@@ -59,7 +63,7 @@ public class SparkassenApiClient {
         return createRequest(url).header(HeaderKeys.CONSENT_ID, consentId);
     }
 
-    public ConsentResponse createConsent(List<String> ibans) {
+    public ConsentResponse createConsent(List<String> ibans) throws LoginException {
         List<AccountsEntity> accountsEntities =
                 ibans.stream()
                         .map(String::trim)
@@ -74,9 +78,16 @@ public class SparkassenApiClient {
                         FormValues.FREQUENCY_PER_DAY,
                         false);
 
-        return createRequest(Urls.GET_CONSENT)
-                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, false)
-                .post(ConsentResponse.class, getConsentRequest);
+        try {
+            return createRequest(Urls.GET_CONSENT)
+                    .header(HeaderKeys.TPP_REDIRECT_PREFERRED, false)
+                    .post(ConsentResponse.class, getConsentRequest);
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(String.class).contains(IBAN_INVALID)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw e;
+        }
     }
 
     public InitAuthorizationResponse initializeAuthorization(
@@ -88,7 +99,7 @@ public class SparkassenApiClient {
                             InitAuthorizationResponse.class,
                             new InitAuthorizationRequest(new PsuDataEntity(password)));
         } catch (HttpResponseException e) {
-            if (e.getResponse().getBody(String.class).contains("PSU_CREDENTIALS_INVALID")) {
+            if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
             throw e;
