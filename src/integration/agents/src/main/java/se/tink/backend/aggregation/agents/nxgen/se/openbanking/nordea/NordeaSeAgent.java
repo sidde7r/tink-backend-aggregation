@@ -10,17 +10,18 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSePaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.transactionalaccount.NordeaSeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.NordeaBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -47,25 +48,21 @@ public final class NordeaSeAgent extends NordeaBaseAgent
     @Override
     protected Authenticator constructAuthenticator() {
 
-        final NordeaBaseConfiguration nordeaConfiguration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(NordeaBaseConfiguration.class);
-
-        BankIdAuthenticationController bankIdAuthenticationController =
-                new BankIdAuthenticationController<>(
-                        supplementalRequester,
-                        new NordeaSeBankIdAuthenticator(
-                                (NordeaSeApiClient) apiClient,
-                                language,
-                                nordeaConfiguration.getScopes()),
+        NordeaBaseAuthenticator authenticator =
+                new NordeaSeAuthenticator((NordeaSeApiClient) apiClient);
+        OAuth2AuthenticationController oAuth2AuthenticationController =
+                new OAuth2AuthenticationController(
                         persistentStorage,
-                        credentials);
-
+                        supplementalInformationHelper,
+                        authenticator,
+                        credentials,
+                        strongAuthenticationState);
         return new AutoAuthenticationController(
                 request,
-                systemUpdater,
-                bankIdAuthenticationController,
-                bankIdAuthenticationController);
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override
