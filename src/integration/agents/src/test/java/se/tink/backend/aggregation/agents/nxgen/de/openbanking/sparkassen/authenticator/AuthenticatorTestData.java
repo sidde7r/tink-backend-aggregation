@@ -5,7 +5,9 @@ import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentStatusResponse;
@@ -44,6 +46,9 @@ class AuthenticatorTestData {
 
     static final HttpResponseException HTTP_RESPONSE_EXCEPTION =
             new HttpResponseException(null, null);
+
+    static final LoginException LOGIN_EXCEPTION =
+            new LoginException(LoginError.INCORRECT_CREDENTIALS);
 
     static final SupplementalInfoException SUPPLEMENTAL_INFO_EXCEPTION =
             new SupplementalInfoException(SupplementalInfoError.NO_VALID_CODE);

@@ -20,6 +20,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.INIT_AUTH_RESPONSE_NO_METHOD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.INIT_AUTH_RESPONSE_OK_ONE_METHOD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.INIT_AUTH_RESPONSE_OK_TWO_METHODS;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.LOGIN_EXCEPTION;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.OK_CREDENTIALS;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.OK_PASSWORD;
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.AuthenticatorTestData.OK_USERNAME;
@@ -211,7 +212,8 @@ public class SparkassenAuthenticatorTest {
     }
 
     @Test
-    public void shouldThrowHttpResponseExceptionWhenInitializeAuthorizatinCallFails() {
+    public void shouldThrowHttpResponseExceptionWhenInitializeAuthorizationCallFails()
+            throws AuthenticationException {
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationThrow(HTTP_RESPONSE_EXCEPTION);
@@ -229,7 +231,27 @@ public class SparkassenAuthenticatorTest {
     }
 
     @Test
-    public void shouldThrowIllegalStateExceptionWhenCreateConsentResponseHasNoSCAMethods() {
+    public void shouldThrowLoginExceptionWhenWrongCredentialsProvided()
+            throws AuthenticationException {
+        // given
+        whenCreateConsentReturn(CONSENT_RESPONSE_OK);
+        whenWrongCredentialsThrow(LOGIN_EXCEPTION);
+
+        // when
+        Throwable throwable = catchThrowable(() -> authenticator.authenticate(OK_CREDENTIALS));
+
+        // then
+        assertThat(persistentStorage.getConsentId()).isEqualTo(TEST_CONSENT_ID);
+        assertThat(throwable).isEqualTo(LOGIN_EXCEPTION);
+        verifyCreateConsentCalled();
+        verifyInitializeAuthorizationCalled();
+        verifyNoMoreInteractions(apiClient);
+        verifyNoMoreInteractions(supplementalInformationHelper);
+    }
+
+    @Test
+    public void shouldThrowIllegalStateExceptionWhenCreateConsentResponseHasNoSCAMethods()
+            throws AuthenticationException {
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_NO_METHOD);
@@ -251,7 +273,7 @@ public class SparkassenAuthenticatorTest {
 
     @Test
     public void shouldThrowHttpResponseExceptionWhenSelectAuthorizationMethodCallFails()
-            throws SupplementalInfoException {
+            throws AuthenticationException {
 
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
@@ -276,7 +298,7 @@ public class SparkassenAuthenticatorTest {
 
     @Test
     public void shouldThrowIllegalStateExceptionWhenSelectAuthMethodResponseMissingCrucialData()
-            throws SupplementalInfoException {
+            throws AuthenticationException {
 
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
@@ -303,7 +325,7 @@ public class SparkassenAuthenticatorTest {
 
     @Test
     public void shouldThrowSuppInfoExceptionWhenNoSCAMethodProvidedByUser()
-            throws SupplementalInfoException {
+            throws AuthenticationException {
 
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
@@ -326,7 +348,7 @@ public class SparkassenAuthenticatorTest {
 
     @Test
     public void shouldThrowSuppInfoExceptionWhenNoOTPProvidedByUser()
-            throws SupplementalInfoException {
+            throws AuthenticationException {
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
@@ -348,7 +370,7 @@ public class SparkassenAuthenticatorTest {
 
     @Test
     public void shouldThrowHttpResponseExceptionWhenFinalizeAuthorizationCallFails()
-            throws SupplementalInfoException {
+            throws AuthenticationException {
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
@@ -372,7 +394,7 @@ public class SparkassenAuthenticatorTest {
 
     @Test
     public void shouldThrowLoginExceptionWhenFinalizeAuthorizationResponseHasFailedStatus()
-            throws SupplementalInfoException {
+            throws AuthenticationException {
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
@@ -396,7 +418,7 @@ public class SparkassenAuthenticatorTest {
 
     @Test
     public void shouldThrowLoginExceptionWhenFinalizeAuthorizationResponseHasUnsupportedStatus()
-            throws SupplementalInfoException {
+            throws AuthenticationException {
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_OK);
         whenInitializeAuthorizationReturn(INIT_AUTH_RESPONSE_OK_ONE_METHOD);
@@ -479,17 +501,25 @@ public class SparkassenAuthenticatorTest {
     }
 
     private void whenInitializeAuthorizationReturn(
-            InitAuthorizationResponse initializeAuthorizationResult) {
+            InitAuthorizationResponse initializeAuthorizationResult)
+            throws AuthenticationException {
         when(apiClient.initializeAuthorization(TEST_AUTH_URL, OK_USERNAME, OK_PASSWORD))
                 .thenReturn(initializeAuthorizationResult);
     }
 
-    private void whenInitializeAuthorizationThrow(HttpResponseException httpResponseException) {
+    private void whenInitializeAuthorizationThrow(HttpResponseException httpResponseException)
+            throws AuthenticationException {
         when(apiClient.initializeAuthorization(TEST_AUTH_URL, OK_USERNAME, OK_PASSWORD))
                 .thenThrow(httpResponseException);
     }
 
-    private void verifyInitializeAuthorizationCalled() {
+    private void whenWrongCredentialsThrow(LoginException loginException)
+            throws AuthenticationException {
+        when(apiClient.initializeAuthorization(TEST_AUTH_URL, OK_USERNAME, OK_PASSWORD))
+                .thenThrow(loginException);
+    }
+
+    private void verifyInitializeAuthorizationCalled() throws AuthenticationException {
         verify(apiClient).initializeAuthorization(TEST_AUTH_URL, OK_USERNAME, OK_PASSWORD);
     }
 

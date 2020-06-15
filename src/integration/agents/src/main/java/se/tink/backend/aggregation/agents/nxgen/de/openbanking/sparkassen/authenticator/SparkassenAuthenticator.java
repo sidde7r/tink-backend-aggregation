@@ -129,7 +129,8 @@ public class SparkassenAuthenticator implements MultiFactorAuthenticator, AutoAu
     }
 
     private InitAuthorizationResponse initializeAuthorizationOfConsent(
-            ConsentResponse consentResponse, String username, String password) {
+            ConsentResponse consentResponse, String username, String password)
+            throws AuthenticationException {
 
         URL url =
                 Optional.ofNullable(consentResponse.getLinks())

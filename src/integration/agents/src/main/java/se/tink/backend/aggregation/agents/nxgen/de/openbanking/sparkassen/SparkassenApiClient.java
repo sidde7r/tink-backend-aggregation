@@ -6,6 +6,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants.PathVariables;
@@ -28,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetche
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class SparkassenApiClient {
@@ -77,12 +80,19 @@ public class SparkassenApiClient {
     }
 
     public InitAuthorizationResponse initializeAuthorization(
-            URL url, String username, String password) {
-        return createRequest(url)
-                .header(HeaderKeys.PSU_ID, username)
-                .post(
-                        InitAuthorizationResponse.class,
-                        new InitAuthorizationRequest(new PsuDataEntity(password)));
+            URL url, String username, String password) throws AuthenticationException {
+        try {
+            return createRequest(url)
+                    .header(HeaderKeys.PSU_ID, username)
+                    .post(
+                            InitAuthorizationResponse.class,
+                            new InitAuthorizationRequest(new PsuDataEntity(password)));
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getBody(String.class).contains("PSU_CREDENTIALS_INVALID")) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            throw e;
+        }
     }
 
     public SelectAuthenticationMethodResponse selectAuthorizationMethod(
