@@ -7,13 +7,13 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class BankdataPaymentAccountCapabilities {
 
-    public static AccountCapabilities.Answer canMakeDomesticTransfer(
+    public static AccountCapabilities.Answer canExecuteExternalTransfer(
             String productName,
             AccountTypes accountType,
             BankdataAccountEntity bankdataAccountEntity) {
-        Boolean canMakeDomesticTransfer = bankdataAccountEntity.isTransfersFromAllowed();
+        Boolean canExecuteExternalTransfer = bankdataAccountEntity.isTransfersFromAllowed();
         AccountCapabilities.Answer answer =
-                AccountCapabilities.Answer.From(canMakeDomesticTransfer);
+                AccountCapabilities.Answer.From(canExecuteExternalTransfer);
         if (answer == AccountCapabilities.Answer.YES || answer == AccountCapabilities.Answer.NO) {
             return answer;
         }
@@ -32,7 +32,7 @@ public class BankdataPaymentAccountCapabilities {
                 .orElse(AccountCapabilities.Answer.UNKNOWN);
     }
 
-    public static AccountCapabilities.Answer canReceiveDomesticTransfer(
+    public static AccountCapabilities.Answer canReceiveExternalTransfer(
             String productName,
             AccountTypes accountType,
             BankdataAccountEntity bankdataAccountEntity) {
@@ -57,7 +57,7 @@ public class BankdataPaymentAccountCapabilities {
                 .orElse(AccountCapabilities.Answer.UNKNOWN);
     }
 
-    public static AccountCapabilities.Answer canWithdrawFunds(
+    public static AccountCapabilities.Answer canWithdrawCash(
             String productName, AccountTypes accountType) {
         // by default checking accounts are having this capability
         // but can be verified exactly the same way as below (for non-checking accounts)
@@ -80,14 +80,14 @@ public class BankdataPaymentAccountCapabilities {
 
         // our current understanding is that canPlaceFunds is fulfilled if one of the following is
         // true:
-        // - canReceiveDomesticTransfer is true or
+        // - canReceiveExternalTransfer is true or
         // - you can make a physical deposit at a bank office or by depositing through a depositing
         // box/machine
-        AccountCapabilities.Answer canReceiveDomesticTransfer =
-                canReceiveDomesticTransfer(productName, accountType, bankdataAccountEntity);
-        if (canReceiveDomesticTransfer == AccountCapabilities.Answer.YES
-                || canReceiveDomesticTransfer == AccountCapabilities.Answer.NO) {
-            return canReceiveDomesticTransfer;
+        AccountCapabilities.Answer canReceiveExternalTransfer =
+                canReceiveExternalTransfer(productName, accountType, bankdataAccountEntity);
+        if (canReceiveExternalTransfer == AccountCapabilities.Answer.YES
+                || canReceiveExternalTransfer == AccountCapabilities.Answer.NO) {
+            return canReceiveExternalTransfer;
         }
         // by default checking accounts are having this capability
         if (accountType == AccountTypes.CHECKING) {

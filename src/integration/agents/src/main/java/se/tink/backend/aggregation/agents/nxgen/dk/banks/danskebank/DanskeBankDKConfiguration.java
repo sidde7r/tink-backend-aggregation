@@ -116,7 +116,7 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     }
 
     @Override
-    public AccountCapabilities.Answer canMakeDomesticTransfer(String productCode) {
+    public AccountCapabilities.Answer canExecuteExternalTransfer(String productCode) {
         return ImmutableMap.<String, AccountCapabilities.Answer>builder()
                 // log-in via www to the bank and under account check that it has option to make
                 // transfers (incl international transfers)
@@ -129,7 +129,7 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     }
 
     @Override
-    public AccountCapabilities.Answer canReceiveDomesticTransfer(String productCode) {
+    public AccountCapabilities.Answer canReceiveExternalTransfer(String productCode) {
         return ImmutableMap.<String, AccountCapabilities.Answer>builder()
                 // see transfer history & and saved recipients/payees
                 .put("12J", AccountCapabilities.Answer.YES)
@@ -145,7 +145,7 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
         return ImmutableMap.<String, AccountCapabilities.Answer>builder()
                 // our current understanding is that canPlaceFunds is fulfilled if one of the
                 // following is true:
-                // - canReceiveDomesticTransfer is true or
+                // - canReceiveExternalTransfer is true or
                 // - you can make a physical deposit at a bank office or by depositing through a
                 // depositing box/machine
                 //
@@ -160,7 +160,7 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     }
 
     @Override
-    public AccountCapabilities.Answer canWithdrawFunds(String productCode) {
+    public AccountCapabilities.Answer canWithdrawCash(String productCode) {
         return ImmutableMap.<String, AccountCapabilities.Answer>builder()
                 // log-in via www to the bank and see:
                 // Card & currency -> Card overview -> Card limits -> info about limits for ATM
