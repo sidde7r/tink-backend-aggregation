@@ -66,7 +66,7 @@ public class SparebankAccountFetcherTest {
                 "NO8591351631959",
                 "91351631959",
                 "enc!!90hSjpSdpeftHiDSYiPaHVGoKHriD-6ARR4JlXcEebYbYa_WNwJvqevSrba4WtnD",
-                "",
+                null,
                 "/v1/sandbox/accounts/zxcv/transactions");
     }
 
