@@ -73,8 +73,8 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     @Override
-    public B canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds) {
-        this.capabilities.setCanWithdrawFunds(canWithdrawFunds);
+    public B canWithdrawCash(AccountCapabilities.Answer canWithdrawCash) {
+        this.capabilities.setCanWithdrawCash(canWithdrawCash);
         return buildStep();
     }
 
@@ -85,14 +85,14 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     @Override
-    public B canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer) {
-        this.capabilities.setCanMakeDomesticTransfer(canMakeDomesticTransfer);
+    public B canExecuteExternalTransfer(AccountCapabilities.Answer canExecuteExternalTransfer) {
+        this.capabilities.setCanExecuteExternalTransfer(canExecuteExternalTransfer);
         return buildStep();
     }
 
     @Override
-    public B canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer) {
-        this.capabilities.setCanReceiveDomesticTransfer(canReceiveDomesticTransfer);
+    public B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer) {
+        this.capabilities.setCanReceiveExternalTransfer(canReceiveExternalTransfer);
         return buildStep();
     }
 

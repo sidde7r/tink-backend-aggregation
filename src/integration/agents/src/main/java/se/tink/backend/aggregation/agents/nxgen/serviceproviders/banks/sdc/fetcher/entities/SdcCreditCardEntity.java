@@ -80,9 +80,9 @@ public class SdcCreditCardEntity {
                 .setAccountNumber(creditcardNumber.replace(" ", ""))
                 .setName(creditCardAccount.getName())
                 .canPlaceFunds(creditCardAccount.canPlaceFunds())
-                .canWithdrawFunds(creditCardAccount.canWithdrawFunds())
-                .canMakeDomesticTransfer(creditCardAccount.canMakeDomesticTransfer())
-                .canReceiveDomesticTransfer(creditCardAccount.canReceiveDomesticTransfer())
+                .canWithdrawCash(creditCardAccount.canWithdrawFunds())
+                .canExecuteExternalTransfer(creditCardAccount.canMakeDomesticTransfer())
+                .canReceiveExternalTransfer(creditCardAccount.canReceiveDomesticTransfer())
                 .build();
     }
 

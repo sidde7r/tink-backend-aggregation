@@ -65,13 +65,13 @@ public class CreditCardDetailsResponse {
                 .withInferredAccountFlags()
                 .withId(idModule)
                 // Withdraw funds at ATM
-                .canWithdrawFunds(AccountCapabilities.Answer.YES)
+                .canWithdrawCash(AccountCapabilities.Answer.YES)
                 // The `permissions` object does not contain any useful information for these
                 // fields.
                 // Setting to UNKNOWN for the time being
                 .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
-                .canReceiveDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
-                .canMakeDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                 .setApiIdentifier(cardId)
                 .build();
     }

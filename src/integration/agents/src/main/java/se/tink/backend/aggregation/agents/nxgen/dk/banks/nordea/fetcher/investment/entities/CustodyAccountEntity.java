@@ -67,9 +67,9 @@ public class CustodyAccountEntity {
                 // You can place and withdraw funds from an Investment account (e.g. `cashAmount`),
                 // but not make or receive domestic transfers.
                 .canPlaceFunds(AccountCapabilities.Answer.YES)
-                .canWithdrawFunds(AccountCapabilities.Answer.YES)
-                .canReceiveDomesticTransfer(AccountCapabilities.Answer.NO)
-                .canMakeDomesticTransfer(AccountCapabilities.Answer.NO)
+                .canWithdrawCash(AccountCapabilities.Answer.YES)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.NO)
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.NO)
                 .build();
     }
 }

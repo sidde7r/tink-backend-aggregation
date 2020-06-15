@@ -16,19 +16,19 @@ public class CapabilitiesRule
     }
 
     private boolean areAllCapabilitiesYes(AccountCapabilities accountCapabilities) {
-        return accountCapabilities.getCanMakeDomesticTransfer() == AccountCapabilities.Answer.YES
-                && accountCapabilities.getCanReceiveDomesticTransfer()
+        return accountCapabilities.getCanExecuteExternalTransfer() == AccountCapabilities.Answer.YES
+                && accountCapabilities.getCanReceiveExternalTransfer()
                         == AccountCapabilities.Answer.YES
                 && accountCapabilities.getCanPlaceFunds() == AccountCapabilities.Answer.YES
-                && accountCapabilities.getCanWithdrawFunds() == AccountCapabilities.Answer.YES;
+                && accountCapabilities.getCanWithdrawCash() == AccountCapabilities.Answer.YES;
     }
 
     private boolean isAnyCapabilityNo(AccountCapabilities accountCapabilities) {
-        return accountCapabilities.getCanMakeDomesticTransfer() == AccountCapabilities.Answer.NO
-                || accountCapabilities.getCanReceiveDomesticTransfer()
+        return accountCapabilities.getCanExecuteExternalTransfer() == AccountCapabilities.Answer.NO
+                || accountCapabilities.getCanReceiveExternalTransfer()
                         == AccountCapabilities.Answer.NO
                 || accountCapabilities.getCanPlaceFunds() == AccountCapabilities.Answer.NO
-                || accountCapabilities.getCanWithdrawFunds() == AccountCapabilities.Answer.NO;
+                || accountCapabilities.getCanWithdrawCash() == AccountCapabilities.Answer.NO;
     }
 
     // Note: This rule is ONLY applicable for providers in a PSD2 market (see `isApplicable`).

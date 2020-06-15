@@ -384,8 +384,8 @@ public abstract class Account {
         }
 
         @Override
-        public B canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds) {
-            this.capabilities.setCanWithdrawFunds(canWithdrawFunds);
+        public B canWithdrawCash(AccountCapabilities.Answer canWithdrawCash) {
+            this.capabilities.setCanWithdrawCash(canWithdrawCash);
             return buildStep();
         }
 
@@ -396,14 +396,14 @@ public abstract class Account {
         }
 
         @Override
-        public B canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer) {
-            this.capabilities.setCanMakeDomesticTransfer(canMakeDomesticTransfer);
+        public B canExecuteExternalTransfer(AccountCapabilities.Answer canExecuteExternalTransfer) {
+            this.capabilities.setCanExecuteExternalTransfer(canExecuteExternalTransfer);
             return buildStep();
         }
 
         @Override
-        public B canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer) {
-            this.capabilities.setCanReceiveDomesticTransfer(canReceiveDomesticTransfer);
+        public B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer) {
+            this.capabilities.setCanReceiveExternalTransfer(canReceiveExternalTransfer);
             return buildStep();
         }
 
@@ -583,8 +583,8 @@ public abstract class Account {
             return self();
         }
 
-        public T canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds) {
-            this.capabilities.setCanWithdrawFunds(canWithdrawFunds);
+        public T canWithdrawCash(AccountCapabilities.Answer canWithdrawCash) {
+            this.capabilities.setCanWithdrawCash(canWithdrawCash);
             return self();
         }
 
@@ -593,13 +593,13 @@ public abstract class Account {
             return self();
         }
 
-        public T canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer) {
-            this.capabilities.setCanMakeDomesticTransfer(canMakeDomesticTransfer);
+        public T canExecuteExternalTransfer(AccountCapabilities.Answer canExecuteExternalTransfer) {
+            this.capabilities.setCanExecuteExternalTransfer(canExecuteExternalTransfer);
             return self();
         }
 
-        public T canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer) {
-            this.capabilities.setCanReceiveDomesticTransfer(canReceiveDomesticTransfer);
+        public T canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer) {
+            this.capabilities.setCanReceiveExternalTransfer(canReceiveExternalTransfer);
             return self();
         }
 

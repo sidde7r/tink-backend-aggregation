@@ -141,11 +141,11 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
-                .canMakeDomesticTransfer(configuration.canMakeDomesticTransfer(accountProduct))
-                .canReceiveDomesticTransfer(
+                .canExecuteExternalTransfer(configuration.canMakeDomesticTransfer(accountProduct))
+                .canReceiveExternalTransfer(
                         configuration.canReceiveDomesticTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
-                .canWithdrawFunds(configuration.canWithdrawFunds(accountProduct))
+                .canWithdrawCash(configuration.canWithdrawFunds(accountProduct))
                 .build();
     }
 
@@ -157,11 +157,11 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
-                .canMakeDomesticTransfer(configuration.canMakeDomesticTransfer(accountProduct))
-                .canReceiveDomesticTransfer(
+                .canExecuteExternalTransfer(configuration.canMakeDomesticTransfer(accountProduct))
+                .canReceiveExternalTransfer(
                         configuration.canReceiveDomesticTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
-                .canWithdrawFunds(configuration.canWithdrawFunds(accountProduct))
+                .canWithdrawCash(configuration.canWithdrawFunds(accountProduct))
                 .build();
     }
 
@@ -176,10 +176,10 @@ public class AccountEntity {
                 .setBankIdentifier(accountNoInt)
                 // checking accounts are having by default the following 4 capabilities
                 // but you can confirm that easily the same way as done for other account types
-                .canMakeDomesticTransfer(AccountCapabilities.Answer.YES)
-                .canReceiveDomesticTransfer(AccountCapabilities.Answer.YES)
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.YES)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.YES)
                 .canPlaceFunds(AccountCapabilities.Answer.YES)
-                .canWithdrawFunds(AccountCapabilities.Answer.YES)
+                .canWithdrawCash(AccountCapabilities.Answer.YES)
                 .addAccountFlag(AccountFlag.PSD2_PAYMENT_ACCOUNT)
                 .build();
     }
@@ -192,11 +192,11 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
-                .canMakeDomesticTransfer(configuration.canMakeDomesticTransfer(accountProduct))
-                .canReceiveDomesticTransfer(
+                .canExecuteExternalTransfer(configuration.canMakeDomesticTransfer(accountProduct))
+                .canReceiveExternalTransfer(
                         configuration.canReceiveDomesticTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
-                .canWithdrawFunds(configuration.canWithdrawFunds(accountProduct))
+                .canWithdrawCash(configuration.canWithdrawFunds(accountProduct))
                 .build();
     }
 

@@ -50,10 +50,10 @@ public class SdcLoanAccount {
                 // Instead we assume that we do not have any of the capabilities.
                 // Note: The capabilities are meant to signify "instant/direct" result, you can
                 // normally not place/withdraw funds directly to/from a loan account.
-                .canWithdrawFunds(AccountCapabilities.Answer.NO)
+                .canWithdrawCash(AccountCapabilities.Answer.NO)
                 .canPlaceFunds(AccountCapabilities.Answer.NO)
-                .canReceiveDomesticTransfer(AccountCapabilities.Answer.NO)
-                .canMakeDomesticTransfer(AccountCapabilities.Answer.NO)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.NO)
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.NO)
                 .build();
     }
 }

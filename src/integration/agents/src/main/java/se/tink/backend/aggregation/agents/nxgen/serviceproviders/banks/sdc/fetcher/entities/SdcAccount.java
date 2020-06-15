@@ -43,9 +43,9 @@ public class SdcAccount {
                         .setName(name)
                         .setBankIdentifier(normalizedBankId())
                         .canPlaceFunds(canPlaceFunds())
-                        .canWithdrawFunds(canWithdrawFunds())
-                        .canMakeDomesticTransfer(canMakeDomesticTransfer())
-                        .canReceiveDomesticTransfer(canReceiveDomesticTransfer());
+                        .canWithdrawCash(canWithdrawFunds())
+                        .canExecuteExternalTransfer(canMakeDomesticTransfer())
+                        .canReceiveExternalTransfer(canReceiveDomesticTransfer());
 
         if (accountTypes.equals(AccountTypes.CHECKING)
                 || accountTypes.equals(AccountTypes.SAVINGS)) {
@@ -63,9 +63,9 @@ public class SdcAccount {
                 .setName(name)
                 .setBankIdentifier(normalizedBankId())
                 .canPlaceFunds(canPlaceFunds())
-                .canWithdrawFunds(canWithdrawFunds())
-                .canMakeDomesticTransfer(canMakeDomesticTransfer())
-                .canReceiveDomesticTransfer(canReceiveDomesticTransfer())
+                .canWithdrawCash(canWithdrawFunds())
+                .canExecuteExternalTransfer(canMakeDomesticTransfer())
+                .canReceiveExternalTransfer(canReceiveDomesticTransfer())
                 .build();
     }
 

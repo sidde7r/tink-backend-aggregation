@@ -41,9 +41,9 @@ public class SdcCustodyDetailsModel {
                 // - We cannot make a domestic transfer.
                 // - We cannot receive a domestic transfer.
                 .canPlaceFunds(AccountCapabilities.Answer.YES)
-                .canWithdrawFunds(AccountCapabilities.Answer.YES)
-                .canMakeDomesticTransfer(AccountCapabilities.Answer.NO)
-                .canReceiveDomesticTransfer(AccountCapabilities.Answer.NO)
+                .canWithdrawCash(AccountCapabilities.Answer.YES)
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.NO)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.NO)
                 .build();
     }
 
