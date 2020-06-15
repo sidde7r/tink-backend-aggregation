@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
@@ -8,20 +8,15 @@ import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 @JsonObject
+@Data
 public class AktiaConfiguration implements ClientConfiguration {
-    @JsonProperty @Secret private String clientId;
-    @JsonProperty @SensitiveSecret private String clientSecret;
-    @JsonProperty @AgentConfigParam private String redirectUrl;
 
-    public String getClientId() {
-        return clientId;
-    }
+    @Secret private String apiServerUrl;
 
-    public String getClientSecret() {
-        return clientSecret;
-    }
+    @Secret private String authServerUrl;
 
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
+    @SensitiveSecret private String basicAuthHeaderValue;
+
+    /* TODO: Added temporary. Remove when secrets uploading is fixed. */
+    @AgentConfigParam private String redirectUrl;
 }

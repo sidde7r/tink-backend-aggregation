@@ -1,36 +1,49 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator;
 
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.AuthorizeConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
-import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import java.util.Arrays;
+import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.AuthorizeWithOtpStep;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.CheckIfAccessTokenIsValidStep;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.CheckOtpResponseStep;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.LoginStep;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.helpers.AktiaAccessTokenRetriever;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.helpers.AktiaLoginDetailsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.helpers.AktiaOtpCodeExchanger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class AktiaAuthenticator {
-    private final AktiaApiClient apiClient;
-    private final PersistentStorage persistentStorage;
-    private final String iban;
+public class AktiaAuthenticator extends StatelessProgressiveAuthenticator {
+
+    private final List<AuthenticationStep> authenticationSteps;
 
     public AktiaAuthenticator(
-            AktiaApiClient apiClient, PersistentStorage persistentStorage, String iban) {
-        this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
-        this.iban = iban;
+            SupplementalInformationFormer supplementalInformationFormer,
+            AktiaAccessTokenRetriever accessTokenRetriever,
+            AktiaLoginDetailsFetcher loginDetailsFetcher,
+            AktiaOtpCodeExchanger aktiaOtpCodeExchanger) {
+
+        final AktiaOtpDataStorage otpDataStorage = loginDetailsFetcher.getOtpDataStorage();
+
+        this.authenticationSteps =
+                Arrays.asList(
+                        new CheckIfAccessTokenIsValidStep(accessTokenRetriever),
+                        new LoginStep(accessTokenRetriever, loginDetailsFetcher),
+                        new AuthorizeWithOtpStep(
+                                supplementalInformationFormer,
+                                aktiaOtpCodeExchanger,
+                                otpDataStorage),
+                        new CheckOtpResponseStep(otpDataStorage));
     }
 
-    public URL buildAuthorizeUrl(String state) {
-        ConsentBaseRequest consentRequest =
-                new ConsentBaseRequest(new AccessEntity.Builder().addIban(iban).build());
-        ConsentResponse consentResponse = apiClient.createConsent(consentRequest, state);
+    @Override
+    public List<? extends AuthenticationStep> authenticationSteps() {
+        return authenticationSteps;
+    }
 
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
-
-        AuthorizeConsentResponse authorizeConsentResponse =
-                apiClient.authorizeConsent(consentResponse.getLinks().getStartAuthorisation());
-
-        return new URL(authorizeConsentResponse.getLinks().getScaRedirect());
+    @Override
+    public boolean isManualAuthentication(CredentialsRequest request) {
+        return false;
     }
 }
