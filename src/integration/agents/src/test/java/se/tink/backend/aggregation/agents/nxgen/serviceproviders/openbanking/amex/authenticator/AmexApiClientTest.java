@@ -50,6 +50,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.token.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.token.TokenResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.AmexMacGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.hmac.HmacMultiTokenStorage;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -92,13 +93,16 @@ public class AmexApiClientTest {
 
         SessionStorage sessionStorage = mock(SessionStorage.class);
 
+        HmacMultiTokenStorage hmacMultiTokenStorage = mock(HmacMultiTokenStorage.class);
+
         amexApiClient =
                 new AmexApiClient(
                         amexConfigurationMock,
                         httpClientMock,
                         amexMacGeneratorMock,
                         new ObjectMapper(),
-                        sessionStorage);
+                        sessionStorage,
+                        hmacMultiTokenStorage);
     }
 
     @Test

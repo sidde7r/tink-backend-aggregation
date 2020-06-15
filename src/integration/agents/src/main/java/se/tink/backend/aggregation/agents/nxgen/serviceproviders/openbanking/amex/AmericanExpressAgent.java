@@ -69,7 +69,8 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
                         this.client,
                         amexMacGenerator,
                         this.objectMapper,
-                        this.sessionStorage);
+                        this.sessionStorage,
+                        hmacMultiTokenStorage);
 
         this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
 
@@ -146,6 +147,7 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
+        amexApiClient.setLogout(true);
         return creditCardRefreshController.fetchCreditCardAccounts();
     }
 
