@@ -50,32 +50,17 @@ public class BunqSignatureHeaderFilter extends Filter {
 
     private void addSignatureHeader(HttpRequest httpRequest) {
 
-        MultivaluedMap<String, Object> requestHeaders = httpRequest.getHeaders();
-
-        String rawHeader =
-                httpRequest.getMethod()
-                        + " "
-                        + getPathAndQuery(httpRequest)
-                        + "\n"
-                        + toSignatureFormat(BunqBaseConstants.Headers.CACHE_CONTROL, requestHeaders)
-                        + toSignatureFormat(
-                                BunqBaseConstants.Headers.USER_AGENT.getKey(), userAgent)
-                        + toSignatureFormat(BunqBaseConstants.Headers.CLIENT_AUTH, requestHeaders)
-                        + toSignatureFormat(BunqBaseConstants.Headers.REQUEST_ID, requestHeaders)
-                        + toSignatureFormat(BunqBaseConstants.Headers.GEOLOCATION, requestHeaders)
-                        + toSignatureFormat(BunqBaseConstants.Headers.LANGUAGE, requestHeaders)
-                        + toSignatureFormat(BunqBaseConstants.Headers.REGION, requestHeaders)
-                        + "\n";
-
-        if (httpRequest.getBody() != null) {
-            rawHeader += SerializationUtils.serializeToString(httpRequest.getBody());
+        if (httpRequest.getBody() == null) {
+            return;
         }
+
+        String requestBody = SerializationUtils.serializeToString(httpRequest.getBody());
 
         httpRequest
                 .getHeaders()
                 .putSingle(
                         BunqBaseConstants.Headers.CLIENT_SIGNATURE.getKey(),
-                        getEncodedSignature(rawHeader));
+                        getEncodedSignature(requestBody));
     }
 
     private String getEncodedSignature(String rawHeader) {
