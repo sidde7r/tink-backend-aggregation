@@ -5,7 +5,6 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.agent.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
-import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 
@@ -23,7 +22,7 @@ public class N26Constants {
         public static GenericTypeMapper<AgentError, String> errorsMap =
                 GenericTypeMapper.<AgentError, String>genericBuilder()
                         .put(SupplementalInfoError.NO_VALID_CODE, "invalid_otp")
-                        .put(ThirdPartyAppError.CANCELLED, "invalid_grant")
+                        .put(LoginError.INCORRECT_CREDENTIALS, "invalid_grant")
                         .put(LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE, "too_many_sms")
                         .ignoreKeys(continueList)
                         .build();
