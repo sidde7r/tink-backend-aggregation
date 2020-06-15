@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -50,6 +47,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecApiClient {
 
@@ -59,8 +57,6 @@ public class BecApiClient {
 
     private Map<String, NemIdStateConsumer> nemIdStateMap = new HashMap<>();
 
-    private static final ObjectMapper mapper = new ObjectMapper();
-    private static final String JSON_PROCESSING_FAILED = "Json processing failed";
     private BecSecurityHelper securityHelper;
     private final TinkHttpClient apiClient;
     private final BecUrlConfiguration agentUrl;
@@ -87,6 +83,7 @@ public class BecApiClient {
     }
 
     public void appSync() {
+        log.info("app sync -> init");
 
         BaseBecRequest request = baseRequest();
 
@@ -108,24 +105,29 @@ public class BecApiClient {
     public ScaOptionsEncryptedPayload scaPrepare(String username, String password)
             throws LoginException {
         try {
+            log.info("SCA prepare -> get available options");
             BaseBecRequest request = baseRequest();
             EncryptedPayloadAndroidEntity payloadEntity = scaPrepareRequest(username, password);
+
             request.setEncryptedPayload(
-                    securityHelper.encrypt(mapper.writeValueAsString(payloadEntity).getBytes()));
+                    securityHelper.encrypt(
+                            SerializationUtils.serializeToString(payloadEntity).getBytes()));
             EncryptedResponse response =
                     createRequest(this.agentUrl.getPrepareSca())
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .post(EncryptedResponse.class, request);
             String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
+
             ScaOptionsEncryptedPayload payload =
-                    mapper.readValue(decryptedResponse, ScaOptionsEncryptedPayload.class);
+                    SerializationUtils.deserializeFromString(
+                            decryptedResponse, ScaOptionsEncryptedPayload.class);
             log.info(
-                    String.format("Available login options: %s", payload.getSecondFactorOptions()));
+                    String.format(
+                            "SCA prepare -> available login options: %s",
+                            payload.getSecondFactorOptions()));
             return payload;
-        } catch (IOException e) {
-            throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
         } catch (BecAuthenticationException e) {
-            log.error("SCA prepare respond with error: " + e.getMessage());
+            log.error("SCA prepare -> error get options response: " + e.getMessage());
             throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
         }
     }
@@ -133,26 +135,27 @@ public class BecApiClient {
     public CodeAppTokenEncryptedPayload scaPrepare2(String username, String password)
             throws LoginException {
         try {
+            log.info("SCA prepare -> get token");
             BaseBecRequest request = baseRequest();
             EncryptedPayloadAndroidEntity payloadEntity = scaPrepare2Request(username, password);
             request.setEncryptedPayload(
-                    securityHelper.encrypt(mapper.writeValueAsString(payloadEntity).getBytes()));
+                    securityHelper.encrypt(
+                            SerializationUtils.serializeToString(payloadEntity).getBytes()));
             EncryptedResponse response =
                     createRequest(this.agentUrl.getPrepareSca())
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .post(EncryptedResponse.class, request);
             String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
-            return mapper.readValue(decryptedResponse, CodeAppTokenEncryptedPayload.class);
-        } catch (IOException e) {
-            throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
+            return SerializationUtils.deserializeFromString(
+                    decryptedResponse, CodeAppTokenEncryptedPayload.class);
         } catch (BecAuthenticationException e) {
-            log.error("SCA prepare 2 respond with error: " + e.getMessage());
+            log.error("SCA prepare -> error get token response: " + e.getMessage());
             throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
         }
     }
 
     public void pollNemId(String token) throws AuthenticationException {
-        log.info("Poll for 2fa prove.");
+        log.info("Poll for 2fa prove");
         NemIdPollResponse response =
                 createRequest(this.agentUrl.getNemIdPoll())
                         .type(MediaType.APPLICATION_JSON_TYPE)
@@ -171,20 +174,18 @@ public class BecApiClient {
     }
 
     public void sca(String username, String password, String token) throws ThirdPartyAppException {
-
+        log.info("SCA -> authenticate");
         try {
             BaseBecRequest request = baseRequest();
             EncryptedPayloadAndroidEntity payloadEntity = scaRequest(username, password, token);
             request.setEncryptedPayload(
-                    securityHelper.encrypt(mapper.writeValueAsString(payloadEntity).getBytes()));
+                    securityHelper.encrypt(
+                            SerializationUtils.serializeToString(payloadEntity).getBytes()));
             createRequest(this.agentUrl.getSca())
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .post(request);
-
-        } catch (IOException e) {
-            throw new UncheckedIOException(JSON_PROCESSING_FAILED, e);
         } catch (BecAuthenticationException e) {
-            log.error("SCA respond with error: " + e.getMessage());
+            log.error("SCA -> error auth response: " + e.getMessage());
             throw ThirdPartyAppError.TIMED_OUT.exception(e.getMessage());
         }
     }
@@ -300,7 +301,7 @@ public class BecApiClient {
                     .getCardArray();
         } catch (HttpResponseException ex) {
             /*
-             * Some banks that are part of BEC (such as PFA) throws error (403) when the agent tries
+             * Some banks that are part of BEC (such as PFA) throws error (400) when the agent tries
              * to fetch credit cards. We suspect that this happens because those banks actually do
              * not provide credit card service at all. If this is the case, only PFA (and other
              * pension banks) should have this error. We will keep logs and see which banks have
