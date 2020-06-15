@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.token.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.token.TokenResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.macgenerator.AmexMacGenerator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.hmac.HmacMultiTokenStorage;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -40,6 +41,8 @@ public class AmexApiClient {
     private final AmexMacGenerator amexMacGenerator;
     private final ObjectMapper objectMapper;
     private final SessionStorage sessionStorage;
+    private final HmacMultiTokenStorage hmacMultiTokenStorage;
+    private boolean logout;
 
     public URL getAuthorizeUrl(String state) {
         return httpClient
@@ -124,6 +127,19 @@ public class AmexApiClient {
                         AmericanExpressConstants.Headers.AUTHENTICATION,
                         amexMacGenerator.generateAuthMacValue(AmexGrantType.REVOKE))
                 .post(RevokeResponseDto.class);
+    }
+
+    public void revokeAccessToken() {
+        String token =
+                hmacMultiTokenStorage
+                        .getToken()
+                        .flatMap(t -> t.getTokens().stream().findFirst())
+                        .get()
+                        .getAccessToken();
+
+        revokeAccessToken(token);
+        hmacMultiTokenStorage.clearToken();
+        log.info("Access token revoked and cleared from storage");
     }
 
     public AccountsResponseDto fetchAccounts(HmacToken hmacToken) {
@@ -266,5 +282,13 @@ public class AmexApiClient {
                         AmericanExpressConstants.Headers.X_AMEX_REQUEST_ID,
                         UUID.randomUUID().toString().replace("-", ""))
                 .get(clazz);
+    }
+
+    public boolean shouldLogout() {
+        return logout;
+    }
+
+    public void setLogout(boolean logout) {
+        this.logout = logout;
     }
 }
