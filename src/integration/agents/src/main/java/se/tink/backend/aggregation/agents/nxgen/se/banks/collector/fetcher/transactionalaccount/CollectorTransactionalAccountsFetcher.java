@@ -41,8 +41,7 @@ public class CollectorTransactionalAccountsFetcher implements AccountFetcher<Tra
                 .map(Optional::get)
                 .map(apiClient::getAccountInfo)
                 .map(this::storeSavingsResponse)
-                .map(accountEntity::toTinkAccount)
-                .get();
+                .flatMap(accountEntity::toTinkAccount);
     }
 
     private SavingsResponse storeSavingsResponse(SavingsResponse savingsResponse) {
