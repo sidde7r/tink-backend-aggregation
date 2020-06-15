@@ -20,13 +20,13 @@
       },
       "excluded": false,
       "favored": false,
-      "flags": "[]",
+      "flags": "[\"PSD2_PAYMENT_ACCOUNT\"]",
       "holderName": null,
       "identifiers": "[\"iban://IT71U0300203280244168953997\"]",
       "name": "JOHN DOE",
       "ownership": 1.0,
       "payload": null,
-      "type": "OTHER"
+      "type": "CHECKING"
     }
   ],
   "transactions": [

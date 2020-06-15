@@ -38,8 +38,8 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(
                         FabricConstants.ACCOUNT_TYPE_MAPPER,
-                        Optional.ofNullable(cashAccountType).orElse(Accounts.OTHER),
-                        TransactionalAccountType.OTHER)
+                        Optional.ofNullable(cashAccountType).orElse(Accounts.CASH),
+                        TransactionalAccountType.CHECKING)
                 .withBalance(BalanceModule.of(getBalance()))
                 .withId(
                         IdModule.builder()
