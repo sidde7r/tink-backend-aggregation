@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.gb.openbanking.handelsbanken;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.handelsbanken;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;

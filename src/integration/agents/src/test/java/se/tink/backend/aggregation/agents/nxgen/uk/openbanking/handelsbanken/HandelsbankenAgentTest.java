@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.gb.openbanking.handelsbanken;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.handelsbanken;
 
 import org.junit.Before;
 import org.junit.Ignore;
