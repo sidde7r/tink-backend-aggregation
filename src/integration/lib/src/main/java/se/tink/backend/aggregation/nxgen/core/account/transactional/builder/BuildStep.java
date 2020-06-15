@@ -70,16 +70,16 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value);
 
     @Deprecated
-    B canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds);
+    B canWithdrawCash(AccountCapabilities.Answer canWithdrawCash);
 
     @Deprecated
     B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds);
 
     @Deprecated
-    B canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer);
+    B canExecuteExternalTransfer(AccountCapabilities.Answer canExecuteExternalTransfer);
 
     @Deprecated
-    B canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer);
+    B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer);
 
     /**
      * Constructs an account from this builder.

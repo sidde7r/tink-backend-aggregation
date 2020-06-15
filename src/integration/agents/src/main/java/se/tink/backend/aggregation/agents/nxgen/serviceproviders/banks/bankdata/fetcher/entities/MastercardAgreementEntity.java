@@ -80,9 +80,9 @@ public class MastercardAgreementEntity {
                                 .setAccountNumber(mastercardEntity.getCardNo())
                                 .setName(mastercardEntity.getCardName())
                                 .setBankIdentifier(constructUniqueIdentifier())
-                                .canMakeDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
-                                .canReceiveDomesticTransfer(AccountCapabilities.Answer.UNKNOWN)
-                                .canWithdrawFunds(AccountCapabilities.Answer.UNKNOWN)
+                                .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
+                                .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
+                                .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
                                 .canPlaceFunds(AccountCapabilities.Answer.From(canDeposit))
                                 .build());
     }

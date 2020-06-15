@@ -67,9 +67,9 @@ public class CapabilitiesRuleTest {
 
         AccountCapabilities capabilities = AccountCapabilities.createDefault();
         capabilities.setCanPlaceFunds(AccountCapabilities.Answer.YES);
-        capabilities.setCanMakeDomesticTransfer(AccountCapabilities.Answer.YES);
-        capabilities.setCanReceiveDomesticTransfer(AccountCapabilities.Answer.YES);
-        capabilities.setCanWithdrawFunds(AccountCapabilities.Answer.YES);
+        capabilities.setCanExecuteExternalTransfer(AccountCapabilities.Answer.YES);
+        capabilities.setCanReceiveExternalTransfer(AccountCapabilities.Answer.YES);
+        capabilities.setCanWithdrawCash(AccountCapabilities.Answer.YES);
         Account account = prepareMockedAccountWithCapabilities(capabilities);
 
         Psd2PaymentAccountClassificationResult result = rule.classify(provider, account);
@@ -85,9 +85,9 @@ public class CapabilitiesRuleTest {
 
         AccountCapabilities capabilities = AccountCapabilities.createDefault();
         capabilities.setCanPlaceFunds(AccountCapabilities.Answer.YES);
-        capabilities.setCanMakeDomesticTransfer(AccountCapabilities.Answer.YES);
-        capabilities.setCanReceiveDomesticTransfer(AccountCapabilities.Answer.YES);
-        capabilities.setCanWithdrawFunds(AccountCapabilities.Answer.NO);
+        capabilities.setCanExecuteExternalTransfer(AccountCapabilities.Answer.YES);
+        capabilities.setCanReceiveExternalTransfer(AccountCapabilities.Answer.YES);
+        capabilities.setCanWithdrawCash(AccountCapabilities.Answer.NO);
         Account account = prepareMockedAccountWithCapabilities(capabilities);
 
         Psd2PaymentAccountClassificationResult result = rule.classify(provider, account);

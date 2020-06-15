@@ -56,13 +56,13 @@ public class BankdataAccountEntity {
                 .setBankIdentifier(constructUniqueIdentifier())
                 .putInTemporaryStorage(REGISTRATION_NUMBER_TEMP_STORAGE_KEY, regNo)
                 .putInTemporaryStorage(ACCOUNT_NUMBER_TEMP_STORAGE_KEY, accountNo)
-                .canMakeDomesticTransfer(
+                .canExecuteExternalTransfer(
                         BankdataPaymentAccountCapabilities.canMakeDomesticTransfer(
                                 name, accountType, this))
-                .canReceiveDomesticTransfer(
+                .canReceiveExternalTransfer(
                         BankdataPaymentAccountCapabilities.canReceiveDomesticTransfer(
                                 name, accountType, this))
-                .canWithdrawFunds(
+                .canWithdrawCash(
                         BankdataPaymentAccountCapabilities.canWithdrawFunds(name, accountType))
                 .canPlaceFunds(
                         BankdataPaymentAccountCapabilities.canPlaceFunds(name, accountType, this))

@@ -52,9 +52,9 @@ public class AccountEntity {
                 .withBalance(balanceModule)
                 .withId(idModule)
                 .canPlaceFunds(canPlaceFunds())
-                .canWithdrawFunds(canTransferFromAccount())
-                .canMakeDomesticTransfer(canTransferFromAccount())
-                .canReceiveDomesticTransfer(canTransferToAccount())
+                .canWithdrawCash(canTransferFromAccount())
+                .canExecuteExternalTransfer(canTransferFromAccount())
+                .canReceiveExternalTransfer(canTransferToAccount())
                 .setApiIdentifier(accountId)
                 .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();

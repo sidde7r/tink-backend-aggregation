@@ -51,11 +51,11 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
 
     // TODO: These should be made into a mandatory BuildStep:
     // TODO: https://tinkab.atlassian.net/browse/AGG-290
-    B canWithdrawFunds(AccountCapabilities.Answer canWithdrawFunds);
+    B canWithdrawCash(AccountCapabilities.Answer canWithdrawCash);
 
     B canPlaceFunds(AccountCapabilities.Answer canPlaceFunds);
 
-    B canMakeDomesticTransfer(AccountCapabilities.Answer canMakeDomesticTransfer);
+    B canExecuteExternalTransfer(AccountCapabilities.Answer canExecuteExternalTransfer);
 
-    B canReceiveDomesticTransfer(AccountCapabilities.Answer canReceiveDomesticTransfer);
+    B canReceiveExternalTransfer(AccountCapabilities.Answer canReceiveExternalTransfer);
 }

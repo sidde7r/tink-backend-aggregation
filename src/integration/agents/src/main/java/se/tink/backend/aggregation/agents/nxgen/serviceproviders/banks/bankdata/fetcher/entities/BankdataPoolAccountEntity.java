@@ -78,10 +78,10 @@ public class BankdataPoolAccountEntity {
                 .setPortfolios(Collections.singletonList(portfolio))
                 // As the capabilities are meant to signify "instant/direct" result we
                 // - don't have an option to make and receive a transfer
-                .canMakeDomesticTransfer(AccountCapabilities.Answer.NO)
-                .canReceiveDomesticTransfer(AccountCapabilities.Answer.NO)
+                .canExecuteExternalTransfer(AccountCapabilities.Answer.NO)
+                .canReceiveExternalTransfer(AccountCapabilities.Answer.NO)
                 // lack of information to determine the following
-                .canWithdrawFunds(AccountCapabilities.Answer.UNKNOWN)
+                .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
                 .canPlaceFunds(AccountCapabilities.Answer.UNKNOWN)
                 .build();
     }
