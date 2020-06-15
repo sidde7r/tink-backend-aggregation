@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.ConfirmTransferResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class HandelsbankenSEPaymentContextTest {
@@ -12,21 +10,6 @@ public class HandelsbankenSEPaymentContextTest {
     public void testParse() {
         Failure error = SerializationUtils.deserializeFromString(TEST_DATA, Failure.class);
         assertTrue(error.customerIsUnder16());
-    }
-
-    @Test
-    public void testErrorResponse() {
-
-        ErrorResponse errorResponse =
-                SerializationUtils.deserializeFromString(TEST_DATA, ErrorResponse.class);
-        assertEquals(403, errorResponse.getStatus());
-    }
-
-    @Test
-    public void testMessageable() {
-        ConfirmTransferResponse messageable =
-                SerializationUtils.deserializeFromString(TEST_DATA, ConfirmTransferResponse.class);
-        assertEquals("10573", messageable.getCode());
     }
 
     private static String TEST_DATA =
