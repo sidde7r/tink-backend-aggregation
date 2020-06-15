@@ -10,7 +10,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public class IngConstants {
 
-    public static final String APP_VERSION = "8.15.1";
+    public static final String APP_VERSION = "2020.11.1";
 
     public static final class Urls {
         static final String HOST = "https://mobilebanking.ing.be";
@@ -121,7 +121,7 @@ public class IngConstants {
             APP_TYPE("appType", "1"),
             DEVICE_TYPE("deviceType", "1"),
             OS_TYPE("osType", "1"),
-            OS_VERSION("osVersion", "10.3.1"),
+            OS_VERSION("osVersion", "11.3.1"),
             DEVICE_IS_JAILBROKEN("deviceJailBroken", "0"),
             IP_ADDRESS("ipAddress", "127.0.0.1"),
             BROWSER_APP_VERSION("browserAppVersion", Headers.USER_AGENT),
