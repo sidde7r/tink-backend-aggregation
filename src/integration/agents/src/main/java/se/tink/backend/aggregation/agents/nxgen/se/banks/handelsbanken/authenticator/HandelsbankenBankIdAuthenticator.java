@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.libraries.identitydata.IdentityData;
 
 public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<InitBankIdResponse> {
     private final HandelsbankenSEApiClient client;
@@ -131,7 +132,10 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
 
     private void checkIdentity(String ssn, List<Mandate> mandates) throws LoginException {
         final String identitySsn =
-                HandelsbankenSEIdentityFetcher.mandatesToIdentity(mandates).get().getSsn();
+                HandelsbankenSEIdentityFetcher.mandatesToIdentity(mandates)
+                        .map(IdentityData::getSsn)
+                        .orElse("");
+
         if (!identitySsn.equalsIgnoreCase(ssn)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
