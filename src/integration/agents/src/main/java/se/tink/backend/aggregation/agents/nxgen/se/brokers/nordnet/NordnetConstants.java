@@ -147,17 +147,35 @@ public class NordnetConstants {
     }
 
     public static class NordnetAccountTypes {
-        public static final String AKTIE_FONDKONTO = "AF";
+        public static final String AKTIE_FONDKONTO_AF = "AF";
+        public static final String AKTIE_FONDKONTO_EKF = "EKF";
         public static final String INVESTERINGSSPARKONTO = "ISK";
         public static final String KAPITALFORSAKRING = "KF";
         public static final String SPARKONTO = "S";
         public static final String IPS = "IPS";
-        public static final String PRIVATE_PENSION = "PP";
-        public static final String TJANSTEPENSION = "TJP";
-        public static final String DEPOT = "dep";
-        public static final String TJANSTEPENSION_TJF = "tjf";
-        public static final String TJANSTEPENSION_BTP1 = "btp1";
-        public static final String TJANSTEPENSION_BTP = "btp";
+        public static final String PRIVATE_PENSION_PP = "PP";
+        public static final String TJANSTEPENSION_TJP = "TJP";
+        public static final String DEPOT = "DEP";
+        public static final String TJANSTEPENSION_TJF = "TJF";
+        public static final String TJANSTEPENSION_BTP = "BTP";
+        public static final String AVTALS_PENSION = "KAP";
+        public static final String KAPITAL_PENSION = "KP";
+    }
+
+    public static class NordnetAccountCodes {
+        public static final String INVESTERINGSSPARKONTO = "ISK";
+        public static final String PRIVATE_PENSION_PT = "PT";
+        public static final String KAPITALFORSAKRING = "KF";
+        public static final String DEPOT = "DEP";
+        public static final String TJANSTEPENSION_TJF = "TJF";
+        public static final String TJANSTEPENSION_TJFF = "TJFF";
+        public static final String TJANSTEPENSION_BTP_TRYGG = "BTP_TRYGG";
+        public static final String TJANSTEPENSION_BTP_VALBAR = "BTP_VALBAR";
+        public static final String IPS = "IPS";
+        public static final String TJANSTEPENSION_BTP1 = "BTP1";
+        public static final String AVTALS_PENSION = "KAP_KL";
+        public static final String KAPITAL_PENSION = "KP";
+        public static final String PENSION_KFEX = "KFEX";
     }
 
     public static TypeMapper<AccountTypes> getAccountTypeMapper() {
@@ -165,15 +183,18 @@ public class NordnetConstants {
         return TypeMapper.<AccountTypes>builder()
                 .put(
                         AccountTypes.INVESTMENT,
-                        NordnetAccountTypes.AKTIE_FONDKONTO,
+                        NordnetAccountTypes.AKTIE_FONDKONTO_AF,
+                        NordnetAccountTypes.AKTIE_FONDKONTO_EKF,
                         NordnetAccountTypes.INVESTERINGSSPARKONTO,
                         NordnetAccountTypes.KAPITALFORSAKRING)
                 .put(AccountTypes.SAVINGS, NordnetAccountTypes.SPARKONTO)
                 .put(
                         AccountTypes.PENSION,
-                        NordnetAccountTypes.PRIVATE_PENSION,
+                        NordnetAccountTypes.PRIVATE_PENSION_PP,
                         NordnetAccountTypes.IPS,
-                        NordnetAccountTypes.TJANSTEPENSION,
+                        NordnetAccountTypes.AVTALS_PENSION,
+                        NordnetAccountTypes.KAPITAL_PENSION,
+                        NordnetAccountTypes.TJANSTEPENSION_TJP,
                         NordnetAccountTypes.TJANSTEPENSION_TJF,
                         NordnetAccountTypes.TJANSTEPENSION_BTP)
                 .build();
@@ -181,17 +202,21 @@ public class NordnetConstants {
 
     public static TypeMapper<PortfolioModule.PortfolioType> getPortfolioTypeMapper() {
         return TypeMapper.<PortfolioModule.PortfolioType>builder()
-                .put(PortfolioModule.PortfolioType.DEPOT, NordnetAccountTypes.DEPOT)
-                .put(PortfolioModule.PortfolioType.ISK, NordnetAccountTypes.INVESTERINGSSPARKONTO)
-                .put(PortfolioModule.PortfolioType.KF, NordnetAccountTypes.KAPITALFORSAKRING)
+                .put(PortfolioModule.PortfolioType.DEPOT, NordnetAccountCodes.DEPOT)
+                .put(PortfolioModule.PortfolioType.ISK, NordnetAccountCodes.INVESTERINGSSPARKONTO)
+                .put(PortfolioModule.PortfolioType.KF, NordnetAccountCodes.KAPITALFORSAKRING)
                 .put(
                         PortfolioModule.PortfolioType.PENSION,
                         NordnetAccountTypes.IPS,
-                        NordnetAccountTypes.TJANSTEPENSION,
-                        NordnetAccountTypes.TJANSTEPENSION_TJF,
-                        NordnetAccountTypes.PRIVATE_PENSION,
-                        NordnetAccountTypes.TJANSTEPENSION_BTP1,
-                        NordnetAccountTypes.TJANSTEPENSION_BTP)
+                        NordnetAccountCodes.AVTALS_PENSION,
+                        NordnetAccountCodes.KAPITAL_PENSION,
+                        NordnetAccountCodes.PENSION_KFEX,
+                        NordnetAccountCodes.PRIVATE_PENSION_PT,
+                        NordnetAccountCodes.TJANSTEPENSION_TJFF,
+                        NordnetAccountCodes.TJANSTEPENSION_TJF,
+                        NordnetAccountCodes.TJANSTEPENSION_BTP1,
+                        NordnetAccountCodes.TJANSTEPENSION_BTP_TRYGG,
+                        NordnetAccountCodes.TJANSTEPENSION_BTP_VALBAR)
                 .build();
     }
 }
