@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import java.util.Date;
 import java.util.Optional;
 import java.util.function.Function;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants.MenuItemKey;
@@ -18,7 +19,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.AbstractAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.BankProfileHandler;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
@@ -106,17 +109,47 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
     private RegisterTransferResponse registerPayment(
             Transfer transfer, String sourceAccountId, String destinationAccountId) {
         Date dueDate = dateUtils.getTransferDateForPayments(transfer.getDueDate());
+        SwedbankBaseConstants.ReferenceType referenceType =
+                SwedbankTransferHelper.getReferenceTypeFor(transfer);
         try {
-            return apiClient.registerPayment(
-                    transfer.getAmount().getValue(),
-                    transfer.getDestinationMessage(),
-                    SwedbankTransferHelper.getReferenceTypeFor(transfer),
-                    dueDate,
-                    destinationAccountId,
-                    sourceAccountId);
+            return tryRegisterPayment(
+                    transfer, sourceAccountId, destinationAccountId, dueDate, referenceType);
         } catch (HttpResponseException hre) {
+            HttpResponse httpResponse = hre.getResponse();
+            if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+                if (errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.REFERENCE)
+                        && errorResponse.hasErrorMessage(
+                                SwedbankBaseConstants.ErrorMessage.OCR_NOT_ALLOWED)) {
+                    try {
+                        tryRegisterPayment(
+                                transfer,
+                                sourceAccountId,
+                                destinationAccountId,
+                                dueDate,
+                                SwedbankBaseConstants.ReferenceType.MESSAGE);
+                    } catch (HttpResponseException httpResponseException) {
+                        throw convertExceptionIfBadPayment(httpResponseException);
+                    }
+                }
+            }
             throw convertExceptionIfBadPayment(hre);
         }
+    }
+
+    private RegisterTransferResponse tryRegisterPayment(
+            Transfer transfer,
+            String sourceAccountId,
+            String destinationAccountId,
+            Date dueDate,
+            SwedbankBaseConstants.ReferenceType referenceType) {
+        return apiClient.registerPayment(
+                transfer.getAmount().getValue(),
+                transfer.getDestinationMessage(),
+                referenceType,
+                dueDate,
+                destinationAccountId,
+                sourceAccountId);
     }
 
     private AbstractAccountEntity createSignedPayee(final Transfer transfer) {
