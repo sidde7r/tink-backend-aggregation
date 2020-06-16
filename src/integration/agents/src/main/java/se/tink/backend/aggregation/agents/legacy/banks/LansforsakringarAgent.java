@@ -1162,7 +1162,8 @@ public class LansforsakringarAgent extends AbstractAgent
         boolean isBetweenSameUserAccounts =
                 LFUtils.find(destination, sourceAccounts.getAccounts()).isPresent();
         TransferMessageFormatter.Messages formattedMessages =
-                transferMessageFormatter.getMessages(transfer, isBetweenSameUserAccounts);
+                transferMessageFormatter.getMessagesFromRemittanceInformation(
+                        transfer, isBetweenSameUserAccounts);
 
         TransferRequest transferRequest =
                 TransferRequest.create(
