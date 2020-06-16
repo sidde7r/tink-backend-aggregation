@@ -9,6 +9,15 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.Demoba
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdChallengeEntity;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdEnrollEntity;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdGenerateCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdGenerateCodeResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdInstallIdEntity;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdLoginEncryptionEntity;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdLoginInstallIdEncryptionEntity;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdLoginWithInstallIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdCollectRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdCollectResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.NoBankIdInitRequest;
@@ -24,6 +33,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestB
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DemobankApiClient {
 
@@ -102,6 +112,58 @@ public class DemobankApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(NoBankIdCollectResponse.class, new NoBankIdCollectRequest(ssn, sessionId));
+    }
+
+    private static final String X_NEMID_TOKEN = "X-NemID-Token";
+
+    public NemIdChallengeEntity nemIdGetChallenge(
+            NemIdLoginEncryptionEntity encryptionEntity, String token) {
+        NemIdResponse nemIdResponse =
+                createRequest(fetchBaseUrl().concat(Urls.DK_NEMID_GET_CHALLENGE))
+                        .header(X_NEMID_TOKEN, token)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .post(NemIdResponse.class, encryptionEntity);
+
+        return SerializationUtils.deserializeFromString(
+                nemIdResponse.getData(), NemIdChallengeEntity.class);
+    }
+
+    public NemIdGenerateCodeResponse nemIdGenerateCode(
+            NemIdGenerateCodeRequest codeRequest, String token) {
+        NemIdResponse nemIdResponse =
+                createRequest(fetchBaseUrl().concat(Urls.DK_NEMID_GENERATE_CODE))
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header(X_NEMID_TOKEN, token)
+                        .post(NemIdResponse.class, codeRequest);
+
+        return SerializationUtils.deserializeFromString(
+                nemIdResponse.getData(), NemIdGenerateCodeResponse.class);
+    }
+
+    public NemIdInstallIdEntity nemIdEnroll(NemIdEnrollEntity entity, String token) {
+        NemIdResponse nemIdResponse =
+                createRequest(fetchBaseUrl().concat(Urls.DK_NEMID_ENROLL))
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header(X_NEMID_TOKEN, token)
+                        .post(NemIdResponse.class, entity);
+
+        return SerializationUtils.deserializeFromString(
+                nemIdResponse.getData(), NemIdInstallIdEntity.class);
+    }
+
+    public NemIdLoginWithInstallIdResponse nemIdLoginWithInstallId(
+            NemIdLoginInstallIdEncryptionEntity loginWithInstallIdEntity, String token) {
+        NemIdResponse nemIdResponse =
+                createRequest(fetchBaseUrl().concat(Urls.DK_NEMID_LOGIN))
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header(X_NEMID_TOKEN, token)
+                        .post(NemIdResponse.class, loginWithInstallIdEntity);
+        return SerializationUtils.deserializeFromString(
+                nemIdResponse.getData(), NemIdLoginWithInstallIdResponse.class);
     }
 
     public FetchAccountResponse fetchAccounts() {
