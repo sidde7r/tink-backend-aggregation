@@ -180,7 +180,7 @@ public class SparkassenAuthenticatorTest {
     }
 
     @Test
-    public void shouldThrowHttpResponseExceptionWhenCreateConsentCallFails() {
+    public void shouldThrowHttpResponseExceptionWhenCreateConsentCallFails() throws LoginException {
         // given
         whenCreateConsentThrow(HTTP_RESPONSE_EXCEPTION);
 
@@ -195,7 +195,23 @@ public class SparkassenAuthenticatorTest {
     }
 
     @Test
-    public void shouldThrowIllegalStateExceptionWhenCreateConsentResponseMissingCrucialData() {
+    public void shouldThrowLoginExceptionWhenCreateConsentCallFails() throws LoginException {
+        // given
+        whenCreateConsentThrowAuthenticationException(LOGIN_EXCEPTION);
+
+        // when
+        Throwable throwable = catchThrowable(() -> authenticator.authenticate(OK_CREDENTIALS));
+
+        // then
+        assertThat(throwable).isEqualTo(LOGIN_EXCEPTION);
+        verifyCreateConsentCalled();
+        verifyNoMoreInteractions(apiClient);
+        verifyNoMoreInteractions(supplementalInformationHelper);
+    }
+
+    @Test
+    public void shouldThrowIllegalStateExceptionWhenCreateConsentResponseMissingCrucialData()
+            throws LoginException {
         // given
         whenCreateConsentReturn(CONSENT_RESPONSE_MISSING_LINK);
 
@@ -488,15 +504,22 @@ public class SparkassenAuthenticatorTest {
         verifyNoMoreInteractions(supplementalInformationHelper);
     }
 
-    private void whenCreateConsentReturn(ConsentResponse createConsentResult) {
+    private void whenCreateConsentReturn(ConsentResponse createConsentResult)
+            throws LoginException {
         when(apiClient.createConsent(any())).thenReturn(createConsentResult);
     }
 
-    private void whenCreateConsentThrow(HttpResponseException httpResponseException) {
+    private void whenCreateConsentThrow(HttpResponseException httpResponseException)
+            throws LoginException {
         when(apiClient.createConsent(any())).thenThrow(httpResponseException);
     }
 
-    private void verifyCreateConsentCalled() {
+    private void whenCreateConsentThrowAuthenticationException(LoginException loginException)
+            throws LoginException {
+        when(apiClient.createConsent(any())).thenThrow(loginException);
+    }
+
+    private void verifyCreateConsentCalled() throws LoginException {
         verify(apiClient).createConsent(any());
     }
 

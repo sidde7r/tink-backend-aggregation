@@ -15,6 +15,8 @@ public final class SparkassenConstants {
                 "Could not parse transactions description";
         public static final String COULD_NOT_INITIALIZE_JAXBCONTEXT =
                 "Could not initialize JAXBContext";
+        static final String PSU_CREDENTIALS_INVALID = "PSU_CREDENTIALS_INVALID";
+        static final String IBAN_INVALID = "IBAN_INVALID";
     }
 
     public static class Urls {
