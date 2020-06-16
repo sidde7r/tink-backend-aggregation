@@ -18,7 +18,7 @@ public class RedsysConfiguration implements ClientConfiguration {
     @Secret private String baseAPIUrl;
     @Secret private String clientId;
     @AgentConfigParam private String redirectUrl;
-    @AgentConfigParam private List<String> scopes;
+    @Secret private List<String> scopes;
     private String clientSigningKeyPath;
     private String clientSigningKeyPassword;
     @Secret private String clientSigningCertificate;
