@@ -110,7 +110,7 @@ public class FabricConstants {
 
     public static class Accounts {
         public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
-        public static final String OTHER = "OTHER";
+        public static final String CASH = "CASH";
     }
 
     public static class PathParameterKeys {
