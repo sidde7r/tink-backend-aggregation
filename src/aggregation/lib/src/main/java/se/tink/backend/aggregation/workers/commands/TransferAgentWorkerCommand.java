@@ -44,6 +44,7 @@ import se.tink.libraries.metrics.core.MetricId;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerCommand
@@ -97,6 +98,10 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
 
         Transfer transfer = transferRequest.getTransfer();
         SignableOperation signableOperation = transferRequest.getSignableOperation();
+
+        // TODO: This (hack) is here to handle direct integration flow, will remove it after the
+        // observing that we are receiving RI throw all flows, Jira Ticket:
+        // https://tinkab.atlassian.net/browse/PAY1-506
         if (transfer.getRemittanceInformation() != null) {
             log.info(
                     transfer,
@@ -105,7 +110,13 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                             + ", desitnation message"
                             + transfer.getDestinationMessage());
         } else {
-            log.info(transfer, "RemittanceInformation is null");
+            log.info(
+                    transfer,
+                    "RemittanceInformation is null, will create it from destinationMessage");
+            RemittanceInformation remittanceInformation = new RemittanceInformation();
+            remittanceInformation.setValue(transfer.getDestinationMessage());
+            remittanceInformation.setType(null);
+            transfer.setRemittanceInformation(remittanceInformation);
         }
 
         signableOperation.setStatus(SignableOperationStatuses.EXECUTING);
