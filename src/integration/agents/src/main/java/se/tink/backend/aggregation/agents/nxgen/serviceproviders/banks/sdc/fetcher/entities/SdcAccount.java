@@ -43,9 +43,9 @@ public class SdcAccount {
                         .setName(name)
                         .setBankIdentifier(normalizedBankId())
                         .canPlaceFunds(canPlaceFunds())
-                        .canWithdrawCash(canWithdrawFunds())
-                        .canExecuteExternalTransfer(canMakeDomesticTransfer())
-                        .canReceiveExternalTransfer(canReceiveDomesticTransfer());
+                        .canWithdrawCash(canWithdrawCash())
+                        .canExecuteExternalTransfer(canExecuteExternalTransfer())
+                        .canReceiveExternalTransfer(canReceiveExternalTransfer());
 
         if (accountTypes.equals(AccountTypes.CHECKING)
                 || accountTypes.equals(AccountTypes.SAVINGS)) {
@@ -63,9 +63,9 @@ public class SdcAccount {
                 .setName(name)
                 .setBankIdentifier(normalizedBankId())
                 .canPlaceFunds(canPlaceFunds())
-                .canWithdrawCash(canWithdrawFunds())
-                .canExecuteExternalTransfer(canMakeDomesticTransfer())
-                .canReceiveExternalTransfer(canReceiveDomesticTransfer())
+                .canWithdrawCash(canWithdrawCash())
+                .canExecuteExternalTransfer(canExecuteExternalTransfer())
+                .canReceiveExternalTransfer(canReceiveExternalTransfer())
                 .build();
     }
 
@@ -94,32 +94,32 @@ public class SdcAccount {
     }
 
     @JsonIgnore
-    public AccountCapabilities.Answer canWithdrawFunds() {
+    public AccountCapabilities.Answer canWithdrawCash() {
         if (Objects.isNull(accountProperties)) {
             return AccountCapabilities.Answer.UNKNOWN;
         }
 
-        // We can withdraw funds if we can credit the account.
+        // We can withdraw cash if we can credit the account.
         return AccountCapabilities.Answer.From(accountProperties.isCreditable());
     }
 
     @JsonIgnore
-    public AccountCapabilities.Answer canMakeDomesticTransfer() {
+    public AccountCapabilities.Answer canExecuteExternalTransfer() {
         if (Objects.isNull(accountProperties)) {
             return AccountCapabilities.Answer.UNKNOWN;
         }
 
-        // We can make a domestic transfer if we can credit the account.
+        // We can make a transfer if we can credit the account.
         return AccountCapabilities.Answer.From(accountProperties.isCreditable());
     }
 
     @JsonIgnore
-    public AccountCapabilities.Answer canReceiveDomesticTransfer() {
+    public AccountCapabilities.Answer canReceiveExternalTransfer() {
         if (Objects.isNull(accountProperties)) {
             return AccountCapabilities.Answer.UNKNOWN;
         }
 
-        // We can receive a domestic transfer if we can debit the account.
+        // We can receive a transfer if we can debit the account.
         return AccountCapabilities.Answer.From(accountProperties.isDebitable());
     }
 
