@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.gb.openbanking.handelsbanken;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.handelsbanken;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -13,7 +13,7 @@ public class HandelsbankenAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("gb", "gb-handelsbanken-oauth2")
+                new AgentIntegrationTest.Builder("uk", "uk-handelsbanken-ob")
                         .addCredentialField("accessToken", "VUtfUFJJVkFURV9QUk9GSUxFX18z")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
