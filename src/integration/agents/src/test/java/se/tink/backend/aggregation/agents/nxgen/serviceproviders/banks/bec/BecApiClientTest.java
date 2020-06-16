@@ -292,6 +292,34 @@ public class BecApiClientTest {
     }
 
     @Test
+    public void
+            scaPrepareShouldThrowNemIdExceptionWhenBlockedNemIdIsAMessageOfBecAuthenticationException() {
+        // given
+        given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
+        // and
+        BaseBecRequest baseBecRequest = baseBecRequest();
+        baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
+        // and
+        String pinLockedMsg = "NemID is blocked. Contact support.";
+        given(requestBuilder.post(eq(EncryptedResponse.class), eq(baseBecRequest)))
+                .willThrow(new BecAuthenticationException(pinLockedMsg));
+
+        // when
+        Throwable t = catchThrowable(() -> becApiClient.scaPrepare(USERNAME, PASSWORD));
+
+        // then
+        assertThat(t)
+                .isInstanceOf(NemIdException.class)
+                .hasMessage("Cause: NemIdError.CODEAPP_NOT_REGISTERED");
+        // and
+        verify(securityHelper)
+                .encrypt(
+                        argThat(
+                                new SecurityHelperEncryptVerifier(
+                                        PASSWORD, USERNAME, DEFAULT_2FA)));
+    }
+
+    @Test
     public void scaPrepareShouldThrowNemIdExceptionWhenCodeappIsNotRegisteredOption() {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
