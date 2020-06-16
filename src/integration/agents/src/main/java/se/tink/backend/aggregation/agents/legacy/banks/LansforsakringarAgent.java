@@ -632,7 +632,7 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     @Override
-    public void execute(final Transfer transfer) throws Exception, TransferExecutionException {
+    public void execute(final Transfer transfer) throws Exception {
 
         if (transfer.getType() == TransferType.BANK_TRANSFER) {
             executeBankTransfer(transfer);
@@ -647,7 +647,7 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception, TransferExecutionException {
+    public void update(Transfer transfer) throws Exception {
         switch (transfer.getType()) {
             case EINVOICE:
                 approveEInvoice(transfer);
