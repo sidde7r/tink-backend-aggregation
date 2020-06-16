@@ -5,6 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
@@ -44,7 +45,8 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
         return AuthenticationStepResponse.executeNextStep();
     }
 
-    private void fetchScaOptions(String username, String password) throws LoginException {
+    private void fetchScaOptions(String username, String password)
+            throws LoginException, NemIdException {
         apiClient.scaPrepare(username, password);
         sessionStorage.put(USERNAME_STORAGE_KEY, username);
         sessionStorage.put(PASSWORD_STORAGE_KEY, password);

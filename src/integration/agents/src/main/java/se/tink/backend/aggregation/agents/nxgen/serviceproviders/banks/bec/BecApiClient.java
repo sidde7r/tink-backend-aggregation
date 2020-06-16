@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.rpc.F
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.error.NemIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdPollTimeoutException;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -50,6 +51,8 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecApiClient {
+
+    private static final String CODEAPP_OPTION = "codeapp";
 
     interface NemIdStateConsumer {
         void accept() throws AuthenticationException;
@@ -72,12 +75,12 @@ public class BecApiClient {
         nemIdStateMap.put(
                 "2",
                 () -> {
-                    throw ThirdPartyAppError.CANCELLED.exception("NemID was rejected.");
+                    throw new NemIdException(NemIdError.REJECTED);
                 });
         nemIdStateMap.put(
                 "4",
                 () -> {
-                    throw new NemIdException(NemIdError.TIMEOUT);
+                    throw new NemIdPollTimeoutException();
                 });
         nemIdStateMap = Collections.unmodifiableMap(nemIdStateMap);
     }
@@ -103,37 +106,47 @@ public class BecApiClient {
     }
 
     public ScaOptionsEncryptedPayload scaPrepare(String username, String password)
-            throws LoginException {
-        try {
-            log.info("SCA prepare -> get available options");
-            BaseBecRequest request = baseRequest();
-            EncryptedPayloadAndroidEntity payloadEntity = scaPrepareRequest(username, password);
+            throws LoginException, NemIdException {
+        log.info("SCA prepare -> get available options");
+        BaseBecRequest request = baseRequest();
+        EncryptedPayloadAndroidEntity payloadEntity = scaPrepareRequest(username, password);
+        request.setEncryptedPayload(
+                securityHelper.encrypt(
+                        SerializationUtils.serializeToString(payloadEntity).getBytes()));
+        ScaOptionsEncryptedPayload payload = postScaPrepareAndDecryptResponse(request);
+        log.info(
+                String.format(
+                        "SCA prepare -> available login options: %s",
+                        payload.getSecondFactorOptions()));
+        if (!payload.getSecondFactorOptions().contains(CODEAPP_OPTION)) {
+            throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
+        }
+        return payload;
+    }
 
-            request.setEncryptedPayload(
-                    securityHelper.encrypt(
-                            SerializationUtils.serializeToString(payloadEntity).getBytes()));
+    private ScaOptionsEncryptedPayload postScaPrepareAndDecryptResponse(BaseBecRequest request)
+            throws NemIdException, LoginException {
+        try {
             EncryptedResponse response =
                     createRequest(this.agentUrl.getPrepareSca())
                             .type(MediaType.APPLICATION_JSON_TYPE)
                             .post(EncryptedResponse.class, request);
             String decryptedResponse = securityHelper.decrypt(response.getEncryptedPayload());
 
-            ScaOptionsEncryptedPayload payload =
-                    SerializationUtils.deserializeFromString(
-                            decryptedResponse, ScaOptionsEncryptedPayload.class);
-            log.info(
-                    String.format(
-                            "SCA prepare -> available login options: %s",
-                            payload.getSecondFactorOptions()));
-            return payload;
+            return SerializationUtils.deserializeFromString(
+                    decryptedResponse, ScaOptionsEncryptedPayload.class);
         } catch (BecAuthenticationException e) {
             log.error("SCA prepare -> error get options response: " + e.getMessage());
-            throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
+            if (e.getMessage().startsWith("Your chosen PIN code is locked.")) {
+                throw new NemIdException(NemIdError.LOCKED_PIN);
+            } else {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
+            }
         }
     }
 
     public CodeAppTokenEncryptedPayload scaPrepare2(String username, String password)
-            throws LoginException {
+            throws NemIdException {
         try {
             log.info("SCA prepare -> get token");
             BaseBecRequest request = baseRequest();
@@ -150,7 +163,7 @@ public class BecApiClient {
                     decryptedResponse, CodeAppTokenEncryptedPayload.class);
         } catch (BecAuthenticationException e) {
             log.error("SCA prepare -> error get token response: " + e.getMessage());
-            throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
+            throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
         }
     }
 
@@ -193,7 +206,7 @@ public class BecApiClient {
     private EncryptedPayloadAndroidEntity scaRequest(
             String username, String password, String token) {
         EncryptedPayloadAndroidEntity result = scaPrepareRequest(username, password);
-        result.setSecondFactor("codeapp");
+        result.setSecondFactor(CODEAPP_OPTION);
         result.setCodeapp(new CodeAppScaEntity(token));
         return result;
     }
@@ -224,7 +237,7 @@ public class BecApiClient {
     private EncryptedPayloadAndroidEntity scaPrepare2Request(String username, String password) {
         EncryptedPayloadAndroidEntity payloadAndroidEntity =
                 baseScaPrepareRequest(username, password);
-        payloadAndroidEntity.setSecondFactor("codeapp");
+        payloadAndroidEntity.setSecondFactor(CODEAPP_OPTION);
         return payloadAndroidEntity;
     }
 
