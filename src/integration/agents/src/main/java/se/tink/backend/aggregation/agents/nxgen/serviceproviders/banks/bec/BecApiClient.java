@@ -139,6 +139,11 @@ public class BecApiClient {
             log.error("SCA prepare -> error get options response: " + e.getMessage());
             if (e.getMessage().startsWith("Your chosen PIN code is locked.")) {
                 throw new NemIdException(NemIdError.LOCKED_PIN);
+            } else if (e.getMessage().startsWith("NemID is blocked. Contact support.")) {
+                // This is guessing (!!!) based on similar message when user tries to auth 2fa using
+                // method which one does not have registered. So it is possible if no 2fa nemid
+                // option is registered it might result in such a message in this place.
+                throw new NemIdException(NemIdError.CODEAPP_NOT_REGISTERED);
             } else {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e.getMessage());
             }
