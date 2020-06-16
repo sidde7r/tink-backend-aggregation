@@ -19,7 +19,7 @@ public class SendAccountsHoldersToUpdateServiceAgentWorkerCommand extends AgentW
             LoggerFactory.getLogger(SendAccountsHoldersToUpdateServiceAgentWorkerCommand.class);
 
     private static final String METRIC_NAME = "agent_refresh";
-    private static final String METRIC_ACTION = "send_accounts_holders";
+    static final String METRIC_ACTION = "send_accounts_holders";
 
     private final AgentWorkerCommandContext context;
     private final AgentWorkerCommandMetricState metrics;
