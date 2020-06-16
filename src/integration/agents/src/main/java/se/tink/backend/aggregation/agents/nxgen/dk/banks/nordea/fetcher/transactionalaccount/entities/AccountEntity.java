@@ -52,9 +52,9 @@ public class AccountEntity {
                 .withBalance(balanceModule)
                 .withId(idModule)
                 .canPlaceFunds(canPlaceFunds())
-                .canWithdrawCash(canTransferFromAccount())
-                .canExecuteExternalTransfer(canTransferFromAccount())
-                .canReceiveExternalTransfer(canTransferToAccount())
+                .canWithdrawCash(canWithdrawCash())
+                .canExecuteExternalTransfer(canExecuteExternalTransfer())
+                .canReceiveExternalTransfer(canReceiveExternalTransfer())
                 .setApiIdentifier(accountId)
                 .putInTemporaryStorage(NordeaDkConstants.StorageKeys.PRODUCT_CODE, productCode)
                 .build();
@@ -98,7 +98,7 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private AccountCapabilities.Answer canTransferFromAccount() {
+    private AccountCapabilities.Answer canWithdrawCash() {
         if (Objects.isNull(permissions)) {
             return AccountCapabilities.Answer.UNKNOWN;
         }
@@ -107,7 +107,16 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private AccountCapabilities.Answer canTransferToAccount() {
+    private AccountCapabilities.Answer canExecuteExternalTransfer() {
+        if (Objects.isNull(permissions)) {
+            return AccountCapabilities.Answer.UNKNOWN;
+        }
+
+        return AccountCapabilities.Answer.From(permissions.getCanPayFromAccount());
+    }
+
+    @JsonIgnore
+    private AccountCapabilities.Answer canReceiveExternalTransfer() {
         if (Objects.isNull(permissions)) {
             return AccountCapabilities.Answer.UNKNOWN;
         }
