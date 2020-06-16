@@ -4,12 +4,14 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import javax.ws.rs.core.Response;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
@@ -111,5 +113,9 @@ public class ControllerWrapper {
 
     public void updateIdentityData(UpdateIdentityDataRequest request) {
         client.updateIdentity(configuration, request);
+    }
+
+    public AccountHolder updateAccountHolder(UpdateAccountHolderRequest request) {
+        return client.updateAccountHolder(configuration, request);
     }
 }

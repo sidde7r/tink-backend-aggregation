@@ -55,6 +55,7 @@ import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWo
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCommand;
+import se.tink.backend.aggregation.workers.commands.SendAccountsHoldersToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToDataAvailabilityTrackerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
@@ -227,6 +228,10 @@ public class AgentWorkerOperationFactory {
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
 
+            commands.add(
+                    new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
+                            context, createCommandMetricState(request)));
+
             /** Special command; see {@link AbnAmroSpecificCase} for more information. */
             if (Objects.equals("abnamro.AbnAmroAgent", request.getProvider().getClassName())
                     && Objects.equals("nl-abnamro", request.getProvider().getName())) {
@@ -260,6 +265,9 @@ public class AgentWorkerOperationFactory {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
+                            context, createCommandMetricState(request)));
+            commands.add(
+                    new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
             commands.add(
                     new SendAccountsToDataAvailabilityTrackerAgentWorkerCommand(
@@ -1170,6 +1178,10 @@ public class AgentWorkerOperationFactory {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
+                            context, createCommandMetricState(request)));
+
+            commands.add(
+                    new SendAccountsHoldersToUpdateServiceAgentWorkerCommand(
                             context, createCommandMetricState(request)));
 
             /** Special command; see {@link AbnAmroSpecificCase} for more information. */

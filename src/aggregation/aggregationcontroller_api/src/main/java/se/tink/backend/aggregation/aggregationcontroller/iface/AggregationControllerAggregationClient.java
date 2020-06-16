@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.aggregationcontroller.iface;
 
 import javax.ws.rs.core.Response;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
@@ -55,4 +57,7 @@ public interface AggregationControllerAggregationClient {
     Response checkConnectivity(HostConfiguration hostConfiguration);
 
     Response updateIdentity(HostConfiguration hostConfiguration, UpdateIdentityDataRequest request);
+
+    AccountHolder updateAccountHolder(
+            HostConfiguration hostConfiguration, UpdateAccountHolderRequest request);
 }

@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -193,6 +195,15 @@ public final class NewAgentTestContext extends AgentContext {
 
     public Account sendAccountToUpdateService(String uniqueId) {
         return accountsByBankId.get(uniqueId);
+    }
+
+    @Override
+    public AccountHolder sendAccountHolderToUpdateService(String tinkId) {
+        return accountsByBankId.values().stream()
+                .filter(a -> Objects.equals(tinkId, a.getId()))
+                .findFirst()
+                .map(Account::getAccountHolder)
+                .orElse(null);
     }
 
     public Account updateAccount(String uniqueId) {
