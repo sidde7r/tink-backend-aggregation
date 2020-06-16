@@ -633,7 +633,6 @@ public class LansforsakringarAgent extends AbstractAgent
 
     @Override
     public void execute(final Transfer transfer) throws Exception {
-
         if (transfer.getType() == TransferType.BANK_TRANSFER) {
             executeBankTransfer(transfer);
         } else if (transfer.getType() == TransferType.PAYMENT) {
@@ -867,7 +866,7 @@ public class LansforsakringarAgent extends AbstractAgent
         paymentRequest.setPaymentDate(
                 LansforsakringarDateUtil.getNextPossiblePaymentDateForBgPg(transfer.getDueDate()));
         if (Objects.equal(recipientNameResponse.getOcrType(), "OCR_REQUIRED")) {
-            if (!LFUtils.isValidOCR(transfer.getDestinationMessage())) {
+            if (!LFUtils.isValidOCR(transfer.getRemittanceInformation().getValue())) {
                 cancelTransfer(TransferExecutionException.EndUserMessage.INVALID_OCR);
             } else {
                 paymentRequest.setReferenceType("OCR");
@@ -875,7 +874,7 @@ public class LansforsakringarAgent extends AbstractAgent
         } else {
             paymentRequest.setReferenceType("MESSAGE");
         }
-        paymentRequest.setReference(transfer.getDestinationMessage());
+        paymentRequest.setReference(transfer.getRemittanceInformation().getValue());
 
         validatePaymentAndValidateResponse(paymentRequest);
         createPaymentAndValidateResponse(paymentRequest);
