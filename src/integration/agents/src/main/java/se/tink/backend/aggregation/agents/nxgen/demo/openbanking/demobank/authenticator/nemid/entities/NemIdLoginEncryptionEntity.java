@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authe
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class NemIdLoginEncryptionEntity  {
+public class NemIdLoginEncryptionEntity {
     private final String userId;
     private final String pinCode;
 

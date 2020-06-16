@@ -9,5 +9,4 @@ public class NemIdResponse {
     public String getData() {
         return data;
     }
-
 }

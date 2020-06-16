@@ -12,7 +12,6 @@ public class NemIdLoginWithInstallIdResponse {
     private boolean campaignAvailable;
     private String sessionToken;
 
-
     public String getCprNo() {
         return cprNo;
     }

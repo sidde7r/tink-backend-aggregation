@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authe
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class NemIdGenerateCodeRequest  {
+public class NemIdGenerateCodeRequest {
     private boolean pushEnabled;
 
     public NemIdGenerateCodeRequest setPushEnabled(boolean pushEnabled) {

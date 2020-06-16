@@ -9,12 +9,12 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 @JsonObject
 public class NemIdErrorEntity {
 
-
     private static final class ErrorCode {
         public static final int INVALID_CREDENTIAL = 112;
         public static final int NOT_SIGNED_UP_FOR_MOBILE_BANK = 109;
         public static final int INROLL_BAD_REQUEST = 1;
     }
+
     private String errorCode;
     private String errorMessage;
 
@@ -27,8 +27,7 @@ public class NemIdErrorEntity {
     }
 
     public static void throwError(HttpResponseException e) throws LoginException {
-        NemIdErrorEntity error = e.getResponse().getBody(
-            NemIdErrorEntity.class);
+        NemIdErrorEntity error = e.getResponse().getBody(NemIdErrorEntity.class);
         switch (Integer.valueOf(error.getErrorCode())) {
             case ErrorCode.INVALID_CREDENTIAL:
                 throw LoginError.INCORRECT_CREDENTIALS.exception(e);
