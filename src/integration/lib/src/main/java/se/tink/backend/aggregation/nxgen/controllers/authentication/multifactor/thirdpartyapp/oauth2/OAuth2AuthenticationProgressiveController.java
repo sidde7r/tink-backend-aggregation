@@ -115,6 +115,10 @@ public class OAuth2AuthenticationProgressiveController
 
             // Store the new access token on the persistent storage again.
             persistentStorage.rotateStorageValue(PersistentStorageKeys.OAUTH_2_TOKEN, oAuth2Token);
+            Optional<String> newRefreshToken = oAuth2Token.getRefreshToken();
+            if (newRefreshToken.isPresent()) {
+                logger.info("persistent with new refresh token {}", newRefreshToken.get());
+            }
 
             // Fall through.
         }
