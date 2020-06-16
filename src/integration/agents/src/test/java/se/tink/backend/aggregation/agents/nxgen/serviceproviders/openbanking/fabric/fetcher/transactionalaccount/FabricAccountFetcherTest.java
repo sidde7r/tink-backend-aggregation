@@ -1,6 +1,5 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.mock;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -9,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.FabricAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
@@ -18,10 +16,10 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.user.rpc.User;
 
-public class AccountFetcherTest {
+public class FabricAccountFetcherTest {
 
     @Test
-    public void testFetchAccount_convertTransferDestination() {
+    public void shouldConvertToTransferDestinationProperly() {
         String sourceBalance =
                 "{\n"
                         + "  \"account\": {\n"
@@ -103,8 +101,8 @@ public class AccountFetcherTest {
                 SerializationUtils.deserializeFromString(sourceBalance, BalanceResponse.class);
         FabricApiClient apiClient = mock(FabricApiClient.class);
         when(apiClient.fetchAccounts()).thenReturn(accountResponse);
-        when(apiClient.getAccountDetails(any(String.class))).thenReturn(accountDetailsResponse);
-        when(apiClient.getBalances(any(String.class))).thenReturn(balanceResponse);
+        when(apiClient.getAccountDetails("/v1/accounts/15259")).thenReturn(accountDetailsResponse);
+        when(apiClient.getBalances("/v1/accounts/15259/balances")).thenReturn(balanceResponse);
         FabricAccountFetcher fabricAccountFetcher = new FabricAccountFetcher(apiClient);
 
         FetchTransferDestinationsResponse dt =
