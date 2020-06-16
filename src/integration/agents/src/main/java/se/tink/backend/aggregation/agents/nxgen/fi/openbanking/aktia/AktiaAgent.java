@@ -1,66 +1,54 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia;
 
-import java.util.Optional;
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.AktiaAuthenticationController;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.apiclient.AktiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.AktiaAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.AktiaOtpDataStorage;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.helpers.AktiaAccessTokenRetriever;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.helpers.AktiaLoginDetailsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.steps.helpers.AktiaOtpCodeExchanger;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration.AktiaConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.executor.payment.AktiaPaymentExecutor;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.AktiaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.AktiaTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.AktiaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.converter.AktiaTransactionalAccountConverter;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2TokenStorage;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
-public final class AktiaAgent extends NextGenerationAgent
+public class AktiaAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
-    private final AktiaApiClient apiClient;
+
+    private final AktiaApiClient aktiaApiClient;
+    private final OAuth2TokenStorage tokenStorage;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public AktiaAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    @Inject
+    public AktiaAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
-        apiClient = new AktiaApiClient(client, persistentStorage);
+        final AktiaConfiguration aktiaConfiguration = getAgentConfiguration();
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
-        final AktiaConfiguration aktiaConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(AktiaConfiguration.class);
-        apiClient.setConfiguration(aktiaConfiguration);
-        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+        this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
+        this.aktiaApiClient =
+                new AktiaApiClient(this.client, aktiaConfiguration, this.tokenStorage);
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
-    protected Authenticator constructAuthenticator() {
-        AktiaAuthenticator authenticator =
-                new AktiaAuthenticator(
-                        apiClient, persistentStorage, credentials.getField(CredentialKeys.IBAN));
-
-        AktiaAuthenticationController controller =
-                new AktiaAuthenticationController(
-                        supplementalInformationHelper, authenticator, strongAuthenticationState);
-
-        return new AutoAuthenticationController(
-                request,
-                context,
-                new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
+    public void setConfiguration(final AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
@@ -83,9 +71,43 @@ public final class AktiaAgent extends NextGenerationAgent
         return transactionalAccountRefreshController.fetchSavingsTransactions();
     }
 
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public StatelessProgressiveAuthenticator getAuthenticator() {
+        final SupplementalInformationFormer supplementalInformationFormer =
+                new SupplementalInformationFormer(request.getProvider());
+        final AktiaAccessTokenRetriever accessTokenRetriever =
+                new AktiaAccessTokenRetriever(aktiaApiClient, tokenStorage);
+        final AktiaOtpDataStorage otpDataStorage = new AktiaOtpDataStorage(sessionStorage);
+        final AktiaLoginDetailsFetcher loginDetailsFetcher =
+                new AktiaLoginDetailsFetcher(aktiaApiClient, otpDataStorage);
+        final AktiaOtpCodeExchanger otpCodeExchanger =
+                new AktiaOtpCodeExchanger(aktiaApiClient, otpDataStorage);
+
+        return new AktiaAuthenticator(
+                supplementalInformationFormer,
+                accessTokenRetriever,
+                loginDetailsFetcher,
+                otpCodeExchanger);
+    }
+
+    private AktiaConfiguration getAgentConfiguration() {
+        return getAgentConfigurationController().getAgentConfiguration(AktiaConfiguration.class);
+    }
+
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        AktiaTransactionalAccountFetcher accountFetcher =
-                new AktiaTransactionalAccountFetcher(apiClient);
+        final AktiaTransactionalAccountConverter transactionalAccountConverter =
+                new AktiaTransactionalAccountConverter();
+
+        final AktiaTransactionalAccountFetcher accountFetcher =
+                new AktiaTransactionalAccountFetcher(aktiaApiClient, transactionalAccountConverter);
+
+        final AktiaTransactionFetcher transactionFetcher =
+                new AktiaTransactionFetcher(aktiaApiClient, transactionalAccountConverter);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -93,18 +115,6 @@ public final class AktiaAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(accountFetcher)));
-    }
-
-    @Override
-    public Optional<PaymentController> constructPaymentController() {
-        AktiaPaymentExecutor aktiaPaymentExecutor = new AktiaPaymentExecutor(apiClient);
-
-        return Optional.of(new PaymentController(aktiaPaymentExecutor, aktiaPaymentExecutor));
-    }
-
-    @Override
-    protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 }
