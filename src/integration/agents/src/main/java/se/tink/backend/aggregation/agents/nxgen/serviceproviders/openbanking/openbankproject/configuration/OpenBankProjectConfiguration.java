@@ -15,6 +15,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 import se.tink.libraries.pair.Pair;
 
 @JsonObject
@@ -26,8 +28,8 @@ public class OpenBankProjectConfiguration implements ClientConfiguration {
     @JsonIgnore
     private static final LogTag MISSING_CONFIG = LogTag.from("OpenBankProject_MISSING_CONFIG");
 
-    @JsonProperty @Secret private String clientId;
-    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @Secret @ClientIdConfiguration private String clientId;
+    @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String baseUrl;
     @JsonProperty @Secret private String bankId;

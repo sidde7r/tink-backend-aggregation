@@ -8,13 +8,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
 @JsonObject
 public class SdcConfiguration implements ClientConfiguration {
 
-    @Secret private String clientId;
+    @Secret @ClientIdConfiguration private String clientId;
     @AgentConfigParam private String redirectUrl;
-    @SensitiveSecret private String clientSecret;
+    @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @SensitiveSecret private String ocpApimSubscriptionKey;
 
     public String getClientId() {

@@ -11,13 +11,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
 @Setter
 @JsonObject
 public class DkbConfiguration implements ClientConfiguration {
 
-    @Secret private String clientId;
-    @SensitiveSecret private String clientSecret;
+    @Secret @ClientIdConfiguration private String clientId;
+    @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
     @Secret private String consumerId;
     @SensitiveSecret private String consumerSecret;

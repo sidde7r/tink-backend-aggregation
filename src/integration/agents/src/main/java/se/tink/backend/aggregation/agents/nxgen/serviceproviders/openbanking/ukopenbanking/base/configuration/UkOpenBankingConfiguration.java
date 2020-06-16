@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatementAssertion;
@@ -20,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurationAdapter {
 
     @JsonProperty @Secret private String organizationId;
-    @JsonProperty @SensitiveSecret private String clientId;
+    @JsonProperty @SensitiveSecret @ClientIdConfiguration private String clientId;
     @JsonProperty @Secret private String signingKey;
     @JsonProperty @Secret private String signingKeyId;
     @JsonProperty @Secret private String softwareStatementAssertion;
@@ -30,7 +32,7 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     @JsonProperty @Secret private String transportKeyId;
     @JsonProperty @Secret private String tokenEndpointAuthSigningAlg;
     @JsonProperty @Secret private String tokenEndpointAuthMethod;
-    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @JsonProperty @SensitiveSecret private String transportKeyPassword;
     @JsonProperty @SensitiveSecret private String signingKeyPassword;
 

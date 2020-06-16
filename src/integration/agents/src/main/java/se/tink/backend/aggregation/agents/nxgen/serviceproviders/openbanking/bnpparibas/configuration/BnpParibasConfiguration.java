@@ -5,12 +5,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
 @JsonObject
 public class BnpParibasConfiguration implements ClientConfiguration {
 
-    @Secret private String clientId;
-    @SensitiveSecret private String clientSecret;
+    @Secret @ClientIdConfiguration private String clientId;
+    @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @AgentConfigParam private String redirectUrl;
     @Secret private String keyId;
     @Secret private String authorizeUrl;

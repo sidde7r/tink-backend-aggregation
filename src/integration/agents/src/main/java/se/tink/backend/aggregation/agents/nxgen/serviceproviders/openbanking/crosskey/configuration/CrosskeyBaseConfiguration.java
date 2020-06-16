@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.AgentConfigParam;
@@ -11,17 +14,31 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
 @JsonObject
 public class CrosskeyBaseConfiguration implements ClientConfiguration {
 
-    @JsonProperty @Secret private String baseAPIUrl;
-    @JsonProperty @Secret private String baseAuthUrl;
-    @JsonProperty @Secret private String clientId;
+    @JsonProperty(required = true)
+    @Secret
+    @JsonSchemaDescription("The base URL for API endpoint.")
+    @JsonSchemaTitle("Base API URL")
+    @JsonSchemaExamples("https://api.alandsbanken.se")
+    private String baseAPIUrl;
+
+    @JsonProperty(required = true)
+    @Secret
+    @JsonSchemaDescription("The base URL for Auth endpoint.")
+    @JsonSchemaTitle("Base Auth URL")
+    @JsonSchemaExamples("https://open.alandsbanken.se")
+    private String baseAuthUrl;
+
+    @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @Secret private String clientSigningCertificateSerialNumber;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty private List<String> scopes;
-    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
     public String getBaseAPIUrl() {
         Preconditions.checkNotNull(
