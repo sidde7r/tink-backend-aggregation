@@ -17,12 +17,12 @@ public class DemobankAgentDkNemIdTest {
     @Before
     public void setup() {
         builder =
-            new AgentIntegrationTest.Builder("dk", "dk-demobank-nemid")
-                .addCredentialField(Field.Key.USERNAME, USERNAME)
-                .addCredentialField(Field.Key.PASSWORD, PINCODE)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
-                .expectLoggedIn(false);
+                new AgentIntegrationTest.Builder("dk", "dk-demobank-nemid")
+                        .addCredentialField(Field.Key.USERNAME, USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD, PINCODE)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .expectLoggedIn(false);
     }
 
     @Test
