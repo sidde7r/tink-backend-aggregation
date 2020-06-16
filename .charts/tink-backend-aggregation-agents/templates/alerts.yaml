@@ -759,20 +759,6 @@ spec:
     expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled"}[12h])) or on() vector(0)
 
   {{- if eq .Values.Environment "production" }}
-  # TODO increase the threshold when we go live with a Swedish customer
-  - record: thresold:tink_transfers_in_sweden:lowerBound12h
-    expr: vector(5)
-
-  - alert: TransferCountLowerThanExpectedLowerBound
-    expr: sum:tink_transfers_in_sweden:delta12h < thresold:tink_transfers_in_sweden:lowerBound12h
-    labels:
-      severity: urgent
-      who: payments
-      priority: P4
-    annotations:
-      description: This is a last resort alert. Try a test payment at demo.tink.com and then check with product if we expect this few transfers. You can find the trend here https://grafana.global-production.tink.network/d/NMhMIXRGz/se-trends-from-aggregation-service-pov?orgId=1&from=now-12h&to=now
-      summary: Number of transfers happened in the last 12 hours is below historical threshold.
-
   - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier2Banks
     expr: sum by (provider, outcome) (increase(tink_agent_transfer_total{market="SE", provider!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 5
     labels:
