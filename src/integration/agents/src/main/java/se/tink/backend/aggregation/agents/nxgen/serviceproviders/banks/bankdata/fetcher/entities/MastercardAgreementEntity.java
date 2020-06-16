@@ -82,7 +82,7 @@ public class MastercardAgreementEntity {
                                 .setBankIdentifier(constructUniqueIdentifier())
                                 .canExecuteExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
                                 .canReceiveExternalTransfer(AccountCapabilities.Answer.UNKNOWN)
-                                .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
+                                .canWithdrawCash(AccountCapabilities.Answer.YES)
                                 .canPlaceFunds(AccountCapabilities.Answer.From(canDeposit))
                                 .build());
     }

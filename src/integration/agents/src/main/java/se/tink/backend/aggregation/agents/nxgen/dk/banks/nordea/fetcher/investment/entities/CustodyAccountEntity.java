@@ -64,10 +64,12 @@ public class CustodyAccountEntity {
                 .withPortfolios(portfolioModule)
                 .withCashBalance(ExactCurrencyAmount.of(cashAmount, currency))
                 .withId(idModule)
-                // You can place and withdraw funds from an Investment account (e.g. `cashAmount`),
-                // but not make or receive domestic transfers.
+                // You can place funds on an Investment account (e.g. `cashAmount`),
+                // but not execute or receive external transfers.
+                // It's unknown if we can withdraw cash directly or if that requires an intermediate
+                // account.
                 .canPlaceFunds(AccountCapabilities.Answer.YES)
-                .canWithdrawCash(AccountCapabilities.Answer.YES)
+                .canWithdrawCash(AccountCapabilities.Answer.UNKNOWN)
                 .canReceiveExternalTransfer(AccountCapabilities.Answer.NO)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.NO)
                 .build();

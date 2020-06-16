@@ -37,9 +37,9 @@ public class SdcCustodyDetailsModel {
                 // InvestmentAccounts.
                 // Instead we assume the following:
                 // - We can place funds onto the cash part of the account.
-                // - We can withdraw funds from the cash part of the account.
-                // - We cannot make a domestic transfer.
-                // - We cannot receive a domestic transfer.
+                // - We can withdraw cash from the cash part of the account.
+                // - We cannot execute a transfer.
+                // - We cannot receive a transfer.
                 .canPlaceFunds(AccountCapabilities.Answer.YES)
                 .canWithdrawCash(AccountCapabilities.Answer.YES)
                 .canExecuteExternalTransfer(AccountCapabilities.Answer.NO)

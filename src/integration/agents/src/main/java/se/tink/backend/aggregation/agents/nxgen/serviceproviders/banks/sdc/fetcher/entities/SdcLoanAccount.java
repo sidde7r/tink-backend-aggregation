@@ -48,8 +48,6 @@ public class SdcLoanAccount {
                 .setBankIdentifier(getSecondaryLabel())
                 // We don't have any "properties" or "permissions" to look at for LoanAccounts.
                 // Instead we assume that we do not have any of the capabilities.
-                // Note: The capabilities are meant to signify "instant/direct" result, you can
-                // normally not place/withdraw funds directly to/from a loan account.
                 .canWithdrawCash(AccountCapabilities.Answer.NO)
                 .canPlaceFunds(AccountCapabilities.Answer.NO)
                 .canReceiveExternalTransfer(AccountCapabilities.Answer.NO)
