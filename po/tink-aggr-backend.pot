@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-10 12:07+0200\n"
+"POT-Creation-Date: 2020-06-16 13:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1376,4 +1376,18 @@ msgid "An error occurred when confirming the payment."
 msgstr ""
 
 msgid "An error occurred while confirming the payment."
+msgstr ""
+
+msgid "Authenticating with NemID Code App timed out. Please try again."
+msgstr ""
+
+msgid "Authentication rejected by the user."
+msgstr ""
+
+msgid "NemID Code App is not registered option to use. Contact bank support."
+msgstr ""
+
+msgid ""
+"Your chosen PIN code is locked. The PIN code must be changed in your Netbank "
+"before you can log on."
 msgstr ""

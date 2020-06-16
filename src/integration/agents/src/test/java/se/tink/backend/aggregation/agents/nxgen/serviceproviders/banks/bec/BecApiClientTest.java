@@ -159,7 +159,7 @@ public class BecApiClientTest {
         verify(requestBuilder).queryParam(TOKEN_KEY, TOKEN_VALUE);
         verify(requestBuilder).get(NemIdPollResponse.class);
         // and
-        assertThat(t).isInstanceOf(ThirdPartyAppException.class).hasMessage("NemID was rejected.");
+        assertThat(t).isInstanceOf(NemIdException.class).hasMessage("Cause: NemIdError.REJECTED");
     }
 
     @Test
@@ -211,7 +211,7 @@ public class BecApiClientTest {
     }
 
     @Test
-    public void scaPrepareShouldReturnPossible2faOptions() throws LoginException {
+    public void scaPrepareShouldReturnPossible2faOptions() throws LoginException, NemIdException {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -265,7 +265,66 @@ public class BecApiClientTest {
     }
 
     @Test
-    public void scaPrepare2ShouldReturnPossible2faOptions() throws LoginException {
+    public void
+            scaPrepareShouldThrowNemIdExceptionWhenLockedPinIsAMessageOfBecAuthenticationException() {
+        // given
+        given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
+        // and
+        BaseBecRequest baseBecRequest = baseBecRequest();
+        baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
+        // and
+        String pinLockedMsg =
+                "Your chosen PIN code is locked. The PIN code must be changed in your Netbank before you can log on.";
+        given(requestBuilder.post(eq(EncryptedResponse.class), eq(baseBecRequest)))
+                .willThrow(new BecAuthenticationException(pinLockedMsg));
+
+        // when
+        Throwable t = catchThrowable(() -> becApiClient.scaPrepare(USERNAME, PASSWORD));
+
+        // then
+        assertThat(t).isInstanceOf(NemIdException.class).hasMessage("Cause: NemIdError.LOCKED_PIN");
+        // and
+        verify(securityHelper)
+                .encrypt(
+                        argThat(
+                                new SecurityHelperEncryptVerifier(
+                                        PASSWORD, USERNAME, DEFAULT_2FA)));
+    }
+
+    @Test
+    public void scaPrepareShouldThrowNemIdExceptionWhenCodeappIsNotRegisteredOption() {
+        // given
+        given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
+        // and
+        BaseBecRequest baseBecRequest = baseBecRequest();
+        baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
+        // and
+        given(requestBuilder.post(eq(EncryptedResponse.class), eq(baseBecRequest)))
+                .willReturn(
+                        SerializationUtils.deserializeFromString(
+                                "{\"encryptedPayload\":\"" + ENCRYPTED_PAYLOAD + "\"}",
+                                EncryptedResponse.class));
+        // and
+        given(securityHelper.decrypt(ENCRYPTED_PAYLOAD))
+                .willReturn("{\"secondFactorOptions\":[\"non_codeapp_option\"]}");
+
+        // when
+        Throwable t = catchThrowable(() -> becApiClient.scaPrepare(USERNAME, PASSWORD));
+
+        // then
+        assertThat(t)
+                .isInstanceOf(NemIdException.class)
+                .hasMessage("Cause: NemIdError.CODEAPP_NOT_REGISTERED");
+        // and
+        verify(securityHelper)
+                .encrypt(
+                        argThat(
+                                new SecurityHelperEncryptVerifier(
+                                        PASSWORD, USERNAME, DEFAULT_2FA)));
+    }
+
+    @Test
+    public void scaPrepare2ShouldReturnPossible2faOptions() throws NemIdException {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -296,7 +355,7 @@ public class BecApiClientTest {
     }
 
     @Test
-    public void scaPrepare2ShouldThrowLoginExceptionWhenUserProvidesWrongCredentials() {
+    public void scaPrepare2ShouldThrowNemIdExceptionWhen2ndScaRequestThrowsBecAuthException() {
         // given
         given(securityHelper.encrypt(any())).willReturn(ENCRYPTED_PAYLOAD);
         // and
@@ -304,13 +363,15 @@ public class BecApiClientTest {
         baseBecRequest.setEncryptedPayload(ENCRYPTED_PAYLOAD);
         // and
         given(requestBuilder.post(eq(EncryptedResponse.class), eq(baseBecRequest)))
-                .willThrow(new BecAuthenticationException(WRONG_CREDENTIALS));
+                .willThrow(new BecAuthenticationException(""));
 
         // when
         Throwable t = catchThrowable(() -> becApiClient.scaPrepare2(USERNAME, PASSWORD));
 
         // then
-        assertThat(t).isInstanceOf(LoginException.class).hasMessage(WRONG_CREDENTIALS);
+        assertThat(t)
+                .isInstanceOf(NemIdException.class)
+                .hasMessage("Cause: NemIdError.CODEAPP_NOT_REGISTERED");
         // and
         verify(securityHelper)
                 .encrypt(

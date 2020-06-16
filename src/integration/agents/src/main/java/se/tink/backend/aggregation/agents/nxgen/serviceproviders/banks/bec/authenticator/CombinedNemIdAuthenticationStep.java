@@ -7,11 +7,11 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.entities.CodeAppTokenEncryptedPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.nemid.exception.NemIdPollTimeoutException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
@@ -40,7 +40,7 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
         this.supplementalRequester = supplementalRequester;
 
         retryExecutor.setRetryPolicy(
-                new RetryPolicy(POLL_NEMID_MAX_ATTEMPTS, NemIdException.class));
+                new RetryPolicy(POLL_NEMID_MAX_ATTEMPTS, NemIdPollTimeoutException.class));
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CombinedNemIdAuthenticationStep implements AuthenticationStep {
         supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
-    private void sendNemIdRequest(final Credentials credentials) throws LoginException {
+    private void sendNemIdRequest(final Credentials credentials) throws NemIdException {
         CodeAppTokenEncryptedPayload payload =
                 apiClient.scaPrepare2(
                         credentials.getField(Field.Key.USERNAME),
