@@ -40,4 +40,8 @@ public class ConsentAuthorizationsResponse {
     public void setAccess(AccessItem access) {
         this.access = access;
     }
+
+    public void setValidUntil(String validUntil) {
+        this.validUntil = validUntil;
+    }
 }

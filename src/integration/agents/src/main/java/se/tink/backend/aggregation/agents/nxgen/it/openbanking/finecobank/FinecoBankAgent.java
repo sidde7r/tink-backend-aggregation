@@ -44,7 +44,6 @@ public final class FinecoBankAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-
         this.finecoBankConfiguration =
                 getAgentConfigurationController()
                         .getAgentConfiguration(FinecoBankConfiguration.class);
@@ -69,7 +68,8 @@ public final class FinecoBankAgent extends NextGenerationAgent
                     new FinecoBankAuthenticator(
                             supplementalInformationHelper,
                             persistentStorage,
-                            new FinecoBankAuthenticationHelper(apiClient, persistentStorage),
+                            new FinecoBankAuthenticationHelper(
+                                    apiClient, persistentStorage, credentials),
                             strongAuthenticationState);
 
             authenticationController =
