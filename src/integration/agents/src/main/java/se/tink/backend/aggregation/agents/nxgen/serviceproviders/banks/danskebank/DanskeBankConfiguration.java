@@ -34,11 +34,11 @@ public interface DanskeBankConfiguration extends ClientConfiguration {
 
     List<String> getSavingsAccountTypes();
 
-    default AccountCapabilities.Answer canMakeDomesticTransfer(String productCode) {
+    default AccountCapabilities.Answer canExecuteExternalTransfer(String productCode) {
         return AccountCapabilities.Answer.UNKNOWN;
     }
 
-    default AccountCapabilities.Answer canReceiveDomesticTransfer(String productCode) {
+    default AccountCapabilities.Answer canReceiveExternalTransfer(String productCode) {
         return AccountCapabilities.Answer.UNKNOWN;
     }
 
@@ -46,7 +46,7 @@ public interface DanskeBankConfiguration extends ClientConfiguration {
         return AccountCapabilities.Answer.UNKNOWN;
     }
 
-    default AccountCapabilities.Answer canWithdrawFunds(String productCode) {
+    default AccountCapabilities.Answer canWithdrawCash(String productCode) {
         return AccountCapabilities.Answer.UNKNOWN;
     }
 

@@ -44,12 +44,10 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
         return AuthenticationStepResponse.executeNextStep();
     }
 
-    private AuthenticationStepResponse fetchScaOptions(String username, String password)
-            throws LoginException {
+    private void fetchScaOptions(String username, String password) throws LoginException {
         apiClient.scaPrepare(username, password);
         sessionStorage.put(USERNAME_STORAGE_KEY, username);
         sessionStorage.put(PASSWORD_STORAGE_KEY, password);
-        return AuthenticationStepResponse.executeNextStep();
     }
 
     @Override

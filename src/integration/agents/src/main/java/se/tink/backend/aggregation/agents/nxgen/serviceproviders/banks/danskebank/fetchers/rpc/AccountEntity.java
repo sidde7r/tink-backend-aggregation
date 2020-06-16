@@ -141,11 +141,12 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
-                .canExecuteExternalTransfer(configuration.canMakeDomesticTransfer(accountProduct))
+                .canExecuteExternalTransfer(
+                        configuration.canExecuteExternalTransfer(accountProduct))
                 .canReceiveExternalTransfer(
-                        configuration.canReceiveDomesticTransfer(accountProduct))
+                        configuration.canReceiveExternalTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
-                .canWithdrawCash(configuration.canWithdrawFunds(accountProduct))
+                .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
                 .build();
     }
 
@@ -157,11 +158,12 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
-                .canExecuteExternalTransfer(configuration.canMakeDomesticTransfer(accountProduct))
+                .canExecuteExternalTransfer(
+                        configuration.canExecuteExternalTransfer(accountProduct))
                 .canReceiveExternalTransfer(
-                        configuration.canReceiveDomesticTransfer(accountProduct))
+                        configuration.canReceiveExternalTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
-                .canWithdrawCash(configuration.canWithdrawFunds(accountProduct))
+                .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
                 .build();
     }
 
@@ -192,11 +194,12 @@ public class AccountEntity {
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
-                .canExecuteExternalTransfer(configuration.canMakeDomesticTransfer(accountProduct))
+                .canExecuteExternalTransfer(
+                        configuration.canExecuteExternalTransfer(accountProduct))
                 .canReceiveExternalTransfer(
-                        configuration.canReceiveDomesticTransfer(accountProduct))
+                        configuration.canReceiveExternalTransfer(accountProduct))
                 .canPlaceFunds(configuration.canPlaceFunds(accountProduct))
-                .canWithdrawCash(configuration.canWithdrawFunds(accountProduct))
+                .canWithdrawCash(configuration.canWithdrawCash(accountProduct))
                 .build();
     }
 

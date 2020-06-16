@@ -153,6 +153,7 @@ public class NordnetConstants {
         public static final String KAPITALFORSAKRING = "KF";
         public static final String SPARKONTO = "S";
         public static final String IPS = "IPS";
+        public static final String FKF = "FKF";
         public static final String PRIVATE_PENSION_PP = "PP";
         public static final String TJANSTEPENSION_TJP = "TJP";
         public static final String DEPOT = "DEP";
@@ -185,6 +186,7 @@ public class NordnetConstants {
                         AccountTypes.INVESTMENT,
                         NordnetAccountTypes.AKTIE_FONDKONTO_AF,
                         NordnetAccountTypes.AKTIE_FONDKONTO_EKF,
+                        NordnetAccountTypes.FKF,
                         NordnetAccountTypes.INVESTERINGSSPARKONTO,
                         NordnetAccountTypes.KAPITALFORSAKRING)
                 .put(AccountTypes.SAVINGS, NordnetAccountTypes.SPARKONTO)

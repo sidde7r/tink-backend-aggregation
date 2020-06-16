@@ -73,7 +73,6 @@ public class BecApiClientTest {
 
     private BecSecurityHelper securityHelper;
     private TinkHttpClient client;
-    private BecUrlConfiguration agentUrl;
 
     private RequestBuilder requestBuilder;
 
@@ -81,10 +80,9 @@ public class BecApiClientTest {
     public void setUp() {
         securityHelper = mock(BecSecurityHelper.class);
         client = mock(TinkHttpClient.class, Answers.RETURNS_DEEP_STUBS);
-        agentUrl = new BecUrlConfiguration(PAYLOAD);
         requestBuilder = mock(RequestBuilder.class);
 
-        becApiClient = new BecApiClient(securityHelper, client, agentUrl);
+        becApiClient = new BecApiClient(securityHelper, client, new BecUrlConfiguration(PAYLOAD));
 
         given(client.request(APP_SYNC_URL)).willReturn(requestBuilder);
         given(client.request(NEM_ID_POLL_URL)).willReturn(requestBuilder);
