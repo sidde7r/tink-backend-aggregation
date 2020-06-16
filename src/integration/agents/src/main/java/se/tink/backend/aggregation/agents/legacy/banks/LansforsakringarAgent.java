@@ -676,7 +676,8 @@ public class LansforsakringarAgent extends AbstractAgent
         Transfer originalTransfer = transfer.getOriginalTransfer().get();
 
         if (!Objects.equal(
-                transfer.getDestinationMessage(), originalTransfer.getDestinationMessage())) {
+                transfer.getRemittanceInformation().getValue(),
+                originalTransfer.getRemittanceInformation().getValue())) {
 
             throw cancelTransfer(
                     TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE);
@@ -746,7 +747,7 @@ public class LansforsakringarAgent extends AbstractAgent
     private void addEInvoiceToApproveList(
             final Transfer transfer, AccountEntity sourceAccount, EInvoice eInvoice) {
         EInvoicePaymentRequest request = new EInvoicePaymentRequest();
-        request.setOcr(transfer.getDestinationMessage());
+        request.setOcr(transfer.getRemittanceInformation().getValue());
         request.setDate(transfer.getDueDate().getTime());
         request.setToAccount(transfer.getDestination().getIdentifier(GIRO_FORMATTER));
         request.setElectronicInvoiceId(eInvoice.getElectronicInvoiceId());
@@ -827,7 +828,7 @@ public class LansforsakringarAgent extends AbstractAgent
 
         UpdatePaymentRequest paymentRequest = new UpdatePaymentRequest();
         paymentRequest.setAmount(transfer.getAmount().getValue());
-        paymentRequest.setReference(transfer.getDestinationMessage());
+        paymentRequest.setReference(transfer.getRemittanceInformation().getValue());
         paymentRequest.setFromAccountNumber(
                 source.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
         paymentRequest.setPaymentDate(transfer.getDueDate().getTime());
