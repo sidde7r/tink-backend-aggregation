@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditmutuel;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditmutuel.manual;
 
 import org.junit.Before;
 import org.junit.Ignore;

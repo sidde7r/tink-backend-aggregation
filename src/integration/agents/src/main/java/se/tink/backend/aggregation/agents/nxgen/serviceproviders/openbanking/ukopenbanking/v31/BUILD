@@ -17,6 +17,7 @@ java_library(
         "//src/integration/payment:rpc",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",
         "//src/libraries/account_identifier",
+        "//src/libraries/mapper",
         "//src/libraries/pair",
         "//src/libraries/strings",
         "//third_party:com_auth0_java_jwt",

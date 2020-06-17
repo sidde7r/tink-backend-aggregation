@@ -12,6 +12,7 @@ junit_test(
         "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/libraries/account_identifier",
+        "//src/libraries/mapper",
         "//src/libraries/serialization",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
