@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.business.nordea;
 
 import com.google.inject.Inject;
+import java.util.Optional;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -29,6 +31,7 @@ public class NordeaSEAgent extends NextGenerationAgent
                 RefreshIdentityDataExecutor {
     private final NordeaSEApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final NordeaSEBankIdAuthenticator nordeaSEBankIdAuthenticator;
 
     @Inject
     public NordeaSEAgent(AgentComponentProvider componentProvider) {
@@ -36,15 +39,24 @@ public class NordeaSEAgent extends NextGenerationAgent
         client.addFilter(new NordeaSEFilter());
         apiClient = new NordeaSEApiClient(client, sessionStorage);
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        nordeaSEBankIdAuthenticator =
+                new NordeaSEBankIdAuthenticator(
+                        apiClient,
+                        sessionStorage,
+                        Optional.ofNullable(
+                                        componentProvider
+                                                .getCredentialsRequest()
+                                                .getCredentials()
+                                                .getField(Key.CORPORATE_ID))
+                                .map(s -> s.replace("-", ""))
+                                .map(String::trim)
+                                .orElse(""));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new NordeaSEBankIdAuthenticator(apiClient, sessionStorage),
-                persistentStorage,
-                credentials);
+                supplementalRequester, nordeaSEBankIdAuthenticator, persistentStorage, credentials);
     }
 
     @Override

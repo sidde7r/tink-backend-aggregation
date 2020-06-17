@@ -8,9 +8,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AgreementsEntity {
     private List<AgreementEntity> agreement;
 
-    public String getId() {
+    public String getId(String orgNumber) {
         return agreement.stream()
                 .filter(a -> !Strings.isNullOrEmpty(a.getId()))
+                .filter(
+                        a ->
+                                !Strings.isNullOrEmpty(a.getAgreementHolderID())
+                                        && a.getAgreementHolderID().trim().equals(orgNumber))
                 .map(AgreementEntity::getId)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);

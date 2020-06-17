@@ -23,10 +23,13 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class NordeaSEBankIdAuthenticator implements BankIdAuthenticator<String> {
     private final NordeaSEApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final String orgNumber;
 
-    public NordeaSEBankIdAuthenticator(NordeaSEApiClient apiClient, SessionStorage sessionStorage) {
+    public NordeaSEBankIdAuthenticator(
+            NordeaSEApiClient apiClient, SessionStorage sessionStorage, String orgNumber) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.orgNumber = orgNumber;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class NordeaSEBankIdAuthenticator implements BankIdAuthenticator<String> 
         final String holderName = resultBankIdResponse.getHolderName();
         sessionStorage.put(StorageKeys.HOLDER_NAME, holderName);
 
-        final String id = resultBankIdResponse.getId();
+        final String id = resultBankIdResponse.getId(orgNumber);
         final FetchTokenRequest tokenRequest = new FetchTokenRequest(id);
         final FetchTokenResponse tokenResponse = apiClient.fetchToken(tokenRequest);
         securityToken = tokenResponse.getToken();

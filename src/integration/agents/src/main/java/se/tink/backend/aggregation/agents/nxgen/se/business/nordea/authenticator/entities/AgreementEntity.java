@@ -13,6 +13,10 @@ public class AgreementEntity {
         return id;
     }
 
+    public String getAgreementHolderID() {
+        return agreementHolderID;
+    }
+
     public String getAgreementHolderName() {
         return agreementHolderName;
     }
