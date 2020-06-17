@@ -14,14 +14,16 @@ import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
 @JsonObject
 public class LaBanquePostaleConfiguration implements BerlinGroupConfiguration {
 
     @JsonProperty @Secret private String oauthBaseUrl;
     @JsonProperty @Secret private String baseUrl;
-    @JsonProperty @Secret private String clientId;
-    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @Secret @ClientIdConfiguration private String clientId;
+    @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String psuIpAddress;
 

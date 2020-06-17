@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
 @JsonObject
 public class BunqConfiguration implements ClientConfiguration {
@@ -17,9 +19,9 @@ public class BunqConfiguration implements ClientConfiguration {
 
     @JsonProperty @SensitiveSecret private String psd2ApiKey;
 
-    @JsonProperty @Secret private String clientId;
+    @JsonProperty @Secret @ClientIdConfiguration private String clientId;
 
-    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
     @JsonProperty @Secret private String psd2InstallationKeyPair;
 

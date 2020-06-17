@@ -12,9 +12,6 @@ import java.lang.annotation.RetentionPolicy;
 @JacksonAnnotationsInside
 @JsonSchemaDescription("Client Id is a public identifier for apps.")
 @JsonSchemaTitle("Client Id")
-@JsonSchemaExamples({
-    "555d5513cb123456789050b90f06a18b21234567890a9cce977c5513734d3f41",
-    "042cfdf1234567890ad83d622d7563aa2412345678900d8fd891c490f183c6da"
-})
+@JsonSchemaExamples("555d5513cb123456789050b90f06a18b21234567890a9cce977c5513734d3f41")
 @JsonProperty(required = true)
 public @interface ClientIdConfiguration {}

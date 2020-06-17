@@ -6,14 +6,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
 
 @JsonObject
 public class BelfiusConfiguration implements ClientConfiguration {
 
-    @JsonProperty @Secret private String clientId;
+    @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String baseUrl;
-    @JsonProperty @SensitiveSecret private String clientSecret;
+    @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
     public String getClientId() {
         return clientId;
