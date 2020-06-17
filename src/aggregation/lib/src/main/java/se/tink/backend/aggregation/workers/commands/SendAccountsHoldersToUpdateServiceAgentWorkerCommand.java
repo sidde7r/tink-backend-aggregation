@@ -38,20 +38,22 @@ public class SendAccountsHoldersToUpdateServiceAgentWorkerCommand extends AgentW
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
+        MetricAction action = null;
         try {
-            MetricAction action =
-                    metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
-            try {
-                log.info("Sending accounts holders to UpdateService");
+            action = metrics.buildAction(new MetricId.MetricLabels().add("action", METRIC_ACTION));
 
-                context.sendAllCachedAccountsHoldersToUpdateService();
+            log.info("Sending accounts holders to UpdateService");
 
-                action.completed();
-            } catch (Exception e) {
-                // don't fail refresh if account holder information is not updated
+            context.sendAllCachedAccountsHoldersToUpdateService();
+
+            action.completed();
+        } catch (Exception e) {
+            if (action != null) {
                 action.failed();
-                log.warn("Couldn't send Accounts to UpdateService", e);
             }
+            // don't fail refresh if account holder information is not updated
+            log.warn("Couldn't send Accounts to UpdateService", e);
+
         } finally {
             metrics.stop();
         }
