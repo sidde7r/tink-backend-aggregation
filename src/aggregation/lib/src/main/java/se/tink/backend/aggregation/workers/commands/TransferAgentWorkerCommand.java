@@ -105,9 +105,9 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         if (transfer.getRemittanceInformation() != null) {
             log.info(
                     transfer,
-                    "RemittanceInformation:"
+                    "Remittance information: "
                             + transfer.getRemittanceInformation().toString()
-                            + ", desitnation message"
+                            + ", Destination message: "
                             + transfer.getDestinationMessage());
         } else {
             log.info(
