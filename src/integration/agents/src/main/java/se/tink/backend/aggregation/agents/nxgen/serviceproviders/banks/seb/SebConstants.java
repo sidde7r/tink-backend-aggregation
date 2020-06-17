@@ -76,6 +76,7 @@ public class SebConstants {
         public static final String CREDIT_CARD_HANDLE = "BILL_UNIT_HDL";
         public static final String PENDING_TRANSACTIONS = "RESERVE_AMT_FL";
         public static final String INVESTMENT_DETAIL_HANDLE = "DETAIL_URL";
+        public static final String EXTRA_INFO = "EXTRA_INFO";
     }
 
     public static class ServiceInputValues {

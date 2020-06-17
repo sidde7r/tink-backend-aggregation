@@ -160,12 +160,16 @@ public class SebApiClient {
     public Response fetchAccounts(String customerId, String accountType) {
         Preconditions.checkNotNull(Strings.emptyToNull(customerId));
         Preconditions.checkNotNull(Strings.emptyToNull(accountType));
-        final Request request =
-                new Request.Builder()
-                        .addServiceInput(ServiceInputKeys.CUSTOMER_ID, customerId)
-                        .addServiceInput(ServiceInputKeys.ACCOUNT_TYPE, accountType)
-                        .build();
-        return post(sebConfiguration.getListAccountsUrl(), request);
+        final Request.Builder request =
+                new Request.Builder().addServiceInput(ServiceInputKeys.CUSTOMER_ID, customerId);
+
+        if (sebConfiguration.isBusinessAgent()) {
+            request.addServiceInput(ServiceInputKeys.EXTRA_INFO, ServiceInputValues.YES);
+        } else {
+            request.addServiceInput(ServiceInputKeys.ACCOUNT_TYPE, accountType);
+        }
+
+        return post(sebConfiguration.getListAccountsUrl(), request.build());
     }
 
     public Response fetchTransactions(TransactionQuery query) {
