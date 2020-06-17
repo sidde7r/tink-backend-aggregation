@@ -52,7 +52,7 @@ public class SendAccountsHoldersToUpdateServiceAgentWorkerCommand extends AgentW
                 action.failed();
             }
             // don't fail refresh if account holder information is not updated
-            log.warn("Couldn't send Accounts to UpdateService", e);
+            log.warn("Couldn't send accounts holders to UpdateService", e);
 
         } finally {
             metrics.stop();
