@@ -164,7 +164,8 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
 
     private TransferMessageFormatter.Messages generateTransferMessages(
             Transfer transfer, boolean isInternalTransfer) {
-        return transferMessageFormatter.getMessages(transfer, isInternalTransfer);
+        return transferMessageFormatter.getMessagesFromRemittanceInformation(
+                transfer, isInternalTransfer);
     }
 
     private boolean isTransferBetweenSameUserAccounts(
