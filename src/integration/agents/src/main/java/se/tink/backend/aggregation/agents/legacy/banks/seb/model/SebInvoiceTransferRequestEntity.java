@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -38,18 +39,18 @@ public class SebInvoiceTransferRequestEntity extends SebTransferRequestEntity {
      * <p>TODO: Support several message lines if needed
      */
     public static SebInvoiceTransferRequestEntity createInvoiceTransfer(
-            Transfer transfer, String customerNumber, boolean isDestinationMessageOcr)
-            throws IllegalArgumentException {
+            Transfer transfer, String customerNumber) throws IllegalArgumentException {
         SebInvoiceTransferRequestEntity requestEntity =
                 new SebInvoiceTransferRequestEntity(transfer, customerNumber);
         requestEntity.destinationAccountType = getAccountType(transfer.getDestination());
 
-        if (isDestinationMessageOcr) {
-            requestEntity.ocr = transfer.getDestinationMessage();
-        } else {
+        if (transfer.getRemittanceInformation().isOfType(RemittanceInformationType.OCR)) {
+            requestEntity.ocr = transfer.getRemittanceInformation().getValue();
+        } else if (transfer.getRemittanceInformation()
+                .isOfType(RemittanceInformationType.UNSTRUCTURED)) {
             List<String> messageLines =
                     Splitter.fixedLength(MSG_LINE_SIZE)
-                            .splitToList(transfer.getDestinationMessage());
+                            .splitToList(transfer.getRemittanceInformation().getValue());
 
             if (messageLines.size() > 4) {
                 throw new IllegalStateException("Message contains of more than 100 letters");
@@ -59,6 +60,8 @@ public class SebInvoiceTransferRequestEntity extends SebTransferRequestEntity {
             requestEntity.messageLine2 = Iterables.get(messageLines, 1, "");
             requestEntity.messageLine3 = Iterables.get(messageLines, 2, "");
             requestEntity.messageLine4 = Iterables.get(messageLines, 3, "");
+        } else {
+            throw new IllegalStateException("Unknown remittance information type");
         }
 
         return requestEntity;
