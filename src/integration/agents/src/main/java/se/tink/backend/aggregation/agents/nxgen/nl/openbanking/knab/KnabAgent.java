@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.configuratio
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.fetcher.KnabTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.knab.session.KnabSessionHandler;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -28,7 +29,7 @@ public class KnabAgent extends NextGenerationAgent
 
     private final KnabApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
-    private KnabConfiguration configuration;
+    private KnabConfiguration clientConfiguration;
 
     public KnabAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -42,11 +43,12 @@ public class KnabAgent extends NextGenerationAgent
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final KnabConfiguration knabConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(KnabConfiguration.class);
+        final AgentConfiguration<KnabConfiguration> agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(KnabConfiguration.class);
 
-        this.configuration = knabConfiguration;
-        apiClient.setConfiguration(knabConfiguration);
+        clientConfiguration = agentConfiguration.getClientConfiguration();
+        apiClient.setConfiguration(agentConfiguration);
 
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
@@ -62,7 +64,7 @@ public class KnabAgent extends NextGenerationAgent
                                 strongAuthenticationState,
                                 apiClient,
                                 persistentStorage,
-                                configuration),
+                                clientConfiguration),
                         credentials,
                         strongAuthenticationState);
 

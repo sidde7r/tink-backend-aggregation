@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.AbnAmroCo
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.ExchangeAuthorizationCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.abnamro.configuration.AbnAmroConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -21,20 +22,21 @@ public class AbnAmroAuthenticator implements OAuth2Authenticator {
     private final AbnAmroApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final AbnAmroConfiguration configuration;
+    private final String redirectUrl;
 
     public AbnAmroAuthenticator(
             AbnAmroApiClient apiClient,
             PersistentStorage persistentStorage,
-            AbnAmroConfiguration configuration) {
+            AgentConfiguration<AbnAmroConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     @Override
     public URL buildAuthorizeUrl(final String state) {
         final String clientId = getConfiguration().getClientId();
-        final String redirectUri = getConfiguration().getRedirectUrl();
 
         return AbnAmroConstants.URLs.AUTHORIZE_ABNAMRO
                 .queryParam(AbnAmroConstants.QueryParams.SCOPE, AbnAmroConstants.QueryValues.SCOPES)
@@ -43,7 +45,7 @@ public class AbnAmroAuthenticator implements OAuth2Authenticator {
                         AbnAmroConstants.QueryParams.RESPONSE_TYPE,
                         AbnAmroConstants.QueryValues.CODE)
                 .queryParam(AbnAmroConstants.QueryParams.FLOW, AbnAmroConstants.QueryValues.CODE)
-                .queryParam(AbnAmroConstants.QueryParams.REDIRECT_URI, redirectUri)
+                .queryParam(AbnAmroConstants.QueryParams.REDIRECT_URI, redirectUrl)
                 .queryParam(AbnAmroConstants.QueryParams.BANK, AbnAmroConstants.QueryValues.NLAA01)
                 .queryParam(AbnAmroConstants.QueryParams.STATE, state);
     }
@@ -56,7 +58,6 @@ public class AbnAmroAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token exchangeAuthorizationCode(final String code) throws BankServiceException {
 
-        final String redirectUri = getConfiguration().getRedirectUrl();
         final String clientId = getConfiguration().getClientId();
         final ExchangeAuthorizationCodeRequest request = new ExchangeAuthorizationCodeRequest();
 
@@ -65,7 +66,7 @@ public class AbnAmroAuthenticator implements OAuth2Authenticator {
                 AbnAmroConstants.QueryValues.AUTHORIZATION_CODE);
         request.put(AbnAmroConstants.QueryParams.CLIENT_ID, clientId);
         request.put(AbnAmroConstants.QueryParams.CODE, code);
-        request.put(AbnAmroConstants.QueryParams.REDIRECT_URI, redirectUri);
+        request.put(AbnAmroConstants.QueryParams.REDIRECT_URI, redirectUrl);
 
         return apiClient.exchangeAuthorizationCode(request).toOauthToken();
     }
