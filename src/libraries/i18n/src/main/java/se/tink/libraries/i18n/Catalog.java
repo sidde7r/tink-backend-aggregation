@@ -15,6 +15,7 @@ public class Catalog {
     private static final Logger log = LoggerFactory.getLogger(Catalog.class);
 
     private static final String I18N_MESSAGES_BUNDLE = "se.tink.libraries.i18n.Messages";
+    private static final Locale BASE_LOCALE = getLocale("en_US");
 
     public static String format(String message, Object... params) {
         return MessageFormat.format(message.replace("'", "''"), params);
@@ -41,10 +42,14 @@ public class Catalog {
     }
 
     public Catalog(Locale locale) {
-        try {
-            i18n = I18nFactory.getI18n(Catalog.class, I18N_MESSAGES_BUNDLE, locale);
-        } catch (Exception e) {
-            log.error("Could not instantiate catalog for locale: {}", locale);
+        if (!locale.equals(BASE_LOCALE)) {
+            try {
+                i18n =
+                        I18nFactory.getI18n(
+                                Catalog.class, I18N_MESSAGES_BUNDLE, locale, I18nFactory.FALLBACK);
+            } catch (Exception e) {
+                log.error("Could not instantiate catalog for locale: {}", locale);
+            }
         }
     }
 
