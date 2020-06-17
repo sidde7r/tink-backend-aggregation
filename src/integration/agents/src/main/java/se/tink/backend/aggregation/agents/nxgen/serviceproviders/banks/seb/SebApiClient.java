@@ -251,7 +251,7 @@ public class SebApiClient {
 
     public void setupSession(String ssn) throws AuthenticationException, AuthorizationException {
         try {
-            initiateSession(ssn.substring(2));
+            initiateSession("");
         } catch (HttpResponseException e) {
             SocialSecurityNumber.Sweden formattedSsn = new SocialSecurityNumber.Sweden(ssn);
             if (!formattedSsn.isValid()) {

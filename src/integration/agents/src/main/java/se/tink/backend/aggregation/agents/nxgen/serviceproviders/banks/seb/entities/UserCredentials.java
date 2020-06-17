@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class UserCredentials implements RequestComponent {
 
     @JsonProperty("ApplicationName")
-    private String applicationName = "MASP";
+    private String applicationName = "RFO";
 
     @JsonProperty("UserId")
     private String userId;
