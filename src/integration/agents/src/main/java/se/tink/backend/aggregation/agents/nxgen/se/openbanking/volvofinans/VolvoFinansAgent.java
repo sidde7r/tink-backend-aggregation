@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.authe
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.configuration.VolvoFinansConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.VolvoFinansCreditCardAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.volvofinans.fetcher.transactionalaccount.VolvoFinansCreditCardTransactionsFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -35,15 +36,14 @@ public final class VolvoFinansAgent extends NextGenerationAgent
         apiClient = new VolvoFinansApiClient(client, persistentStorage);
 
         this.creditCardRefreshController = getCreditCardRefreshController();
-
         apiClient.setConfiguration(
-                getClientConfiguration(), agentsServiceConfiguration.getEidasProxy());
+                getAgentConfiguration(), agentsServiceConfiguration.getEidasProxy());
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 
-    protected VolvoFinansConfiguration getClientConfiguration() {
+    protected AgentConfiguration<VolvoFinansConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(VolvoFinansConfiguration.class);
+                .getAgentCommonConfiguration(VolvoFinansConfiguration.class);
     }
 
     @Override
@@ -53,7 +53,9 @@ public final class VolvoFinansAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new VolvoFinansAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()),
+                                apiClient,
+                                persistentStorage,
+                                getAgentConfiguration().getClientConfiguration()),
                         credentials,
                         strongAuthenticationState);
 

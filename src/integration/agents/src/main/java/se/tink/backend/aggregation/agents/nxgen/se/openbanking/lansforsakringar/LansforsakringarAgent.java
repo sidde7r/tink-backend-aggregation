@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.LansforsakringarPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.filter.ServiceBlockedFilter;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -43,10 +44,10 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        final LansforsakringarConfiguration lansforsakringarConfiguration =
+        final AgentConfiguration<LansforsakringarConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(LansforsakringarConfiguration.class);
-        apiClient.setConfiguration(lansforsakringarConfiguration);
+                        .getAgentCommonConfiguration(LansforsakringarConfiguration.class);
+        apiClient.setConfiguration(agentConfiguration);
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
 

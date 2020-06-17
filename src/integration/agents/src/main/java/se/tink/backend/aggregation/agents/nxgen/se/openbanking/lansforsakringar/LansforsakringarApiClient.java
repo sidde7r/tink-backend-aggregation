@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -52,6 +53,7 @@ public final class LansforsakringarApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private LansforsakringarConfiguration configuration;
+    private String redirectUrl;
     private final Credentials credentials;
     private final PersistentStorage persistentStorage;
 
@@ -76,8 +78,15 @@ public final class LansforsakringarApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    public void setConfiguration(LansforsakringarConfiguration configuration) {
-        this.configuration = configuration;
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(
+            AgentConfiguration<LansforsakringarConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     public RequestBuilder createRequest(URL url) {
@@ -106,9 +115,7 @@ public final class LansforsakringarApiClient {
                 .header(
                         LansforsakringarConstants.HeaderKeys.PSU_ID_TYPE,
                         LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI,
-                        getConfiguration().getRedirectUrl())
+                .header(LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
                 .post(ConsentResponse.class, LansforsakringarConstants.BodyValues.EMPTY_BODY);
     }
@@ -124,9 +131,7 @@ public final class LansforsakringarApiClient {
                 .header(
                         LansforsakringarConstants.HeaderKeys.PSU_ID_TYPE,
                         LansforsakringarConstants.HeaderValues.PSU_ID_TYPE)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI,
-                        getConfiguration().getRedirectUrl())
+                .header(LansforsakringarConstants.HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(LansforsakringarConstants.HeaderKeys.TPP_EXPLICIT_AUTH_PREFERRED, false)
                 .post(ConsentResponse.class, LansforsakringarConstants.BodyValues.EMPTY_BODY);
     }
@@ -140,9 +145,7 @@ public final class LansforsakringarApiClient {
                         LansforsakringarConstants.QueryKeys.RESPONSE_TYPE,
                         LansforsakringarConstants.QueryValues.RESPONSE_TYPE)
                 .queryParam(LansforsakringarConstants.QueryKeys.AUTHORIZATION_ID, authorizationId)
-                .queryParam(
-                        LansforsakringarConstants.QueryKeys.REDIRECT_URI,
-                        getConfiguration().getRedirectUrl())
+                .queryParam(LansforsakringarConstants.QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParam(LansforsakringarConstants.QueryKeys.STATE, state)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .getUrl();
@@ -155,7 +158,7 @@ public final class LansforsakringarApiClient {
                         .setGrantType(FormValues.AUTHORIZATION_CODE)
                         .setCode(code)
                         .setClientSecret(getConfiguration().getClientSecret())
-                        .setRedirectUri(getConfiguration().getRedirectUrl())
+                        .setRedirectUri(getRedirectUrl())
                         .build();
 
         URL tokenUrl = new URL(Urls.TOKEN);
@@ -237,7 +240,7 @@ public final class LansforsakringarApiClient {
                                 .parameter(
                                         IdTags.PAYMENT_TYPE,
                                         PaymentTypes.DOMESTIC_CREDIT_TRANSFERS))
-                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .post(DomesticPaymentResponse.class, domesticPaymentRequest);
     }
 
@@ -248,7 +251,7 @@ public final class LansforsakringarApiClient {
                                 .parameter(
                                         IdTags.PAYMENT_TYPE,
                                         PaymentTypes.CROSS_BORDER_CREDIT_TRANSFERS))
-                .header(HeaderKeys.TPP_REDIRECT_URI, configuration.getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .post(CrossBorderPaymentResponse.class, crossBorderPaymentRequest);
     }
 

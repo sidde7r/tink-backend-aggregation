@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.configura
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.skandia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -36,6 +37,7 @@ public final class SkandiaApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private SkandiaConfiguration configuration;
+    private String redirectUrl;
 
     public SkandiaApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -47,9 +49,16 @@ public final class SkandiaApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
     protected void setConfiguration(
-            SkandiaConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = configuration;
+            AgentConfiguration<SkandiaConfiguration> agentConfiguration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         client.setEidasProxy(eidasProxyConfiguration);
     }
 
@@ -75,7 +84,7 @@ public final class SkandiaApiClient {
     public URL getAuthorizeUrl(String state) {
         return client.request(Urls.AUTHORIZE)
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
-                .queryParam(QueryKeys.REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .queryParam(QueryKeys.REDIRECT_URI, getRedirectUrl())
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
@@ -85,10 +94,13 @@ public final class SkandiaApiClient {
     public OAuth2Token getToken(String code) {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
-        final String redirectUrl = getConfiguration().getRedirectUrl();
         TokenRequest request =
                 new TokenRequest(
-                        FormValues.AUTHORIZATION_CODE, code, redirectUrl, clientId, clientSecret);
+                        FormValues.AUTHORIZATION_CODE,
+                        code,
+                        getRedirectUrl(),
+                        clientId,
+                        clientSecret);
 
         return client.request(Urls.TOKEN)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)

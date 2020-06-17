@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configu
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.IcaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -29,6 +30,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final IcaBankenApiClient apiClient;
+    private AgentConfiguration<IcaBankenConfiguration> agentConfiguration;
     private IcaBankenConfiguration icaBankenConfiguration;
     private Credentials credentialsRequest;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -43,10 +45,10 @@ public final class IcaBankenAgent extends NextGenerationAgent
         credentialsRequest = request.getCredentials();
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
-        icaBankenConfiguration =
+        agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(IcaBankenConfiguration.class);
-
+                        .getAgentCommonConfiguration(IcaBankenConfiguration.class);
+        icaBankenConfiguration = agentConfiguration.getClientConfiguration();
         apiClient.setConfiguration(
                 icaBankenConfiguration, agentsServiceConfiguration.getEidasProxy());
     }
@@ -60,7 +62,7 @@ public final class IcaBankenAgent extends NextGenerationAgent
                         new IcaBankenAuthenticator(
                                 apiClient,
                                 persistentStorage,
-                                icaBankenConfiguration,
+                                agentConfiguration,
                                 credentialsRequest),
                         credentials,
                         strongAuthenticationState);

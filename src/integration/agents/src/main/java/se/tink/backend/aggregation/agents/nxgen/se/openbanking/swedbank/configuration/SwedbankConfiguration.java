@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.configuration;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -16,7 +14,6 @@ public class SwedbankConfiguration implements ClientConfiguration {
 
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @AgentConfigParam private String redirectUrl;
     @Secret private String qSealc;
     @Secret private String keyIdBase64;
 
@@ -50,13 +47,5 @@ public class SwedbankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
-    }
-
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
-        return redirectUrl;
     }
 }

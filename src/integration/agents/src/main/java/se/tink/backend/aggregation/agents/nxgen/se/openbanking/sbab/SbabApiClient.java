@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
 import java.util.Date;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.payment.DateValidationException;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchCustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.Utils;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -41,7 +43,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public final class SbabApiClient {
 
     private final TinkHttpClient client;
-    private SbabConfiguration configuration;
+    private String redirectUrl;
     private final SessionStorage sessionStorage;
 
     public SbabApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
@@ -49,8 +51,16 @@ public final class SbabApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    protected void setConfiguration(SbabConfiguration configuration) {
-        this.configuration = configuration;
+    protected void setConfiguration(AgentConfiguration<SbabConfiguration> agentConfiguration) {
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
+    }
+
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        SbabConstants.ErrorMessages.INVALID_CONFIGURATION));
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -147,10 +157,7 @@ public final class SbabApiClient {
 
     public DecoupledResponse getDecoupled(String code) {
         TokenRequest tokenRequest =
-                new TokenRequest(
-                        configuration.getRedirectUrl(),
-                        code,
-                        QueryValues.PENDING_AUTHORIZATION_CODE);
+                new TokenRequest(getRedirectUrl(), code, QueryValues.PENDING_AUTHORIZATION_CODE);
         return client.request(Urls.TOKEN)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
