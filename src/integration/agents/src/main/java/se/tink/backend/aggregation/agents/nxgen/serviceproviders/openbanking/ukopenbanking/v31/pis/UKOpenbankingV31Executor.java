@@ -132,13 +132,11 @@ public class UKOpenbankingV31Executor implements PaymentExecutor, FetchablePayme
                                                 AccountIdentifier.Type.SORT_CODE),
                                         new Pair<>(
                                                 AccountIdentifier.Type.PAYM_PHONE_NUMBER,
-                                                AccountIdentifier.Type.PAYM_PHONE_NUMBER))
-                                .put(
-                                        PaymentType.INTERNATIONAL,
-                                        new Pair<>(null, AccountIdentifier.Type.IBAN),
+                                                AccountIdentifier.Type.PAYM_PHONE_NUMBER),
                                         new Pair<>(
                                                 AccountIdentifier.Type.IBAN,
-                                                AccountIdentifier.Type.IBAN))
+                                                AccountIdentifier.Type.IBAN),
+                                        new Pair<>(null, AccountIdentifier.Type.IBAN))
                                 .build();
 
         PaymentType type =
