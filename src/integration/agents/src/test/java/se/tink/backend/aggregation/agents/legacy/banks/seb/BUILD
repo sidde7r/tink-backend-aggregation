@@ -17,6 +17,7 @@ junit_test(
         "//src/integration/credentials:service",
         "//src/integration/lib",
         "//src/integration/models",
+        "//src/integration/transfer:enums",
         "//src/integration/transfer:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/account_identifier/src/test/java/se/tink/libraries/account/identifiers/account",

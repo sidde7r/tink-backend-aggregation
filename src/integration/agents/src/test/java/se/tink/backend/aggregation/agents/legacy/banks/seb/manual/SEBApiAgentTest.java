@@ -26,8 +26,10 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.social.security.ssn.TestSSN;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.mocks.TransferMock;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
@@ -35,6 +37,14 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
 
     public SEBApiAgentTest() {
         super(SEBApiAgent.class);
+    }
+
+    private RemittanceInformation getRemittanceInformation(
+            RemittanceInformationType type, String value) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(type);
+        remittanceInformation.setValue(value);
+        return remittanceInformation;
     }
 
     @Override
@@ -116,62 +126,72 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
     @Test
     public void testTransferExternalBankIdHandelsbanken() throws Exception {
         Transfer transfer =
-                create1SEKTestTransfer(TestAccount.SEB_JR, TestAccount.HANDELSBANKEN_FH, "1");
+                create1SEKTestTransferUnstructuredMessage(
+                        TestAccount.SEB_JR, TestAccount.HANDELSBANKEN_FH, "1");
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalNordea() throws Exception {
         Transfer transfer =
-                create1SEKTestTransfer(TestAccount.SEB_JR, TestAccount.NORDEASSN_EP, "2");
+                create1SEKTestTransferUnstructuredMessage(
+                        TestAccount.SEB_JR, TestAccount.NORDEASSN_EP, "2");
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdSwedbank() throws Exception {
         Transfer transfer =
-                create1SEKTestTransfer(TestAccount.SEB_JR, TestAccount.SWEDBANK_FH, "3");
+                create1SEKTestTransferUnstructuredMessage(
+                        TestAccount.SEB_JR, TestAccount.SWEDBANK_FH, "3");
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdSavingsbank() throws Exception {
         Transfer transfer =
-                create1SEKTestTransfer(TestAccount.SEB_JR, TestAccount.SAVINGSBANK_AL, "4");
+                create1SEKTestTransferUnstructuredMessage(
+                        TestAccount.SEB_JR, TestAccount.SAVINGSBANK_AL, "4");
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdIcaBanken() throws Exception {
         Transfer transfer =
-                create1SEKTestTransfer(TestAccount.SEB_JR, TestAccount.ICABANKEN_FH, "5");
+                create1SEKTestTransferUnstructuredMessage(
+                        TestAccount.SEB_JR, TestAccount.ICABANKEN_FH, "5");
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdNordea() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.SEB_JR, TestAccount.NORDEA_EP, "6");
+        Transfer transfer =
+                create1SEKTestTransferUnstructuredMessage(
+                        TestAccount.SEB_JR, TestAccount.NORDEA_EP, "6");
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdLansforsakringar() throws Exception {
         Transfer transfer =
-                create1SEKTestTransfer(TestAccount.SEB_JR, TestAccount.LANSFORSAKRINGAR_FH, "8");
+                create1SEKTestTransferUnstructuredMessage(
+                        TestAccount.SEB_JR, TestAccount.LANSFORSAKRINGAR_FH, "8");
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdDanskeBank() throws Exception {
         Transfer transfer =
-                create1SEKTestTransfer(TestAccount.SEB_JR, TestAccount.DANSKEBANK_FH, "9");
+                create1SEKTestTransferUnstructuredMessage(
+                        TestAccount.SEB_JR, TestAccount.DANSKEBANK_FH, "9");
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdSkandiabanken() throws Exception {
         Transfer transfer =
-                create1SEKTestTransfer(TestAccount.SEB_JR, TestAccount.SKANDIABANKEN_FH, "9");
+                create1SEKTestTransferUnstructuredMessage(
+                        TestAccount.SEB_JR, TestAccount.SKANDIABANKEN_FH, "9");
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
@@ -179,7 +199,11 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
     public void testTransferExternal_LessThan_1SEK() throws Exception {
         Transfer transfer =
                 createLessThan1SEKTestTransferWithMessage(
-                        TestAccount.SEB_JR, TestAccount.NORDEASSN_EP, "tink test", "tink test");
+                        TestAccount.SEB_JR,
+                        TestAccount.NORDEASSN_EP,
+                        "tink test",
+                        getRemittanceInformation(
+                                RemittanceInformationType.UNSTRUCTURED, "tink test"));
         testTransfer(TestSSN.JR, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
@@ -187,7 +211,11 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
     public void testTransferInternal_LessThan_1SEK() throws Exception {
         Transfer transfer =
                 createLessThan1SEKTestTransferWithMessage(
-                        TestAccount.SEB_DL, TestAccount.SEB_ANOTHER_DL, "tink test", "tink test");
+                        TestAccount.SEB_DL,
+                        TestAccount.SEB_ANOTHER_DL,
+                        "tink test",
+                        getRemittanceInformation(
+                                RemittanceInformationType.UNSTRUCTURED, "tink test"));
         testTransfer(TestSSN.DL, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
@@ -196,11 +224,14 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
         String sourceMessageIdentifier = "Lvl1";
         AccountIdentifier source = TestAccount.Identifiers.SEB_DL;
         AccountIdentifier destination = TestAccount.SwedishBGIdentifiers.HARD_OCR_TYPE4_AMEX;
-        String destinationMessage = "37578468440200775"; // Al's Amex card OCR
+        String ocr = "37578468440200775"; // Al's Amex card OCR
 
         Transfer transfer =
-                create1SEKTestTransfer(
-                        source, destination, sourceMessageIdentifier, destinationMessage);
+                create1SEKTestTransferUnstructuredMessage(
+                        source,
+                        destination,
+                        sourceMessageIdentifier,
+                        getRemittanceInformation(RemittanceInformationType.OCR, ocr));
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(createUpComingValidDueDate());
 
@@ -283,54 +314,55 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
         return ThreadSafeDateFormat.FORMATTER_DAILY.parse(validDateString);
     }
 
-    private Transfer create1SEKTestTransfer(
+    private Transfer create1SEKTestTransferUnstructuredMessage(
             AccountIdentifier source,
             AccountIdentifier destination,
             String sourceMessageIdentifier,
-            String destinationMessage) {
+            RemittanceInformation remittanceInformation) {
         Transfer transfer = new Transfer();
         transfer.setAmount(Amount.inSEK(1.0));
-        transfer.setSourceMessage("Tink " + sourceMessageIdentifier + ": " + destinationMessage);
+        transfer.setSourceMessage(
+                "Tink " + sourceMessageIdentifier + ": " + remittanceInformation.getValue());
         transfer.setSource(source);
         transfer.setDestination(destination);
-        transfer.setDestinationMessage(destinationMessage);
+        transfer.setRemittanceInformation(remittanceInformation);
         transfer.setType(TransferType.BANK_TRANSFER);
         return transfer;
     }
 
-    private Transfer create1SEKTestTransfer(
+    private Transfer create1SEKTestTransferUnstructuredMessage(
             String sourceAccount, String destinationAccount, String sourceMessageIdentifier) {
-        return create1SEKTestTransferWithMessage(
+        return create1SEKTestTransferWithUnstructuredMessage(
                 sourceAccount,
                 destinationAccount,
                 "Tink Test" + sourceMessageIdentifier,
-                "Tink Test" + sourceMessageIdentifier);
+                getRemittanceInformation(RemittanceInformationType.UNSTRUCTURED, "Tink Test"));
     }
 
-    private Transfer create1SEKTestTransferWithMessage(
+    private Transfer create1SEKTestTransferWithUnstructuredMessage(
             String sourceAccount,
             String destinationAccount,
             String sourceMessage,
-            String destinationMessage) {
+            RemittanceInformation remittanceInformation) {
         return create1SEKTestTransferWithMessage(
                 new SwedishIdentifier(sourceAccount),
                 new SwedishIdentifier(destinationAccount),
                 sourceMessage,
-                destinationMessage);
+                remittanceInformation);
     }
 
     private Transfer create1SEKTestTransferWithMessage(
             AccountIdentifier sourceAccount,
             AccountIdentifier destinationAccount,
             String sourceMessage,
-            String destinationMessage) {
+            RemittanceInformation remittanceInformation) {
         Transfer transfer = new Transfer();
 
         transfer.setAmount(Amount.inSEK(1.0));
         transfer.setSource(sourceAccount);
         transfer.setSourceMessage(sourceMessage);
         transfer.setDestination(destinationAccount);
-        transfer.setDestinationMessage(destinationMessage);
+        transfer.setRemittanceInformation(remittanceInformation);
         transfer.setType(TransferType.BANK_TRANSFER);
 
         return transfer;
@@ -340,14 +372,14 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
             String sourceAccount,
             String destinationAccount,
             String sourceMessage,
-            String destinationMessage) {
+            RemittanceInformation remittanceInformation) {
         Transfer transfer = new Transfer();
 
         transfer.setAmount(Amount.inSEK(0.9999999999999999));
         transfer.setSource(new SwedishIdentifier(sourceAccount));
         transfer.setSourceMessage(sourceMessage);
         transfer.setDestination(new SwedishIdentifier(destinationAccount));
-        transfer.setDestinationMessage(destinationMessage);
+        transfer.setRemittanceInformation(remittanceInformation);
         transfer.setType(TransferType.BANK_TRANSFER);
 
         return transfer;
