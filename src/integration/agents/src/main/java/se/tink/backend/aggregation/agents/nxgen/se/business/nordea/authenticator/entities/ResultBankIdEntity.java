@@ -16,8 +16,8 @@ public class ResultBankIdEntity {
         return authenticationToken.getToken();
     }
 
-    public String getId() {
-        return agreements.getId();
+    public String getId(String orgNumber) {
+        return agreements.getId(orgNumber);
     }
 
     public String getHolderName() {

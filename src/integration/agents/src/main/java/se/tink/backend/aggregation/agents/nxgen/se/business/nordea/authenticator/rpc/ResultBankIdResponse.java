@@ -18,8 +18,8 @@ public class ResultBankIdResponse extends NordeaSEResponse {
         return resultBankIdEntity.getToken();
     }
 
-    public String getId() {
-        return resultBankIdEntity.getId();
+    public String getId(String orgNumber) {
+        return resultBankIdEntity.getId(orgNumber);
     }
 
     public String getHolderName() {
