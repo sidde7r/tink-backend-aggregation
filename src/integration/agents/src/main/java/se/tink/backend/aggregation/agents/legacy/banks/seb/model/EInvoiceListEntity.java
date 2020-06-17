@@ -26,6 +26,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -63,6 +64,9 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
                 transfer.setAmount(eInvoiceListEntity.getOriginalAmount());
                 transfer.setDestination(eInvoiceListEntity.getDestination());
                 transfer.setDestinationMessage(eInvoiceListEntity.getDestinationMessage());
+                RemittanceInformation remittanceInformation = new RemittanceInformation();
+                remittanceInformation.setValue(eInvoiceListEntity.getDestinationMessage());
+                transfer.setRemittanceInformation(remittanceInformation);
                 transfer.setSource(eInvoiceListEntity.getSource());
                 transfer.setSourceMessage(eInvoiceListEntity.getSourceMessage());
 
