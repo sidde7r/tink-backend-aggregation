@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.clien
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
+import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.TokenResponse;
@@ -11,20 +14,19 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.IdentityEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@AllArgsConstructor
 public class BoursoramaApiClient {
 
     private final SimpleDateFormat apiDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private final TinkHttpClient client;
     private final BoursoramaConfiguration configuration;
-
-    public BoursoramaApiClient(TinkHttpClient client, BoursoramaConfiguration configuration) {
-        this.client = client;
-        this.configuration = configuration;
-    }
+    private final SessionStorage sessionStorage;
 
     public TokenResponse refreshToken(RefreshTokenRequest tokenRequest) {
         return client.request(configuration.getBaseUrl() + Urls.REFRESH_TOKEN)
@@ -56,6 +58,17 @@ public class BoursoramaApiClient {
 
     private RequestBuilder baseAISRequest(String urlTemplate, String userHash) {
         String url = String.format(urlTemplate, userHash);
-        return client.request(configuration.getBaseUrl() + url).type(MediaType.APPLICATION_JSON);
+        return client.request(configuration.getBaseUrl() + url)
+                .type(MediaType.APPLICATION_JSON)
+                .addBearerToken(getTokenFromStorage());
+    }
+
+    private OAuth2Token getTokenFromStorage() {
+        return sessionStorage
+                .get(BoursoramaConstants.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        SessionError.SESSION_EXPIRED.exception()));
     }
 }
