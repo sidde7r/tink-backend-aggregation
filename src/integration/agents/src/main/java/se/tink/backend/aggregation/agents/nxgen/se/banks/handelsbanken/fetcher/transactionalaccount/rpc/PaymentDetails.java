@@ -16,6 +16,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class PaymentDetails extends BaseResponse implements UpdatablePayment {
@@ -75,6 +76,9 @@ public class PaymentDetails extends BaseResponse implements UpdatablePayment {
         }
 
         transfer.setDestinationMessage(getMessage());
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue(getMessage());
+        transfer.setRemittanceInformation(remittanceInformation);
 
         if (approvalId != null) {
             transfer.addPayload(TransferPayloadType.PROVIDER_UNIQUE_ID, approvalId);

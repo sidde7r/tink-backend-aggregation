@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class EInvoice extends BaseResponse {
@@ -41,6 +42,10 @@ public class EInvoice extends BaseResponse {
         transfer.setDueDate(DateUtils.flattenTime(dueDate));
         transfer.setAmount(amount.asAmount());
         transfer.setDestination(recipient.accountIdentifier());
+
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue(getMessage());
+        transfer.setRemittanceInformation(remittanceInformation);
 
         if (account != null) {
             account.applyTo(transfer);
