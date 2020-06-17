@@ -15,6 +15,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 /** Careful with this test! Actual transfers made! */
@@ -102,7 +103,10 @@ public class HandelsbankenSEPaymentTest {
         } else {
             transfer.setDueDate(getDueDateToday());
         }
-        transfer.setDestinationMessage("Reference");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(null);
+        remittanceInformation.setValue("Reference");
+        transfer.setRemittanceInformation(remittanceInformation);
         return transfer;
     }
 
