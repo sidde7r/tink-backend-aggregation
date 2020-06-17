@@ -63,11 +63,8 @@ public class DemobankDkNemIdReAuthenticator
         persistentStorage.put(
                 PSK_CHALLENGE_ENTITY, SerializationUtils.serializeToString(challengeResponse));
 
-        NemIdGenerateCodeResponse response =
-                apiClient.nemIdGenerateCode(
-                        new NemIdGenerateCodeRequest().setPushEnabled(true), token);
-
-        return response;
+        return apiClient.nemIdGenerateCode(
+                new NemIdGenerateCodeRequest().setPushEnabled(true), token);
     }
 
     @Override
@@ -121,8 +118,6 @@ public class DemobankDkNemIdReAuthenticator
                         installIdResponse.getSessionToken(),
                         installIdResponse.getSessionToken(),
                         3600));
-        // apiClient.sendTransportKey(token);
-        // apiClient.mobilServiceLogin(installIdResponse, token);
     }
 
     @Override
