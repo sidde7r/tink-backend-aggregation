@@ -47,6 +47,8 @@ public class AggregationControllerAggregationClientImpl
             LoggerFactory.getLogger(AggregationControllerAggregationClientImpl.class);
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("oxford-staging", "oxford-production");
+    private static final ImmutableSet<String> ACCOUNT_INFORMATION_ENABLED_ENVIRONMENTS =
+            ImmutableSet.of("local-development", "oxford-staging");
     private final ClientConfig config;
     private static final int MAXIMUM_RETRY_ATTEMPT = 3;
     private static final int WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS = 2000;
@@ -250,6 +252,10 @@ public class AggregationControllerAggregationClientImpl
     @Override
     public AccountHolder updateAccountHolder(
             HostConfiguration hostConfiguration, UpdateAccountHolderRequest request) {
+        Preconditions.checkState(
+                ACCOUNT_INFORMATION_ENABLED_ENVIRONMENTS.contains(hostConfiguration.getClusterId()),
+                "Account Information Service is not enabled on ",
+                hostConfiguration.getClusterId());
         return requestExecuter(
                 () -> getAccountHolderService(hostConfiguration).updateAccountHolder(request),
                 "Update Account Holder");
