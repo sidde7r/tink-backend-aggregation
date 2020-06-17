@@ -2,34 +2,21 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authe
 
 import com.nimbusds.jwt.JWTParser;
 import java.text.ParseException;
+import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaAuthenticationFilter;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@AllArgsConstructor
 public class BoursoramaAuthenticator implements OAuth2Authenticator {
 
     private static final String USER_HASH_CLAIM = "userHash";
 
     private final BoursoramaApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private final BoursoramaAuthenticationFilter authenticationFilter;
-    private final BoursoramaConfiguration configuration;
-
-    public BoursoramaAuthenticator(
-            BoursoramaApiClient apiClient,
-            SessionStorage sessionStorage,
-            BoursoramaAuthenticationFilter authenticationFilter,
-            BoursoramaConfiguration configuration) {
-        this.sessionStorage = sessionStorage;
-        this.apiClient = apiClient;
-        this.authenticationFilter = authenticationFilter;
-        this.configuration = configuration;
-    }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
@@ -76,7 +63,7 @@ public class BoursoramaAuthenticator implements OAuth2Authenticator {
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         sessionStorage.put(BoursoramaConstants.USER_HASH, extractUserHash(accessToken));
-        authenticationFilter.setTokenToUse(accessToken);
+        sessionStorage.put(BoursoramaConstants.OAUTH_TOKEN, accessToken);
     }
 
     private String extractUserHash(OAuth2Token accessToken) {

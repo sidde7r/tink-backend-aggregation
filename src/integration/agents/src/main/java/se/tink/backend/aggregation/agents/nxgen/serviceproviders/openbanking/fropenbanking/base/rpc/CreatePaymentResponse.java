@@ -40,6 +40,11 @@ public class CreatePaymentResponse {
     }
 
     private String getPaymentId() {
-        return links.getAuthorizationUrl().split("=")[1];
+        String authorizationUrl = links.getAuthorizationUrl();
+        if (authorizationUrl.contains("=")) {
+            return authorizationUrl.substring(authorizationUrl.lastIndexOf("=") + 1);
+        }
+
+        return authorizationUrl.substring(authorizationUrl.lastIndexOf("/") + 1);
     }
 }

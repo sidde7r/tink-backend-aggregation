@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama;
 
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -10,12 +11,13 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.BoursoramaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaAuthenticationFilter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaMessageSignFilter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.IdentityEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaPaymentApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -29,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -60,13 +63,8 @@ public class BoursoramaAgent extends NextGenerationAgent
 
         BoursoramaConfiguration agentConfiguration = getAgentConfiguration();
 
-        BoursoramaAuthenticationFilter authenticationFilter = new BoursoramaAuthenticationFilter();
-        this.apiClient =
-                constructApiClient(
-                        agentConfiguration, agentsServiceConfiguration, authenticationFilter);
-        this.authenticator =
-                new BoursoramaAuthenticator(
-                        apiClient, sessionStorage, authenticationFilter, agentConfiguration);
+        this.apiClient = constructApiClient(agentConfiguration, agentsServiceConfiguration);
+        this.authenticator = new BoursoramaAuthenticator(apiClient, sessionStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -85,14 +83,12 @@ public class BoursoramaAgent extends NextGenerationAgent
 
     private BoursoramaApiClient constructApiClient(
             BoursoramaConfiguration agentConfiguration,
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            BoursoramaAuthenticationFilter authenticationFilter) {
+            AgentsServiceConfiguration agentsServiceConfiguration) {
 
         BoursoramaMessageSignFilter messageSignFilter =
                 constructMessageSignFilter(agentsServiceConfiguration, agentConfiguration);
-        client.addFilter(authenticationFilter);
         client.addFilter(messageSignFilter);
-        return new BoursoramaApiClient(client, agentConfiguration);
+        return new BoursoramaApiClient(client, agentConfiguration, sessionStorage);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
@@ -173,5 +169,22 @@ public class BoursoramaAgent extends NextGenerationAgent
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return transactionalAccountRefreshController.fetchSavingsTransactions();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        BoursoramaConfiguration configuration =
+                getAgentConfigurationController()
+                        .getAgentConfiguration(BoursoramaConfiguration.class);
+
+        FrOpenBankingPaymentExecutor paymentExecutor =
+                new FrOpenBankingPaymentExecutor(
+                        new BoursoramaPaymentApiClient(client, configuration),
+                        configuration.getRedirectUrl(),
+                        sessionStorage,
+                        strongAuthenticationState,
+                        supplementalInformationHelper);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }
