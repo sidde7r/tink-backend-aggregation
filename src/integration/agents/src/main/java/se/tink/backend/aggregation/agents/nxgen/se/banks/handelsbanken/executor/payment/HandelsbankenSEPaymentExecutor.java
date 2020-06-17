@@ -84,7 +84,8 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
         PaymentRecipient paymentRecipient = verifyRecipient(transfer.getDestination(), context);
 
         if (transfer.getRemittanceInformation().getType() == null) {
-            validateDestinationMessage(paymentRecipient, transfer.getRemittanceInformation().getValue());
+            validateRemittanceInformation(
+                    paymentRecipient, transfer.getRemittanceInformation().getValue());
         }
         signTransfer(context.toCreate(), PaymentSignRequest.create(transfer, paymentRecipient));
     }
@@ -141,7 +142,7 @@ public class HandelsbankenSEPaymentExecutor implements PaymentExecutor, UpdatePa
                                         new DisplayAccountIdentifierFormatter())));
     }
 
-    private void validateDestinationMessage(
+    private void validateRemittanceInformation(
             PaymentRecipient destination, String remittanceInformation) {
         GiroMessageValidator.ValidationResult validationResult =
                 GiroMessageValidator.create(destination.getOcrCheck().getValidationConfiguration())
