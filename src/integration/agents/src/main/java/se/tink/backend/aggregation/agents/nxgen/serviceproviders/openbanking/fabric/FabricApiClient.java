@@ -186,7 +186,10 @@ public class FabricApiClient {
                                                 paymentId))
                         .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                         .get(PaymentAuthorizationsResponse.class);
-        sessionStorage.put(StorageKeys.PAYMENT_AUTHORIZATION_ID, result.getLastAuthorisationId());
+        if (!result.getAuthorisationIds().isEmpty()) {
+            sessionStorage.put(
+                    StorageKeys.PAYMENT_AUTHORIZATION_ID, result.getLastAuthorisationId());
+        }
         return result;
     }
 
