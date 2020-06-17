@@ -252,13 +252,12 @@ public class AggregationControllerAggregationClientImpl
     @Override
     public AccountHolder updateAccountHolder(
             HostConfiguration hostConfiguration, UpdateAccountHolderRequest request) {
-        Preconditions.checkState(
-                ACCOUNT_INFORMATION_ENABLED_ENVIRONMENTS.contains(hostConfiguration.getClusterId()),
-                "Account Information Service is not enabled on ",
-                hostConfiguration.getClusterId());
-        return requestExecuter(
-                () -> getAccountHolderService(hostConfiguration).updateAccountHolder(request),
-                "Update Account Holder");
+        if (ACCOUNT_INFORMATION_ENABLED_ENVIRONMENTS.contains(hostConfiguration.getClusterId())) {
+            return requestExecuter(
+                    () -> getAccountHolderService(hostConfiguration).updateAccountHolder(request),
+                    "Update Account Holder");
+        }
+        return request.getAccountHolder();
     }
 
     @FunctionalInterface
