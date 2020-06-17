@@ -37,7 +37,7 @@ public class PensionEntityTest {
     public void withNullHolderHolderNameIsExpectedFullName() {
         PensionEntity e4 = deserializeFromString(NULL_HOLDER, PensionEntity.class);
 
-        assertNull(e4.toTinkInvestmentAccount().getHolderName().toString());
+        assertNull(e4.toTinkInvestmentAccount().getHolderName());
     }
 
     private static final String HOLDER_SECOND =

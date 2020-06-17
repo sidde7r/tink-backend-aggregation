@@ -72,6 +72,7 @@ public class Account implements Cloneable {
     private AccountDetails details;
     private boolean closed;
     private String holderName;
+    private AccountHolder accountHolder;
     private String flags;
     private String financialInstitutionId;
 
@@ -580,6 +581,7 @@ public class Account implements Cloneable {
                 && Objects.equals(first.details, second.details)
                 && Objects.equals(first.holderName, second.holderName)
                 && Objects.equals(first.flags, second.flags)
+                && Objects.equals(first.accountHolder, second.accountHolder)
                 && Objects.equals(first.financialInstitutionId, second.financialInstitutionId);
     }
 
@@ -626,5 +628,13 @@ public class Account implements Cloneable {
 
     public void setCapabilities(AccountCapabilities capabilities) {
         this.capabilities = capabilities;
+    }
+
+    public AccountHolder getAccountHolder() {
+        return accountHolder;
+    }
+
+    public void setAccountHolder(AccountHolder accountHolder) {
+        this.accountHolder = accountHolder;
     }
 }

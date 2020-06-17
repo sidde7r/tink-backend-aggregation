@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sp
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.SparebankConstants;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -31,7 +32,8 @@ public class CustomAsserts {
         assertThat(account.getIdentifiers())
                 .containsOnly(new IbanIdentifier(iban), new NorwegianIdentifier(bban));
         assertThat(account.getApiIdentifier()).isEqualTo(apiIdentifier);
-        assertThat(account.getHolderName().toString()).isEqualTo(holderName);
+        assertThat(Optional.ofNullable(account.getHolderName()).map(h -> h.toString()).orElse(null))
+                .isEqualTo(holderName);
         assertThat(account.getFromTemporaryStorage(SparebankConstants.StorageKeys.TRANSACTIONS_URL))
                 .isEqualTo(transactionLink);
     }

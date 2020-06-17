@@ -14,8 +14,10 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationControllerAggregationClient;
+import se.tink.backend.aggregation.aggregationcontroller.v1.api.AccountHolderService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.AggregationControllerService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.IdentityAggregatorService;
@@ -25,6 +27,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfigurati
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsSensitiveRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
@@ -96,6 +99,10 @@ public class AggregationControllerAggregationClientImpl
             HostConfiguration hostConfiguration) {
         return buildInterClusterServiceFromInterface(
                 hostConfiguration, IdentityAggregatorService.class);
+    }
+
+    private AccountHolderService getAccountHolderService(HostConfiguration hostConfiguration) {
+        return buildInterClusterServiceFromInterface(hostConfiguration, AccountHolderService.class);
     }
 
     @Override
@@ -238,6 +245,14 @@ public class AggregationControllerAggregationClientImpl
         }
 
         return Response.ok().build();
+    }
+
+    @Override
+    public AccountHolder updateAccountHolder(
+            HostConfiguration hostConfiguration, UpdateAccountHolderRequest request) {
+        return requestExecuter(
+                () -> getAccountHolderService(hostConfiguration).updateAccountHolder(request),
+                "Update Account Holder");
     }
 
     @FunctionalInterface

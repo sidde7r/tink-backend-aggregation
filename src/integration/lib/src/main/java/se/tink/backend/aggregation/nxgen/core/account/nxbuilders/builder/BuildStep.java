@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder;
 
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.libraries.account.enums.AccountFlag;
 
 public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
@@ -20,12 +23,39 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
 
     /**
      * Adds a name as a holder of the account. For shared accounts this method can be invoked
-     * several times to add multiple holders.
+     * several times to add multiple holders. If the role of each holder can be specified use {@link
+     * BuildStep#addHolders(Holder...)}
      *
      * @param holderName Name of the account holder.
      * @return The next step of the builder.
      */
     B addHolderName(@Nullable String holderName);
+
+    /**
+     * Adds multiple holders to the account. If this method is invoked several times all holders
+     * specified in all calls will be added.
+     *
+     * @param holders list of holder entities to be added to the account
+     * @return The next step of the builder.
+     */
+    B addHolders(@Nonnull List<Holder> holders);
+
+    /**
+     * Adds multiple holders to the account. If this method is invoked several times all holders
+     * specified in all calls will be added.
+     *
+     * @param holders array of holder entities to be added to the account
+     * @return The next step of the builder.
+     */
+    B addHolders(@Nonnull Holder... holders);
+
+    /**
+     * Set the type the account holder. {@link AccountHolderType}
+     *
+     * @param type type of the account holder.
+     * @return The next step of the builder.
+     */
+    B setHolderType(@Nonnull AccountHolderType type);
 
     B addAccountFlags(@Nonnull AccountFlag... accountFlags);
 

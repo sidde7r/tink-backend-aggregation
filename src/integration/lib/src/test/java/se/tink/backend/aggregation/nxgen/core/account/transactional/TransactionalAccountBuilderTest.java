@@ -11,7 +11,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountBuilder;
+import se.tink.backend.aggregation.nxgen.core.account.AccountHolderType;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.libraries.account.AccountIdentifier;
@@ -256,6 +258,8 @@ public class TransactionalAccountBuilderTest {
                                         .setProductName("UltraSavings ZeroFX")
                                         .build())
                         .addHolderName("Jürgen Flughaubtkopf")
+                        .addHolders(Holder.of("Millie-Jo Morales", Holder.Role.AUTHORIZED_USER))
+                        .setHolderType(AccountHolderType.PERSONAL)
                         .setApiIdentifier("2a3ffe-38320c")
                         .putInTemporaryStorage("box", box)
                         .build()
@@ -291,6 +295,13 @@ public class TransactionalAccountBuilderTest {
         assertThat(storage.get().x).isEqualTo("TestString");
         assertThat(storage.get().y).isEqualTo(15);
         assertThat(account.getHolderName().toString()).isEqualTo("Jürgen Flughaubtkopf");
+        assertThat(account.getHolders()).hasSize(2);
+        assertThat(account.getHolders().get(0).getName()).isEqualTo("Jürgen Flughaubtkopf");
+        assertThat(account.getHolders().get(0).getRole()).isNull();
+        assertThat(account.getHolders().get(1).getName()).isEqualTo("Millie-Jo Morales");
+        assertThat(account.getHolders().get(1).getRole()).isEqualTo(Holder.Role.AUTHORIZED_USER);
+        assertThat(account.getHolderType()).isEqualTo(AccountHolderType.PERSONAL);
+
         assertThat(account.getApiIdentifier()).isEqualTo("2a3ffe-38320c");
     }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -22,11 +23,12 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     private IdModule idModule;
     private String apiIdentifier;
-    private final List<HolderName> holderNames = new ArrayList<>();
+    private final List<Holder> holders = new ArrayList<>();
     protected final List<AccountFlag> accountFlags = new ArrayList<>();
     private final TemporaryStorage temporaryStorage = new TemporaryStorage();
     protected Map<String, String> payload = new HashMap<>();
     private AccountCapabilities capabilities = AccountCapabilities.createDefault();
+    private AccountHolderType holderType;
 
     protected abstract B buildStep();
 
@@ -46,10 +48,31 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     @Override
     public B addHolderName(@Nullable String holderName) {
-        if (holderName != null) {
-            holderNames.add(new HolderName(holderName));
+        if (!Strings.isNullOrEmpty(holderName)) {
+            holders.add(Holder.of(holderName));
         }
 
+        return buildStep();
+    }
+
+    @Override
+    public B addHolders(@Nonnull List<Holder> holders) {
+        Preconditions.checkNotNull(holders, "holders List must not be null.");
+
+        this.holders.addAll(holders);
+        return buildStep();
+    }
+
+    @Override
+    public B addHolders(@Nonnull Holder... holders) {
+        Preconditions.checkNotNull(holders, "holders Array must not be null.");
+        return this.addHolders(Arrays.asList(holders));
+    }
+
+    @Override
+    public B setHolderType(@Nonnull AccountHolderType holderType) {
+        Preconditions.checkNotNull(holderType, "holder type must not be null.");
+        this.holderType = holderType;
         return buildStep();
     }
 
@@ -104,8 +127,12 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
         return apiIdentifier;
     }
 
-    List<HolderName> getHolderNames() {
-        return ImmutableList.copyOf(holderNames);
+    List<Holder> getHolders() {
+        return ImmutableList.copyOf(holders);
+    }
+
+    AccountHolderType getHolderType() {
+        return holderType;
     }
 
     List<AccountFlag> getAccountFlags() {

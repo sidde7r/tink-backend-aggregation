@@ -225,6 +225,11 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         }
     }
 
+    public void sendAllCachedAccountsHoldersToUpdateService() {
+
+        updatedAccountsByTinkId.keySet().forEach(this::sendAccountHolderToUpdateService);
+    }
+
     private void compareAccountsBeforeAndAfterUpdate() {
 
         if (!(request instanceof RefreshInformationRequest)) {

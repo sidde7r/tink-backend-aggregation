@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -34,6 +35,7 @@ import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account.Psd2PaymentAccountClassifier;
@@ -468,6 +470,34 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
 
         return updatedAccount;
+    }
+
+    public AccountHolder sendAccountHolderToUpdateService(String tinkId) {
+        AccountHolder accountHolder =
+                Optional.ofNullable(updatedAccountsByTinkId.get(tinkId))
+                        .map(account -> allAvailableAccountsByUniqueId.get(account.getBankId()))
+                        .map(account -> account.first)
+                        .map(Account::getAccountHolder)
+                        .orElse(null);
+
+        if (Objects.isNull(accountHolder)) {
+            log.debug("account: " + tinkId + "has no account holder");
+            return null;
+        }
+        accountHolder.setAccountId(tinkId);
+        accountHolder.setUserId(request.getCredentials().getUserId());
+        UpdateAccountHolderRequest request = new UpdateAccountHolderRequest();
+        request.setAccountHolder(accountHolder);
+        try {
+            return controllerWrapper.updateAccountHolder(request);
+        } catch (UniformInterfaceException e) {
+            log.error(
+                    "Account holder update request failed, response: "
+                            + (e.getResponse().hasEntity()
+                                    ? e.getResponse().getEntity(String.class)
+                                    : ""));
+            throw e;
+        }
     }
 
     public Account updateAccount(String uniqueId) {

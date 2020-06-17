@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -15,12 +16,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -48,7 +52,6 @@ public abstract class Account {
     protected Set<AccountIdentifier> identifiers;
     protected String uniqueIdentifier;
     protected String apiIdentifier;
-    protected HolderName holderName;
     protected TemporaryStorage temporaryStorage;
     protected Set<AccountFlag> accountFlags;
     protected ExactCurrencyAmount exactBalance;
@@ -57,6 +60,8 @@ public abstract class Account {
     protected ExactCurrencyAmount exactCreditLimit;
     protected Map<String, String> payload;
     protected AccountCapabilities capabilities;
+    protected final List<Holder> holders;
+    protected AccountHolderType holderType;
 
     protected Account(AccountBuilder<? extends Account, ?> builder, BalanceModule balanceModule) {
         this(
@@ -80,7 +85,8 @@ public abstract class Account {
         this.uniqueIdentifier = builder.getIdModule().getUniqueId();
         this.idModule = builder.getIdModule();
         this.apiIdentifier = builder.getApiIdentifier();
-        this.holderName = builder.getHolderNames().stream().findFirst().orElse(null);
+        this.holders = builder.getHolders();
+        this.holderType = builder.getHolderType();
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         this.payload = builder.getPayload();
@@ -95,7 +101,11 @@ public abstract class Account {
         this.identifiers = ImmutableSet.copyOf(builder.getIdentifiers());
         this.uniqueIdentifier = sanitizeUniqueIdentifier(builder.getUniqueIdentifier());
         this.apiIdentifier = builder.getBankIdentifier();
-        this.holderName = builder.getHolderName();
+        this.holders =
+                Optional.ofNullable(builder.getHolderName())
+                        .filter(holderName -> !Strings.isNullOrEmpty(holderName.toString()))
+                        .map(holderName -> ImmutableList.of(Holder.of(holderName.toString())))
+                        .orElse(ImmutableList.of());
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         this.exactBalance = builder.getExactBalance();
@@ -132,9 +142,12 @@ public abstract class Account {
             this.name = builder.getAlias();
         }
 
-        // Only use one holder name for now
-        this.holderName =
-                new HolderName(builder.getHolderNames().stream().findFirst().orElse(null));
+        this.holders =
+                Optional.ofNullable(builder.getHolderNames()).orElse(Collections.emptyList())
+                        .stream()
+                        .filter(holderName -> !Strings.isNullOrEmpty(holderName))
+                        .map(Holder::of)
+                        .collect(Collectors.toList());
     }
 
     @Deprecated
@@ -246,7 +259,7 @@ public abstract class Account {
         account.setExactBalance(this.exactBalance);
         account.setIdentifiers(this.identifiers);
         account.setBankId(this.uniqueIdentifier);
-        account.setHolderName(HolderName.toString(this.holderName));
+        account.setHolderName(getFirstHolder().orElse(null));
         account.setFlags(this.accountFlags);
         account.setPayload(createPayload(user));
         account.setAvailableCredit(
@@ -258,11 +271,33 @@ public abstract class Account {
         account.setCreditLimit(this.exactCreditLimit);
         account.setCapabilities(this.capabilities);
 
+        if (holders.size() > 0 || java.util.Objects.nonNull(holderType)) {
+            AccountHolder accountHolder = new AccountHolder();
+            accountHolder.setType(
+                    Optional.ofNullable(holderType)
+                            .orElse(AccountHolderType.PERSONAL)
+                            .toSystemType());
+            accountHolder.setIdentities(
+                    holders.stream().map(Holder::toSystemHolder).collect(Collectors.toList()));
+            account.setAccountHolder(accountHolder);
+        }
         return account;
     }
 
+    private Optional<String> getFirstHolder() {
+        return holders.stream().findFirst().map(Holder::getName);
+    }
+
     public HolderName getHolderName() {
-        return this.holderName;
+        return getFirstHolder().map(HolderName::new).orElse(null);
+    }
+
+    public List<Holder> getHolders() {
+        return holders;
+    }
+
+    public AccountHolderType getHolderType() {
+        return holderType;
     }
 
     public String getFromTemporaryStorage(String key) {

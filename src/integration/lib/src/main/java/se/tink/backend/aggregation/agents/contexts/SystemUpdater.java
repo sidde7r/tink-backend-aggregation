@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.contexts;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
@@ -13,6 +14,8 @@ public interface SystemUpdater {
     void processTransactions();
 
     Account sendAccountToUpdateService(String uniqueId);
+
+    AccountHolder sendAccountHolderToUpdateService(String tinkId);
 
     Account updateAccount(String uniqueId);
 

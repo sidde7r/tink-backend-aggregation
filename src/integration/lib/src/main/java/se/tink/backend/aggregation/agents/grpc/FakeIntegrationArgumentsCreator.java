@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -123,6 +124,11 @@ public class FakeIntegrationArgumentsCreator {
 
                     @Override
                     public Account sendAccountToUpdateService(String uniqueId) {
+                        return null;
+                    }
+
+                    @Override
+                    public AccountHolder sendAccountHolderToUpdateService(String tinkId) {
                         return null;
                     }
 

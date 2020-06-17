@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
@@ -17,6 +18,7 @@ import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -202,6 +204,15 @@ public class AgentTestContext extends AgentContext {
 
     public Account sendAccountToUpdateService(String uniqueId) {
         return accountsByBankId.get(uniqueId);
+    }
+
+    @Override
+    public AccountHolder sendAccountHolderToUpdateService(String tinkId) {
+        return accountsByBankId.values().stream()
+                .filter(a -> Objects.equals(tinkId, a.getId()))
+                .findFirst()
+                .map(Account::getAccountHolder)
+                .orElse(null);
     }
 
     public Account updateAccount(String uniqueId) {
