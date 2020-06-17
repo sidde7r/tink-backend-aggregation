@@ -642,7 +642,7 @@ public class DanskeBankV2Agent extends AbstractAgent
             billRequest.setBankGiro("false");
         }
 
-        if (thinkThisIsOCR(transfer.getDestinationMessage())) {
+        if (isValidSoftOcr(transfer.getDestinationMessage())) {
             billRequest.setReference(transfer.getDestinationMessage());
         } else {
             billRequest.setReceiverText(transfer.getDestinationMessage());
@@ -653,7 +653,7 @@ public class DanskeBankV2Agent extends AbstractAgent
         return billRequest;
     }
 
-    private boolean thinkThisIsOCR(String message) {
+    private boolean isValidSoftOcr(String message) {
         OcrValidationConfiguration validationConfiguration = OcrValidationConfiguration.softOcr();
         GiroMessageValidator validator = GiroMessageValidator.create(validationConfiguration);
 
