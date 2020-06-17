@@ -22,6 +22,7 @@ public class SebConstants {
         public static final String AUTHENTICATE = "/auth/bid/v2/authentications";
         public static final String INITIATE_SESSION = "/PC_BankInit11Session01.asmx/Execute";
         public static final String ACTIVATE_SESSION = "/PC_BankAktivera01Session01.asmx/Execute";
+        public static final String ACTIVATE_ROLE = "/PC_BankAktivera01Roll01.asmx/Execute";
         public static final String LIST_CARDS = "/PC_BankLista11Kort_privat05.asmx/Execute";
         public static final String LIST_LOANS = "/PC_BankLista11Laninfo_privat03.asmx/Execute";
         public static final String LIST_TRANSACTIONS = "/PC_BankLista01Rorelse_ftg03.asmx/Execute";
@@ -70,6 +71,7 @@ public class SebConstants {
     public static class ServiceInputKeys {
         public static final String CUSTOMER_TYPE = "CUSTOMERTYPE";
         public static final String CUSTOMER_ID = "KUND_ID";
+        public static final String CUSTOMER_ID_EN = "CUSTOMERID";
         public static final String ACCOUNT_TYPE = "KONTO_TYP";
         public static final String CUSTOMER_NUMBER = "SEB_KUND_ID";
         public static final String MAX_ROWS = "MAX_ROWS";

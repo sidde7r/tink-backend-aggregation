@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Request;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -40,6 +41,7 @@ public class SebApiClient {
     private final SebBaseConfiguration sebConfiguration;
     private final String sebUUID;
     private final SebSessionStorage sessionStorage;
+    private static final AggregationLogger log = new AggregationLogger(SebApiClient.class);
 
     public SebApiClient(
             TinkHttpClient httpClient,
@@ -157,6 +159,19 @@ public class SebApiClient {
         return response;
     }
 
+    private void activateRole() throws HttpResponseException {
+        final Response response =
+                post(
+                        Urls.ACTIVATE_ROLE,
+                        new Request.Builder()
+                                .addServiceInput(
+                                        ServiceInputKeys.CUSTOMER_ID_EN,
+                                        sessionStorage.getCustomerNumber())
+                                .build());
+
+        Preconditions.checkState(response.isValid());
+    }
+
     public Response fetchAccounts(String customerId, String accountType) {
         Preconditions.checkNotNull(Strings.emptyToNull(customerId));
         Preconditions.checkNotNull(Strings.emptyToNull(accountType));
@@ -268,6 +283,11 @@ public class SebApiClient {
 
         if (sebConfiguration.isBusinessAgent()) {
             sessionStorage.putCompanyInformation(activateSessionResponse.getCompanyInformation());
+            log.info(
+                    String.format(
+                            "Selected company number to aggregate is %s",
+                            sessionStorage.getCustomerNumber()));
+            activateRole();
         }
     }
 }
