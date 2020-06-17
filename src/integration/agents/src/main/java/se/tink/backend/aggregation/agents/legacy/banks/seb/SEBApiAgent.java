@@ -170,8 +170,10 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -1986,7 +1988,8 @@ public class SEBApiAgent extends AbstractAgent
             EInvoiceListEntity eInvoiceEntity, Transfer transfer)
             throws TransferExecutionException {
         if (!Objects.equal(
-                transfer.getDestinationMessage(), eInvoiceEntity.getDestinationMessage())) {
+                transfer.getRemittanceInformation().getValue(),
+                eInvoiceEntity.getDestinationMessage())) {
             cancelTransfer(
                     catalog.getString(
                             TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_MESSAGE));
