@@ -63,6 +63,8 @@ public class FabricMockServerAgentTest {
                         .addPayment(createMockedDomesticPayment())
                         .withHttpDebugTrace()
                         .buildWithoutLogin();
+
+        agentWireMockPaymentTest.executePayment();
     }
 
     private Payment createMockedDomesticPayment() {
@@ -73,15 +75,17 @@ public class FabricMockServerAgentTest {
                 .withCreditor(
                         new Creditor(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.IBAN, "IT55R0503401693000000002042"),
+                                        AccountIdentifier.Type.IBAN, "IT07W0326843450000354472850"),
                                 "Translation"))
                 .withDebtor(
                         new Debtor(
                                 AccountIdentifier.create(
-                                        AccountIdentifier.Type.IBAN, "IT74J032682230005296715315")))
+                                        AccountIdentifier.Type.IBAN,
+                                        "IT60X0542811101000000123456")))
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withReference(new Reference("TRANSFER", "WTF"))
+                .withUniqueId("paymentId")
                 .build();
     }
 }

@@ -1,4 +1,3 @@
-
 REQUEST 1
 GET ***MASKED***/api/fabrick/psd2/v1/consents/***MASKED***/status
 X-Request-ID: 9c8c4c98-564a-472a-a7a2-284baa082dc3
@@ -21,14 +20,12 @@ Content-Length: 25
 {"consentStatus":"valid"}
 
 REQUEST 2
-POST ***MASKED***/api/fabrick/psd2/v1/payments/sepa-credit-transfers
+POST /api/fabrick/psd2/v1/payments/sepa-credit-transfers
 Content-Type: application/json
-TPP-Redirect-Preferred: ***
-X-Request-ID: 9ef51b74-112b-4773-8804-16942efd16a3
-TPP-Redirect-URI: https://api.tink.com/api/v1/credentials/third-party/callback?code=code&state=***MASKED***
-X-Aggregator: Tink
+TPP-Redirect-Preferred: true
+X-Aggregator: Tink Testing
 
-{"debtorAccount":{"iban":"IT74J0326822300052967153150"},"instructedAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"IT55R0503401693000000002042"},"creditorName":"Translation","remittanceInformationUnstructured":"WTF"}
+{"debtorAccount":{"iban":"IT60X0542811101000000123456"},"instructedAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"IT07W0326843450000354472850"},"creditorName":"Translation","remittanceInformationUnstructured":"WTF"}
 
 RESPONSE 2
 201
@@ -41,14 +38,12 @@ X-CorrelationID: ***
 ASPSP-SCA-Approach: ***
 Vary: User-Agent
 Content-Type: application/json;charset=utf-8
-Content-Length: 243
 
 {"transactionStatus":"RCVD","paymentId":"***MASKED***","_links":{"scaRedirect":{"href":"***MASKED***"},"self":{"href":"/v1/payments/sepa-credit-transfers/***MASKED***"}}}
 
 REQUEST 3
-GET ***MASKED***/api/fabrick/psd2/v1/payments/sepa-credit-transfers/***MASKED***/authorisations
-X-Request-ID: da875fba-3e9d-43d2-9169-8cf785a76d12
-X-Aggregator: Tink
+GET /api/fabrick/psd2/v1/payments/sepa-credit-transfers/***MASKED***/authorisations
+X-Aggregator: Tink Testing
 
 RESPONSE 3
 200
@@ -60,14 +55,12 @@ Via: 1.0 fbprgtm01 ()
 X-CorrelationID: ***
 Vary: User-Agent
 Content-Type: application/json;charset=utf-8
-Content-Length: 30
 
 {"authorisationIds":["***MASKED***"]}
 
 REQUEST 4
-GET ***MASKED***/api/fabrick/psd2/v1/payments/sepa-credit-transfers/***MASKED***/authorisations/***MASKED***
-X-Request-ID: acbeb22c-884b-44be-b8a0-7f770335a77d
-X-Aggregator: Tink
+GET /api/fabrick/psd2/v1/payments/sepa-credit-transfers/***MASKED***/authorisations/***MASKED***
+X-Aggregator: Tink Testing
 
 RESPONSE 4
 200
@@ -79,14 +72,12 @@ Via: 1.0 fbprgtm02 ()
 X-CorrelationID: ***
 Vary: User-Agent
 Content-Type: application/json;charset=utf-8
-Content-Length: 24
 
 {"scaStatus":"exempted"}
 
 REQUEST 5
-GET ***MASKED***/api/fabrick/psd2/v1/payments/sepa-credit-transfers/***MASKED***/status
-X-Request-ID: eb0bbfd7-8fe4-4748-ae98-aa0bc27670a5
-X-Aggregator: Tink
+GET /api/fabrick/psd2/v1/payments/sepa-credit-transfers/***MASKED***/status
+X-Aggregator: Tink Testing
 
 RESPONSE 5
 200
@@ -98,6 +89,5 @@ Via: 1.0 fbprgtm01 ()
 X-CorrelationID: ***
 Vary: User-Agent
 Content-Type: application/json;charset=utf-8
-Content-Length: 28
 
 {"transactionStatus":"PDNG"}
