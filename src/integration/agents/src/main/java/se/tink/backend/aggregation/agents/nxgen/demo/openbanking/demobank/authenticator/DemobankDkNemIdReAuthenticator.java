@@ -133,10 +133,11 @@ public class DemobankDkNemIdReAuthenticator
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
+        String userId = persistentStorage.get(PSK_USERID);
+        String pinCode = persistentStorage.get(PSK_PINCODE);
+        String installId = persistentStorage.get(PSK_INSTALL_ID);
         NemIdLoginInstallIdEncryptionEntity installIdResponse =
-                SerializationUtils.deserializeFromString(
-                        persistentStorage.get(PSK_INSTALL_ID),
-                        NemIdLoginInstallIdEncryptionEntity.class);
+                new NemIdLoginInstallIdEncryptionEntity(userId, pinCode, installId);
 
         NemIdLoginWithInstallIdResponse login =
                 apiClient.nemIdLoginWithInstallId(installIdResponse, token);
