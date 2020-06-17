@@ -118,7 +118,9 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class DanskeBankV2Agent extends AbstractAgent
@@ -518,6 +520,12 @@ public class DanskeBankV2Agent extends AbstractAgent
 
         AccountIdentifier source = transfer.getSource();
 
+        if (transfer.getRemittanceInformation().getType() == null) {
+            RemittanceInformation remittanceInformation = transfer.getRemittanceInformation();
+            remittanceInformation.setType(decideRemittanceInformationType(remittanceInformation));
+            transfer.setRemittanceInformation(remittanceInformation);
+        }
+
         Optional<TransferAccountEntity> fromAccount =
                 findAccount(source, detailsResponse.getFromAccounts());
         if (!fromAccount.isPresent()) {
@@ -554,6 +562,18 @@ public class DanskeBankV2Agent extends AbstractAgent
         }
 
         apiClient.confirmPayment(requestChallenge(billResponse));
+    }
+
+    private RemittanceInformationType decideRemittanceInformationType(
+            RemittanceInformation remittanceInformation) {
+        RemittanceInformationType remittanceInformationType;
+
+        if (isValidSoftOcr(remittanceInformation.getValue())) {
+            remittanceInformationType = RemittanceInformationType.OCR;
+        } else {
+            remittanceInformationType = RemittanceInformationType.UNSTRUCTURED;
+        }
+        return remittanceInformationType;
     }
 
     private ChallengeResponseRequest requestChallenge(AbstractChallengeResponse challenge)
@@ -642,10 +662,10 @@ public class DanskeBankV2Agent extends AbstractAgent
             billRequest.setBankGiro("false");
         }
 
-        if (isValidSoftOcr(transfer.getDestinationMessage())) {
-            billRequest.setReference(transfer.getDestinationMessage());
+        if (transfer.getRemittanceInformation().getType() == RemittanceInformationType.OCR) {
+            billRequest.setReference(transfer.getRemittanceInformation().getValue());
         } else {
-            billRequest.setReceiverText(transfer.getDestinationMessage());
+            billRequest.setReceiverText(transfer.getRemittanceInformation().getValue());
         }
 
         billRequest.setDate(danskeBankDateUtil.getTransferDateForBgPg(transfer.getDueDate()));
