@@ -12,6 +12,14 @@ public class DemobankConstants {
         // Norwegian BankID mocks
         public static final String NO_BANKID_INIT = "/auth/no/init";
         public static final String NO_BANKID_COLLECT = "/auth/no/collect";
+
+        // Denmark NemID mocks
+        public static final String DK_NEMID_GET_CHALLENGE =
+                "/auth/dk/mobilbank/nemid/get_challange";
+        public static final String DK_NEMID_GENERATE_CODE = "/auth/dk/mobilbank/nemid/generatecode";
+        public static final String DK_NEMID_ENROLL = "/auth/dk/mobilbank/nemid/inroll";
+        public static final String DK_NEMID_LOGIN =
+                "/auth/dk/mobilbank/nemid/login_with_installid_prop";
     }
 
     public static class QueryParams {

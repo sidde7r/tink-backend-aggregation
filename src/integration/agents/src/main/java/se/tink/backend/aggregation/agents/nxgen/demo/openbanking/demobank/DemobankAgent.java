@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank;
 
 import com.google.inject.Inject;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Provider.AccessType;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterIds;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterSpecificCallbacks;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankDkNemIdReAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankNoBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankRedirectAuthenticator;
@@ -83,6 +86,24 @@ public class DemobankAgent extends NextGenerationAgent
 
             return new BankIdAuthenticationControllerNO(
                     supplementalRequester, new DemobankNoBankIdAuthenticator(apiClient));
+
+        } else if (CredentialsTypes.THIRD_PARTY_APP.equals(provider.getCredentialsType())
+                && AccessType.OTHER.equals(provider.getAccessType())
+                && "DK".equals(provider.getMarket())) {
+
+            String username = credentials.getField(Field.Key.USERNAME);
+            String password = credentials.getField(Field.Key.PASSWORD);
+
+            DemobankDkNemIdReAuthenticator demobankNemIdAuthenticator =
+                    new DemobankDkNemIdReAuthenticator(
+                            apiClient, client, persistentStorage, username, password);
+
+            return new AutoAuthenticationController(
+                    request,
+                    systemUpdater,
+                    new ThirdPartyAppAuthenticationController<>(
+                            demobankNemIdAuthenticator, supplementalInformationHelper),
+                    demobankNemIdAuthenticator);
 
         } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())) {
             return new PasswordAuthenticationController(
