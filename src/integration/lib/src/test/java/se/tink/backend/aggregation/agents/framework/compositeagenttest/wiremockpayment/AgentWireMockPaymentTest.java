@@ -16,9 +16,9 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.Comp
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentWiremockTestContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.VerdictModule;
 import se.tink.backend.aggregation.agents.framework.wiremock.WireMockTestServer;
 import se.tink.backend.aggregation.agents.framework.wiremock.configuration.provider.socket.MutableFakeBankSocket;
 import se.tink.backend.aggregation.agents.framework.wiremock.utils.AapFileParser;
@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public final class AgentWireMockPaymentTest {
 
@@ -43,6 +44,7 @@ public final class AgentWireMockPaymentTest {
             Map<String, String> callbackData,
             TestModule agentModule,
             List<Payment> paymentList,
+            List<Transfer> transfersList,
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
             boolean httpDebugTrace) {
 
@@ -67,7 +69,8 @@ public final class AgentWireMockPaymentTest {
                                 callbackData),
                         new RefreshRequestModule(
                                 RefreshableItem.REFRESHABLE_ITEMS_ALL, true, false, false),
-                        new PaymentRequestModule(paymentList),
+                        new PaymentRequestModule(paymentList, transfersList),
+                        new VerdictModule(),
                         new AgentFactoryWireMockModule(
                                 MutableFakeBankSocket.of("localhost:" + server.getHttpsPort()),
                                 callbackData,
@@ -115,6 +118,7 @@ public final class AgentWireMockPaymentTest {
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
         private final List<Payment> paymentList;
+        private final List<Transfer> transferList;
         private boolean httpDebugTrace = false;
 
         private AgentsServiceConfiguration configuration;
@@ -128,6 +132,7 @@ public final class AgentWireMockPaymentTest {
             this.credentialFields = new HashMap<>();
             this.callbackData = new HashMap<>();
             this.paymentList = new ArrayList<>();
+            this.transferList = new ArrayList<>();
         }
 
         /**
@@ -198,6 +203,10 @@ public final class AgentWireMockPaymentTest {
             return this;
         }
 
+        public Builder addTransfer(Transfer transfer) {
+            this.transferList.add(transfer);
+            return this;
+        }
         /**
          * Enables http debug trace printout
          *
@@ -213,7 +222,8 @@ public final class AgentWireMockPaymentTest {
          *
          * @return WireMock payment test.
          */
-        public AgentWireMockPaymentTest buildWithoutLogin() {
+        public AgentWireMockPaymentTest buildWithoutLogin(
+                Class<? extends CompositeAgentTestCommand> command) {
 
             return new AgentWireMockPaymentTest(
                     market,
@@ -224,7 +234,8 @@ public final class AgentWireMockPaymentTest {
                     callbackData,
                     agentTestModule,
                     paymentList,
-                    of(PaymentCommand.class),
+                    transferList,
+                    of(command),
                     httpDebugTrace);
         }
 
@@ -233,7 +244,8 @@ public final class AgentWireMockPaymentTest {
          *
          * @return WireMock payment test.
          */
-        public AgentWireMockPaymentTest buildWithLogin() {
+        public AgentWireMockPaymentTest buildWithLogin(
+                Class<? extends CompositeAgentTestCommand> command) {
 
             return new AgentWireMockPaymentTest(
                     market,
@@ -244,7 +256,8 @@ public final class AgentWireMockPaymentTest {
                     callbackData,
                     agentTestModule,
                     paymentList,
-                    of(LoginCommand.class, PaymentCommand.class),
+                    transferList,
+                    of(LoginCommand.class, command),
                     httpDebugTrace);
         }
     }
