@@ -119,6 +119,21 @@ public class OAuth2AuthenticationProgressiveController
             if (newRefreshToken.isPresent()) {
                 logger.info("persistent with new refresh token {}", newRefreshToken.hashCode());
             }
+            Optional<OAuth2Token> persistentOAuth2Token =
+                    persistentStorage.get(PersistentStorageKeys.OAUTH_2_TOKEN, OAuth2Token.class);
+            if (persistentOAuth2Token.isPresent()) {
+                Optional<String> persistentRefreshToken =
+                        persistentOAuth2Token.get().getRefreshToken();
+                if (persistentRefreshToken.isPresent()) {
+                    logger.info(
+                            "succeeded to persistent with new refresh token {}",
+                            persistentRefreshToken.hashCode());
+                } else {
+                    logger.info("failed to persistent with empty persistentRefreshToken");
+                }
+            } else {
+                logger.info("failed to persistent with empty persistentOAuth2Token");
+            }
 
             // Fall through.
         }
