@@ -11,7 +11,9 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager.ArgumentMana
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.SsnArgumentEnum;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 // DISCLAIMER! Actual money being transferred, run under own responsability
@@ -49,11 +51,20 @@ public class IcaBankenAgentPaymentTest {
         transfer.setSourceMessage("Message");
         transfer.setDestination(
                 new SwedishIdentifier(creditorDebtorManager.get(Arg.CREDITOR_ACCOUNT)));
-        transfer.setDestinationMessage("Message");
+        transfer.setRemittanceInformation(
+                getRemittanceInformation(RemittanceInformationType.UNSTRUCTURED, "Message"));
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(new Date());
 
         return transfer;
+    }
+
+    private RemittanceInformation getRemittanceInformation(
+            RemittanceInformationType type, String value) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(type);
+        remittanceInformation.setValue(value);
+        return remittanceInformation;
     }
 
     private enum Arg implements ArgumentManagerEnum {
