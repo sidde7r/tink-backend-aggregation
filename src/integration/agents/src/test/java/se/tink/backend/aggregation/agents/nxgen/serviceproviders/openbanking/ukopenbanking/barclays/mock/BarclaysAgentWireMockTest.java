@@ -67,7 +67,7 @@ public class BarclaysAgentWireMockTest {
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPayment(createMockedDomesticPayment())
-                        .buildWithoutLogin();
+                        .buildWithoutLoginWithGBCommand();
 
         // when / then (execution and assertion currently done in the same step)
         agentWireMockPaymentTest.executePayment();

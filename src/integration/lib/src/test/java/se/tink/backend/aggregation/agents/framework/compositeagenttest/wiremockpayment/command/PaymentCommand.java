@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.PaymentControllerable;
 import se.tink.backend.aggregation.agents.agent.Agent;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.CompositeAgentTestCommand;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.verdict.PaymentVerdict;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -17,18 +17,19 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
-import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public final class PaymentCommand implements CompositeAgentTestCommand {
 
     private final Agent agent;
     private final List<Payment> paymentList;
+    private final PaymentVerdict paymentVerdict;
 
     @Inject
-    private PaymentCommand(Agent agent, List<Payment> paymentList) {
+    PaymentCommand(Agent agent, List<Payment> paymentList, PaymentVerdict paymentVerdict) {
         this.agent = agent;
         this.paymentList = paymentList;
+        this.paymentVerdict = paymentVerdict;
     }
 
     @Override
@@ -68,20 +69,7 @@ public final class PaymentCommand implements CompositeAgentTestCommand {
                 paymentSign = signPaymentMultiStepResponse.getPayment();
                 storageSign = signPaymentMultiStepResponse.getStorage();
             }
-
-            if (isPaymentStatusPassed(paymentSign.getStatus())) {
-                Assert.assertTrue(true);
-            } else {
-                PaymentResponse paymentResponse =
-                        paymentController.fetch(
-                                PaymentMultiStepRequest.of(signPaymentMultiStepResponse));
-                PaymentStatus statusResult = paymentResponse.getPayment().getStatus();
-                Assert.assertTrue(isPaymentStatusPassed(statusResult));
-            }
+            paymentVerdict.verdictOnPaymentStatus(signPaymentMultiStepResponse);
         }
-    }
-
-    private boolean isPaymentStatusPassed(PaymentStatus statusResult) {
-        return statusResult.equals(PaymentStatus.SIGNED) || statusResult.equals(PaymentStatus.PAID);
     }
 }
