@@ -2,9 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fet
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.stream.Stream;
-import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -80,18 +81,15 @@ public class TransactionEntity {
                 .setDate(created)
                 .setAmount(amount.getAsTinkAmount())
                 .setDescription(getTinkDescription())
+                .setPayload(TransactionPayloadTypes.MESSAGE, Strings.nullToEmpty(description))
                 .build();
     }
 
     private String getTinkDescription() {
-        String transactionDescription =
-                Stream.of(getDebtor(), description)
-                        .filter(str -> !Strings.isNullOrEmpty(str))
-                        .reduce("", (s1, s2) -> s1 + "\n" + s2);
-        if (transactionDescription.isEmpty()) {
-            return getCreditor();
-        }
-        return transactionDescription.trim();
+        return Stream.of(getDebtor(), description, getCreditor())
+                .filter(str -> !Strings.isNullOrEmpty(str))
+                .findFirst()
+                .orElse("");
     }
 
     private String getDebtor() {
