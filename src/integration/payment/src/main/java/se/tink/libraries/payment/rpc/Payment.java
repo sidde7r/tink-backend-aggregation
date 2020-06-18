@@ -172,13 +172,11 @@ public class Payment {
     }
 
     public boolean isSepa() {
-        if (debtor.getAccountIdentifierType() == Type.IBAN
-                && creditor.getAccountIdentifierType() == Type.IBAN) {
-            if (sepaCountriesWithEur.contains(IbanUtil.getCountryCode(debtor.getAccountNumber()))
-                    && sepaCountriesWithEur.contains(
-                            IbanUtil.getCountryCode(creditor.getAccountNumber()))) return true;
-        }
-        return false;
+        return debtor.getAccountIdentifierType() == Type.IBAN
+                && creditor.getAccountIdentifierType() == Type.IBAN
+                && sepaCountriesWithEur.contains(IbanUtil.getCountryCode(debtor.getAccountNumber()))
+                && sepaCountriesWithEur.contains(
+                        IbanUtil.getCountryCode(creditor.getAccountNumber()));
     }
 
     private String getIbanMarket(String accountNumber) {
