@@ -13,8 +13,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
@@ -74,6 +76,12 @@ public class EInvoiceEntity {
         // changed this field.
         transfer.setDestinationMessage(
                 catalog.getString(IcaBankenConstants.IdTags.NOT_AVAILABLE_TAG));
+
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue(
+                catalog.getString(IcaBankenConstants.IdTags.NOT_AVAILABLE_TAG));
+        transfer.setRemittanceInformation(remittanceInformation);
 
         return transfer;
     }
