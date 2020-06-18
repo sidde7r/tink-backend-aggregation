@@ -37,14 +37,11 @@ public class SebSessionStorage {
         }
         sessionStorage.put(StorageKeys.SHORT_USERID, userId);
 
-        // For business we don't get SSN
-        if (!sebConfiguration.isBusinessAgent()) {
-            final String ssn = userInformation.getSSN();
-            if (Strings.isNullOrEmpty(ssn)) {
-                throw new IllegalStateException("Did not get customer SSN.");
-            }
-            sessionStorage.put(StorageKeys.SSN, ssn);
+        final String ssn = userInformation.getSSN();
+        if (Strings.isNullOrEmpty(ssn)) {
+            throw new IllegalStateException("Did not get customer SSN.");
         }
+        sessionStorage.put(StorageKeys.SSN, ssn);
     }
 
     public void putCompanyInformation(BusinessEntity companyInformation) {
