@@ -1,0 +1,93 @@
+REQUEST 1
+GET ***MASKED***/api/fabrick/psd2/v1/consents/***MASKED***/status
+X-Request-ID: 9c8c4c98-564a-472a-a7a2-284baa082dc3
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink
+
+RESPONSE 1
+200
+Date: Wed, 17 Jun 2020 12:15:40 GMT
+Date: Wed, 17 Jun 2020 12:15:40 GMT
+Server: Apache
+Max-Forwards: ***
+Via: 1.0 fbprgtm01 ()
+X-CorrelationID: ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+Content-Length: 25
+
+{"consentStatus":"valid"}
+
+REQUEST 2
+POST /api/fabrick/psd2/v1/payments/sepa-credit-transfers
+Content-Type: application/json
+TPP-Redirect-Preferred: true
+X-Aggregator: Tink Testing
+
+{"debtorAccount":{"iban":"IT60X0542811101000000123456"},"instructedAmount":{"currency":"EUR","amount":"1.0"},"creditorAccount":{"iban":"IT07W0326843450000354472850"},"creditorName":"Translation","remittanceInformationUnstructured":"WTF"}
+
+RESPONSE 2
+201
+Date: Wed, 17 Jun 2020 12:15:41 GMT
+Date: Wed, 17 Jun 2020 12:15:41 GMT
+Server: Apache
+Max-Forwards: ***
+Via: 1.0 fbprgtm02 ()
+X-CorrelationID: ***
+ASPSP-SCA-Approach: ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+
+{"transactionStatus":"RCVD","paymentId":"***MASKED***","_links":{"scaRedirect":{"href":"***MASKED***"},"self":{"href":"/v1/payments/sepa-credit-transfers/***MASKED***"}}}
+
+REQUEST 3
+GET /api/fabrick/psd2/v1/payments/sepa-credit-transfers/***MASKED***/authorisations
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Date: Wed, 17 Jun 2020 12:16:04 GMT
+Date: Wed, 17 Jun 2020 12:16:04 GMT
+Server: Apache
+Max-Forwards: ***
+Via: 1.0 fbprgtm01 ()
+X-CorrelationID: ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+
+{"authorisationIds":["***MASKED***"]}
+
+REQUEST 4
+GET /api/fabrick/psd2/v1/payments/sepa-credit-transfers/***MASKED***/authorisations/***MASKED***
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Date: Wed, 17 Jun 2020 12:16:05 GMT
+Date: Wed, 17 Jun 2020 12:16:05 GMT
+Server: Apache
+Max-Forwards: ***
+Via: 1.0 fbprgtm02 ()
+X-CorrelationID: ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+
+{"scaStatus":"exempted"}
+
+REQUEST 5
+GET /api/fabrick/psd2/v1/payments/sepa-credit-transfers/***MASKED***/status
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Date: Wed, 17 Jun 2020 12:16:05 GMT
+Date: Wed, 17 Jun 2020 12:16:05 GMT
+Server: Apache
+Max-Forwards: ***
+Via: 1.0 fbprgtm01 ()
+X-CorrelationID: ***
+Vary: User-Agent
+Content-Type: application/json;charset=utf-8
+
+{"transactionStatus":"PDNG"}

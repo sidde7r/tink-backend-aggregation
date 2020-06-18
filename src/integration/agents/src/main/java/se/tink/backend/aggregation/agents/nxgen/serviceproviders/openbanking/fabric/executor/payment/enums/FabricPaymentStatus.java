@@ -56,7 +56,7 @@ public enum FabricPaymentStatus {
         paymentStatusToTinkMapper.put(ACWP, PaymentStatus.SIGNED);
         paymentStatusToTinkMapper.put(RCVD, PaymentStatus.CREATED);
         paymentStatusToTinkMapper.put(RJCT, PaymentStatus.REJECTED);
-        paymentStatusToTinkMapper.put(PDNG, PaymentStatus.PENDING);
+        paymentStatusToTinkMapper.put(PDNG, PaymentStatus.SIGNED);
         paymentStatusToTinkMapper.put(CANC, PaymentStatus.CANCELLED);
     }
 
