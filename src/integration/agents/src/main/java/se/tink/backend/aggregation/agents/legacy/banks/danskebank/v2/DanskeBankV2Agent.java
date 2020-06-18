@@ -566,14 +566,9 @@ public class DanskeBankV2Agent extends AbstractAgent
 
     private RemittanceInformationType decideRemittanceInformationType(
             RemittanceInformation remittanceInformation) {
-        RemittanceInformationType remittanceInformationType;
-
-        if (isValidSoftOcr(remittanceInformation.getValue())) {
-            remittanceInformationType = RemittanceInformationType.OCR;
-        } else {
-            remittanceInformationType = RemittanceInformationType.UNSTRUCTURED;
-        }
-        return remittanceInformationType;
+        return isValidSoftOcr(remittanceInformation.getValue())
+                ? RemittanceInformationType.OCR
+                : RemittanceInformationType.UNSTRUCTURED;
     }
 
     private ChallengeResponseRequest requestChallenge(AbstractChallengeResponse challenge)
