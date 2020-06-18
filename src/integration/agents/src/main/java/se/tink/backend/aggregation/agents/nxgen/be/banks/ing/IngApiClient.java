@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Optional;
+import javax.ws.rs.core.MediaType;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
@@ -42,6 +43,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.TrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -70,9 +72,19 @@ public class IngApiClient {
             String url, String username, String cardNumber, String otp, String deviceId) {
         TrustBuilderRequestBody trustBuilderRequestBody =
                 new TrustBuilderRequestBody(username, cardNumber, otp, deviceId, "", true);
+        Form.Builder urlEncodedBodyBuilder = Form.builder();
+        trustBuilderRequestBody
+                .entrySet()
+                .forEach(
+                        entry ->
+                                urlEncodedBodyBuilder.put(entry.getKey(), entry.getValue().get(0)));
+
         URL trustBuilderUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
-        this.client.request(trustBuilderUrl).post(HttpResponse.class, trustBuilderRequestBody);
+        this.client
+                .request(trustBuilderUrl)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .post(HttpResponse.class, urlEncodedBodyBuilder.build().serialize());
     }
 
     public HttpResponse trustBuilderLogin(
