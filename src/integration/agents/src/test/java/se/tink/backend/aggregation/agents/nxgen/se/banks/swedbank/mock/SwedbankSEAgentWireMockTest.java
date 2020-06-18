@@ -69,7 +69,7 @@ public class SwedbankSEAgentWireMockTest {
     private Transfer createMockedDomesticTransfer() {
 
         Transfer transfer = new Transfer();
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "848069332865790"));
+        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SE, "832791234567890"));
 
         transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "1202407"));
         transfer.setAmount(Amount.inSEK(856d));
