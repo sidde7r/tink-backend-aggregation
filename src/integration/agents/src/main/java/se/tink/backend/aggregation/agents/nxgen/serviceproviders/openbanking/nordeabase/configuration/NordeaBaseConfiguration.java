@@ -19,7 +19,7 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
     @JsonProperty @AgentConfigParam private String redirectUrl;
-    @JsonProperty @AgentConfigParam private List<String> scopes;
+    @JsonProperty @Secret private List<String> scopes;
     @JsonProperty private AgentType agentType = AgentType.PERSONAL;
 
     public String getClientId() {

@@ -3,11 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaDescription;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaExamples;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
-import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -37,7 +35,6 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @Secret private String clientSigningCertificateSerialNumber;
     @JsonProperty @AgentConfigParam private String redirectUrl;
-    @JsonProperty private List<String> scopes;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
     public String getBaseAPIUrl() {
@@ -77,16 +74,6 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
-    }
-
-    public List<String> getScopes() {
-        Preconditions.checkNotNull(
-                scopes, String.format(ErrorMessages.INVALID_CONFIGURATION, "scopes"));
-        Preconditions.checkArgument(
-                !Iterables.isEmpty(scopes),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Scopes"));
-
-        return scopes;
     }
 
     public String getClientSecret() {

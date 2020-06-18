@@ -212,15 +212,10 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     }
 
     private void initScopes(List<String> scopes) {
-        if (CollectionUtils.isEmpty(scopes)) {
-            // We end up here when the secrets do contain scopes key but it is an empty
-            // list.
-            log.info("Empty scopes list in secrets" + getSecretsServiceParamsString());
-
-            return;
+        if (!CollectionUtils.isEmpty(scopes)) {
+            final String SCOPES_KEY = "scopes";
+            allSecretsMapObj.put(SCOPES_KEY, scopes);
         }
-        final String SCOPES_KEY = "scopes";
-        allSecretsMapObj.put(SCOPES_KEY, scopes);
     }
 
     @Override
