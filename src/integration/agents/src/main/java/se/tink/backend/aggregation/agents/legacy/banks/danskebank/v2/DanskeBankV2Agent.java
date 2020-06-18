@@ -630,18 +630,18 @@ public class DanskeBankV2Agent extends AbstractAgent
         String destinationAccountId =
                 transfer.getDestination().getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
 
-        // Formatted messages to ensure we don't exceed max limits of chars
-        TransferMessageFormatter.Messages formattedMessages =
-                transferMessageFormatter.getMessages(transfer, isBetweenUserAccounts);
+        String formattedDestinationMessage = transferMessageFormatter.getDestinationMessage(
+                transfer, isBetweenUserAccounts);
+        String formattedSourceMessage = transferMessageFormatter.getSourceMessage(transfer);
 
         return TransferRequest.builder()
                 .amount(Double.toString(transfer.getAmount().getValue()))
                 .currency(request.getProvider().getCurrency()) // Is this valid?
                 .date(transferDate)
                 .destinationAccountNumber(destinationAccountId)
-                .destinationMessage(formattedMessages.getDestinationMessage())
+                .destinationMessage(formattedDestinationMessage)
                 .sourceAccountNumber(fromAccount.getAccountId())
-                .sourceMessage(formattedMessages.getSourceMessage())
+                .sourceMessage(formattedSourceMessage)
                 .build();
     }
 
