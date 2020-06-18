@@ -178,8 +178,8 @@ public class IcaBankenEInvoiceExecutor implements ApproveEInvoiceExecutor {
 
         // Destination message
         validateFieldsMatch(
-                bankTransfer.getDestinationMessage(),
-                potentiallyModifiedTransfer.getDestinationMessage(),
+                bankTransfer.getRemittanceInformation().getValue(),
+                potentiallyModifiedTransfer.getRemittanceInformation().getValue(),
                 IcaBankenConstants.LogMessage.EINVOICE_DEST_MSG_MODIFIED,
                 TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE);
     }
