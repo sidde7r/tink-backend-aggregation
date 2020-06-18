@@ -23,7 +23,7 @@ public class SamlinkAgentPaymentTest {
     @Test
     public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("FI", "fi-samlink-oauth2")
+                new AgentIntegrationTest.Builder("FI", "fi-samlink-ob")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
