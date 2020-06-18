@@ -53,14 +53,14 @@ public class TransferRequest {
             AccountEntity sourceAccount,
             RecipientEntity destinationAccount,
             String sourceMessage,
-            String destinationMessage,
+            String remittanceInformationValue,
             String typeOfPayment) {
         this.recipientAccountNumber = destinationAccount.getAccountNumber();
         this.amount = transfer.getAmount().getValue();
         this.registrationId = null;
         this.memo = sourceMessage;
         this.fromAccountId = sourceAccount.getAccountId();
-        this.reference = destinationMessage;
+        this.reference = remittanceInformationValue;
         this.type = destinationAccount.getType();
         this.isStandingTransaction = false;
         this.eventId = null;
@@ -83,7 +83,7 @@ public class TransferRequest {
                 sourceAccount,
                 destinationAccount,
                 transfer.getSourceMessage(),
-                transfer.getDestinationMessage(),
+                transfer.getRemittanceInformation().getValue(),
                 IcaBankenConstants.Transfers.PAYMENT);
     }
 
@@ -93,7 +93,8 @@ public class TransferRequest {
             RecipientEntity destinationAccount,
             TransferMessageFormatter transferMessageFormatter) {
         TransferMessageFormatter.Messages formattedMessages =
-                transferMessageFormatter.getMessages(transfer, destinationAccount.isOwnAccount());
+                transferMessageFormatter.getMessagesFromRemittanceInformation(
+                        transfer, destinationAccount.isOwnAccount());
         return new TransferRequest(
                 transfer,
                 sourceAccount,
