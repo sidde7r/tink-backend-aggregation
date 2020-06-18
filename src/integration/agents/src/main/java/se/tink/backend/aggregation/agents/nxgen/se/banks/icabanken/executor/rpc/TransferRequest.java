@@ -70,9 +70,21 @@ public class TransferRequest {
             this.referenceType = null;
             this.recipientType = typeOfPayment;
         } else {
-            this.referenceType = IcaBankenExecutorUtils.getReferenceTypeFor(transfer);
+            // TODO: these 3 lines + method should be removed after customers start using only RI
+            if (transfer.getRemittanceInformation().getType() == null) {
+                IcaBankenExecutorUtils.validateAndSetRemittanceInformationType(transfer);
+            }
+            switch (transfer.getRemittanceInformation().getType()) {
+                case OCR:
+                    this.referenceType = IcaBankenConstants.Transfers.OCR;
+                    break;
+                case UNSTRUCTURED:
+                    this.referenceType = IcaBankenConstants.Transfers.MESSAGE;
+                    break;
+                default:
+                    throw new IllegalStateException("Unknown remittance information type");
+            }
         }
-
         this.recipientId = destinationAccount.getRecipientId();
     }
 
