@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.balance.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -32,14 +33,16 @@ public final class BnpParibasFortisApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private BnpParibasFortisConfiguration configuration;
+    private final String redirectUrl;
 
     public BnpParibasFortisApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            BnpParibasFortisConfiguration configuration) {
+            AgentConfiguration<BnpParibasFortisConfiguration> agentConfiguration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(String url) {
@@ -70,7 +73,7 @@ public final class BnpParibasFortisApiClient {
     public URL getAuthorizeUrl(String state) {
         final String clientId = configuration.getClientId();
 
-        final String redirectUri = configuration.getRedirectUrl();
+        final String redirectUri = redirectUrl;
         final String authBaseUrl = configuration.getAuthBaseUrl();
         final String oauthUrl = authBaseUrl + Urls.OAUTH;
 
@@ -89,7 +92,7 @@ public final class BnpParibasFortisApiClient {
         final String openbankStetVersion = configuration.getOpenbankStetVersion();
         final String organizationId = configuration.getOrganisationId();
 
-        final String redirectUri = configuration.getRedirectUrl();
+        final String redirectUri = redirectUrl;
         final String authBaseUrl = configuration.getAuthBaseUrl();
         final String tokenUrl = authBaseUrl + Urls.TOKEN;
 
@@ -123,7 +126,7 @@ public final class BnpParibasFortisApiClient {
         final String openbankStetVersion = configuration.getOpenbankStetVersion();
         final String organizationId = configuration.getOrganisationId();
 
-        final String redirectUri = configuration.getRedirectUrl();
+        final String redirectUri = redirectUrl;
         final String authBaseUrl = configuration.getAuthBaseUrl();
         final String tokenUrl = authBaseUrl + Urls.TOKEN;
 

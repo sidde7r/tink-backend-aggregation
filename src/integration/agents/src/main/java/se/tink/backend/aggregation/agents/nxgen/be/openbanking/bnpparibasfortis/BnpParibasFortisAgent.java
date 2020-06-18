@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.configuration.BnpParibasFortisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.executor.BnpParibasFortisPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.BnpParibasFortisTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -34,13 +35,13 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BnpParibasFortisApiClient(client, sessionStorage, getClientConfiguration());
+        apiClient = new BnpParibasFortisApiClient(client, sessionStorage, getAgentConfiguration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    private BnpParibasFortisConfiguration getClientConfiguration() {
+    private AgentConfiguration<BnpParibasFortisConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(BnpParibasFortisConfiguration.class);
+                .getAgentCommonConfiguration(BnpParibasFortisConfiguration.class);
     }
 
     @Override
@@ -111,7 +112,7 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
                 new BnpParibasFortisPaymentExecutor(
                         apiClient,
                         paymentAuthenticator,
-                        getClientConfiguration(),
+                        getAgentConfiguration(),
                         strongAuthenticationState);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));

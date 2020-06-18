@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configura
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.BelfiusPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.executor.payment.BelfiusPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.fetcher.transactionalaccount.BelfiusTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -26,7 +27,7 @@ public final class BelfiusAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final BelfiusApiClient apiClient;
-    private final BelfiusConfiguration belfiusConfiguration;
+    private final AgentConfiguration<BelfiusConfiguration> agentConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public BelfiusAgent(
@@ -35,11 +36,12 @@ public final class BelfiusAgent extends NextGenerationAgent
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
-        this.belfiusConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(BelfiusConfiguration.class);
+        this.agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(BelfiusConfiguration.class);
         super.setConfiguration(agentsServiceConfiguration);
 
-        this.apiClient = new BelfiusApiClient(client, this.belfiusConfiguration);
+        this.apiClient = new BelfiusApiClient(client, agentConfiguration);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
@@ -54,7 +56,7 @@ public final class BelfiusAgent extends NextGenerationAgent
                         new BelfiusAuthenticator(
                                 apiClient,
                                 persistentStorage,
-                                this.belfiusConfiguration,
+                                agentConfiguration,
                                 credentials.getField(BelfiusConstants.CredentialKeys.IBAN)),
                         credentials,
                         strongAuthenticationState);

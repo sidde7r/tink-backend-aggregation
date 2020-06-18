@@ -36,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.Sig
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.argenta.utils.TimeUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -49,20 +50,23 @@ public class ArgentaApiClient {
 
     private final TinkHttpClient client;
     private final ArgentaConfiguration configuration;
+    private final String redirectUrl;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final SignatureHeaderProvider signatureHeaderProvider;
 
     public ArgentaApiClient(
             TinkHttpClient client,
-            ArgentaConfiguration configuration,
+            AgentConfiguration<ArgentaConfiguration> agentConfiguration,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
             SignatureHeaderProvider signatureHeaderProvider) {
-        Preconditions.checkNotNull(configuration);
+        Preconditions.checkNotNull(agentConfiguration);
 
         this.client = client;
-        this.configuration = configuration;
+        this.configuration =
+                Preconditions.checkNotNull(agentConfiguration.getClientConfiguration());
+        this.redirectUrl = Preconditions.checkNotNull(agentConfiguration.getRedirectUrl());
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
         this.signatureHeaderProvider = signatureHeaderProvider;
@@ -110,7 +114,7 @@ public class ArgentaApiClient {
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.S256)
                 .queryParam(QueryKeys.SCOPE, String.format(QueryValues.SCOPE, consentId))
                 .queryParam(
@@ -146,7 +150,7 @@ public class ArgentaApiClient {
                         code,
                         FormValues.AUTHORIZATION_CODE,
                         configuration.getClientId(),
-                        configuration.getRedirectUrl(),
+                        redirectUrl,
                         sessionStorage.get(StorageKeys.CODE_VERIFIER));
 
         return createRequest(Urls.TOKEN, tokenRequest.toData())

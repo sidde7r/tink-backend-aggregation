@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authentic
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.configuration.BelfiusConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.utils.CryptoUtils;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
@@ -27,16 +28,18 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
     private final BelfiusApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final BelfiusConfiguration configuration;
+    private final String redirectUrl;
     private final String iban;
 
     public BelfiusAuthenticator(
             BelfiusApiClient apiClient,
             PersistentStorage persistentStorage,
-            BelfiusConfiguration configuration,
+            AgentConfiguration<BelfiusConfiguration> agentConfiguration,
             String iban) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.iban = iban;
     }
 
@@ -62,7 +65,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
                 Form.builder()
                         .put(FormKeys.GRANT_TYPE, FormValues.AUTHORIZATION_CODE)
                         .put(FormKeys.CODE, code)
-                        .put(FormKeys.REDIRECT_URI, configuration.getRedirectUrl())
+                        .put(FormKeys.REDIRECT_URI, redirectUrl)
                         .put(FormKeys.CODE_VERIFIER, persistentStorage.get(StorageKeys.CODE))
                         .build()
                         .serialize();
