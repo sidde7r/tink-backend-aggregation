@@ -41,7 +41,9 @@ public class PaymentRequest {
                 || TransferType.EINVOICE.equals(transfer.getType())
                 || TransferType.BANK_TRANSFER.equals(transfer.getType())) {
             referenceInRequest =
-                    new Reference(transfer.getType().toString(), transfer.getDestinationMessage());
+                    new Reference(
+                            transfer.getType().toString(),
+                            transfer.getRemittanceInformation().getValue());
         }
 
         Payment.Builder paymentInRequestBuilder =
