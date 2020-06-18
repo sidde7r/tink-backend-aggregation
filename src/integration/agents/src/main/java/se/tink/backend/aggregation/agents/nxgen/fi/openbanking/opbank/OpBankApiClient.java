@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -37,6 +38,7 @@ public final class OpBankApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private OpBankConfiguration configuration;
+    private String redirectUrl;
     private EidasProxyConfiguration eidasProxyConfiguration;
     private EidasIdentity eidasIdentity;
 
@@ -48,10 +50,11 @@ public final class OpBankApiClient {
     }
 
     protected void setConfiguration(
-            OpBankConfiguration configuration,
+            AgentConfiguration<OpBankConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration,
             EidasIdentity eidasIdentity) {
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         client.setEidasProxy(eidasProxyConfiguration);
         this.eidasIdentity = eidasIdentity;
@@ -130,7 +133,7 @@ public final class OpBankApiClient {
                                         .setClientId(configuration.getClientId())
                                         .setClientSecret(configuration.getClientSecret())
                                         .setCode(code)
-                                        .setRedirectUri(configuration.getRedirectUrl()))
+                                        .setRedirectUri(redirectUrl))
                         .post(HttpResponse.class);
         try {
             return MAPPER.readValue(response.getBodyInputStream(), ExchangeTokenResponse.class);

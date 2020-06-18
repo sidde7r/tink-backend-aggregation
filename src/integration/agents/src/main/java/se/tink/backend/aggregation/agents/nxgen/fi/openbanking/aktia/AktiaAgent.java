@@ -37,11 +37,14 @@ public class AktiaAgent extends SubsequentProgressiveGenerationAgent
     public AktiaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        final AktiaConfiguration aktiaConfiguration = getAgentConfiguration();
+        final AktiaConfiguration agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(AktiaConfiguration.class)
+                        .getClientConfiguration();
 
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
         this.aktiaApiClient =
-                new AktiaApiClient(this.client, aktiaConfiguration, this.tokenStorage);
+                new AktiaApiClient(this.client, agentConfiguration, this.tokenStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 

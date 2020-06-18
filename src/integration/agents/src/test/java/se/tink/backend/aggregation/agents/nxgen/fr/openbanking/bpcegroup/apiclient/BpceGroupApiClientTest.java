@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transac
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.consent.CustomerConsent;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -52,9 +53,12 @@ public class BpceGroupApiClientTest {
     @Before
     public void setUp() {
         final BpceGroupConfiguration configurationMock = mock(BpceGroupConfiguration.class);
+        final AgentConfiguration<BpceGroupConfiguration> agentConfigurationMock =
+                mock(AgentConfiguration.class);
         when(configurationMock.getClientId()).thenReturn(CLIENT_ID);
-        when(configurationMock.getRedirectUrl()).thenReturn(REDIRECT_URL);
         when(configurationMock.getServerUrl()).thenReturn(SERVER_URL);
+        when(agentConfigurationMock.getClientConfiguration()).thenReturn(configurationMock);
+        when(agentConfigurationMock.getRedirectUrl()).thenReturn(REDIRECT_URL);
 
         httpClientMock = mock(TinkHttpClient.class);
 
@@ -73,6 +77,7 @@ public class BpceGroupApiClientTest {
                         httpClientMock,
                         bpceOAuth2TokenStorageMock,
                         configurationMock,
+                        REDIRECT_URL,
                         bpceGroupSignatureHeaderGeneratorMock);
     }
 

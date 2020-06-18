@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
@@ -33,6 +34,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
     private final OpBankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final OpBankConfiguration configuration;
+    private final String redirectUrl;
     private final Credentials credentials;
     private String refreshToken;
 
@@ -40,15 +42,21 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
             OpBankApiClient apiClient,
             PersistentStorage persistentStorage,
             Credentials credentials,
-            OpBankConfiguration configuration) {
+            AgentConfiguration<OpBankConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.credentials = credentials;
     }
 
     private OpBankConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
@@ -83,7 +91,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
         tokenBody.setIss(configuration.getClientId());
         tokenBody.setResponseType(OpBankConstants.TokenValues.RESPONSE_TYPE);
         tokenBody.setClientId(configuration.getClientId());
-        tokenBody.setRedirectUri(configuration.getRedirectUrl());
+        tokenBody.setRedirectUri(getRedirectUrl());
         tokenBody.setScope(OpBankConstants.TokenValues.SCOPE);
         tokenBody.setState(state);
         tokenBody.setNonce(UUID.randomUUID().toString());
