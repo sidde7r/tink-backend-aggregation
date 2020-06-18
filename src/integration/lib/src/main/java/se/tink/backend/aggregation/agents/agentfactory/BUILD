@@ -323,6 +323,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/business/handelsbanken",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/business/nordea",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/business/seb",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/business/swedbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex/v62",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/entercard/coop",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/entercard/moregolf",

@@ -23,7 +23,12 @@ import se.tink.libraries.uuid.UUIDUtils;
  *
  * <p>The methods for (String, String, String) and similar are deprecated, and should be converted
  * to type-safe alternatives.
+ *
+ * @deprecated Please depend on slf4j directly instead of AggregationLoggger.
+ *     https://tink.slack.com/archives/CB12SB8DV/p1592400385429200
+ *     https://tink.slack.com/archives/C239US7C5/p1525431375000316
  */
+@Deprecated
 public class AggregationLogger {
     protected Logger log;
 
