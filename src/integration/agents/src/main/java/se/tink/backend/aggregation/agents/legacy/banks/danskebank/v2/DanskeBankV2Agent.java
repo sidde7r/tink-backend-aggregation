@@ -630,8 +630,9 @@ public class DanskeBankV2Agent extends AbstractAgent
         String destinationAccountId =
                 transfer.getDestination().getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
 
-        String formattedDestinationMessage = transferMessageFormatter.getDestinationMessage(
-                transfer, isBetweenUserAccounts);
+        String formattedDestinationMessage =
+                transferMessageFormatter.getDestinationMessageFromRemittanceInformation(
+                        transfer, isBetweenUserAccounts);
         String formattedSourceMessage = transferMessageFormatter.getSourceMessage(transfer);
 
         return TransferRequest.builder()
