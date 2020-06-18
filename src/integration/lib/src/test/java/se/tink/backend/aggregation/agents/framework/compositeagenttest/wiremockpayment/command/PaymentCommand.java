@@ -69,12 +69,19 @@ public final class PaymentCommand implements CompositeAgentTestCommand {
                 storageSign = signPaymentMultiStepResponse.getStorage();
             }
 
-            PaymentStatus statusResult = paymentSign.getStatus();
-
-            // TODO: assertions should probably be moved to separate step.
-            Assert.assertTrue(
-                    statusResult.equals(PaymentStatus.SIGNED)
-                            || statusResult.equals(PaymentStatus.PAID));
+            if (isPaymentStatusPassed(paymentSign.getStatus())) {
+                Assert.assertTrue(true);
+            } else {
+                PaymentResponse paymentResponse =
+                        paymentController.fetch(
+                                PaymentMultiStepRequest.of(signPaymentMultiStepResponse));
+                PaymentStatus statusResult = paymentResponse.getPayment().getStatus();
+                Assert.assertTrue(isPaymentStatusPassed(statusResult));
+            }
         }
+    }
+
+    private boolean isPaymentStatusPassed(PaymentStatus statusResult) {
+        return statusResult.equals(PaymentStatus.SIGNED) || statusResult.equals(PaymentStatus.PAID);
     }
 }
