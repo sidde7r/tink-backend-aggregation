@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -62,7 +63,7 @@ public class FabricMockServerAgentTest {
                         .withConfigurationFile(configuration)
                         .addPayment(createMockedDomesticPayment())
                         .withHttpDebugTrace()
-                        .buildWithoutLogin();
+                        .buildWithoutLogin(PaymentCommand.class);
 
         agentWireMockPaymentTest.executePayment();
     }

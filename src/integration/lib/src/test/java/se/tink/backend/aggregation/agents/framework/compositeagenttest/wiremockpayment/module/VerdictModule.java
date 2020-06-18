@@ -6,8 +6,6 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockp
 
 public class VerdictModule extends AbstractModule {
 
-    public VerdictModule() {}
-
     @Override
     public void configure() {
         bind(PaymentVerdict.class).to(PaymentVerdicter.class);

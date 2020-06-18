@@ -5,6 +5,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentGBCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -67,7 +68,7 @@ public class BarclaysAgentWireMockTest {
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
                         .addPayment(createMockedDomesticPayment())
-                        .buildWithoutLoginWithGBCommand();
+                        .buildWithoutLogin(PaymentGBCommand.class);
 
         // when / then (execution and assertion currently done in the same step)
         agentWireMockPaymentTest.executePayment();

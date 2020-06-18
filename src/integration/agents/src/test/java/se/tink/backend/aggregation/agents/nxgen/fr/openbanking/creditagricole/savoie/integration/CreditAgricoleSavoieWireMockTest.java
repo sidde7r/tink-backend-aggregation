@@ -4,6 +4,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
+import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockrefresh.AgentWireMockRefreshTest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.savoie.integration.module.CreditAgricoleSavoieWireMockTestModule;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReader;
@@ -67,7 +68,7 @@ public class CreditAgricoleSavoieWireMockTest {
                         .withConfigurationFile(configuration)
                         .addPayment(createMockedDomesticPayment())
                         .withAgentModule(new CreditAgricoleSavoieWireMockTestModule())
-                        .buildWithoutLogin();
+                        .buildWithoutLogin(PaymentCommand.class);
 
         // when / then (execution and assertion currently done in the same step)
         agentWireMockPaymentTest.executePayment();

@@ -16,8 +16,6 @@ import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.Comp
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.AgentWiremockTestContextModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.base.module.RefreshRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.command.LoginCommand;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentCommand;
-import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.command.PaymentGBCommand;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.AgentFactoryWireMockModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.PaymentRequestModule;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.module.VerdictModule;
@@ -224,7 +222,8 @@ public final class AgentWireMockPaymentTest {
          *
          * @return WireMock payment test.
          */
-        public AgentWireMockPaymentTest buildWithoutLogin() {
+        public AgentWireMockPaymentTest buildWithoutLogin(
+                Class<? extends CompositeAgentTestCommand> command) {
 
             return new AgentWireMockPaymentTest(
                     market,
@@ -236,36 +235,17 @@ public final class AgentWireMockPaymentTest {
                     agentTestModule,
                     paymentList,
                     transferList,
-                    of(PaymentCommand.class),
+                    of(command),
                     httpDebugTrace);
         }
 
-        /**
-         * Builds payment test that does not attempt to login before executing payment.
-         *
-         * @return WireMock payment test.
-         */
-        public AgentWireMockPaymentTest buildWithoutLoginWithGBCommand() {
-
-            return new AgentWireMockPaymentTest(
-                    market,
-                    providerName,
-                    wireMockFilePath,
-                    configuration,
-                    credentialFields,
-                    callbackData,
-                    agentTestModule,
-                    paymentList,
-                    transferList,
-                    of(PaymentGBCommand.class),
-                    httpDebugTrace);
-        }
         /**
          * Builds payment test that will login before executing the payment.
          *
          * @return WireMock payment test.
          */
-        public AgentWireMockPaymentTest buildWithLogin() {
+        public AgentWireMockPaymentTest buildWithLogin(
+                Class<? extends CompositeAgentTestCommand> command) {
 
             return new AgentWireMockPaymentTest(
                     market,
@@ -277,7 +257,7 @@ public final class AgentWireMockPaymentTest {
                     agentTestModule,
                     paymentList,
                     transferList,
-                    of(LoginCommand.class, PaymentCommand.class),
+                    of(LoginCommand.class, command),
                     httpDebugTrace);
         }
     }

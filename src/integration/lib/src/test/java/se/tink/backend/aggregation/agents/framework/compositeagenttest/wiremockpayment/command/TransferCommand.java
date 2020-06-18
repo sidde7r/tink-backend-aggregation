@@ -38,8 +38,7 @@ public class TransferCommand implements CompositeAgentTestCommand {
         }
     }
 
-    private void transferExecutorNxgenExecute(TransferExecutorNxgen transferExecutorNxgen)
-            throws Exception {
+    private void transferExecutorNxgenExecute(TransferExecutorNxgen transferExecutorNxgen) {
         for (Transfer transfer : transferList) {
             transferExecutorNxgen.execute(transfer);
         }

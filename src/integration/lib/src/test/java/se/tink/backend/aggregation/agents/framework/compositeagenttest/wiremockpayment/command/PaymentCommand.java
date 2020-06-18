@@ -50,8 +50,6 @@ public final class PaymentCommand implements CompositeAgentTestCommand {
             Map<String, String> map;
             List<Field> fields;
             String nextStep = signPaymentMultiStepResponse.getStep();
-            Payment paymentSign = signPaymentMultiStepResponse.getPayment();
-            Storage storageSign = signPaymentMultiStepResponse.getStorage();
 
             while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
                 fields = signPaymentMultiStepResponse.getFields();
@@ -66,8 +64,6 @@ public final class PaymentCommand implements CompositeAgentTestCommand {
                                         fields,
                                         new ArrayList<>(map.values())));
                 nextStep = signPaymentMultiStepResponse.getStep();
-                paymentSign = signPaymentMultiStepResponse.getPayment();
-                storageSign = signPaymentMultiStepResponse.getStorage();
             }
             paymentVerdict.verdictOnPaymentStatus(signPaymentMultiStepResponse);
         }
