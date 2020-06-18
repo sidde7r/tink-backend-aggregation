@@ -1,18 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.openbanking;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
 public class NordeaDKAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
         AgentIntegrationTest.Builder builder =
-                new AgentIntegrationTest.Builder("dk", "dk-nordea-openbanking")
+                new AgentIntegrationTest.Builder("dk", "dk-nordea-ob")
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(true)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
 
         builder.build().testRefresh();
