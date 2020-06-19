@@ -3,7 +3,6 @@ load("//tools/bzl:junit_old.bzl", "junit_test")
 junit_test(
     name = "nordea",
     srcs = glob([
-        "openbanking/NordeaDKAgentTest.java",
         "NordeaDkAgentTest.java",
     ]),
     data = ["//:agent_test_data"],
@@ -23,7 +22,6 @@ junit_test(
     srcs = glob(
         ["**/*.java"],
         exclude = [
-            "openbanking/NordeaDKAgentTest.java",
             "NordeaDkAgentTest.java",
         ],
     ),
