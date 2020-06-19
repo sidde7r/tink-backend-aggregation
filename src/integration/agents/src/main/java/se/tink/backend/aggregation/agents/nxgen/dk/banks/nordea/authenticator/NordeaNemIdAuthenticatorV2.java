@@ -10,6 +10,9 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
@@ -28,7 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.StatelessProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.step.AutomaticAuthenticationStep;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.step.UsernamePasswordAuthenticationStep;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.step.CredentialsAuthenticationStep;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -49,20 +52,21 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
     public NordeaNemIdAuthenticatorV2(
             final NordeaDkApiClient bankClient,
             final SessionStorage sessionStorage,
-            final PersistentStorage persistentStorage) {
+            final PersistentStorage persistentStorage,
+            final SupplementalRequester supplementalRequester) {
         this.bankClient = Objects.requireNonNull(bankClient);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
-        this.iFrameController = new NemIdIFrameController(this);
+        this.iFrameController = new NemIdIFrameController(this, supplementalRequester);
     }
 
-    public void authenticate(String username, String password) throws AuthenticationException {
-
-        if (Strings.isNullOrEmpty(password) || Strings.isNullOrEmpty(username)) {
+    public void authenticate(final Credentials credentials) throws AuthenticationException {
+        if (Strings.isNullOrEmpty(credentials.getField(Field.Key.PASSWORD))
+                || Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        String token = iFrameController.doLoginWith(username, password);
+        String token = iFrameController.doLoginWith(credentials);
 
         final String code = exchangeNemIdToken(token);
 
@@ -164,7 +168,7 @@ public class NordeaNemIdAuthenticatorV2 extends StatelessProgressiveAuthenticato
     public List<? extends AuthenticationStep> authenticationSteps() {
         List<AuthenticationStep> steps = new LinkedList<>();
         steps.add(new AutomaticAuthenticationStep(this::autoAuthenticate, "autoAuth"));
-        steps.add(new UsernamePasswordAuthenticationStep(this::authenticate));
+        steps.add(new CredentialsAuthenticationStep(this::authenticate));
         return steps;
     }
 

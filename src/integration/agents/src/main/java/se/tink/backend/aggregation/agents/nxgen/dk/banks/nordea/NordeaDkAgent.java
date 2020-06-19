@@ -69,7 +69,8 @@ public class NordeaDkAgent extends SubsequentProgressiveGenerationAgent
 
     @Override
     public StatelessProgressiveAuthenticator getAuthenticator() {
-        return new NordeaNemIdAuthenticatorV2(nordeaClient, sessionStorage, persistentStorage);
+        return new NordeaNemIdAuthenticatorV2(
+                nordeaClient, sessionStorage, persistentStorage, supplementalRequester);
     }
 
     @Override

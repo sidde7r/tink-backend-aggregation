@@ -78,7 +78,7 @@ public class BankdataAgent extends NextGenerationAgent
 
         NemIdAuthenticationController nemidAuthenticationController =
                 new NemIdAuthenticationController(
-                        new NemIdIFrameController(nemIdAuthenticator),
+                        new NemIdIFrameController(nemIdAuthenticator, supplementalRequester),
                         nemIdAuthenticator,
                         persistentStorage);
 

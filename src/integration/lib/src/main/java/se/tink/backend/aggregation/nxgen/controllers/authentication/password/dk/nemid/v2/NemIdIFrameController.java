@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -13,9 +14,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // Temporarily renaming this to V2. V1 will be removed once the Nordea DK update is finished
 public class NemIdIFrameController {
@@ -48,21 +54,26 @@ public class NemIdIFrameController {
     private final WebdriverHelper webdriverHelper;
     private final Sleeper sleeper;
     private final NemIdParametersFetcher nemIdParametersFetcher;
+    private final SupplementalRequester supplementalRequester;
 
-    public NemIdIFrameController(final NemIdParametersFetcher nemIdParametersFetcher) {
-        this(new WebdriverHelper(), new Sleeper(), nemIdParametersFetcher);
+    public NemIdIFrameController(
+            final NemIdParametersFetcher nemIdParametersFetcher,
+            final SupplementalRequester supplementalRequester) {
+        this(new WebdriverHelper(), new Sleeper(), nemIdParametersFetcher, supplementalRequester);
     }
 
     NemIdIFrameController(
             final WebdriverHelper webdriverHelper,
             final Sleeper sleeper,
-            final NemIdParametersFetcher nemIdParametersFetcher) {
+            final NemIdParametersFetcher nemIdParametersFetcher,
+            final SupplementalRequester supplementalRequester) {
         this.webdriverHelper = webdriverHelper;
         this.sleeper = sleeper;
         this.nemIdParametersFetcher = nemIdParametersFetcher;
+        this.supplementalRequester = supplementalRequester;
     }
 
-    public String doLoginWith(String username, String password) throws AuthenticationException {
+    public String doLoginWith(Credentials credentials) throws AuthenticationException {
         log.info("Start authentication process with nem-id iframe.");
         WebDriver driver = webdriverHelper.constructWebDriver(PHANTOMJS_TIMEOUT_SECONDS);
         try {
@@ -71,13 +82,15 @@ public class NemIdIFrameController {
             log.info("NemId iframe is initialized");
 
             // provide credentials and submit
-            setUserName(driver, username);
-            setPassword(driver, password);
+            setUserName(driver, credentials.getField(Field.Key.USERNAME));
+            setPassword(driver, credentials.getField(Field.Key.PASSWORD));
             clickLogin(driver);
 
             // validate response
             validateCredentials(driver);
             log.info("Provided credentials are valid.");
+
+            displayPrompt(credentials);
 
             final long askForNemIdStartTime = System.currentTimeMillis();
             // credentials are valid let's ask for 2nd factor
@@ -239,5 +252,21 @@ public class NemIdIFrameController {
     private Optional<String> getNemIdToken(WebDriver driver) {
         Optional<WebElement> tokenElement = webdriverHelper.waitForElement(driver, NEMID_TOKEN);
         return tokenElement.map(webElement -> Strings.emptyToNull(webElement.getText()));
+    }
+
+    private void displayPrompt(Credentials credentials) {
+        Field field =
+                Field.builder()
+                        .immutable(true)
+                        .description("Please open the NemId app and confirm login.")
+                        .value("Please open the NemId app and confirm login")
+                        .name("name")
+                        .build();
+
+        credentials.setSupplementalInformation(
+                SerializationUtils.serializeToString(Collections.singletonList(field)));
+        credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 }

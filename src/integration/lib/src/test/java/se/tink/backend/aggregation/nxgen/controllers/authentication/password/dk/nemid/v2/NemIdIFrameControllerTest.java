@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,12 +18,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.InOrder;
-import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebDriver.Timeouts;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 
@@ -40,6 +43,7 @@ public class NemIdIFrameControllerTest {
     private Sleeper sleeper;
     private NemIdAuthenticatorV2 authenticator;
     private PhantomJSDriver driver;
+    private SupplementalRequester supplementalRequester;
 
     private NemIdIFrameController controller;
 
@@ -61,6 +65,8 @@ public class NemIdIFrameControllerTest {
     private WebElement otpIconMock;
     private WebElement nemIdTokenMock;
 
+    private Credentials credentials;
+
     @SneakyThrows
     @Before
     public void setUp() {
@@ -77,15 +83,30 @@ public class NemIdIFrameControllerTest {
 
         given(webdriverHelper.constructWebDriver(PHANTOMJS_TIMEOUT_SECONDS)).willReturn(driver);
 
-        inOrder = Mockito.inOrder(webdriverHelper, driver, targetLocator, timeouts, sleeper);
+        supplementalRequester = mock(SupplementalRequester.class);
+
+        inOrder =
+                inOrder(
+                        webdriverHelper,
+                        driver,
+                        targetLocator,
+                        timeouts,
+                        sleeper,
+                        supplementalRequester);
 
         authenticator = mock(NemIdAuthenticatorV2.class);
 
         given(authenticator.getNemIdParameters()).willReturn(NEM_ID_PARAMETERS_V_2);
 
-        controller = new NemIdIFrameController(webdriverHelper, sleeper, authenticator);
+        controller =
+                new NemIdIFrameController(
+                        webdriverHelper, sleeper, authenticator, supplementalRequester);
 
         initializeWebElements();
+
+        credentials = mock(Credentials.class);
+        given(credentials.getField(Field.Key.USERNAME)).willReturn(USERNAME);
+        given(credentials.getField(Field.Key.PASSWORD)).willReturn(PASSWORD);
     }
 
     private void initializeWebElements() {
@@ -121,7 +142,7 @@ public class NemIdIFrameControllerTest {
         // given
 
         // when
-        String result = controller.doLoginWith(USERNAME, PASSWORD);
+        String result = controller.doLoginWith(credentials);
 
         // then
         // create webdriver and initialize it with danid.dk page
@@ -148,6 +169,9 @@ public class NemIdIFrameControllerTest {
         inOrder.verify(webdriverHelper).waitForElement(driver, ERROR_MESSAGE);
         inOrder.verify(webdriverHelper).waitForElement(driver, OTP_ICON);
 
+        // display supplemental information about nemid 2fa
+        inOrder.verify(supplementalRequester).requestSupplementalInformation(credentials, false);
+
         // credentials ok, forward request to nemid app
         inOrder.verify(webdriverHelper).clickButton(driver, NEMID_APP_BUTTON);
 
@@ -166,8 +190,7 @@ public class NemIdIFrameControllerTest {
         given(webdriverHelper.waitForElement(driver, IFRAME)).willReturn(Optional.empty());
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> controller.doLoginWith(USERNAME, PASSWORD));
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
         // then
         verify(sleeper, times(5)).sleepFor(5_000);
@@ -184,8 +207,7 @@ public class NemIdIFrameControllerTest {
         given(webdriverHelper.waitForElement(driver, USERNAME_INPUT)).willReturn(Optional.empty());
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> controller.doLoginWith(USERNAME, PASSWORD));
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
         // then
         verify(authenticator, times(5)).getNemIdParameters();
@@ -202,8 +224,7 @@ public class NemIdIFrameControllerTest {
         given(webdriverHelper.waitForElement(driver, OTP_ICON)).willReturn(Optional.empty());
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> controller.doLoginWith(USERNAME, PASSWORD));
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
         // then
         verify(sleeper, times(20)).sleepFor(1_000);
@@ -219,8 +240,7 @@ public class NemIdIFrameControllerTest {
         given(errorMessageMock.getText()).willReturn("--- WRONG CREDENTIALS UNKNOWN ERROR ---");
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> controller.doLoginWith(USERNAME, PASSWORD));
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
         // then
         assertThat(throwable)
@@ -245,7 +265,7 @@ public class NemIdIFrameControllerTest {
 
             // when
             Throwable throwable =
-                    Assertions.catchThrowable(() -> controller.doLoginWith(USERNAME, PASSWORD));
+                    Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
             // then
             assertThat(throwable).isInstanceOf(LoginException.class).hasMessage(errorMsg);
@@ -259,8 +279,7 @@ public class NemIdIFrameControllerTest {
                 .willReturn(Optional.of(otpIconMock));
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> controller.doLoginWith(USERNAME, PASSWORD));
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
         // then
         verify(sleeper, times(120)).sleepFor(1_000);
@@ -276,8 +295,7 @@ public class NemIdIFrameControllerTest {
         given(webdriverHelper.waitForElement(driver, NEMID_TOKEN)).willReturn(Optional.empty());
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> controller.doLoginWith(USERNAME, PASSWORD));
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
         // then
         verify(webdriverHelper, times(7)).waitForElement(driver, NEMID_TOKEN);
@@ -293,8 +311,7 @@ public class NemIdIFrameControllerTest {
         given(nemIdTokenMock.getText()).willReturn("");
 
         // when
-        Throwable throwable =
-                Assertions.catchThrowable(() -> controller.doLoginWith(USERNAME, PASSWORD));
+        Throwable throwable = Assertions.catchThrowable(() -> controller.doLoginWith(credentials));
 
         // then
         verify(webdriverHelper, times(7)).waitForElement(driver, NEMID_TOKEN);
@@ -313,7 +330,7 @@ public class NemIdIFrameControllerTest {
                 .willReturn(Optional.of(userinputMock));
 
         // when
-        String result = controller.doLoginWith(USERNAME, PASSWORD);
+        String result = controller.doLoginWith(credentials);
 
         // then
         verify(authenticator, times(2)).getNemIdParameters();
