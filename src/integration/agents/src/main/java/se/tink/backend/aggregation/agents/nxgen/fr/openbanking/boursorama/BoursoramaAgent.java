@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama;
 
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.ZONE_ID;
+
+import com.google.inject.Inject;
+import java.time.Clock;
 import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -8,10 +12,11 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.BoursoramaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaMessageSignFilter;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaGetRequestSignFilter;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaPostRequestSignFilter;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.IdentityEntity;
@@ -20,14 +25,10 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.paymen
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.agentcontext.AgentContextProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.GeneratedValueProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.date.ActualLocalDateTimeSource;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.supplementalinformation.SupplementalInformationProviderImpl;
-import se.tink.backend.aggregation.nxgen.agents.componentproviders.tinkhttpclient.LegacyTinkHttpClientProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -37,9 +38,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
+@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public class BoursoramaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,
@@ -49,26 +50,25 @@ public class BoursoramaAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final BoursoramaAuthenticator authenticator;
 
-    public BoursoramaAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(
-                new AgentComponentProvider(
-                        new LegacyTinkHttpClientProvider(
-                                request, context, agentsServiceConfiguration.getSignatureKeyPair()),
-                        new SupplementalInformationProviderImpl(context, request),
-                        new AgentContextProviderImpl(request, context),
-                        new GeneratedValueProviderImpl(
-                                new ActualLocalDateTimeSource(), new RandomValueGeneratorImpl())));
+    @Inject
+    public BoursoramaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+
+        super(componentProvider);
 
         AgentConfiguration<BoursoramaConfiguration> agentConfiguration = getAgentConfiguration();
 
-        this.apiClient = constructApiClient(agentConfiguration, agentsServiceConfiguration);
+        this.apiClient =
+                constructApiClient(qsealcSigner, agentConfiguration.getClientConfiguration());
         this.authenticator =
                 new BoursoramaAuthenticator(
-                        apiClient, sessionStorage, agentConfiguration.getRedirectUrl());
+                        this.apiClient, this.sessionStorage, agentConfiguration);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     private AgentConfiguration<BoursoramaConfiguration> getAgentConfiguration() {
@@ -86,20 +86,26 @@ public class BoursoramaAgent extends NextGenerationAgent
     }
 
     private BoursoramaApiClient constructApiClient(
-            AgentConfiguration<BoursoramaConfiguration> agentConfiguration,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
+            QsealcSigner qsealcSigner, BoursoramaConfiguration agentConfiguration) {
 
-        BoursoramaMessageSignFilter messageSignFilter =
-                constructMessageSignFilter(
-                        agentsServiceConfiguration, agentConfiguration.getClientConfiguration());
-        client.addFilter(messageSignFilter);
-        return new BoursoramaApiClient(
-                client, agentConfiguration.getClientConfiguration(), sessionStorage);
+        final BoursoramaSignatureHeaderGenerator signatureHeaderGenerator =
+                new BoursoramaSignatureHeaderGenerator(
+                        qsealcSigner, agentConfiguration.getQsealKeyUrl());
+        final BoursoramaGetRequestSignFilter getRequestSignFilter =
+                new BoursoramaGetRequestSignFilter(signatureHeaderGenerator);
+        final BoursoramaPostRequestSignFilter postRequestSignFilter =
+                new BoursoramaPostRequestSignFilter(signatureHeaderGenerator);
+
+        client.addFilter(getRequestSignFilter);
+        client.addFilter(postRequestSignFilter);
+
+        return new BoursoramaApiClient(client, agentConfiguration, sessionStorage);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         BoursoramaTransactionalAccountFetcher accountFetcher =
-                new BoursoramaTransactionalAccountFetcher(apiClient, sessionStorage);
+                new BoursoramaTransactionalAccountFetcher(
+                        apiClient, sessionStorage, Clock.system(ZONE_ID));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -108,16 +114,6 @@ public class BoursoramaAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(accountFetcher)));
-    }
-
-    private BoursoramaMessageSignFilter constructMessageSignFilter(
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            BoursoramaConfiguration agentConfiguration) {
-        return new BoursoramaMessageSignFilter(
-                new BoursoramaSignatureHeaderGenerator(
-                        agentsServiceConfiguration.getEidasProxy(),
-                        getEidasIdentity(),
-                        agentConfiguration.getQsealKeyUrl()));
     }
 
     @Override

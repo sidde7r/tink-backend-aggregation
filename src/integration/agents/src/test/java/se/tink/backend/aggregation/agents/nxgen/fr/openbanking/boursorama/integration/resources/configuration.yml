@@ -1,0 +1,11 @@
+agentsServiceConfiguration:
+  integrations:
+    ae45a3cb1d1a4a839aa13620fd02d5b5:
+      tink:
+        baseUrl: https://api-dsp2.boursorama.com
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+        clientId: DUMMY_CLIENT_ID
+        qsealKeyUrl: https://cdn.tink.se/eidas/tink-qsealc.pem
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

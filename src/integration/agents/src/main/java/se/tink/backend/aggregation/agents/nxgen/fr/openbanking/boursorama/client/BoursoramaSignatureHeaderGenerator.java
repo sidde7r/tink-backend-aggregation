@@ -2,61 +2,62 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.clien
 
 import java.net.URI;
 import java.util.Base64;
+import javax.ws.rs.core.MediaType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
+@Slf4j
+@RequiredArgsConstructor
 public class BoursoramaSignatureHeaderGenerator {
 
-    private final EidasProxyConfiguration eidasProxyConf;
-    private final EidasIdentity eidasIdentity;
+    private final QsealcSigner qsealcSigner;
     private final String qsealKeyUrl;
-
-    public BoursoramaSignatureHeaderGenerator(
-            EidasProxyConfiguration eidasProxyConf,
-            EidasIdentity eidasIdentity,
-            String qsealKeyUrl) {
-        this.eidasProxyConf = eidasProxyConf;
-        this.eidasIdentity = eidasIdentity;
-        this.qsealKeyUrl = qsealKeyUrl;
-    }
 
     String getDigestHeaderValue(String requestBody) {
         return "SHA-256=" + Base64.getEncoder().encodeToString(Hash.sha256(requestBody));
     }
 
-    String getSignatureHeaderValue(
-            String httpMethod,
-            URI uri,
-            String digest,
-            String xRequestId,
-            String date,
-            String contentType) {
+    String getSignatureHeaderValueForGet(URI uri, String digest, String xRequestId, String date) {
 
-        String signatureEntity =
-                getMandatoryHeadersSignature(
-                        httpMethod, uri, digest, xRequestId, date, contentType);
-        String signature = signAndEncode(signatureEntity, eidasProxyConf, eidasIdentity);
+        final String signatureEntity =
+                getMandatoryHeadersSignatureForGet(uri, digest, xRequestId, date);
+        final String signature = signAndEncode(signatureEntity);
+
+        log.info(signatureEntity);
+        log.info(signature);
 
         return String.join(
                 ",",
                 "keyId=" + '"' + qsealKeyUrl + '"',
                 "algorithm=\"rsa-sha256\"",
-                "headers=\"(request-target) Digest X-Request-ID Date Content-Type\"",
+                "headers=\"(request-target) x-request-id date digest\"",
                 "signature=" + '"' + signature + '"');
     }
 
-    private String getMandatoryHeadersSignature(
-            String httpMethod,
-            URI uri,
-            String digest,
-            String xRequestId,
-            String date,
-            String contentType) {
+    String getSignatureHeaderValueForPost(URI uri, String digest, String xRequestId, String date) {
 
-        String fullPath = httpMethod.toLowerCase() + " " + uri.getPath();
+        final String signatureEntity =
+                getMandatoryHeadersSignatureForPost(uri, digest, xRequestId, date);
+        final String signature = signAndEncode(signatureEntity);
+
+        log.info(signatureEntity);
+        log.info(signature);
+
+        return String.join(
+                ",",
+                "keyId=" + '"' + qsealKeyUrl + '"',
+                "algorithm=\"rsa-sha256\"",
+                "headers=\"(request-target) content-type x-request-id date digest\"",
+                "signature=" + '"' + signature + '"');
+    }
+
+    private String getMandatoryHeadersSignatureForGet(
+            URI uri, String digest, String xRequestId, String date) {
+
+        String fullPath = HttpMethod.GET.name().toLowerCase() + " " + uri.getPath();
         if (uri.getQuery() != null) {
             fullPath += "?" + uri.getQuery();
         }
@@ -64,21 +65,26 @@ public class BoursoramaSignatureHeaderGenerator {
         return String.join(
                 "\n",
                 "(request-target): " + fullPath,
-                "digest: " + digest,
                 "x-request-id: " + xRequestId,
                 "date: " + date,
-                "content-type: " + contentType);
+                "digest: " + digest);
     }
 
-    private String signAndEncode(
-            String signatureEntity,
-            EidasProxyConfiguration eidasProxyConf,
-            EidasIdentity eidasIdentity) {
+    private String getMandatoryHeadersSignatureForPost(
+            URI uri, String digest, String xRequestId, String date) {
 
-        return QsealcSignerImpl.build(
-                        eidasProxyConf.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity)
-                .getSignatureBase64(signatureEntity.getBytes());
+        final String fullPath = HttpMethod.POST.name().toLowerCase() + " " + uri.getPath();
+
+        return String.join(
+                "\n",
+                "(request-target): " + fullPath,
+                "content-type: " + MediaType.APPLICATION_JSON,
+                "x-request-id: " + xRequestId,
+                "date: " + date,
+                "digest: " + digest);
+    }
+
+    private String signAndEncode(String signatureEntity) {
+        return qsealcSigner.getSignatureBase64(signatureEntity.getBytes());
     }
 }

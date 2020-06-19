@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama;
 
+import java.time.ZoneId;
+
 public class BoursoramaConstants {
 
     public static final String USER_HASH = "USER_HASH";
     public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
+
+    public static final ZoneId ZONE_ID = ZoneId.of("CET");
 
     public static class Urls {
 
