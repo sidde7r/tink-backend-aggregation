@@ -4,7 +4,10 @@ junit_test(
     name = "boursorama",
     srcs = glob(
         ["**/*.java"],
-        exclude = ["agent/**/*.java"],
+        exclude = [
+            "agent/**/*.java",
+            "integration/**/*.java",
+        ],
     ),
     tags = [
     ],

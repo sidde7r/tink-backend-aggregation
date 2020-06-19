@@ -6,9 +6,12 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.ZONE_ID;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,17 +36,22 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BoursoramaTransactionalAccountFetcherTest {
 
+    private static final Instant NOW = Instant.now();
+
     private BoursoramaTransactionalAccountFetcher accountFetcher;
-    private SessionStorage sessionStorage;
     private BoursoramaApiClient apiClient;
 
     @Before
     public void setUp() throws Exception {
-        sessionStorage = Mockito.mock(SessionStorage.class);
         apiClient = Mockito.mock(BoursoramaApiClient.class);
-        accountFetcher = new BoursoramaTransactionalAccountFetcher(apiClient, sessionStorage);
 
-        when(sessionStorage.get(eq(BoursoramaConstants.USER_HASH))).thenReturn("USER_HASH_123");
+        final SessionStorage sessionStorageMock = Mockito.mock(SessionStorage.class);
+        final Clock clockMock = createClockMock();
+
+        accountFetcher =
+                new BoursoramaTransactionalAccountFetcher(apiClient, sessionStorageMock, clockMock);
+
+        when(sessionStorageMock.get(eq(BoursoramaConstants.USER_HASH))).thenReturn("USER_HASH_123");
     }
 
     @Test
@@ -100,12 +108,14 @@ public class BoursoramaTransactionalAccountFetcherTest {
     }
 
     @Test
-    public void transactionsAreCorrectlyMapped() throws ParseException {
+    public void transactionsAreCorrectlyMapped() {
         // given
         TransactionalAccount account = mock(TransactionalAccount.class);
 
-        Date dateFrom = new SimpleDateFormat("yyyy-MM-dd").parse("2019-01-01");
-        Date dateTo = new SimpleDateFormat("yyyy-MM-dd").parse("2019-03-01");
+        LocalDate localDateTo = ZonedDateTime.ofInstant(NOW, ZONE_ID).toLocalDate();
+        LocalDate localDateFrom = localDateTo.minusDays(89);
+        Date dateFrom = convertLocalDateToDate(localDateFrom);
+        Date dateTo = convertLocalDateToDate(localDateTo);
 
         TransactionsResponse accountsResponse =
                 SerializationUtils.deserializeFromString(
@@ -113,7 +123,7 @@ public class BoursoramaTransactionalAccountFetcherTest {
 
         // when
         when(account.getApiIdentifier()).thenReturn("123456");
-        when(apiClient.fetchTransactions("USER_HASH_123", "123456", dateFrom, dateTo))
+        when(apiClient.fetchTransactions("USER_HASH_123", "123456", localDateFrom, localDateTo))
                 .thenReturn(accountsResponse);
 
         PaginatorResponse paginatorResponse =
@@ -157,5 +167,18 @@ public class BoursoramaTransactionalAccountFetcherTest {
 
         assertThat(account.getType()).isEqualTo(type);
         assertThat(account.getApiIdentifier()).isEqualTo(apiIdentifier);
+    }
+
+    private static Clock createClockMock() {
+        final Clock clockMock = mock(Clock.class);
+
+        when(clockMock.instant()).thenReturn(NOW);
+        when(clockMock.getZone()).thenReturn(ZONE_ID);
+
+        return clockMock;
+    }
+
+    private static Date convertLocalDateToDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZONE_ID).toInstant());
     }
 }

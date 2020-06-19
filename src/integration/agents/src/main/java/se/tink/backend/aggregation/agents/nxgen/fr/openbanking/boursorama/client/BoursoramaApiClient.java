@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.RefreshTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.AccountsResponse;
@@ -22,11 +22,15 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 @AllArgsConstructor
 public class BoursoramaApiClient {
 
-    private final SimpleDateFormat apiDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
     private final TinkHttpClient client;
     private final BoursoramaConfiguration configuration;
     private final SessionStorage sessionStorage;
+
+    public TokenResponse exchangeAuthorizationCode(TokenRequest tokenRequest) {
+        return client.request(configuration.getBaseUrl() + Urls.CONSUME_AUTH_CODE)
+                .body(tokenRequest, MediaType.APPLICATION_JSON)
+                .post(TokenResponse.class);
+    }
 
     public TokenResponse refreshToken(RefreshTokenRequest tokenRequest) {
         return client.request(configuration.getBaseUrl() + Urls.REFRESH_TOKEN)
@@ -48,11 +52,11 @@ public class BoursoramaApiClient {
     }
 
     public TransactionsResponse fetchTransactions(
-            String userHash, String resourceId, Date dateFrom, Date dateTo) {
+            String userHash, String resourceId, LocalDate dateFrom, LocalDate dateTo) {
 
         return baseAISRequest(Urls.TRANSACTIONS_TEMPLATE + resourceId, userHash)
-                .queryParam("dateFrom", apiDateFormat.format(dateFrom))
-                .queryParam("dateTo", apiDateFormat.format(dateTo))
+                .queryParam("dateFrom", dateFrom.toString())
+                .queryParam("dateTo", dateTo.toString())
                 .get(TransactionsResponse.class);
     }
 

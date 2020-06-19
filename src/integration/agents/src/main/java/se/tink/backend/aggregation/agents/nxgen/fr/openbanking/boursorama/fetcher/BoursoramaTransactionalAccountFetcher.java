@@ -2,10 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetch
 
 import static java.util.stream.Collectors.collectingAndThen;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
@@ -26,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
+@RequiredArgsConstructor
 public class BoursoramaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
@@ -39,12 +43,7 @@ public class BoursoramaTransactionalAccountFetcher
 
     private final BoursoramaApiClient apiClient;
     private final SessionStorage sessionStorage;
-
-    public BoursoramaTransactionalAccountFetcher(
-            BoursoramaApiClient apiClient, SessionStorage sessionStorage) {
-        this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
-    }
+    private final Clock clock;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
@@ -61,9 +60,23 @@ public class BoursoramaTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
-        String userHash = sessionStorage.get(BoursoramaConstants.USER_HASH);
+        final String userHash = sessionStorage.get(BoursoramaConstants.USER_HASH);
 
-        return apiClient.fetchTransactions(userHash, account.getApiIdentifier(), fromDate, toDate)
+        final LocalDate fromDateLocal = getLocalDateFromDate(fromDate);
+        final LocalDate toDateLocal = getLocalDateFromDate(toDate);
+
+        final LocalDate oldestDateForFetch = getOldestDateForTransactionFetch();
+
+        if (oldestDateForFetch.isAfter(toDateLocal)) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
+
+        final LocalDate limitedFromDate =
+                oldestDateForFetch.isAfter(fromDateLocal) ? oldestDateForFetch : fromDateLocal;
+
+        return apiClient
+                .fetchTransactions(
+                        userHash, account.getApiIdentifier(), limitedFromDate, toDateLocal)
                 .getTransactions().stream()
                 .map(this::mapTransaction)
                 .collect(collectingAndThen(Collectors.toList(), PaginatorResponseImpl::create));
@@ -126,5 +139,13 @@ public class BoursoramaTransactionalAccountFetcher
         return DEBIT_TRANSACTION_CODE.equals(transaction.getCreditDebitIndicator())
                 ? amount.negate()
                 : amount;
+    }
+
+    private LocalDate getOldestDateForTransactionFetch() {
+        return LocalDate.now(clock).minusDays(89);
+    }
+
+    private LocalDate getLocalDateFromDate(Date date) {
+        return date.toInstant().atZone(clock.getZone()).toLocalDate();
     }
 }

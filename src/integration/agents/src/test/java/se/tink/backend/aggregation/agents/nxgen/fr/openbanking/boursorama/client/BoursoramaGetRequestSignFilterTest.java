@@ -2,32 +2,31 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.clien
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import se.tink.backend.aggregation.api.Psd2Headers.Keys;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.iface.Filter;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
-public class BoursoramaMessageSignFilterTest {
+public class BoursoramaGetRequestSignFilterTest {
 
-    private BoursoramaMessageSignFilter filter;
+    private BoursoramaGetRequestSignFilter filter;
     private BoursoramaSignatureHeaderGenerator signatureHeaderGenerator;
 
     @Before
     public void before() {
         signatureHeaderGenerator = mock(BoursoramaSignatureHeaderGenerator.class);
 
-        filter = new BoursoramaMessageSignFilter(signatureHeaderGenerator);
+        filter = new BoursoramaGetRequestSignFilter(signatureHeaderGenerator);
         filter.setNext(mock(Filter.class));
     }
 
@@ -55,8 +54,7 @@ public class BoursoramaMessageSignFilterTest {
         HttpRequestImpl request = new HttpRequestImpl(HttpMethod.GET, new URL("dummy.url"));
 
         // when
-        when(signatureHeaderGenerator.getSignatureHeaderValue(
-                        any(), any(), any(), any(), any(), any()))
+        when(signatureHeaderGenerator.getSignatureHeaderValueForGet(any(), any(), any(), any()))
                 .thenReturn("SIGNATURE_HEADER_VALUE");
 
         filter.handle(request);
@@ -92,22 +90,6 @@ public class BoursoramaMessageSignFilterTest {
     }
 
     @Test
-    public void singingWorks_EvenWhenBodyIsNotString() {
-        // given
-        List<Integer> requestBody = Collections.singletonList(123);
-        HttpRequestImpl request =
-                new HttpRequestImpl(HttpMethod.GET, new URL("dummy.url"), requestBody);
-
-        // when
-        filter.handle(request);
-
-        // then
-        ArgumentCaptor<String> digestInput = ArgumentCaptor.forClass(String.class);
-        verify(signatureHeaderGenerator).getDigestHeaderValue(digestInput.capture());
-        assertThat(digestInput.getValue()).isEqualTo(request.getBody());
-    }
-
-    @Test
     public void nullRequestBody_isTreatedAsEmptyString() {
         // given
         final String digestForEmptyString = "DIGEST_FOR_EMPTY_STRING";
@@ -116,8 +98,8 @@ public class BoursoramaMessageSignFilterTest {
 
         // when
         when(signatureHeaderGenerator.getDigestHeaderValue("")).thenReturn(digestForEmptyString);
-        when(signatureHeaderGenerator.getSignatureHeaderValue(
-                        any(), any(), eq(digestForEmptyString), any(), any(), any()))
+        when(signatureHeaderGenerator.getSignatureHeaderValueForGet(
+                        any(), eq(digestForEmptyString), any(), any()))
                 .thenReturn(signatureForEmptyString);
 
         filter.handle(request);
@@ -126,5 +108,22 @@ public class BoursoramaMessageSignFilterTest {
         assertThat(request.getHeaders().getFirst(Keys.DIGEST)).isEqualTo(digestForEmptyString);
         assertThat(request.getHeaders().getFirst(Keys.SIGNATURE))
                 .isEqualTo(signatureForEmptyString);
+    }
+
+    @Test
+    public void willDoNothingWhenHttpMethodIsNotGet() {
+        // given
+        HttpRequestImpl request = new HttpRequestImpl(HttpMethod.POST, new URL("dummy.url"));
+
+        // when
+        filter.handle(request);
+
+        // then
+        verify(signatureHeaderGenerator, never()).getDigestHeaderValue(anyString());
+        verify(signatureHeaderGenerator, never())
+                .getSignatureHeaderValueForGet(any(), anyString(), anyString(), anyString());
+        assertThat(request.getHeaders().getFirst(Keys.DIGEST)).isNull();
+        assertThat(request.getHeaders().getFirst(Keys.SIGNATURE)).isNull();
+        assertThat(request.getHeaders().getFirst(Keys.DATE)).isNull();
     }
 }
