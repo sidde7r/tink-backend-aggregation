@@ -12,9 +12,6 @@ public class ResponseDataEntity {
     private String errors;
     private String language;
 
-    @JsonProperty("ns2:authenticationParameterMap")
-    private AuthParameterMapEntity authenticationParameterMap;
-
     @JsonProperty("otp_format")
     private OtpFormatEntity otpFormat;
 
@@ -35,10 +32,6 @@ public class ResponseDataEntity {
 
     public String getLanguage() {
         return language;
-    }
-
-    public AuthParameterMapEntity getAuthenticationParameterMap() {
-        return authenticationParameterMap;
     }
 
     public OtpFormatEntity getOtpFormat() {
