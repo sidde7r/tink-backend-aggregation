@@ -25,7 +25,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     protected final HandelsbankenBaseApiClient apiClient;
-    private HandelsbankenBaseConfiguration handelsbankenBaseConfiguration;
+    protected HandelsbankenBaseConfiguration handelsbankenBaseConfiguration;
     protected TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public HandelsbankenBaseAgent(
