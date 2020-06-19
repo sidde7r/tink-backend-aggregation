@@ -12,6 +12,7 @@ java_library(
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/serialization",
         "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_google_guava_guava",

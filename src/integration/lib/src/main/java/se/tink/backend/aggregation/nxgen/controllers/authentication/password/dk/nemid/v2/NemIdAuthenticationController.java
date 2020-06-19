@@ -42,7 +42,7 @@ public class NemIdAuthenticationController
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        final String token = iFrameController.doLoginWith(username, password);
+        final String token = iFrameController.doLoginWith(credentials);
         final String installId = authenticator.exchangeNemIdToken(token);
 
         authenticator.authenticateUsingInstallId(username, pinCode, installId);
