@@ -22,7 +22,6 @@ public final class Psd2Headers {
         public static final String HOST = "Host";
         public static final String LOCATION = "Location";
         public static final String PSU_ID = "PSU-ID";
-        public static final String PSU_ID_ADDRESS = "psu-ip-address";
         public static final String PSU_ID_TYPE = "PSU-ID-Type";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String REDIRECT_URI = "redirect-uri";

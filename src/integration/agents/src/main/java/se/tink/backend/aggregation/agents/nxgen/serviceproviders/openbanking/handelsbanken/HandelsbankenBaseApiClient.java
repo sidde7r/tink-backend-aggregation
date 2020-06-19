@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.AuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.DecoupledResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.RedirectResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.TokenResponse;
@@ -443,5 +444,22 @@ public class HandelsbankenBaseApiClient {
                     HandelsbankenBaseConstants.UnacceptedTermsAndConditionsException
                             .KNOW_YOUR_CUSTOMER);
         }
+    }
+
+    public RedirectResponse exchangeAuthorizationCode(String consentId, String code) {
+        Form tokenForm =
+                Form.builder()
+                        .put(BodyKeys.GRANT_TYPE, "authorization_code")
+                        .put(BodyKeys.SCOPE, "AIS:" + consentId)
+                        .put(BodyKeys.CLIENT_ID, configuration.getClientId())
+                        .put("code", code)
+                        .put("redirect_uri", configuration.getRedirectUrl())
+                        .build();
+
+        return client.request(Urls.TOKEN)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(tokenForm.serialize())
+                .post(RedirectResponse.class);
     }
 }
