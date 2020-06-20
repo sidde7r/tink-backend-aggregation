@@ -151,6 +151,7 @@ public class NordeaSEApiClient {
         final RequestBuilder request =
                 httpClient
                         .request(NordeaSEConstants.Urls.FETCH_ACCOUNTS)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
         return requestRefreshableGet(request, FetchAccountResponse.class);
@@ -234,7 +235,10 @@ public class NordeaSEApiClient {
                         NordeaSEConstants.QueryParams.STATUS_VALUES);
 
         final RequestBuilder request =
-                httpClient.request(url).accept(MediaType.APPLICATION_JSON_TYPE);
+                httpClient
+                        .request(url)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .type(MediaType.APPLICATION_JSON_TYPE);
 
         return requestRefreshableGet(request, FetchPaymentsResponse.class);
     }
@@ -260,6 +264,7 @@ public class NordeaSEApiClient {
         final RequestBuilder request =
                 httpClient
                         .request(NordeaSEConstants.Urls.FETCH_BENEFICIARIES)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
         return requestRefreshableGet(request, FetchBeneficiariesResponse.class);
@@ -328,7 +333,10 @@ public class NordeaSEApiClient {
                                 Integer.toString(pollSequence));
 
         final RequestBuilder request =
-                httpClient.request(url).accept(MediaType.APPLICATION_JSON_TYPE);
+                httpClient
+                        .request(url)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
 
         return requestRefreshableGet(request, ResultSignResponse.class);
     }
