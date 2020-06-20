@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.montepaschi;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.aion;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.IbanArgumentEnum;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 
-public class MontepaschiAgentTest {
+public class AionAgentTest {
 
     private final ArgumentManager<IbanArgumentEnum> manager =
             new ArgumentManager<>(IbanArgumentEnum.values());
@@ -24,12 +24,12 @@ public class MontepaschiAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-montepaschi-ob")
+                new AgentIntegrationTest.Builder("be", "be-aion-ob")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(IbanArgumentEnum.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .setFinancialInstitutionId("montepaschi")
+                        .setFinancialInstitutionId("f2c0e0ecfe4a4790be0d380da24d12b1")
                         .setAppId("tink");
     }
 
