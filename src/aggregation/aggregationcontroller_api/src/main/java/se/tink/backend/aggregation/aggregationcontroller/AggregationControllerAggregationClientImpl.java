@@ -257,6 +257,7 @@ public class AggregationControllerAggregationClientImpl
                     () -> getAccountHolderService(hostConfiguration).updateAccountHolder(request),
                     "Update Account Holder");
         }
+        log.info("Updating Account Holder is disabled!");
         return request.getAccountHolder();
     }
 
