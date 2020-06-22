@@ -23,7 +23,7 @@ public class BecAuthenticator extends StatelessProgressiveAuthenticator {
     static final String USERNAME_STORAGE_KEY = "username";
     static final String PASSWORD_STORAGE_KEY = "password";
 
-    private static final Pattern USERNAME_PATTERN = Pattern.compile("\\d{11}");
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("\\d{10,11}");
     private static final Pattern MOBILECODE_PATTERN = Pattern.compile("\\d{4}");
 
     private final BecApiClient apiClient;
