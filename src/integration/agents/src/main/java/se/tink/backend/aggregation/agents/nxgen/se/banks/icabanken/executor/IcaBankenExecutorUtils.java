@@ -24,6 +24,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -157,14 +158,18 @@ public class IcaBankenExecutorUtils {
     }
 
     /** ICA Banken uses numbers to identify reference type: 1 = OCR, 2 = Message */
-    public static String getReferenceTypeFor(Transfer transfer) {
+    public static void validateAndSetRemittanceInformationType(Transfer transfer) {
         GiroMessageValidator giroValidator =
                 GiroMessageValidator.create(OcrValidationConfiguration.softOcr());
         Optional<String> validOcr =
-                giroValidator.validate(transfer.getDestinationMessage()).getValidOcr();
+                giroValidator
+                        .validate(transfer.getRemittanceInformation().getValue())
+                        .getValidOcr();
 
-        return validOcr.isPresent()
-                ? IcaBankenConstants.Transfers.OCR
-                : IcaBankenConstants.Transfers.MESSAGE;
+        if (validOcr.isPresent()) {
+            transfer.getRemittanceInformation().setType(RemittanceInformationType.OCR);
+        } else {
+            transfer.getRemittanceInformation().setType(RemittanceInformationType.UNSTRUCTURED);
+        }
     }
 }

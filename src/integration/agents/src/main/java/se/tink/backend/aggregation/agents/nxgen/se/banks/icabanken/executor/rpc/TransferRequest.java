@@ -53,14 +53,14 @@ public class TransferRequest {
             AccountEntity sourceAccount,
             RecipientEntity destinationAccount,
             String sourceMessage,
-            String destinationMessage,
+            String remittanceInformationValue,
             String typeOfPayment) {
         this.recipientAccountNumber = destinationAccount.getAccountNumber();
         this.amount = transfer.getAmount().getValue();
         this.registrationId = null;
         this.memo = sourceMessage;
         this.fromAccountId = sourceAccount.getAccountId();
-        this.reference = destinationMessage;
+        this.reference = remittanceInformationValue;
         this.type = destinationAccount.getType();
         this.isStandingTransaction = false;
         this.eventId = null;
@@ -70,9 +70,21 @@ public class TransferRequest {
             this.referenceType = null;
             this.recipientType = typeOfPayment;
         } else {
-            this.referenceType = IcaBankenExecutorUtils.getReferenceTypeFor(transfer);
+            // TODO: these 3 lines + method should be removed after customers start using only RI
+            if (transfer.getRemittanceInformation().getType() == null) {
+                IcaBankenExecutorUtils.validateAndSetRemittanceInformationType(transfer);
+            }
+            switch (transfer.getRemittanceInformation().getType()) {
+                case OCR:
+                    this.referenceType = IcaBankenConstants.Transfers.OCR;
+                    break;
+                case UNSTRUCTURED:
+                    this.referenceType = IcaBankenConstants.Transfers.MESSAGE;
+                    break;
+                default:
+                    throw new IllegalStateException("Unknown remittance information type");
+            }
         }
-
         this.recipientId = destinationAccount.getRecipientId();
     }
 
@@ -83,7 +95,7 @@ public class TransferRequest {
                 sourceAccount,
                 destinationAccount,
                 transfer.getSourceMessage(),
-                transfer.getDestinationMessage(),
+                transfer.getRemittanceInformation().getValue(),
                 IcaBankenConstants.Transfers.PAYMENT);
     }
 
@@ -93,7 +105,8 @@ public class TransferRequest {
             RecipientEntity destinationAccount,
             TransferMessageFormatter transferMessageFormatter) {
         TransferMessageFormatter.Messages formattedMessages =
-                transferMessageFormatter.getMessages(transfer, destinationAccount.isOwnAccount());
+                transferMessageFormatter.getMessagesFromRemittanceInformation(
+                        transfer, destinationAccount.isOwnAccount());
         return new TransferRequest(
                 transfer,
                 sourceAccount,

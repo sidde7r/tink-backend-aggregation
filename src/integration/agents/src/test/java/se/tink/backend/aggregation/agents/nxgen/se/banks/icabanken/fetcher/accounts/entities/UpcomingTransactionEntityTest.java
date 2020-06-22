@@ -9,7 +9,9 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class UpcomingTransactionEntityTest {
@@ -171,7 +173,8 @@ public class UpcomingTransactionEntityTest {
         t.setDueDate(new Date());
         t.setSource(new SwedishIdentifier("92714943462"));
         t.setDestination(identifier);
-        t.setDestinationMessage("38173926046183528");
+        t.setRemittanceInformation(
+                getRemittanceInformation(RemittanceInformationType.OCR, "38173926046183528"));
         t.setSourceMessage("BG Test payment");
         t.setType(TransferType.PAYMENT);
 
@@ -197,10 +200,19 @@ public class UpcomingTransactionEntityTest {
         t.setDueDate(new Date());
         t.setSource(new SwedishIdentifier("92714943462"));
         t.setDestination(identifier);
-        t.setDestinationMessage("38173926046183528");
+        t.setRemittanceInformation(
+                getRemittanceInformation(RemittanceInformationType.OCR, "38173926046183528"));
         t.setSourceMessage("BG Test payment");
         t.setType(TransferType.PAYMENT);
 
         assertNotEquals(t.getHash(), upcomingTransaction1.getHash(false));
+    }
+
+    private RemittanceInformation getRemittanceInformation(
+            RemittanceInformationType type, String value) {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(type);
+        remittanceInformation.setValue(value);
+        return remittanceInformation;
     }
 }
