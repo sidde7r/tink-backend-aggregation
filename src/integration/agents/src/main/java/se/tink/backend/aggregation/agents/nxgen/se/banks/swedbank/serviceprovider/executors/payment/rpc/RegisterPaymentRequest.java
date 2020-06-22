@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovide
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonDouble.JsonType;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @JsonObject
 public class RegisterPaymentRequest {
@@ -49,8 +50,7 @@ public class RegisterPaymentRequest {
 
     public static RegisterPaymentRequest createEinvoicePayment(
             double amount,
-            String message,
-            SwedbankBaseConstants.ReferenceType referenceType,
+            RemittanceInformation remittanceInformation,
             Date date,
             String recipientId,
             String fromAccountId,
@@ -58,8 +58,7 @@ public class RegisterPaymentRequest {
 
         return RegisterPaymentRequest.create(
                 amount,
-                message,
-                referenceType,
+                remittanceInformation,
                 date,
                 recipientId,
                 fromAccountId,
@@ -69,16 +68,14 @@ public class RegisterPaymentRequest {
 
     public static RegisterPaymentRequest createPayment(
             double amount,
-            String message,
-            SwedbankBaseConstants.ReferenceType referenceType,
+            RemittanceInformation remittanceInformation,
             Date date,
             String recipientId,
             String fromAccountId) {
 
         return RegisterPaymentRequest.create(
                 amount,
-                message,
-                referenceType,
+                remittanceInformation,
                 date,
                 recipientId,
                 fromAccountId,
@@ -88,8 +85,7 @@ public class RegisterPaymentRequest {
 
     private static RegisterPaymentRequest create(
             double amount,
-            String message,
-            SwedbankBaseConstants.ReferenceType referenceType,
+            RemittanceInformation remittanceInformation,
             Date date,
             String recipientId,
             String fromAccountId,
@@ -98,7 +94,7 @@ public class RegisterPaymentRequest {
 
         return new RegisterPaymentRequest(
                 amount,
-                ReferenceEntity.create(message, referenceType),
+                ReferenceEntity.create(remittanceInformation),
                 date,
                 recipientId,
                 fromAccountId,
