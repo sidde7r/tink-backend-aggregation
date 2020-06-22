@@ -30,6 +30,11 @@ public final class BbvaConstants {
         }
     }
 
+    public static final class CredentialKeys {
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+    }
+
     public static final class StorageKeys {
         public static final String USER_ID = "userId";
         public static final String ID_TYPE_CODE = "idTypeCode";
@@ -132,6 +137,7 @@ public final class BbvaConstants {
     public static final class LoginParameter {
         public static final String AUTH_DATA_ID = "password";
         public static final String AUTH_TYPE = "02";
+        public static final String AUTHORIZE_TYPE = "121";
         public static final String USER_VALUE_PREFIX = "0019-";
         public static final String CONSUMER_ID = "00000013";
     }
@@ -142,6 +148,7 @@ public final class BbvaConstants {
 
     public static final class AuthenticationStates {
         public static final String OK = "OK";
+        public static final String GO_ON = "GO_ON";
     }
 
     public static final class ErrorMessages {
