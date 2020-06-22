@@ -8,10 +8,10 @@ public class SwedbankNoteToRecipientUtils {
 
     private SwedbankNoteToRecipientUtils() {}
 
-    public static boolean isValidSwedbankNoteToRecipient(String destinationMessage) {
-        if (destinationMessage == null) {
+    public static boolean isValidSwedbankNoteToRecipient(String remittanceInformationValue) {
+        if (remittanceInformationValue == null) {
             return true;
         }
-        return !ILLEGAL_CHARS_PATTERN.matcher(destinationMessage).find();
+        return !ILLEGAL_CHARS_PATTERN.matcher(remittanceInformationValue).find();
     }
 }
