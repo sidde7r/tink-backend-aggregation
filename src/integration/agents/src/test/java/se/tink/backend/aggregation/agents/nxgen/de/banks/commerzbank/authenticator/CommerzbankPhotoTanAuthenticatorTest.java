@@ -168,6 +168,22 @@ public class CommerzbankPhotoTanAuthenticatorTest {
 
     @Test
     public void
+            authenticateShouldThrowLoginExceptionWhenLoginResponseContainsValidationException() {
+        // given
+        LoginResponse loginResponse = loginResponseWithError(Error.VALIDATION_EXCEPTION);
+        given(apiClient.manualLogin(USERNAME, PASSWORD)).willReturn(loginResponse);
+
+        // when
+        Throwable t = catchThrowable(() -> authenticator.authenticate(credentials));
+
+        // then
+        assertThat(t)
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.INCORRECT_CREDENTIALS");
+    }
+
+    @Test
+    public void
             authenticateShouldThrowSessionExceptionWhenLoginResponseContainsSessionActiveError() {
         // given
         LoginResponse loginResponse = loginResponseWithError(Error.ACCOUNT_SESSION_ACTIVE_ERROR);
@@ -183,8 +199,7 @@ public class CommerzbankPhotoTanAuthenticatorTest {
     }
 
     @Test
-    public void
-            authenticateShouldThrowIllegalStateExceptionWhenLoginResponseContainsUnknownError() {
+    public void authenticateShouldThrowDefaultLoginErrorWhenLoginResponseContainsUnknownError() {
         // given
         LoginResponse loginResponse = loginResponseWithError("UNKNOWN ERROR");
         given(apiClient.manualLogin(USERNAME, PASSWORD)).willReturn(loginResponse);
@@ -193,13 +208,11 @@ public class CommerzbankPhotoTanAuthenticatorTest {
         Throwable t = catchThrowable(() -> authenticator.authenticate(credentials));
 
         // then
-        assertThat(t)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Login failed with unknown error message: UNKNOWN ERROR");
+        assertThat(t).isInstanceOf(LoginException.class).hasMessage("Reason: UNKNOWN ERROR");
     }
 
     @Test
-    public void authenticateShouldThrowIllegalStateExceptionWhenLoginResponseContainsNullError() {
+    public void authenticateShouldThrowLoginExceptionWhenLoginResponseContainsNullError() {
         // given
         LoginResponse loginResponse = loginResponseWithError(null);
         given(apiClient.manualLogin(USERNAME, PASSWORD)).willReturn(loginResponse);
@@ -209,8 +222,8 @@ public class CommerzbankPhotoTanAuthenticatorTest {
 
         // then
         assertThat(t)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Login failed without error description present.");
+                .isInstanceOf(LoginException.class)
+                .hasMessage("Cause: LoginError.DEFAULT_MESSAGE");
     }
 
     @Test

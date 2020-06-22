@@ -90,6 +90,7 @@ public class CommerzbankConstants {
     public static class Error {
         public static final String PIN_ERROR = "login.pin.error.10203";
         public static final String ACCOUNT_SESSION_ACTIVE_ERROR = "login.pin.error.10205";
+        public static final String VALIDATION_EXCEPTION = "ccb.validationexception";
     }
 
     public static class ScaMethod {
