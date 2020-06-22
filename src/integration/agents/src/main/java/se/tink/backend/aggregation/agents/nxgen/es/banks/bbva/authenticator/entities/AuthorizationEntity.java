@@ -15,7 +15,9 @@ public class AuthorizationEntity {
 
     public AuthorizationEntity(String username, String otpCode, String multistepProcessId) {
         this.userId = LoginParameter.USER_VALUE_PREFIX + username;
-        this.authenticationData = Collections.singletonList(new AuthenticationDataEntity(otpCode));
+        this.authenticationData =
+                Collections.singletonList(
+                        new AuthenticationDataEntity(otpCode, LoginParameter.OTP_DATA_ID));
         this.multistepProcessId = multistepProcessId;
         this.consumerID = LoginParameter.CONSUMER_ID;
         this.authenticationType = LoginParameter.AUTHORIZE_TYPE;
