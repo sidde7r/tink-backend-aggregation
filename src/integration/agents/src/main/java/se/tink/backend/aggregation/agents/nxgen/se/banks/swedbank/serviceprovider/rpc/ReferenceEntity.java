@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 @JsonObject
@@ -28,6 +29,24 @@ public class ReferenceEntity {
             case UNSTRUCTURED:
                 referenceEntity.type = "MESSAGE";
                 return referenceEntity;
+            default:
+                throw new IllegalStateException("Unknown remittance information type");
+        }
+    }
+
+    public RemittanceInformation toRemittanceInformation() {
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue(value);
+        remittanceInformation.setType(getRemittanceInformationType());
+        return remittanceInformation;
+    }
+
+    private RemittanceInformationType getRemittanceInformationType() {
+        switch (this.type) {
+            case "OCR":
+                return RemittanceInformationType.OCR;
+            case "MESSAGE":
+                return RemittanceInformationType.UNSTRUCTURED;
             default:
                 throw new IllegalStateException("Unknown remittance information type");
         }

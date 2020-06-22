@@ -73,6 +73,7 @@ public class EInvoicePaymentEntity {
                         tinkType.get(), this.payee.getAccountNumber(), this.payee.getName()));
         transfer.setDueDate(dueDate);
         transfer.setDestinationMessage(referenceValue.get());
+        transfer.setRemittanceInformation(reference.toRemittanceInformation());
         transfer.setSourceMessage(this.payee.getName());
         transfer.setPayload(
                 ImmutableMap.of(TransferPayloadType.PROVIDER_UNIQUE_ID, providerUniqueId));
