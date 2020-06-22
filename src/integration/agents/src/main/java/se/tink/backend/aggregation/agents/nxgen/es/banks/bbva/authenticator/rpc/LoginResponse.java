@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginResponse {
     private List<String> authenticationData;
     private String authenticationState;
+    private String multistepProcessId;
     private UserEntity user;
 
     public UserEntity getUser() {
@@ -16,5 +17,9 @@ public class LoginResponse {
 
     public String getAuthenticationState() {
         return authenticationState;
+    }
+
+    public String getMultistepProcessId() {
+        return multistepProcessId;
     }
 }
