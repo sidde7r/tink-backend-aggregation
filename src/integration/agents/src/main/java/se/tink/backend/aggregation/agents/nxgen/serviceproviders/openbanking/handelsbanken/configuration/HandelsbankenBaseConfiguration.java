@@ -5,11 +5,12 @@ import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
+import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 
 @JsonObject
 public class HandelsbankenBaseConfiguration implements ClientConfiguration {
 
-    @JsonProperty @SensitiveSecret private String clientId;
+    @JsonProperty @SensitiveSecret @ClientIdConfiguration private String clientId;
     @JsonProperty @AgentConfigParam private String redirectUrl;
 
     public String getClientId() {
