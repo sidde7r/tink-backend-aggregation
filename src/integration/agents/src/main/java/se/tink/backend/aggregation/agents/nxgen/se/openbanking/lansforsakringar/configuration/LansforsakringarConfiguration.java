@@ -9,12 +9,13 @@ import se.tink.backend.aggregation.annotations.SensitiveSecret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfiguration;
+import se.tink.backend.aggregation.configuration.agents.QWACConfiguration;
 
 @JsonObject
 public class LansforsakringarConfiguration implements ClientConfiguration {
     @Secret @ClientIdConfiguration private String clientId;
     @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @Secret private String eidasQwac;
+    @Secret @QWACConfiguration private String eidasQwac;
 
     public String getClientId() {
         Preconditions.checkNotNull(

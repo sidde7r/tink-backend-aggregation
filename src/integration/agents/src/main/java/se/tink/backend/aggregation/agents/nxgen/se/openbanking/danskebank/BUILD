@@ -9,10 +9,12 @@ java_library(
         "//src/integration/enums",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agents",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid/jwt/signer/iface",
         "//third_party:com_google_inject_guice",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
         "@aggregation//:com_google_guava_guava",
+        "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
     ],
 )

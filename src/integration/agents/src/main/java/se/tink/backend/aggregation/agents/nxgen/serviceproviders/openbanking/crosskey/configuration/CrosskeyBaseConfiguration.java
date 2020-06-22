@@ -33,7 +33,14 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     private String baseAuthUrl;
 
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
-    @JsonProperty @Secret private String clientSigningCertificateSerialNumber;
+
+    @JsonProperty(required = true)
+    @Secret
+    @JsonSchemaDescription("The key Id registered on cross key.")
+    @JsonSchemaTitle("Key ID")
+    @JsonSchemaExamples("Key1")
+    private String clientSigningCertificateSerialNumber;
+
     @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
