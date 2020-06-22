@@ -16,6 +16,8 @@ public class AuthenticationEntity {
         this.userID = LoginParameter.USER_VALUE_PREFIX + username;
         this.consumerID = LoginParameter.CONSUMER_ID;
         this.authenticationType = LoginParameter.AUTH_TYPE;
-        this.authenticationData = Collections.singletonList(new AuthenticationDataEntity(password));
+        this.authenticationData =
+                Collections.singletonList(
+                        new AuthenticationDataEntity(password, LoginParameter.AUTH_DATA_ID));
     }
 }

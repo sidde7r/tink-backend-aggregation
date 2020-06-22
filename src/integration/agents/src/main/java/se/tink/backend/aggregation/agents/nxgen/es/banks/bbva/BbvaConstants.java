@@ -135,6 +135,7 @@ public final class BbvaConstants {
     }
 
     public static final class LoginParameter {
+        public static final String OTP_DATA_ID = "otp";
         public static final String AUTH_DATA_ID = "password";
         public static final String AUTH_TYPE = "02";
         public static final String AUTHORIZE_TYPE = "121";
