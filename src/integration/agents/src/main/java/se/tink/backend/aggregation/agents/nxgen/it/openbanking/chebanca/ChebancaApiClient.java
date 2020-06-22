@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.Q
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.detail.TransactionRequestURLBuilder;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConfirmConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.rpc.ConsentRequest;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
@@ -34,26 +35,29 @@ public class ChebancaApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final StrongAuthenticationState strongAuthenticationState;
-    private ChebancaConfiguration chebancaConfig;
-    private AgentsServiceConfiguration config;
+    private final ChebancaConfiguration chebancaConfig;
+    private final String redirectUrl;
+    private final AgentsServiceConfiguration config;
     private ChebancaRequestBuilder chebancaRequestBuilder;
 
     public ChebancaApiClient(
             TinkHttpClient client,
             PersistentStorage persistentStorage,
             StrongAuthenticationState strongAuthenticationState,
-            ChebancaConfiguration chebancaConfig,
+            AgentConfiguration<ChebancaConfiguration> chebancaConfig,
             final AgentsServiceConfiguration configuration,
             EidasIdentity eidasIdentity) {
 
         this.client = requireNonNull(client);
         this.persistentStorage = requireNonNull(persistentStorage);
         this.strongAuthenticationState = requireNonNull(strongAuthenticationState);
-        this.chebancaConfig = requireProperConfig(chebancaConfig);
+        requireNonNull(chebancaConfig);
+        this.chebancaConfig = requireProperConfig(chebancaConfig.getClientConfiguration());
+        this.redirectUrl = requireNonNull(chebancaConfig.getRedirectUrl());
         this.config = requireNonNull(configuration);
         requireNonNull(eidasIdentity);
         this.chebancaRequestBuilder =
-                createChebancaRequestBuilder(client, chebancaConfig, eidasIdentity);
+                createChebancaRequestBuilder(client, this.chebancaConfig, eidasIdentity);
     }
 
     public HttpResponse getLoginUrl(URL authorizationUrl) { // performs URL redirection
@@ -113,7 +117,7 @@ public class ChebancaApiClient {
                         HeaderKeys.GET_METHOD)
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(chebancaConfig.getRedirectUrl())
+                        new URL(redirectUrl)
                                 .queryParam(QueryKeys.STATE, strongAuthenticationState.getState())
                                 .get())
                 .get(HttpResponse.class);
@@ -157,7 +161,6 @@ public class ChebancaApiClient {
         requireNonNull(config);
         requireNonNull(Strings.emptyToNull(config.getClientId()));
         requireNonNull(Strings.emptyToNull(config.getClientSecret()));
-        requireNonNull(Strings.emptyToNull(config.getRedirectUrl()));
         requireNonNull(Strings.emptyToNull(config.getCertificateId()));
         requireNonNull(Strings.emptyToNull(config.getApplicationId()));
         return config;

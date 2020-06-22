@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.ChebancaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration.ChebancaConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 
@@ -22,12 +23,15 @@ public class AuthenticatorTestBase {
 
     void setUpAuthenticatorToCreateToken(HttpResponse response) {
         ChebancaApiClient apiClient = mock(ChebancaApiClient.class);
+        AgentConfiguration<ChebancaConfiguration> agentConfiguration =
+                mock(AgentConfiguration.class);
         when(apiClient.createToken(any())).thenReturn(response);
         ChebancaConfiguration config =
-                new ChebancaConfiguration(
-                        CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, CERTIFICATE_ID, APP_ID);
+                new ChebancaConfiguration(CLIENT_ID, CLIENT_SECRET, CERTIFICATE_ID, APP_ID);
+        when(agentConfiguration.getClientConfiguration()).thenReturn(config);
+        when(agentConfiguration.getRedirectUrl()).thenReturn(REDIRECT_URL);
         StrongAuthenticationState state = new StrongAuthenticationState(CLIENT_STATE);
-        authenticator = new ChebancaAuthenticator(apiClient, config, state);
+        authenticator = new ChebancaAuthenticator(apiClient, agentConfiguration, state);
     }
 
     HttpResponse getMockedSuccessfulResponse(TokenResponse tokenResponse) {

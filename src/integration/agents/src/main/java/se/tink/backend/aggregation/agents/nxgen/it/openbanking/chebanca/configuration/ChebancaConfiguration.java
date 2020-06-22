@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -16,8 +15,6 @@ public class ChebancaConfiguration implements ClientConfiguration {
 
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
 
-    @JsonProperty @AgentConfigParam private String redirectUrl;
-
     @JsonProperty @Secret private String certificateId;
 
     @JsonProperty @Secret private String applicationId;
@@ -25,14 +22,9 @@ public class ChebancaConfiguration implements ClientConfiguration {
     public ChebancaConfiguration() {}
 
     public ChebancaConfiguration(
-            String clientId,
-            String clientSecret,
-            String redirectUrl,
-            String certificateId,
-            String applicationId) {
+            String clientId, String clientSecret, String certificateId, String applicationId) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.redirectUrl = redirectUrl;
         this.certificateId = certificateId;
         this.applicationId = applicationId;
     }
@@ -51,9 +43,5 @@ public class ChebancaConfiguration implements ClientConfiguration {
 
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    public String getRedirectUrl() {
-        return redirectUrl;
     }
 }

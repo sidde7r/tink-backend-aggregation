@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.FinecoBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.authenticator.entities.AccountConsent;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 @RunWith(JUnitParamsRunner.class)
@@ -117,6 +118,7 @@ public class FinecoBankApiClientTest {
                         ArgumentMatchers.<TypeReference<List<AccountConsent>>>any()))
                 .thenReturn(Optional.of(balancesItems));
 
-        return new FinecoBankApiClient(null, persistentStorage, null);
+        return new FinecoBankApiClient(
+                null, persistentStorage, new AgentConfiguration.Builder().build());
     }
 }

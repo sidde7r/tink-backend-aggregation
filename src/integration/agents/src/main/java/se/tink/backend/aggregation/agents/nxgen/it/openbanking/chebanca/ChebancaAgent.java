@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.configur
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaConsentManualApproveController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.chebanca.fetcher.transactionalaccount.ChebancaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -43,7 +44,7 @@ public final class ChebancaAgent extends NextGenerationAgent
                         client,
                         persistentStorage,
                         strongAuthenticationState,
-                        getClientConfiguration(),
+                        getAgentConfiguration(),
                         agentsServiceConfiguration,
                         this.getEidasIdentity());
 
@@ -53,8 +54,9 @@ public final class ChebancaAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    protected ChebancaConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(ChebancaConfiguration.class);
+    protected AgentConfiguration<ChebancaConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(ChebancaConfiguration.class);
     }
 
     @Override
@@ -64,7 +66,7 @@ public final class ChebancaAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new ChebancaAuthenticator(
-                                apiClient, getClientConfiguration(), strongAuthenticationState),
+                                apiClient, getAgentConfiguration(), strongAuthenticationState),
                         credentials,
                         strongAuthenticationState);
 

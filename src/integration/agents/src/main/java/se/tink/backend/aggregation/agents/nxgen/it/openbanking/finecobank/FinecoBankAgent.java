@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetche
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.fetcher.transactionalaccount.FinecoBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.FinecoBankPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.it.openbanking.finecobank.payment.executor.FinecoBankPaymentExecutor;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -34,7 +35,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
                 RefreshCreditCardAccountsExecutor {
 
     private final FinecoBankApiClient apiClient;
-    private final FinecoBankConfiguration finecoBankConfiguration;
+    private final AgentConfiguration<FinecoBankConfiguration> agentConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final CreditCardRefreshController creditCardRefreshController;
     private AutoAuthenticationController authenticationController;
@@ -44,13 +45,14 @@ public final class FinecoBankAgent extends NextGenerationAgent
             AgentContext context,
             AgentsServiceConfiguration agentsServiceConfiguration) {
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
-        this.finecoBankConfiguration =
+
+        this.agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(FinecoBankConfiguration.class);
+                        .getAgentCommonConfiguration(FinecoBankConfiguration.class);
 
         super.setConfiguration(agentsServiceConfiguration);
         this.apiClient =
-                new FinecoBankApiClient(client, persistentStorage, this.finecoBankConfiguration);
+                new FinecoBankApiClient(client, persistentStorage, this.agentConfiguration);
 
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
