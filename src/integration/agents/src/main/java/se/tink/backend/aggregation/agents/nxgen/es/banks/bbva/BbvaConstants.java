@@ -142,6 +142,7 @@ public final class BbvaConstants {
 
     public static final class AuthenticationStates {
         public static final String OK = "OK";
+        public static final String GO_ON = "GO_ON";
     }
 
     public static final class ErrorMessages {
