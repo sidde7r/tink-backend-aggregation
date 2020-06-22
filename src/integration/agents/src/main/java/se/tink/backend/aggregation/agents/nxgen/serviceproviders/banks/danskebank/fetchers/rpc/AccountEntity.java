@@ -186,7 +186,7 @@ public class AccountEntity {
                 .build();
     }
 
-    public TransactionalAccount toSavingsAccount(DanskeBankConfiguration configuration) {
+    TransactionalAccount toSavingsAccount(DanskeBankConfiguration configuration) {
         return SavingsAccount.builder(
                         AccountTypes.SAVINGS,
                         accountNoInt,

@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.FutureTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.FutureTransactionsResponse;
@@ -29,14 +27,10 @@ import se.tink.libraries.date.DateUtils;
 public class DanskeBankMultiTransactionsFetcher<A extends Account>
         implements TransactionDatePaginator<A>, UpcomingTransactionFetcher<A> {
 
-    private static final Logger log =
-            LoggerFactory.getLogger(DanskeBankMultiTransactionsFetcher.class);
-
     private static final ZoneId TIMEZONE = TimeZone.getTimeZone("Europe/Stockholm").toZoneId();
 
     private final DanskeBankApiClient apiClient;
     private final String languageCode;
-    private boolean hasSuccessfullyFetched;
 
     public DanskeBankMultiTransactionsFetcher(DanskeBankApiClient apiClient, String languageCode) {
         this.apiClient = apiClient;
@@ -92,32 +86,12 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account>
                             .collect(Collectors.toList()));
         }
 
-        logTransactions(account, transactions);
-
         // TODO: Removing `toDate.after(DateUtils.addYears(new Date(), -2))` will cause paginator to
         // sometimes get
         // TODO: stuck looping the last transactions forever. -2 is based on transaction range in
         // app. Find better fix.
         return PaginatorResponseImpl.create(
                 transactions, toDate.after(DateUtils.addYears(new Date(), -2)));
-    }
-
-    private void logTransactions(A account, List<Transaction> transactions) {
-        String transactionsDescriptionsWithAmount =
-                transactions.stream()
-                        .map(
-                                transaction ->
-                                        "Description: "
-                                                + transaction.getDescription()
-                                                + " amount: "
-                                                + transaction.getExactAmount())
-                        .collect(Collectors.joining("\n"));
-
-        log.info(
-                "Account details: apiIdentifier = {}, accountNumber = {}, transactions:\n{}",
-                account.getApiIdentifier(),
-                account.getAccountNumber(),
-                transactionsDescriptionsWithAmount);
     }
 
     @Override
