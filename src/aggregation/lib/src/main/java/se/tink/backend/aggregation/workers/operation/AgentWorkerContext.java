@@ -485,11 +485,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return null;
         }
         accountHolder.setAccountId(tinkId);
-        accountHolder.setUserId(request.getCredentials().getUserId());
-        UpdateAccountHolderRequest request = new UpdateAccountHolderRequest();
-        request.setAccountHolder(accountHolder);
+        UpdateAccountHolderRequest updateAccountHolderRequest = new UpdateAccountHolderRequest();
+        updateAccountHolderRequest.setAccountHolder(accountHolder);
+        updateAccountHolderRequest.setAppId(this.getAppId());
+        updateAccountHolderRequest.setUserId(request.getCredentials().getUserId());
         try {
-            return controllerWrapper.updateAccountHolder(request);
+            return controllerWrapper.updateAccountHolder(updateAccountHolderRequest);
         } catch (UniformInterfaceException e) {
             log.error(
                     "Account holder update request failed, response: "

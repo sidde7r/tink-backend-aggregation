@@ -181,12 +181,13 @@ public final class AggregationControllerAggregationClientTest {
         UpdateAccountHolderRequest request = new UpdateAccountHolderRequest();
         AccountHolder holder = new AccountHolder();
         holder.setAccountId(id);
-        holder.setUserId(id);
         holder.setType(AccountHolderType.BUSINESS);
         HolderIdentity identity = new HolderIdentity();
         identity.setName("Dummy Name");
         holder.setIdentities(ImmutableList.of(identity));
         request.setAccountHolder(holder);
+        request.setAppId(id);
+        request.setUserId(id);
         return request;
     }
 }

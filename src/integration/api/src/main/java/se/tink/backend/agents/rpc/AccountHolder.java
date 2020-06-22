@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class AccountHolder {
     private String accountId;
-    private String userId;
     private AccountHolderType type;
     private List<HolderIdentity> identities;
 
@@ -25,14 +24,6 @@ public class AccountHolder {
         this.accountId = accountId;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public List<HolderIdentity> getIdentities() {
         return identities;
     }
@@ -47,13 +38,12 @@ public class AccountHolder {
         if (o == null || getClass() != o.getClass()) return false;
         AccountHolder that = (AccountHolder) o;
         return Objects.equals(accountId, that.accountId)
-                && Objects.equals(userId, that.userId)
                 && type == that.type
                 && Objects.equals(identities, that.identities);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountId, userId, type, identities);
+        return Objects.hash(accountId, type, identities);
     }
 }

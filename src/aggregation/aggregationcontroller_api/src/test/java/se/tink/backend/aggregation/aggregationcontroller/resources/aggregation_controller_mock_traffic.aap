@@ -81,10 +81,10 @@ POST https://aggregation.com/aggregation/controller/v1/account-holder/update
 Accept: application/json
 Content-Type: application/json
 
-{"accountHolder": {"accountId": "dummy_id", "userId": "dummy_id", "type":"BUSINESS", "identities": [{"name": "Dummy Name"}]}}
+{"appId": "dummy_id", "userId": "dummy_id", "accountHolder": {"accountId": "dummy_id", "type":"BUSINESS", "identities": [{"name": "Dummy Name"}]}}
 
 RESPONSE 7
 200
 Content-Type: application/json;charset=utf-8
 
-{"accountId": "dummy_id", "userId": "dummy_id", "type":"BUSINESS", "identities": [{"name": "Dummy Name"}]}
+{"accountId": "dummy_id", "type":"BUSINESS", "identities": [{"name": "Dummy Name"}]}
