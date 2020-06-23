@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -31,6 +32,15 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
     public HandelsbankenBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        client.addFilter(new TimeoutFilter());
+        client.addFilter(new HandelsbankenRejectedFilter());
+        apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
+
+        setMaxPeriodTransactions();
+    }
+
+    public HandelsbankenBaseAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         client.addFilter(new TimeoutFilter());
         client.addFilter(new HandelsbankenRejectedFilter());
         apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, getMarket());
