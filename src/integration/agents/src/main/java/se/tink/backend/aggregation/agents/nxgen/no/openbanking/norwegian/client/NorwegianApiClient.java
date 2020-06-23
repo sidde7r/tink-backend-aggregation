@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.authent
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -44,6 +45,7 @@ public class NorwegianApiClient {
 
     private final TinkHttpClient client;
     private final NorwegianConfiguration norwegianConfiguration;
+    private final String redirectUrl;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
 
@@ -51,11 +53,14 @@ public class NorwegianApiClient {
             final TinkHttpClient client,
             final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
-            final NorwegianConfiguration norwegianConfiguration) {
+            final AgentConfiguration<NorwegianConfiguration> agentConfiguration) {
         this.client = Objects.requireNonNull(client);
         this.sessionStorage = Objects.requireNonNull(sessionStorage);
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
-        this.norwegianConfiguration = Objects.requireNonNull(norwegianConfiguration);
+        Objects.requireNonNull(agentConfiguration);
+        this.norwegianConfiguration =
+                Objects.requireNonNull(agentConfiguration.getClientConfiguration());
+        this.redirectUrl = Objects.requireNonNull(agentConfiguration.getRedirectUrl());
     }
 
     private String getAuthorizationString() {
@@ -72,7 +77,7 @@ public class NorwegianApiClient {
                         .setClientSecret(norwegianConfiguration.getClientSecret())
                         .setCode(code)
                         .setGrantType(QueryValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(norwegianConfiguration.getRedirectUrl())
+                        .setRedirectUri(redirectUrl)
                         .setCodeVerifier(codeVerifier)
                         .build();
 
@@ -158,9 +163,7 @@ public class NorwegianApiClient {
                                         + NorwegianConstants.URLs.CONSENT_PATH)
                         .type(MediaType.APPLICATION_JSON)
                         .header(HeaderKeys.TPP_CLIENT_ID, norwegianConfiguration.getClientId())
-                        .header(
-                                HeaderKeys.TPP_REDIRECT_URI,
-                                norwegianConfiguration.getRedirectUrl());
+                        .header(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
         request = addMandatoryHeaders(request);
         ConsentResponse response = request.post(ConsentResponse.class, consentRequest);
 

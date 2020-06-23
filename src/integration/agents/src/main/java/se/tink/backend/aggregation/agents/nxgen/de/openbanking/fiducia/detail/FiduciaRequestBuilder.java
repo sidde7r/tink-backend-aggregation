@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
@@ -23,16 +24,18 @@ public class FiduciaRequestBuilder {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final FiduciaConfiguration fiduciaConfiguration;
+    private final String redirectUrl;
     private final SignatureHeaderGenerator signatureHeaderGenerator;
 
     public FiduciaRequestBuilder(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            FiduciaConfiguration fiduciaConfiguration,
+            AgentConfiguration<FiduciaConfiguration> agentConfiguration,
             SignatureHeaderGenerator signatureHeaderGenerator) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.fiduciaConfiguration = fiduciaConfiguration;
+        this.fiduciaConfiguration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.signatureHeaderGenerator = signatureHeaderGenerator;
     }
 
@@ -70,8 +73,8 @@ public class FiduciaRequestBuilder {
     private Map<String, Object> getHeaders(String body) {
         String digest = SignatureUtils.createDigest(body);
 
-        String redirectUrl =
-                new URL(fiduciaConfiguration.getRedirectUrl())
+        String tppRedirectUrl =
+                new URL(redirectUrl)
                         .queryParam("state", sessionStorage.get(StorageKeys.STATE))
                         .toString();
 
@@ -84,7 +87,7 @@ public class FiduciaRequestBuilder {
         headers.put(
                 HeaderKeys.DATE, ZonedDateTime.now().format(DateTimeFormatter.RFC_1123_DATE_TIME));
         headers.put(HeaderKeys.X_REQUEST_ID, requestId);
-        headers.put(HeaderKeys.TPP_REDIRECT_URI, redirectUrl);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, tppRedirectUrl);
         headers.put(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, fiduciaConfiguration.getCertificate());
         headers.put(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS);
         headers.put(HeaderKeys.DIGEST, digest);

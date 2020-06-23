@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -13,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configura
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -42,7 +45,7 @@ public final class FiduciaAgent extends NextGenerationAgent
                 new FiduciaRequestBuilder(
                         client,
                         sessionStorage,
-                        getClientConfiguration(),
+                        getAgentConfiguration(),
                         createSignatureHeaderGenerator(qsealcSigner));
 
         this.apiClient = new FiduciaApiClient(persistentStorage, serverUrl, fiduciaRequestBuilder);
@@ -54,14 +57,17 @@ public final class FiduciaAgent extends NextGenerationAgent
         return new SignatureHeaderGenerator(
                 FiduciaConstants.SIGNATURE_HEADER,
                 FiduciaConstants.HEADERS_TO_SIGN,
-                getClientConfiguration().getKeyId(),
+                getAgentConfiguration().getClientConfiguration().getKeyId(),
                 qsealcSigner);
     }
 
-    protected FiduciaConfiguration getClientConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentConfiguration(FiduciaConfiguration.class)
-                .validateConfig();
+    protected AgentConfiguration<FiduciaConfiguration> getAgentConfiguration() {
+        final AgentConfiguration<FiduciaConfiguration> agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(FiduciaConfiguration.class);
+        agentConfiguration.getClientConfiguration().validateConfig();
+        Objects.requireNonNull(Strings.emptyToNull(agentConfiguration.getRedirectUrl()));
+        return agentConfiguration;
     }
 
     @Override
@@ -115,7 +121,7 @@ public final class FiduciaAgent extends NextGenerationAgent
         final FiduciaPaymentExecutor fiduciaPaymentExecutor =
                 new FiduciaPaymentExecutor(
                         apiClient,
-                        getClientConfiguration(),
+                        getAgentConfiguration().getClientConfiguration(),
                         credentials.getField(CredentialKeys.PSU_ID),
                         credentials.getField(CredentialKeys.PASSWORD));
 

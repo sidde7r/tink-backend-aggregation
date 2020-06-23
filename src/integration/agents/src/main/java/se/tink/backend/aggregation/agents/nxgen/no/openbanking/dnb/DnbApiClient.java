@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -28,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.paym
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.CreditCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.TransactionResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
@@ -45,7 +47,7 @@ public class DnbApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
-    private DnbConfiguration configuration;
+    private String redirectUrl;
 
     public DnbApiClient(
             final TinkHttpClient client,
@@ -56,15 +58,22 @@ public class DnbApiClient {
         this.credentials = credentials;
     }
 
-    private DnbConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    public void setConfiguration(
+            AgentConfiguration<DnbConfiguration> agentConfiguration,
+            EidasProxyConfiguration eidasProxyConfiguration) {
+        Objects.requireNonNull(agentConfiguration);
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
+        this.client.setEidasProxy(eidasProxyConfiguration);
     }
 
-    public void setConfiguration(
-            DnbConfiguration configuration, EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = configuration;
-        this.client.setEidasProxy(eidasProxyConfiguration);
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        String.format(
+                                                ErrorMessages.INVALID_CONFIGURATION,
+                                                "Redirect URL")));
     }
 
     public URL getAuthorizeUrl(final String state) {
@@ -167,16 +176,16 @@ public class DnbApiClient {
 
     private RequestBuilder createRequest(final URL url) {
         return createRequestWithoutRedirectHeader(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl());
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl());
     }
 
     private RequestBuilder createRequestWithRedirectStateAndCode(final URL url) {
-        final URL redirectUrl =
-                new URL(getConfiguration().getRedirectUrl())
+        final URL tppRedirectUrl =
+                new URL(getRedirectUrl())
                         .queryParam(QueryKeys.STATE, sessionStorage.get(StorageKeys.STATE));
 
         return createRequestWithoutRedirectHeader(url)
-                .header(HeaderKeys.TPP_REDIRECT_URI, decodeUrl(redirectUrl));
+                .header(HeaderKeys.TPP_REDIRECT_URI, decodeUrl(tppRedirectUrl));
     }
 
     private String decodeUrl(final URL url) {

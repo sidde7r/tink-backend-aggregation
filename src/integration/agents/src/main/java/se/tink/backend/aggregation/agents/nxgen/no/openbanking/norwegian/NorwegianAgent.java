@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.client.NorwegianSigningFilter;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.NorwegianTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.norwegian.fetcher.transactionalaccount.NorwegianTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcAlg;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -28,6 +29,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NorwegianAgent extends NextGenerationAgent implements RefreshCheckingAccountsExecutor {
 
     private final NorwegianApiClient apiClient;
+    private AgentConfiguration<NorwegianConfiguration> agentConfiguration;
     private NorwegianConfiguration norwegianConfiguration;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -39,12 +41,13 @@ public class NorwegianAgent extends NextGenerationAgent implements RefreshChecki
         Objects.requireNonNull(request);
         Objects.requireNonNull(context);
         Objects.requireNonNull(agentsServiceConfiguration);
-        this.norwegianConfiguration =
+        this.agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(NorwegianConfiguration.class);
+                        .getAgentCommonConfiguration(NorwegianConfiguration.class);
+        this.norwegianConfiguration = agentConfiguration.getClientConfiguration();
         this.apiClient =
                 new NorwegianApiClient(
-                        client, sessionStorage, persistentStorage, norwegianConfiguration);
+                        client, sessionStorage, persistentStorage, agentConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
         client.addFilter(
