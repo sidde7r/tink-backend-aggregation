@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 public final class SibsConstants {
 
+    private static final String API_VERSION = "v1-0-2";
+    private static final String ASPSP_CODE_WITH_VERSION = "/{aspsp-cde}/" + API_VERSION;
+
     private SibsConstants() {}
 
     public static class ErrorMessages {
@@ -12,24 +15,24 @@ public final class SibsConstants {
     }
 
     public static class Urls {
-        public static final String ACCOUNTS = "/{aspsp-cde}/v1-0-2/accounts";
-        public static final String CREATE_CONSENT = "/{aspsp-cde}/v1-0-2/consents";
+        public static final String ACCOUNTS = ASPSP_CODE_WITH_VERSION + "/accounts";
+        public static final String CREATE_CONSENT = ASPSP_CODE_WITH_VERSION + "/consents";
         public static final String CONSENT_STATUS =
-                "/{aspsp-cde}/v1-0-2/consents/{consent-id}/status";
+                ASPSP_CODE_WITH_VERSION + "/consents/{consent-id}/status";
         public static final String ACCOUNT_BALANCES =
-                "/{aspsp-cde}/v1-0-2/accounts/{account-id}/balances";
+                ASPSP_CODE_WITH_VERSION + "/accounts/{account-id}/balances";
         public static final String ACCOUNT_TRANSACTIONS =
-                "/{aspsp-cde}/v1-0-2/accounts/{account-id}/transactions";
+                ASPSP_CODE_WITH_VERSION + "/accounts/{account-id}/transactions";
         public static final String PAYMENT_INITIATION =
-                "/{aspsp-cde}/v1-0-2/payments/{payment-product}";
+                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}";
         public static final String GET_PAYMENT_REQUEST =
-                "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}";
+                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}/{payment-id}";
         public static final String UPDATE_PAYMENT_REQUEST =
-                "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}";
+                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}/{payment-id}";
         public static final String DELETE_PAYMENT_REQUEST =
-                "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}";
+                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}/{payment-id}";
         public static final String GET_PAYMENT_STATUS_REQUEST =
-                "/{aspsp-cde}/v1-0-2/payments/{payment-product}/{payment-id}/status";
+                ASPSP_CODE_WITH_VERSION + "/payments/{payment-product}/{payment-id}/status";
     }
 
     public static class QueryKeys {
