@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.instrument.InstrumentModule;
@@ -123,4 +125,7 @@ public class RevolutConstants {
         public static final int NUM_TIMEOUT_RETRIES = 3;
         public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 1000;
     }
+
+    public static final List<String> REVOLUT_SUPPORTED_CRYPTO_CURRENCIES =
+            ImmutableList.of("BTC", "LTC", "ETH", "BCH", "XRP");
 }
