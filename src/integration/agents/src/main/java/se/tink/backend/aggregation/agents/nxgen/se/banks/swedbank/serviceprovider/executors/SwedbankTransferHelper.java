@@ -32,6 +32,8 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SwedbankTransferHelper {
@@ -143,15 +145,18 @@ public class SwedbankTransferHelper {
                 .build();
     }
 
-    public static SwedbankBaseConstants.ReferenceType getReferenceTypeFor(Transfer transfer) {
+    public static void validateAndSetRemittanceInformationTypeFor(Transfer transfer) {
+        RemittanceInformation remittanceInformation = transfer.getRemittanceInformation();
         GiroMessageValidator giroValidator =
                 GiroMessageValidator.create(OcrValidationConfiguration.softOcr());
         Optional<String> validOcr =
-                giroValidator.validate(transfer.getDestinationMessage()).getValidOcr();
+                giroValidator.validate(remittanceInformation.getValue()).getValidOcr();
 
-        return validOcr.isPresent()
-                ? SwedbankBaseConstants.ReferenceType.OCR
-                : SwedbankBaseConstants.ReferenceType.MESSAGE;
+        if (validOcr.isPresent()) {
+            remittanceInformation.setType(RemittanceInformationType.OCR);
+        } else {
+            remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        }
     }
 
     public void confirmSuccessfulTransferOrThrow(
