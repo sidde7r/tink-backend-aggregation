@@ -42,6 +42,7 @@ public abstract class UkOpenBankingConstants {
         public static final String ACCOUNT_TRANSACTIONS_REQUEST = "/accounts/%s/transactions";
         public static final String ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST =
                 "/accounts/%s/scheduled-payments";
+        public static final String ACCOUNT_BENEFICIARIES_REQUEST = "/accounts/%s/beneficiaries";
         public static final String PAYMENTS = "/payments";
         public static final String PAYMENT_SUBMISSIONS = "/payment-submissions";
 
