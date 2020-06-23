@@ -148,6 +148,7 @@ public class BpceGroupApiClient {
 
         return requestBuilder
                 .addBearerToken(token)
+                .header(Psd2Headers.Keys.PSU_IP_ADDRESS, "127.0.0.1")
                 .header(Psd2Headers.Keys.SIGNATURE, signature)
                 .header(Psd2Headers.Keys.X_REQUEST_ID, requestId);
     }
