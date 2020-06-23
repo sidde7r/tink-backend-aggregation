@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -18,8 +18,9 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.RefreshTokenTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -55,9 +56,10 @@ public class CmcicApiClientTest {
         when(cmcicConfigurationMock.getBasePath()).thenReturn(BASE_PATH);
         when(cmcicConfigurationMock.getClientId()).thenReturn(CLIENT_ID);
 
-        final EidasProxyConfiguration eidasProxyConfigurationMock =
-                mock(EidasProxyConfiguration.class);
-        final EidasIdentity eidasIdentityMock = mock(EidasIdentity.class);
+        final CmcicDigestProvider digestProviderMock = mock(CmcicDigestProvider.class);
+        final CmcicSignatureProvider signatureProviderMock = mock(CmcicSignatureProvider.class);
+        final CmcicCodeChallengeProvider codeChallengeProviderMock =
+                mock(CmcicCodeChallengeProvider.class);
 
         cmcicApiClient =
                 new CmcicApiClient(
@@ -65,8 +67,9 @@ public class CmcicApiClientTest {
                         persistentStorageMock,
                         sessionStorageMock,
                         cmcicConfigurationMock,
-                        eidasProxyConfigurationMock,
-                        eidasIdentityMock);
+                        digestProviderMock,
+                        signatureProviderMock,
+                        codeChallengeProviderMock);
     }
 
     @Test

@@ -6,14 +6,16 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import com.google.common.collect.ImmutableList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.AccountResourceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicTransactionalAccountConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
@@ -22,32 +24,34 @@ public class CmcicTransactionalAccountFetcherTest {
     private CmcicApiClient apiClient;
     private CmcicTransactionalAccountFetcher cmcicTransactionalAccountFetcher;
     private FetchAccountsResponse fetchAccountsResponse;
-    private AccountResourceEntity accountResourceEntity;
+    private AccountResourceDto accountResourceDto;
     private TransactionalAccount transactionalAccount;
 
     @Before
     public void init() {
         apiClient = mock(CmcicApiClient.class);
         fetchAccountsResponse = mock(FetchAccountsResponse.class);
-        accountResourceEntity = mock(AccountResourceEntity.class);
+        accountResourceDto = mock(AccountResourceDto.class);
         transactionalAccount = mock(TransactionalAccount.class);
 
-        cmcicTransactionalAccountFetcher = new CmcicTransactionalAccountFetcher(apiClient);
+        final CmcicTransactionalAccountConverter transactionalAccountConverterMock =
+                mock(CmcicTransactionalAccountConverter.class);
+
+        cmcicTransactionalAccountFetcher =
+                new CmcicTransactionalAccountFetcher(apiClient, transactionalAccountConverterMock);
+
+        when(transactionalAccountConverterMock.convertAccountResourceToTinkAccount(
+                        accountResourceDto))
+                .thenReturn(Optional.of(transactionalAccount));
     }
 
     @Test
     public void shouldFetchAccounts() {
         // given
-        fetchAccountsResponse = mock(FetchAccountsResponse.class);
-        accountResourceEntity = mock(AccountResourceEntity.class);
-        transactionalAccount = mock(TransactionalAccount.class);
-
-        List<AccountResourceEntity> accountsList = new ArrayList<>();
-        accountsList.add(accountResourceEntity);
+        List<AccountResourceDto> accountsList = ImmutableList.of(accountResourceDto);
 
         when(apiClient.fetchAccounts()).thenReturn(fetchAccountsResponse);
         when(fetchAccountsResponse.getAccounts()).thenReturn(accountsList);
-        when(accountResourceEntity.toTinkAccount()).thenReturn(Optional.of(transactionalAccount));
 
         // when
         Collection<TransactionalAccount> response =
@@ -62,11 +66,8 @@ public class CmcicTransactionalAccountFetcherTest {
     @Test
     public void shouldReturnEmptyCollectionOnFetchAccounts() {
         // given
-        List<AccountResourceEntity> accountsList = new ArrayList<>();
-
         when(apiClient.fetchAccounts()).thenReturn(fetchAccountsResponse);
-        when(fetchAccountsResponse.getAccounts()).thenReturn(accountsList);
-        when(accountResourceEntity.toTinkAccount()).thenReturn(Optional.of(transactionalAccount));
+        when(fetchAccountsResponse.getAccounts()).thenReturn(Collections.emptyList());
 
         // when
         Collection<TransactionalAccount> response =

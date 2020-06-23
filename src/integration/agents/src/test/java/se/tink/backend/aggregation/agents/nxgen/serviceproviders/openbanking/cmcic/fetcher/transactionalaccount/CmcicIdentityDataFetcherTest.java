@@ -9,20 +9,19 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.libraries.identitydata.IdentityData;
 
 public class CmcicIdentityDataFetcherTest {
 
-    private CmcicApiClient apiClient;
     private EndUserIdentityResponse endUserIdentityResponse;
     private CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
 
     @Before
     public void init() {
         String connectedPsu = "connectedPsu";
-        apiClient = mock(CmcicApiClient.class);
+        CmcicApiClient apiClient = mock(CmcicApiClient.class);
         endUserIdentityResponse = mock(EndUserIdentityResponse.class);
 
         when(apiClient.getEndUserIdentity()).thenReturn(endUserIdentityResponse);

@@ -1,22 +1,20 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public class CodeChallengeUtil {
+public class CmcicCodeChallengeProvider {
 
-    private CodeChallengeUtil() {}
-
-    public static String generateCodeVerifier() {
+    public String generateCodeVerifier() {
         SecureRandom sr = new SecureRandom();
         byte[] code = new byte[32];
         sr.nextBytes(code);
         return Base64.getUrlEncoder().encodeToString(code);
     }
 
-    public static String generateCodeChallengeForCodeVerifier(String verifier) {
+    public String generateCodeChallengeForCodeVerifier(String verifier) {
         try {
             byte[] bytes;
             bytes = verifier.getBytes(StandardCharsets.US_ASCII);

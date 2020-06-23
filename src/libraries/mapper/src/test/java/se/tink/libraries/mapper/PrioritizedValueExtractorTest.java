@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper;
+package se.tink.libraries.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,6 +36,7 @@ public class PrioritizedValueExtractorTest {
                         Function.identity(),
                         ImmutableList.of(4, 2, 1, 3));
 
+        assertThat(result.isPresent()).isTrue();
         assertThat(result.get()).isEqualTo(2);
     }
 
@@ -47,6 +48,7 @@ public class PrioritizedValueExtractorTest {
                         String::length,
                         ImmutableList.of(2, 1, 5));
 
+        assertThat(pickedString.isPresent()).isTrue();
         assertThat(pickedString.get()).isEqualTo("aa");
     }
 }

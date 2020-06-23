@@ -24,8 +24,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.PrioritizedValueExtractor;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public class SantanderCreditCardBalanceMapperTest {
 

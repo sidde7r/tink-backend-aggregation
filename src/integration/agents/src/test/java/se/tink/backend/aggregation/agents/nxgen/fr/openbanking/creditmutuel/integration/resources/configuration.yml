@@ -1,0 +1,14 @@
+agentsServiceConfiguration:
+  integrations:
+    fec1e328ed81443b8a943856a693cba4:
+      tink:
+        authBaseUrl: https://www.creditmutuel.fr/oauth2/en/banque/oauth2_authorization.aspx
+        basePath: /cm/
+        baseUrl: https://oauth2-apisi.e-i.com
+        certificateId: Tink
+        clientId: DUMMY_CLIENT_ID
+        keyId: DUMMY_KEY_ID
+        redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true

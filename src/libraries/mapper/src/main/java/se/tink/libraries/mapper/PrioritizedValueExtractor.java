@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper;
+package se.tink.libraries.mapper;
 
 import com.google.common.collect.Ordering;
 import java.util.Collection;

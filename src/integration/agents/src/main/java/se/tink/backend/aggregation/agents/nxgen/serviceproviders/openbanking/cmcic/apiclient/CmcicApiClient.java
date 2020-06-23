@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,16 +27,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util.CodeChallengeUtil;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.util.SignatureUtil;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.form.AbstractForm;
-import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -50,8 +48,9 @@ public class CmcicApiClient {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
     private final CmcicConfiguration configuration;
-    private final EidasProxyConfiguration eidasProxyConfiguration;
-    private final EidasIdentity eidasIdentity;
+    private final CmcicDigestProvider digestProvider;
+    private final CmcicSignatureProvider signatureProvider;
+    private final CmcicCodeChallengeProvider codeChallengeProvider;
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
@@ -59,40 +58,29 @@ public class CmcicApiClient {
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createPispRequestInSession(
-            URL baseUrl, String path, HttpMethod httpMethod) {
-        return createRequestInSession(baseUrl, path, httpMethod, getPispTokenFromStorage());
+    private RequestBuilder createPispRequestInSession(URL baseUrl, String path) {
+        return createRequestInSession(baseUrl, path, getPispTokenFromStorage());
     }
 
-    private RequestBuilder createPispRequestInSession(
-            URL baseUrl, String path, String body, HttpMethod httpMethod) {
-        return createRequestInSession(baseUrl, path, body, httpMethod, getPispTokenFromStorage());
+    private RequestBuilder createPispRequestInSession(URL baseUrl, String path, String body) {
+        return createRequestInSession(baseUrl, path, body, getPispTokenFromStorage());
     }
 
-    private RequestBuilder createAispRequestInSession(
-            URL baseUrl, String path, HttpMethod httpMethod) {
-        return createRequestInSession(baseUrl, path, httpMethod, getAispTokenFromStorage());
+    private RequestBuilder createAispRequestInSession(URL baseUrl, String path) {
+        return createRequestInSession(baseUrl, path, getAispTokenFromStorage());
     }
 
     private RequestBuilder createRequestInSession(
-            URL baseUrl, String path, String body, HttpMethod httpMethod, OAuth2Token authToken) {
+            URL baseUrl, String path, String body, OAuth2Token authToken) {
 
         final String date = getServerTime();
-        final String digest = SignatureUtil.generateDigest(body);
+        final String digest = digestProvider.generateDigest(body);
         final String requestId = UUID.randomUUID().toString();
         URL requestUrl = baseUrl.concat(path);
 
         String signatureHeaderValue =
-                SignatureUtil.getSignatureHeaderValue(
-                        configuration.getKeyId(),
-                        httpMethod.name(),
-                        requestUrl.toUri(),
-                        date,
-                        digest,
-                        MediaType.APPLICATION_JSON,
-                        requestId,
-                        eidasProxyConfiguration,
-                        eidasIdentity);
+                signatureProvider.getSignatureHeaderValueForPost(
+                        configuration.getKeyId(), requestUrl.toUri(), date, digest, requestId);
 
         return client.request(requestUrl)
                 .addBearerToken(authToken)
@@ -105,22 +93,15 @@ public class CmcicApiClient {
                 .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createRequestInSession(
-            URL baseUrl, String path, HttpMethod httpMethod, OAuth2Token authToken) {
+    private RequestBuilder createRequestInSession(URL baseUrl, String path, OAuth2Token authToken) {
 
         final String date = getServerTime();
         final String requestId = UUID.randomUUID().toString();
         URL requestUrl = baseUrl.concat(path);
 
         String signatureHeaderValue =
-                SignatureUtil.getSignatureHeaderValue(
-                        configuration.getKeyId(),
-                        httpMethod.name(),
-                        requestUrl.toUri(),
-                        date,
-                        requestId,
-                        eidasProxyConfiguration,
-                        eidasIdentity);
+                signatureProvider.getSignatureHeaderValueForGet(
+                        configuration.getKeyId(), requestUrl.toUri(), date, requestId);
 
         return client.request(requestUrl)
                 .addBearerToken(authToken)
@@ -157,17 +138,16 @@ public class CmcicApiClient {
     }
 
     private String getCodeChallenge() {
-        final String codeVerifier = CodeChallengeUtil.generateCodeVerifier();
+        final String codeVerifier = codeChallengeProvider.generateCodeVerifier();
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
-        return CodeChallengeUtil.generateCodeChallengeForCodeVerifier(codeVerifier);
+        return codeChallengeProvider.generateCodeChallengeForCodeVerifier(codeVerifier);
     }
 
     public FetchAccountsResponse fetchAccounts() {
         String baseUrl = configuration.getBaseUrl();
         String basePath = configuration.getBasePath();
 
-        return createAispRequestInSession(
-                        new URL(baseUrl), basePath + Urls.FETCH_ACCOUNTS_PATH, HttpMethod.GET)
+        return createAispRequestInSession(new URL(baseUrl), basePath + Urls.FETCH_ACCOUNTS_PATH)
                 .get(FetchAccountsResponse.class);
     }
 
@@ -186,8 +166,7 @@ public class CmcicApiClient {
                                                         account.getApiIdentifier()));
 
         FetchTransactionsResponse fetchTransactionsResponse =
-                createAispRequestInSession(baseUrl, path, HttpMethod.GET)
-                        .get(FetchTransactionsResponse.class);
+                createAispRequestInSession(baseUrl, path).get(FetchTransactionsResponse.class);
 
         fetchTransactionsResponse.setTransactionalAccount(account);
 
@@ -202,8 +181,7 @@ public class CmcicApiClient {
 
         String body = SerializationUtils.serializeToString(paymentRequestResourceEntity);
 
-        return createPispRequestInSession(
-                        new URL(baseUrl), basePath + Urls.PAYMENT_REQUESTS, body, HttpMethod.POST)
+        return createPispRequestInSession(new URL(baseUrl), basePath + Urls.PAYMENT_REQUESTS, body)
                 .type(MediaType.APPLICATION_JSON)
                 .post(HalPaymentRequestCreation.class, body);
     }
@@ -245,9 +223,7 @@ public class CmcicApiClient {
         String basePath = configuration.getBasePath();
 
         return createPispRequestInSession(
-                        new URL(baseUrl),
-                        basePath + Urls.PAYMENT_REQUESTS + "/" + uniqueId,
-                        HttpMethod.GET)
+                        new URL(baseUrl), basePath + Urls.PAYMENT_REQUESTS + "/" + uniqueId)
                 .type(MediaType.APPLICATION_JSON)
                 .get(HalPaymentRequestEntity.class);
     }
@@ -263,8 +239,7 @@ public class CmcicApiClient {
         String baseUrl = configuration.getBaseUrl();
         String basePath = configuration.getBasePath();
 
-        return createAispRequestInSession(
-                        new URL(baseUrl), basePath + Urls.FETCH_END_USER_IDENTITY, HttpMethod.GET)
+        return createAispRequestInSession(new URL(baseUrl), basePath + Urls.FETCH_END_USER_IDENTITY)
                 .get(EndUserIdentityResponse.class);
     }
 

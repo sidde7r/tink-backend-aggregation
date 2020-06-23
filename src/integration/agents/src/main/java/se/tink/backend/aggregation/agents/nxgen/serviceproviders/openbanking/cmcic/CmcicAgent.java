@@ -7,15 +7,21 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.CmcicAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.executor.payment.CmcicPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicTransactionalAccountConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -25,7 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public abstract class CmcicAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
@@ -37,14 +43,15 @@ public abstract class CmcicAgent extends NextGenerationAgent
     private final CmcicConfiguration cmcicConfiguration;
     private final CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
 
-    public CmcicAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    public CmcicAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
 
         cmcicConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
+
+        final CmcicSignatureProvider signatureProvider = new CmcicSignatureProvider(qsealcSigner);
+        final CmcicDigestProvider digestProvider = new CmcicDigestProvider();
+        final CmcicCodeChallengeProvider codeChallengeProvider = new CmcicCodeChallengeProvider();
 
         apiClient =
                 new CmcicApiClient(
@@ -52,13 +59,18 @@ public abstract class CmcicAgent extends NextGenerationAgent
                         persistentStorage,
                         sessionStorage,
                         cmcicConfiguration,
-                        agentsServiceConfiguration.getEidasProxy(),
-                        getEidasIdentity());
-
-        client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+                        digestProvider,
+                        signatureProvider,
+                        codeChallengeProvider);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
         cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(apiClient);
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
@@ -110,8 +122,11 @@ public abstract class CmcicAgent extends NextGenerationAgent
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
+        final PrioritizedValueExtractor prioritizedValueExtractor = new PrioritizedValueExtractor();
+        final CmcicTransactionalAccountConverter transactionalAccountConverter =
+                new CmcicTransactionalAccountConverter(prioritizedValueExtractor);
         final CmcicTransactionalAccountFetcher accountFetcher =
-                new CmcicTransactionalAccountFetcher(apiClient);
+                new CmcicTransactionalAccountFetcher(apiClient, transactionalAccountConverter);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

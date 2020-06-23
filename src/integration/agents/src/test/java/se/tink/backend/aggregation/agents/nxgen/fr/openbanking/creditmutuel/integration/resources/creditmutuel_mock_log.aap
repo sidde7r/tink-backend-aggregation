@@ -1,0 +1,48 @@
+REQUEST 1
+POST https://oauth2-apisi.e-i.com/cm/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+X-Aggregator : Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"bearer","expires_in":900,"state":"f2533843-785d-4499-b92f-61711101feed","scope":"aisp extended_transaction_history","refresh_token":"DUMMY_REFRESH_TOKEN"}
+
+REQUEST 2
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/accounts
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"accounts":[{"cashAccountType":"CACC","resourceId":"DUMMY_RESOURCE_ID","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME","currency":"EUR","balances":[{"name":"AvailableBalance","balanceAmount":{"currency":"EUR","amount":"42.48"},"balanceType":"XPCD"}],"_links":{"balances":{"href":"/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions"}}}],"_links":{"self":{"href":"/stet-psd2-api/v1/accounts"}}}
+
+REQUEST 3
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_ID_2","transactionAmount":{"currency":"EUR","amount":"12.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions"},"parent-list":{"href":"/cm/stet-psd2-api/v1/accounts"},"balances":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/balances"},"last":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2"},"next":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2"}}}
+
+REQUEST 4
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+Accept: application/json
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"transactions":[{"resourceId":"DUMMY_RESOURCE_ID_2","transactionAmount":{"currency":"EUR","amount":"13.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2"},"parent-list":{"href":"/cm/stet-psd2-api/v1/accounts"},"balances":{"href":"v1/accounts/DUMMY_RESOURCE_ID/balances"},"last":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2"},"next":null}}
