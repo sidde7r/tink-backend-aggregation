@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.spa
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.executor.payment.SparebankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sparebank.fetcher.transactionalaccount.SparebankTransactionFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -44,16 +45,15 @@ public final class SparebankAgent extends NextGenerationAgent
         List<String> payLoadValues = splitPayload(request.getProvider().getPayload());
         apiClient = new SparebankApiClient(client, sessionStorage, payLoadValues.get(1));
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-
         apiClient.setConfiguration(
-                getClientConfiguration(),
+                getAgentConfiguration(),
                 agentsServiceConfiguration.getEidasProxy(),
                 this.getEidasIdentity());
     }
 
-    public SparebankConfiguration getClientConfiguration() {
+    public AgentConfiguration<SparebankConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(SparebankConfiguration.class);
+                .getAgentCommonConfiguration(SparebankConfiguration.class);
     }
 
     @Override
@@ -119,7 +119,10 @@ public final class SparebankAgent extends NextGenerationAgent
     @Override
     public Optional<PaymentController> constructPaymentController() {
         SparebankPaymentExecutor sparebankPaymentExecutor =
-                new SparebankPaymentExecutor(apiClient, sessionStorage, getClientConfiguration());
+                new SparebankPaymentExecutor(
+                        apiClient,
+                        sessionStorage,
+                        getAgentConfiguration().getClientConfiguration());
 
         return Optional.of(
                 new SparebankPaymentController(

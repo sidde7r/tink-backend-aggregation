@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.Xs2aDevelopersPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.Xs2aDevelopersTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -36,12 +37,13 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        Xs2aDevelopersConfiguration xs2aDevelopersConfiguration = getClientConfiguration();
+        final AgentConfiguration<Xs2aDevelopersConfiguration> xs2aDevelopersConfiguration =
+                getAgentConfiguration();
         apiClient =
                 new Xs2aDevelopersApiClient(client, persistentStorage, xs2aDevelopersConfiguration);
         oauth2Authenticator =
                 new Xs2aDevelopersAuthenticator(
-                        apiClient, persistentStorage, getClientConfiguration());
+                        apiClient, persistentStorage, getAgentConfiguration());
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -51,9 +53,9 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
-    private Xs2aDevelopersConfiguration getClientConfiguration() {
+    private AgentConfiguration<Xs2aDevelopersConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
+                .getAgentCommonConfiguration(Xs2aDevelopersConfiguration.class);
     }
 
     @Override
@@ -114,7 +116,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
                         persistentStorage,
                         supplementalInformationHelper,
                         new Xs2aDevelopersPaymentAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()),
+                                apiClient, persistentStorage, getAgentConfiguration()),
                         credentials,
                         strongAuthenticationState);
 

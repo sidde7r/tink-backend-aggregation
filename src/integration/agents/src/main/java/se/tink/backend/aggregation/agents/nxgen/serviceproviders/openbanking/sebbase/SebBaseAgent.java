@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.authenticator.SebDecoupledAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.configuration.SebConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.session.SebSessionHandler;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -20,6 +21,7 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
 
     protected C apiClient;
     protected CreditCardRefreshController creditCardRefreshController;
+    protected AgentConfiguration<SebConfiguration> agentConfiguration;
     protected SebConfiguration sebConfiguration;
 
     protected SebBaseAgent(
@@ -34,9 +36,10 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        sebConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(SebConfiguration.class);
-
+        agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(SebConfiguration.class);
+        sebConfiguration = agentConfiguration.getClientConfiguration();
         apiClient.setConfiguration(sebConfiguration);
         client.setEidasProxy(configuration.getEidasProxy());
     }
@@ -46,7 +49,7 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
         BankIdAuthenticationController bankIdAuthenticationController =
                 new BankIdAuthenticationController<>(
                         supplementalRequester,
-                        new SebDecoupledAuthenticator(apiClient, sebConfiguration),
+                        new SebDecoupledAuthenticator(apiClient, agentConfiguration),
                         persistentStorage,
                         credentials);
         return new AutoAuthenticationController(

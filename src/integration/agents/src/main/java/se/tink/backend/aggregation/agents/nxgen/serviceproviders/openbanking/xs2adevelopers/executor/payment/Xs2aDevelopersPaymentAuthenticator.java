@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -16,14 +17,16 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
     private final Xs2aDevelopersApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final Xs2aDevelopersConfiguration configuration;
+    private final String redirectUrl;
 
     public Xs2aDevelopersPaymentAuthenticator(
             Xs2aDevelopersApiClient apiClient,
             PersistentStorage persistentStorage,
-            Xs2aDevelopersConfiguration configuration) {
+            AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     @Override
@@ -42,7 +45,7 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
                         .setCode(code)
                         .setCodeVerifier(persistentStorage.get(StorageKeys.CODE_VERIFIER))
                         .setGrantType(FormValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(configuration.getRedirectUrl())
+                        .setRedirectUri(redirectUrl)
                         .setValidRequest(true)
                         .build();
 

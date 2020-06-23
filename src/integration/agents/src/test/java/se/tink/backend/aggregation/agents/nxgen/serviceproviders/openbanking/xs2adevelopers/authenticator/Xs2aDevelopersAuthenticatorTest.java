@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.configuration.Xs2aDevelopersConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -21,6 +22,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class Xs2aDevelopersAuthenticatorTest {
     private static final String CLIENT_ID = "CLIENT_ID";
     private static final String BASE_URL = "BASE_URL";
+    private static final String REDIRECT_URL = "REDIRECT_URL";
     private static final String STATE = "STATE";
     private static final String CONSENT_ID = "CONSENT_ID";
     private static final String AIS_CONSENT_ID = SCOPE + CONSENT_ID;
@@ -54,6 +56,7 @@ public class Xs2aDevelopersAuthenticatorTest {
 
     private Xs2aDevelopersApiClient apiClient;
     private Xs2aDevelopersAuthenticator authenticator;
+    private AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration;
     private Xs2aDevelopersConfiguration configuration;
     private PersistentStorage storage;
 
@@ -62,7 +65,12 @@ public class Xs2aDevelopersAuthenticatorTest {
         apiClient = mock(Xs2aDevelopersApiClient.class);
         storage = mock(PersistentStorage.class);
         configuration = mock(Xs2aDevelopersConfiguration.class);
-        authenticator = new Xs2aDevelopersAuthenticator(apiClient, storage, configuration);
+        agentConfiguration =
+                new AgentConfiguration.Builder<>()
+                        .setClientConfiguration(configuration)
+                        .setRedirectUrl(REDIRECT_URL)
+                        .build();
+        authenticator = new Xs2aDevelopersAuthenticator(apiClient, storage, agentConfiguration);
     }
 
     @Test

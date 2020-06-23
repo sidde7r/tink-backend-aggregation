@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.configuration.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.SdcTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sdc.fetcher.transactionalaccount.SdcTransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -41,11 +42,12 @@ public final class SdcAgent extends NextGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         apiClient.setConfiguration(
-                getClientConfiguration(), agentsServiceConfiguration.getEidasProxy());
+                getAgentConfiguration(), agentsServiceConfiguration.getEidasProxy());
     }
 
-    protected SdcConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(SdcConfiguration.class);
+    protected AgentConfiguration<SdcConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(SdcConfiguration.class);
     }
 
     @Override

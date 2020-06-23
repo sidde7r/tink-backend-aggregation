@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -49,6 +50,11 @@ public class Xs2aDevelopersApiClientTest {
     @Before
     public void init() {
         Xs2aDevelopersConfiguration configuration = mock(Xs2aDevelopersConfiguration.class);
+        AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration =
+                new AgentConfiguration.Builder()
+                        .setClientConfiguration(configuration)
+                        .setRedirectUrl("REDIRECT_URL")
+                        .build();
         OAuth2Token oauth2Token =
                 OAuth2Token.create("TOKEN_TYPE", "ACCESS_TOKEN", "REFRESH_TOKEN", 1);
         tinkHttpClient = mock(TinkHttpClient.class);
@@ -70,9 +76,8 @@ public class Xs2aDevelopersApiClientTest {
 
         when(configuration.getBaseUrl()).thenReturn(BASE_URL);
         when(configuration.getClientId()).thenReturn("CLIENT_ID");
-        when(configuration.getRedirectUrl()).thenReturn("REDIRECT_URL");
 
-        apiClient = new Xs2aDevelopersApiClient(tinkHttpClient, storage, configuration);
+        apiClient = new Xs2aDevelopersApiClient(tinkHttpClient, storage, agentConfiguration);
     }
 
     @Test(expected = IllegalStateException.class)
