@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaMockServerPaymentAgentTest {
@@ -48,7 +49,9 @@ public class NordeaMockServerPaymentAgentTest {
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(
                 Date.from(LocalDate.of(2020, 6, 22).atStartOfDay(ZoneId.of("CET")).toInstant()));
-        transfer.setDestinationMessage("610550873500157");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("610550873500157");
+        transfer.setRemittanceInformation(remittanceInformation);
 
         return transfer;
     }
