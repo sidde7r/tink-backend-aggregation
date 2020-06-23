@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 
 import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionAmountEntity {
@@ -16,5 +17,9 @@ public class TransactionAmountEntity {
 
     public BigDecimal getContent() {
         return content;
+    }
+
+    public ExactCurrencyAmount getAmount() {
+        return ExactCurrencyAmount.of(content, currency);
     }
 }

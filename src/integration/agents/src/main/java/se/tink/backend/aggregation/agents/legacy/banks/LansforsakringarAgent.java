@@ -632,8 +632,7 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     @Override
-    public void execute(final Transfer transfer) throws Exception, TransferExecutionException {
-
+    public void execute(final Transfer transfer) throws Exception {
         if (transfer.getType() == TransferType.BANK_TRANSFER) {
             executeBankTransfer(transfer);
         } else if (transfer.getType() == TransferType.PAYMENT) {
@@ -647,7 +646,7 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception, TransferExecutionException {
+    public void update(Transfer transfer) throws Exception {
         switch (transfer.getType()) {
             case EINVOICE:
                 approveEInvoice(transfer);
@@ -677,7 +676,8 @@ public class LansforsakringarAgent extends AbstractAgent
         Transfer originalTransfer = transfer.getOriginalTransfer().get();
 
         if (!Objects.equal(
-                transfer.getDestinationMessage(), originalTransfer.getDestinationMessage())) {
+                transfer.getRemittanceInformation().getValue(),
+                originalTransfer.getRemittanceInformation().getValue())) {
 
             throw cancelTransfer(
                     TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE);
@@ -747,7 +747,7 @@ public class LansforsakringarAgent extends AbstractAgent
     private void addEInvoiceToApproveList(
             final Transfer transfer, AccountEntity sourceAccount, EInvoice eInvoice) {
         EInvoicePaymentRequest request = new EInvoicePaymentRequest();
-        request.setOcr(transfer.getDestinationMessage());
+        request.setOcr(transfer.getRemittanceInformation().getValue());
         request.setDate(transfer.getDueDate().getTime());
         request.setToAccount(transfer.getDestination().getIdentifier(GIRO_FORMATTER));
         request.setElectronicInvoiceId(eInvoice.getElectronicInvoiceId());
@@ -828,7 +828,7 @@ public class LansforsakringarAgent extends AbstractAgent
 
         UpdatePaymentRequest paymentRequest = new UpdatePaymentRequest();
         paymentRequest.setAmount(transfer.getAmount().getValue());
-        paymentRequest.setReference(transfer.getDestinationMessage());
+        paymentRequest.setReference(transfer.getRemittanceInformation().getValue());
         paymentRequest.setFromAccountNumber(
                 source.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
         paymentRequest.setPaymentDate(transfer.getDueDate().getTime());
@@ -867,7 +867,7 @@ public class LansforsakringarAgent extends AbstractAgent
         paymentRequest.setPaymentDate(
                 LansforsakringarDateUtil.getNextPossiblePaymentDateForBgPg(transfer.getDueDate()));
         if (Objects.equal(recipientNameResponse.getOcrType(), "OCR_REQUIRED")) {
-            if (!LFUtils.isValidOCR(transfer.getDestinationMessage())) {
+            if (!LFUtils.isValidOCR(transfer.getRemittanceInformation().getValue())) {
                 cancelTransfer(TransferExecutionException.EndUserMessage.INVALID_OCR);
             } else {
                 paymentRequest.setReferenceType("OCR");
@@ -875,7 +875,7 @@ public class LansforsakringarAgent extends AbstractAgent
         } else {
             paymentRequest.setReferenceType("MESSAGE");
         }
-        paymentRequest.setReference(transfer.getDestinationMessage());
+        paymentRequest.setReference(transfer.getRemittanceInformation().getValue());
 
         validatePaymentAndValidateResponse(paymentRequest);
         createPaymentAndValidateResponse(paymentRequest);
@@ -1162,7 +1162,8 @@ public class LansforsakringarAgent extends AbstractAgent
         boolean isBetweenSameUserAccounts =
                 LFUtils.find(destination, sourceAccounts.getAccounts()).isPresent();
         TransferMessageFormatter.Messages formattedMessages =
-                transferMessageFormatter.getMessages(transfer, isBetweenSameUserAccounts);
+                transferMessageFormatter.getMessagesFromRemittanceInformation(
+                        transfer, isBetweenSameUserAccounts);
 
         TransferRequest transferRequest =
                 TransferRequest.create(
