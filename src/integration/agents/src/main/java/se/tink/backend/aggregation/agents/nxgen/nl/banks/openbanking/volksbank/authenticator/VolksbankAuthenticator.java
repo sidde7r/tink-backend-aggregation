@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator;
 
-import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
@@ -96,26 +95,8 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
         logger.info("Volksbank - Refreshing access token");
 
-        OAuth2Token oldToken =
-                persistentStorage
-                        .get(Storage.OAUTH_TOKEN, OAuth2Token.class)
-                        .orElseThrow(
-                                () ->
-                                        new NoSuchElementException(
-                                                "Cannot refresh access token, could not fetch old token object"));
-
-        final String persistToken =
-                oldToken.getRefreshToken()
-                        .orElseThrow(
-                                () ->
-                                        new NoSuchElementException(
-                                                "Cannot refresh access token, could not fetch refresh token from old token object"));
-
-        // TODO temporary log input parameter refresh token
-        logger.info("Volksbank - input parameter refresh token: {}", refreshToken.hashCode());
-
-        // TODO temporary log to trace persist refresh token
-        logger.info("Volksbank - get persist refresh token: {}", persistToken.hashCode());
+        // TODO temporary log persist refresh token
+        logger.info("Volksbank - get persist refresh token: {}", refreshToken.hashCode());
 
         URL url =
                 urlFactory
