@@ -1,0 +1,11 @@
+agentsServiceConfiguration:
+  integrations:
+    dde2463acf40501389de4fca5a3693a4:
+      tink:
+        clientId: DUMMY_ID,
+        redirectUrls: https://api.tink.se/api/v1/credentials/third-party/callback
+        clientSecret: DUMMY_SECRET
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
+

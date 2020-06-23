@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -16,7 +17,6 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.NordeaBankIdAutostartAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.NordeaPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdAutostartResponse;
@@ -35,8 +35,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.filters.NordeaInternalServerErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.filters.NordeaSEServiceUnavailableFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.session.NordeaSESessionHandler;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -53,7 +53,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.TimeoutFilter;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordeaSEAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
@@ -70,9 +69,9 @@ public class NordeaSEAgent extends NextGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public NordeaSEAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+    @Inject
+    public NordeaSEAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         apiClient = new NordeaSEApiClient(client, sessionStorage, catalog);
 
         investmentRefreshController =
