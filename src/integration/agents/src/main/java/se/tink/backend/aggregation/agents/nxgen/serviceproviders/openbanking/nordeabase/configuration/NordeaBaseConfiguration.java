@@ -36,7 +36,13 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
             ints = {
                 @JsonSchemaInt(path = "minItems", value = 1),
                 @JsonSchemaInt(path = "maxItems", value = 2)
-            })
+            },
+            json =
+                    "{\n"
+                            + "  \"items\" : {\n"
+                            + "      \"enum\" : [\"AIS\",\"PIS\"]\n"
+                            + "    }\n"
+                            + "}")
     @JsonSchemaExamples("AIS")
     private List<String> scopes;
 
