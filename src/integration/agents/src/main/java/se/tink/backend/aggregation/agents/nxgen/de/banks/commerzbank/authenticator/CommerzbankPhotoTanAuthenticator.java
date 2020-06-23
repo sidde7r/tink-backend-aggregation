@@ -166,22 +166,17 @@ public class CommerzbankPhotoTanAuthenticator implements TypedAuthenticator {
 
     private void handleLoginError(ErrorEntity error) throws LoginException, SessionException {
         ErrorMessageEntity errorMessage =
-                error.getErrorMessage()
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Login failed without error description present."));
+                error.getErrorMessage().orElseThrow(LoginError.DEFAULT_MESSAGE::exception);
 
         switch (errorMessage.getMessageId()) {
             case Error.PIN_ERROR:
+            case Error.VALIDATION_EXCEPTION:
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             case Error.ACCOUNT_SESSION_ACTIVE_ERROR:
                 throw SessionError.SESSION_ALREADY_ACTIVE.exception();
             default:
-                throw new IllegalStateException(
-                        String.format(
-                                "Login failed with unknown error message: %s",
-                                errorMessage.getMessageId()));
+                throw LoginError.DEFAULT_MESSAGE.exception(
+                        String.format("Reason: %s", errorMessage.getMessageId()));
         }
     }
 

@@ -36,7 +36,8 @@ public enum LoginError implements AgentError {
                     "Your password has changed. Please enter the latest password in all other devices.")),
     INVALIDATED_CREDENTIALS(
             new LocalizableKey(
-                    "Your existing credentials have been invalidated, Please delete this credentials and create a new one."));
+                    "Your existing credentials have been invalidated, Please delete this credentials and create a new one.")),
+    DEFAULT_MESSAGE(new LocalizableKey("Something went wrong during login process."));
 
     private LocalizableKey userMessage;
 
