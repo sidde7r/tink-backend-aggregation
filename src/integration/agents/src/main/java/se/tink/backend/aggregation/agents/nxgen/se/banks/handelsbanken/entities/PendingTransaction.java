@@ -23,7 +23,7 @@ public class PendingTransaction extends BaseResponse {
 
     public UpcomingTransaction toTinkTransaction(Transfer transfer) {
         return UpcomingTransaction.builder()
-                .setAmount(ExactCurrencyAmount.of(amount.asDouble(), "SEK"))
+                .setAmount(ExactCurrencyAmount.of(amount.asDouble(), "SEK").negate())
                 .setDate(dueDate)
                 .setDescription(recipient.getName())
                 .setUpcomingTransfer(transfer)
