@@ -1,7 +1,7 @@
 {
     "accounts": [
         {
-            "accountNumber": "6025-612 312 456",
+            "accountNumber": "6025-111 111 111",
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "SEK",
@@ -11,7 +11,7 @@
                 "unscaledValue": 0
             },
             "currencyCode": "SEK",
-            "bankId": "612312456",
+            "bankId": "111111111",
             "excluded": false,
             "favored": false,
             "name": "e-Kapitalkonto",
@@ -20,7 +20,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"se-internal://612312456\",\"se://6025612312456\"]",
+            "identifiers": "[\"se://6025111111111\",\"se-internal://111111111\"]",
             "closed": false,
             "holderName": "John Doe",
             "flags": "[]",
@@ -28,7 +28,7 @@
             "balance": 0.0
         },
         {
-            "accountNumber": "6025-747 851 694",
+            "accountNumber": "6025-222 222 222",
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "SEK",
@@ -38,7 +38,7 @@
                 "unscaledValue": 5700061
             },
             "currencyCode": "SEK",
-            "bankId": "747851694",
+            "bankId": "222222222",
             "excluded": false,
             "favored": false,
             "name": "Sparkonto",
@@ -47,7 +47,7 @@
             "userModifiedExcluded": false,
             "userModifiedName": false,
             "userModifiedType": false,
-            "identifiers": "[\"se-internal://747851694\",\"se://6025747851694\"]",
+            "identifiers": "[\"se-internal://222222222\",\"se://6025222222222\"]",
             "closed": false,
             "holderName": "John Doe",
             "flags": "[]",
@@ -55,7 +55,7 @@
             "balance": 57000.61
         },
         {
-            "accountNumber": "6025-512 351 234",
+            "accountNumber": "6025-000 000 000",
             "accountExclusion": "NONE",
             "exactBalance": {
                 "currencyCode": "SEK",
@@ -65,7 +65,7 @@
                 "unscaledValue": 22444
             },
             "currencyCode": "SEK",
-            "bankId": "512351234",
+            "bankId": "000000000",
             "excluded": false,
             "favored": false,
             "name": "Allkonto",
@@ -85,7 +85,7 @@
         {
             "amount": -1000.0,
             "date": 1556532000000,
-            "description": "Overf Internet",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -97,7 +97,7 @@
         {
             "amount": 5000.0,
             "date": 1585134000000,
-            "description": "Overf Mobil",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -109,7 +109,7 @@
         {
             "amount": 5000.0,
             "date": 1585134000000,
-            "description": "Overf Mobil",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -121,7 +121,7 @@
         {
             "amount": -1000.0,
             "date": 1584442800000,
-            "description": "Overf Mobil",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -133,7 +133,7 @@
         {
             "amount": 3000.0,
             "date": 1582628400000,
-            "description": "Overf Mobil",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -145,7 +145,7 @@
         {
             "amount": -2000.0,
             "date": 1582369200000,
-            "description": "Overf Mobil",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -157,7 +157,7 @@
         {
             "amount": -1000.0,
             "date": 1581937200000,
-            "description": "Overf Mobil",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -169,11 +169,11 @@
         {
             "amount": -38.0,
             "date": 1579086000000,
-            "description": "KONDITOR",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
-            "pending": true,
+            "pending": false,
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false
@@ -181,11 +181,11 @@
         {
             "amount": -90.0,
             "date": 1578999600000,
-            "description": "KONDITOR",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
-            "pending": true,
+            "pending": false,
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false
@@ -193,11 +193,11 @@
         {
             "amount": -138.0,
             "date": 1578999600000,
-            "description": "COOP",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
-            "pending": true,
+            "pending": false,
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false
@@ -205,11 +205,11 @@
         {
             "amount": -10.0,
             "date": 1578999600000,
-            "description": "MCDONALD",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
-            "pending": true,
+            "pending": false,
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false
@@ -217,7 +217,7 @@
         {
             "amount": -70.0,
             "date": 1578999600000,
-            "description": "Lottoland",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -229,7 +229,7 @@
         {
             "amount": -300.0,
             "date": 1578999600000,
-            "description": "HAIRCENTER",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -241,7 +241,7 @@
         {
             "amount": -12.0,
             "date": 1578999600000,
-            "description": "CIRCLE K",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -253,7 +253,7 @@
         {
             "amount": -102.8,
             "date": 1578913200000,
-            "description": "COOP",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -265,7 +265,7 @@
         {
             "amount": -25.0,
             "date": 1578913200000,
-            "description": "IDROTTSHALLEN",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -277,7 +277,7 @@
         {
             "amount": -30.0,
             "date": 1578913200000,
-            "description": "IDROTTSHALLEN",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -289,7 +289,7 @@
         {
             "amount": -109.0,
             "date": 1578826800000,
-            "description": "TEAM SPORTIA",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -301,7 +301,7 @@
         {
             "amount": -45.0,
             "date": 1578826800000,
-            "description": "SKOR",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -313,7 +313,7 @@
         {
             "amount": -69.8,
             "date": 1578654000000,
-            "description": "COOP",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -325,7 +325,7 @@
         {
             "amount": -14.0,
             "date": 1578654000000,
-            "description": "COOP",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -337,7 +337,7 @@
         {
             "amount": -45.0,
             "date": 1578567600000,
-            "description": "VALBO HOCKEY C",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -349,7 +349,7 @@
         {
             "amount": -180.0,
             "date": 1578567600000,
-            "description": "ASIA GARDEN",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -361,7 +361,7 @@
         {
             "amount": -56.8,
             "date": 1578567600000,
-            "description": "WILLYS HEMMA V",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -373,7 +373,7 @@
         {
             "amount": -57.5,
             "date": 1578567600000,
-            "description": "Easypark",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -385,7 +385,7 @@
         {
             "amount": -25.0,
             "date": 1578481200000,
-            "description": "APOTEKET",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -397,7 +397,7 @@
         {
             "amount": 6300.0,
             "date": 1578481200000,
-            "description": "Scandic",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -409,7 +409,7 @@
         {
             "amount": -125.35,
             "date": 1578394800000,
-            "description": "COOP",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -421,7 +421,7 @@
         {
             "amount": -100.0,
             "date": 1578394800000,
-            "description": "MCDONALDS",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -433,7 +433,7 @@
         {
             "amount": -321.89,
             "date": 1578308400000,
-            "description": "COOP",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -445,7 +445,7 @@
         {
             "amount": -110.0,
             "date": 1578308400000,
-            "description": "WILLYS HEMMA V",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -457,7 +457,7 @@
         {
             "amount": -115.0,
             "date": 1578308400000,
-            "description": "RUSTA",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -469,7 +469,7 @@
         {
             "amount": -175.0,
             "date": 1578222000000,
-            "description": "MCD",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -481,7 +481,7 @@
         {
             "amount": -6.75,
             "date": 1578222000000,
-            "description": "Easypark",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -493,7 +493,7 @@
         {
             "amount": -77.0,
             "date": 1578135600000,
-            "description": "Scandic Hotels",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -505,7 +505,7 @@
         {
             "amount": -45.0,
             "date": 1578135600000,
-            "description": "iZ *Hanhals If",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -517,7 +517,7 @@
         {
             "amount": -85.0,
             "date": 1578135600000,
-            "description": "Hanhals IF, ca",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -529,7 +529,7 @@
         {
             "amount": -36.0,
             "date": 1578049200000,
-            "description": "Scandic Hotels",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -541,7 +541,7 @@
         {
             "amount": -3600.0,
             "date": 1578049200000,
-            "description": "Scandic Hotels",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -553,7 +553,7 @@
         {
             "amount": -3080.0,
             "date": 1578049200000,
-            "description": "Scandic Hotels",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -565,7 +565,7 @@
         {
             "amount": -32.0,
             "date": 1578049200000,
-            "description": "Partille Hocke",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -577,7 +577,7 @@
         {
             "amount": -30.0,
             "date": 1578049200000,
-            "description": "Partille Hocke",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -589,7 +589,7 @@
         {
             "amount": -200.0,
             "date": 1578049200000,
-            "description": "AB SVENSKA SPE",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -601,7 +601,7 @@
         {
             "amount": -1155.0,
             "date": 1578049200000,
-            "description": "SVEDEA AB",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -613,7 +613,7 @@
         {
             "amount": -66.0,
             "date": 1577962800000,
-            "description": "Scandic Hotels",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -625,7 +625,7 @@
         {
             "amount": -15.0,
             "date": 1577962800000,
-            "description": "Partille Hocke",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -637,7 +637,7 @@
         {
             "amount": -1170.0,
             "date": 1577962800000,
-            "description": "BANK NORWEGIAN",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -649,7 +649,7 @@
         {
             "amount": -1173.0,
             "date": 1577962800000,
-            "description": "MEDMERA BANK A",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -661,7 +661,7 @@
         {
             "amount": -2502.0,
             "date": 1577962800000,
-            "description": "Ecster/Handels",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -673,7 +673,7 @@
         {
             "amount": -2160.0,
             "date": 1577962800000,
-            "description": "Ecster/Handels",
+            "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -685,7 +685,7 @@
         {
             "amount": -1174.0,
             "date": 1577962800000,
-            "description": "FALUN ENERGI A",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -697,7 +697,7 @@
         {
             "amount": -241.0,
             "date": 1577962800000,
-            "description": "FALUN VATTEN A",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -709,7 +709,7 @@
         {
             "amount": -1118.0,
             "date": 1577962800000,
-            "description": "SWEDBANK AB",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -721,7 +721,7 @@
         {
             "amount": -114.0,
             "date": 1577962800000,
-            "description": "SVENSKA CENTRA",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -733,7 +733,7 @@
         {
             "amount": -211.0,
             "date": 1577876400000,
-            "description": "MCD STOCKHOLM",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -745,7 +745,7 @@
         {
             "amount": -225.0,
             "date": 1577876400000,
-            "description": "FRIGGA PIZZERI",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -757,7 +757,7 @@
         {
             "amount": -30.0,
             "date": 1577876400000,
-            "description": "SHELL",
+           "description": "transactionInfo",
             "internalPayload": {},
             "originalAmount": 0.0,
             "payload": {},
@@ -769,10 +769,62 @@
         {
             "amount": 5000.0,
             "date": 1577876400000,
-            "description": "Overf Mobil",
+           "description": "transactionInfo",
             "originalAmount": 0.0,
             "payload": {},
             "pending": false,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -4199.0,
+            "date": 1593511200000,
+            "description": "PENDING_1",
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -137.0,
+            "date": 1593511200000,
+            "description": "PENDING_2",
+            "originalAmount": 0.0,
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -6529.0,
+            "date": 1593597600000,
+            "description": "PENDING_3",
+            "originalAmount": 0.0,
+            "payload": {},
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -28959.08,
+            "date": 1593165600000,
+            "description": "PENDING_4",
+            "originalAmount": 0.0,
+            "pending": true,
+            "timestamp": 0,
+            "type": "DEFAULT",
+            "upcoming": false
+        },
+        {
+            "amount": -5972.9,
+            "date": 1593511200000,
+            "description": "PENDING_5",
+            "originalAmount": 0.0,
+            "pending": true,
             "timestamp": 0,
             "type": "DEFAULT",
             "upcoming": false
