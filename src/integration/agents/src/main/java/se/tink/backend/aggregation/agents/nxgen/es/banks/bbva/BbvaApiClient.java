@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 import com.google.common.collect.ImmutableList;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Headers;
@@ -24,12 +25,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -145,8 +148,16 @@ public class BbvaApiClient {
     }
 
     public HistoricalDateResponse fetchInvestmentHistoricalDate(HistoricalDateRequest request) {
-        return createRequestInSession(BbvaConstants.Url.HISTORICAL_DATE)
-                .post(HistoricalDateResponse.class, request);
+        try {
+            return createRequestInSession(BbvaConstants.Url.HISTORICAL_DATE)
+                    .post(HistoricalDateResponse.class, request);
+        } catch (HttpResponseException ex) {
+            BbvaErrorResponse response = ex.getResponse().getBody(BbvaErrorResponse.class);
+            if (response.isContractNotOperableError()) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception(response.getErrorMessage());
+            }
+            throw ex;
+        }
     }
 
     public LoanDetailsResponse fetchLoanDetails(String loanId) {
