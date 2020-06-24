@@ -17,7 +17,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class CredentialsCrypto {
     private static final AggregationLogger logger = new AggregationLogger(CredentialsCrypto.class);
 
-    private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(20));
+    // according to
+    // https://grafana.global-production.tink.network/d/000000054/aggregation-service?editPanel=8&orgId=1&from=now-2d&to=now
+    private static final int CACHE_EXPIRE_TIME = Math.toIntExact(TimeUnit.MINUTES.toSeconds(150));
 
     private final CacheClient cacheClient;
     private final ControllerWrapper controllerWrapper;

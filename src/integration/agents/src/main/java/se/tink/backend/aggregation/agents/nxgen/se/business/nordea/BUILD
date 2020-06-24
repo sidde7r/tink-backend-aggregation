@@ -19,7 +19,9 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_google_guava_guava",
+        "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
+        "@aggregation//:com_google_guava_guava",
     ],
 )
