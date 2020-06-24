@@ -55,6 +55,10 @@ public class SdcDkAgent extends SdcAgent
 
         creditCardRefreshController = constructCreditCardRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
+        // TODO
+        //  temporary fix to disable ssl verification of SDC cert (expired). Proper solution
+        // will be done in this ticket https://tinkab.atlassian.net/browse/ITE-1039 (more details)
+        this.client.disableSslVerification();
     }
 
     @Override
