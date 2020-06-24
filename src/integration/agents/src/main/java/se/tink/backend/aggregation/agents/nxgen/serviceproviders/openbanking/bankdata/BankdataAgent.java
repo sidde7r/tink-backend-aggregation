@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.BankdataPaymentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.BankdataPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.BankdataTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -51,14 +52,14 @@ public abstract class BankdataAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        apiClient.setConfiguration(getAgentConfiguration(), configuration.getEidasProxy());
     }
 
-    private BankdataConfiguration getClientConfiguration() {
+    private AgentConfiguration<BankdataConfiguration> getAgentConfiguration() {
 
-        BankdataConfiguration config =
+        AgentConfiguration<BankdataConfiguration> config =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(BankdataConfiguration.class);
+                        .getAgentCommonConfiguration(BankdataConfiguration.class);
         return config;
     }
 
@@ -68,7 +69,8 @@ public abstract class BankdataAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new BankdataAuthenticator(apiClient, getClientConfiguration()),
+                        new BankdataAuthenticator(
+                                apiClient, getAgentConfiguration().getClientConfiguration()),
                         credentials,
                         strongAuthenticationState);
 
@@ -84,7 +86,9 @@ public abstract class BankdataAgent extends NextGenerationAgent
     public Optional<PaymentController> constructPaymentController() {
         BankdataPaymentExecutorSelector bankdataPaymentExecutorSelector =
                 new BankdataPaymentExecutorSelector(
-                        apiClient, sessionStorage, getClientConfiguration());
+                        apiClient,
+                        sessionStorage,
+                        getAgentConfiguration().getClientConfiguration());
 
         return Optional.of(
                 new BankdataPaymentController(

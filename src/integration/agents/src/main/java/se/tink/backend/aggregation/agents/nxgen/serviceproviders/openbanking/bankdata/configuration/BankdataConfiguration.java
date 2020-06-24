@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.ErrorMessages;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -14,7 +13,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 public class BankdataConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String clientId;
-    @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @SensitiveSecret private String apiKey;
 
     public String getApiKey() {
@@ -31,13 +29,5 @@ public class BankdataConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
-    }
-
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
-        return redirectUrl;
     }
 }

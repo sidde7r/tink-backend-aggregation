@@ -42,8 +42,9 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
             final TinkHttpClient client,
             final SessionStorage sessionStorage,
             final TriodosConfiguration configuration,
+            final String redirectUrl,
             final Credentials credentials) {
-        super(client, sessionStorage, configuration);
+        super(client, sessionStorage, configuration, redirectUrl);
 
         this.credentials = credentials;
     }
@@ -71,11 +72,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         sessionStorage.put(BerlinGroupConstants.StorageKeys.CONSENT_ID, consentId);
         final String authUrl = getConfiguration().getBaseUrl() + Urls.AUTH;
 
-        return getAuthorizeUrl(
-                        authUrl,
-                        state,
-                        getConfiguration().getClientId(),
-                        getConfiguration().getRedirectUrl())
+        return getAuthorizeUrl(authUrl, state, getConfiguration().getClientId(), getRedirectUrl())
                 .queryParam(QueryKeys.SCOPE, TriodosConstants.QueryValues.SCOPE + consentId)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
@@ -118,7 +115,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         final String body =
                 Form.builder()
                         .put(FormKeys.GRANT_TYPE, FormValues.CLIENT_CREDENTIALS)
-                        .put(FormKeys.REDIRECT_URI, getConfiguration().getRedirectUrl())
+                        .put(FormKeys.REDIRECT_URI, getRedirectUrl())
                         .put(FormKeys.CODE_VERIFIER, codeVerifier)
                         .put(FormKeys.CODE, code)
                         .build()
@@ -200,7 +197,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .header(HeaderKeys.DIGEST, digest)
-                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.SIGNATURE, getAuthorization(digest, requestId));
     }
 

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bnpparibas.configuration.BnpParibasConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -17,14 +18,16 @@ public class BnpParibasAuthenticator implements OAuth2Authenticator {
     private final SessionStorage sessionStorage;
     private final BnpParibasApiBaseClient apiClient;
     private BnpParibasConfiguration bnpParibasConfiguration;
+    private String redirectUrl;
 
     public BnpParibasAuthenticator(
             BnpParibasApiBaseClient apiClient,
             SessionStorage sessionStorage,
-            BnpParibasConfiguration bnpParibasConfiguration) {
+            AgentConfiguration<BnpParibasConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.bnpParibasConfiguration = bnpParibasConfiguration;
+        this.bnpParibasConfiguration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     @Override
@@ -39,7 +42,7 @@ public class BnpParibasAuthenticator implements OAuth2Authenticator {
                         .setClientId(bnpParibasConfiguration.getClientId())
                         .setCode(code)
                         .setGrantType(BnpParibasBaseConstants.QueryValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(bnpParibasConfiguration.getRedirectUrl())
+                        .setRedirectUri(redirectUrl)
                         .build();
 
         return apiClient.exchangeAuthorizationToken(request).toOauthToken();

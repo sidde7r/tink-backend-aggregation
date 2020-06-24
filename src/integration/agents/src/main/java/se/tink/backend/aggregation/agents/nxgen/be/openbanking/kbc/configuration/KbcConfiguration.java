@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuratio
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -12,7 +11,6 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 public class KbcConfiguration implements BerlinGroupConfiguration {
 
     @JsonProperty @Secret private String clientId;
-    @JsonProperty @AgentConfigParam private String redirectUrl;
 
     @Override
     public String getClientId() {
@@ -22,11 +20,6 @@ public class KbcConfiguration implements BerlinGroupConfiguration {
     @Override
     public String getClientSecret() {
         throw new NotImplementedException("clientSecret not used anymore");
-    }
-
-    @Override
-    public String getRedirectUrl() {
-        return redirectUrl;
     }
 
     @Override

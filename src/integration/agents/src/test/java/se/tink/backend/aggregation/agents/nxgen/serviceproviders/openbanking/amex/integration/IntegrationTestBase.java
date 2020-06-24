@@ -17,12 +17,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
+import net.minidev.json.JSONObject;
 import org.junit.Rule;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.configuration.AmexConfiguration;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
@@ -117,24 +117,24 @@ public abstract class IntegrationTestBase {
     private IntegrationsConfiguration createIntegrationsConfiguration(Provider provider) {
         final IntegrationsConfiguration integrationsConfigurationMock =
                 mock(IntegrationsConfiguration.class);
-        final AmexConfiguration amexConfiguration = createConfiguration();
+        final JSONObject agentConfiguration = createConfiguration();
 
         when(integrationsConfigurationMock.getClientConfigurationAsObject(
                         provider.getFinancialInstitutionId(), APP_ID))
-                .thenReturn(Optional.of(amexConfiguration));
+                .thenReturn(Optional.of(agentConfiguration));
 
         return integrationsConfigurationMock;
     }
 
-    private AmexConfiguration createConfiguration() {
-        final AmexConfiguration amexConfiguration = new AmexConfiguration();
-        amexConfiguration.setClientId(CLIENT_ID);
-        amexConfiguration.setClientSecret("secret");
-        amexConfiguration.setGrantAccessJourneyUrl(AUTHORIZE_URL);
-        amexConfiguration.setRedirectUrl(REDIRECT_URL);
-        amexConfiguration.setServerUrl(String.format(LOCAL_URL, wireMockRule.port()));
+    private JSONObject createConfiguration() {
+        final JSONObject agentConfiguration = new JSONObject();
+        agentConfiguration.put("clientId", CLIENT_ID);
+        agentConfiguration.put("clientSecret", "secret");
+        agentConfiguration.put("grantAccessJourneyUrl", AUTHORIZE_URL);
+        agentConfiguration.put("serverUrl", String.format(LOCAL_URL, wireMockRule.port()));
+        agentConfiguration.put("redirectUrl", REDIRECT_URL);
 
-        return amexConfiguration;
+        return agentConfiguration;
     }
 
     private static User createUser() {

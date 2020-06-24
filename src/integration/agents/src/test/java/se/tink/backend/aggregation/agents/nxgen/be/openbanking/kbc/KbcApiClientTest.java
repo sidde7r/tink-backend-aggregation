@@ -40,7 +40,6 @@ public class KbcApiClientTest {
         final KbcConfiguration kbcConfigurationMock = mock(KbcConfiguration.class);
 
         when(kbcConfigurationMock.getBaseUrl()).thenReturn(BASE_URL);
-        when(kbcConfigurationMock.getRedirectUrl()).thenReturn(REDIRECT_URL);
         when(kbcConfigurationMock.getPsuIpAddress()).thenReturn(PSU_IP_ADDR);
 
         setUpHttpClientMock(httpClientMock);
@@ -52,6 +51,7 @@ public class KbcApiClientTest {
                         httpClientMock,
                         sessionStorageMock,
                         kbcConfigurationMock,
+                        REDIRECT_URL,
                         credentialsMock,
                         persistentStorageMock);
     }

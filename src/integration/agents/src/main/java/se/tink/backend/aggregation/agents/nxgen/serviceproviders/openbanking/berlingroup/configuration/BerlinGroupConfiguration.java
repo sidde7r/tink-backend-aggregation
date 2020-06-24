@@ -8,8 +8,6 @@ public interface BerlinGroupConfiguration extends ClientConfiguration {
 
     String getClientSecret();
 
-    String getRedirectUrl();
-
     String getBaseUrl();
 
     String getPsuIpAddress();

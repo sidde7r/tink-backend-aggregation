@@ -56,9 +56,10 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
             final TinkHttpClient client,
             final SessionStorage sessionStorage,
             final KbcConfiguration configuration,
+            final String redirectUrl,
             final Credentials credentials,
             final PersistentStorage persistentStorage) {
-        super(client, sessionStorage, configuration);
+        super(client, sessionStorage, configuration, redirectUrl);
 
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
@@ -116,7 +117,7 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
                         state,
                         consentId,
                         getConfiguration().getClientId(),
-                        getConfiguration().getRedirectUrl())
+                        getRedirectUrl())
                 .getUrl();
     }
 
@@ -126,7 +127,7 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
                 new TokenRequest(
                         FormValues.AUTHORIZATION_CODE,
                         code,
-                        getConfiguration().getRedirectUrl(),
+                        getRedirectUrl(),
                         getConfiguration().getClientId(),
                         sessionStorage.get(StorageKeys.CODE_VERIFIER));
 
@@ -186,9 +187,7 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
         return client.request(getConfiguration().getBaseUrl() + Urls.CONSENT)
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                 .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(
-                        BerlinGroupConstants.HeaderKeys.TPP_REDIRECT_URI,
-                        getConfiguration().getRedirectUrl())
+                .header(BerlinGroupConstants.HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(
                         BerlinGroupConstants.HeaderKeys.PSU_IP_ADDRESS,
                         getConfiguration().getPsuIpAddress())
@@ -205,7 +204,7 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
                                 .parameter(IdTags.PAYMENT_PRODUCT, paymentType.toString()))
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        getConfiguration().getRedirectUrl().concat("?state=").concat(state))
+                        getRedirectUrl().concat("?state=").concat(state))
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 

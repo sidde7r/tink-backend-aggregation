@@ -41,16 +41,14 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     ErstebankApiClient(
             final TinkHttpClient client,
             final SessionStorage sessionStorage,
-            final ErstebankConfiguration configuration) {
-        super(client, sessionStorage, configuration);
+            final ErstebankConfiguration configuration,
+            final String redirectUrl) {
+        super(client, sessionStorage, configuration, redirectUrl);
     }
 
     public URL getAuthorizeUrl(final String state) {
         return getAuthorizeUrl(
-                        EndPoints.AUTH,
-                        state,
-                        getConfiguration().getClientId(),
-                        getConfiguration().getRedirectUrl())
+                        EndPoints.AUTH, state, getConfiguration().getClientId(), getRedirectUrl())
                 .getUrl();
     }
 
@@ -59,7 +57,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
         final TokenRequestGet request =
                 new TokenRequestGet(
                         getConfiguration().getClientId(),
-                        getConfiguration().getRedirectUrl(),
+                        getRedirectUrl(),
                         code,
                         QueryValues.AUTHORIZATION_CODE);
 

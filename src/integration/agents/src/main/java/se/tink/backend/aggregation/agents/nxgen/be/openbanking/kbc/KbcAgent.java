@@ -30,7 +30,12 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
     @Override
     protected KbcApiClient createApiClient() {
         return new KbcApiClient(
-                client, sessionStorage, getConfiguration(), credentials, persistentStorage);
+                client,
+                sessionStorage,
+                getConfiguration().getClientConfiguration(),
+                getConfiguration().getRedirectUrl(),
+                credentials,
+                persistentStorage);
     }
 
     @Override
@@ -58,7 +63,10 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
 
         KbcPaymentExecutor kbcPaymentExecutor =
                 new KbcPaymentExecutor(
-                        apiClient, paymentAuthenticator, getConfiguration(), sessionStorage);
+                        apiClient,
+                        paymentAuthenticator,
+                        getConfiguration().getClientConfiguration(),
+                        sessionStorage);
 
         return Optional.of(
                 new KbcPaymentAuthenticationController(

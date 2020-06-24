@@ -43,8 +43,9 @@ public final class LaBanquePostaleApiClient
             TinkHttpClient client,
             SessionStorage sessionStorage,
             QsealcSigner qsealcSigner,
-            LaBanquePostaleConfiguration configuration) {
-        super(client, sessionStorage, configuration);
+            LaBanquePostaleConfiguration configuration,
+            String redirectUrl) {
+        super(client, sessionStorage, configuration, redirectUrl);
 
         this.qsealcSigner = qsealcSigner;
     }
@@ -102,7 +103,7 @@ public final class LaBanquePostaleApiClient
 
     @Override
     public OAuth2Token getToken(String code) {
-        final String redirectUri = getConfiguration().getRedirectUrl();
+        final String redirectUri = getRedirectUrl();
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
         TokenRequest tokenRequest =
@@ -133,7 +134,7 @@ public final class LaBanquePostaleApiClient
     @Override
     public URL getAuthorizeUrl(String state) {
         final String clientId = getConfiguration().getClientId();
-        final String redirectUrl = getConfiguration().getRedirectUrl();
+        final String redirectUrl = getRedirectUrl();
 
         return client.request(getConfiguration().getOauthBaseUrl() + Urls.OAUTH)
                 .queryParam(BerlinGroupConstants.QueryKeys.CLIENT_ID, clientId)

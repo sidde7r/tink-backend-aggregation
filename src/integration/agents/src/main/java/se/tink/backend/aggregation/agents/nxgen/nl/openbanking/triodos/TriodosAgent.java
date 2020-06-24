@@ -21,7 +21,11 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
     @Override
     protected TriodosApiClient createApiClient() {
         return new TriodosApiClient(
-                client, sessionStorage, getConfiguration(), this.request.getCredentials());
+                client,
+                sessionStorage,
+                getConfiguration().getClientConfiguration(),
+                getConfiguration().getRedirectUrl(),
+                this.request.getCredentials());
     }
 
     @Override
