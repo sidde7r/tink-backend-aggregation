@@ -220,13 +220,9 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         }
         // TODO REMOVE IF BLOCK
         if ("kirkby-staging".equals(clusterId)) {
-            allSecretsMapObj.forEach(
-                    (key, value) ->
-                            log.info(
-                                    "[secretDebug]: in initRedirectUrl - allSecretsMapObj"
-                                            + key
-                                            + ":"
-                                            + value));
+            log.info(
+                    "[secretDebug]: in initRedirectUrl - allSecretsMapObj"
+                            + allSecretsMapObj.get(REDIRECT_URL_KEY));
         }
     }
 
@@ -268,13 +264,9 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                                         + getSecretsServiceParamsString()));
         // TODO REMOVE IF BLOCK
         if ("kirkby-staging".equals(clusterId)) {
-            allSecretsMapObj.forEach(
-                    (key, value) ->
-                            log.info(
-                                    "[secretDebug]: in getAgentCommonConfiguration - allSecretsMapObj"
-                                            + key
-                                            + ":"
-                                            + value));
+            log.info(
+                    "[secretDebug]: in getAgentCommonConfiguration - allSecretsMapObj"
+                            + allSecretsMapObj.get(REDIRECT_URL_KEY));
         }
         String redirectUrl =
                 Optional.ofNullable(
