@@ -19,6 +19,8 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 @Data
 @JsonObject
 public class AuthResult {
+    private static final String PROMPT_FOR_AUTH_METHOD_SELECTION =
+            "PROMPT_FOR_AUTH_METHOD_SELECTION";
     private static final Set<String> RETURN_CODES_POSITIVE = ImmutableSet.of("CORRECT");
     private static final Set<String> RETURN_CODES_NEGATIVE = ImmutableSet.of("FAILED");
 
@@ -44,8 +46,12 @@ public class AuthResult {
         return RETURN_CODES_FINAL.contains(returnCode);
     }
 
+    boolean isAuthenticationFailed() {
+        return RETURN_CODES_NEGATIVE.contains(returnCode);
+    }
+
     boolean isAuthMethodSelectionRequired() {
-        return "PROMPT_FOR_AUTH_METHOD_SELECTION".equals(actionCode)
+        return PROMPT_FOR_AUTH_METHOD_SELECTION.equals(actionCode)
                 && !getSelectableAuthMethods().isEmpty();
     }
 

@@ -4,6 +4,7 @@ import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbCon
 
 import java.time.LocalDate;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 
+@Slf4j
 public class DkbAuthenticator implements PasswordAuthenticator {
 
     private final DkbAuthApiClient authApiClient;
@@ -42,6 +44,10 @@ public class DkbAuthenticator implements PasswordAuthenticator {
 
     private void authenticateUser(String username, String password) throws AuthenticationException {
         AuthResult result = authenticate1stFactor(username, password);
+        log.info(
+                "Authentication result returnCode [{}] and actionCode [{}]",
+                result.getReturnCode(),
+                result.getActionCode());
         result = authenticate2ndFactor(result);
         processAuthenticationResult(result);
     }
@@ -60,7 +66,8 @@ public class DkbAuthenticator implements PasswordAuthenticator {
 
     private AuthResult authenticate2ndFactor(AuthResult previousResult)
             throws AuthenticationException {
-        if (previousResult.isAuthenticationFinished()) {
+        if (previousResult.isAuthenticationFailed()) {
+            log.info("Authentication process has failed");
             return previousResult;
         }
         AuthResult result = select2ndFactorMethodIfNeeded(previousResult);
@@ -70,8 +77,10 @@ public class DkbAuthenticator implements PasswordAuthenticator {
     private AuthResult select2ndFactorMethodIfNeeded(AuthResult previousResult)
             throws AuthenticationException {
         if (!previousResult.isAuthMethodSelectionRequired()) {
+            log.info("Authentication method selection is not required");
             return previousResult;
         }
+        log.info("Selection of authentication method is required");
 
         String methodId =
                 supplementalDataProvider.selectAuthMethod(
@@ -82,6 +91,10 @@ public class DkbAuthenticator implements PasswordAuthenticator {
     private AuthResult provide2ndFactorCode(AuthResult previousResult)
             throws AuthenticationException {
         if (previousResult.isAuthenticationFinished()) {
+            log.info(
+                    "Authentication process is finished. Authentication result returnCode [{}] and actionCode [{}]",
+                    previousResult.getReturnCode(),
+                    previousResult.getActionCode());
             return previousResult;
         }
         String code = supplementalDataProvider.getTanCode();
