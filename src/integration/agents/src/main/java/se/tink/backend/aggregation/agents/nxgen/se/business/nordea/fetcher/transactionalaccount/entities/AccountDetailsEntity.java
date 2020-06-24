@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.business.nordea.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +60,7 @@ public class AccountDetailsEntity {
                 IdModule.builder()
                         .withUniqueIdentifier(getIbanFormatted())
                         .withAccountNumber(account.getProductNumber())
-                        .withAccountName(account.getNickName())
+                        .withAccountName(getAccountName(account))
                         .addIdentifier(new IbanIdentifier(getIbanFormatted()))
                         .addIdentifier(new SwedishIdentifier(longAccountNumber))
                         .setProductName(
@@ -72,5 +73,12 @@ public class AccountDetailsEntity {
             }
         }
         return idModule.build();
+    }
+
+    private String getAccountName(AccountEntity account) {
+        if (!Strings.isNullOrEmpty(account.getNickName())) {
+            return account.getNickName();
+        }
+        return accountHolderName;
     }
 }
