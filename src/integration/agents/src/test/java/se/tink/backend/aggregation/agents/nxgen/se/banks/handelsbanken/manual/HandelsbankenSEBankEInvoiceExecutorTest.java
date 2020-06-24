@@ -32,7 +32,9 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 /** Careful with this test! Actual EInvoice approvals made! */
@@ -65,7 +67,10 @@ public class HandelsbankenSEBankEInvoiceExecutorTest {
         transfer.setDestination(
                 AccountIdentifier.create(AccountIdentifier.Type.SE_BG, destinationAccountNumber));
         transfer.setAmount(Amount.inSEK(AMOUNT));
-        transfer.setDestinationMessage(message);
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue(message);
+        transfer.setRemittanceInformation(remittanceInformation);
 
         String serializedTransfer = SerializationUtils.serializeToString(transfer);
 

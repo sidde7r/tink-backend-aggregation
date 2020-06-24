@@ -25,7 +25,7 @@ public class UpdatePaymentRequest {
                         ? ((SwedishIdentifier) account).getAccountNumber()
                         : account.getIdentifier());
         request.amount = transfer.getAmount().getValue();
-        request.message = transfer.getDestinationMessage();
+        request.message = transfer.getRemittanceInformation().getValue();
         request.payDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(transfer.getDueDate());
         return request;
     }

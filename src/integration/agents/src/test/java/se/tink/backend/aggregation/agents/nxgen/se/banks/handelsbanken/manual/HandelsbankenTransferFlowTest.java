@@ -13,7 +13,9 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.CountryDateHelper;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenTransferFlowTest {
@@ -64,7 +66,10 @@ public class HandelsbankenTransferFlowTest {
         Transfer transfer = new Transfer();
 
         transfer.setAmount(Amount.inSEK(1.0));
-        transfer.setDestinationMessage("Tink dest");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        remittanceInformation.setValue("Tink dest");
+        transfer.setRemittanceInformation(remittanceInformation);
         transfer.setSourceMessage("Tink source");
         transfer.setType(TransferType.BANK_TRANSFER);
         transfer.setDueDate(dateHelper.addDays(dateHelper.getToday(), 7));

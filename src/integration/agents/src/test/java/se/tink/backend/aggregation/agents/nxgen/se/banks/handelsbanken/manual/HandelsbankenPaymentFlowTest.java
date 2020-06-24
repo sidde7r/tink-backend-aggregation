@@ -12,7 +12,9 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.CountryDateHelper;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenPaymentFlowTest {
@@ -76,7 +78,10 @@ public class HandelsbankenPaymentFlowTest {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, 1);
         transfer.setDueDate(c.getTime());
-        transfer.setDestinationMessage("0123456789");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("0123456789");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        transfer.setRemittanceInformation(remittanceInformation);
 
         return transfer;
     }

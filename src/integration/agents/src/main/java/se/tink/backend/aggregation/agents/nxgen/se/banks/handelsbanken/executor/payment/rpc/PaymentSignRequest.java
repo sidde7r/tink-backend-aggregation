@@ -28,7 +28,7 @@ public class PaymentSignRequest implements BaseSignRequest {
         request.payDate = HandelsbankenDateUtils.getTransferDateForBgPg(transfer.getDueDate());
 
         request.recipientName = paymentRecipient.getName();
-        request.message = transfer.getDestinationMessage();
+        request.message = transfer.getRemittanceInformation().getValue();
         request.recipientId = paymentRecipient.getId();
         AccountIdentifier account = transfer.getSource();
         request.accountNumber =
