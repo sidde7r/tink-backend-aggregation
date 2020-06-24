@@ -23,6 +23,7 @@ java_library(
         "//src/integration/payment:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/date",
+        "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_slf4j_slf4j_api",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",

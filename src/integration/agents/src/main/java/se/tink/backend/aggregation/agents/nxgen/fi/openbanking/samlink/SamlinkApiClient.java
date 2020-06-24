@@ -28,9 +28,11 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration> {
 
-    public SamlinkApiClient(final TinkHttpClient client, final SessionStorage sessionStorage) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
+    public SamlinkApiClient(
+            final TinkHttpClient client,
+            final SessionStorage sessionStorage,
+            SamlinkConfiguration configuration) {
+        super(client, sessionStorage, configuration);
     }
 
     public URL getAuthorizeUrl(final String state) {

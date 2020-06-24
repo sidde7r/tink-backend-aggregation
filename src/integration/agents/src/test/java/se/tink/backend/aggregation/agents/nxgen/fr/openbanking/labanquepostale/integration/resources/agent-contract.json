@@ -1,0 +1,40 @@
+{
+  "accounts": [
+    {
+      "accountNumber": "DUMMY_IBAN",
+      "accountExclusion":"NONE",
+      "exactBalance":{
+        "currencyCode":"EUR",
+        "doubleValue":243.47,
+        "scale":2,
+        "unscaledValue":24347,
+        "exactValue":243.47
+      },
+      "currencyCode":"EUR",
+      "bankId":"DUMMYIBAN",
+      "name":"DUMMY_NAME",
+      "ownership":1.0,
+      "type":"CHECKING",
+      "identifiers":"[]",
+      "closed":false,
+      "holderName":"DUMMY_NAME",
+      "flags":"[\"PSD2_PAYMENT_ACCOUNT\"]",
+      "availableCredit":0.0,
+      "balance":243.47
+    }
+  ],
+  "transactions": [
+    {
+      "amount":100.0,
+      "date":1591351200000,
+      "description":"DUMMY_DESCRIPTION",
+      "internalPayload":{},
+      "originalAmount":0.0,
+      "payload":{},
+      "pending":false,
+      "timestamp":0,
+      "type":"DEFAULT",
+      "upcoming":false
+    }
+  ]
+}

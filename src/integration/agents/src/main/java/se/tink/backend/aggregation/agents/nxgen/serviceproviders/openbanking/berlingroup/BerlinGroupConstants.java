@@ -109,6 +109,7 @@ public abstract class BerlinGroupConstants {
 
         public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
         public static final String CLBD = "CLBD";
+        public static final String XPCD = "XPCD";
     }
 
     public static class ErrorMessages {

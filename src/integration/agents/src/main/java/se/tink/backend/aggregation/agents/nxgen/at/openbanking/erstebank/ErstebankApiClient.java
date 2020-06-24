@@ -37,9 +37,12 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.DateFormat;
 
 public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConfiguration> {
-    public ErstebankApiClient(final TinkHttpClient client, final SessionStorage sessionStorage) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
+
+    ErstebankApiClient(
+            final TinkHttpClient client,
+            final SessionStorage sessionStorage,
+            final ErstebankConfiguration configuration) {
+        super(client, sessionStorage, configuration);
     }
 
     public URL getAuthorizeUrl(final String state) {
@@ -70,7 +73,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
 
     @Override
     public String getConsentId() {
-        return getConsent(Collections.EMPTY_LIST).getConsentId();
+        return getConsent(Collections.emptyList()).getConsentId();
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {

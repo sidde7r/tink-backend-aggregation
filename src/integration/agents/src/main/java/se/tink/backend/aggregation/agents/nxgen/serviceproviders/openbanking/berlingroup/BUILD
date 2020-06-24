@@ -22,6 +22,7 @@ java_library(
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/libraries/account_identifier",
+        "//src/libraries/mapper",
         "//src/libraries/metrics:collection",
         "//src/libraries/serialization",
         "//src/libraries/uuid",

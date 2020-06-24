@@ -15,8 +15,6 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -40,9 +38,6 @@ public class KbcApiClientTest {
         final SessionStorage sessionStorageMock = mock(SessionStorage.class);
         final PersistentStorage persistentStorageMock = mock(PersistentStorage.class);
         final KbcConfiguration kbcConfigurationMock = mock(KbcConfiguration.class);
-        final EidasProxyConfiguration eidasProxyConfigurationMock =
-                mock(EidasProxyConfiguration.class);
-        final EidasIdentity eidasIdentityMock = mock(EidasIdentity.class);
 
         when(kbcConfigurationMock.getBaseUrl()).thenReturn(BASE_URL);
         when(kbcConfigurationMock.getRedirectUrl()).thenReturn(REDIRECT_URL);
@@ -54,9 +49,11 @@ public class KbcApiClientTest {
 
         kbcApiClient =
                 new KbcApiClient(
-                        httpClientMock, sessionStorageMock, credentialsMock, persistentStorageMock);
-        kbcApiClient.setConfiguration(
-                kbcConfigurationMock, eidasProxyConfigurationMock, eidasIdentityMock);
+                        httpClientMock,
+                        sessionStorageMock,
+                        kbcConfigurationMock,
+                        credentialsMock,
+                        persistentStorageMock);
     }
 
     @Test

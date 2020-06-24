@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc;
 
+import com.google.inject.Inject;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.configuration.KbcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.executor.payment.KbcPaymentAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.executor.payment.KbcPaymentExecutor;
@@ -9,24 +9,28 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.fetcher.KbcTr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupPaymentAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfiguration> {
-    private KbcApiClient apiClient;
 
-    public KbcAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration);
-        apiClient = new KbcApiClient(client, sessionStorage, credentials, persistentStorage);
+    @Inject
+    public KbcAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
+
+        this.apiClient = createApiClient();
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    @Override
+    protected KbcApiClient createApiClient() {
+        return new KbcApiClient(
+                client, sessionStorage, getConfiguration(), credentials, persistentStorage);
     }
 
     @Override
@@ -39,11 +43,6 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
                 new KbcAuthenticator(apiClient),
                 credentials,
                 strongAuthenticationState);
-    }
-
-    @Override
-    protected KbcApiClient getApiClient() {
-        return apiClient;
     }
 
     @Override
@@ -68,9 +67,8 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, KbcConfigurat
 
     @Override
     protected TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
-        final BerlinGroupAccountFetcher accountFetcher =
-                new BerlinGroupAccountFetcher(getApiClient());
-        final KbcTransactionFetcher transactionFetcher = new KbcTransactionFetcher(getApiClient());
+        final BerlinGroupAccountFetcher accountFetcher = new BerlinGroupAccountFetcher(apiClient);
+        final KbcTransactionFetcher transactionFetcher = new KbcTransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,

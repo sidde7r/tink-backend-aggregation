@@ -55,10 +55,11 @@ public class KbcApiClient extends BerlinGroupApiClient<KbcConfiguration> {
     public KbcApiClient(
             final TinkHttpClient client,
             final SessionStorage sessionStorage,
+            final KbcConfiguration configuration,
             final Credentials credentials,
             final PersistentStorage persistentStorage) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
+        super(client, sessionStorage, configuration);
+
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
     }

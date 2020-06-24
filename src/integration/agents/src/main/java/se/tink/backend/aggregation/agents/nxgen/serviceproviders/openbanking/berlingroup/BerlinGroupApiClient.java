@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
@@ -12,20 +14,19 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
+@RequiredArgsConstructor
 public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupConfiguration> {
-    protected TinkHttpClient client;
-    protected SessionStorage sessionStorage;
-    private TConfiguration configuration;
-    protected EidasProxyConfiguration eidasProxyConfiguration;
-    protected EidasIdentity eidasIdentity;
+
+    protected final TinkHttpClient client;
+    protected final SessionStorage sessionStorage;
+
+    @Getter private final TConfiguration configuration;
 
     public abstract BerlinGroupAccountResponse fetchAccounts();
 
@@ -37,21 +38,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
 
     public abstract OAuth2Token refreshToken(String token);
 
-    public TConfiguration getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(
-            final TConfiguration configuration,
-            EidasProxyConfiguration eidasProxyConfiguration,
-            EidasIdentity eidasIdentity) {
-        this.configuration = configuration;
-        this.eidasProxyConfiguration = eidasProxyConfiguration;
-        this.eidasIdentity = eidasIdentity;
-        client.setEidasProxy(eidasProxyConfiguration);
-    }
-
-    public RequestBuilder getAccountsRequestBuilder(final String url) {
+    protected RequestBuilder getAccountsRequestBuilder(final String url) {
         return client.request(url)
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))

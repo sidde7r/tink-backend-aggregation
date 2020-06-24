@@ -1,27 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink;
 
+import com.google.inject.Inject;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.configuration.SamlinkConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.SamlinkPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.fetcher.transactionalaccount.SamlinkTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConfiguration> {
-    private final SamlinkApiClient apiClient;
 
-    public SamlinkAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration);
-        apiClient = new SamlinkApiClient(client, sessionStorage);
+    @Inject
+    public SamlinkAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
+
+        this.apiClient = createApiClient();
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    @Override
+    protected SamlinkApiClient createApiClient() {
+        return new SamlinkApiClient(client, sessionStorage, getConfiguration());
     }
 
     @Override
@@ -37,23 +40,18 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
     }
 
     @Override
-    protected SamlinkApiClient getApiClient() {
-        return apiClient;
-    }
-
-    @Override
     protected Class<SamlinkConfiguration> getConfigurationClassDescription() {
         return SamlinkConfiguration.class;
     }
 
     @Override
     protected BerlinGroupTransactionFetcher getTransactionFetcher() {
-        return new SamlinkTransactionFetcher(getApiClient(), getConfiguration());
+        return new SamlinkTransactionFetcher(apiClient, getConfiguration());
     }
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        SamlinkPaymentExecutor executor = new SamlinkPaymentExecutor(getApiClient());
+        SamlinkPaymentExecutor executor = new SamlinkPaymentExecutor(apiClient);
         return Optional.of(new PaymentController(executor, executor));
     }
 }

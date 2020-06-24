@@ -1,0 +1,43 @@
+REQUEST 1
+POST https://oauth2.labanquepostale.com/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator : Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"token_type":"bearer", "access_token":"DUMMY_ACCESS_TOKEN", "expires_in":3600, "consented_on":0, "scope":"aisp" }
+
+REQUEST 2
+GET https://api.labanquepostale.com/v1/accounts
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"_links":{"self":{"href":"/v1/accounts"}},"accounts":[{"_links":{"balances":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/transactions"}},"resourceId":"DUMMY_RESOURCE_ID","accountId":{"iban":"DUMMY_IBAN","currency":"EUR"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC"}]}
+
+REQUEST 3
+GET https://api.labanquepostale.com/v1/accounts/DUMMY_RESOURCE_ID/balances
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"balances":[{"balanceAmount":{"amount":"243.47","currency":"EUR"},"balanceType":"XPCD","name":"Avoir disponible"}],"_links":{"self":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/balances"},"transactions":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/transactions"},"parent-list":{"href":"/v1/accounts"}}}
+
+REQUEST 4
+GET https://api.labanquepostale.com/v1/accounts/DUMMY_RESOURCE_ID/transactions
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"_links":{"self":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/transactions"},"parent-list":{"href":"/v1/accounts"},"balances":{"href":"/v1/accounts/DUMMY_RESOURCE_ID/balances"}},"transactions":[{"bookingDate":"2020-06-05","creditDebitIndicator":"CRDT","remittanceInformation":["DUMMY_DESCRIPTION","REFERENCE : 0190156000097016"],"status":"BOOK","transactionAmount":{"amount":"100.00","currency":"EUR"}}]}
