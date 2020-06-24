@@ -27,7 +27,7 @@ public class SparkassenAgentTest {
         usernamePasswordManager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("de", "de-sparkassen-ob")
+                new AgentIntegrationTest.Builder("de", "de-sparkassestadmünchen-ob")
                         .addCredentialField(Field.Key.IBAN, ibanManager.get(IbanArgumentEnum.IBAN))
                         .addCredentialField(
                                 Field.Key.USERNAME,

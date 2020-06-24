@@ -72,7 +72,7 @@ public class SparkassenApiClient {
 
         ConsentRequest getConsentRequest =
                 new ConsentRequest(
-                        new IbanAccessEntity(accountsEntities, accountsEntities),
+                        new IbanAccessEntity(accountsEntities, accountsEntities, accountsEntities),
                         true,
                         LocalDate.now().plusDays(90).toString(),
                         FormValues.FREQUENCY_PER_DAY,
