@@ -104,9 +104,13 @@ public class PaymentRequest {
     private String getExternalTransferMessage(
             Transfer transfer, TransferMessageFormatter transferMessageFormatter) {
         return Optional.ofNullable(transfer)
-                .map(Transfer::getDestinationMessage)
+                .map(t -> t.getRemittanceInformation().getValue())
                 .filter(not(Strings::isNullOrEmpty))
-                .map(s -> transferMessageFormatter.getDestinationMessage(transfer, false))
+                .map(
+                        s ->
+                                transferMessageFormatter
+                                        .getDestinationMessageFromRemittanceInformation(
+                                                transfer, false))
                 .orElse("");
     }
 

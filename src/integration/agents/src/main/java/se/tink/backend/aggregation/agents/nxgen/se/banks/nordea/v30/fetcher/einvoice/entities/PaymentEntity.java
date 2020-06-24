@@ -242,7 +242,7 @@ public class PaymentEntity {
                 && isIdentifierEquals(transfer.getDestination(), getRecipientAccountNumber())
                 && isIdentifierEquals(transfer.getSource(), getFrom())
                 && DateUtils.isSameDay(transfer.getDueDate(), getDue())
-                && Strings.nullToEmpty(transfer.getDestinationMessage())
+                && Strings.nullToEmpty(transfer.getRemittanceInformation().getValue())
                         .equals(Strings.nullToEmpty(message));
     }
 
