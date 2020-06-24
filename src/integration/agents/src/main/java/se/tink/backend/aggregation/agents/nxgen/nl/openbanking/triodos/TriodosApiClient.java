@@ -36,14 +36,15 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfiguration> {
 
-    private Credentials credentials;
+    private final Credentials credentials;
 
-    public TriodosApiClient(final TinkHttpClient client, final SessionStorage sessionStorage) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
-    }
+    TriodosApiClient(
+            final TinkHttpClient client,
+            final SessionStorage sessionStorage,
+            final TriodosConfiguration configuration,
+            final Credentials credentials) {
+        super(client, sessionStorage, configuration);
 
-    public void setCredentials(final Credentials credentials) {
         this.credentials = credentials;
     }
 
@@ -186,6 +187,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 .toString();
     }
 
+    @SuppressWarnings("unused")
     private String getSignature(final String digest, final String xRequestId) {
         throw new NotImplementedException();
     }

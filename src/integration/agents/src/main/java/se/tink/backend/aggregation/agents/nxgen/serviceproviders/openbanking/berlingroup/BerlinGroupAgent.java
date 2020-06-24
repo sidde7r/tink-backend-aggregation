@@ -4,33 +4,31 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class BerlinGroupAgent<
-                TApiCliient extends BerlinGroupApiClient<TConfiguration>,
+                TApiClient extends BerlinGroupApiClient<TConfiguration>,
                 TConfiguration extends BerlinGroupConfiguration>
         extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
-    private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public BerlinGroupAgent(
-            final CredentialsRequest request,
-            final AgentContext context,
-            final AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    protected TApiClient apiClient;
+    protected TransactionalAccountRefreshController transactionalAccountRefreshController;
+
+    public BerlinGroupAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
     }
 
-    protected abstract TApiCliient getApiClient();
+    protected abstract TApiClient createApiClient();
 
     protected TConfiguration getConfiguration() {
         return getAgentConfigurationController()
@@ -40,21 +38,17 @@ public abstract class BerlinGroupAgent<
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        getApiClient()
-                .setConfiguration(
-                        getConfiguration(), configuration.getEidasProxy(), getEidasIdentity());
-
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     protected abstract Class<TConfiguration> getConfigurationClassDescription();
 
     protected BerlinGroupAccountFetcher getAccountFetcher() {
-        return new BerlinGroupAccountFetcher(getApiClient());
+        return new BerlinGroupAccountFetcher(apiClient);
     }
 
     protected BerlinGroupTransactionFetcher getTransactionFetcher() {
-        return new BerlinGroupTransactionFetcher(getApiClient());
+        return new BerlinGroupTransactionFetcher(apiClient);
     }
 
     @Override

@@ -1,30 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank;
 
+import com.google.inject.Inject;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.authenticator.ErstebankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.configuration.ErstebankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.ErstebankPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.fetcher.transactionalaccount.ErstebankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
-import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class ErstebankAgent
         extends BerlinGroupAgent<ErstebankApiClient, ErstebankConfiguration> {
-    private final ErstebankApiClient apiClient;
 
-    public ErstebankAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration);
+    @Inject
+    public ErstebankAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
 
-        apiClient = new ErstebankApiClient(client, sessionStorage);
+        this.apiClient = createApiClient();
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    @Override
+    protected ErstebankApiClient createApiClient() {
+        return new ErstebankApiClient(client, sessionStorage, getConfiguration());
     }
 
     @Override
@@ -37,11 +39,6 @@ public final class ErstebankAgent
                 new ErstebankAuthenticator(apiClient, sessionStorage),
                 credentials,
                 strongAuthenticationState);
-    }
-
-    @Override
-    protected ErstebankApiClient getApiClient() {
-        return apiClient;
     }
 
     @Override

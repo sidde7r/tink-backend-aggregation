@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderKeys;
@@ -22,12 +24,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountEntityBaseEntityWithHref;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.api.Psd2Headers;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -37,9 +37,16 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public final class LaBanquePostaleApiClient
         extends BerlinGroupApiClient<LaBanquePostaleConfiguration> {
 
-    public LaBanquePostaleApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
-        this.client = client;
-        this.sessionStorage = sessionStorage;
+    private final QsealcSigner qsealcSigner;
+
+    public LaBanquePostaleApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            QsealcSigner qsealcSigner,
+            LaBanquePostaleConfiguration configuration) {
+        super(client, sessionStorage, configuration);
+
+        this.qsealcSigner = qsealcSigner;
     }
 
     @Override
@@ -53,14 +60,10 @@ public final class LaBanquePostaleApiClient
     }
 
     public TransactionResponse fetchTransactionsLaBanquePostal(String url) {
-        if (url.startsWith("v1/")) {
-            url =
-                    url.substring(
-                            3); // they return the url with prefix v1/ but api is without that url,
-            // so if the prefix exists it is removed in this line
-        }
+        final Path transactionsPath = preparePathForFetchTransactions(url);
 
-        return buildRequestWithSignature(getConfiguration().getBaseUrl() + "/" + url, "")
+        return buildRequestWithSignature(
+                        getConfiguration().getBaseUrl() + "/" + transactionsPath.toString(), "")
                 .get(TransactionResponse.class);
     }
 
@@ -88,11 +91,7 @@ public final class LaBanquePostaleApiClient
     private String getSignature(final String digest, String requestId) {
         final SignatureEntity signatureEntity = new SignatureEntity(digest, requestId);
 
-        return QsealcSignerImpl.build(
-                        eidasProxyConfiguration.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity)
-                .getSignatureBase64(signatureEntity.toString().getBytes());
+        return qsealcSigner.getSignatureBase64(signatureEntity.toString().getBytes());
     }
 
     private String getAuthorization(final String digest, String requestId) {
@@ -147,8 +146,7 @@ public final class LaBanquePostaleApiClient
                 .getUrl();
     }
 
-    private AccountEntityBaseEntityWithHref populateBalanceForAccount(
-            AccountEntity accountBaseEntityWithHref) {
+    private void populateBalanceForAccount(AccountEntity accountBaseEntityWithHref) {
         BalanceResponse balanceResponse =
                 buildRequestWithSignature(
                                 String.format(
@@ -157,7 +155,6 @@ public final class LaBanquePostaleApiClient
                                 Payload.EMPTY)
                         .get(BalanceResponse.class);
         accountBaseEntityWithHref.setBalances(balanceResponse.getBalances());
-        return accountBaseEntityWithHref;
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
@@ -181,5 +178,15 @@ public final class LaBanquePostaleApiClient
                                 getConfiguration().getBaseUrl() + Urls.CONFIRM_PAYMENT, paymentId),
                         Payload.EMPTY)
                 .post(GetPaymentResponse.class);
+    }
+
+    private Path preparePathForFetchTransactions(String url) {
+        final Path startPath = Paths.get(url);
+        final Path relativePath =
+                startPath.isAbsolute() ? Paths.get("/").relativize(startPath) : startPath;
+
+        return relativePath.startsWith("v1")
+                ? relativePath.subpath(1, relativePath.getNameCount())
+                : relativePath;
     }
 }

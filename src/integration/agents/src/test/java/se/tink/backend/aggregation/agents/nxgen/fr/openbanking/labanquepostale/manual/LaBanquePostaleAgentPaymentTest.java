@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.manual;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

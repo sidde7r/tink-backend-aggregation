@@ -1,0 +1,13 @@
+agentsServiceConfiguration:
+  integrations:
+    45b024bb6f654814882525d8b9e59a6d:
+      tink:
+        baseUrl: "https://api.labanquepostale.com/v1"
+        oauthBaseUrl: "https://oauth2.labanquepostale.com"
+        clientId: "DUMMY_CLIENT_ID"
+        psuIpAddress: null
+        redirectUrl: "https://api.tink.com/api/v1/credentials/third-party/callback"
+        clientSecret: "DUMMY_CLIENT_SECRET"
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
