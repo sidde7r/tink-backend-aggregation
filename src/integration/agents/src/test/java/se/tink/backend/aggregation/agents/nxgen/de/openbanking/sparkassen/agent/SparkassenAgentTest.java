@@ -38,7 +38,7 @@ public class SparkassenAgentTest {
                         .setFinancialInstitutionId("sparkassen")
                         .setAppId("tink")
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(true)
+                        .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
     }
 
