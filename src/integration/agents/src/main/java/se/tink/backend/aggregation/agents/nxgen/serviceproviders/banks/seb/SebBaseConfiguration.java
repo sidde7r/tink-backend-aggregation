@@ -17,4 +17,8 @@ public abstract class SebBaseConfiguration {
     public boolean isBusinessAgent() {
         return false;
     }
+
+    public String getOrganizationNumber() {
+        return "";
+    }
 }
