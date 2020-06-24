@@ -8,6 +8,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
 
 public class SebConfiguration extends SebBaseConfiguration {
+    private String orgNumber;
+
+    public SebConfiguration(String orgNumber) {
+        this.orgNumber = orgNumber;
+    }
 
     @Override
     public String getAuthBaseUrl() {
@@ -32,5 +37,10 @@ public class SebConfiguration extends SebBaseConfiguration {
     @Override
     public boolean isBusinessAgent() {
         return true;
+    }
+
+    @Override
+    public String getOrganizationNumber() {
+        return orgNumber;
     }
 }

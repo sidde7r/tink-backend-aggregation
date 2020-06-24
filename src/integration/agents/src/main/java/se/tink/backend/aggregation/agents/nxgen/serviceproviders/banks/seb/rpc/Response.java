@@ -93,9 +93,16 @@ public class Response {
     }
 
     @JsonIgnore
-    public BusinessEntity getCompanyInformation() {
-        // For now, the policy is to use the first company in the list
-        return payload.getBusinessEntities().get(0);
+    public BusinessEntity getCompanyInformation(String orgNumber) {
+        return payload.getBusinessEntities().stream()
+                .filter(
+                        businessEntity ->
+                                businessEntity
+                                        .getCompanyNumber()
+                                        .substring(0, 10)
+                                        .equals(orgNumber))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid organization number"));
     }
 
     @JsonIgnore

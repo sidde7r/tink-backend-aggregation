@@ -30,7 +30,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetch
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.fetcher.transactionalaccount.entities.TransactionQuery;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Request;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb.rpc.Response;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -41,7 +40,6 @@ public class SebApiClient {
     private final SebBaseConfiguration sebConfiguration;
     private final String sebUUID;
     private final SebSessionStorage sessionStorage;
-    private static final AggregationLogger log = new AggregationLogger(SebApiClient.class);
 
     public SebApiClient(
             TinkHttpClient httpClient,
@@ -282,11 +280,9 @@ public class SebApiClient {
         sessionStorage.putUserInformation(userInformation);
 
         if (sebConfiguration.isBusinessAgent()) {
-            sessionStorage.putCompanyInformation(activateSessionResponse.getCompanyInformation());
-            log.info(
-                    String.format(
-                            "Selected company number to aggregate is %s",
-                            sessionStorage.getCustomerNumber()));
+            sessionStorage.putCompanyInformation(
+                    activateSessionResponse.getCompanyInformation(
+                            sebConfiguration.getOrganizationNumber()));
             activateRole();
         }
     }
