@@ -37,9 +37,9 @@ public class SebBankTransferRequestEntity extends SebTransferRequestEntity {
         request.type = "E";
         request.bankPrefix = "SEB";
 
-        if (!Strings.isNullOrEmpty(transfer.getDestinationMessage())) {
+        if (!Strings.isNullOrEmpty(transfer.getRemittanceInformation().getValue())) {
             TransferMessageFormatter.Messages messages =
-                    transferMessageFormatter.getMessages(transfer, true);
+                    transferMessageFormatter.getMessagesFromRemittanceInformation(transfer, true);
             request.destinationMessage = messages.getDestinationMessage();
             request.sourceMessage = messages.getDestinationMessage();
             return request;
@@ -60,7 +60,7 @@ public class SebBankTransferRequestEntity extends SebTransferRequestEntity {
         request.bankPrefix = BankPrefix.fromAccountIdentifier(transfer.getDestination());
 
         TransferMessageFormatter.Messages messages =
-                transferMessageFormatter.getMessages(transfer, false);
+                transferMessageFormatter.getMessagesFromRemittanceInformation(transfer, false);
         request.destinationMessage = messages.getDestinationMessage();
         request.sourceMessage = messages.getSourceMessage();
 

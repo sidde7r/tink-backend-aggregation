@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SebTransferRequestEntityTest {
@@ -22,7 +24,10 @@ public class SebTransferRequestEntityTest {
         transfer.setAmount(Amount.inSEK(100.01));
         transfer.setSource(new SwedishIdentifier("56241111111"));
         transfer.setDestination(new SwedishIdentifier("56242222222"));
-        transfer.setDestinationMessage("hubba");
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("hubba");
+        remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+        transfer.setRemittanceInformation(remittanceInformation);
         transfer.setSourceMessage("hubba");
 
         TransferMessageFormatter mockedTransferMessageFormatter = mockTransferMessageFormatter();
@@ -44,10 +49,11 @@ public class SebTransferRequestEntityTest {
                         "some formatted source message", "some formatted dest message");
 
         TransferMessageFormatter mock = mock(TransferMessageFormatter.class);
-        when(mock.getDestinationMessage(any(Transfer.class), anyBoolean()))
+        when(mock.getDestinationMessageFromRemittanceInformation(any(Transfer.class), anyBoolean()))
                 .thenReturn(messages.getDestinationMessage());
         when(mock.getSourceMessage(any(Transfer.class))).thenReturn(messages.getSourceMessage());
-        when(mock.getMessages(any(Transfer.class), anyBoolean())).thenReturn(messages);
+        when(mock.getMessagesFromRemittanceInformation(any(Transfer.class), anyBoolean()))
+                .thenReturn(messages);
 
         return mock;
     }

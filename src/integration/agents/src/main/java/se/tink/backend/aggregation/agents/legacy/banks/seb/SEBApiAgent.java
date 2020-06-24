@@ -170,8 +170,10 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -1986,7 +1988,8 @@ public class SEBApiAgent extends AbstractAgent
             EInvoiceListEntity eInvoiceEntity, Transfer transfer)
             throws TransferExecutionException {
         if (!Objects.equal(
-                transfer.getDestinationMessage(), eInvoiceEntity.getDestinationMessage())) {
+                transfer.getRemittanceInformation().getValue(),
+                eInvoiceEntity.getDestinationMessage())) {
             cancelTransfer(
                     catalog.getString(
                             TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_MESSAGE));
@@ -2095,12 +2098,16 @@ public class SEBApiAgent extends AbstractAgent
     private void executeExternalTransfer(Transfer transfer) throws Exception {
         SebTransferRequestEntity externalTransfer;
         if (isBgOrPg(transfer)) {
-            GiroMessageValidator.ValidationResult validationResult =
-                    validateBGPGTransferOrThrow(transfer);
-            boolean useMessageAsOcr = isDestinationMessageOcr(validationResult);
+            Optional<List<GiroEntity>> searchResult = findGiroEntity(transfer.getDestination());
+            validateBGPGTransferOrThrow(searchResult);
+            RemittanceInformation remittanceInformation = transfer.getRemittanceInformation();
+            if (remittanceInformation.getType() == null) {
+                GiroMessageValidator.ValidationResult validationResult =
+                        validateRemittanceInformation(remittanceInformation, searchResult);
+                setRemittanceInformationType(remittanceInformation, validationResult);
+            }
             externalTransfer =
-                    SebInvoiceTransferRequestEntity.createInvoiceTransfer(
-                            transfer, customerId, useMessageAsOcr);
+                    SebInvoiceTransferRequestEntity.createInvoiceTransfer(transfer, customerId);
         } else {
             externalTransfer =
                     SebBankTransferRequestEntity.createExternalBankTransfer(
@@ -2120,18 +2127,19 @@ public class SEBApiAgent extends AbstractAgent
         }
     }
 
-    private boolean isDestinationMessageOcr(
+    private void setRemittanceInformationType(
+            RemittanceInformation remittanceInformation,
             GiroMessageValidator.ValidationResult validationResult) {
         switch (validationResult.getAllowedType()) {
             case MESSAGE:
-                return false;
+                remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
             case OCR:
-                return true;
+                remittanceInformation.setType(RemittanceInformationType.OCR);
             default:
                 // TODO: What to do if we have both a valid message and valid OCR in
                 // validationResult? We just prioritize OCR for now, and if not present use message
                 // instead
-                return validationResult.getValidOcr().isPresent();
+                remittanceInformation.setType(RemittanceInformationType.OCR);
         }
     }
 
@@ -2142,21 +2150,21 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     /** Ensure we only find one entity for a given destination of the same type as the transfer. */
-    private GiroMessageValidator.ValidationResult validateBGPGTransferOrThrow(Transfer transfer) {
-        Optional<List<GiroEntity>> searchResult = findGiroEntity(transfer.getDestination());
-
+    private void validateBGPGTransferOrThrow(Optional<List<GiroEntity>> searchResult) {
         if (!searchResult.isPresent() || searchResult.get().size() != 1) {
             cancelTransfer(
                     catalog.getString(
                             TransferExecutionException.EndUserMessage.INVALID_DESTINATION));
         }
+    }
 
+    private GiroMessageValidator.ValidationResult validateRemittanceInformation(
+            RemittanceInformation remittanceInformation, Optional<List<GiroEntity>> searchResult) {
+        String remittanceInformationValue = remittanceInformation.getValue();
         GiroEntity giroEntity = searchResult.get().get(0);
-
         GiroMessageValidator messageValidator = giroEntity.createMessageValidator();
-        String destinationMessage = transfer.getDestinationMessage();
 
-        if (destinationMessage.length() > 100) {
+        if (remittanceInformationValue.length() > 100) {
             cancelTransfer(
                     catalog.getString(
                             TransferExecutionException.EndUserMessageParametrized
@@ -2165,7 +2173,7 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         GiroMessageValidator.ValidationResult validationResult =
-                messageValidator.validate(destinationMessage);
+                messageValidator.validate(remittanceInformationValue);
 
         boolean isValidMessage = false;
         String errorMessage =
