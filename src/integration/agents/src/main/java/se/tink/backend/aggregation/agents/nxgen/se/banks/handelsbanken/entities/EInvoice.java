@@ -51,7 +51,6 @@ public class EInvoice extends BaseResponse {
             account.applyTo(transfer);
         }
 
-        transfer.setDestinationMessage(getMessage());
         transfer.setSourceMessage(recipient.getName());
 
         if (approvalId != null) {

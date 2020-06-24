@@ -75,7 +75,6 @@ public class PaymentDetails extends BaseResponse implements UpdatablePayment {
             account.applyTo(transfer);
         }
 
-        transfer.setDestinationMessage(getMessage());
         RemittanceInformation remittanceInformation = new RemittanceInformation();
         remittanceInformation.setValue(getMessage());
         transfer.setRemittanceInformation(remittanceInformation);
