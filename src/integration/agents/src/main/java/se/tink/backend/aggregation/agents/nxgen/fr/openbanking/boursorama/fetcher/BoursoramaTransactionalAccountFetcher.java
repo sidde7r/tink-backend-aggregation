@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.BalanceAmountEntity;
@@ -25,7 +24,6 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -42,15 +40,13 @@ public class BoursoramaTransactionalAccountFetcher
     private static final String STATUS_BOOKED = "BOOK";
 
     private final BoursoramaApiClient apiClient;
-    private final SessionStorage sessionStorage;
     private final Clock clock;
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        String userHash = sessionStorage.get(BoursoramaConstants.USER_HASH);
-        return apiClient.fetchAccounts(userHash).getAccounts().stream()
+        return apiClient.fetchAccounts().getAccounts().stream()
                 .filter(a -> a.getCashAccountType().equals(CASH_ACCOUNT))
-                .map(account -> map(account, userHash))
+                .map(this::mapAccountEntityToTransactionalAccount)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
@@ -59,8 +55,6 @@ public class BoursoramaTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-
-        final String userHash = sessionStorage.get(BoursoramaConstants.USER_HASH);
 
         final LocalDate fromDateLocal = getLocalDateFromDate(fromDate);
         final LocalDate toDateLocal = getLocalDateFromDate(toDate);
@@ -74,17 +68,16 @@ public class BoursoramaTransactionalAccountFetcher
         final LocalDate limitedFromDate =
                 oldestDateForFetch.isAfter(fromDateLocal) ? oldestDateForFetch : fromDateLocal;
 
-        return apiClient
-                .fetchTransactions(
-                        userHash, account.getApiIdentifier(), limitedFromDate, toDateLocal)
+        return apiClient.fetchTransactions(account.getApiIdentifier(), limitedFromDate, toDateLocal)
                 .getTransactions().stream()
                 .map(this::mapTransaction)
                 .collect(collectingAndThen(Collectors.toList(), PaginatorResponseImpl::create));
     }
 
-    private Optional<TransactionalAccount> map(AccountEntity account, String userHash) {
+    private Optional<TransactionalAccount> mapAccountEntityToTransactionalAccount(
+            AccountEntity account) {
         BalanceAmountEntity balance =
-                apiClient.fetchBalances(userHash, account.getResourceId()).getBalances().stream()
+                apiClient.fetchBalances(account.getResourceId()).getBalances().stream()
                         .filter((this::isAvailableBalance))
                         .findAny()
                         .map(BalanceEntity::getBalanceAmount)

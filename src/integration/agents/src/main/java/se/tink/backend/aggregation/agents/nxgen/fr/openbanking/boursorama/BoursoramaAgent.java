@@ -4,14 +4,18 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama
 
 import com.google.inject.Inject;
 import java.time.Clock;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.authenticator.BoursoramaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
@@ -21,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.configuration.BoursoramaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.IdentityEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.BoursoramaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.BoursoramaTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.payment.BoursoramaPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
@@ -37,6 +42,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.identitydata.IdentityData;
 
@@ -44,11 +50,13 @@ import se.tink.libraries.identitydata.IdentityData;
 public class BoursoramaAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor,
                 RefreshCheckingAccountsExecutor,
-                RefreshSavingsAccountsExecutor {
+                RefreshSavingsAccountsExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final BoursoramaApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final BoursoramaAuthenticator authenticator;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     @Inject
     public BoursoramaAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
@@ -63,6 +71,8 @@ public class BoursoramaAgent extends NextGenerationAgent
                 new BoursoramaAuthenticator(
                         this.apiClient, this.sessionStorage, agentConfiguration);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+
+        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     @Override
@@ -104,8 +114,7 @@ public class BoursoramaAgent extends NextGenerationAgent
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
         BoursoramaTransactionalAccountFetcher accountFetcher =
-                new BoursoramaTransactionalAccountFetcher(
-                        apiClient, sessionStorage, Clock.system(ZONE_ID));
+                new BoursoramaTransactionalAccountFetcher(apiClient, Clock.system(ZONE_ID));
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -142,8 +151,7 @@ public class BoursoramaAgent extends NextGenerationAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        String accessToken = sessionStorage.get(BoursoramaConstants.USER_HASH);
-        IdentityEntity identityEntity = apiClient.fetchIdentityData(accessToken);
+        IdentityEntity identityEntity = apiClient.fetchIdentityData();
 
         return new FetchIdentityDataResponse(
                 IdentityData.builder()
@@ -188,5 +196,15 @@ public class BoursoramaAgent extends NextGenerationAgent
                         supplementalInformationHelper);
 
         return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new BoursoramaTransferDestinationFetcher(apiClient));
     }
 }

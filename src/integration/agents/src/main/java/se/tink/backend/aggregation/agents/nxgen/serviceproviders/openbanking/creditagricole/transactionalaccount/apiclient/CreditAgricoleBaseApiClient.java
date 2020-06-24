@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.PutConsentsRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -28,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
-public class CreditAgricoleBaseApiClient {
+public class CreditAgricoleBaseApiClient implements FrAispApiClient {
 
     private final TinkHttpClient client;
     private final CreditAgricoleStorage creditAgricoleStorage;
@@ -79,6 +80,7 @@ public class CreditAgricoleBaseApiClient {
                 .get(EndUserIdentityResponse.class);
     }
 
+    @Override
     public Optional<GetTrustedBeneficiariesResponse> getTrustedBeneficiaries() {
         return getTrustedBeneficiaries(BENEFICIARIES_PATH);
     }

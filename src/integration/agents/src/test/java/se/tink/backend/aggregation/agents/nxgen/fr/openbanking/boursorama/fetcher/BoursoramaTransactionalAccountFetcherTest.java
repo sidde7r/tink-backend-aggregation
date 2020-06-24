@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetch
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants.ZONE_ID;
@@ -21,7 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.BalanceResponse;
@@ -31,7 +29,6 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetche
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BoursoramaTransactionalAccountFetcherTest {
@@ -45,13 +42,9 @@ public class BoursoramaTransactionalAccountFetcherTest {
     public void setUp() throws Exception {
         apiClient = Mockito.mock(BoursoramaApiClient.class);
 
-        final SessionStorage sessionStorageMock = Mockito.mock(SessionStorage.class);
         final Clock clockMock = createClockMock();
 
-        accountFetcher =
-                new BoursoramaTransactionalAccountFetcher(apiClient, sessionStorageMock, clockMock);
-
-        when(sessionStorageMock.get(eq(BoursoramaConstants.USER_HASH))).thenReturn("USER_HASH_123");
+        accountFetcher = new BoursoramaTransactionalAccountFetcher(apiClient, clockMock);
     }
 
     @Test
@@ -66,8 +59,8 @@ public class BoursoramaTransactionalAccountFetcherTest {
                         AccountsData.FETCH_BALANCES_RESPONSE, BalanceResponse.class);
 
         // when
-        when(apiClient.fetchAccounts(eq("USER_HASH_123"))).thenReturn(accountsResponse);
-        when(apiClient.fetchBalances(eq("USER_HASH_123"), anyString())).thenReturn(balanceResponse);
+        when(apiClient.fetchAccounts()).thenReturn(accountsResponse);
+        when(apiClient.fetchBalances(anyString())).thenReturn(balanceResponse);
 
         List<TransactionalAccount> accounts = new ArrayList<>(accountFetcher.fetchAccounts());
 
@@ -97,8 +90,8 @@ public class BoursoramaTransactionalAccountFetcherTest {
                         BalanceResponse.class);
 
         // when
-        when(apiClient.fetchAccounts(eq("USER_HASH_123"))).thenReturn(accountsResponse);
-        when(apiClient.fetchBalances(eq("USER_HASH_123"), anyString())).thenReturn(balanceResponse);
+        when(apiClient.fetchAccounts()).thenReturn(accountsResponse);
+        when(apiClient.fetchBalances(anyString())).thenReturn(balanceResponse);
 
         // then
         Throwable thrown = catchThrowable(accountFetcher::fetchAccounts);
@@ -123,7 +116,7 @@ public class BoursoramaTransactionalAccountFetcherTest {
 
         // when
         when(account.getApiIdentifier()).thenReturn("123456");
-        when(apiClient.fetchTransactions("USER_HASH_123", "123456", localDateFrom, localDateTo))
+        when(apiClient.fetchTransactions("123456", localDateFrom, localDateTo))
                 .thenReturn(accountsResponse);
 
         PaginatorResponse paginatorResponse =
