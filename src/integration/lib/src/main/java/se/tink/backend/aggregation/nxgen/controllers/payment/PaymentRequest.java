@@ -6,7 +6,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.payment.rpc.Reference;
-import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -36,13 +35,10 @@ public class PaymentRequest {
                         transfer.getDestination(),
                         transfer.getDestination().getName().orElse(null));
 
-        Reference referenceInRequest = null;
-        if (TransferType.PAYMENT.equals(transfer.getType())
-                || TransferType.EINVOICE.equals(transfer.getType())
-                || TransferType.BANK_TRANSFER.equals(transfer.getType())) {
-            referenceInRequest =
-                    new Reference(transfer.getType().toString(), transfer.getDestinationMessage());
-        }
+        Reference referenceInRequest =
+                new Reference(
+                        transfer.getType().toString(),
+                        transfer.getRemittanceInformation().getValue());
 
         Payment.Builder paymentInRequestBuilder =
                 new Payment.Builder()
