@@ -273,11 +273,8 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                 OBJECT_MAPPER
                                         .convertValue(allSecretsMapObj, AgentConfiguration.class)
                                         .getRedirectUrl())
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Common configuration is missing redirectUrl for appId: "
-                                                        + appId));
+                        // TPP Secrets is not used
+                        .orElse("");
 
         AgentConfiguration<T> agentConfiguration =
                 new AgentConfiguration.Builder()
