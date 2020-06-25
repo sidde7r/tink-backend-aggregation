@@ -7,7 +7,6 @@ import java.security.PrivateKey;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -24,25 +23,18 @@ public class StarlingConfiguration implements ClientConfiguration {
 
     @JsonProperty @Secret private String keyUid;
     @JsonProperty @Secret private String signingKey;
-    @JsonProperty @AgentConfigParam private String redirectUrl;
-
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl), "Starling redirectUrl could not load.");
-        return redirectUrl;
-    }
 
     public ClientConfigurationEntity getAisConfiguration() {
         Preconditions.checkNotNull(aisClientId, "Starling AIS configuration could not load.");
         Preconditions.checkNotNull(aisClientSecret, "Starling AIS configuration could not load.");
-        return new ClientConfigurationEntity(aisClientId, aisClientSecret, redirectUrl);
+        return new ClientConfigurationEntity(aisClientId, aisClientSecret);
     }
 
     public ClientConfigurationEntity getPisConfiguration() {
 
         Preconditions.checkNotNull(pisClientId, "Starling PIS configuration could not load.");
         Preconditions.checkNotNull(pisClientSecret, "Starling PIS configuration could not load.");
-        return new ClientConfigurationEntity(pisClientId, pisClientSecret, redirectUrl);
+        return new ClientConfigurationEntity(pisClientId, pisClientSecret);
     }
 
     public String getKeyUid() {

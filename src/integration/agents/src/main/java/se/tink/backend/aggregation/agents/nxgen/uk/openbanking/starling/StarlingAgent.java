@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.ProductionAgentComponentProvider;
@@ -48,14 +49,18 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(ProductionAgentComponentProvider.create(request, context, signatureKeyPair));
 
-        StarlingConfiguration starlingConfiguration =
+        final AgentConfiguration<StarlingConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(StarlingConfiguration.class);
+                        .getAgentCommonConfiguration(StarlingConfiguration.class);
+        final StarlingConfiguration starlingConfiguration =
+                agentConfiguration.getClientConfiguration();
 
         aisConfiguration = starlingConfiguration.getAisConfiguration();
         pisConfiguration = starlingConfiguration.getPisConfiguration();
-        redirectUrl = starlingConfiguration.getRedirectUrl();
-        authenticator = new StarlingOAut2Authenticator(persistentStorage, client, aisConfiguration);
+        redirectUrl = agentConfiguration.getRedirectUrl();
+        authenticator =
+                new StarlingOAut2Authenticator(
+                        persistentStorage, client, aisConfiguration, redirectUrl);
         apiClient = new StarlingApiClient(client, authenticator);
         transferDestinationRefreshController = constructTransferDestinationRefreshController();
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
