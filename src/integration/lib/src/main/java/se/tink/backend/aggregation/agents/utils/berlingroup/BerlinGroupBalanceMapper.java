@@ -14,11 +14,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ComparatorUtils;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BerlinGroupBalanceMapper {
 
     private static final List<BalanceType> BOOKED_BALANCE_PREFERRED_TYPES =
