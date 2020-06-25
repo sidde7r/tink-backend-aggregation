@@ -11,7 +11,6 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaString;
 import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientIdConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ClientInfo;
@@ -40,8 +39,6 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     @Secret
     private String softwareStatementAssertion;
 
-    @JsonProperty @AgentConfigParam private String redirectUrl;
-
     @JsonProperty(required = true)
     @JsonSchemaDescription("The one you used in software statement")
     @JsonSchemaTitle("Software ID")
@@ -66,7 +63,7 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
 
     @Override
     public SoftwareStatementAssertion getSoftwareStatementAssertion() {
-        return new SoftwareStatementAssertion(softwareStatementAssertion, softwareId, redirectUrl);
+        return new SoftwareStatementAssertion(softwareStatementAssertion, softwareId);
     }
 
     @Override

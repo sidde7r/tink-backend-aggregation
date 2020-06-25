@@ -18,6 +18,7 @@ public final class UkOpenBankingConfigurationProvider
     @Override
     public UkOpenBankingConfiguration get() {
         return context.getAgentConfigurationController()
-                .getAgentConfiguration(UkOpenBankingConfiguration.class);
+                .getAgentCommonConfiguration(UkOpenBankingConfiguration.class)
+                .getClientConfiguration();
     }
 }

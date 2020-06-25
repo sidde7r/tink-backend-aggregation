@@ -9,14 +9,12 @@ public class SoftwareStatementAssertion {
 
     private String assertion;
     private String softwareId;
-    private String redirectUri;
 
     public SoftwareStatementAssertion() {}
 
-    public SoftwareStatementAssertion(String assertion, String softwareId, String redirectUri) {
+    public SoftwareStatementAssertion(String assertion, String softwareId) {
         this.assertion = assertion;
         this.softwareId = softwareId;
-        this.redirectUri = redirectUri;
     }
 
     public String getAssertion() {
@@ -25,10 +23,6 @@ public class SoftwareStatementAssertion {
 
     public String getSoftwareId() {
         return softwareId;
-    }
-
-    public String getRedirectUri() {
-        return redirectUri;
     }
 
     public String[] getAllRedirectUris() {

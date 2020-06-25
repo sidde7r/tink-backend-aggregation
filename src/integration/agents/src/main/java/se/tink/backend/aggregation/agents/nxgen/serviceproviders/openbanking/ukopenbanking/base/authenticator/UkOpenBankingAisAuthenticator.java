@@ -31,6 +31,7 @@ public class UkOpenBankingAisAuthenticator implements OpenIdAuthenticator {
                         .withAccountsScope()
                         .withClientInfo(providerConfiguration.getClientInfo())
                         .withSoftwareStatement(apiClient.getSoftwareStatement())
+                        .withRedirectUrl(apiClient.getRedirectUrl())
                         .withState(state)
                         .withNonce(nonce)
                         .withCallbackUri(callbackUri)

@@ -32,6 +32,7 @@ public class OpenIdApiClient {
 
     protected final TinkHttpClient httpClient;
     protected final SoftwareStatementAssertion softwareStatement;
+    protected final String redirectUrl;
     protected final ProviderConfiguration providerConfiguration;
     protected final JwtSigner signer;
     private final URL wellKnownURL;
@@ -49,11 +50,13 @@ public class OpenIdApiClient {
             TinkHttpClient httpClient,
             JwtSigner signer,
             SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
             ProviderConfiguration providerConfiguration,
             URL wellKnownURL,
             RandomValueGenerator randomValueGenerator) {
         this.httpClient = httpClient;
         this.softwareStatement = softwareStatement;
+        this.redirectUrl = redirectUrl;
         this.providerConfiguration = providerConfiguration;
         this.wellKnownURL = wellKnownURL;
         this.signer = signer;
@@ -92,6 +95,10 @@ public class OpenIdApiClient {
         return softwareStatement;
     }
 
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
     public JwtSigner getSigner() {
         return signer;
     }
@@ -116,9 +123,7 @@ public class OpenIdApiClient {
         WellKnownResponse wellknownConfiguration = getWellKnownConfiguration();
 
         TokenRequestForm requestForm =
-                new TokenRequestForm()
-                        .withGrantType(grantType)
-                        .withRedirectUri(softwareStatement.getRedirectUri());
+                new TokenRequestForm().withGrantType(grantType).withRedirectUri(redirectUrl);
 
         handleFormAuthentication(requestForm, wellknownConfiguration);
 
@@ -174,7 +179,7 @@ public class OpenIdApiClient {
                 new TokenRequestForm()
                         .withGrantType(grantType)
                         .withScope(scope)
-                        .withRedirectUri(softwareStatement.getRedirectUri());
+                        .withRedirectUri(redirectUrl);
 
         handleFormAuthentication(requestForm, wellknownConfiguration);
 
@@ -276,9 +281,7 @@ public class OpenIdApiClient {
                                                 "Provider does not support the mandatory scopes."));
 
         String redirectUri =
-                Optional.ofNullable(callbackUri)
-                        .filter(s -> !s.isEmpty())
-                        .orElse(softwareStatement.getRedirectUri());
+                Optional.ofNullable(callbackUri).filter(s -> !s.isEmpty()).orElse(redirectUrl);
 
         URL authorizationEndpoint =
                 Optional.ofNullable(authEndpoint)
