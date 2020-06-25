@@ -74,6 +74,7 @@ public class HandelsbankenConstants {
             PENDING_EINVOICES("einvoice-pending"),
             PENDING_TRANSACTIONS("pending-transactions"),
             PENSION_DETAILS("pension-detail"),
+            PENSION_OVERVIEW("pension-overview"),
             PINNED_ACTIVATION("pinned-activation"),
             PINNED_LOGIN("pinned-login"),
             SECURITIES_HOLDINGS("securities-holdings"),
