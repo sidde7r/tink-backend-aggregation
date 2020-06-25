@@ -380,11 +380,14 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
-        } catch (Exception e) {
+        } catch (Throwable e) { // We are catching Throwable just because there may be serialization
+            // Errors down the line on Agent and we want to know, log and Fail transfer if
+            // some thing is broken in any Agent
+
             // Catching this exception here means that the Credentials will not get status
             // TEMPORARY_ERROR.
             metricAction.failed();
-            log.error(transfer, "Could not execute transfer.", e);
+            log.error(transfer, "Could not execute transfer. Something is badly broken", e);
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
             signableOperation.setStatusMessage(catalog.getString("Something went wrong."));
