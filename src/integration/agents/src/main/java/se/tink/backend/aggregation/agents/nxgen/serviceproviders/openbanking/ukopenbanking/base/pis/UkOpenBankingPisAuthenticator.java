@@ -60,6 +60,7 @@ public class UkOpenBankingPisAuthenticator implements OpenIdAuthenticator {
                         .withClientInfo(providerConfiguration.getClientInfo())
                         .withPaymentsScope()
                         .withSoftwareStatement(softwareStatement)
+                        .withRedirectUrl(apiClient.getRedirectUrl())
                         .withState(state)
                         .withNonce(nonce)
                         .withWellknownConfiguration(wellKnownConfiguration)

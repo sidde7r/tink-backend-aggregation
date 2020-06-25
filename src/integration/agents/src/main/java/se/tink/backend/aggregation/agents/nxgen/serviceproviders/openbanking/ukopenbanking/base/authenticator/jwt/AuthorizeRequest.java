@@ -29,6 +29,7 @@ public class AuthorizeRequest {
     public static class Builder {
         private WellKnownResponse wellknownConfiguration;
         private SoftwareStatementAssertion softwareStatement;
+        private String redirectUrl;
         private ClientInfo clientInfo;
         private String intentId;
         private String state;
@@ -54,6 +55,11 @@ public class AuthorizeRequest {
 
         public Builder withWellknownConfiguration(WellKnownResponse wellknownConfiguration) {
             this.wellknownConfiguration = wellknownConfiguration;
+            return this;
+        }
+
+        public Builder withRedirectUrl(String redirectUrl) {
+            this.redirectUrl = redirectUrl;
             return this;
         }
 
@@ -105,9 +111,7 @@ public class AuthorizeRequest {
             String scope = scopes.build().stream().collect(Collectors.joining(" "));
 
             String redirectUri =
-                    Optional.ofNullable(callbackUri)
-                            .filter(s -> !s.isEmpty())
-                            .orElse(softwareStatement.getRedirectUri());
+                    Optional.ofNullable(callbackUri).filter(s -> !s.isEmpty()).orElse(redirectUrl);
 
             String responseTypes =
                     OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()

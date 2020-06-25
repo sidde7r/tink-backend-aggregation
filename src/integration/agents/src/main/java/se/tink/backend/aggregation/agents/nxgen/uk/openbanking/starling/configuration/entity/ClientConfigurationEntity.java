@@ -4,12 +4,10 @@ public class ClientConfigurationEntity {
 
     private String clientId;
     private String clientSecret;
-    private String redirectUrl;
 
-    public ClientConfigurationEntity(String clientId, String clientSecret, String redirectUrl) {
+    public ClientConfigurationEntity(String clientId, String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.redirectUrl = redirectUrl;
     }
 
     public String getClientId() {
@@ -18,9 +16,5 @@ public class ClientConfigurationEntity {
 
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    public String getRedirectUrl() {
-        return redirectUrl;
     }
 }

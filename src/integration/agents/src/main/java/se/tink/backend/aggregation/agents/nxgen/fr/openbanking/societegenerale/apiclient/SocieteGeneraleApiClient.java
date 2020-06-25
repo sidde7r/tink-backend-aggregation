@@ -35,6 +35,7 @@ public class SocieteGeneraleApiClient implements FrAispApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private final SocieteGeneraleConfiguration configuration;
+    private final String redirectUrl;
     private final SignatureHeaderProvider signatureHeaderProvider;
 
     public TokenResponse exchangeAuthorizationCodeOrRefreshToken(AbstractForm request) {
@@ -159,7 +160,7 @@ public class SocieteGeneraleApiClient implements FrAispApiClient {
     }
 
     private void getAndSavePisToken() {
-        PisTokenRequest request = new PisTokenRequest(configuration.getRedirectUrl());
+        PisTokenRequest request = new PisTokenRequest(redirectUrl);
         TokenResponse getTokenResponse = exchangeAuthorizationCodeOrRefreshToken(request);
         OAuth2Token token = getTokenResponse.toOauthToken();
         persistentStorage.put(SocieteGeneraleConstants.StorageKeys.PISP_OAUTH_TOKEN, token);

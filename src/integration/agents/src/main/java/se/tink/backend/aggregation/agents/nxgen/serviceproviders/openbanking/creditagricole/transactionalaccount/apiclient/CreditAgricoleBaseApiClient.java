@@ -34,6 +34,7 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
     private final TinkHttpClient client;
     private final CreditAgricoleStorage creditAgricoleStorage;
     private final CreditAgricoleBaseConfiguration configuration;
+    private final String redirectUrl;
 
     public TokenResponse getToken(final String code) {
         final TokenRequest request = createAuthTokenRequest(code);
@@ -131,7 +132,7 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
                 .scope(CreditAgricoleBaseConstants.QueryValues.SCOPE)
                 .grantType(CreditAgricoleBaseConstants.QueryValues.GRANT_TYPE)
                 .code(authCode)
-                .redirectUri(configuration.getRedirectUrl())
+                .redirectUri(redirectUrl)
                 .clientId(configuration.getClientId())
                 .build();
     }
@@ -141,7 +142,7 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
                 .scope(CreditAgricoleBaseConstants.QueryValues.SCOPE)
                 .grantType(CreditAgricoleBaseConstants.QueryValues.REFRESH_TOKEN)
                 .refreshToken(refreshToken)
-                .redirectUri(configuration.getRedirectUrl())
+                .redirectUri(redirectUrl)
                 .clientId(configuration.getClientId())
                 .build();
     }

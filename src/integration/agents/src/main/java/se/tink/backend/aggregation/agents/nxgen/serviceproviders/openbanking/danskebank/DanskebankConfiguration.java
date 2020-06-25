@@ -17,7 +17,6 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     @JsonProperty @Secret private String organizationId;
     @JsonProperty @Secret private String clientId;
     @JsonProperty @Secret private String softwareStatementAssertion;
-    @JsonProperty @Secret private String redirectUrl;
     @JsonProperty @Secret private String softwareId;
 
     @Override
@@ -28,7 +27,7 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
 
     @Override
     public SoftwareStatementAssertion getSoftwareStatementAssertion() {
-        return new SoftwareStatementAssertion(softwareStatementAssertion, softwareId, redirectUrl);
+        return new SoftwareStatementAssertion(softwareStatementAssertion, softwareId);
     }
 
     @Override

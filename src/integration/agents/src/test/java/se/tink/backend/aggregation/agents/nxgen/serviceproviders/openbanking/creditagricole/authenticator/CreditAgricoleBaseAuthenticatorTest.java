@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -22,6 +23,7 @@ public class CreditAgricoleBaseAuthenticatorTest {
 
     private CreditAgricoleBaseApiClient apiClient;
     private PersistentStorage persistentStorage;
+    private AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration;
     private CreditAgricoleBaseConfiguration configuration;
 
     private CreditAgricoleBaseAuthenticator creditAgricoleBaseAuthenticator;
@@ -34,13 +36,17 @@ public class CreditAgricoleBaseAuthenticatorTest {
         String clientId = "clientId";
         String redirectUrl = "redirectUrl";
         String authorizeUrl = "authorizeUrl";
-
+        agentConfiguration =
+                new AgentConfiguration.Builder<>()
+                        .setClientConfiguration(configuration)
+                        .setRedirectUrl(redirectUrl)
+                        .build();
         when(configuration.getClientId()).thenReturn(clientId);
-        when(configuration.getRedirectUrl()).thenReturn(redirectUrl);
         when(configuration.getAuthorizeUrl()).thenReturn(authorizeUrl);
 
         creditAgricoleBaseAuthenticator =
-                new CreditAgricoleBaseAuthenticator(apiClient, persistentStorage, configuration);
+                new CreditAgricoleBaseAuthenticator(
+                        apiClient, persistentStorage, agentConfiguration);
     }
 
     @Test

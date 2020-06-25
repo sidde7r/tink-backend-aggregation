@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configurati
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.AktiaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.AktiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.transactionalaccount.converter.AktiaTransactionalAccountConverter;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -37,14 +38,12 @@ public class AktiaAgent extends SubsequentProgressiveGenerationAgent
     public AktiaAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
 
-        final AktiaConfiguration agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(AktiaConfiguration.class)
-                        .getClientConfiguration();
+        final AktiaConfiguration aktiaConfiguration =
+                getAgentConfiguration().getClientConfiguration();
 
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
         this.aktiaApiClient =
-                new AktiaApiClient(this.client, agentConfiguration, this.tokenStorage);
+                new AktiaApiClient(this.client, aktiaConfiguration, this.tokenStorage);
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
@@ -98,8 +97,9 @@ public class AktiaAgent extends SubsequentProgressiveGenerationAgent
                 otpCodeExchanger);
     }
 
-    private AktiaConfiguration getAgentConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(AktiaConfiguration.class);
+    private AgentConfiguration<AktiaConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(AktiaConfiguration.class);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {

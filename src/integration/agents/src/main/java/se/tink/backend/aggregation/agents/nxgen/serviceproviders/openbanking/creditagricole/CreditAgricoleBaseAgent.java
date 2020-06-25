@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.transfer.CreditAgricoleTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -45,6 +46,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
 
     private final CreditAgricoleBaseApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private final AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration;
     private final CreditAgricoleBaseConfiguration creditAgricoleConfiguration;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
 
@@ -55,11 +57,15 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
         final CreditAgricoleStorage creditAgricoleStorage =
                 new CreditAgricoleStorage(this.persistentStorage);
 
-        this.creditAgricoleConfiguration = getCreditAgricoleConfiguration();
+        this.agentConfiguration = getAgentConfiguration();
+        this.creditAgricoleConfiguration = agentConfiguration.getClientConfiguration();
 
         this.apiClient =
                 new CreditAgricoleBaseApiClient(
-                        this.client, creditAgricoleStorage, this.creditAgricoleConfiguration);
+                        this.client,
+                        creditAgricoleStorage,
+                        this.creditAgricoleConfiguration,
+                        this.agentConfiguration.getRedirectUrl());
 
         final CreditAgricoleBaseMessageSignInterceptor creditAgricoleBaseMessageSignInterceptor =
                 new CreditAgricoleBaseMessageSignInterceptor(
@@ -116,7 +122,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                         persistentStorage,
                         supplementalInformationHelper,
                         new CreditAgricoleBaseAuthenticator(
-                                apiClient, persistentStorage, creditAgricoleConfiguration),
+                                apiClient, persistentStorage, agentConfiguration),
                         credentials,
                         strongAuthenticationState);
 
@@ -133,9 +139,9 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
         return SessionHandler.alwaysFail();
     }
 
-    private CreditAgricoleBaseConfiguration getCreditAgricoleConfiguration() {
+    private AgentConfiguration<CreditAgricoleBaseConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(CreditAgricoleBaseConfiguration.class);
+                .getAgentCommonConfiguration(CreditAgricoleBaseConfiguration.class);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {
@@ -159,14 +165,12 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        CreditAgricoleBaseConfiguration configuration =
-                getAgentConfigurationController()
-                        .getAgentConfiguration(CreditAgricoleBaseConfiguration.class);
 
         FrOpenBankingPaymentExecutor paymentExecutor =
                 new FrOpenBankingPaymentExecutor(
-                        new CreditAgricolePaymentApiClient(client, sessionStorage, configuration),
-                        configuration.getRedirectUrl(),
+                        new CreditAgricolePaymentApiClient(
+                                client, sessionStorage, creditAgricoleConfiguration),
+                        agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,
                         supplementalInformationHelper);

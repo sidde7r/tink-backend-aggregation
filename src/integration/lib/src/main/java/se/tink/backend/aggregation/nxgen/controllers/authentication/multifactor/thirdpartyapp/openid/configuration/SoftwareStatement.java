@@ -22,10 +22,6 @@ public class SoftwareStatement {
         return softwareStatementAssertion.getSoftwareId();
     }
 
-    public String getRedirectUri() {
-        return softwareStatementAssertion.getRedirectUri();
-    }
-
     public String[] getAllRedirectUris() {
         return softwareStatementAssertion.getAllRedirectUris();
     }

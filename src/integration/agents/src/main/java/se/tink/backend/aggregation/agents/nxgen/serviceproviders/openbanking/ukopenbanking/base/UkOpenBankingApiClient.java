@@ -59,6 +59,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             TinkHttpClient httpClient,
             JwtSigner signer,
             SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
             ProviderConfiguration providerConfiguration,
             URL wellKnownURL,
             RandomValueGenerator randomValueGenerator,
@@ -68,6 +69,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 httpClient,
                 signer,
                 softwareStatement,
+                redirectUrl,
                 providerConfiguration,
                 wellKnownURL,
                 randomValueGenerator);

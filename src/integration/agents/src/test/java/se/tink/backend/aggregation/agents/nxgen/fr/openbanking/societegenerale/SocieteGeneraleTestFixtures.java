@@ -16,6 +16,7 @@ public final class SocieteGeneraleTestFixtures {
     public static final String BEARER_HEADER_VALUE = "Bearer " + ACCESS_TOKEN;
     public static final String CLIENT_ID = "DUMMY_CLIENT_ID";
     public static final String NEXT_PAGE_PATH = "/trusted-beneficiaries?page=2";
+    public static final String REDIRECT_URL = "https://127.0.0.1:7357/api/v1/thirdparty/callback";
     private static final String IBAN_1 = "FR7630006000011234567890189";
     private static final String IBAN_2 = "FR7612345987650123456789014";
     private static final String NAME_1 = "DUMMY_NAME";

@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.filter.ReAuthenticateFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -99,9 +100,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     }
 
     // Different part between UkOpenBankingBaseAgent and this class
-    public UkOpenBankingClientConfigurationAdapter getClientConfiguration() {
+    public AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
+            getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(getClientConfigurationFormat());
+                .getAgentCommonConfiguration(getClientConfigurationFormat());
     }
 
     @Override
@@ -109,7 +111,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
-                getClientConfiguration();
+                getAgentConfiguration().getClientConfiguration();
 
         softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertion();
 
@@ -126,7 +128,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
                 .orElse(this::useEidasProxy)
                 .applyConfiguration(client);
 
-        apiClient = createApiClient(client, jwtSigner, softwareStatement, providerConfiguration);
+        final String redirectUrl = getAgentConfiguration().getRedirectUrl();
+
+        apiClient =
+                createApiClient(
+                        client, jwtSigner, softwareStatement, redirectUrl, providerConfiguration);
 
         this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
 
@@ -153,11 +159,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
             TinkHttpClient httpClient,
             JwtSigner signer,
             SoftwareStatementAssertion softwareStatement,
+            String redirectUrl,
             ProviderConfiguration providerConfiguration) {
         return new UkOpenBankingApiClient(
                 httpClient,
                 signer,
                 softwareStatement,
+                redirectUrl,
                 providerConfiguration,
                 wellKnownURL,
                 randomValueGenerator,

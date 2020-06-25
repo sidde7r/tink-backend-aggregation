@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.DkbTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.DkbPaymentExecutor;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -37,17 +38,19 @@ public final class DkbAgent extends NextGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    private DkbConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(DkbConfiguration.class);
+    private AgentConfiguration<DkbConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(DkbConfiguration.class);
     }
 
     private ModuleDependenciesRegistry initializeAgentDependencies(
             DkbModuleDependenciesRegistration moduleDependenciesRegistration) {
+        final DkbConfiguration dkbConfiguration = getAgentConfiguration().getClientConfiguration();
         moduleDependenciesRegistration.registerExternalDependencies(
                 client,
                 sessionStorage,
                 persistentStorage,
-                getClientConfiguration(),
+                dkbConfiguration,
                 supplementalInformationHelper);
         moduleDependenciesRegistration.registerInternalModuleDependencies();
         return moduleDependenciesRegistration.createModuleDependenciesRegistry();

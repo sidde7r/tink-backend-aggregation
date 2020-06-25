@@ -30,15 +30,19 @@ public class StarlingOAut2Authenticator extends OAuth2Authenticator {
     public StarlingOAut2Authenticator(
             final PersistentStorage persistentStorage,
             final TinkHttpClient httpClient,
-            final ClientConfigurationEntity aisConfiguration) {
-        super(createAuthorizationSpecification(aisConfiguration), persistentStorage, httpClient);
+            final ClientConfigurationEntity aisConfiguration,
+            final String redirectUrl) {
+        super(
+                createAuthorizationSpecification(aisConfiguration, redirectUrl),
+                persistentStorage,
+                httpClient);
     }
 
     private static OAuth2AuthorizationSpecification createAuthorizationSpecification(
-            final ClientConfigurationEntity aisConfiguration) {
+            final ClientConfigurationEntity aisConfiguration, final String redirectUrl) {
         return new OAuth2AuthorizationSpecification.Builder()
                 .withAuthorizationEndpoint(new EndpointSpecification(AUTH_STARLING))
-                .withRedirectUrl(aisConfiguration.getRedirectUrl())
+                .withRedirectUrl(redirectUrl)
                 .withClientId(aisConfiguration.getClientId())
                 .withResponseTypeCode(createAccessTokenEndpoint(aisConfiguration))
                 .withTokenRefreshEndpoint(createRefreshTokenEndpointSpecification(aisConfiguration))
