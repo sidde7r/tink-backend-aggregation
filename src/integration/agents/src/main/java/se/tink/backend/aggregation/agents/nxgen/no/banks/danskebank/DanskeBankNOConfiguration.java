@@ -19,8 +19,8 @@ public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     private static final String MARKET_CODE = "NO";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
     private static final String CLIENT_SECRET =
-            "KUhwdCVVyW8h5NHw8beZNXyCfE86VBivO6PB191UsSJipfmWsW";
-    private static final String APP_VERSION_HEADER = "MobileBank ios NO 11407";
+            "WUepJkBVKQfiKD29zkg8WQbFBbk1nHCPWqnXw25W6Yui2TkrWl";
+    private static final String APP_VERSION_HEADER = "MobileBank ios NO 17798";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String USER_AGENT =
