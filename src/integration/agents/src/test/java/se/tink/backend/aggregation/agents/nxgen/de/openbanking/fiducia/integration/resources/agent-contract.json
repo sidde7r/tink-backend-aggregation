@@ -6,8 +6,8 @@
       "exactBalance": {
         "currencyCode": "EUR",
         "doubleValue": 274.56,
-        "unscaledValue": 2076465881737131641,
-        "scale": 44,
+        "unscaledValue": 27456,
+        "scale": 2,
         "exactValue": 274.56
       },
       "currencyCode": "EUR",

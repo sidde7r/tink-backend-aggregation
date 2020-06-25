@@ -4,6 +4,7 @@ import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -18,7 +19,7 @@ public class TransactionEntity {
 
     Transaction toBookedTransaction() {
         return Transaction.builder()
-                .setAmount(transactionAmount.toAmount())
+                .setAmount(transactionAmount.toTinkAmount())
                 .setDate(bookingDate)
                 .setPending(false)
                 .setDescription(remittanceInformationUnstructured)

@@ -21,6 +21,6 @@ public class BalanceEntity {
     private String lastCommittedTransaction;
 
     public ExactCurrencyAmount toTinkAmount() {
-        return ExactCurrencyAmount.of(balanceAmount.getAmount(), balanceAmount.getCurrency());
+        return balanceAmount.toTinkAmount();
     }
 }
