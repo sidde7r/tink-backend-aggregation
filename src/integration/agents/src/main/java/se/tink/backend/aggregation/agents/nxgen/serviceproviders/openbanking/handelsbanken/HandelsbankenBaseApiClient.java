@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.TransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.HandelsbankenErrorResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -55,6 +56,7 @@ public class HandelsbankenBaseApiClient {
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
     private HandelsbankenBaseConfiguration configuration;
+    private String redirectUrl;
     private final String market;
 
     public HandelsbankenBaseApiClient(
@@ -64,12 +66,18 @@ public class HandelsbankenBaseApiClient {
         this.market = market;
     }
 
-    public void setConfiguration(HandelsbankenBaseConfiguration configuration) {
-        this.configuration = configuration;
+    public void setConfiguration(
+            AgentConfiguration<HandelsbankenBaseConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     public HandelsbankenBaseConfiguration getConfiguration() {
         return this.configuration;
+    }
+
+    public String getRedirectUrl() {
+        return this.redirectUrl;
     }
 
     private OAuth2Token getOauthToken() {
@@ -453,7 +461,7 @@ public class HandelsbankenBaseApiClient {
                         .put(BodyKeys.SCOPE, "AIS:" + consentId)
                         .put(BodyKeys.CLIENT_ID, configuration.getClientId())
                         .put("code", code)
-                        .put("redirect_uri", configuration.getRedirectUrl())
+                        .put("redirect_uri", getRedirectUrl())
                         .build();
 
         return client.request(Urls.TOKEN)

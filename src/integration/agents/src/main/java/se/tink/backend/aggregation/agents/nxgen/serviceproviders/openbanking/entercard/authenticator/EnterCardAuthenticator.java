@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.EnterCardConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.configuration.EnterCardConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -20,11 +21,14 @@ public class EnterCardAuthenticator implements OAuth2Authenticator {
 
     private final EnterCardApiClient apiClient;
     private final EnterCardConfiguration configuration;
+    private final String redirectUrl;
 
     public EnterCardAuthenticator(
-            EnterCardApiClient apiClient, EnterCardConfiguration configuration) {
+            EnterCardApiClient apiClient,
+            AgentConfiguration<EnterCardConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     @Override
@@ -34,7 +38,7 @@ public class EnterCardAuthenticator implements OAuth2Authenticator {
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
-                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl());
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUrl);
     }
 
     @Override

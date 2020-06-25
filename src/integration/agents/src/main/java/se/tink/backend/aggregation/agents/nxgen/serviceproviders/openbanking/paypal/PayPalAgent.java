@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.pay
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.executor.payment.PayPalPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.PayPalTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.paypal.fetcher.PayPalTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -40,11 +41,12 @@ public final class PayPalAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
         apiClient = new PayPalApiClient(client, persistentStorage);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        apiClient.setConfiguration(getClientConfiguration());
+        apiClient.setConfiguration(getAgentConfiguration());
     }
 
-    protected PayPalConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(PayPalConfiguration.class);
+    protected AgentConfiguration<PayPalConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(PayPalConfiguration.class);
     }
 
     @Override
@@ -75,14 +77,18 @@ public final class PayPalAgent extends NextGenerationAgent
         // Switch between two authenticators, P2P and WiP.
         Authenticator wipAuthenticator =
                 new PayPalOrderTransactionAuthenticator(
-                        apiClient, persistentStorage, getClientConfiguration());
+                        apiClient,
+                        persistentStorage,
+                        getAgentConfiguration().getClientConfiguration());
 
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
                         new PayPalAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()),
+                                apiClient,
+                                persistentStorage,
+                                getAgentConfiguration().getClientConfiguration()),
                         credentials,
                         strongAuthenticationState);
 

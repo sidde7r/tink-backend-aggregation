@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fab
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.TransactionResponse;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -39,6 +40,7 @@ public class FabricApiClient {
     private final RandomValueGenerator randomValueGenerator;
     private final SessionStorage sessionStorage;
     private FabricConfiguration configuration;
+    private String redirectUrl;
 
     FabricApiClient(
             TinkHttpClient client,
@@ -56,8 +58,14 @@ public class FabricApiClient {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(FabricConfiguration configuration) {
-        this.configuration = configuration;
+    private String getRedirectUrl() {
+        return Optional.ofNullable(redirectUrl)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    protected void setConfiguration(AgentConfiguration<FabricConfiguration> agentConfiguration) {
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -74,8 +82,7 @@ public class FabricApiClient {
 
     public CreateConsentResponse getConsent(String state) {
         final String baseUrl = getConfiguration().getBaseUrl();
-        final URL redirectUri =
-                new URL(getConfiguration().getRedirectUrl()).queryParam(QueryKeys.STATE, state);
+        final URL redirectUri = new URL(getRedirectUrl()).queryParam(QueryKeys.STATE, state);
 
         return client.request(new URL(baseUrl + Urls.CONSENT))
                 .type(MediaType.APPLICATION_JSON)
@@ -145,7 +152,7 @@ public class FabricApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
-                        new URL(getConfiguration().getRedirectUrl())
+                        new URL(getRedirectUrl())
                                 .queryParam(QueryKeys.CODE, FabricConstants.QueryValues.CODE)
                                 .queryParam(QueryKeys.STATE, sessionStorage.get(QueryKeys.STATE)))
                 .post(CreatePaymentResponse.class, createPaymentRequest);

@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.RedirectResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -22,14 +23,16 @@ public class HandelsbankenOAuth2Authenticator implements OAuth2Authenticator {
 
     private final HandelsbankenBaseApiClient apiClient;
     private final HandelsbankenBaseConfiguration configuration;
+    private final String redirectUrl;
     private final PersistentStorage persistentStorage;
 
     public HandelsbankenOAuth2Authenticator(
             HandelsbankenBaseApiClient apiClient,
-            HandelsbankenBaseConfiguration configuration,
+            AgentConfiguration<HandelsbankenBaseConfiguration> agentConfiguration,
             PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.persistentStorage = persistentStorage;
     }
 
@@ -62,7 +65,7 @@ public class HandelsbankenOAuth2Authenticator implements OAuth2Authenticator {
                 .queryParam("scope", "AIS:" + consentId)
                 .queryParam("client_id", configuration.getClientId())
                 .queryParam("state", state)
-                .queryParam("redirect_uri", configuration.getRedirectUrl());
+                .queryParam("redirect_uri", redirectUrl);
     }
 
     @Override

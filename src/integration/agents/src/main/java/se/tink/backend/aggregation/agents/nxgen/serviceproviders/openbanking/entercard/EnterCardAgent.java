@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.creditcardaccount.CreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.fetcher.creditcardaccount.CreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.entercard.payment.EnterCardBasePaymentExecutor;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -28,7 +29,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class EnterCardAgent extends NextGenerationAgent
         implements RefreshCreditCardAccountsExecutor {
 
-    private EnterCardConfiguration enterCardConfiguration;
+    private AgentConfiguration<EnterCardConfiguration> agentConfiguration;
     private final EnterCardApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
 
@@ -39,9 +40,9 @@ public abstract class EnterCardAgent extends NextGenerationAgent
             String brandId) {
         super(request, context, signatureKeyPair);
 
-        enterCardConfiguration =
+        agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(EnterCardConfiguration.class);
+                        .getAgentCommonConfiguration(EnterCardConfiguration.class);
         apiClient = new EnterCardApiClient(client, persistentStorage);
 
         creditCardRefreshController =
@@ -59,7 +60,7 @@ public abstract class EnterCardAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        apiClient.setConfiguration(enterCardConfiguration);
+        apiClient.setConfiguration(agentConfiguration);
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
@@ -69,7 +70,7 @@ public abstract class EnterCardAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new EnterCardAuthenticator(apiClient, enterCardConfiguration),
+                        new EnterCardAuthenticator(apiClient, agentConfiguration),
                         credentials,
                         strongAuthenticationState);
 
@@ -102,7 +103,7 @@ public abstract class EnterCardAgent extends NextGenerationAgent
                 new EnterCardBasePaymentExecutor(
                         apiClient,
                         supplementalInformationHelper,
-                        enterCardConfiguration,
+                        agentConfiguration,
                         strongAuthenticationState);
 
         return Optional.of(

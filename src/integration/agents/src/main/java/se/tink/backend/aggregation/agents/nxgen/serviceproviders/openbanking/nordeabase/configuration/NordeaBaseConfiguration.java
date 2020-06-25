@@ -12,7 +12,6 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaTitle;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.AgentType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.annotations.SensitiveSecret;
@@ -24,7 +23,6 @@ import se.tink.backend.aggregation.configuration.agents.ClientSecretsConfigurati
 public class NordeaBaseConfiguration implements ClientConfiguration {
     @JsonProperty @Secret @ClientIdConfiguration private String clientId;
     @JsonProperty @SensitiveSecret @ClientSecretsConfiguration private String clientSecret;
-    @JsonProperty @AgentConfigParam private String redirectUrl;
 
     @JsonProperty(required = true)
     @Secret
@@ -54,10 +52,6 @@ public class NordeaBaseConfiguration implements ClientConfiguration {
 
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    public String getRedirectUrl() {
-        return redirectUrl;
     }
 
     public AgentType getAgentType() {
