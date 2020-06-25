@@ -16,14 +16,14 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -109,7 +109,12 @@ public class FiduciaTransactionalAccountFetcherTest {
     private GetBalancesResponse getBalancesResponse() {
         return new GetBalancesResponse(
                 Collections.singletonList(
-                        new BalanceEntity(new AmountEntity(10.0, "EUR"), "available")));
+                        new BalanceEntity()
+                                .setBalanceType("available")
+                                .setBalanceAmount(
+                                        new AmountEntity()
+                                                .setCurrency(CURRENCY)
+                                                .setAmount(BigDecimal.valueOf(10.0)))));
     }
 
     private GetTransactionsResponse getTransactions() {
@@ -120,6 +125,6 @@ public class FiduciaTransactionalAccountFetcherTest {
                                 new TransactionEntity(
                                         new Date(),
                                         "to own account",
-                                        new AmountEntity(10.0, CURRENCY)))));
+                                        new AmountEntity(CURRENCY, BigDecimal.valueOf(10.0))))));
     }
 }

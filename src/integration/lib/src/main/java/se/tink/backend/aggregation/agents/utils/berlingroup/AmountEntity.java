@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 @AllArgsConstructor
@@ -17,4 +18,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AmountEntity {
     private String currency;
     private BigDecimal amount;
+
+    public ExactCurrencyAmount toTinkAmount() {
+        return ExactCurrencyAmount.of(amount, currency);
+    }
 }
