@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.a
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
@@ -18,14 +19,16 @@ public class SocieteGeneraleAuthenticator implements OAuth2Authenticator {
     private final SocieteGeneraleApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SocieteGeneraleConfiguration societeGeneraleConfiguration;
+    private final String redirectUrl;
 
     public SocieteGeneraleAuthenticator(
             SocieteGeneraleApiClient apiClient,
             PersistentStorage persistentStorage,
-            SocieteGeneraleConfiguration societeGeneraleConfiguration) {
+            AgentConfiguration<SocieteGeneraleConfiguration> agentConfiguration) {
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
-        this.societeGeneraleConfiguration = societeGeneraleConfiguration;
+        this.societeGeneraleConfiguration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
     @Override
@@ -52,7 +55,7 @@ public class SocieteGeneraleAuthenticator implements OAuth2Authenticator {
         TokenRequest request =
                 TokenRequest.builder()
                         .setGrantType(SocieteGeneraleConstants.QueryValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(societeGeneraleConfiguration.getRedirectUrl())
+                        .setRedirectUri(redirectUrl)
                         .setCode(code)
                         .build();
 

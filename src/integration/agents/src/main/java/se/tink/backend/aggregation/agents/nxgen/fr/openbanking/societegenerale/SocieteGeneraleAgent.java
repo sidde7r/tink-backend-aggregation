@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.f
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.SocieteGeneraleTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transfer.SocieteGeneraleTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
@@ -51,6 +52,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SocieteGeneraleIdentityDataFetcher societeGeneraleIdentityDataFetcher;
     private final SignatureHeaderProvider signatureHeaderProvider;
+    private final AgentConfiguration<SocieteGeneraleConfiguration> agentConfiguration;
     private final SocieteGeneraleConfiguration societeGeneraleConfiguration;
     private final TransferDestinationRefreshController transferDestinationRefreshController;
 
@@ -59,7 +61,8 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
             AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
-        societeGeneraleConfiguration = getConfiguration();
+        agentConfiguration = getAgentConfiguration();
+        societeGeneraleConfiguration = agentConfiguration.getClientConfiguration();
         signatureHeaderProvider =
                 new SignatureHeaderProvider(qsealcSigner, societeGeneraleConfiguration);
 
@@ -68,11 +71,11 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                         client,
                         persistentStorage,
                         societeGeneraleConfiguration,
+                        agentConfiguration.getRedirectUrl(),
                         signatureHeaderProvider);
 
         authenticator =
-                new SocieteGeneraleAuthenticator(
-                        apiClient, persistentStorage, societeGeneraleConfiguration);
+                new SocieteGeneraleAuthenticator(apiClient, persistentStorage, agentConfiguration);
 
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
@@ -161,9 +164,9 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                 metricRefreshController, new SocieteGeneraleTransferDestinationFetcher(apiClient));
     }
 
-    private SocieteGeneraleConfiguration getConfiguration() {
+    private AgentConfiguration<SocieteGeneraleConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(SocieteGeneraleConfiguration.class);
+                .getAgentCommonConfiguration(SocieteGeneraleConfiguration.class);
     }
 
     @Override
@@ -172,7 +175,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
                 new PaymentController(
                         new SocieteGeneralePaymentExecutor(
                                 apiClient,
-                                societeGeneraleConfiguration.getRedirectUrl(),
+                                agentConfiguration.getRedirectUrl(),
                                 sessionStorage,
                                 supplementalInformationHelper,
                                 strongAuthenticationState)));

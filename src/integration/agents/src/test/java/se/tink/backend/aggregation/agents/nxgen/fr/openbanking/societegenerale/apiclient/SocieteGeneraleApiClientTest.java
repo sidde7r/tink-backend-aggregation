@@ -12,6 +12,7 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegen
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.BEARER_HEADER_VALUE;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.CLIENT_ID;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.NEXT_PAGE_PATH;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.REDIRECT_URL;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.SIGNATURE;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.createTrustedBeneficiariesPage1Response;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.createTrustedBeneficiariesPage2Response;
@@ -61,6 +62,7 @@ public class SocieteGeneraleApiClientTest {
                         httpClientMock,
                         persistentStorageMock,
                         societeGeneraleConfigurationMock,
+                        REDIRECT_URL,
                         signatureHeaderProviderMock);
     }
 
