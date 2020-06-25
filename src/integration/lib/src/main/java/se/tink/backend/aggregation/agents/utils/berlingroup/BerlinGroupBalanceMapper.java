@@ -70,7 +70,7 @@ public class BerlinGroupBalanceMapper {
         // In this method we only log the unknown types, but proceed with all of the balances.
         // Credit limit should appear the same in all types of balances, so there is no one type
         // that is better than other
-        logUnknownTypes(balances, "getAvailableBalance");
+        logUnknownTypes(balances, "getCreditLimit");
 
         Map<String, List<BalanceEntity>> balancesGroupedByType =
                 balances.stream().collect(Collectors.groupingBy(BalanceEntity::getBalanceType));
