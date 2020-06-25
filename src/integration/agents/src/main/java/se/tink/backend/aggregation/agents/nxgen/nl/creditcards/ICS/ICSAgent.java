@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cred
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSBankFailureFilter;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.filter.ICSRetryFilter;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -43,8 +44,10 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
         configureHttpClient(client);
         redirectUri = request.getProvider().getPayload().split(" ")[1];
 
-        final ICSConfiguration icsConfiguration =
-                getAgentConfigurationController().getAgentConfiguration(ICSConfiguration.class);
+        final AgentConfiguration<ICSConfiguration> agentConfiguration =
+                getAgentConfigurationController()
+                        .getAgentCommonConfiguration(ICSConfiguration.class);
+        final ICSConfiguration icsConfiguration = agentConfiguration.getClientConfiguration();
 
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 
