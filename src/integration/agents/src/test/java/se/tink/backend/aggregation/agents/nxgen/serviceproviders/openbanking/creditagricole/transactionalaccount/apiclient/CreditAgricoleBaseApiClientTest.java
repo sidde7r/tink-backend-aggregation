@@ -76,7 +76,8 @@ public class CreditAgricoleBaseApiClientTest {
                 new CreditAgricoleBaseApiClient(
                         httpClientMock,
                         creditAgricoleStorageMock,
-                        creditAgricoleBaseConfigurationMock);
+                        creditAgricoleBaseConfigurationMock,
+                        REDIRECT_URL);
     }
 
     @Test
@@ -346,7 +347,6 @@ public class CreditAgricoleBaseApiClientTest {
                 mock(CreditAgricoleBaseConfiguration.class);
 
         when(creditAgricoleBaseConfigurationMock.getClientId()).thenReturn(CLIENT_ID);
-        when(creditAgricoleBaseConfigurationMock.getRedirectUrl()).thenReturn(REDIRECT_URL);
         when(creditAgricoleBaseConfigurationMock.getBaseUrl()).thenReturn(BASE_URL);
         when(creditAgricoleBaseConfigurationMock.getPsuIpAddress()).thenReturn(PSU_IP_ADDR);
 

@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -16,14 +17,16 @@ public class CreditAgricoleBaseAuthenticator implements OAuth2Authenticator {
     private final CreditAgricoleBaseApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final CreditAgricoleBaseConfiguration configuration;
+    private final String redirecUrl;
 
     public CreditAgricoleBaseAuthenticator(
             CreditAgricoleBaseApiClient apiClient,
             PersistentStorage persistentStorage,
-            CreditAgricoleBaseConfiguration configuration) {
+            AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirecUrl = agentConfiguration.getRedirectUrl();
     }
 
     @Override
@@ -50,7 +53,7 @@ public class CreditAgricoleBaseAuthenticator implements OAuth2Authenticator {
 
     private URL getAuthorizeUrl(final String state) {
         final String clientId = configuration.getClientId();
-        final String redirectUri = configuration.getRedirectUrl();
+        final String redirectUri = redirecUrl;
 
         return new URL(configuration.getAuthorizeUrl())
                 .queryParam(CreditAgricoleBaseConstants.QueryKeys.CLIENT_ID, clientId)
