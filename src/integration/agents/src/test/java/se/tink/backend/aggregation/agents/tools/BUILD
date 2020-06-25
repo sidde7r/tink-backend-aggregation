@@ -45,6 +45,7 @@ junit_test(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/creditcards/ICS",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/no/openbanking/norwegian",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/nordea/v30",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/sbab",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/seb",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/skandiabanken",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex/v62",
