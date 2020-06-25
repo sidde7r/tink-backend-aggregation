@@ -18,12 +18,12 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String BRAND = "DB";
     private static final String LANGUAGE_CODE = "DA";
     private static final String MARKET_CODE = "DK";
-    private static final String APP_VERSION_HEADER = "MobileBank ios DK 285229706";
+    private static final String APP_VERSION_HEADER = "MobileBank ios DK 17798";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
     private static final String CLIENT_SECRET =
-            "xwsanksYkb6vs1fLLEzNjRowHVIhisuLxoMfX7qnb41wxuruTg";
+            "Wpr25NAnqiGhRUPqhag3qKIp8WXb6IXSK5S6XZIkeQ5ka21xp7";
 
     @Override
     public String getAppVersionHeader() {
