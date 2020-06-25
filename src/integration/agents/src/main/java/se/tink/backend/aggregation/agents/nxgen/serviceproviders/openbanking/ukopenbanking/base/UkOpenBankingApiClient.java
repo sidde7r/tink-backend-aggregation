@@ -26,10 +26,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataV31Entity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.TrustedBeneficiaryEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.AccountBalanceV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.AccountsV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.PartiesV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.PartyV31Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.TrustedBeneficiariesV31Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.HttpHeaders;
@@ -114,17 +116,23 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .post(responseType);
     }
 
-    public <T> T fetchAccounts(Class<T> responseType) {
-        return createAisRequest(aisConfig.getBulkAccountRequestURL()).get(responseType);
-    }
-
     public List<AccountEntity> fetchV31Accounts() {
-        return fetchAccounts(AccountsV31Response.class).getData().orElse(Collections.emptyList());
+        return createAisRequest(aisConfig.getBulkAccountRequestURL())
+                .get(AccountsV31Response.class)
+                .getData()
+                .orElse(Collections.emptyList());
     }
 
     public List<AccountBalanceEntity> fetchV31AccountBalances(String accountId) {
         return createAisRequest(aisConfig.getAccountBalanceRequestURL(accountId))
                 .get(AccountBalanceV31Response.class)
+                .getData()
+                .orElse(Collections.emptyList());
+    }
+
+    public List<TrustedBeneficiaryEntity> fetchV31AccountBeneficiaries(String accountId) {
+        return createAisRequest(aisConfig.getAccountBeneficiariesRequestURL(accountId))
+                .get(TrustedBeneficiariesV31Response.class)
                 .getData()
                 .orElse(Collections.emptyList());
     }

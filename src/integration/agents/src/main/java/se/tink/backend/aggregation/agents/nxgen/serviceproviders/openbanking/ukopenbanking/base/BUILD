@@ -28,6 +28,7 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
+        "//src/integration/payment:enums",
         "//src/libraries/account_identifier",
         "//src/libraries/strings",
         "//third_party:com_auth0_java_jwt",

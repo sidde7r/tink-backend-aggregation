@@ -45,6 +45,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.identitydata.IdentityData;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
@@ -248,9 +250,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
-    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+    protected TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController, new UkOpenBankingTransferDestinationFetcher());
+                metricRefreshController,
+                new UkOpenBankingTransferDestinationFetcher(
+                        apiClient, AccountIdentifier.Type.SORT_CODE, SortCodeIdentifier.class));
     }
 
     @Override

@@ -11,6 +11,7 @@ junit_test(
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/identity_data",
         "//src/integration/lib",
+        "//src/integration/models",
         "//src/libraries/account_identifier",
         "//src/libraries/mapper",
         "//src/libraries/serialization",

@@ -37,9 +37,11 @@ public class AccountV31FetcherTest {
 
     @Before
     public void setUp() {
+
+        Account mockedAccount = mock(Account.class);
         accountMapper = mock(AccountMapper.class);
         when(accountMapper.map(any(), anyCollection(), anyCollection()))
-                .thenReturn(Optional.of(mock(Account.class)));
+                .thenReturn(Optional.of(mockedAccount));
         when(accountMapper.supportsAccountType(any())).thenReturn(true);
 
         identityDataV31Fetcher = mock(IdentityDataV31Fetcher.class);
@@ -85,9 +87,9 @@ public class AccountV31FetcherTest {
 
         // when
         when(apiClient.fetchV31Accounts()).thenReturn(ImmutableList.of(account));
-        when(apiClient.fetchV31AccountBalances(account.getBankIdentifier()))
+        when(apiClient.fetchV31AccountBalances(account.getAccountId()))
                 .thenReturn(ImmutableList.of(balance));
-        when(identityDataV31Fetcher.fetchAccountParties(account.getBankIdentifier()))
+        when(identityDataV31Fetcher.fetchAccountParties(account.getAccountId()))
                 .thenReturn(parties);
 
         accountFetcher.fetchAccounts();
