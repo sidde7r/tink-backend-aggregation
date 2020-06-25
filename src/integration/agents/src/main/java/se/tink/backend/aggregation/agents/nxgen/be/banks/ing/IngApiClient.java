@@ -197,20 +197,10 @@ public class IngApiClient {
                                         .post(AccountsResponse.class, new BaseBody()));
     }
 
-    public PortfolioResponse fetchInvestmentPortfolio(
-            LoginResponseEntity loginResponse, String bbanNumber) {
+    public PortfolioResponse fetchInvestmentPortfolio(URL url, String bbanNumber) {
         PortfolioRequestBody portfolioRequestBody = new PortfolioRequestBody(bbanNumber);
-
-        return loginResponse
-                .findInvestmentPortfolioValFlowRequest()
-                .map(
-                        url ->
-                                client.request(getUrlWithQueryParams(url))
-                                        .post(PortfolioResponse.class, portfolioRequestBody))
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Could not find portfolio request in list of requests."));
+        return client.request(getUrlWithQueryParams(url))
+                .post(PortfolioResponse.class, portfolioRequestBody);
     }
 
     public TransactionsResponse getTransactions(

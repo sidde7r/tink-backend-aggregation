@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 public class IngInvestmentAccountFetcher
         implements AccountFetcher<InvestmentAccount>, TransactionPagePaginator<InvestmentAccount> {
@@ -40,25 +41,31 @@ public class IngInvestmentAccountFetcher
 
     private List<InvestmentAccount> fetchAccountsFromLoginResponse(
             LoginResponseEntity loginResponse) {
-        return this.apiClient
-                .fetchAccounts(loginResponse)
-                .map(AccountsResponse::getAccounts)
-                .map(AccountListEntity::stream)
-                .orElseGet(Stream::empty)
-                .filter(AccountEntity::isInvestmentType)
+        return loginResponse
+                .findInvestmentPortfolioRequest()
                 .map(
-                        account ->
-                                account.toTinkInvestmentAccount(
-                                        getInvestmentPortfolios(loginResponse, account)))
-                .collect(Collectors.toList());
+                        url ->
+                                this.apiClient
+                                        .fetchAccounts(loginResponse)
+                                        .map(AccountsResponse::getAccounts)
+                                        .map(AccountListEntity::stream)
+                                        .orElseGet(Stream::empty)
+                                        .filter(AccountEntity::isInvestmentType)
+                                        .map(
+                                                account ->
+                                                        account.toTinkInvestmentAccount(
+                                                                getInvestmentPortfolios(
+                                                                        url, account)))
+                                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 
     public PortfolioResponseEntity getInvestmentPortfolios(
-            LoginResponseEntity loginResponse, AccountEntity accountEntity) {
+            URL investmentUrl, AccountEntity accountEntity) {
 
         final String bbanNumber =
                 accountEntity.getBbanNumber().replace(accountEntity.getAccount313(), "");
-        return apiClient.fetchInvestmentPortfolio(loginResponse, bbanNumber).getMobileResponse();
+        return apiClient.fetchInvestmentPortfolio(investmentUrl, bbanNumber).getMobileResponse();
     }
 
     @Override
