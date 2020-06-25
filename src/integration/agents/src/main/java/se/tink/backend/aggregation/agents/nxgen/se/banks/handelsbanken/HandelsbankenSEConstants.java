@@ -110,6 +110,7 @@ public class HandelsbankenSEConstants {
         public static final String KF_AND_PENSION = "kapital";
         public static final String ERROR_TOO_YOUNG_INVESTMENTS = "10001";
         public static final String KF_TYPE_PREFIX = "kapitalspar";
+        public static final String PENSION = "pension";
         public static final TypeMapper<InstrumentType> INSTRUMENT_TYPE_MAPPER =
                 TypeMapper.<InstrumentType>builder()
                         .put(InstrumentType.STOCK, "stock")
