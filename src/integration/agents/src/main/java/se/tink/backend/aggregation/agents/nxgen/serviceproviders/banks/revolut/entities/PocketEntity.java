@@ -93,4 +93,11 @@ public class PocketEntity {
     public String getName() {
         return name;
     }
+
+    @JsonIgnore
+    public boolean isCryptoCurrency() {
+        return currency != null
+                && RevolutConstants.REVOLUT_SUPPORTED_CRYPTO_CURRENCIES.contains(
+                        currency.toUpperCase());
+    }
 }

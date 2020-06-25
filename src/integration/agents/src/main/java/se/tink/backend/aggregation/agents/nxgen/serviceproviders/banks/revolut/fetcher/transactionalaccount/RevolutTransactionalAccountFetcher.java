@@ -42,8 +42,7 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
                                         (account1, account2) -> account1));
 
         return wallet.getPockets().stream()
-                .filter(PocketEntity::isActive)
-                .filter(PocketEntity::isOpen)
+                .filter(p -> p.isActive() && p.isOpen() && (!p.isCryptoCurrency()))
                 .filter(this::isTransactionalAccount)
                 .map(
                         pocket ->
