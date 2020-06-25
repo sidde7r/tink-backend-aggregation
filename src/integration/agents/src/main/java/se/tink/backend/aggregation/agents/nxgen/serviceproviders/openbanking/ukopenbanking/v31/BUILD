@@ -13,7 +13,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid/error",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/url",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
-        "//src/integration/models",
         "//src/integration/payment:enums",
         "//src/integration/payment:rpc",
         "//src/integration/signableoperation/src/main/java/se/tink/libraries/signableoperation/enums",

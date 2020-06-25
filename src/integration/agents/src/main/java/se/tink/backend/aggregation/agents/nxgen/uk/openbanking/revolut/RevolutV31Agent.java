@@ -5,7 +5,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
@@ -22,9 +21,6 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingLocalKeySignerModule.class)
 @AgentDependencyModulesForDecoupledMode(
@@ -55,14 +51,6 @@ public class RevolutV31Agent extends UkOpenBankingBaseAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return super.constructAuthenticator(aisConfig);
-    }
-
-    @Override
-    protected TransferDestinationRefreshController constructTransferDestinationRefreshController() {
-        return new TransferDestinationRefreshController(
-                metricRefreshController,
-                new UkOpenBankingTransferDestinationFetcher(
-                        apiClient, AccountIdentifier.Type.IBAN, IbanIdentifier.class));
     }
 
     @Override

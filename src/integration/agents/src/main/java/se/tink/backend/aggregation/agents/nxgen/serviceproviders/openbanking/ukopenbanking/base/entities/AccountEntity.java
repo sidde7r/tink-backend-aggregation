@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import lombok.Data;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Data
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class AccountEntity {
+public class AccountEntity implements IdentifiableAccount {
     private String accountId;
 
     private String currency;
@@ -27,4 +28,9 @@ public class AccountEntity {
 
     @JsonProperty("Account")
     private List<AccountIdentifierEntity> identifiers;
+
+    @Override
+    public String getBankIdentifier() {
+        return accountId;
+    }
 }
