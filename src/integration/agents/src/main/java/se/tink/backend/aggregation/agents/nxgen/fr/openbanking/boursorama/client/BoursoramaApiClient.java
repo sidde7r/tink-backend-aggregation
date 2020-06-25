@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -14,13 +15,16 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.IdentityEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.entity.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.dto.TrustedBeneficiariesResponseDto;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDtoBase;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 @AllArgsConstructor
-public class BoursoramaApiClient {
+public class BoursoramaApiClient implements FrAispApiClient {
 
     private final TinkHttpClient client;
     private final BoursoramaConfiguration configuration;
@@ -38,30 +42,43 @@ public class BoursoramaApiClient {
                 .post(TokenResponse.class);
     }
 
-    public IdentityEntity fetchIdentityData(String userHash) {
-        return baseAISRequest(Urls.IDENTITY_TEMPLATE, userHash).get(IdentityEntity.class);
+    public IdentityEntity fetchIdentityData() {
+        return baseAISRequest(Urls.IDENTITY_TEMPLATE).get(IdentityEntity.class);
     }
 
-    public AccountsResponse fetchAccounts(String userHash) {
-        return baseAISRequest(Urls.ACCOUNTS_TEMPLATE, userHash).get(AccountsResponse.class);
+    public AccountsResponse fetchAccounts() {
+        return baseAISRequest(Urls.ACCOUNTS_TEMPLATE).get(AccountsResponse.class);
     }
 
-    public BalanceResponse fetchBalances(String userHash, String resourceId) {
-        return baseAISRequest(Urls.BALANCES_TEMPLATE + resourceId, userHash)
-                .get(BalanceResponse.class);
+    public BalanceResponse fetchBalances(String resourceId) {
+        return baseAISRequest(Urls.BALANCES_TEMPLATE + resourceId).get(BalanceResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(
-            String userHash, String resourceId, LocalDate dateFrom, LocalDate dateTo) {
-
-        return baseAISRequest(Urls.TRANSACTIONS_TEMPLATE + resourceId, userHash)
+            String resourceId, LocalDate dateFrom, LocalDate dateTo) {
+        return baseAISRequest(Urls.TRANSACTIONS_TEMPLATE + resourceId)
                 .queryParam("dateFrom", dateFrom.toString())
                 .queryParam("dateTo", dateTo.toString())
                 .get(TransactionsResponse.class);
     }
 
-    private RequestBuilder baseAISRequest(String urlTemplate, String userHash) {
-        String url = String.format(urlTemplate, userHash);
+    @Override
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries() {
+        return Optional.of(
+                baseAISRequest(Urls.TRUSTED_BENEFICIARIES_TEMPLATE)
+                        .get(TrustedBeneficiariesResponseDto.class));
+    }
+
+    @Override
+    public Optional<? extends TrustedBeneficiariesResponseDtoBase> getTrustedBeneficiaries(
+            String path) {
+        return Optional.empty();
+    }
+
+    private RequestBuilder baseAISRequest(String urlTemplate) {
+        final String userHash = sessionStorage.get(BoursoramaConstants.USER_HASH);
+        final String url = String.format(urlTemplate, userHash);
+
         return client.request(configuration.getBaseUrl() + url)
                 .type(MediaType.APPLICATION_JSON)
                 .addBearerToken(getTokenFromStorage());

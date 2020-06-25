@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities;
 
 import lombok.Data;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.BeneficiaryDtoBase;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @Data
-public class BeneficiaryDto {
+public class BeneficiaryDto implements BeneficiaryDtoBase {
 
     private String id;
 

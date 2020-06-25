@@ -16,6 +16,7 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegen
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.createTrustedBeneficiariesPage1Response;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.createTrustedBeneficiariesPage2Response;
 
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,11 +73,13 @@ public class SocieteGeneraleApiClientTest {
         setUpHttpClientMockForApi(TRUSTED_BENEFICIARIES_PATH, expectedResponse);
 
         // when
-        final TrustedBeneficiariesResponse actualResponse =
+        final Optional<TrustedBeneficiariesResponse> response =
                 societeGeneraleApiClient.getTrustedBeneficiaries();
 
         // then
-        assertThat(actualResponse).isEqualTo(expectedResponse);
+        assertThat(response.isPresent()).isTrue();
+        response.ifPresent(
+                actualResponse -> assertThat(actualResponse).isEqualTo(expectedResponse));
     }
 
     @Test
@@ -89,11 +92,13 @@ public class SocieteGeneraleApiClientTest {
         setUpHttpClientMockForApi(nextPageUrl, expectedResponse);
 
         // when
-        final TrustedBeneficiariesResponse actualResponse =
+        final Optional<TrustedBeneficiariesResponse> response =
                 societeGeneraleApiClient.getTrustedBeneficiaries(NEXT_PAGE_PATH);
 
         // then
-        assertThat(actualResponse).isEqualTo(expectedResponse);
+        assertThat(response.isPresent()).isTrue();
+        response.ifPresent(
+                actualResponse -> assertThat(actualResponse).isEqualTo(expectedResponse));
     }
 
     private void setUpHttpClientMockForApi(URL url, Object response) {

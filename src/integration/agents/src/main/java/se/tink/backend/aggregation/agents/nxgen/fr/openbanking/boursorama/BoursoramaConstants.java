@@ -25,6 +25,9 @@ public class BoursoramaConstants {
         public static final String TRANSACTIONS_TEMPLATE =
                 "/services/api/v1.7/_user_/_%s_/dsp2/accounts/transactions/";
 
+        public static final String TRUSTED_BENEFICIARIES_TEMPLATE =
+                "/services/api/v1.7/_user_/_%s_/dsp2/trusted-beneficiaries";
+
         public static final String CREATE_PAYMENT =
                 "/services/api/v1.7/_public_/dsp2/payment-requests";
         public static final String GET_PAYMENT =

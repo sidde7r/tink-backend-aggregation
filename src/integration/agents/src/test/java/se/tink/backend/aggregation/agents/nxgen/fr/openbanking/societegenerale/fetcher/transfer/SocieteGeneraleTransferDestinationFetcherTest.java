@@ -36,12 +36,12 @@ public class SocieteGeneraleTransferDestinationFetcherTest {
         final TrustedBeneficiariesResponse trustedBeneficiariesResponse1 =
                 createTrustedBeneficiariesPage1Response();
         when(societeGeneraleApiClientMock.getTrustedBeneficiaries())
-                .thenReturn(trustedBeneficiariesResponse1);
+                .thenReturn(Optional.of(trustedBeneficiariesResponse1));
 
         final TrustedBeneficiariesResponse trustedBeneficiariesResponse2 =
                 createTrustedBeneficiariesPage2Response();
         when(societeGeneraleApiClientMock.getTrustedBeneficiaries(NEXT_PAGE_PATH))
-                .thenReturn(trustedBeneficiariesResponse2);
+                .thenReturn(Optional.of(trustedBeneficiariesResponse2));
 
         societeGeneraleTransferDestinationFetcher =
                 new SocieteGeneraleTransferDestinationFetcher(societeGeneraleApiClientMock);
