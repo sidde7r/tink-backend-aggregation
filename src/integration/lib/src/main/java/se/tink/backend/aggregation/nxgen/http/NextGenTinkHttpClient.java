@@ -52,6 +52,7 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.StrictHostnameVerifier;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.BasicHttpEntity;
@@ -100,6 +101,7 @@ import se.tink.backend.aggregation.nxgen.http.response.jersey.JerseyHttpResponse
 import se.tink.backend.aggregation.nxgen.http.serializecontainer.SerializeContainer;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
+import se.tink.backend.aggregation.nxgen.http.truststrategy.VerifyHostname;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.metrics.registry.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -585,6 +587,11 @@ public class NextGenTinkHttpClient extends NextGenFilterable<TinkHttpClient>
         try {
             this.internalSslContextBuilder =
                     this.internalSslContextBuilder.loadTrustMaterial(truststore, trustStrategy);
+            if (trustStrategy instanceof VerifyHostname) {
+                this.internalHttpClientBuilder =
+                        this.internalHttpClientBuilder.setHostnameVerifier(
+                                new StrictHostnameVerifier());
+            }
         } catch (NoSuchAlgorithmException | KeyStoreException e) {
             throw new IllegalStateException(e);
         }
