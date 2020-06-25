@@ -2,22 +2,22 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetch
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import java.util.Collection;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.entities.AccountIbanEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.entities.BalanceEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FetchBalancesResponse {
     private AccountIbanEntity account;
-    private Collection<BalanceEntity> balances;
+    private List<BalanceEntity> balances;
 
     @JsonSetter(nulls = Nulls.AS_EMPTY)
-    public void setBalances(Collection<BalanceEntity> balances) {
+    public void setBalances(List<BalanceEntity> balances) {
         this.balances = balances;
     }
 
-    public Collection<BalanceEntity> getBalances() {
+    public List<BalanceEntity> getBalances() {
         return balances;
     }
 }

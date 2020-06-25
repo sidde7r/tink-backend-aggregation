@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.detail;
 
+import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BerlinGroupBalanceMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
@@ -42,10 +46,7 @@ public class TransactionalAccountMapper {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withFlags(AccountFlag.PSD2_PAYMENT_ACCOUNT)
-                .withBalance(
-                        BalanceModule.of(
-                                BalanceMapper.getAvailableBalance(
-                                        fetchBalancesResponse, accountEntity.getCurrency())))
+                .withBalance(getBalanceModule(fetchBalancesResponse.getBalances()))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(accountEntity.getIban())
@@ -60,5 +61,16 @@ public class TransactionalAccountMapper {
                 .setApiIdentifier(accountEntity.getResourceId())
                 .addHolderName(accountEntity.getOwnerName())
                 .build();
+    }
+
+    private static BalanceModule getBalanceModule(List<BalanceEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder()
+                        .withBalance(BerlinGroupBalanceMapper.getBookedBalance(balances));
+        BerlinGroupBalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
+        BerlinGroupBalanceMapper.getCreditLimit(balances)
+                .ifPresent(balanceBuilderStep::setCreditLimit);
+        return balanceBuilderStep.build();
     }
 }
