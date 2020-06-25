@@ -30,7 +30,7 @@ public class IccreaAgent extends CbiGlobeAgent {
                             apiClient,
                             new StrongAuthenticationState(request.getAppUriId()),
                             userState,
-                            getClientConfiguration(),
+                            getAgentConfiguration().getClientConfiguration(),
                             supplementalRequester);
         }
 

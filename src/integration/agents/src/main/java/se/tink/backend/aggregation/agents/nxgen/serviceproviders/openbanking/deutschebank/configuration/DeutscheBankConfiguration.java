@@ -8,7 +8,6 @@ import java.net.UnknownHostException;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.ErrorMessages;
-import se.tink.backend.aggregation.annotations.AgentConfigParam;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.annotations.Secret;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
@@ -16,17 +15,8 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @JsonObject
 public class DeutscheBankConfiguration implements ClientConfiguration {
     @JsonProperty @Secret private String baseUrl;
-    @JsonProperty @AgentConfigParam private String redirectUrl;
     @JsonProperty @Secret private String psuIpAddress;
     @JsonProperty @Secret private String psuIdType;
-
-    public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
-        return redirectUrl;
-    }
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(

@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.ServiceLevelCodeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.SupplementaryDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.SupplementaryDataEntity.AcceptedAuthenticationApproachEnum;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -54,15 +55,17 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     private CmcicApiClient apiClient;
     private SessionStorage sessionStorage;
     private CmcicConfiguration configuration;
+    private String redirectUrl;
     private List<PaymentResponse> paymentResponses;
 
     public CmcicPaymentExecutor(
             CmcicApiClient apiClient,
             SessionStorage sessionStorage,
-            CmcicConfiguration configuration) {
+            AgentConfiguration<CmcicConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.configuration = configuration;
+        this.configuration = agentConfiguration.getClientConfiguration();
+        this.redirectUrl = agentConfiguration.getRedirectUrl();
         paymentResponses = new ArrayList<>();
     }
 
@@ -114,9 +117,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                 .build());
 
         String callbackUrl =
-                configuration.getRedirectUrl()
-                        + Urls.SUCCESS_REPORT_PATH
-                        + sessionStorage.get(StorageKeys.STATE);
+                redirectUrl + Urls.SUCCESS_REPORT_PATH + sessionStorage.get(StorageKeys.STATE);
 
         List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach =
                 Collections.singletonList(AcceptedAuthenticationApproachEnum.REDIRECT);

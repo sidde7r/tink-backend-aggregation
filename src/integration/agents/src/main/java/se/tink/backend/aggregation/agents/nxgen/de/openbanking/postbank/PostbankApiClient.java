@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -24,7 +25,7 @@ public class PostbankApiClient extends DeutscheBankApiClient {
     public PostbankApiClient(
             TinkHttpClient client,
             SessionStorage sessionStorage,
-            DeutscheBankConfiguration configuration) {
+            AgentConfiguration<DeutscheBankConfiguration> configuration) {
         super(client, sessionStorage, configuration);
         this.apiClient = client;
     }

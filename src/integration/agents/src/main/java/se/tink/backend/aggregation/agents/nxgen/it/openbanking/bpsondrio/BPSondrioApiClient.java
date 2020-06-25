@@ -30,7 +30,7 @@ public class BPSondrioApiClient extends CbiGlobeApiClient {
     @Override
     public String createRedirectUrl(String state, ConsentType consentType) {
         // '?' and '&' need to be encoded
-        return getConfiguration().getRedirectUrl()
+        return getRedirectUrl()
                 + CbiGlobeUtils.encodeValue(
                         "?"
                                 + QueryKeys.STATE

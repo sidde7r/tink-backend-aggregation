@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.TransactionalAccountAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.TransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -57,18 +58,16 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration();
-
         apiClient.setConfiguration(
-                crosskeyBaseConfiguration,
+                getAgentConfiguration(),
                 configuration.getEidasProxy(),
                 getEidasIdentity(),
                 getxFapiFinancialId());
     }
 
-    private CrosskeyBaseConfiguration getClientConfiguration() {
+    private AgentConfiguration<CrosskeyBaseConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentConfiguration(CrosskeyBaseConfiguration.class);
+                .getAgentCommonConfiguration(CrosskeyBaseConfiguration.class);
     }
 
     @Override

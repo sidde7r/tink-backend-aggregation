@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.executor.payment.CbiGlobePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.CbiGlobeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentProgressiveGenerationAgent;
@@ -77,14 +78,16 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final CbiGlobeConfiguration clientConfiguration = getClientConfiguration();
-        apiClient.setConfiguration(clientConfiguration);
+        final AgentConfiguration<CbiGlobeConfiguration> agentConfiguration =
+                getAgentConfiguration();
+        apiClient.setConfiguration(agentConfiguration);
         this.client.setDebugOutput(true);
         this.client.setEidasProxy(configuration.getEidasProxy());
     }
 
-    protected CbiGlobeConfiguration getClientConfiguration() {
-        return getAgentConfigurationController().getAgentConfiguration(CbiGlobeConfiguration.class);
+    protected AgentConfiguration<CbiGlobeConfiguration> getAgentConfiguration() {
+        return getAgentConfigurationController()
+                .getAgentCommonConfiguration(CbiGlobeConfiguration.class);
     }
 
     @Override
@@ -95,7 +98,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                             apiClient,
                             new StrongAuthenticationState(request.getAppUriId()),
                             userState,
-                            getClientConfiguration());
+                            getAgentConfiguration().getClientConfiguration());
         }
 
         return authenticator;

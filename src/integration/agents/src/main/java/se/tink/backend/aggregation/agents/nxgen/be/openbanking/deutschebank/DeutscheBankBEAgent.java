@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deu
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.authenticator.DeutscheBankMultifactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -19,7 +20,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class DeutscheBankBEAgent extends DeutscheBankAgent {
 
-    private final DeutscheBankConfiguration deutscheBankBEConfiguration;
+    private final AgentConfiguration<DeutscheBankConfiguration> agentConfiguration;
     private final DeutscheBankApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
@@ -28,11 +29,10 @@ public class DeutscheBankBEAgent extends DeutscheBankAgent {
             AgentContext context,
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration);
-        deutscheBankBEConfiguration =
+        agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentConfiguration(DeutscheBankConfiguration.class);
-        apiClient =
-                new DeutscheBankBEApiClient(client, sessionStorage, deutscheBankBEConfiguration);
+                        .getAgentCommonConfiguration(DeutscheBankConfiguration.class);
+        apiClient = new DeutscheBankBEApiClient(client, sessionStorage, agentConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
