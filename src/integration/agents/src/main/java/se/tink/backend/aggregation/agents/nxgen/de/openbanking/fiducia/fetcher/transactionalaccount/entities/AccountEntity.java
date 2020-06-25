@@ -36,7 +36,7 @@ public class AccountEntity {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withInferredAccountFlags()
-                .withBalance(getBalnceModule())
+                .withBalance(getBalanceModule())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -48,7 +48,7 @@ public class AccountEntity {
                 .build();
     }
 
-    private BalanceModule getBalnceModule() {
+    private BalanceModule getBalanceModule() {
         BalanceBuilderStep balanceBuilderStep =
                 BalanceModule.builder()
                         .withBalance(BerlinGroupBalanceMapper.getBookedBalance(balances));
