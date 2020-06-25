@@ -188,15 +188,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     }
 
     private void initRedirectUrl(List<String> redirectUrls) {
-        // TODO REMOVE IF BLOCK
-        if ("kirkby-staging".equals(clusterId)) {
-            redirectUrls.forEach(
-                    redirectUrl ->
-                            log.info(
-                                    "[secretDebug]: in initRedirectUrl - redirectUrls"
-                                            + redirectUrl));
-            log.info("[secretDebug]: in initRedirectUrl - redirectUrl" + redirectUrl);
-        }
         if (CollectionUtils.isEmpty(redirectUrls)) {
             throw new IllegalStateException(
                     "Could not find redirectUrls in secrets " + getSecretsServiceParamsString());
@@ -217,12 +208,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
         } else {
             // The redirectUrl provided in the CredentialsRequest is among those registered.
             allSecretsMapObj.put(REDIRECT_URL_KEY, redirectUrl);
-        }
-        // TODO REMOVE IF BLOCK
-        if ("kirkby-staging".equals(clusterId)) {
-            log.info(
-                    "[secretDebug]: in initRedirectUrl - allSecretsMapObj"
-                            + allSecretsMapObj.get(REDIRECT_URL_KEY));
         }
     }
 
@@ -262,19 +247,13 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                                         + clientConfigClass.toString()
                                                         + " is missing"
                                                         + getSecretsServiceParamsString()));
-        // TODO REMOVE IF BLOCK
-        if ("kirkby-staging".equals(clusterId)) {
-            log.info(
-                    "[secretDebug]: in getAgentCommonConfiguration - allSecretsMapObj"
-                            + allSecretsMapObj.get(REDIRECT_URL_KEY));
-        }
         String redirectUrl =
                 Optional.ofNullable(
                                 OBJECT_MAPPER
                                         .convertValue(allSecretsMapObj, AgentConfiguration.class)
                                         .getRedirectUrl())
                         // TPP Secrets is not used
-                        .orElse("");
+                        .orElse(null);
 
         AgentConfiguration<T> agentConfiguration =
                 new AgentConfiguration.Builder()
