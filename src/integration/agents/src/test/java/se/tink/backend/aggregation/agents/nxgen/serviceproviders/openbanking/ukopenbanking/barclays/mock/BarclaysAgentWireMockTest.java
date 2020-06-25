@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.barclays.mock;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.assertions.AgentContractEntitiesJsonFileParser;
 import se.tink.backend.aggregation.agents.framework.assertions.entities.AgentContractEntity;
@@ -14,7 +12,6 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
@@ -37,15 +34,12 @@ public class BarclaysAgentWireMockTest {
 
         final AgentsServiceConfiguration configuration =
                 AgentsServiceConfigurationReader.read(CONFIGURATION_PATH);
-        final Set<RefreshableItem> refreshableItems =
-                new HashSet<>(RefreshableItem.REFRESHABLE_ITEMS_ALL);
-        refreshableItems.remove(RefreshableItem.TRANSFER_DESTINATIONS);
+
         final AgentWireMockRefreshTest agentWireMockRefreshTest =
                 AgentWireMockRefreshTest.builder(
                                 MarketCode.UK, "uk-barclays-oauth2", wireMockFilePath)
                         .withConfigurationFile(configuration)
                         .addCallbackData("code", "DUMMY_AUTH_CODE")
-                        .addRefreshableItems(refreshableItems.toArray(new RefreshableItem[0]))
                         .build();
 
         final AgentContractEntity expected =

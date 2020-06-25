@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.IdentityDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
@@ -81,11 +80,6 @@ public class UKOpenBankingAis implements UkOpenBankingAisConfig {
     @Override
     public URL getAccountBalanceRequestURL(String accountId) {
         return apiBaseURL.concat(String.format(ACCOUNT_BALANCE_REQUEST, accountId));
-    }
-
-    @Override
-    public URL getAccountBeneficiariesRequestURL(String accountId) {
-        return apiBaseURL.concat("/accounts").concat("/" + accountId).concat("/beneficiaries");
     }
 
     @Override
