@@ -35,7 +35,9 @@ public interface BankIdAuthenticator<T> {
      */
     Optional<String> getAutostartToken();
 
-    Optional<OAuth2Token> getAccessToken();
+    default Optional<OAuth2Token> getAccessToken() {
+        return Optional.empty();
+    }
 
     /**
      * Attempts to use the refresh token supplied to return a new OAuth2Token to extend validity.
@@ -43,5 +45,8 @@ public interface BankIdAuthenticator<T> {
      * @param refreshToken
      * @return An Optional containing the OAuth2Token or Optional.empty()
      */
-    Optional<OAuth2Token> refreshAccessToken(final String refreshToken) throws SessionException;
+    default Optional<OAuth2Token> refreshAccessToken(final String refreshToken)
+            throws SessionException {
+        return Optional.empty();
+    }
 }
