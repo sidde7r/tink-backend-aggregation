@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.transfer.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.MobileHelloResponseEntity;
@@ -43,6 +44,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.TrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.client.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.form.Form;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -168,10 +170,17 @@ public class IngApiClient {
                 new LoginRequestBody(ingId, virtualCardNumber, deviceId);
         URL loginUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
-        return this.client
-                .request(loginUrl)
-                .post(LoginResponse.class, loginRequestBody)
-                .getMobileResponse();
+        try {
+            return this.client
+                    .request(loginUrl)
+                    .post(LoginResponse.class, loginRequestBody)
+                    .getMobileResponse();
+        } catch (HttpClientException ex) {
+            if (ex.getMessage().contains("JsonMappingException")) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw ex;
+        }
     }
 
     public HttpResponse getMenuItems() {
