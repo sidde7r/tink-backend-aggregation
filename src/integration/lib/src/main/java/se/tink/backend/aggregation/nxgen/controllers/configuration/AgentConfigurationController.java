@@ -219,13 +219,6 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     }
 
     @Override
-    public <T extends ClientConfiguration> T getAgentConfiguration(
-            final Class<T> clientConfigClass) {
-
-        return getAgentCommonConfiguration(clientConfigClass).getClientConfiguration();
-    }
-
-    @Override
     public <T extends ClientConfiguration> AgentConfiguration<T> getAgentCommonConfiguration(
             final Class<T> clientConfigClass) {
 
