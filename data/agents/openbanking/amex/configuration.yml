@@ -1,0 +1,17 @@
+agentsServiceConfiguration:
+  eidasProxy:
+    host: https://eidas-proxy.staging.aggregation.tink.network
+    localEidasDev: true
+  featureFlags:
+  testConfiguration:
+    debugOutput: true
+  integrations:
+    b6e0ca903b3b4f3e920ee602d3b919eb:
+      tink:
+        certificateId: Tink
+        clientId: dummyId
+        clientSecret: dummySecret
+        grantAccessJourneyUrl: https://m.amex/oauth
+        grantAccessJourneyUrl2: https://global.americanexpress.com/authentication/oauth/enrollment
+        redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+        serverUrl: https://api2s.americanexpress.com

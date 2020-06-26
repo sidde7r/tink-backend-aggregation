@@ -28,7 +28,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -315,11 +314,7 @@ public class AmexApiClientTest {
                         new URL(urlString)
                                 .queryParam(
                                         "start_date",
-                                        LocalDate.parse(
-                                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                                                new Date()))
-                                                .minusDays(90)
-                                                .toString())
+                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
                                 .queryParam(
                                         "end_date",
                                         ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
@@ -331,11 +326,7 @@ public class AmexApiClientTest {
                         new URL(urlString)
                                 .queryParam(
                                         "start_date",
-                                        LocalDate.parse(
-                                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                                                new Date()))
-                                                .minusDays(90)
-                                                .toString())
+                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
                                 .queryParam(
                                         "end_date",
                                         ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
