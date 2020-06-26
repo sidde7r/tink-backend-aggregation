@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking;
 
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
 import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -42,6 +44,16 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
     public SebAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        connfigureHttpClient(client);
+        this.apiClient = new SebApiClient(client, persistentStorage, request.isManual());
+        this.instanceStorage = new SebStorage();
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        creditCardRefreshController = getCreditCardRefreshController();
+    }
+
+    @Inject
+    public SebAgent(AgentComponentProvider componentProvider) {
+        super(componentProvider);
         connfigureHttpClient(client);
         this.apiClient = new SebApiClient(client, persistentStorage, request.isManual());
         this.instanceStorage = new SebStorage();
@@ -99,7 +111,8 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
                 new TransactionFetcherController<>(
                         this.transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(
-                                new SebTransactionFetcher(apiClient))));
+                                new SebTransactionFetcher(apiClient)),
+                        new SebTransactionFetcher(apiClient)));
     }
 
     private CreditCardRefreshController getCreditCardRefreshController() {
