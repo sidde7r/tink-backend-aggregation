@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex;
 
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+
 public class AmericanExpressConstants {
 
     private AmericanExpressConstants() {
@@ -11,6 +13,16 @@ public class AmericanExpressConstants {
 
         public static final String DATE_OUT_OF_RANGE =
                 "Request Validation Failed - Requested date range exceeds the supported limit";
+
+        public static final TypeMapper<Boolean> REVOKED_TOKEN_MAPPER =
+                TypeMapper.<Boolean>builder()
+                        .put(
+                                true,
+                                "[ERR_OAS_0001] Access Token expired",
+                                "[ERR_OAS_0002] Access Token revoked by user",
+                                "[ERR_OAS_0007] Access Token revoked by Change Password Check")
+                        .setDefaultTranslationValue(false)
+                        .build();
     }
 
     public static class ErrorCodes {

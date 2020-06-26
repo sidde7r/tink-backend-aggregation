@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.agents;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.manual;
 
 import org.junit.AfterClass;
 import org.junit.Before;

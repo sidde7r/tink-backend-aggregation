@@ -2,7 +2,7 @@ load("//tools/bzl:junit_old.bzl", "junit_test")
 
 junit_test(
     name = "amex",
-    srcs = glob(["agents/*.java"]),
+    srcs = glob(["manual/*.java"]),
     data = ["//:agent_test_data"],
     tags = [
         "external",
