@@ -12,4 +12,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PaymentTypeInformationEntity {
 
     private String serviceLevel;
+    private String categoryPurpose;
 }

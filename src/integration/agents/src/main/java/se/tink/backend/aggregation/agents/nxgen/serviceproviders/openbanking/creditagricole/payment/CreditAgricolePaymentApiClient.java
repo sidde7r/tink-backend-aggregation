@@ -79,6 +79,11 @@ public class CreditAgricolePaymentApiClient implements FrOpenBankingPaymentApiCl
     }
 
     @Override
+    public String findPaymentId(String authorizationUrl) {
+        return authorizationUrl.substring(authorizationUrl.lastIndexOf("=") + 1);
+    }
+
+    @Override
     public GetPaymentResponse getPayment(String paymentId) {
         return createRequest(
                         createUrl(ApiServices.GET_PAYMENT).parameter(IdTags.PAYMENT_ID, paymentId))

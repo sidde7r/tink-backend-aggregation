@@ -31,6 +31,7 @@ public class CreatePaymentRequest {
     private AccountEntity debtorAccount;
     private BeneficiaryEntity beneficiary;
     private List<CreditTransferTransactionEntity> creditTransferTransaction;
+    private String chargeBearer;
     private SupplementaryDataEntity supplementaryData;
 
     private CreatePaymentRequest(Builder builder) {
@@ -40,7 +41,8 @@ public class CreatePaymentRequest {
         numberOfTransactions = 1;
         initiatingParty = new InitiatingPartyEntity("TINK");
         paymentTypeInformation =
-                new PaymentTypeInformationEntity(builder.paymentType.toString().toUpperCase());
+                new PaymentTypeInformationEntity(
+                        builder.paymentType.toString().toUpperCase(), "CASH");
         debtorAccount = builder.debtorAccount;
         beneficiary = new BeneficiaryEntity(builder.creditorEntity, builder.creditorAccount);
         creditTransferTransaction =
@@ -49,6 +51,7 @@ public class CreatePaymentRequest {
                                 new PaymentIdEntity(),
                                 builder.amount,
                                 Collections.singletonList(builder.remittanceInformation)));
+        chargeBearer = "SLEV";
         supplementaryData = new SupplementaryDataEntity(builder.redirectUrl);
     }
 

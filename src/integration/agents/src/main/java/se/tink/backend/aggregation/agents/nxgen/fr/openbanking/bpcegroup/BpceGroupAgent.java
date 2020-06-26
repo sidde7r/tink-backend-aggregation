@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup;
 
 import com.google.inject.Inject;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -9,12 +10,14 @@ import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModul
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.BpceGroupAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.payment.BpceGroupPaymentApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupRequestSigner;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature.BpceGroupSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.BpceGroupTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.converter.BpceGroupTransactionalAccountConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.FrOpenBankingPaymentExecutor;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
@@ -26,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -36,6 +40,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
     private final BpceGroupApiClient bpceGroupApiClient;
+    private final BpceGroupPaymentApiClient bpceGroupPaymentApiClient;
     private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
     private final StrongAuthenticationState strongAuthenticationState;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -60,6 +65,13 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         this.bpceOAuth2TokenStorage,
                         bpceGroupConfiguration,
                         redirectUrl,
+                        bpceGroupSignatureHeaderGenerator);
+
+        this.bpceGroupPaymentApiClient =
+                new BpceGroupPaymentApiClient(
+                        client,
+                        sessionStorage,
+                        agentConfiguration.getProviderSpecificConfiguration(),
                         bpceGroupSignatureHeaderGenerator);
 
         this.strongAuthenticationState = new StrongAuthenticationState(this.request.getAppUriId());
@@ -149,5 +161,21 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionPagePaginationController<>(transactionFetcher, 1)));
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        final AgentConfiguration<BpceGroupConfiguration> agentConfiguration =
+                getAgentConfiguration();
+
+        FrOpenBankingPaymentExecutor paymentExecutor =
+                new FrOpenBankingPaymentExecutor(
+                        bpceGroupPaymentApiClient,
+                        agentConfiguration.getRedirectUrl(),
+                        sessionStorage,
+                        strongAuthenticationState,
+                        supplementalInformationHelper);
+
+        return Optional.of(new PaymentController(paymentExecutor, paymentExecutor));
     }
 }

@@ -32,6 +32,11 @@ public class BoursoramaPaymentApiClient implements FrOpenBankingPaymentApiClient
     }
 
     @Override
+    public String findPaymentId(String authorizationUrl) {
+        return authorizationUrl.substring(authorizationUrl.lastIndexOf("/") + 1);
+    }
+
+    @Override
     public GetPaymentResponse getPayment(String paymentId) {
         return client.request(createUrl(Urls.GET_PAYMENT).parameter("paymentId", paymentId))
                 .accept(MediaType.APPLICATION_JSON)

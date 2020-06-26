@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.rpc.PispTokenRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -74,6 +75,11 @@ public class BnpParibasPaymentApiClient implements FrOpenBankingPaymentApiClient
     public CreatePaymentResponse createPayment(CreatePaymentRequest request) {
         return createRequest(createUrl(Urls.CREATE_PAYMENT))
                 .post(CreatePaymentResponse.class, SerializationUtils.serializeToString(request));
+    }
+
+    @Override
+    public String findPaymentId(String authorizationUrl) {
+        return authorizationUrl.substring(authorizationUrl.lastIndexOf("=") + 1);
     }
 
     @Override

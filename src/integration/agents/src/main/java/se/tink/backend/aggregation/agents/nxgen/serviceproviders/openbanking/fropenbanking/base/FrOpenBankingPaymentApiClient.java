@@ -10,5 +10,7 @@ public interface FrOpenBankingPaymentApiClient {
 
     CreatePaymentResponse createPayment(CreatePaymentRequest request);
 
+    String findPaymentId(String authorizationUrl);
+
     GetPaymentResponse getPayment(String paymentId);
 }
