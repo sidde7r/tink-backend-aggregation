@@ -47,6 +47,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -58,7 +59,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.progressive.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacMultiToken;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -209,9 +209,8 @@ public class AmericanExpressAgentIntegrationTest extends IntegrationTestBase {
 
         // then
         assertThat(thrown)
-                .isExactlyInstanceOf(HttpResponseException.class)
-                .hasMessage(
-                        "Response statusCode: 401 with body: {\"code\" : \"154011\", \"message\": \"[ERR_OAS_0002] Access Token revoked by user\"}");
+                .isExactlyInstanceOf(BankServiceException.class)
+                .hasMessage("Cause: BankServiceError.CONSENT_REVOKED");
     }
 
     private SteppableAuthenticationResponse makeInitialLoginCall(
