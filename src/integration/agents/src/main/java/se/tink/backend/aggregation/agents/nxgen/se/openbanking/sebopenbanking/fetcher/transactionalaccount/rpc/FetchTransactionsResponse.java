@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fe
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 @JsonObject
 public class FetchTransactionsResponse {
@@ -27,5 +28,10 @@ public class FetchTransactionsResponse {
     @JsonIgnore
     public List<Transaction> getTinkTransactions(SebApiClient apiClient) {
         return transactions.getTransactions(apiClient);
+    }
+
+    @JsonIgnore
+    public List<UpcomingTransaction> getUpcomingTransactions() {
+        return transactions.getUpcomingTransactions();
     }
 }

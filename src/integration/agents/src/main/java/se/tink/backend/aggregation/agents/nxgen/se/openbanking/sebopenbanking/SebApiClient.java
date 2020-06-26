@@ -108,12 +108,17 @@ public class SebApiClient extends SebBaseApiClient {
         RequestBuilder requestBuilder = createRequestInSession(url);
 
         if (appendQueryParams) {
-            requestBuilder.queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED_TRANSACTIONS);
+            requestBuilder.queryParam(
+                    QueryKeys.BOOKING_STATUS, QueryValues.PENDING_AND_BOOKED_TRANSACTIONS);
         }
 
-        FetchTransactionsResponse response = requestBuilder.get(FetchTransactionsResponse.class);
+        return requestBuilder.get(FetchTransactionsResponse.class);
+    }
 
-        return response;
+    public FetchTransactionsResponse fetchUpcomingTransactions(URL url) {
+        return createRequestInSession(url)
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.PENDING)
+                .get(FetchTransactionsResponse.class);
     }
 
     public TransactionDetailsEntity fetchTransactionDetails(String urlAddress) {

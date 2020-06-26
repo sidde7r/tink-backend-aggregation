@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.f
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 @JsonObject
 public class PendingEntity {
@@ -28,8 +30,24 @@ public class PendingEntity {
         return Transaction.builder()
                 .setAmount(transactionAmount.getAmount())
                 .setDate(valueDate)
-                .setDescription(creditorName)
+                .setDescription(descriptiveText)
                 .setPending(true)
                 .build();
+    }
+
+    public UpcomingTransaction toTinkUpcomingTransaction() {
+        return UpcomingTransaction.builder()
+                .setDate(valueDate)
+                .setAmount(transactionAmount.getAmount())
+                .setDescription(creditorName)
+                .build();
+    }
+
+    public boolean isUpcomingTransaction() {
+        return pendingType.equalsIgnoreCase(SebCommonConstants.TransactionType.UPCOMING);
+    }
+
+    public boolean isPendingTransaction() {
+        return pendingType.equalsIgnoreCase(SebCommonConstants.TransactionType.RESERVED);
     }
 }
