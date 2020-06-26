@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterIds;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterSpecificCallbacks;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAppToAppAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankDkNemIdReAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankNoBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAuthenticator;
@@ -108,7 +109,20 @@ public class DemobankAgent extends NextGenerationAgent
         } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())) {
             return new PasswordAuthenticationController(
                     new DemobankPasswordAuthenticator(apiClient));
-        } else {
+        } else if (provider.getName().endsWith("-app-to-app")) {
+            DemobankAppToAppAuthenticator authenticator =
+                    new DemobankAppToAppAuthenticator(
+                            apiClient,
+                            credentials.getField("username"),
+                            credentials.getField("password"),
+                            getCallbackUri());
+            return new AutoAuthenticationController(
+                    request,
+                    systemUpdater,
+                    new ThirdPartyAppAuthenticationController<>(
+                            authenticator, supplementalInformationHelper),
+                    authenticator);
+        } else if (provider.getName().endsWith("-redirect")) {
             DemobankRedirectAuthenticator demobankRedirectAuthenticator =
                     new DemobankRedirectAuthenticator(
                             apiClient, persistentStorage, credentials, callbackUri);
@@ -127,6 +141,8 @@ public class DemobankAgent extends NextGenerationAgent
                     new ThirdPartyAppAuthenticationController<>(
                             controller, supplementalInformationHelper),
                     controller);
+        } else {
+            throw new IllegalStateException("Invalid provider configuration");
         }
     }
 

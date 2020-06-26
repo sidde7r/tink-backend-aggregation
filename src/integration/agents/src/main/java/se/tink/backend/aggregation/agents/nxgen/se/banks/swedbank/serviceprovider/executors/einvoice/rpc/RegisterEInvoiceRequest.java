@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovid
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.serviceprovider.rpc.ReferenceEntity;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class RegisterEInvoiceRequest {
     @JsonIgnore private static final String EMPTY_STRING = "";
@@ -40,8 +40,7 @@ public class RegisterEInvoiceRequest {
 
     public static RegisterEInvoiceRequest create(
             double amount,
-            String message,
-            SwedbankBaseConstants.ReferenceType referenceType,
+            RemittanceInformation remittanceInformation,
             Date date,
             String einvoiceReference,
             String recipientId,
@@ -49,7 +48,7 @@ public class RegisterEInvoiceRequest {
 
         return new RegisterEInvoiceRequest(
                 String.valueOf(amount).replace(".", ","),
-                ReferenceEntity.create(message, referenceType),
+                ReferenceEntity.create(remittanceInformation),
                 date,
                 einvoiceReference,
                 recipientId,
