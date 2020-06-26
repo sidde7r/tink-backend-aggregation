@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -28,7 +29,7 @@ public class TransactionEntity {
                 .setDate(bookingDate)
                 .setPending(false)
                 .setDescription(getDescription())
-                .setAmount(transactionAmount.toAmount())
+                .setAmount(transactionAmount.toTinkAmount())
                 .build();
     }
 
@@ -38,7 +39,7 @@ public class TransactionEntity {
                 .setDate(bookingDate)
                 .setPending(true)
                 .setDescription(getDescription())
-                .setAmount(transactionAmount.toAmount())
+                .setAmount(transactionAmount.toTinkAmount())
                 .build();
     }
 

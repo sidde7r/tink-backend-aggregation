@@ -27,7 +27,7 @@ public class Xs2aDevelopersTransactionalAccountFetcherTest {
 
     private static final GetBalanceResponse BALANCE_RESPONSE =
             SerializationUtils.deserializeFromString(
-                    "{\"balances\" : [ {\"balanceAmount\" : {\"currency\" : \"EUR\", \"amount\" : 12.12 }}, {\"balanceAmount\" : {\"currency\" : \"EUR\", \"amount\" : 12.12 }} ] }",
+                    "{\"balances\" : [ {\"balanceType\" : \"authorised\", \"balanceAmount\" : {\"currency\" : \"EUR\", \"amount\" : 12.12 }}, {\"balanceType\" : \"authorised\", \"balanceAmount\" : {\"currency\" : \"EUR\", \"amount\" : 12.12 }} ] }",
                     GetBalanceResponse.class);
     private Xs2aDevelopersApiClient apiClient = mock(Xs2aDevelopersApiClient.class);
     private Xs2aDevelopersAuthenticator oauth2Authenticator =
