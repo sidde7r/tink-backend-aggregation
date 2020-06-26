@@ -12,9 +12,18 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public final class MockSupplementalInformationController
         implements SupplementalInformationController {
 
+    private final Map<String, String> callbackData;
+
+    public MockSupplementalInformationController(Map<String, String> callbackData) {
+        this.callbackData = callbackData;
+    }
+
     @Override
     public Optional<Map<String, String>> waitForSupplementalInformation(
-            final String key, final long waitFor, final TimeUnit unit) {
+            String key, final long waitFor, final TimeUnit unit) {
+        if (key.startsWith("tpcb")) {
+            return Optional.of(callbackData);
+        }
         throw new UnsupportedOperationException("Not implemented");
     }
 

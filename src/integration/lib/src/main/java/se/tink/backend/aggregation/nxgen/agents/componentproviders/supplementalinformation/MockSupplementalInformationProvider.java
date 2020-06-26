@@ -14,7 +14,8 @@ public final class MockSupplementalInformationProvider implements SupplementalIn
     public MockSupplementalInformationProvider(final Map<String, String> mockCallbackData) {
         this.supplementalInformationHelper =
                 new MockSupplementalInformationHelper(mockCallbackData);
-        this.supplementalInformationController = new MockSupplementalInformationController();
+        this.supplementalInformationController =
+                new MockSupplementalInformationController(mockCallbackData);
     }
 
     @Override
