@@ -11,6 +11,8 @@ public interface UkOpenBankingAisConfig {
 
     URL getAccountBalanceRequestURL(String accountId);
 
+    URL getAccountBeneficiariesRequestURL(String accountId);
+
     <T extends AccountPermissionResponse> String getIntentId(T accountPermissionResponse);
 
     URL createConsentRequestURL();
