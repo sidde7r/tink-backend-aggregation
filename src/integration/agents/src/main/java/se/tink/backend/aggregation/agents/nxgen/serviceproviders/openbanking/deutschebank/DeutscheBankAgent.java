@@ -36,7 +36,7 @@ public abstract class DeutscheBankAgent extends NextGenerationAgent
 
         final AgentConfiguration<DeutscheBankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(DeutscheBankConfiguration.class);
+                        .getAgentConfiguration(DeutscheBankConfiguration.class);
 
         apiClient = new DeutscheBankApiClient(client, sessionStorage, agentConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

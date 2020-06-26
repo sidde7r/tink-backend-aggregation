@@ -69,12 +69,13 @@ public class SwedbankBasePredicates {
 
     public static Predicate<ConfirmedTransactionEntity> filterByMessage(Transfer originalTransfer) {
         return confirmedTransactionEntity -> {
-            String destinationMessage = originalTransfer.getDestinationMessage();
+            String remittanceInformationValue =
+                    originalTransfer.getRemittanceInformation().getValue();
 
             return Optional.ofNullable(confirmedTransactionEntity.getPayment())
                     .map(PaymentEntity::getReference)
                     .map(ReferenceEntity::getValue)
-                    .map(destinationMessage::equalsIgnoreCase)
+                    .map(remittanceInformationValue::equalsIgnoreCase)
                     .isPresent();
         };
     }

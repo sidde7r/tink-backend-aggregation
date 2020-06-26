@@ -43,7 +43,7 @@ public final class VolvoFinansAgent extends NextGenerationAgent
 
     protected AgentConfiguration<VolvoFinansConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(VolvoFinansConfiguration.class);
+                .getAgentConfiguration(VolvoFinansConfiguration.class);
     }
 
     @Override
@@ -55,7 +55,7 @@ public final class VolvoFinansAgent extends NextGenerationAgent
                         new VolvoFinansAuthenticator(
                                 apiClient,
                                 persistentStorage,
-                                getAgentConfiguration().getClientConfiguration()),
+                                getAgentConfiguration().getProviderSpecificConfiguration()),
                         credentials,
                         strongAuthenticationState);
 

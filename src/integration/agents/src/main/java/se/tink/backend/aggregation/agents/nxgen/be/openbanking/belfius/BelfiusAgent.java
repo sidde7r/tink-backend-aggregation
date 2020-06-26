@@ -37,8 +37,7 @@ public final class BelfiusAgent extends NextGenerationAgent
         super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
 
         this.agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(BelfiusConfiguration.class);
+                getAgentConfigurationController().getAgentConfiguration(BelfiusConfiguration.class);
         super.setConfiguration(agentsServiceConfiguration);
 
         this.apiClient = new BelfiusApiClient(client, agentConfiguration);

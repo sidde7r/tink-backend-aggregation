@@ -68,7 +68,7 @@ public final class BecApiClient {
             AgentConfiguration<BecConfiguration> agentConfiguration,
             final AgentsServiceConfiguration configuration,
             EidasIdentity eidasIdentity) {
-        this.becConfiguration = agentConfiguration.getClientConfiguration();
+        this.becConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.config = configuration;
         this.eidasIdentity = eidasIdentity;

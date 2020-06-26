@@ -42,8 +42,7 @@ public final class BunqAgent extends BunqBaseAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(BunqConfiguration.class);
+                getAgentConfigurationController().getAgentConfiguration(BunqConfiguration.class);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class DeutscheBankBEApiClient extends DeutscheBankApiClient {
             AgentConfiguration<DeutscheBankConfiguration> agentConfiguration) {
         super(client, sessionStorage, agentConfiguration);
         this.client = client;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

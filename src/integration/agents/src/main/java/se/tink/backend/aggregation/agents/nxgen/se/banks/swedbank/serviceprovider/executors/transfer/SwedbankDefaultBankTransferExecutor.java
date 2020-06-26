@@ -48,7 +48,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
         // We'll go through all the profiles to find the one the source account belongs to.
         // That profile will be selected so it's used going forward in the execution flow.
         if (!SwedbankNoteToRecipientUtils.isValidSwedbankNoteToRecipient(
-                transfer.getDestinationMessage())) {
+                transfer.getRemittanceInformation().getValue())) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
                             TransferExecutionException.EndUserMessage.INVALID_MESSAGE
@@ -101,7 +101,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
                     apiClient.registerTransfer(
                             transfer.getAmount().getValue(),
                             recipientAccountId,
-                            transfer.getDestinationMessage(),
+                            transfer.getRemittanceInformation().getValue(),
                             sourceAccountId,
                             dueDate);
             RegisteredTransfersResponse registeredTransfers =

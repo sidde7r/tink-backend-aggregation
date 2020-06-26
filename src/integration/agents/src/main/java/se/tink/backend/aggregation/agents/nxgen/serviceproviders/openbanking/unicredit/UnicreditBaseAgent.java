@@ -56,7 +56,7 @@ public abstract class UnicreditBaseAgent extends NextGenerationAgent
 
         final AgentConfiguration<UnicreditConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(UnicreditConfiguration.class);
+                        .getAgentConfiguration(UnicreditConfiguration.class);
 
         apiClient.setConfiguration(agentConfiguration);
 

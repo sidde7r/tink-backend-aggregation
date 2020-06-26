@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -35,9 +34,9 @@ public class Xs2aDevelopersCreditCardAccountFetcher
     }
 
     private CreditCardAccount transformAccount(AccountEntity transactionAccountEntity) {
-        BalanceEntity balanceEntity =
-                apiClient.getBalance(transactionAccountEntity).getBalances().get(0);
-        return transactionAccountEntity.toTinkCreditAccount(balanceEntity);
+        transactionAccountEntity.setBalance(
+                apiClient.getBalance(transactionAccountEntity).getBalances());
+        return transactionAccountEntity.toTinkCreditAccount();
     }
 
     @Override

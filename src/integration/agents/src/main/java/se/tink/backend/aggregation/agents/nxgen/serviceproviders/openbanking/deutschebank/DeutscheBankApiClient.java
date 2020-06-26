@@ -37,7 +37,7 @@ public class DeutscheBankApiClient {
             AgentConfiguration<DeutscheBankConfiguration> agentConfiguration) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

@@ -9,9 +9,7 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public interface AgentConfigurationControllerable {
 
-    <T extends ClientConfiguration> T getAgentConfiguration(final Class<T> clientConfigClass);
-
-    <T extends ClientConfiguration> AgentConfiguration<T> getAgentCommonConfiguration(
+    <T extends ClientConfiguration> AgentConfiguration<T> getAgentConfiguration(
             final Class<T> clientConfigClass);
 
     void completeSecretValuesSubject();

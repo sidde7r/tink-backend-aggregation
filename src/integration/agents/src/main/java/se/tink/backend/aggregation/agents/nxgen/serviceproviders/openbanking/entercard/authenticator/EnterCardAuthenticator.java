@@ -27,7 +27,7 @@ public class EnterCardAuthenticator implements OAuth2Authenticator {
             EnterCardApiClient apiClient,
             AgentConfiguration<EnterCardConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

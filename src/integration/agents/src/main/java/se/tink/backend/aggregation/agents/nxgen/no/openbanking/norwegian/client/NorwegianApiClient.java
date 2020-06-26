@@ -59,7 +59,7 @@ public class NorwegianApiClient {
         this.persistentStorage = Objects.requireNonNull(persistentStorage);
         Objects.requireNonNull(agentConfiguration);
         this.norwegianConfiguration =
-                Objects.requireNonNull(agentConfiguration.getClientConfiguration());
+                Objects.requireNonNull(agentConfiguration.getProviderSpecificConfiguration());
         this.redirectUrl = Objects.requireNonNull(agentConfiguration.getRedirectUrl());
     }
 

@@ -58,7 +58,7 @@ public final class EnterCardApiClient {
     }
 
     protected void setConfiguration(AgentConfiguration<EnterCardConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

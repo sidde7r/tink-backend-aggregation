@@ -39,7 +39,7 @@ public class AktiaAgent extends SubsequentProgressiveGenerationAgent
         super(componentProvider);
 
         final AktiaConfiguration aktiaConfiguration =
-                getAgentConfiguration().getClientConfiguration();
+                getAgentConfiguration().getProviderSpecificConfiguration();
 
         this.tokenStorage = new OAuth2TokenStorage(this.persistentStorage, this.sessionStorage);
         this.aktiaApiClient =
@@ -98,8 +98,7 @@ public class AktiaAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private AgentConfiguration<AktiaConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(AktiaConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(AktiaConfiguration.class);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {

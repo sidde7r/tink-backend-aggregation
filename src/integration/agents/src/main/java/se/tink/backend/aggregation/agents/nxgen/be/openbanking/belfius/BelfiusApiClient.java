@@ -45,7 +45,7 @@ public final class BelfiusApiClient {
     public BelfiusApiClient(
             TinkHttpClient client, AgentConfiguration<BelfiusConfiguration> agentConfiguration) {
         this.client = client;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

@@ -53,7 +53,7 @@ public class FinecoBankApiClient {
             AgentConfiguration<FinecoBankConfiguration> agentConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

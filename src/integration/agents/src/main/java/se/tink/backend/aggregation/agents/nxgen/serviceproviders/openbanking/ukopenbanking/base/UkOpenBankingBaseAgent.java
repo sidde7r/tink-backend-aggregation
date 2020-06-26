@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.DefaultTransferDestinationAccountsProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.filter.ReAuthenticateFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
@@ -46,6 +47,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.BankServiceInternalErrorFilter;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.identitydata.IdentityData;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
@@ -103,7 +106,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     public AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(getClientConfigurationFormat());
+                .getAgentConfiguration(getClientConfigurationFormat());
     }
 
     @Override
@@ -111,7 +114,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
-                getAgentConfiguration().getClientConfiguration();
+                getAgentConfiguration().getProviderSpecificConfiguration();
 
         softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertion();
 
@@ -256,9 +259,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return transferDestinationRefreshController.fetchTransferDestinations(accounts);
     }
 
-    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+    protected TransferDestinationRefreshController constructTransferDestinationRefreshController() {
         return new TransferDestinationRefreshController(
-                metricRefreshController, new UkOpenBankingTransferDestinationFetcher());
+                metricRefreshController,
+                new UkOpenBankingTransferDestinationFetcher(
+                        new DefaultTransferDestinationAccountsProvider(),
+                        AccountIdentifier.Type.SORT_CODE,
+                        SortCodeIdentifier.class));
     }
 
     @Override

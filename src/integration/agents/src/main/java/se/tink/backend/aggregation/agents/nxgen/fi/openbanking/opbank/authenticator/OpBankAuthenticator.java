@@ -45,7 +45,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
             AgentConfiguration<OpBankConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.credentials = credentials;
     }

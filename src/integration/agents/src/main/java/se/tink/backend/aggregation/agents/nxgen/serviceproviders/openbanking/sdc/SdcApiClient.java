@@ -68,7 +68,7 @@ public final class SdcApiClient {
     protected void setConfiguration(
             AgentConfiguration<SdcConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.client.setEidasProxy(eidasProxyConfiguration);
     }

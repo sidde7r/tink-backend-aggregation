@@ -44,10 +44,9 @@ public final class AbnAmroAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(AbnAmroConfiguration.class);
+                getAgentConfigurationController().getAgentConfiguration(AbnAmroConfiguration.class);
 
-        clientConfiguration = agentConfiguration.getClientConfiguration();
+        clientConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(clientConfiguration);
 
         this.client.setEidasProxy(configuration.getEidasProxy());

@@ -57,7 +57,7 @@ public final class PayPalApiClient {
     }
 
     protected void setConfiguration(AgentConfiguration<PayPalConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

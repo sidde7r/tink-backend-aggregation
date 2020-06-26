@@ -57,7 +57,7 @@ public final class SkandiaApiClient {
     protected void setConfiguration(
             AgentConfiguration<SkandiaConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         client.setEidasProxy(eidasProxyConfiguration);
     }

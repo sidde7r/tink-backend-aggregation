@@ -47,8 +47,8 @@ public final class IcaBankenAgent extends NextGenerationAgent
 
         agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(IcaBankenConfiguration.class);
-        icaBankenConfiguration = agentConfiguration.getClientConfiguration();
+                        .getAgentConfiguration(IcaBankenConfiguration.class);
+        icaBankenConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(
                 icaBankenConfiguration, agentsServiceConfiguration.getEidasProxy());
     }

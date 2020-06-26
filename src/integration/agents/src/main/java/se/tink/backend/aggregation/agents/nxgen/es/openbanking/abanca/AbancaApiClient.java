@@ -58,7 +58,7 @@ public final class AbancaApiClient {
             SupplementalRequester supplementalRequester) {
         this.client = client;
         this.catalog = catalog;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;

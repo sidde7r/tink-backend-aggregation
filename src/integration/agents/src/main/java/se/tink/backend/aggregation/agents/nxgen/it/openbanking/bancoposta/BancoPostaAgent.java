@@ -34,7 +34,7 @@ public class BancoPostaAgent extends CbiGlobeAgent {
                             apiClient,
                             new StrongAuthenticationState(request.getAppUriId()),
                             userState,
-                            getAgentConfiguration().getClientConfiguration());
+                            getAgentConfiguration().getProviderSpecificConfiguration());
         }
 
         return authenticator;

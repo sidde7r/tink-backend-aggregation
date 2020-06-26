@@ -20,7 +20,9 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
@@ -131,6 +133,35 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
     }
 
     @JsonIgnore
+    private RemittanceInformation getRemittanceInformation() {
+        if (type == null) {
+            return null;
+        }
+
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        switch (type.toLowerCase()) {
+            case SwedbankBaseConstants.TransactionType.TRANSFER:
+                remittanceInformation.setType(RemittanceInformationType.UNSTRUCTURED);
+                remittanceInformation.setValue(
+                        Optional.ofNullable(transfer)
+                                .map(TransferEntity::getNoteToRecipient)
+                                .orElse(EMPTY_STRING));
+                return remittanceInformation;
+            case SwedbankBaseConstants.TransactionType.PAYMENT:
+                remittanceInformation.setType(RemittanceInformationType.OCR);
+                remittanceInformation.setValue(
+                        Optional.ofNullable(payment)
+                                .map(PaymentEntity::getReference)
+                                .map(ReferenceEntity::getValue)
+                                .orElse(EMPTY_STRING));
+                return remittanceInformation;
+            default:
+                log.warn("Unexpected transfer type: {}", type);
+                throw new IllegalStateException("Unexpected transfer type: " + type);
+        }
+    }
+
+    @JsonIgnore
     private String getSourceMessage() {
         if (type == null) {
             return null;
@@ -203,6 +234,7 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         transfer.setSource(sourceAccount);
         transfer.setDestinationMessage(getDestinationMessage());
 
+        transfer.setRemittanceInformation(getRemittanceInformation());
         Optional<AccountIdentifier> destinationAccount = getDestinationAccount();
         if (!destinationAccount.isPresent()) {
             return Optional.empty();

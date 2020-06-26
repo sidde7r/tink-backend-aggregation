@@ -107,8 +107,7 @@ public class SwedbankDefaultUpdatePaymentExecutor extends BaseTransferExecutor
                 apiClient.updatePayment(
                         editLink.get(),
                         transfer.getAmount().getValue(),
-                        transfer.getDestinationMessage(),
-                        SwedbankTransferHelper.getReferenceTypeFor(transfer),
+                        transfer.getRemittanceInformation(),
                         transfer.getDueDate(),
                         destinationAccountId.get(),
                         sourceAccountId.get());

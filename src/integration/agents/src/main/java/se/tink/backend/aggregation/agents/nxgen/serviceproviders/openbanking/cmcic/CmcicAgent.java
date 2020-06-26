@@ -49,9 +49,8 @@ public abstract class CmcicAgent extends NextGenerationAgent
         super(componentProvider);
 
         agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(CmcicConfiguration.class);
-        cmcicConfiguration = agentConfiguration.getClientConfiguration();
+                getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
+        cmcicConfiguration = agentConfiguration.getProviderSpecificConfiguration();
 
         final CmcicSignatureProvider signatureProvider = new CmcicSignatureProvider(qsealcSigner);
         final CmcicDigestProvider digestProvider = new CmcicDigestProvider();

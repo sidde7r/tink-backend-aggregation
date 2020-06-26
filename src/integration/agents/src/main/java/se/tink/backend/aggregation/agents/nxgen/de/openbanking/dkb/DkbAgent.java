@@ -39,13 +39,13 @@ public final class DkbAgent extends NextGenerationAgent
     }
 
     private AgentConfiguration<DkbConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(DkbConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(DkbConfiguration.class);
     }
 
     private ModuleDependenciesRegistry initializeAgentDependencies(
             DkbModuleDependenciesRegistration moduleDependenciesRegistration) {
-        final DkbConfiguration dkbConfiguration = getAgentConfiguration().getClientConfiguration();
+        final DkbConfiguration dkbConfiguration =
+                getAgentConfiguration().getProviderSpecificConfiguration();
         moduleDependenciesRegistration.registerExternalDependencies(
                 client,
                 sessionStorage,

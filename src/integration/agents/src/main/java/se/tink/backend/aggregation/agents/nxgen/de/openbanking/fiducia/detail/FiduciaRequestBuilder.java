@@ -34,7 +34,7 @@ public class FiduciaRequestBuilder {
             SignatureHeaderGenerator signatureHeaderGenerator) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.fiduciaConfiguration = agentConfiguration.getClientConfiguration();
+        this.fiduciaConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.signatureHeaderGenerator = signatureHeaderGenerator;
     }

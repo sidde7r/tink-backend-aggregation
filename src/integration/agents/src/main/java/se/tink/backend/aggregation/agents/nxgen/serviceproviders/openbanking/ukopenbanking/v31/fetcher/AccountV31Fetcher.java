@@ -46,13 +46,12 @@ public final class AccountV31Fetcher<T extends Account> implements AccountFetche
 
     private Single<List<IdentityDataV31Entity>> fetchParties(AccountEntity account) {
         return Single.fromCallable(
-                        () -> identityFetcher.fetchAccountParties(account.getBankIdentifier()))
+                        () -> identityFetcher.fetchAccountParties(account.getAccountId()))
                 .subscribeOn(Schedulers.io());
     }
 
     private Single<List<AccountBalanceEntity>> fetchBalance(AccountEntity account) {
-        return Single.fromCallable(
-                        () -> apiClient.fetchV31AccountBalances(account.getBankIdentifier()))
+        return Single.fromCallable(() -> apiClient.fetchV31AccountBalances(account.getAccountId()))
                 .subscribeOn(Schedulers.io());
     }
 }

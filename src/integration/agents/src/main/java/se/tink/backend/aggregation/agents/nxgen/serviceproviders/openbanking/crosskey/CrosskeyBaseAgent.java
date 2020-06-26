@@ -67,7 +67,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
 
     private AgentConfiguration<CrosskeyBaseConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(CrosskeyBaseConfiguration.class);
+                .getAgentConfiguration(CrosskeyBaseConfiguration.class);
     }
 
     @Override

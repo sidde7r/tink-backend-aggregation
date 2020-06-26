@@ -52,7 +52,7 @@ public class Xs2aDevelopersApiClientTest {
         Xs2aDevelopersConfiguration configuration = mock(Xs2aDevelopersConfiguration.class);
         AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration =
                 new AgentConfiguration.Builder()
-                        .setClientConfiguration(configuration)
+                        .setProviderSpecificConfiguration(configuration)
                         .setRedirectUrl("REDIRECT_URL")
                         .build();
         OAuth2Token oauth2Token =

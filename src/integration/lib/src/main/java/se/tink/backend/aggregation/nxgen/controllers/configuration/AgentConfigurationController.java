@@ -219,14 +219,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
     }
 
     @Override
-    public <T extends ClientConfiguration> T getAgentConfiguration(
-            final Class<T> clientConfigClass) {
-
-        return getAgentCommonConfiguration(clientConfigClass).getClientConfiguration();
-    }
-
-    @Override
-    public <T extends ClientConfiguration> AgentConfiguration<T> getAgentCommonConfiguration(
+    public <T extends ClientConfiguration> AgentConfiguration<T> getAgentConfiguration(
             final Class<T> clientConfigClass) {
 
         // For local development we can use the development.yml file.
@@ -257,7 +250,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
 
         AgentConfiguration<T> agentConfiguration =
                 new AgentConfiguration.Builder()
-                        .setClientConfiguration(clientConfig)
+                        .setProviderSpecificConfiguration(clientConfig)
                         .setRedirectUrl(redirectUrl)
                         .build();
 
@@ -403,7 +396,7 @@ public final class AgentConfigurationController implements AgentConfigurationCon
 
         AgentConfiguration<T> agentConfiguration =
                 new AgentConfiguration.Builder()
-                        .setClientConfiguration(
+                        .setProviderSpecificConfiguration(
                                 OBJECT_MAPPER.convertValue(
                                         clientConfigurationAsObject, clientConfigClass))
                         .setRedirectUrl(

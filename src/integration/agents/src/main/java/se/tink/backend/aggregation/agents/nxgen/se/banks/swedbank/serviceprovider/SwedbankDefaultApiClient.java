@@ -74,6 +74,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 
 public class SwedbankDefaultApiClient {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
@@ -390,7 +391,7 @@ public class SwedbankDefaultApiClient {
     public RegisterTransferResponse registerTransfer(
             double amount,
             String destinationAccountId,
-            String destinationMessage,
+            String remittanceInformationValue,
             String sourceAccountId,
             Date transferDueDate) {
         return makeMenuItemRequest(
@@ -398,7 +399,7 @@ public class SwedbankDefaultApiClient {
                 RegisterTransferRequest.create(
                         amount,
                         destinationAccountId,
-                        destinationMessage,
+                        remittanceInformationValue,
                         sourceAccountId,
                         transferDueDate),
                 RegisterTransferResponse.class);
@@ -406,27 +407,20 @@ public class SwedbankDefaultApiClient {
 
     public RegisterTransferResponse registerPayment(
             double amount,
-            String message,
-            SwedbankBaseConstants.ReferenceType referenceType,
+            RemittanceInformation remittanceInformation,
             Date date,
             String destinationAccountId,
             String sourceAccountId) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
                 RegisterPaymentRequest.createPayment(
-                        amount,
-                        message,
-                        referenceType,
-                        date,
-                        destinationAccountId,
-                        sourceAccountId),
+                        amount, remittanceInformation, date, destinationAccountId, sourceAccountId),
                 RegisterTransferResponse.class);
     }
 
     public RegisterTransferResponse registerEInvoice(
             double amount,
-            String message,
-            SwedbankBaseConstants.ReferenceType referenceType,
+            RemittanceInformation remittanceInformation,
             Date date,
             String eInvoiceId,
             String destinationAccountId,
@@ -435,8 +429,7 @@ public class SwedbankDefaultApiClient {
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
                 RegisterPaymentRequest.createEinvoicePayment(
                         amount,
-                        message,
-                        referenceType,
+                        remittanceInformation,
                         date,
                         destinationAccountId,
                         sourceAccountId,
@@ -475,15 +468,14 @@ public class SwedbankDefaultApiClient {
     public RegisterTransferResponse updatePayment(
             LinkEntity linkEntity,
             double amount,
-            String message,
-            SwedbankBaseConstants.ReferenceType referenceType,
+            RemittanceInformation remittanceInformation,
             Date date,
             String recipientId,
             String fromAccountId) {
         return makeRequest(
                 linkEntity,
                 RegisterPaymentRequest.createPayment(
-                        amount, message, referenceType, date, recipientId, fromAccountId),
+                        amount, remittanceInformation, date, recipientId, fromAccountId),
                 RegisterTransferResponse.class,
                 false,
                 Retry.FIRST_ATTEMPT);

@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.Xs2aDevelopersAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -42,8 +41,8 @@ public class Xs2aDevelopersTransactionalAccountFetcher
     }
 
     private Optional<TransactionalAccount> transformAccount(AccountEntity accountEntity) {
-        BalanceEntity balanceEntity = apiClient.getBalance(accountEntity).getBalances().get(0);
-        return accountEntity.toTinkAccount(balanceEntity);
+        accountEntity.setBalance(apiClient.getBalance(accountEntity).getBalances());
+        return accountEntity.toTinkAccount();
     }
 
     @Override

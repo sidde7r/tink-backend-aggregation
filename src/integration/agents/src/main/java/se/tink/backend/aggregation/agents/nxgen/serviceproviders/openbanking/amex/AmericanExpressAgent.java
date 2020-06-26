@@ -53,7 +53,8 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
     public AmericanExpressAgent(AgentComponentProvider componentProvider) {
         super(componentProvider);
         final AgentConfiguration<AmexConfiguration> agentConfiguration = getAgentConfiguration();
-        final AmexConfiguration amexConfiguration = agentConfiguration.getClientConfiguration();
+        final AmexConfiguration amexConfiguration =
+                agentConfiguration.getProviderSpecificConfiguration();
         final String redirectUrl = agentConfiguration.getRedirectUrl();
         final MacSignatureCreator macSignatureCreator = new MacSignatureCreator();
         final Clock clock = Clock.systemDefaultZone();
@@ -123,8 +124,7 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
     }
 
     private AgentConfiguration<AmexConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(AmexConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(AmexConfiguration.class);
     }
 
     private CreditCardRefreshController constructCreditCardController() {

@@ -7,9 +7,12 @@ import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BerlinGroupBalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -40,14 +43,14 @@ public class AccountEntity {
         return links;
     }
 
-    public Optional<TransactionalAccount> toTinkAccount(BalanceEntity balanceEntity) {
+    public Optional<TransactionalAccount> toTinkAccount() {
         if (iban == null) {
             return Optional.empty();
         }
 
         return TransactionalAccount.nxBuilder()
                 .withTypeAndFlagsFrom(Xs2aDevelopersConstants.ACCOUNT_TYPE_MAPPER, getAccountType())
-                .withBalance(BalanceModule.of(balanceEntity.toAmount()))
+                .withBalance(getBalanceModule())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getAccountNumber())
@@ -62,17 +65,28 @@ public class AccountEntity {
                 .build();
     }
 
+    private BalanceModule getBalanceModule() {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder()
+                        .withBalance(BerlinGroupBalanceMapper.getBookedBalance(balances));
+        BerlinGroupBalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
+        BerlinGroupBalanceMapper.getCreditLimit(balances)
+                .ifPresent(balanceBuilderStep::setCreditLimit);
+        return balanceBuilderStep.build();
+    }
+
     public boolean isCreditCardAccount() {
         return !Strings.isNullOrEmpty(maskedPan);
     }
 
-    public CreditCardAccount toTinkCreditAccount(BalanceEntity balanceEntity) {
+    public CreditCardAccount toTinkCreditAccount() {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(maskedPan)
-                                .withBalance(balanceEntity.toAmount())
-                                .withAvailableCredit(balanceEntity.toAmount())
+                                .withBalance(balances.get(0).toTinkAmount())
+                                .withAvailableCredit(balances.get(0).toTinkAmount())
                                 .withCardAlias(name)
                                 .build())
                 .withPaymentAccountFlag()

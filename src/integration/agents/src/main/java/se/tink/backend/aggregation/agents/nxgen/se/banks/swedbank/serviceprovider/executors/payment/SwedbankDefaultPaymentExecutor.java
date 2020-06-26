@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
@@ -109,11 +110,11 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
     private RegisterTransferResponse registerPayment(
             Transfer transfer, String sourceAccountId, String destinationAccountId) {
         Date dueDate = dateUtils.getTransferDateForPayments(transfer.getDueDate());
-        SwedbankBaseConstants.ReferenceType referenceType =
-                SwedbankTransferHelper.getReferenceTypeFor(transfer);
+        if (transfer.getRemittanceInformation().getType() == null) {
+            SwedbankTransferHelper.validateAndSetRemittanceInformationTypeFor(transfer);
+        }
         try {
-            return tryRegisterPayment(
-                    transfer, sourceAccountId, destinationAccountId, dueDate, referenceType);
+            return tryRegisterPayment(transfer, sourceAccountId, destinationAccountId, dueDate);
         } catch (HttpResponseException hre) {
             HttpResponse httpResponse = hre.getResponse();
             if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
@@ -122,12 +123,10 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
                         && errorResponse.hasErrorMessage(
                                 SwedbankBaseConstants.ErrorMessage.OCR_NOT_ALLOWED)) {
                     try {
+                        transfer.getRemittanceInformation()
+                                .setType(RemittanceInformationType.UNSTRUCTURED);
                         tryRegisterPayment(
-                                transfer,
-                                sourceAccountId,
-                                destinationAccountId,
-                                dueDate,
-                                SwedbankBaseConstants.ReferenceType.MESSAGE);
+                                transfer, sourceAccountId, destinationAccountId, dueDate);
                     } catch (HttpResponseException httpResponseException) {
                         throw convertExceptionIfBadPayment(httpResponseException);
                     }
@@ -138,15 +137,10 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor
     }
 
     private RegisterTransferResponse tryRegisterPayment(
-            Transfer transfer,
-            String sourceAccountId,
-            String destinationAccountId,
-            Date dueDate,
-            SwedbankBaseConstants.ReferenceType referenceType) {
+            Transfer transfer, String sourceAccountId, String destinationAccountId, Date dueDate) {
         return apiClient.registerPayment(
                 transfer.getAmount().getValue(),
-                transfer.getDestinationMessage(),
-                referenceType,
+                transfer.getRemittanceInformation(),
                 dueDate,
                 destinationAccountId,
                 sourceAccountId);

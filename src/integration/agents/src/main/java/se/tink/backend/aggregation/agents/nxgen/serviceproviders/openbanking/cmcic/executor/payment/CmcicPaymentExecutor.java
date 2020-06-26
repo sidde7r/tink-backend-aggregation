@@ -64,7 +64,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
             AgentConfiguration<CmcicConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         paymentResponses = new ArrayList<>();
     }

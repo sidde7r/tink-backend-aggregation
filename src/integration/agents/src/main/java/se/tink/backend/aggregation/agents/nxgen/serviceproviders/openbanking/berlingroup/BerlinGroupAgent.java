@@ -33,7 +33,7 @@ public abstract class BerlinGroupAgent<
 
     protected AgentConfiguration<TConfiguration> getConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(getConfigurationClassDescription());
+                .getAgentConfiguration(getConfigurationClassDescription());
     }
 
     @Override

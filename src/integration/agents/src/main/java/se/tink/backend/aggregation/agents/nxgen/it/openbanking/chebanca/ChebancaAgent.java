@@ -55,8 +55,7 @@ public final class ChebancaAgent extends NextGenerationAgent
     }
 
     protected AgentConfiguration<ChebancaConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(ChebancaConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(ChebancaConfiguration.class);
     }
 
     @Override

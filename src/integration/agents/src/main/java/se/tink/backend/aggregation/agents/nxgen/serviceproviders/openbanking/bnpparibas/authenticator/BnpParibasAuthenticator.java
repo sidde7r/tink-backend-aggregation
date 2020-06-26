@@ -26,7 +26,7 @@ public class BnpParibasAuthenticator implements OAuth2Authenticator {
             AgentConfiguration<BnpParibasConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.bnpParibasConfiguration = agentConfiguration.getClientConfiguration();
+        this.bnpParibasConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

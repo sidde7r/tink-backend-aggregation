@@ -60,7 +60,7 @@ public class KnabApiClient {
     }
 
     public void setConfiguration(AgentConfiguration<KnabConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

@@ -34,9 +34,8 @@ public final class AbancaAgent extends NextGenerationAgent
         super(agentComponentProvider);
 
         agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(AbancaConfiguration.class);
-        abancaConfiguration = agentConfiguration.getClientConfiguration();
+                getAgentConfigurationController().getAgentConfiguration(AbancaConfiguration.class);
+        abancaConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         apiClient =
                 new AbancaApiClient(
                         client,

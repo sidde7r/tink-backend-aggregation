@@ -72,7 +72,7 @@ public class SibsBaseApiClient {
     protected void setConfiguration(AgentConfiguration<SibsConfiguration> agentConfiguration) {
         Preconditions.checkNotNull(agentConfiguration);
         this.configuration =
-                Preconditions.checkNotNull(agentConfiguration.getClientConfiguration());
+                Preconditions.checkNotNull(agentConfiguration.getProviderSpecificConfiguration());
         this.redirectUrl = Preconditions.checkNotNull(agentConfiguration.getRedirectUrl());
     }
 

@@ -65,7 +65,7 @@ public class ArgentaApiClient {
 
         this.client = client;
         this.configuration =
-                Preconditions.checkNotNull(agentConfiguration.getClientConfiguration());
+                Preconditions.checkNotNull(agentConfiguration.getProviderSpecificConfiguration());
         this.redirectUrl = Preconditions.checkNotNull(agentConfiguration.getRedirectUrl());
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;

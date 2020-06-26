@@ -86,13 +86,15 @@ public class IngBaseApiClient {
             AgentConfiguration<IngBaseConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration,
             EidasIdentity eidasIdentity) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;
         this.certificateSerial =
                 IngBaseUtils.getCertificateSerial(
-                        agentConfiguration.getClientConfiguration().getClientCertificate());
+                        agentConfiguration
+                                .getProviderSpecificConfiguration()
+                                .getClientCertificate());
     }
 
     public FetchAccountsResponse fetchAccounts() {

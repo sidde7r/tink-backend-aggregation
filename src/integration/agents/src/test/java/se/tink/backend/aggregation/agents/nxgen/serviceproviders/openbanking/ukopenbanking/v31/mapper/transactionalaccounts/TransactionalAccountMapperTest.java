@@ -177,4 +177,16 @@ public class TransactionalAccountMapperTest {
 
         assertThat(mappingResult.getHolderName().toString()).isIn(allPosibleHolders);
     }
+
+    @Test
+    public void shouldNotMapAccountsWithoutIdentifiers() {
+        // given
+        AccountEntity incorrectAccount = TransactionalAccountFixtures.savingsAccountWithoutId();
+
+        // when
+        Optional<TransactionalAccount> transactionalAccount =
+                mapper.map(incorrectAccount, Collections.emptyList(), Collections.emptyList());
+
+        assertThat(transactionalAccount).isEmpty();
+    }
 }

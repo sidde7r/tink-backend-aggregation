@@ -119,8 +119,7 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
         try {
             return apiClient.registerEInvoice(
                     transfer.getAmount().getValue(),
-                    transfer.getDestinationMessage(),
-                    SwedbankTransferHelper.getReferenceTypeFor(transfer),
+                    transfer.getRemittanceInformation(),
                     dueDate,
                     eInvoicePaymentEntity.getEinvoiceReference(),
                     eInvoicePaymentEntity.getPayee().getId(),

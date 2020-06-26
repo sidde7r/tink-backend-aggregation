@@ -121,7 +121,7 @@ public abstract class UnicreditBaseApiClient {
     }
 
     protected void setConfiguration(AgentConfiguration<UnicreditConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 
