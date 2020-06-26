@@ -16,6 +16,7 @@ junit_test(
     runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/banks/handelsbanken"],
     deps = [
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/credentials/src/main/java/se/tink/libraries/credentials/service",
         "//src/integration/enums",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/framework/wiremock/configuration",
