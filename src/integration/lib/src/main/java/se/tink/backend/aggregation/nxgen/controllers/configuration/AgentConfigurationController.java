@@ -240,11 +240,13 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                                         + clientConfigClass.toString()
                                                         + " is missing"
                                                         + getSecretsServiceParamsString()));
+
         String redirectUrl =
                 Optional.ofNullable(
-                                OBJECT_MAPPER
-                                        .convertValue(allSecretsMapObj, AgentConfiguration.class)
-                                        .getRedirectUrl())
+                                OBJECT_MAPPER.convertValue(
+                                        allSecretsMapObj, AgentConfiguration.class))
+                        .filter(config -> !config.isRedirectUrlNullOrEmpty())
+                        .map(AgentConfiguration::getRedirectUrl)
                         // TPP Secrets is not used
                         .orElse(null);
 
@@ -400,11 +402,13 @@ public final class AgentConfigurationController implements AgentConfigurationCon
                                 OBJECT_MAPPER.convertValue(
                                         clientConfigurationAsObject, clientConfigClass))
                         .setRedirectUrl(
-                                OBJECT_MAPPER
-                                        .convertValue(
-                                                clientConfigurationAsObject,
-                                                AgentConfiguration.class)
-                                        .getRedirectUrl())
+                                Optional.ofNullable(
+                                                OBJECT_MAPPER.convertValue(
+                                                        clientConfigurationAsObject,
+                                                        AgentConfiguration.class))
+                                        .filter(config -> !config.isRedirectUrlNullOrEmpty())
+                                        .map(AgentConfiguration::getRedirectUrl)
+                                        .orElse(null))
                         .build();
 
         return agentConfiguration;

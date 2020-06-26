@@ -30,7 +30,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     05fd17ff62a24cd492a59ff62366053f:
       tink:
         apiKey: ''
@@ -40,7 +40,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     0864b31991c3487fa0f6e9ef4b848103:
       tink:
         aspspCode: ''
@@ -70,7 +70,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     0acbab9d2ade444faaa83f1f790f143f:
       tink:
         baseAPIUrl: ''
@@ -149,7 +149,7 @@ agentsServiceConfiguration:
       tink:
         apiKey: dummyApiKey
         clientId: dummyClientId
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     0fbe30039db748ca95cc7a995475f5fd:
       tink:
         baseUrl: ''
@@ -187,7 +187,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     151762b70cae44f5a3fcb82a56fc440c:
       tink:
         aspspCode: ''
@@ -220,7 +220,7 @@ agentsServiceConfiguration:
       tink:
         apiKey: dummyApiKey
         clientId: dummyClientId
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     1a98557f669b4778a038502d3b70fcfa:
       tink:
         authorizeUrl: ''
@@ -357,7 +357,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     3095115aff5a405a8b17b49939f90024:
       tink:
         clientId: dummyClientId
@@ -387,7 +387,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     32fed7caec544b1ea47291d211bed92a:
       tink:
         eidasQwac: ''
@@ -437,7 +437,7 @@ agentsServiceConfiguration:
       tink:
         apiKey: dummyApiKey
         clientId: dummyClientId
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     3971c3c470774db8bb9db8892b92c175:
       tink:
         clientId: dummyClientId
@@ -449,7 +449,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     3ade168733f24e2ba677c698d760197e:
       tink:
         baseUrl: ''
@@ -486,12 +486,12 @@ agentsServiceConfiguration:
         baseUrl: ''
         psuIdType: ''
         psuIpAddress: ''
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     40b408f14cc4403a98296f7f4c7ef9af:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     442a5342a0ab4c7da8654eaf8b88fbdd:
       tink:
         baseUrl: dummyBaseUrl
@@ -540,7 +540,7 @@ agentsServiceConfiguration:
       tink:
         apiKey: dummyApiKey
         clientId: dummyClientId
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     4b3ad5ead57f45baa3554b0514333fb9:
       tink:
         baseUrl: ''
@@ -570,12 +570,12 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     53c8b70749624122959aa524421ca93d:
       tink:
         apiKey: dummyApiKey
         clientId: dummyClientId
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     5461a539f104486a8326869078f670bf:
       tink:
         apiKey: ''
@@ -641,7 +641,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     5dc7239f29334fb39cf962847272fba7:
       tink:
         authorizeUrl: ''
@@ -713,7 +713,7 @@ agentsServiceConfiguration:
         clientId: dummyClientId
         clientSigningCertificate: ''
         clientSigningCertificateSerialNumber: ''
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     6374ca46ae01456199a42ba7e7479fd3:
       tink:
         authorizeUrl: ''
@@ -735,7 +735,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     68f914f6c86f46028f9d05627ff602d9:
       tink:
         aspspCode: ''
@@ -829,7 +829,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     7202bb3cc537440e934f83c1cc6cce56:
       tink:
         aspspCode: ''
@@ -873,7 +873,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     76df6c0334c84de18c0b4d8776093f68:
       tink:
         aspspCode: ''
@@ -886,7 +886,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     77918f0f35c14f379503fa9e4bde207f:
       tink:
         authorizeUrl: ''
@@ -903,7 +903,7 @@ agentsServiceConfiguration:
         psd2ApiKey: ''
         psd2ClientAuthToken: ''
         psd2InstallationKeyPair: ''
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     7802078d8a7049398f9668e5478934ea:
       tink:
         clientId: dummyClientId
@@ -994,7 +994,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     88e1cdcf576153f2b5b661b1e1cb3ceb:
       tink:
         clientId: dummyClientId
@@ -1044,7 +1044,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     8f959f96b92c47dfa2f25a4bbbccf2a8:
       tink:
         authorizeUrl: ''
@@ -1095,7 +1095,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     95442fd8424e4bb59bc5557e10415c50:
       tink:
         authorizeUrl: ''
@@ -1129,7 +1129,7 @@ agentsServiceConfiguration:
         redirectUrl: dummyRedirectUrl
     9844198a59965cae9d2705911a054a60:
       tink:
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     9a38fd46559f4133a0fa1943ab77dafe:
       tink:
         certificate: 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
@@ -1168,7 +1168,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     9f0d6ec8e78a4c0caf7ac1d22d1931ef:
       tink:
         authorizeUrl: ''
@@ -1237,7 +1237,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     a6000872703d411ca8edd9f3ac6ce931:
       tink:
         clientId: dummyClientId
@@ -1437,7 +1437,7 @@ agentsServiceConfiguration:
         clientId: dummyClientId
         clientSigningCertificate: ''
         clientSigningCertificateSerialNumber: ''
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     b185d0be1abc4e96b89cdf4cdf23711c:
       tink:
         authorizeUrl: ''
@@ -1476,7 +1476,7 @@ agentsServiceConfiguration:
       tink:
         apiKey: dummyApiKey
         clientId: dummyClientId
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     b7105451781e4107bc7f3591e544bcbe:
       tink:
         baseUrl: dummyBaseUrl
@@ -1500,7 +1500,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     baf1fbef08f0482598701a3b0fff9779:
       tink:
         aspspCode: CGDFR
@@ -1631,7 +1631,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     be5df18a4c4c4ee2ad799f40b7702dbf:
       tink:
         authorizeUrl: ''
@@ -1871,7 +1871,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     c4008360636e42f3b23fbbe9c2206269:
       tink:
         authorizeUrl: ''
@@ -1892,7 +1892,7 @@ agentsServiceConfiguration:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
         eidasQsealc: Tink
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     caisseepargneaquitaine:
       tink:
         clientId: ''
@@ -2160,7 +2160,7 @@ agentsServiceConfiguration:
       tink:
         certificate: ''
         keyId: ''
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
         tppId: ''
     d396eafef04b416e935d94ba4509a436:
       tink:
@@ -2322,12 +2322,12 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     e1a9656ea21e4da08a836c93455c5f13:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     e63aa8bdecc84e61b2165453fd3780fc:
       tink:
         apiBaseUrl: ''
@@ -2397,7 +2397,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     eab9d48aca91445e9fbf2523564f4577:
       tink:
         clientId: dummyClientId
@@ -2428,7 +2428,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     ed47ff3492924bf5855df4d780cdffdc:
       tink:
         clientId: dummyClientId
@@ -2460,7 +2460,7 @@ agentsServiceConfiguration:
         baseUrl: ''
         psuIdType: ''
         psuIpAddress: ''
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     entercard:
       tink:
         clientId: f21cc629-e07e-4e75-874a-8182d5737758
@@ -2545,7 +2545,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     f558421faa6140d697e1b58acb7132cf:
       tink:
         aspspCode: ''
@@ -2558,7 +2558,7 @@ agentsServiceConfiguration:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     f601e6ab24d042d7b92cafa974133e82:
       tink:
         baseAPIUrl: ''
@@ -2599,7 +2599,7 @@ agentsServiceConfiguration:
       tink:
         apiKey: dummyApiKey
         clientId: dummyClientId
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     fadaee91c1f3453eb844c0b9e7a77c81:
       tink:
         baseUrl: ''
@@ -2613,12 +2613,12 @@ agentsServiceConfiguration:
       tink:
         apiKey: dummyApiKey
         clientId: dummyClientId
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     feb105ee583c5f8c86c16eafcb921d56:
       tink:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
-        redirectUrl: ''
+        redirectUrl: dummyRedirectUrl
     fec1e328ed81443b8a943856a693cba4:
       tink:
         authBaseUrl: ''

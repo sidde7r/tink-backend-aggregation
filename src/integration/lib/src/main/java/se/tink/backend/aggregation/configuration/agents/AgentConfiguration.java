@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.configuration.agents;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -10,11 +12,24 @@ public class AgentConfiguration<T> implements ClientConfiguration {
     @JsonProperty private String redirectUrl;
 
     public T getProviderSpecificConfiguration() {
+        Preconditions.checkNotNull(
+                providerSpecificConfiguration, "Provider specific configuration is missing.");
         return providerSpecificConfiguration;
     }
 
     public String getRedirectUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                "Invalid Configuration: Redirect URL cannot be empty or null");
         return redirectUrl;
+    }
+
+    public boolean isProviderSpecificConfigurationNull() {
+        return providerSpecificConfiguration == null ? true : false;
+    }
+
+    public boolean isRedirectUrlNullOrEmpty() {
+        return Strings.emptyToNull(redirectUrl) == null ? true : false;
     }
 
     public static class Builder<T> {
