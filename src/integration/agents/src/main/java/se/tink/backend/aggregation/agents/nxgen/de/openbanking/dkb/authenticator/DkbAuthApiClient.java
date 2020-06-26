@@ -16,9 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbStorage;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.request.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.scaffold.ExternalApiCallResult;
-import tink.org.apache.http.HttpStatus;
 
 public class DkbAuthApiClient {
 
@@ -108,14 +106,7 @@ public class DkbAuthApiClient {
     }
 
     private HttpResponse executeHttpRequest(HttpRequest httpRequest) {
-        try {
-            return httpClient.request(HttpResponse.class, httpRequest);
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() < HttpStatus.SC_INTERNAL_SERVER_ERROR) {
-                return e.getResponse();
-            }
-            throw e;
-        }
+        return httpClient.request(HttpResponse.class, httpRequest);
     }
 
     private <T> ExternalApiCallResult<T> processHttpResponse(
