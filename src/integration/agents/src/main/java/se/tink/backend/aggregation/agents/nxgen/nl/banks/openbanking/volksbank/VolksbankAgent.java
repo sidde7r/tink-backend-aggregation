@@ -62,9 +62,9 @@ public class VolksbankAgent
 
         final AgentConfiguration<VolksbankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(VolksbankConfiguration.class);
+                        .getAgentConfiguration(VolksbankConfiguration.class);
         final VolksbankConfiguration volksbankConfiguration =
-                agentConfiguration.getClientConfiguration();
+                agentConfiguration.getProviderSpecificConfiguration();
         final VolksbankApiClient volksbankApiClient = new VolksbankApiClient(client, urlFactory);
 
         final URL redirectUrl = new URL(agentConfiguration.getRedirectUrl());

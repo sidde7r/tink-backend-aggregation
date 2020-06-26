@@ -58,7 +58,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
 
         agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(BnpParibasConfiguration.class);
+                        .getAgentConfiguration(BnpParibasConfiguration.class);
         BnpParibasSignatureHeaderProvider bnpParibasSignatureHeaderProvider =
                 new BnpParibasSignatureHeaderProvider(qsealcSigner);
 
@@ -66,7 +66,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 new BnpParibasApiBaseClient(
                         client,
                         sessionStorage,
-                        agentConfiguration.getClientConfiguration(),
+                        agentConfiguration.getProviderSpecificConfiguration(),
                         agentConfiguration.getRedirectUrl(),
                         bnpParibasSignatureHeaderProvider);
 
@@ -74,7 +74,7 @@ public class BnpParibasBaseAgent extends NextGenerationAgent
                 new BnpParibasPaymentApiClient(
                         client,
                         sessionStorage,
-                        agentConfiguration.getClientConfiguration(),
+                        agentConfiguration.getProviderSpecificConfiguration(),
                         bnpParibasSignatureHeaderProvider);
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();

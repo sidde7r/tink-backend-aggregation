@@ -55,7 +55,7 @@ public abstract class Xs2aDevelopersTransactionalAgent extends NextGenerationAge
 
     private AgentConfiguration<Xs2aDevelopersConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(Xs2aDevelopersConfiguration.class);
+                .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
     }
 
     @Override

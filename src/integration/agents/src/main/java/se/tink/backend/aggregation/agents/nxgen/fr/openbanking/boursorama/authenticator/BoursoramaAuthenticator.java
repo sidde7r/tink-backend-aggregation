@@ -25,7 +25,7 @@ public class BoursoramaAuthenticator implements OAuth2Authenticator {
     public URL buildAuthorizeUrl(String state) {
         return new URL(
                         "https://clients.boursorama.com/oauth/v2/authorisation/"
-                                + configuration.getClientConfiguration().getClientId())
+                                + configuration.getProviderSpecificConfiguration().getClientId())
                 .queryParam("state", state)
                 .queryParam("successRedirect", configuration.getRedirectUrl())
                 .queryParam("errorRedirect", configuration.getRedirectUrl());
@@ -38,7 +38,7 @@ public class BoursoramaAuthenticator implements OAuth2Authenticator {
                         new TokenRequest(
                                 "authorization_code",
                                 code,
-                                configuration.getClientConfiguration().getClientId()));
+                                configuration.getProviderSpecificConfiguration().getClientId()));
 
         return OAuth2Token.create(
                 tokenResponse.getTokenType(),

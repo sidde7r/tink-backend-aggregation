@@ -55,8 +55,7 @@ public class BecAgent extends NextGenerationAgent
     }
 
     private AgentConfiguration<BecConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(BecConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(BecConfiguration.class);
     }
 
     @Override

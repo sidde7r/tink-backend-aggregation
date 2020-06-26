@@ -34,7 +34,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
             Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.icaBankenConfiguration = agentConfiguration.getClientConfiguration();
+        this.icaBankenConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.credentials = credentials;
     }

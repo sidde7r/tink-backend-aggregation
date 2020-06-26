@@ -57,7 +57,8 @@ public class BpceGroupApiClientTest {
                 mock(AgentConfiguration.class);
         when(configurationMock.getClientId()).thenReturn(CLIENT_ID);
         when(configurationMock.getServerUrl()).thenReturn(SERVER_URL);
-        when(agentConfigurationMock.getClientConfiguration()).thenReturn(configurationMock);
+        when(agentConfigurationMock.getProviderSpecificConfiguration())
+                .thenReturn(configurationMock);
         when(agentConfigurationMock.getRedirectUrl()).thenReturn(REDIRECT_URL);
 
         httpClientMock = mock(TinkHttpClient.class);

@@ -74,7 +74,7 @@ public class FabricAgent extends NextGenerationAgent
         try {
             fabricConfiguration =
                     getAgentConfigurationController()
-                            .getAgentCommonConfiguration(FabricConfiguration.class);
+                            .getAgentConfiguration(FabricConfiguration.class);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION);
         }

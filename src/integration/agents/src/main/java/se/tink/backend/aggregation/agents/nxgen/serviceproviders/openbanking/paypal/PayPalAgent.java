@@ -45,8 +45,7 @@ public final class PayPalAgent extends NextGenerationAgent
     }
 
     protected AgentConfiguration<PayPalConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(PayPalConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(PayPalConfiguration.class);
     }
 
     @Override
@@ -79,7 +78,7 @@ public final class PayPalAgent extends NextGenerationAgent
                 new PayPalOrderTransactionAuthenticator(
                         apiClient,
                         persistentStorage,
-                        getAgentConfiguration().getClientConfiguration());
+                        getAgentConfiguration().getProviderSpecificConfiguration());
 
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
@@ -88,7 +87,7 @@ public final class PayPalAgent extends NextGenerationAgent
                         new PayPalAuthenticator(
                                 apiClient,
                                 persistentStorage,
-                                getAgentConfiguration().getClientConfiguration()),
+                                getAgentConfiguration().getProviderSpecificConfiguration()),
                         credentials,
                         strongAuthenticationState);
 

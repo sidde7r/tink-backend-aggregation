@@ -80,7 +80,7 @@ public final class SwedbankApiClient {
     }
 
     public void setConfiguration(AgentConfiguration<SwedbankConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

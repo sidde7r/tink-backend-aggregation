@@ -25,7 +25,7 @@ public class SebAuthenticator implements OAuth2Authenticator {
     public SebAuthenticator(
             SebBaseApiClient client, AgentConfiguration<SebConfiguration> agentConfiguration) {
         this.client = client;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

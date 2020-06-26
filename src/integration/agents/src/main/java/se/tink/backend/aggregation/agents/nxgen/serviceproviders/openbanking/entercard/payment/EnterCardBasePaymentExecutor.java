@@ -51,7 +51,7 @@ public class EnterCardBasePaymentExecutor implements PaymentExecutor, FetchableP
             AgentConfiguration<EnterCardConfiguration> agentConfiguration,
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.redirectCallbackHandler =
                 new ScaRedirectCallbackHandler(supplementalInformationHelper, 30, TimeUnit.SECONDS);

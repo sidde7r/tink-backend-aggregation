@@ -44,10 +44,9 @@ public final class ArgentaAgent extends NextGenerationAgent
         super.setConfiguration(agentsServiceConfiguration);
 
         final AgentConfiguration<ArgentaConfiguration> agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(ArgentaConfiguration.class);
+                getAgentConfigurationController().getAgentConfiguration(ArgentaConfiguration.class);
         final ArgentaConfiguration argentaConfiguration =
-                agentConfiguration.getClientConfiguration();
+                agentConfiguration.getProviderSpecificConfiguration();
 
         EidasProxyConfiguration eidasProxy = agentsServiceConfiguration.getEidasProxy();
         QsealcSigner qsealcSigner =

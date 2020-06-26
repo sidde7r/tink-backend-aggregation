@@ -27,7 +27,7 @@ public class SocieteGeneraleAuthenticator implements OAuth2Authenticator {
             AgentConfiguration<SocieteGeneraleConfiguration> agentConfiguration) {
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
-        this.societeGeneraleConfiguration = agentConfiguration.getClientConfiguration();
+        this.societeGeneraleConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

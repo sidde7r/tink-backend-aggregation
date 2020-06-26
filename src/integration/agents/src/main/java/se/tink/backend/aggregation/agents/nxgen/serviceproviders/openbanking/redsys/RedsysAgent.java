@@ -70,8 +70,7 @@ public abstract class RedsysAgent extends NextGenerationAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         final AgentConfiguration<RedsysConfiguration> agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(RedsysConfiguration.class);
+                getAgentConfigurationController().getAgentConfiguration(RedsysConfiguration.class);
         apiClient.setConfiguration(agentConfiguration, configuration.getEidasProxy());
         apiClient.setPsuIpAddress(HeaderValues.PSU_IP_ADDRESS);
     }

@@ -48,7 +48,7 @@ public class Xs2aDevelopersApiClient {
             AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

@@ -45,7 +45,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
         final AgentConfiguration<BpceGroupConfiguration> agentConfiguration =
                 getAgentConfiguration();
         final BpceGroupConfiguration bpceGroupConfiguration =
-                agentConfiguration.getClientConfiguration();
+                agentConfiguration.getProviderSpecificConfiguration();
         final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator =
                 createSignatureHeaderGenerator(agentsServiceConfiguration, bpceGroupConfiguration);
         final String redirectUrl = agentConfiguration.getRedirectUrl();
@@ -124,7 +124,7 @@ public final class BpceGroupAgent extends NextGenerationAgent
 
     private AgentConfiguration<BpceGroupConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(BpceGroupConfiguration.class);
+                .getAgentConfiguration(BpceGroupConfiguration.class);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {

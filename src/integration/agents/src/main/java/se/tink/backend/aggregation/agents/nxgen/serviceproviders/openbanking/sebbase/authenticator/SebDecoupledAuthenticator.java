@@ -38,7 +38,7 @@ public class SebDecoupledAuthenticator implements BankIdAuthenticator<String> {
     public SebDecoupledAuthenticator(
             SebBaseApiClient apiClient, AgentConfiguration<SebConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

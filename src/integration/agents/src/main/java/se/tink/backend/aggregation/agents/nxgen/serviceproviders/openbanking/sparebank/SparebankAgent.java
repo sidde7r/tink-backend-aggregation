@@ -53,7 +53,7 @@ public final class SparebankAgent extends NextGenerationAgent
 
     public AgentConfiguration<SparebankConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(SparebankConfiguration.class);
+                .getAgentConfiguration(SparebankConfiguration.class);
     }
 
     @Override
@@ -122,7 +122,7 @@ public final class SparebankAgent extends NextGenerationAgent
                 new SparebankPaymentExecutor(
                         apiClient,
                         sessionStorage,
-                        getAgentConfiguration().getClientConfiguration());
+                        getAgentConfiguration().getProviderSpecificConfiguration());
 
         return Optional.of(
                 new SparebankPaymentController(

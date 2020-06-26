@@ -30,7 +30,7 @@ public class AbnAmroAuthenticator implements OAuth2Authenticator {
             AgentConfiguration<AbnAmroConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

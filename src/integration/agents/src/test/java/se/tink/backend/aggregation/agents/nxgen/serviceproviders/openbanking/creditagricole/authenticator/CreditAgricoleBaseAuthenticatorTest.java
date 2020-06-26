@@ -38,7 +38,7 @@ public class CreditAgricoleBaseAuthenticatorTest {
         String authorizeUrl = "authorizeUrl";
         agentConfiguration =
                 new AgentConfiguration.Builder<>()
-                        .setClientConfiguration(configuration)
+                        .setProviderSpecificConfiguration(configuration)
                         .setRedirectUrl(redirectUrl)
                         .build();
         when(configuration.getClientId()).thenReturn(clientId);

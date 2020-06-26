@@ -66,7 +66,8 @@ public class BoursoramaAgent extends NextGenerationAgent
         AgentConfiguration<BoursoramaConfiguration> agentConfiguration = getAgentConfiguration();
 
         this.apiClient =
-                constructApiClient(qsealcSigner, agentConfiguration.getClientConfiguration());
+                constructApiClient(
+                        qsealcSigner, agentConfiguration.getProviderSpecificConfiguration());
         this.authenticator =
                 new BoursoramaAuthenticator(
                         this.apiClient, this.sessionStorage, agentConfiguration);
@@ -84,8 +85,9 @@ public class BoursoramaAgent extends NextGenerationAgent
     private AgentConfiguration<BoursoramaConfiguration> getAgentConfiguration() {
         AgentConfiguration<BoursoramaConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(BoursoramaConfiguration.class);
-        BoursoramaConfiguration configuration = agentConfiguration.getClientConfiguration();
+                        .getAgentConfiguration(BoursoramaConfiguration.class);
+        BoursoramaConfiguration configuration =
+                agentConfiguration.getProviderSpecificConfiguration();
 
         Objects.requireNonNull(configuration.getBaseUrl());
         Objects.requireNonNull(configuration.getClientId());
@@ -189,7 +191,7 @@ public class BoursoramaAgent extends NextGenerationAgent
         FrOpenBankingPaymentExecutor paymentExecutor =
                 new FrOpenBankingPaymentExecutor(
                         new BoursoramaPaymentApiClient(
-                                client, agentConfiguration.getClientConfiguration()),
+                                client, agentConfiguration.getProviderSpecificConfiguration()),
                         agentConfiguration.getRedirectUrl(),
                         sessionStorage,
                         strongAuthenticationState,

@@ -85,7 +85,7 @@ public final class LansforsakringarApiClient {
 
     public void setConfiguration(
             AgentConfiguration<LansforsakringarConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

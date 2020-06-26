@@ -37,9 +37,8 @@ public abstract class SebBaseAgent<C extends SebBaseApiClient> extends NextGener
         super.setConfiguration(configuration);
 
         agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(SebConfiguration.class);
-        sebConfiguration = agentConfiguration.getClientConfiguration();
+                getAgentConfigurationController().getAgentConfiguration(SebConfiguration.class);
+        sebConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(sebConfiguration);
         client.setEidasProxy(configuration.getEidasProxy());
     }

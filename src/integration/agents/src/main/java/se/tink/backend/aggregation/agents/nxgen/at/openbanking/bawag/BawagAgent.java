@@ -43,9 +43,9 @@ public final class BawagAgent extends NextGenerationAgent
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
 
         final AgentConfiguration<BawagConfiguration> agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(BawagConfiguration.class);
-        final BawagConfiguration clientConfiguration = agentConfiguration.getClientConfiguration();
+                getAgentConfigurationController().getAgentConfiguration(BawagConfiguration.class);
+        final BawagConfiguration clientConfiguration =
+                agentConfiguration.getProviderSpecificConfiguration();
 
         apiClient.setConfiguration(agentConfiguration);
 

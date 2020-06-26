@@ -25,7 +25,7 @@ public class CreditAgricoleBaseAuthenticator implements OAuth2Authenticator {
             AgentConfiguration<CreditAgricoleBaseConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirecUrl = agentConfiguration.getRedirectUrl();
     }
 

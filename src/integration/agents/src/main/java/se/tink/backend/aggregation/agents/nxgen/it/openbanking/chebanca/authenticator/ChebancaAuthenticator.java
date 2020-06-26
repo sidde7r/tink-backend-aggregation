@@ -35,7 +35,7 @@ public class ChebancaAuthenticator implements OAuth2Authenticator {
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = requireNonNull(apiClient);
         requireNonNull(agentConfiguration);
-        this.configuration = requireNonNull(agentConfiguration.getClientConfiguration());
+        this.configuration = requireNonNull(agentConfiguration.getProviderSpecificConfiguration());
         this.redirectUrl = requireNonNull(agentConfiguration.getRedirectUrl());
         requireNonNull(strongAuthenticationState);
         this.authorizationUrlBuilder =

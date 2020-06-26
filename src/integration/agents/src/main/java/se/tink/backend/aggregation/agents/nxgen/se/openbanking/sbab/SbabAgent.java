@@ -80,8 +80,7 @@ public final class SbabAgent extends NextGenerationAgent
     }
 
     protected AgentConfiguration<SbabConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(SbabConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(SbabConfiguration.class);
     }
 
     @Override

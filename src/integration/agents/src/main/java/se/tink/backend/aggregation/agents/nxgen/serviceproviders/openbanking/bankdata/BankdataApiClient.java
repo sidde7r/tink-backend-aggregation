@@ -326,7 +326,7 @@ public final class BankdataApiClient {
     protected void setConfiguration(
             AgentConfiguration<BankdataConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.client.setEidasProxy(eidasProxyConfiguration);
     }

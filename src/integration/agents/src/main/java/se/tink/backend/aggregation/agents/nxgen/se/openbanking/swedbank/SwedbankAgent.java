@@ -56,8 +56,7 @@ public final class SwedbankAgent extends NextGenerationAgent
     }
 
     private AgentConfiguration<SwedbankConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(SwedbankConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(SwedbankConfiguration.class);
     }
 
     @Override

@@ -42,7 +42,7 @@ public abstract class EnterCardAgent extends NextGenerationAgent
 
         agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(EnterCardConfiguration.class);
+                        .getAgentConfiguration(EnterCardConfiguration.class);
         apiClient = new EnterCardApiClient(client, persistentStorage);
 
         creditCardRefreshController =

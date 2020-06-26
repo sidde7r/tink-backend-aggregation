@@ -46,7 +46,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent
 
         final AgentConfiguration<LansforsakringarConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(LansforsakringarConfiguration.class);
+                        .getAgentConfiguration(LansforsakringarConfiguration.class);
         apiClient.setConfiguration(agentConfiguration);
         this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
     }
