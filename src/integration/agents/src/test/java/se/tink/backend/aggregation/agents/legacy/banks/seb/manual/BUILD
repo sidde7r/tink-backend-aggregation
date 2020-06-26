@@ -6,6 +6,7 @@ junit_test(
     data = [
         "//data:agents",
         "//data:aggregation_test",
+        "//data:cryptography_all_files",
         "//data:provider_configurations",
         "//etc:development",
     ],

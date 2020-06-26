@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.seb;
 
+import static se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants.HeaderKeys.X_SEB_CSRF;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
@@ -15,15 +17,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.Security;
@@ -39,7 +42,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -123,7 +125,6 @@ import se.tink.backend.aggregation.agents.banks.seb.model.UpcomingTransactionEnt
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentials;
 import se.tink.backend.aggregation.agents.banks.seb.model.UserCredentialsRequestEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.VODB;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -146,8 +147,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
-import se.tink.backend.aggregation.constants.CommonHeaders;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -188,7 +188,6 @@ public class SEBApiAgent extends AbstractAgent
                 PersistentLogin,
                 TransferExecutor {
 
-    private static final String BASE_URL = "https://mp.seb.se";
     private static final String API_URL = "/1000/ServiceFactory/PC_BANK/";
     private static final String AUTH_URL = "/auth/bid/v2/authentications";
 
@@ -252,9 +251,6 @@ public class SEBApiAgent extends AbstractAgent
     private static final String FIND_BG_URL = API_URL + "PC_BankHamta01BG_nummer01.asmx/Execute";
     private static final String FIND_PG_URL = API_URL + "PC_BankHamta01VerPG01.asmx/Execute";
 
-    private static final String CSRF_HEADER = "x-seb-csrf";
-    private static final String UUID_HEADER = "x-seb-uuid";
-
     private static final int KTO_FUNK_KOD_FOR_DEPOT_ID_MAPPING_TO_ACCOUNT_NUMBER = 3;
 
     private static final Joiner REGEXP_OR_JOINER = Joiner.on("|");
@@ -297,24 +293,24 @@ public class SEBApiAgent extends AbstractAgent
     private final Credentials credentials;
     private final Catalog catalog;
     private final TransferMessageFormatter transferMessageFormatter;
-    private final String sebUUID;
+    private final SebBaseApiClient sebBaseApiClient;
 
     // cache
     private Map<AccountEntity, Account> accountEntityAccountMap = null;
 
-    public SEBApiAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
+    @Inject
+    public SEBApiAgent(AgentComponentProvider agentComponentProvider) {
+        super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
 
         credentials = request.getCredentials();
         client = createClient();
-        sebUUID = UUID.randomUUID().toString().toUpperCase();
         catalog = context.getCatalog();
         transferMessageFormatter =
                 new TransferMessageFormatter(
                         catalog,
                         TRANSFER_MESSAGE_LENGTH_CONFIG,
                         new StringNormalizerSwedish("#%*+=$@©£·…~_-/:;()&@\".,?!\'"));
+        sebBaseApiClient = new SebBaseApiClient(client, URI::create);
     }
 
     /**
@@ -810,7 +806,7 @@ public class SEBApiAgent extends AbstractAgent
     private String initiateBankId() {
         log.info("Initiating BankID");
         final ClientResponse response =
-                resource(AUTH_URL).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class);
+                sebBaseApiClient.resource(AUTH_URL).post(ClientResponse.class);
         if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
             throw BankServiceError.NO_BANK_SERVICE.exception(
                     response.getEntity(LoginErrorResponseEntity.class).getInfoText());
@@ -820,16 +816,15 @@ public class SEBApiAgent extends AbstractAgent
         final AuthenticationResponse authenticationResponse =
                 response.getEntity(AuthenticationResponse.class);
         supplementalRequester.openBankId(authenticationResponse.getAutoStartToken(), false);
-        return response.getHeaders().getFirst(CSRF_HEADER);
+        return response.getHeaders().getFirst(X_SEB_CSRF);
     }
 
     private void collectBankId(String csrfToken) throws BankIdException {
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             final ClientResponse response =
-                    resource(AUTH_URL)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .type(MediaType.APPLICATION_JSON)
-                            .header(CSRF_HEADER, csrfToken)
+                    sebBaseApiClient
+                            .resource(AUTH_URL)
+                            .header(X_SEB_CSRF, csrfToken)
                             .get(ClientResponse.class);
             if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
                 throw BankServiceError.NO_BANK_SERVICE.exception(
@@ -837,7 +832,7 @@ public class SEBApiAgent extends AbstractAgent
             } else if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception("Internal Server Error");
             }
-            csrfToken = response.getHeaders().getFirst(CSRF_HEADER);
+            csrfToken = response.getHeaders().getFirst(X_SEB_CSRF);
 
             final AuthenticationResponse authenticationResponse =
                     response.getEntity(AuthenticationResponse.class);
@@ -1213,7 +1208,7 @@ public class SEBApiAgent extends AbstractAgent
         postAsJSON(LOGOUT_URL, "{\"request\":{\"__type\":\"SEB_CS.SEBCSService\"}}", String.class);
 
         try {
-            resource("/logout").get(String.class);
+            sebBaseApiClient.resource("/logout").get(String.class);
         } catch (Exception e) {
             log.error("Could not log out from SEB.", e);
         }
@@ -1724,12 +1719,6 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         return destinationAccounts;
-    }
-
-    private Builder resource(String url) {
-        return client.resource(BASE_URL + url)
-                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
-                .header(UUID_HEADER, sebUUID);
     }
 
     @Override
@@ -2402,10 +2391,7 @@ public class SEBApiAgent extends AbstractAgent
 
     private <T> T postAsJSON(String url, Object entity, Class<T> responseEntityType) {
         try {
-            return resource(url)
-                    .entity(entity)
-                    .type(MediaType.APPLICATION_JSON)
-                    .post(responseEntityType);
+            return sebBaseApiClient.resource(url).entity(entity).post(responseEntityType);
         } catch (ClientHandlerException e) {
 
             if (Strings.isNullOrEmpty(e.getMessage())) {
