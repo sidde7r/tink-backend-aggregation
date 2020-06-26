@@ -20,6 +20,11 @@ public class SEBApiConstants {
         public static final int KYC_ERROR = 9200;
     }
 
+    public static class HeaderKeys {
+        public static final String X_SEB_UUID = "x-seb-uuid";
+        public static final String X_SEB_CSRF = "x-seb-csrf";
+    }
+
     public static EnumSet<AccountTypes> PSD2_Account_Types =
             EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS);
 }
