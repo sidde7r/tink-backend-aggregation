@@ -118,7 +118,9 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.RemittanceInformationType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class DanskeBankV2Agent extends AbstractAgent
@@ -518,6 +520,11 @@ public class DanskeBankV2Agent extends AbstractAgent
 
         AccountIdentifier source = transfer.getSource();
 
+        if (transfer.getRemittanceInformation().getType() == null) {
+            RemittanceInformation remittanceInformation = transfer.getRemittanceInformation();
+            remittanceInformation.setType(decideRemittanceInformationType(remittanceInformation));
+        }
+
         Optional<TransferAccountEntity> fromAccount =
                 findAccount(source, detailsResponse.getFromAccounts());
         if (!fromAccount.isPresent()) {
@@ -554,6 +561,13 @@ public class DanskeBankV2Agent extends AbstractAgent
         }
 
         apiClient.confirmPayment(requestChallenge(billResponse));
+    }
+
+    private RemittanceInformationType decideRemittanceInformationType(
+            RemittanceInformation remittanceInformation) {
+        return isValidSoftOcr(remittanceInformation.getValue())
+                ? RemittanceInformationType.OCR
+                : RemittanceInformationType.UNSTRUCTURED;
     }
 
     private ChallengeResponseRequest requestChallenge(AbstractChallengeResponse challenge)
@@ -610,18 +624,19 @@ public class DanskeBankV2Agent extends AbstractAgent
         String destinationAccountId =
                 transfer.getDestination().getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
 
-        // Formatted messages to ensure we don't exceed max limits of chars
-        TransferMessageFormatter.Messages formattedMessages =
-                transferMessageFormatter.getMessages(transfer, isBetweenUserAccounts);
+        String formattedDestinationMessage =
+                transferMessageFormatter.getDestinationMessageFromRemittanceInformation(
+                        transfer, isBetweenUserAccounts);
+        String formattedSourceMessage = transferMessageFormatter.getSourceMessage(transfer);
 
         return TransferRequest.builder()
                 .amount(Double.toString(transfer.getAmount().getValue()))
                 .currency(request.getProvider().getCurrency()) // Is this valid?
                 .date(transferDate)
                 .destinationAccountNumber(destinationAccountId)
-                .destinationMessage(formattedMessages.getDestinationMessage())
+                .destinationMessage(formattedDestinationMessage)
                 .sourceAccountNumber(fromAccount.getAccountId())
-                .sourceMessage(formattedMessages.getSourceMessage())
+                .sourceMessage(formattedSourceMessage)
                 .build();
     }
 
@@ -642,10 +657,10 @@ public class DanskeBankV2Agent extends AbstractAgent
             billRequest.setBankGiro("false");
         }
 
-        if (thinkThisIsOCR(transfer.getDestinationMessage())) {
-            billRequest.setReference(transfer.getDestinationMessage());
+        if (transfer.getRemittanceInformation().getType() == RemittanceInformationType.OCR) {
+            billRequest.setReference(transfer.getRemittanceInformation().getValue());
         } else {
-            billRequest.setReceiverText(transfer.getDestinationMessage());
+            billRequest.setReceiverText(transfer.getRemittanceInformation().getValue());
         }
 
         billRequest.setDate(danskeBankDateUtil.getTransferDateForBgPg(transfer.getDueDate()));
@@ -653,7 +668,7 @@ public class DanskeBankV2Agent extends AbstractAgent
         return billRequest;
     }
 
-    private boolean thinkThisIsOCR(String message) {
+    private boolean isValidSoftOcr(String message) {
         OcrValidationConfiguration validationConfiguration = OcrValidationConfiguration.softOcr();
         GiroMessageValidator validator = GiroMessageValidator.create(validationConfiguration);
 
