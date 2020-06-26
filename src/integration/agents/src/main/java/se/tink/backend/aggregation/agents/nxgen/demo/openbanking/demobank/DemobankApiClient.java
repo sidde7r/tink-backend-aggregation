@@ -6,8 +6,12 @@ import static se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.OAuth2Params;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CollectTicketResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdChallengeEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdEnrollEntity;
@@ -164,6 +168,23 @@ public class DemobankApiClient {
                         .post(NemIdResponse.class, loginWithInstallIdEntity);
         return SerializationUtils.deserializeFromString(
                 nemIdResponse.getData(), NemIdLoginWithInstallIdResponse.class);
+    }
+
+    public CreateTicketResponse initAppToApp(CreateTicketRequest request) {
+        return createRequest(fetchBaseUrl().concat(Urls.A2A_INIT_URL))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(CreateTicketResponse.class, request);
+    }
+
+    public CollectTicketResponse collectAppToApp(String ticketId) {
+        return createRequest(
+                        fetchBaseUrl()
+                                .concat(Urls.A2A_COLLECT_URL)
+                                .parameter(QueryParams.TICKET_ID, ticketId))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(CollectTicketResponse.class);
     }
 
     public FetchAccountResponse fetchAccounts() {
