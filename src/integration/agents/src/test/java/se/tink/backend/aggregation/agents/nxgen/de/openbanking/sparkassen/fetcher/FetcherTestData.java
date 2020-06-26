@@ -5,20 +5,11 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FetcherTestData {
-
-    public static final FetchBalancesResponse NO_BALANCES =
-            SerializationUtils.deserializeFromString(
-                    "{\"account\": null, \"balances\": []}", FetchBalancesResponse.class);
-
-    public static final FetchBalancesResponse NULL_BALANCES =
-            SerializationUtils.deserializeFromString(
-                    "{\"account\": null, \"balances\": null}", FetchBalancesResponse.class);
 
     public static final FetchAccountsResponse NULL_ACCOUNTS =
             SerializationUtils.deserializeFromString(
@@ -33,11 +24,6 @@ public class FetcherTestData {
                         .collect(Collectors.joining(","));
         json += "]}";
         return SerializationUtils.deserializeFromString(json, FetchBalancesResponse.class);
-    }
-
-    public static BalanceEntity getBalanceEntity(String currency, BigDecimal amount) {
-        return SerializationUtils.deserializeFromString(
-                getBalanceEntityJsonString(currency, amount), BalanceEntity.class);
     }
 
     private static String getBalanceEntityJsonString(String currency, BigDecimal amount) {
