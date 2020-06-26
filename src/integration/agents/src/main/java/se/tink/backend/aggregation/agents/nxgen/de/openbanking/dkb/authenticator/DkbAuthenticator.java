@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator;
 
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.MAX_CONSENT_VALIDITY_DAYS;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.AuthResult.PROMPT_FOR_TAN;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -66,8 +67,11 @@ public class DkbAuthenticator implements PasswordAuthenticator {
 
     private AuthResult authenticate2ndFactor(AuthResult previousResult)
             throws AuthenticationException {
-        if (previousResult.isAuthenticationFailed()) {
-            log.info("Authentication process has failed");
+        if (previousResult.isAuthenticationFinished()
+                && !PROMPT_FOR_TAN.equals(previousResult.getActionCode())) {
+            log.info(
+                    "Authentication process is finished with returnCode: [{}]",
+                    previousResult.getReturnCode());
             return previousResult;
         }
         AuthResult result = select2ndFactorMethodIfNeeded(previousResult);
@@ -90,13 +94,15 @@ public class DkbAuthenticator implements PasswordAuthenticator {
 
     private AuthResult provide2ndFactorCode(AuthResult previousResult)
             throws AuthenticationException {
-        if (previousResult.isAuthenticationFinished()) {
+        if (previousResult.isAuthenticationFinished()
+                && !PROMPT_FOR_TAN.equals(previousResult.getActionCode())) {
             log.info(
                     "Authentication process is finished. Authentication result returnCode [{}] and actionCode [{}]",
                     previousResult.getReturnCode(),
                     previousResult.getActionCode());
             return previousResult;
         }
+        log.info("Authentication is not finished. Need to provide TAN code");
         String code = supplementalDataProvider.getTanCode();
         return authApiClient.submit2ndFactorTanCode(code);
     }
