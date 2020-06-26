@@ -5,9 +5,11 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import com.google.common.collect.Collections2;
 import io.vavr.collection.Stream;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
@@ -24,7 +26,11 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 @RequiredArgsConstructor
+@Slf4j
 public class TransactionalAccountMapper implements AccountMapper<TransactionalAccount> {
+
+    private static final String NO_IDENTIFIER_FOUND_LOG_MESSAGE_FORMAT =
+            "No valid id for account accountNickname: {}, accountDescription: {}, skipping";
 
     private final TransactionalAccountBalanceMapper balanceMapper;
     private final IdentifierMapper identifierMapper;
@@ -39,9 +45,18 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
             AccountEntity account,
             Collection<AccountBalanceEntity> balances,
             Collection<IdentityDataV31Entity> parties) {
+        List<AccountIdentifierEntity> accountIdentifiers = account.getIdentifiers();
+
+        if (accountIdentifiers.isEmpty()) {
+            log.debug(
+                    NO_IDENTIFIER_FOUND_LOG_MESSAGE_FORMAT,
+                    account.getNickname(),
+                    account.getDescription());
+            return Optional.empty();
+        }
 
         AccountIdentifierEntity primaryIdentifier =
-                identifierMapper.getTransactionalAccountPrimaryIdentifier(account.getIdentifiers());
+                identifierMapper.getTransactionalAccountPrimaryIdentifier(accountIdentifiers);
         String accountNumber = primaryIdentifier.getIdentification();
         String uniqueIdentifier =
                 isRevolutAccount(account)
@@ -61,7 +76,7 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
                                                 pickDisplayName(account, primaryIdentifier))
                                         .addIdentifiers(
                                                 Collections2.transform(
-                                                        account.getIdentifiers(),
+                                                        accountIdentifiers,
                                                         identifierMapper::mapIdentifier))
                                         .build())
                         .setApiIdentifier(account.getAccountId());
