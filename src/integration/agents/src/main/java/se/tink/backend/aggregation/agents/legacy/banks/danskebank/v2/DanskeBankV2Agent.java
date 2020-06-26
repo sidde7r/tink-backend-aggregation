@@ -523,7 +523,6 @@ public class DanskeBankV2Agent extends AbstractAgent
         if (transfer.getRemittanceInformation().getType() == null) {
             RemittanceInformation remittanceInformation = transfer.getRemittanceInformation();
             remittanceInformation.setType(decideRemittanceInformationType(remittanceInformation));
-            transfer.setRemittanceInformation(remittanceInformation);
         }
 
         Optional<TransferAccountEntity> fromAccount =
