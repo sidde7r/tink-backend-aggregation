@@ -86,8 +86,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
     }
 
     protected AgentConfiguration<CbiGlobeConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(CbiGlobeConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(CbiGlobeConfiguration.class);
     }
 
     @Override
@@ -98,7 +97,7 @@ public abstract class CbiGlobeAgent extends SubsequentProgressiveGenerationAgent
                             apiClient,
                             new StrongAuthenticationState(request.getAppUriId()),
                             userState,
-                            getAgentConfiguration().getClientConfiguration());
+                            getAgentConfiguration().getProviderSpecificConfiguration());
         }
 
         return authenticator;

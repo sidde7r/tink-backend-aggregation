@@ -55,7 +55,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
         this.sessionStorage = sessionStorage;
         this.temporaryStorage = temporaryStorage;
         this.aggregatorIdentifier = aggregatorIdentifier;
-        this.agentConfiguration = agentConfiguration.getClientConfiguration();
+        this.agentConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

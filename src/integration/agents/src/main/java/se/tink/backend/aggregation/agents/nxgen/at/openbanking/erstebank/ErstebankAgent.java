@@ -29,7 +29,7 @@ public final class ErstebankAgent
         return new ErstebankApiClient(
                 client,
                 sessionStorage,
-                getConfiguration().getClientConfiguration(),
+                getConfiguration().getProviderSpecificConfiguration(),
                 getConfiguration().getRedirectUrl());
     }
 

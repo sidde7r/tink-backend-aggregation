@@ -35,7 +35,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
 
     protected AgentConfiguration<NordeaBaseConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(NordeaBaseConfiguration.class);
+                .getAgentConfiguration(NordeaBaseConfiguration.class);
     }
 
     @Override

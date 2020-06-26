@@ -64,7 +64,7 @@ public class FabricApiClient {
     }
 
     protected void setConfiguration(AgentConfiguration<FabricConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

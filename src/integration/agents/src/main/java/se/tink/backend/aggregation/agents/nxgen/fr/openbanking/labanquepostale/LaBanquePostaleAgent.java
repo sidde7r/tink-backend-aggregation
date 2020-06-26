@@ -44,7 +44,7 @@ public final class LaBanquePostaleAgent
                 client,
                 sessionStorage,
                 qsealcSigner,
-                getConfiguration().getClientConfiguration(),
+                getConfiguration().getProviderSpecificConfiguration(),
                 getConfiguration().getRedirectUrl());
     }
 

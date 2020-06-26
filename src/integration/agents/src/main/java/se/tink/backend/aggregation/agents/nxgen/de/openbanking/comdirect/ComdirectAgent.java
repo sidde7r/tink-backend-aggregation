@@ -39,6 +39,6 @@ public final class ComdirectAgent extends Xs2aDevelopersAgent {
 
     private AgentConfiguration<Xs2aDevelopersConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(Xs2aDevelopersConfiguration.class);
+                .getAgentConfiguration(Xs2aDevelopersConfiguration.class);
     }
 }

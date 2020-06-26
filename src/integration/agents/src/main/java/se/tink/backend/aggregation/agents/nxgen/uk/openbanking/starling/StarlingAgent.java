@@ -51,9 +51,9 @@ public final class StarlingAgent extends SubsequentProgressiveGenerationAgent
 
         final AgentConfiguration<StarlingConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(StarlingConfiguration.class);
+                        .getAgentConfiguration(StarlingConfiguration.class);
         final StarlingConfiguration starlingConfiguration =
-                agentConfiguration.getClientConfiguration();
+                agentConfiguration.getProviderSpecificConfiguration();
 
         aisConfiguration = starlingConfiguration.getAisConfiguration();
         pisConfiguration = starlingConfiguration.getPisConfiguration();

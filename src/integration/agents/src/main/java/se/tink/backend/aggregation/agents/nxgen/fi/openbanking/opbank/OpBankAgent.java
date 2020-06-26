@@ -49,7 +49,7 @@ public final class OpBankAgent extends NextGenerationAgent
         try {
             agentConfiguration =
                     getAgentConfigurationController()
-                            .getAgentCommonConfiguration(OpBankConfiguration.class);
+                            .getAgentConfiguration(OpBankConfiguration.class);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION);
         }

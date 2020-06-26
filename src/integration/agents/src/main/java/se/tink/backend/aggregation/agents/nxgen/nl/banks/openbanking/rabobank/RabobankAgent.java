@@ -63,10 +63,10 @@ public final class RabobankAgent
 
         final AgentConfiguration<RabobankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(RabobankConfiguration.class);
+                        .getAgentConfiguration(RabobankConfiguration.class);
 
         final RabobankConfiguration rabobankConfiguration =
-                agentConfiguration.getClientConfiguration();
+                agentConfiguration.getProviderSpecificConfiguration();
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
 

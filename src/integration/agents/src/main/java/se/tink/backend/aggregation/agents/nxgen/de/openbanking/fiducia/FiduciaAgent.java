@@ -57,15 +57,14 @@ public final class FiduciaAgent extends NextGenerationAgent
         return new SignatureHeaderGenerator(
                 FiduciaConstants.SIGNATURE_HEADER,
                 FiduciaConstants.HEADERS_TO_SIGN,
-                getAgentConfiguration().getClientConfiguration().getKeyId(),
+                getAgentConfiguration().getProviderSpecificConfiguration().getKeyId(),
                 qsealcSigner);
     }
 
     protected AgentConfiguration<FiduciaConfiguration> getAgentConfiguration() {
         final AgentConfiguration<FiduciaConfiguration> agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(FiduciaConfiguration.class);
-        agentConfiguration.getClientConfiguration().validateConfig();
+                getAgentConfigurationController().getAgentConfiguration(FiduciaConfiguration.class);
+        agentConfiguration.getProviderSpecificConfiguration().validateConfig();
         Objects.requireNonNull(Strings.emptyToNull(agentConfiguration.getRedirectUrl()));
         return agentConfiguration;
     }
@@ -121,7 +120,7 @@ public final class FiduciaAgent extends NextGenerationAgent
         final FiduciaPaymentExecutor fiduciaPaymentExecutor =
                 new FiduciaPaymentExecutor(
                         apiClient,
-                        getAgentConfiguration().getClientConfiguration(),
+                        getAgentConfiguration().getProviderSpecificConfiguration(),
                         credentials.getField(CredentialKeys.PSU_ID),
                         credentials.getField(CredentialKeys.PASSWORD));
 

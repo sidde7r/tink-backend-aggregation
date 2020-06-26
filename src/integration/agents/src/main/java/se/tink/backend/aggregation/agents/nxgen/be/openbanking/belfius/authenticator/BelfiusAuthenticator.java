@@ -38,7 +38,7 @@ public class BelfiusAuthenticator implements OAuth2Authenticator {
             String iban) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.iban = iban;
     }

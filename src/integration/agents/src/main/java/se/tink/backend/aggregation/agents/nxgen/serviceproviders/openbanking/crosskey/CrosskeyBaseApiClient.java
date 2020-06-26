@@ -78,7 +78,7 @@ public class CrosskeyBaseApiClient {
             EidasProxyConfiguration eidasProxyConfiguration,
             EidasIdentity eidasIdentity,
             String xFapiFinancialId) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.eidasIdentity = eidasIdentity;

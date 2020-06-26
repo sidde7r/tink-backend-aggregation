@@ -31,7 +31,7 @@ public final class PostbankAgent extends DeutscheBankAgent {
 
         final AgentConfiguration<DeutscheBankConfiguration> agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(DeutscheBankConfiguration.class);
+                        .getAgentConfiguration(DeutscheBankConfiguration.class);
 
         apiClient = new PostbankApiClient(client, sessionStorage, agentConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();

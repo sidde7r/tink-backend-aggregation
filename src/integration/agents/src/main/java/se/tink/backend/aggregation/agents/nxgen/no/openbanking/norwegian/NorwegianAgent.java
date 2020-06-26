@@ -43,8 +43,8 @@ public class NorwegianAgent extends NextGenerationAgent implements RefreshChecki
         Objects.requireNonNull(agentsServiceConfiguration);
         this.agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(NorwegianConfiguration.class);
-        this.norwegianConfiguration = agentConfiguration.getClientConfiguration();
+                        .getAgentConfiguration(NorwegianConfiguration.class);
+        this.norwegianConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         this.apiClient =
                 new NorwegianApiClient(
                         client, sessionStorage, persistentStorage, agentConfiguration);

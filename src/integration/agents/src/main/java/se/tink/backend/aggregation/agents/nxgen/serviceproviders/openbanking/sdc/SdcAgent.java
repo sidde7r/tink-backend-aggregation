@@ -46,8 +46,7 @@ public final class SdcAgent extends NextGenerationAgent
     }
 
     protected AgentConfiguration<SdcConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(SdcConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(SdcConfiguration.class);
     }
 
     @Override

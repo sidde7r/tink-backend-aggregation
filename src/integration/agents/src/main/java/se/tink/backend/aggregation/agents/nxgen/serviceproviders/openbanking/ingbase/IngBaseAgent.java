@@ -109,8 +109,7 @@ public abstract class IngBaseAgent extends NextGenerationAgent
     }
 
     protected AgentConfiguration<IngBaseConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(IngBaseConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(IngBaseConfiguration.class);
     }
 
     @Override

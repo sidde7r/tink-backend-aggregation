@@ -6,11 +6,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AgentConfiguration<T> implements ClientConfiguration {
 
-    private T clientConfiguration;
+    private T providerSpecificConfiguration;
     @JsonProperty private String redirectUrl;
 
-    public T getClientConfiguration() {
-        return clientConfiguration;
+    public T getProviderSpecificConfiguration() {
+        return providerSpecificConfiguration;
     }
 
     public String getRedirectUrl() {
@@ -18,13 +18,13 @@ public class AgentConfiguration<T> implements ClientConfiguration {
     }
 
     public static class Builder<T> {
-        private T clientConfiguration;
+        private T providerSpecificConfiguration;
         private String redirectUrl;
 
         public Builder() {}
 
-        public Builder setClientConfiguration(T clientConfiguration) {
-            this.clientConfiguration = clientConfiguration;
+        public Builder setProviderSpecificConfiguration(T providerSpecificConfiguration) {
+            this.providerSpecificConfiguration = providerSpecificConfiguration;
             return this;
         }
 
@@ -35,7 +35,7 @@ public class AgentConfiguration<T> implements ClientConfiguration {
 
         public AgentConfiguration<T> build() {
             AgentConfiguration<T> agentConfiguration = new AgentConfiguration<>();
-            agentConfiguration.clientConfiguration = this.clientConfiguration;
+            agentConfiguration.providerSpecificConfiguration = this.providerSpecificConfiguration;
             agentConfiguration.redirectUrl = this.redirectUrl;
             return agentConfiguration;
         }

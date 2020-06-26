@@ -28,7 +28,7 @@ public class AuthenticatorTestBase {
         when(apiClient.createToken(any())).thenReturn(response);
         ChebancaConfiguration config =
                 new ChebancaConfiguration(CLIENT_ID, CLIENT_SECRET, CERTIFICATE_ID, APP_ID);
-        when(agentConfiguration.getClientConfiguration()).thenReturn(config);
+        when(agentConfiguration.getProviderSpecificConfiguration()).thenReturn(config);
         when(agentConfiguration.getRedirectUrl()).thenReturn(REDIRECT_URL);
         StrongAuthenticationState state = new StrongAuthenticationState(CLIENT_STATE);
         authenticator = new ChebancaAuthenticator(apiClient, agentConfiguration, state);

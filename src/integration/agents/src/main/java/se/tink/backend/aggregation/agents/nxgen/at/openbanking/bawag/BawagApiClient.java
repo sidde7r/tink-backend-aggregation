@@ -43,7 +43,7 @@ public final class BawagApiClient {
     }
 
     protected void setConfiguration(AgentConfiguration<BawagConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

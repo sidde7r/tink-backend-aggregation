@@ -61,8 +61,8 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
         agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(HandelsbankenBaseConfiguration.class);
-        handelsbankenBaseConfiguration = agentConfiguration.getClientConfiguration();
+                        .getAgentConfiguration(HandelsbankenBaseConfiguration.class);
+        handelsbankenBaseConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(agentConfiguration);
         this.client.setEidasProxy(configuration.getEidasProxy());
 

@@ -45,9 +45,9 @@ public class ICSAgent extends NextGenerationAgent implements RefreshCreditCardAc
         redirectUri = request.getProvider().getPayload().split(" ")[1];
 
         final AgentConfiguration<ICSConfiguration> agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(ICSConfiguration.class);
-        final ICSConfiguration icsConfiguration = agentConfiguration.getClientConfiguration();
+                getAgentConfigurationController().getAgentConfiguration(ICSConfiguration.class);
+        final ICSConfiguration icsConfiguration =
+                agentConfiguration.getProviderSpecificConfiguration();
 
         client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
 

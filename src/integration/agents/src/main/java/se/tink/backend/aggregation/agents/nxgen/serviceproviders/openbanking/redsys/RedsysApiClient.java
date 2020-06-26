@@ -112,7 +112,7 @@ public final class RedsysApiClient {
     protected void setConfiguration(
             AgentConfiguration<RedsysConfiguration> agentConfiguration,
             EidasProxyConfiguration eidasProxyConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.eidasProxyConfiguration = eidasProxyConfiguration;
         this.clientSigningCertificate =

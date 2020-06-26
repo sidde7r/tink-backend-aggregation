@@ -31,7 +31,7 @@ public class DeutscheBankBEAgent extends DeutscheBankAgent {
         super(request, context, configuration);
         agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(DeutscheBankConfiguration.class);
+                        .getAgentConfiguration(DeutscheBankConfiguration.class);
         apiClient = new DeutscheBankBEApiClient(client, sessionStorage, agentConfiguration);
         transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }

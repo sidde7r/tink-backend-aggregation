@@ -52,7 +52,7 @@ public class BnpParibasFortisPaymentExecutor implements PaymentExecutor, Fetchab
             StrongAuthenticationState strongAuthenticationState) {
         this.apiClient = apiClient;
         this.paymentAuthenticator = paymentAuthenticator;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.strongAuthenticationState = strongAuthenticationState;
         createdPaymentsList = new ArrayList<>();

@@ -31,7 +31,7 @@ public class HandelsbankenOAuth2Authenticator implements OAuth2Authenticator {
             AgentConfiguration<HandelsbankenBaseConfiguration> agentConfiguration,
             PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
         this.persistentStorage = persistentStorage;
     }

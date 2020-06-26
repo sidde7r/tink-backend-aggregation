@@ -58,7 +58,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
                 new CreditAgricoleStorage(this.persistentStorage);
 
         this.agentConfiguration = getAgentConfiguration();
-        this.creditAgricoleConfiguration = agentConfiguration.getClientConfiguration();
+        this.creditAgricoleConfiguration = agentConfiguration.getProviderSpecificConfiguration();
 
         this.apiClient =
                 new CreditAgricoleBaseApiClient(
@@ -141,7 +141,7 @@ public class CreditAgricoleBaseAgent extends NextGenerationAgent
 
     private AgentConfiguration<CreditAgricoleBaseConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(CreditAgricoleBaseConfiguration.class);
+                .getAgentConfiguration(CreditAgricoleBaseConfiguration.class);
     }
 
     private TransactionalAccountRefreshController getTransactionalAccountRefreshController() {

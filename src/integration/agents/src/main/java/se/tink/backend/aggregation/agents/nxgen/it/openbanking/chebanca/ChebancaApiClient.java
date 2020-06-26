@@ -52,7 +52,8 @@ public class ChebancaApiClient {
         this.persistentStorage = requireNonNull(persistentStorage);
         this.strongAuthenticationState = requireNonNull(strongAuthenticationState);
         requireNonNull(chebancaConfig);
-        this.chebancaConfig = requireProperConfig(chebancaConfig.getClientConfiguration());
+        this.chebancaConfig =
+                requireProperConfig(chebancaConfig.getProviderSpecificConfiguration());
         this.redirectUrl = requireNonNull(chebancaConfig.getRedirectUrl());
         this.config = requireNonNull(configuration);
         requireNonNull(eidasIdentity);

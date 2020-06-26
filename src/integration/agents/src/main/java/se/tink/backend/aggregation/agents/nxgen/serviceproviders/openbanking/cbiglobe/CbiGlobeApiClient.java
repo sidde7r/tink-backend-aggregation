@@ -83,7 +83,7 @@ public class CbiGlobeApiClient {
     }
 
     protected void setConfiguration(AgentConfiguration<CbiGlobeConfiguration> agentConfiguration) {
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

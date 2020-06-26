@@ -44,10 +44,9 @@ public class KnabAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         final AgentConfiguration<KnabConfiguration> agentConfiguration =
-                getAgentConfigurationController()
-                        .getAgentCommonConfiguration(KnabConfiguration.class);
+                getAgentConfigurationController().getAgentConfiguration(KnabConfiguration.class);
 
-        clientConfiguration = agentConfiguration.getClientConfiguration();
+        clientConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(agentConfiguration);
 
         this.client.setEidasProxy(configuration.getEidasProxy());

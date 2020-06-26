@@ -48,7 +48,7 @@ public final class FinecoBankAgent extends NextGenerationAgent
 
         this.agentConfiguration =
                 getAgentConfigurationController()
-                        .getAgentCommonConfiguration(FinecoBankConfiguration.class);
+                        .getAgentConfiguration(FinecoBankConfiguration.class);
 
         super.setConfiguration(agentsServiceConfiguration);
         this.apiClient =

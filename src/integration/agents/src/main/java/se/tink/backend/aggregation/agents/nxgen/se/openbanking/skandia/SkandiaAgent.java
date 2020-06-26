@@ -43,8 +43,7 @@ public final class SkandiaAgent extends NextGenerationAgent
     }
 
     protected AgentConfiguration<SkandiaConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(SkandiaConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(SkandiaConfiguration.class);
     }
 
     @Override
@@ -56,7 +55,7 @@ public final class SkandiaAgent extends NextGenerationAgent
                         new SkandiaAuthenticator(
                                 apiClient,
                                 persistentStorage,
-                                getAgentConfiguration().getClientConfiguration()),
+                                getAgentConfiguration().getProviderSpecificConfiguration()),
                         credentials,
                         strongAuthenticationState);
 

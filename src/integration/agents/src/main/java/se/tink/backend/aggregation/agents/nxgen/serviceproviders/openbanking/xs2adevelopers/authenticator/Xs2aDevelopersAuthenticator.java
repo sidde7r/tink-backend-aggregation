@@ -29,7 +29,7 @@ public class Xs2aDevelopersAuthenticator implements OAuth2Authenticator {
             AgentConfiguration<Xs2aDevelopersConfiguration> agentConfiguration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.configuration = agentConfiguration.getClientConfiguration();
+        this.configuration = agentConfiguration.getProviderSpecificConfiguration();
         this.redirectUrl = agentConfiguration.getRedirectUrl();
     }
 

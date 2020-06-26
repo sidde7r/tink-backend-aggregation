@@ -106,7 +106,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
     public AgentConfiguration<? extends UkOpenBankingClientConfigurationAdapter>
             getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(getClientConfigurationFormat());
+                .getAgentConfiguration(getClientConfigurationFormat());
     }
 
     @Override
@@ -114,7 +114,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
-                getAgentConfiguration().getClientConfiguration();
+                getAgentConfiguration().getProviderSpecificConfiguration();
 
         softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertion();
 

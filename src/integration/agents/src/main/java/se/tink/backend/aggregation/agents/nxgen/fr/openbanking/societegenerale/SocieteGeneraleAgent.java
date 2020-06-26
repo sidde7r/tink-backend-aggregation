@@ -62,7 +62,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
         super(componentProvider);
 
         agentConfiguration = getAgentConfiguration();
-        societeGeneraleConfiguration = agentConfiguration.getClientConfiguration();
+        societeGeneraleConfiguration = agentConfiguration.getProviderSpecificConfiguration();
         signatureHeaderProvider =
                 new SignatureHeaderProvider(qsealcSigner, societeGeneraleConfiguration);
 
@@ -166,7 +166,7 @@ public final class SocieteGeneraleAgent extends NextGenerationAgent
 
     private AgentConfiguration<SocieteGeneraleConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(SocieteGeneraleConfiguration.class);
+                .getAgentConfiguration(SocieteGeneraleConfiguration.class);
     }
 
     @Override

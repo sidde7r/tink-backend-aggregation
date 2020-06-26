@@ -57,8 +57,7 @@ public final class DnbAgent extends NextGenerationAgent
     }
 
     private AgentConfiguration<DnbConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(DnbConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(DnbConfiguration.class);
     }
 
     @Override

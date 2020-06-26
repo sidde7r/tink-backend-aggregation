@@ -41,7 +41,7 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent
 
     private AgentConfiguration<BnpParibasFortisConfiguration> getAgentConfiguration() {
         return getAgentConfigurationController()
-                .getAgentCommonConfiguration(BnpParibasFortisConfiguration.class);
+                .getAgentConfiguration(BnpParibasFortisConfiguration.class);
     }
 
     @Override

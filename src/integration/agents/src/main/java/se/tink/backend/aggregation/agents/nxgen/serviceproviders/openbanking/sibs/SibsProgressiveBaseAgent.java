@@ -66,7 +66,8 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
         setConfiguration(configuration);
         apiClient = new SibsBaseApiClient(client, userState, request.isManual());
         final AgentConfiguration<SibsConfiguration> agentConfiguration = getAgentConfiguration();
-        final SibsConfiguration sibsConfiguration = agentConfiguration.getClientConfiguration();
+        final SibsConfiguration sibsConfiguration =
+                agentConfiguration.getProviderSpecificConfiguration();
         apiClient.setConfiguration(agentConfiguration);
         client.setMessageSignInterceptor(
                 new SibsMessageSignInterceptor(
@@ -92,8 +93,7 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
     }
 
     private AgentConfiguration<SibsConfiguration> getAgentConfiguration() {
-        return getAgentConfigurationController()
-                .getAgentCommonConfiguration(SibsConfiguration.class);
+        return getAgentConfigurationController().getAgentConfiguration(SibsConfiguration.class);
     }
 
     @Override
