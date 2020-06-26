@@ -9,7 +9,7 @@ public class BookedTransactionEntity extends TransactionDetailsBaseEntity {
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setPending(false)
-                .setAmount(transactionAmount.toAmount())
+                .setAmount(transactionAmount.toTinkAmount())
                 .setDate(Optional.ofNullable(valueDate).orElse(bookingDate))
                 .setDescription(getDescription())
                 .build();
