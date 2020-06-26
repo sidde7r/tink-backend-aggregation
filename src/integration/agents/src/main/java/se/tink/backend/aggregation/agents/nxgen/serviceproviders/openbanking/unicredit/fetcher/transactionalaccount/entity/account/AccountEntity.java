@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.account;
 
+import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BerlinGroupBalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -30,14 +33,14 @@ public class AccountEntity {
     }
 
     public Optional<TransactionalAccount> toTinkAccount(
-            AccountEntity accountDetailsEntity, ExactCurrencyAmount balanceAmount) {
+            AccountEntity accountDetailsEntity, List<BalanceEntity> balances) {
         String finalIban = getFinalIban(accountDetailsEntity);
         String finalName = getFinalName(accountDetailsEntity);
 
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(balanceAmount))
+                .withBalance(getBalanceModule(balances))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(finalIban)
@@ -57,5 +60,16 @@ public class AccountEntity {
 
     private String getFinalName(AccountEntity accountDetailsEntity) {
         return ObjectUtils.firstNonNull(name, accountDetailsEntity.name, "");
+    }
+
+    private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder()
+                        .withBalance(BerlinGroupBalanceMapper.getBookedBalance(balances));
+        BerlinGroupBalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
+        BerlinGroupBalanceMapper.getCreditLimit(balances)
+                .ifPresent(balanceBuilderStep::setCreditLimit);
+        return balanceBuilderStep.build();
     }
 }

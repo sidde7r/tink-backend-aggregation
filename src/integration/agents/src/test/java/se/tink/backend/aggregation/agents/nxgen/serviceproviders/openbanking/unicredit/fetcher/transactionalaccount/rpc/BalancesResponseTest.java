@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -10,29 +9,15 @@ import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class BalancesResponseTest {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-    @Test
-    public void getBalancesForEmptyBalancesInResponse() {
-        // given
-        BalancesResponse balancesResponse =
-                balancesAsResponse(accountEntityProps(), Collections.emptyList());
-
-        // when
-        Throwable result = catchThrowable(balancesResponse::getBalance);
-
-        // then
-        assertThat(result)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Account balance not found");
-    }
 
     @Test
     public void getBalancesForNotEmptyBalancesInResponse() {
@@ -45,13 +30,18 @@ public class BalancesResponseTest {
                                 balanceEntityProps("expected", "234"),
                                 balanceEntityProps("closingBooked", "345")));
         // and
-        ExactCurrencyAmount expectedAmount = new ExactCurrencyAmount(new BigDecimal("234"), "EUR");
+        ExactCurrencyAmount expectedAmount1 = new ExactCurrencyAmount(new BigDecimal("123"), "EUR");
+        ExactCurrencyAmount expectedAmount2 = new ExactCurrencyAmount(new BigDecimal("234"), "EUR");
+        ExactCurrencyAmount expectedAmount3 = new ExactCurrencyAmount(new BigDecimal("345"), "EUR");
 
         // when
-        ExactCurrencyAmount result = balancesResponse.getBalance();
+        List<BalanceEntity> result = balancesResponse.getBalances();
 
         // then
-        assertThat(result).isEqualTo(expectedAmount);
+        assertThat(result).hasSize(3);
+        assertThat(result.get(0).toTinkAmount()).isEqualTo(expectedAmount1);
+        assertThat(result.get(1).toTinkAmount()).isEqualTo(expectedAmount2);
+        assertThat(result.get(2).toTinkAmount()).isEqualTo(expectedAmount3);
     }
 
     private Properties accountEntityProps() {
