@@ -4,12 +4,10 @@ import java.net.URI;
 import java.util.Base64;
 import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 
-@Slf4j
 @RequiredArgsConstructor
 public class BoursoramaSignatureHeaderGenerator {
 
@@ -26,9 +24,6 @@ public class BoursoramaSignatureHeaderGenerator {
                 getMandatoryHeadersSignatureForGet(uri, digest, xRequestId, date);
         final String signature = signAndEncode(signatureEntity);
 
-        log.info(signatureEntity);
-        log.info(signature);
-
         return String.join(
                 ",",
                 "keyId=" + '"' + qsealKeyUrl + '"',
@@ -42,9 +37,6 @@ public class BoursoramaSignatureHeaderGenerator {
         final String signatureEntity =
                 getMandatoryHeadersSignatureForPost(uri, digest, xRequestId, date);
         final String signature = signAndEncode(signatureEntity);
-
-        log.info(signatureEntity);
-        log.info(signature);
 
         return String.join(
                 ",",
