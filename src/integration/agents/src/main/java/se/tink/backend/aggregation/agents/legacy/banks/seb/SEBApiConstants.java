@@ -15,10 +15,6 @@ public class SEBApiConstants {
         public static final String KAPITAL_PENSION = "kapitalpension";
     }
 
-    public static class FeatureFlag {
-        public static final String RESET_SUPPLEMENTAL_INFORMATION = "resetSuplementalInformation";
-    }
-
     public static class SystemCode {
         public static final int BANKID_NOT_AUTHORIZED = 2;
         public static final int KYC_ERROR = 9200;
