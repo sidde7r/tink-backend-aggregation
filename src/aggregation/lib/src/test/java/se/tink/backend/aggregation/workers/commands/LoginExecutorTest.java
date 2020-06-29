@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.metrics.MetricActionIface;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.eventproducerservice.grpc.BatchEventAck;
+import se.tink.backend.eventproducerservice.grpc.BatchEventAckAsync;
 import se.tink.backend.eventproducerservice.grpc.EventAck;
 import se.tink.backend.eventproducerservice.grpc.EventAckAsync;
 import se.tink.eventproducerservice.events.grpc.AgentLoginCompletedEventProto.AgentLoginCompletedEvent;
@@ -49,6 +50,11 @@ public class LoginExecutorTest {
 
         @Override
         public ListenableFuture<BatchEventAck> postEventsBatchAsync(List<Any> data) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public ListenableFuture<BatchEventAckAsync> postEventsBatchFireAndForget(List<Any> data) {
             throw new UnsupportedOperationException();
         }
 

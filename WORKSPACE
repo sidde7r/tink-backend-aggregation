@@ -74,7 +74,7 @@ git_repository(
 
 git_repository(
     name = "com_tink_api_grpc",
-    commit = "b596408e27d9a89da0dee670948535336d1eb063",
+    commit = "991248df707e7e3e5e28d5e5d7393851db33bd9c",
     remote = "git@github.com:tink-ab/tink-grpc.git",
     shallow_since = "1575523605 +0000",
 )
@@ -164,7 +164,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "1dc541ce0a98d0445f7aa56476a1d69e3bc0f5aa",
+    commit = "d28950c72d9bc794b1032d816df74197280d67e8",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1586908800 +0000",
 )
@@ -620,7 +620,12 @@ http_archive(
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@tink_backend//third_party/maven:deps.bzl", "maven_deps")
 
-maven_deps("//third_party/maven:maven_install.json", IO_NETTY_VERSION, IO_NETTY_BORINGSSL_VERSION, artifact_versions={"javax.validation:validation-api": "2.0.1.Final"})
+maven_deps(
+    "//third_party/maven:maven_install.json",
+    IO_NETTY_VERSION,
+    IO_NETTY_BORINGSSL_VERSION,
+    artifact_versions = {"javax.validation:validation-api": "2.0.1.Final"},
+)
 
 load("@maven//:defs.bzl", "pinned_maven_install")
 

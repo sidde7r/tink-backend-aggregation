@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.utils;
 
 import com.google.common.collect.ImmutableMap;
+import java.awt.Color;
 import org.assertj.core.api.Assertions;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -48,5 +49,11 @@ public class ImageRecognizerTest {
                 (k, v) -> {
                     Assertions.assertThat(k).isEqualTo(ImageRecognizer.ocr(v));
                 });
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testInvalidImages() {
+        byte[] data = "aioejfoiaejfioaj".getBytes();
+        String a = ImageRecognizer.ocr(data, Color.WHITE).replaceAll("\\s", "");
     }
 }

@@ -162,8 +162,9 @@ public class NordeaBaseApiClient implements TokenInterface {
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        return createTokenRequest(refreshToken)
-                .body(RefreshTokenForm.of(refreshToken), MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+        String body = RefreshTokenForm.of(refreshToken).getBodyValue();
+        return createTokenRequest(body)
+                .body(body, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
     }

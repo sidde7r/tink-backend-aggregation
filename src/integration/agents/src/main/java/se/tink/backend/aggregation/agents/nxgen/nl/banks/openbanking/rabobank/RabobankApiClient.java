@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -213,6 +214,11 @@ public final class RabobankApiClient {
         final String accountId = account.getFromTemporaryStorage(StorageKey.RESOURCE_ID);
         final URL url = rabobankConfiguration.getUrls().buildTransactionsUrl(accountId);
 
+        // Stop fetching if fromDate is older than 8 years from current (Rabobank specification).
+        int years = -8;
+        if (fromDate.before(getPreviousYearsDate(years))) {
+            return new EmptyFinalPaginatorResponse();
+        }
         // Order of booking statuses to try fetching transactions with.
         // If Rabobank ever supports booking status "both", we can prepend it to this list.
         final List<String> bookingStatuses = Collections.singletonList(QueryValues.BOOKED);
@@ -228,9 +234,6 @@ public final class RabobankApiClient {
                 } else if (message.toLowerCase().contains(ErrorMessages.UNAVAILABLE_TRX_HISTORY)) {
                     logger.warn(message, e);
                     return new EmptyFinalPaginatorResponse();
-                    // TODO - Below case for debug purpose
-                } else if (message.toLowerCase().contains("Invalid JSON format")) {
-                    logger.info("booking status: {}", bookingStatus);
                 }
                 throw new IllegalStateException(String.format("Unexpected error: %s", message), e);
             }
@@ -292,5 +295,12 @@ public final class RabobankApiClient {
 
     private static String extractQsealcSerial(final String qsealc) {
         return Certificate.getX509SerialNumber(qsealc);
+    }
+
+    private Date getPreviousYearsDate(int years) {
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        cal.add(Calendar.YEAR, years);
+        return cal.getTime();
     }
 }

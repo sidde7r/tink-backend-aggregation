@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
 import se.tink.backend.eventproducerservice.grpc.BatchEventAck;
+import se.tink.backend.eventproducerservice.grpc.BatchEventAckAsync;
 import se.tink.backend.eventproducerservice.grpc.EventAck;
 import se.tink.backend.eventproducerservice.grpc.EventAckAsync;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
@@ -43,6 +44,11 @@ public final class DataTrackerEventProducerTest {
 
         @Override
         public ListenableFuture<BatchEventAck> postEventsBatchAsync(List<Any> data) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public ListenableFuture<BatchEventAckAsync> postEventsBatchFireAndForget(List<Any> data) {
             throw new UnsupportedOperationException();
         }
 
