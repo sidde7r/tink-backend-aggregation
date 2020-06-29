@@ -21,15 +21,14 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.Sparka
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.IbanAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.entities.PsuDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.InitAuthorizationRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.InitAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodRequest;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -90,13 +89,13 @@ public class SparkassenApiClient {
         }
     }
 
-    public InitAuthorizationResponse initializeAuthorization(
+    public AuthenticationMethodResponse initializeAuthorization(
             URL url, String username, String password) throws AuthenticationException {
         try {
             return createRequest(url)
                     .header(HeaderKeys.PSU_ID, username)
                     .post(
-                            InitAuthorizationResponse.class,
+                            AuthenticationMethodResponse.class,
                             new InitAuthorizationRequest(new PsuDataEntity(password)));
         } catch (HttpResponseException e) {
             if (e.getResponse().getBody(String.class).contains(PSU_CREDENTIALS_INVALID)) {
@@ -106,14 +105,14 @@ public class SparkassenApiClient {
         }
     }
 
-    public SelectAuthenticationMethodResponse selectAuthorizationMethod(
+    public AuthenticationMethodResponse selectAuthorizationMethod(
             String consentId, String authorizationId, String methodId) {
         return createRequest(
                         Urls.UPDATE_SCA_METHOD
                                 .parameter(PathVariables.CONSENT_ID, consentId)
                                 .parameter(PathVariables.AUTHORIZATION_ID, authorizationId))
                 .put(
-                        SelectAuthenticationMethodResponse.class,
+                        AuthenticationMethodResponse.class,
                         new SelectAuthenticationMethodRequest(methodId));
     }
 

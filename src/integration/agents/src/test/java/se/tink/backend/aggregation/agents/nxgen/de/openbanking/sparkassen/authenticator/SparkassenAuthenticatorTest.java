@@ -51,10 +51,9 @@ import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.SparkassenPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.InitAuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
@@ -524,7 +523,7 @@ public class SparkassenAuthenticatorTest {
     }
 
     private void whenInitializeAuthorizationReturn(
-            InitAuthorizationResponse initializeAuthorizationResult)
+            AuthenticationMethodResponse initializeAuthorizationResult)
             throws AuthenticationException {
         when(apiClient.initializeAuthorization(TEST_AUTH_URL, OK_USERNAME, OK_PASSWORD))
                 .thenReturn(initializeAuthorizationResult);
@@ -547,7 +546,7 @@ public class SparkassenAuthenticatorTest {
     }
 
     private void whenSelectAuthorizationMethodReturn(
-            SelectAuthenticationMethodResponse selectAuthorizationMethodResult) {
+            AuthenticationMethodResponse selectAuthorizationMethodResult) {
         when(apiClient.selectAuthorizationMethod(
                         TEST_CONSENT_ID, TEST_AUTHORIZATION_ID, TEST_SCA_METHOD_ID))
                 .thenReturn(selectAuthorizationMethodResult);
