@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb.mock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.compositeagenttest.wiremockpayment.AgentWireMockPaymentTest;
@@ -11,14 +12,14 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationReade
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SebSEAgentWireMockTest {
 
-    private final String CONFIGURATION_PATH =
+    private static final String CONFIGURATION_PATH =
             "src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/legacy/banks/seb/mock/resources/configuration.yml";
 
     @Test
@@ -35,17 +36,18 @@ public class SebSEAgentWireMockTest {
                         .withConfigurationFile(configuration)
                         .withHttpDebugTrace()
                         .addTransfer(createTransfer())
-                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), "197710121414")
+                        .addCredentialField(Field.Key.USERNAME.getFieldKey(), "197710120000")
                         .buildWithLogin(TransferCommand.class);
 
         agentWireMockPaymentTest.executePayment();
+        Assert.assertTrue(true);
     }
 
     private Transfer createTransfer() {
         Transfer transfer = new Transfer();
-        transfer.setAmount(Amount.inSEK(328.0));
-        transfer.setSource(new SwedishIdentifier("53680344597"));
-        transfer.setSourceMessage("Sweetpay");
+        transfer.setAmount(ExactCurrencyAmount.inSEK(328.0));
+        transfer.setSource(new SwedishIdentifier("58398257466"));
+        transfer.setSourceMessage("Tinkpay");
         transfer.setDestination(new BankGiroIdentifier("5768353"));
         transfer.setDestinationMessage("1047514784933");
         transfer.setType(TransferType.PAYMENT);
