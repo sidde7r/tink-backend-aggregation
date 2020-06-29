@@ -70,6 +70,13 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
 
     @Provides
     @Singleton
+    @SupplementalInformationCallbackData
+    private Map<String, String> supplementalInformationCallbackData() {
+        return callbackData;
+    }
+
+    @Provides
+    @Singleton
     private SupplementalRequester provideSupplementalRequester() {
         return new MockSupplementalRequester(supplementalInfoForCredentials, callbackData);
     }
