@@ -115,7 +115,8 @@ public class DemobankAgent extends NextGenerationAgent
                             apiClient,
                             credentials.getField("username"),
                             credentials.getField("password"),
-                            getCallbackUri());
+                            getCallbackUri(),
+                            strongAuthenticationState.getState());
             return new AutoAuthenticationController(
                     request,
                     systemUpdater,
