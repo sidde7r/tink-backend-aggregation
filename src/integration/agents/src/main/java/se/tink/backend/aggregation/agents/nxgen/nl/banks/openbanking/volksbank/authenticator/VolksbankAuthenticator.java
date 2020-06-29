@@ -93,11 +93,6 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
-        logger.info("Volksbank - Refreshing access token");
-
-        // TODO temporary log persist refresh token
-        logger.info("Volksbank - get persist refresh token: {}", refreshToken.hashCode());
-
         URL url =
                 urlFactory
                         .buildURL(Paths.TOKEN)
@@ -106,8 +101,6 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
         OAuth2Token token = getBearerToken(url);
         persistentStorage.put(Storage.OAUTH_TOKEN, token);
-        // TODO temporary log to trace newly received refresh token
-        logger.info("Volksbank - get new refresh token: {}", token.getRefreshToken().hashCode());
         return token;
     }
 
