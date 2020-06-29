@@ -3,16 +3,19 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BerlinGroupBalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -52,14 +55,14 @@ public class AccountEntity {
 
     @JsonIgnore
     public Optional<TransactionalAccount> toTinkAccount(
-            ExactCurrencyAmount balance, boolean lowercaseAccountId) {
+            List<BalanceEntity> balances, boolean lowercaseAccountId) {
         if (!isTransactionalAccount()) {
             throw new IllegalStateException("Not a transactional account.");
         }
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(balance))
+                .withBalance(getBalanceModule(balances))
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(getUniqueIdentifier(lowercaseAccountId))
@@ -74,6 +77,17 @@ public class AccountEntity {
                 .putInTemporaryStorage(
                         IngBaseConstants.StorageKeys.TRANSACTIONS_URL, links.getTransactionsUrl())
                 .build();
+    }
+
+    private BalanceModule getBalanceModule(List<BalanceEntity> balances) {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder()
+                        .withBalance(BerlinGroupBalanceMapper.getBookedBalance(balances));
+        BerlinGroupBalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
+        BerlinGroupBalanceMapper.getCreditLimit(balances)
+                .ifPresent(balanceBuilderStep::setCreditLimit);
+        return balanceBuilderStep.build();
     }
 
     @JsonIgnore

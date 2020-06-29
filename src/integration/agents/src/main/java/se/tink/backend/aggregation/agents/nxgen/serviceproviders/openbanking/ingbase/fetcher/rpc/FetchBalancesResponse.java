@@ -3,15 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.entities.BalancesEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FetchBalancesResponse {
 
-    private List<BalancesEntity> balances;
+    private List<BalanceEntity> balances;
 
-    public List<BalancesEntity> getBalances() {
+    public List<BalanceEntity> getBalances() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList());
     }
 }
