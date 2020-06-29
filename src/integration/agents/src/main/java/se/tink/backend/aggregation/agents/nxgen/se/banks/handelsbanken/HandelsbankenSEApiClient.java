@@ -28,12 +28,14 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.c
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.rpc.PendingEInvoicesResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.CustodyAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionFund;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionInfo;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.SecurityHolding;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.SecurityHoldingContainer;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.CustodyAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.FundHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.HandelsbankenSEFundAccountHoldingDetail;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.PensionDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.PensionOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.SecurityHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.PaymentDetails;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
@@ -209,6 +211,16 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         return custodyAccount
                 .getCustodyAccountUrl()
                 .map(url -> createRequest(url).get(CustodyAccountResponse.class));
+    }
+
+    public PensionOverviewResponse pensionOverview(
+            ApplicationEntryPointResponse applicationEntryPoint) {
+        return createRequest(applicationEntryPoint.toPensionOverview())
+                .get(PensionOverviewResponse.class);
+    }
+
+    public PensionDetailsResponse pensionDetails(HandelsbankenSEPensionInfo pensionInfo) {
+        return createRequest(pensionInfo.toPensionDetail()).get(PensionDetailsResponse.class);
     }
 
     public Optional<PensionDetailsResponse> pensionDetails(CustodyAccount custodyAccount) {

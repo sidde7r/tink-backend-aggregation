@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc;
 
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Currency;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.CustodyAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionFund;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionInfo;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionSummary;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEProperty;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -32,10 +35,25 @@ public class PensionDetailsResponse extends BaseResponse {
     private List<HandelsbankenSEPensionFund> funds;
 
     public InvestmentAccount toInvestmentAccount(
+            HandelsbankenSEApiClient client, HandelsbankenSEPensionInfo pensionInfo) {
+        final String identifier = getIdentifier();
+        final BigDecimal value = pensionInfo.getValue().getAmount();
+        return InvestmentAccount.nxBuilder()
+                .withPortfolios(toPortfolioModule(client, value.doubleValue()))
+                .withCashBalance(ExactCurrencyAmount.of(0.0, Currency.SEK))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(identifier)
+                                .withAccountNumber(identifier)
+                                .withAccountName(pensionName)
+                                .addIdentifier(AccountIdentifier.create(Type.TINK, identifier))
+                                .build())
+                .build();
+    }
+
+    public InvestmentAccount toInvestmentAccount(
             HandelsbankenSEApiClient client, CustodyAccount custodyAccount) {
-
         final String identifer = custodyAccount.getCustodyAccountNumber();
-
         return InvestmentAccount.nxBuilder()
                 .withPortfolios(
                         Collections.singletonList(toPortfolioModule(client, custodyAccount)))
@@ -47,6 +65,18 @@ public class PensionDetailsResponse extends BaseResponse {
                                 .withAccountName(pensionName)
                                 .addIdentifier(AccountIdentifier.create(Type.TINK, identifer))
                                 .build())
+                .build();
+    }
+
+    private PortfolioModule toPortfolioModule(HandelsbankenSEApiClient client, Double value) {
+        final String identifier = getIdentifier();
+        return PortfolioModule.builder()
+                .withType(getPortfolioType())
+                .withUniqueIdentifier(identifier)
+                .withCashValue(0)
+                .withTotalProfit(0)
+                .withTotalValue(value)
+                .withInstruments(getInstrumentModules(client))
                 .build();
     }
 
@@ -70,6 +100,10 @@ public class PensionDetailsResponse extends BaseResponse {
         if (Strings.isNullOrEmpty(pensionName)) {
             LOGGER.warn("Handelsbanken pension name not present.");
             return PortfolioType.OTHER;
+        }
+
+        if (pensionName.contains(HandelsbankenSEConstants.Investments.PENSION)) {
+            return PortfolioType.PENSION;
         }
 
         if (!pensionName
@@ -111,5 +145,12 @@ public class PensionDetailsResponse extends BaseResponse {
     @Override
     public String toString() {
         return SerializationUtils.serializeToString(this);
+    }
+
+    private String getIdentifier() {
+        return summary.getItems().stream()
+                .filter(HandelsbankenSEProperty::isIdentifer)
+                .map(HandelsbankenSEProperty::getValue)
+                .collect(Collectors.joining());
     }
 }

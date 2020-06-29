@@ -9,6 +9,10 @@ public class HandelsbankenSEPensionSummary {
 
     List<HandelsbankenSEProperty> items;
 
+    public List<HandelsbankenSEProperty> getItems() {
+        return items;
+    }
+
     public Optional<Double> toPaymentsMade() {
         return Optional.ofNullable(items)
                 .flatMap(

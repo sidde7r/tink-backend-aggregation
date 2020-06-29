@@ -40,6 +40,10 @@ public class ApplicationEntryPointResponse extends BaseResponse {
         return findLink(HandelsbankenConstants.URLS.Links.PENDING_TRANSACTIONS);
     }
 
+    public URL toPensionOverview() {
+        return findLink(HandelsbankenConstants.URLS.Links.PENSION_OVERVIEW);
+    }
+
     public URL toSecuritiesHoldings() {
         return findLink(HandelsbankenConstants.URLS.Links.SECURITIES_HOLDINGS);
     }

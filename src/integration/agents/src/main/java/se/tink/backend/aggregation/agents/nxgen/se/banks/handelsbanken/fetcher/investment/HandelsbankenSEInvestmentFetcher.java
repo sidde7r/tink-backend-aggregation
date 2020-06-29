@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.SecurityHoldingsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -35,13 +36,27 @@ public class HandelsbankenSEInvestmentFetcher implements AccountFetcher<Investme
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
         try {
-            return sessionStorage
+            if (sessionStorage
                     .applicationEntryPoint()
-                    .map(client::securitiesHoldings)
-                    .map(
-                            securityHoldingsResponse ->
-                                    securityHoldingsResponse.toTinkInvestments(client))
-                    .orElseGet(Collections::emptyList);
+                    .get()
+                    .getLinks()
+                    .containsKey(
+                            HandelsbankenConstants.URLS.Links.SECURITIES_HOLDINGS.toString())) {
+                return sessionStorage
+                        .applicationEntryPoint()
+                        .map(client::securitiesHoldings)
+                        .map(
+                                securityHoldingsResponse ->
+                                        securityHoldingsResponse.toTinkInvestments(client))
+                        .orElseGet(Collections::emptyList);
+            } else {
+                return sessionStorage
+                        .applicationEntryPoint()
+                        .map(client::pensionOverview)
+                        .map(l -> l.toInvestments(client))
+                        .orElseGet(Collections::emptyList);
+            }
+
         } catch (HttpResponseException hre) {
             if (handleError(hre)) {
                 return Collections.emptyList();
