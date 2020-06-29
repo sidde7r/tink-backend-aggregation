@@ -29,6 +29,8 @@ public abstract class CredentialsRequest {
     // TODO: Remove with new AgentWorker
     protected boolean update;
 
+    private List<DataFetchingRestrictions> dataFetchingRestrictions;
+
     /** @return true if and only if this request was not initiated by a cron job */
     @JsonIgnore
     public abstract boolean isManual();
@@ -152,5 +154,14 @@ public abstract class CredentialsRequest {
 
     public void setCallbackUri(String callbackUri) {
         this.callbackUri = callbackUri;
+    }
+
+    public List<DataFetchingRestrictions> getDataFetchingRestrictions() {
+        return dataFetchingRestrictions;
+    }
+
+    public void setDataFetchingRestrictions(
+            List<DataFetchingRestrictions> dataFetchingRestrictions) {
+        this.dataFetchingRestrictions = dataFetchingRestrictions;
     }
 }
