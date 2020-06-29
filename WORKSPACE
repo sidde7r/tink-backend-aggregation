@@ -620,7 +620,12 @@ http_archive(
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@tink_backend//third_party/maven:deps.bzl", "maven_deps")
 
-maven_deps("//third_party/maven:maven_install.json", IO_NETTY_VERSION, IO_NETTY_BORINGSSL_VERSION, artifact_versions={"javax.validation:validation-api": "2.0.1.Final"})
+maven_deps(
+    "//third_party/maven:maven_install.json",
+    IO_NETTY_VERSION,
+    IO_NETTY_BORINGSSL_VERSION,
+    artifact_versions = {"javax.validation:validation-api": "2.0.1.Final"},
+)
 
 load("@maven//:defs.bzl", "pinned_maven_install")
 
