@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.utils.berlingroup.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -19,7 +20,7 @@ public abstract class TransactionDetailsBaseEntity {
     protected String debtorName;
     protected String mandateId;
     protected String remittanceInformationUnstructured;
-    protected BalanceAmountBaseEntity transactionAmount;
+    protected AmountEntity transactionAmount;
     protected String transactionId;
 
     @JsonFormat(pattern = "yyyy-MM-dd")

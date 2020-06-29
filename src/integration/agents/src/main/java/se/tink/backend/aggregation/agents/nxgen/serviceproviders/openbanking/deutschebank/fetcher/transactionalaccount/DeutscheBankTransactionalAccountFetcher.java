@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.DeutscheBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.deutschebank.fetcher.transactionalaccount.entity.account.BalanceBaseEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -32,8 +32,11 @@ public class DeutscheBankTransactionalAccountFetcher
     }
 
     private Optional<TransactionalAccount> transformAccount(AccountEntity accountEntity) {
-        List<BalanceBaseEntity> balances = apiClient.fetchBalances(accountEntity).getBalances();
-        return accountEntity.toTinkAccount(balances);
+        List<BalanceEntity> accountBalances = accountEntity.getBalances();
+        if (accountBalances == null || accountBalances.isEmpty()) {
+            accountEntity.setBalances(apiClient.fetchBalances(accountEntity).getBalances());
+        }
+        return accountEntity.toTinkAccount();
     }
 
     @Override
