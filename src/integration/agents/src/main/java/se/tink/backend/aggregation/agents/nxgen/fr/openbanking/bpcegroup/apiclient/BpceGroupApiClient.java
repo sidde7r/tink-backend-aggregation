@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.request.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
@@ -40,6 +38,7 @@ public class BpceGroupApiClient {
             "/accounts/{" + ACCOUNT_RESOURCE_ID_KEY + "}/balances";
     private static final String ENDPOINT_TRANSACTIONS =
             "/accounts/{" + ACCOUNT_RESOURCE_ID_KEY + "}/transactions";
+    private static final String ENDPOINT_TRANSACTIONS_PAGE = ENDPOINT_TRANSACTIONS + "?page=";
 
     private final TinkHttpClient httpClient;
     private final BpceOAuth2TokenStorage bpceOAuth2TokenStorage;
@@ -93,7 +92,7 @@ public class BpceGroupApiClient {
         final CustomerConsent customerConsent = createCustomerConsent(accountIds);
         final RequestBuilder requestBuilder =
                 httpClient
-                        .request(createUrl(BASE_PATH, ENDPOINT_CONSENTS))
+                        .request(createUrlWithBasePath(ENDPOINT_CONSENTS))
                         .body(customerConsent, MediaType.APPLICATION_JSON);
 
         sendRequestAndGetResponse(requestBuilder, HttpMethod.PUT, HttpResponse.class);
@@ -101,33 +100,29 @@ public class BpceGroupApiClient {
 
     public AccountsResponse fetchAccounts() {
         final RequestBuilder requestBuilder =
-                httpClient.request(createUrl(BASE_PATH, ENDPOINT_ACCOUNTS));
+                httpClient.request(createUrlWithBasePath(ENDPOINT_ACCOUNTS));
 
         return sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, AccountsResponse.class);
     }
 
     public BalancesResponse fetchBalances(String resourceId) {
         final RequestBuilder requestBuilder =
-                httpClient.request(createUrlForResource(BASE_PATH, ENDPOINT_BALANCES, resourceId));
+                httpClient.request(createUrlForResource(ENDPOINT_BALANCES, resourceId));
 
         return sendRequestAndGetResponse(requestBuilder, HttpMethod.GET, BalancesResponse.class);
     }
 
-    public TransactionsResponse getTransactions(
-            String resourceId, LocalDate dateFrom, LocalDate dateTo) {
-        try {
-            return getTransactionsBatch(resourceId, dateFrom, dateTo);
-        } catch (HttpResponseException e) {
-            return checkIfThereAreNoMoreTransactions(e);
-        }
+    public TransactionsResponse getTransactions(String resourceId) {
+        return getTransactionsBatch(resourceId, ENDPOINT_TRANSACTIONS);
     }
 
-    private TransactionsResponse getTransactionsBatch(
-            String resourceId, LocalDate dateFrom, LocalDate dateTo) {
+    public TransactionsResponse getTransactions(String resourceId, int page) {
+        return getTransactionsBatch(resourceId, ENDPOINT_TRANSACTIONS_PAGE + page);
+    }
 
+    private TransactionsResponse getTransactionsBatch(String resourceId, String url) {
         final RequestBuilder requestBuilder =
-                httpClient.request(
-                        createUrlForResource(BASE_PATH, ENDPOINT_TRANSACTIONS, resourceId));
+                httpClient.request(createUrlForResource(url, resourceId));
 
         return sendRequestAndGetResponse(
                 requestBuilder, HttpMethod.GET, TransactionsResponse.class);
@@ -157,12 +152,13 @@ public class BpceGroupApiClient {
         return new URL(String.format("%s%s", bpceGroupConfiguration.getServerUrl(), path));
     }
 
-    private URL createUrl(String base, String path) {
-        return new URL(String.format("%s%s%s", bpceGroupConfiguration.getServerUrl(), base, path));
+    private URL createUrlWithBasePath(String path) {
+        return new URL(
+                String.format("%s%s%s", bpceGroupConfiguration.getServerUrl(), BASE_PATH, path));
     }
 
-    private URL createUrlForResource(String base, String path, String resourceId) {
-        return createUrl(base, path).parameter(ACCOUNT_RESOURCE_ID_KEY, resourceId);
+    private URL createUrlForResource(String path, String resourceId) {
+        return createUrlWithBasePath(path).parameter(ACCOUNT_RESOURCE_ID_KEY, resourceId);
     }
 
     private static CustomerConsent createCustomerConsent(List<String> accountIds) {
@@ -175,13 +171,5 @@ public class BpceGroupApiClient {
                 .psuIdentity(true)
                 .trustedBeneficiaries(true)
                 .build();
-    }
-
-    private static TransactionsResponse checkIfThereAreNoMoreTransactions(HttpResponseException e) {
-        if (e.getResponse().getStatus() == 204) {
-            return new TransactionsResponse();
-        }
-
-        throw e;
     }
 }

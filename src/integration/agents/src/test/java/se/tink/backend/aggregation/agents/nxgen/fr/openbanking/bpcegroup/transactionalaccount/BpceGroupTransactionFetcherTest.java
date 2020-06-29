@@ -2,33 +2,24 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transa
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceTestFixtures.RESOURCE_ID;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceTestFixtures.getTransactionalAccount;
+import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.BpceTestFixtures.getTransactionsResponse;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BpceGroupTransactionFetcherTest {
-
-    private static final String RESOURCE_ID = "009988";
-    private static final LocalDate DATE_FROM = LocalDate.of(2020, 1, 1);
-    private static final LocalDate DATE_TO = LocalDate.of(2020, 1, 2);
 
     private BpceGroupTransactionFetcher bpceGroupTransactionFetcher;
 
@@ -37,78 +28,46 @@ public class BpceGroupTransactionFetcherTest {
     @Before
     public void setUp() {
         bpceGroupApiClientMock = mock(BpceGroupApiClient.class);
-        when(bpceGroupApiClientMock.getTransactions(RESOURCE_ID, DATE_FROM, DATE_TO))
-                .thenReturn(getTransactionsResponse());
+
+        final TransactionsResponse transactionsResponse = getTransactionsResponse();
+        when(bpceGroupApiClientMock.getTransactions(RESOURCE_ID)).thenReturn(transactionsResponse);
+        when(bpceGroupApiClientMock.getTransactions(RESOURCE_ID, 2))
+                .thenReturn(transactionsResponse);
 
         bpceGroupTransactionFetcher = new BpceGroupTransactionFetcher(bpceGroupApiClientMock);
     }
 
     @Test
-    public void shouldGetTransactionsFor() {
+    public void shouldGetTransactionsForPage1() {
         // given
-        final Date dateFrom =
-                Date.from(DATE_FROM.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-        final Date dateTo =
-                Date.from(DATE_TO.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         final TransactionalAccount account = getTransactionalAccount();
 
         // when
         final PaginatorResponse response =
-                bpceGroupTransactionFetcher.getTransactionsFor(account, dateFrom, dateTo);
+                bpceGroupTransactionFetcher.getTransactionsFor(account, 1);
 
         // then
-        verify(bpceGroupApiClientMock).getTransactions(RESOURCE_ID, DATE_FROM, DATE_TO);
+        verify(bpceGroupApiClientMock).getTransactions(RESOURCE_ID);
+        verify(bpceGroupApiClientMock, never()).getTransactions(anyString(), anyInt());
         verify(bpceGroupApiClientMock, never()).recordCustomerConsent(any());
         assertThat(response).isNotNull();
-        assertThat(response.getTinkTransactions()).hasSize(1);
+        assertThat(response.getTinkTransactions()).hasSize(3);
     }
 
-    private static TransactionsResponse getTransactionsResponse() {
-        return SerializationUtils.deserializeFromString(
-                "{\n"
-                        + "\"transactions\": [\n"
-                        + "    {\n"
-                        + "      \"resourceId\": \""
-                        + RESOURCE_ID
-                        + "\",\n"
-                        + "      \"remittanceInformation\": [\n"
-                        + "        \"VIREMENT\"\n"
-                        + "      ],\n"
-                        + "      \"transactionAmount\": {\n"
-                        + "        \"amount\": \"27.00\",\n"
-                        + "        \"currency\": \"EUR\"\n"
-                        + "      },\n"
-                        + "      \"bookingDate\": \"2020-01-02\",\n"
-                        + "      \"valueDate\": \"2020-01-02\",\n"
-                        + "      \"transactionDate\": \"2020-01-02\",\n"
-                        + "      \"creditDebitIndicator\": \"CRDT\",\n"
-                        + "      \"entryReference\": \"\",\n"
-                        + "      \"status\": \"PDNG\"\n"
-                        + "    }\n"
-                        + "  ]\n"
-                        + "}",
-                TransactionsResponse.class);
-    }
+    @Test
+    public void shouldGetTransactionsForPage2() {
+        // given
+        final TransactionalAccount account = getTransactionalAccount();
 
-    private static TransactionalAccount getTransactionalAccount() {
-        final String accountNo = "7613807008043001965409135";
-        final String iban = "FR" + accountNo;
-        final ExactCurrencyAmount exactCurrencyAmount =
-                new ExactCurrencyAmount(BigDecimal.valueOf(10.0), "EUR");
+        // when
+        final PaginatorResponse response =
+                bpceGroupTransactionFetcher.getTransactionsFor(account, 2);
 
-        return TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.CHECKING)
-                .withPaymentAccountFlag()
-                .withBalance(BalanceModule.of(exactCurrencyAmount))
-                .withId(
-                        IdModule.builder()
-                                .withUniqueIdentifier(iban)
-                                .withAccountNumber(accountNo)
-                                .withAccountName("account")
-                                .addIdentifier(new IbanIdentifier(iban))
-                                .build())
-                .setApiIdentifier(RESOURCE_ID)
-                .build()
-                .orElse(null);
+        // then
+        verify(bpceGroupApiClientMock, never()).getTransactions(RESOURCE_ID);
+        verify(bpceGroupApiClientMock).getTransactions(RESOURCE_ID, 2);
+        verify(bpceGroupApiClientMock, never()).recordCustomerConsent(any());
+        assertThat(response).isNotNull();
+        assertThat(response.getTinkTransactions()).hasSize(3);
     }
 }

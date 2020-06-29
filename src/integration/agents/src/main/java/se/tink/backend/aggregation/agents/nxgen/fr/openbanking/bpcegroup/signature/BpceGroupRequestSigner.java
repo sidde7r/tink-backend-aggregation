@@ -1,22 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.signature;
 
 import lombok.RequiredArgsConstructor;
-import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidassigner.QsealcAlg;
-import se.tink.backend.aggregation.eidassigner.QsealcSignerImpl;
-import se.tink.backend.aggregation.eidassigner.identity.EidasIdentity;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 
 @RequiredArgsConstructor
 public class BpceGroupRequestSigner {
 
-    private final EidasProxyConfiguration eidasProxyConfiguration;
-    private final EidasIdentity eidasIdentity;
+    private final QsealcSigner qsealcSigner;
 
     String getSignature(String signatureString) {
-        return QsealcSignerImpl.build(
-                        eidasProxyConfiguration.toInternalConfig(),
-                        QsealcAlg.EIDAS_RSA_SHA256,
-                        eidasIdentity)
-                .getSignatureBase64(signatureString.getBytes());
+        return qsealcSigner.getSignatureBase64(signatureString.getBytes());
     }
 }

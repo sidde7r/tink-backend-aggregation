@@ -1,0 +1,76 @@
+REQUEST 1
+POST https://www.18715.live.api.89c3.com/stet/psd2/oauth/token
+Content-Type: application/x-www-form-urlencoded
+User-Agent : Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+X-Aggregator : Tink Testing
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":900,"state":"f2533843-785d-4499-b92f-61711101feed","scope":"aisp","refresh_token":"DUMMY_REFRESH_TOKEN"}
+
+REQUEST 2
+GET https://www.18715.live.api.89c3.com/stet/psd2/v1/accounts
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+X-Aggregator: Tink Testing
+
+RESPONSE 2 SET GOT_ACCOUNTS
+200
+Content-Type: application/json
+
+{"accounts":[{"accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","currency":"EUR","psuStatus":"Account Holder","_links":{}}],"_links":{"self":{"href":"/stet/psd2/v1/accounts","templated":false}}}
+
+REQUEST 3
+PUT https://www.18715.live.api.89c3.com/stet/psd2/v1/consents
+Content-Type: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+{"balances":[{"iban":"DUMMY_IBAN"}],"transactions":[{"iban":"DUMMY_IBAN"}],"trustedBeneficiaries":true,"psuIdentity":true}
+
+RESPONSE 3
+201
+
+{}
+
+REQUEST 4 MATCH GOT_ACCOUNTS
+GET https://www.18715.live.api.89c3.com/stet/psd2/v1/accounts
+X-Aggregator: Tink Testing
+
+RESPONSE 4
+200
+Content-Type: application/json
+
+{"connectedPsu":"HOLDER_NAME","accounts":[{"resourceId":"DUMMY_RESOURCE_ID","accountId":{"iban":"DUMMY_IBAN"},"name":"DUMMY_NAME","usage":"PRIV","cashAccountType":"CACC","currency":"EUR","_links":{"balances":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"transactions":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions","templated":true}}}],"_links":{"self":{"href":"/stet/psd2/v1/accounts","templated":false}}}
+
+REQUEST 5
+GET https://www.18715.live.api.89c3.com/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/balances
+X-Aggregator: Tink Testing
+
+RESPONSE 5
+200
+Content-Type: application/json
+
+{"balances":[{"name":"Solde comptable au 23/06/2020","balanceAmount":{"currency":"EUR","amount":"-479.46"},"balanceType":"CLBD"}],"_links":{"self":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"transactions":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions","templated":true},"parent-list":{"href":"/stet/psd2/v1/accounts","templated":false}}}
+
+REQUEST 6
+GET https://www.18715.live.api.89c3.com/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions
+X-Aggregator: Tink Testing
+
+RESPONSE 6 SET GOT_TRANSACTIONS
+200
+Content-Type: application/json
+
+{"transactions":[{"transactionAmount":{"currency":"EUR","amount":"236.3"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-06-22","remittanceInformation":["DUMMY_DESCRIPTION_1"]},{"transactionAmount":{"currency":"EUR","amount":"310.34"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2020-06-22","remittanceInformation":["DUMMY_DESCRIPTION_2"]},{"transactionAmount":{"currency":"EUR","amount":"45.98"},"creditDebitIndicator":"DBIT","status":"PDNG","bookingDate":"2020-07-04","transactionDate":"2020-06-21","remittanceInformation":["DUMMY_DESCRIPTION_3"]}],"_links":{"self":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions","templated":true},"next":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"first":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=1","templated":true},"last":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"balances":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/stet/psd2/v1/accounts","templated":false}}}
+
+REQUEST 7 MATCH GOT_TRANSACTIONS
+GET https://www.18715.live.api.89c3.com/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2
+X-Aggregator: Tink Testing
+
+RESPONSE 7
+200
+Content-Type: application/json
+
+{"transactions":[{"transactionAmount":{"currency":"EUR","amount":"745.7"},"creditDebitIndicator":"DBIT","status":"BOOK","bookingDate":"2020-06-22","remittanceInformation":["DUMMY_DESCRIPTION_4"]}],"_links":{"self":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"prev":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=1","templated":true},"first":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=1","templated":true},"last":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2","templated":true},"balances":{"href":"/stet/psd2/v1/accounts/DUMMY_RESOURCE_ID/balances","templated":false},"parent-list":{"href":"/stet/psd2/v1/accounts","templated":false}}}
