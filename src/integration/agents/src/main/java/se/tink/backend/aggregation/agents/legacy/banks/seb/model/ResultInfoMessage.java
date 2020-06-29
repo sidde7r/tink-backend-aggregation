@@ -11,6 +11,15 @@ public class ResultInfoMessage {
     private static final ImmutableMap<String, String> CANCELLED_DESCRIPTIONS_BY_CODE =
             ImmutableMap.<String, String>builder()
                     .put("PCB046H", "Transfer validation: DueDate is before next business day")
+                    .put(
+                            "PCB046N",
+                            "Transfer validation: The date you selected has already passed. Please select a later date.")
+                    .put(
+                            "PCB046Q",
+                            "Transfer validation: There already exists  a similar assignment in upcoming events.")
+                    .put(
+                            "PCB049H",
+                            "Transfer Validation: Please change expiration date. Choose a day that is a weekday")
                     .put("PCB03G0", "Transfer validation: The user does not have enough money")
                     .put("PCB03K1", "Transfer validation: The destination account is not correct")
                     .put(
