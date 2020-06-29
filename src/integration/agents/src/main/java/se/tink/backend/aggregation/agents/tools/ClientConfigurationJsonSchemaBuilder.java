@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.tools;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 import java.util.Set;
 import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.annotations.Views;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public class ClientConfigurationJsonSchemaBuilder {
@@ -52,7 +54,8 @@ public class ClientConfigurationJsonSchemaBuilder {
                 clientConfigurationMetaInfoHandler.findClosestClientConfigurationClass();
 
         ObjectMapper mapper = new ObjectMapper();
-
+        mapper.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
+        mapper.setConfig(mapper.getSerializationConfig().withView(Views.Public.class));
         try {
             JsonSchemaGenerator jsonSchemaGenerator = new JsonSchemaGenerator(mapper);
             JsonNode flatSchemaFromConf =
