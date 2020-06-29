@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.agents;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.manual;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,12 +10,15 @@ public class AmericanExpressAgentTest {
 
     @Before
     public void setup() {
+        String market = "se";
+        String provider = market.concat("-amex-ob");
+
         builder =
-                new AgentIntegrationTest.Builder("uk", "uk-amex-ob")
+                new AgentIntegrationTest.Builder(market, provider)
                         .setFinancialInstitutionId("amex")
                         .setAppId("tink")
-                        .doLogout(true)
-                        .loadCredentialsBefore(true)
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
                         .saveCredentialsAfter(true);
     }
 

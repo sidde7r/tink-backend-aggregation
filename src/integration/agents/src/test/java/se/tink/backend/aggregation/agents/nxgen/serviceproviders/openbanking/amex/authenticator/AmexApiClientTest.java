@@ -37,6 +37,7 @@ import javax.ws.rs.core.HttpHeaders;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.AmexGrantType;
@@ -54,7 +55,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -159,7 +159,7 @@ public class AmexApiClientTest {
         final RequestBuilder requestBuilderMock =
                 setUpHttpClientMockForAuth(REFRESH_TOKEN_URL, null);
         final String errorMessage = "error";
-        final HttpResponseException exceptionMock = mock(HttpResponseException.class);
+        final BankServiceException exceptionMock = mock(BankServiceException.class);
         when(exceptionMock.getMessage()).thenReturn(errorMessage);
 
         when(requestBuilderMock.post(any())).thenThrow(exceptionMock);
