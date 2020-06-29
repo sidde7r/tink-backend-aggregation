@@ -11,7 +11,7 @@ public interface UkOpenBankingClientConfigurationAdapter extends ClientConfigura
 
     ProviderConfiguration getProviderConfiguration();
 
-    SoftwareStatementAssertion getSoftwareStatementAssertion();
+    SoftwareStatementAssertion getSoftwareStatementAssertions();
 
     Optional<TlsConfigurationOverride> getTlsConfigurationOverride();
 

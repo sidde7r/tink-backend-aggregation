@@ -16,5 +16,6 @@ java_library(
         "@aggregation//:com_google_guava_guava",
         "@aggregation//:com_kjetland_mbknor_jackson_jsonschema_2_12",
         "@aggregation//:org_yaml_snakeyaml",
+        "@aggregation//:io_github_classgraph_classgraph",
     ],
 )
