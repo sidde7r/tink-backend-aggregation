@@ -18,7 +18,6 @@ public class UnicreditTransactionalAccountFetcher implements AccountFetcher<Tran
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-
         return apiClient.fetchAccounts().getAccounts().stream()
                 .map(this::toTinkAccount)
                 .filter(Optional::isPresent)
@@ -30,6 +29,6 @@ public class UnicreditTransactionalAccountFetcher implements AccountFetcher<Tran
         String resourceId = accountEntity.getResourceId();
         return accountEntity.toTinkAccount(
                 apiClient.fetchAccountDetails(resourceId).getAccount(),
-                apiClient.fetchAccountBalance(resourceId).getBalance());
+                apiClient.fetchAccountBalance(resourceId).getBalances());
     }
 }

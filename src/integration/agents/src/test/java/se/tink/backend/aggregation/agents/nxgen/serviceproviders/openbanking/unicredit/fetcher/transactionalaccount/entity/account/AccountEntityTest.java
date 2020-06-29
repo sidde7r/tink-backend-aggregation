@@ -2,36 +2,34 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.un
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AccountEntityTest {
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Test
     public void toTinkAccount() {
         // given
         AccountEntity entity = accountAsJson(accountEntityProps());
         // and
-        ExactCurrencyAmount balanceAmount =
-                new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR");
+        List<BalanceEntity> balances = Collections.singletonList(getExampleBalanceEntity());
         AccountEntity accountDetailsEntity = accountAsJson(accountDetailsEntityProps());
 
         // when
         Optional<TransactionalAccount> result =
-                entity.toTinkAccount(accountDetailsEntity, balanceAmount);
+                entity.toTinkAccount(accountDetailsEntity, balances);
 
         // then
         assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
@@ -49,13 +47,12 @@ public class AccountEntityTest {
         // given
         AccountEntity entity = accountAsJson(accountEntityMinimalProps());
         // and
-        ExactCurrencyAmount balanceAmount =
-                new ExactCurrencyAmount(new BigDecimal("123.45"), "EUR");
+        List<BalanceEntity> balances = Collections.singletonList(getExampleBalanceEntity());
         AccountEntity accountDetailsEntity = accountAsJson(accountDetailsEntityProps());
 
         // when
         Optional<TransactionalAccount> result =
-                entity.toTinkAccount(accountDetailsEntity, balanceAmount);
+                entity.toTinkAccount(accountDetailsEntity, balances);
 
         // then
         assertThat(result.get().getType()).isEqualTo(AccountTypes.CHECKING);
@@ -98,10 +95,13 @@ public class AccountEntityTest {
 
     private static AccountEntity accountAsJson(final Properties account) {
         Gson gsonObj = new Gson();
-        try {
-            return OBJECT_MAPPER.readValue(gsonObj.toJson(account), AccountEntity.class);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        return SerializationUtils.deserializeFromString(
+                gsonObj.toJson(account), AccountEntity.class);
+    }
+
+    private static BalanceEntity getExampleBalanceEntity() {
+        return SerializationUtils.deserializeFromString(
+                "{\"balanceAmount\": {\"amount\": \"123.45\", \"currency\": \"EUR\"}, \"balanceType\": \"expected\", \"creditLimitIncluded\": false, \"lastChangeDateTime\": \"2020-06-08T09:25:00+02:00\"}",
+                BalanceEntity.class);
     }
 }
