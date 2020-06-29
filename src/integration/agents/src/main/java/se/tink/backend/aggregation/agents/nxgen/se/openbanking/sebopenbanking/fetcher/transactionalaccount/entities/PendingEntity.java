@@ -44,10 +44,10 @@ public class PendingEntity {
     }
 
     public boolean isUpcomingTransaction() {
-        return pendingType.equalsIgnoreCase(SebCommonConstants.TransactionType.UPCOMING);
+        return SebCommonConstants.TransactionType.UPCOMING.equalsIgnoreCase(pendingType);
     }
 
     public boolean isPendingTransaction() {
-        return pendingType.equalsIgnoreCase(SebCommonConstants.TransactionType.RESERVED);
+        return SebCommonConstants.TransactionType.RESERVED.equalsIgnoreCase(pendingType);
     }
 }

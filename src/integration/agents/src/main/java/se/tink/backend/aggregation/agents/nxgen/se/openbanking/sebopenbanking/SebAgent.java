@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.executor.payment.SebPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.creditcards.SebCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.fetcher.creditcards.SebCreditCardTransactionsFetcher;
@@ -20,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sebopenbanking.ut
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.agents.utils.transfer.InferredTransferDestinations;
-import se.tink.backend.aggregation.configuration.signaturekeypair.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -31,7 +29,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filters.AccessExceededFilter;
 import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SebAgent extends SebBaseAgent<SebApiClient>
         implements RefreshCheckingAccountsExecutor,
@@ -40,16 +37,6 @@ public final class SebAgent extends SebBaseAgent<SebApiClient>
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final SebStorage instanceStorage;
-
-    public SebAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
-        connfigureHttpClient(client);
-        this.apiClient = new SebApiClient(client, persistentStorage, request.isManual());
-        this.instanceStorage = new SebStorage();
-        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        creditCardRefreshController = getCreditCardRefreshController();
-    }
 
     @Inject
     public SebAgent(AgentComponentProvider componentProvider) {

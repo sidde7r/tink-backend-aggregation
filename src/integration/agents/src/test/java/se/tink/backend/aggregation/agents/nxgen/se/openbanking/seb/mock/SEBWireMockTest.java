@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConf
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.MarketCode;
 
-public class SebObMockServerAgentTest {
+public class SEBWireMockTest {
 
     private static final String CONFIGURATION_PATH =
             "data/agents/openbanking/seb/configuration.yml";
