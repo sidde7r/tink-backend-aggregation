@@ -11,8 +11,8 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterIds;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.ClusterSpecificCallbacks;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAppToAppAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankDkNemIdReAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankNoBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockDkNemIdReAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankTransactionalAccountFetcher;
@@ -84,67 +84,75 @@ public class DemobankAgent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         if (CredentialsTypes.MOBILE_BANKID.equals(provider.getCredentialsType())
                 && "NO".equals(provider.getMarket())) {
-
             return new BankIdAuthenticationControllerNO(
-                    supplementalRequester, new DemobankNoBankIdAuthenticator(apiClient));
-
+                    supplementalRequester, new DemobankMockNoBankIdAuthenticator(apiClient));
         } else if (CredentialsTypes.THIRD_PARTY_APP.equals(provider.getCredentialsType())
                 && AccessType.OTHER.equals(provider.getAccessType())
                 && "DK".equals(provider.getMarket())) {
-
-            String username = credentials.getField(Field.Key.USERNAME);
-            String password = credentials.getField(Field.Key.PASSWORD);
-
-            DemobankDkNemIdReAuthenticator demobankNemIdAuthenticator =
-                    new DemobankDkNemIdReAuthenticator(
-                            apiClient, client, persistentStorage, username, password);
-
-            return new AutoAuthenticationController(
-                    request,
-                    systemUpdater,
-                    new ThirdPartyAppAuthenticationController<>(
-                            demobankNemIdAuthenticator, supplementalInformationHelper),
-                    demobankNemIdAuthenticator);
-
+            return constructMockNemIdAuthenticator();
         } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())) {
             return new PasswordAuthenticationController(
                     new DemobankPasswordAuthenticator(apiClient));
         } else if (provider.getName().endsWith("-app-to-app")) {
-            DemobankAppToAppAuthenticator authenticator =
-                    new DemobankAppToAppAuthenticator(
-                            apiClient,
-                            credentials.getField("username"),
-                            credentials.getField("password"),
-                            getCallbackUri(),
-                            strongAuthenticationState.getState());
-            return new AutoAuthenticationController(
-                    request,
-                    systemUpdater,
-                    new ThirdPartyAppAuthenticationController<>(
-                            authenticator, supplementalInformationHelper),
-                    authenticator);
+            return constructApptToAppAuthenticator();
         } else if (provider.getName().endsWith("-redirect")) {
-            DemobankRedirectAuthenticator demobankRedirectAuthenticator =
-                    new DemobankRedirectAuthenticator(
-                            apiClient, persistentStorage, credentials, callbackUri);
-
-            final OAuth2AuthenticationController controller =
-                    new OAuth2AuthenticationController(
-                            persistentStorage,
-                            supplementalInformationHelper,
-                            demobankRedirectAuthenticator,
-                            credentials,
-                            strongAuthenticationState);
-
-            return new AutoAuthenticationController(
-                    request,
-                    context,
-                    new ThirdPartyAppAuthenticationController<>(
-                            controller, supplementalInformationHelper),
-                    controller);
+            return constructRedirectAuthenticator();
         } else {
             throw new IllegalStateException("Invalid provider configuration");
         }
+    }
+
+    private Authenticator constructMockNemIdAuthenticator() {
+        String username = credentials.getField(Field.Key.USERNAME);
+        String password = credentials.getField(Field.Key.PASSWORD);
+
+        DemobankMockDkNemIdReAuthenticator demobankNemIdAuthenticator =
+                new DemobankMockDkNemIdReAuthenticator(
+                        apiClient, client, persistentStorage, username, password);
+
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        demobankNemIdAuthenticator, supplementalInformationHelper),
+                demobankNemIdAuthenticator);
+    }
+
+    private Authenticator constructApptToAppAuthenticator() {
+        DemobankAppToAppAuthenticator authenticator =
+                new DemobankAppToAppAuthenticator(
+                        apiClient,
+                        credentials.getField("username"),
+                        credentials.getField("password"),
+                        getCallbackUri(),
+                        strongAuthenticationState.getState());
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        authenticator, supplementalInformationHelper),
+                authenticator);
+    }
+
+    private Authenticator constructRedirectAuthenticator() {
+        DemobankRedirectAuthenticator demobankRedirectAuthenticator =
+                new DemobankRedirectAuthenticator(
+                        apiClient, persistentStorage, credentials, callbackUri);
+
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        demobankRedirectAuthenticator,
+                        credentials,
+                        strongAuthenticationState);
+
+        return new AutoAuthenticationController(
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
