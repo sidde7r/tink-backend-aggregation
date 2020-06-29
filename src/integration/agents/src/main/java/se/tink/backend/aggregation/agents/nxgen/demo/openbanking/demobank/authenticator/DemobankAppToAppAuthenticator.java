@@ -121,13 +121,13 @@ public class DemobankAppToAppAuthenticator
 
         Ios ios = new Ios();
         ios.setAppScheme("tink-demobank-auth");
-        ios.setAppStoreUrl("https://appstore.tink.com");
+        ios.setAppStoreUrl("https://demobank.production.global.tink.se/appstore");
         ios.setDeepLinkUrl(createTicketResponse.getDeeplinkUrl());
         payload.setIos(ios);
 
         Android android = new Android();
-        android.setIntent("intent");
-        android.setPackageName("packagename");
+        android.setIntent(createTicketResponse.getDeeplinkUrl());
+        android.setPackageName("com.tink.demobank.authenticator");
         payload.setAndroid(android);
 
         Desktop desktop = new Desktop();
