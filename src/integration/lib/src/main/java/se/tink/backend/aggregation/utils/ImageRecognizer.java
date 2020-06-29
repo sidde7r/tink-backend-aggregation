@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import javax.imageio.ImageIO;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.ITesseract;
@@ -51,12 +52,13 @@ public class ImageRecognizer {
 
     // Use when image transparency causes ocr to fail
     public static String ocr(byte[] byteImage, Color fillColor) {
-        BufferedImage bufferedImage;
-        ByteArrayInputStream bis = new ByteArrayInputStream(byteImage);
         try {
-            bufferedImage = ImageIO.read(bis);
+            ByteArrayInputStream bis = new ByteArrayInputStream(byteImage);
+            Optional<BufferedImage> bufferedImage = Optional.ofNullable(ImageIO.read(bis));
             bis.close();
-            return ocr(bufferedImage, fillColor);
+            return ocr(
+                    bufferedImage.orElseThrow(() -> new IOException("Image not parsable.")),
+                    fillColor);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
