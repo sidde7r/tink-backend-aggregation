@@ -12,7 +12,6 @@ public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty private boolean manual;
     private Set<RefreshableItem> itemsToRefresh;
     private String refreshId;
-    private DataFetchingPolicy dataFetchingPolicy;
 
     public RefreshInformationRequest() {}
 
@@ -63,13 +62,5 @@ public class RefreshInformationRequest extends CredentialsRequest {
 
     public void setRefreshId(String refreshId) {
         this.refreshId = refreshId;
-    }
-
-    public DataFetchingPolicy getDataFetchingPolicy() {
-        return dataFetchingPolicy;
-    }
-
-    public void setDataFetchingPolicy(DataFetchingPolicy dataFetchingPolicy) {
-        this.dataFetchingPolicy = dataFetchingPolicy;
     }
 }
