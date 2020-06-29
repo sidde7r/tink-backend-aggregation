@@ -74,7 +74,7 @@ git_repository(
 
 git_repository(
     name = "com_tink_api_grpc",
-    commit = "b596408e27d9a89da0dee670948535336d1eb063",
+    commit = "991248df707e7e3e5e28d5e5d7393851db33bd9c",
     remote = "git@github.com:tink-ab/tink-grpc.git",
     shallow_since = "1575523605 +0000",
 )
@@ -164,7 +164,7 @@ go_repository(
 
 git_repository(
     name = "tink_backend",
-    commit = "1dc541ce0a98d0445f7aa56476a1d69e3bc0f5aa",
+    commit = "d28950c72d9bc794b1032d816df74197280d67e8",
     remote = "git@github.com:tink-ab/tink-backend.git",
     shallow_since = "1586908800 +0000",
 )

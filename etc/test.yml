@@ -700,6 +700,10 @@ agentsServiceConfiguration:
         clientId: dummyClientId
         clientSecret: dummyClientSecret
         redirectUrl: dummyRedirectUrl
+    617bcf1569614498920cce658ea05aad:
+      tink:
+        clientId: dummyClientId
+        redirectUrl: dummyRedirectUrl
     62231f7e9bce5834842b6a713caa5c8c:
       tink:
         clientId: dummyClientId
