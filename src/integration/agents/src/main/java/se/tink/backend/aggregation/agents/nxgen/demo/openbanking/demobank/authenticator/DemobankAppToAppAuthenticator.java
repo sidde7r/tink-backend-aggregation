@@ -108,7 +108,6 @@ public class DemobankAppToAppAuthenticator
 
                 @Override
                 public CreateTicketResponse getReference() {
-                    reference.setToken(response.getToken());
                     return reference;
                 }
             };
