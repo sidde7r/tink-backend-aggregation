@@ -1,0 +1,319 @@
+REQUEST 1
+POST https://mp.seb.se/auth/bid/v2/authentications
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+
+RESPONSE 1 SET AUTH1
+201
+content-language: en-US
+content-type: application/json
+date: Thu, 18 Jun 2020 12:30:39 GMT
+p3p: ***
+x-servicerequestid: ***
+cache-control: no-cache,no-store
+expires: Thu, 01 Dec 1994 16:00:00 GMT
+x-seb-csrf: ***
+pragma: no-cache
+Strict-Transport-Security: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Vary: Accept-Encoding
+
+{"auto_start_token":"dde46f2e-ccbe-459e-a8c9-18db47e1c331"}
+
+REQUEST 2 MATCH AUTH1
+GET https://mp.seb.se/auth/bid/v2/authentications
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+Content-Type: application/json
+x-seb-csrf: ***
+
+RESPONSE 2 SET AUTH6
+200
+content-language: en-US
+content-type: application/json
+date: Thu, 18 Jun 2020 12:30:39 GMT
+p3p: ***
+x-servicerequestid: ***
+cache-control: no-cache,no-store
+x-seb-csrf: ***
+pragma: no-cache
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"hint_code":"OUTSTANDING_TRANSACTION","status":"PENDING"}
+
+REQUEST 7 MATCH AUTH6
+GET https://mp.seb.se/auth/bid/v2/authentications
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+Content-Type: application/json
+x-seb-csrf: ***
+
+RESPONSE 7 SET AUTH7
+200
+content-language: en-US
+content-type: application/json
+date: Thu, 18 Jun 2020 12:30:54 GMT
+p3p: ***
+x-servicerequestid: ***
+cache-control: no-cache,no-store
+x-seb-csrf: ***
+pragma: no-cache
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"hint_code":"USER_SIGN","status":"PENDING"}
+
+REQUEST 12 MATCH AUTH7
+GET https://mp.seb.se/auth/bid/v2/authentications
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Accept: application/json
+Content-Type: application/json
+x-seb-csrf: ***
+
+RESPONSE 12
+200
+content-language: en-US
+content-type: application/json
+date: Thu, 18 Jun 2020 12:31:02 GMT
+p3p: ***
+x-servicerequestid: ***
+cache-control: no-cache,no-store
+pragma: no-cache
+Strict-Transport-Security: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Vary: Accept-Encoding
+
+{"status":"COMPLETE"}
+
+REQUEST 13
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankInit11Session01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[],"UserCredentials":{"ApplicationName":"MASP","UserId":"7710120000"}}}
+
+RESPONSE 13
+200
+content-type: application/json; charset=utf-8
+date: Thu, 18 Jun 2020 12:31:02 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":null,"CountryCode":null,"Channel":null,"InvoiceHint":null,"Brand":null,"ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":75},"MiddlewareReport":{"HttpServer":"A3","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20061814:31:03.1023724"},"VODB":{"DBZV170":null,"DBZV160":null,"RESULTO01":{"INIT_TIME":"14:31","INIT_RESULT":"OK"}}}}
+
+REQUEST 14
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankAktivera01Session01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+
+{"request":{"VODB":{"DEVID01":{"APPLICATION_VERSION":"9.1.1","OS_NAME":"iOS","MODEL":"API_VERSION=2","MANUFACTURER":"Apple","OS_VERSION":"12.0.1","APPLICATION_NAME":"MASP"}},"__type":"SEB_CS.SEBCSService","ServiceInput":[{"Condition":"EQ","VariableName":"CUSTOMERTYPE","VariableValue":"P"}]}}
+
+RESPONSE 14
+200
+content-type: application/json; charset=utf-8
+date: Thu, 18 Jun 2020 12:31:02 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","VODB":{"DEVID01":{"MANUFACTURER":"Apple","OS_VERSION":"12.0.1","APPLICATION_NAME":"MASP","OS_NAME":"iOS","APPLICATION_VERSION":"9.1.1","MODEL":"API_VERSION=2","SESSION_DURATION":570},"HWINFO01":null,"DBZV170":null,"DBZV160":null,"USRINF01":{"USER_NAME":"ALEXANDER PETTERSSON             ","SEB_KUND_NR":"77101200000009","BUNT_ANTAL_OSIGNERAD":0,"EFACTURA_ANTAL_OSIGN":3,"IMS_SHORT_USERID":"77A12141","LOGON_COMPLETED":"J","STATUS":"Success","UNIQUE_ID":"h1aYK1drlazzhm0QHjd0WoAv783LE9Mp1KVMNprSQ3w=","LOGIN_METHOD":"bankid","GENDER":"male","AGE":"43","SEB_BID_USERID12":"197710120000"},"CBEW501":null,"CBEW502":null,"PCBW024":{"ROW_ID":0,"VERIF_REQ":"N","CERTIFIKAT":null,"TIME_STAMP_OLD":null,"DATA1_TEXT":null,"DATA2_TEXT":null},"PCBWC011":null,"MESSAGE_INFO":null,"CUSTOMER_REVIEW":null},"ServiceInput":null,"ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":8011,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":225},"MiddlewareReport":{"HttpServer":"A3","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20061814:31:03.4023858"}}}
+
+REQUEST 15
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankLista01Konton_privat01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[{"Condition":"EQ","VariableName":"KUND_ID","VariableValue":"77101200000009"}]}}
+
+RESPONSE 15 SET EXECUTE02
+200
+content-length: 1793
+content-type: application/json; charset=utf-8
+date: Thu, 18 Jun 2020 12:31:03 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":20},"MiddlewareReport":{"HttpServer":"A1","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20061814:31:03.7075837"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW4211":[{"ROW_ID":1,"KUND_NR_PERSORG":7710120000,"KONTO_NR":"58398257466","KTOSLAG_TXT":"PRIVATKONTO","BOKF_SALDO":18757.99,"DISP_BEL":18757.99,"KTOBEN_TXT":"","KREDBEL":0.00,"KHAV":"ALEXANDER PETTERSSON","BETFL":"1","INSFL":"1","UTTFL":"1","KTOSLAG_KOD":1,"KTOUTDR_UTSKR":"N"},{"ROW_ID":2,"KUND_NR_PERSORG":7710120000,"KONTO_NR":"53680382359","KTOSLAG_TXT":"PRIVATKONTO","BOKF_SALDO":350.03,"DISP_BEL":350.03,"KTOBEN_TXT":"GEMENSAMT","KREDBEL":0.00,"KHAV":"ALEXANDER PETTERSSON","BETFL":"1","INSFL":"1","UTTFL":"1","KTOSLAG_KOD":1,"KTOUTDR_UTSKR":"N"},{"ROW_ID":3,"KUND_NR_PERSORG":7710120000,"KONTO_NR":"53683430923","KTOSLAG_TXT":"ENKLA SPARKONTOT","BOKF_SALDO":0.00,"DISP_BEL":0.00,"KTOBEN_TXT":"","KREDBEL":0.00,"KHAV":"ALEXANDER PETTERSSON","BETFL":"0","INSFL":"1","UTTFL":"1","KTOSLAG_KOD":16,"KTOUTDR_UTSKR":"N"}],"PCBW204":null}}}
+
+REQUEST 21 MATCH EXECUTE02
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankHamta01BG_nummer01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[{"Condition":"EQ","VariableName":"BG_NR","VariableValue":"0005768353"}]}}
+
+RESPONSE 21 SET EXECUTE03
+200
+content-type: application/json; charset=utf-8
+date: Sat, 20 Jun 2020 05:46:08 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":"074609020007","SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":"189759F7BD904ADEAC3BCF21DAB8B8BE","Language":"SV","CountryCode":null,"Channel":null,"InvoiceHint":null,"Brand":null,"ParentReqId":"074609020007","CurrentReqId":"7dd571d7-5eed-41ac-a482-a2a12d96346a","ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":26,"ExecuteTime":1,"HostTime":4,"GateWayTime":0,"HTTPServerTime":9},"MiddlewareReport":{"HttpServer":"A2","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20062007:46:09.0296742"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW3041":[{"ROW_ID":1,"BGCNR":"0005768353","KUND_NR_PERSORG":5569060477,"NAMN":"Financial Tech Sweden AB","BG_KONTO_OCR_FL":"2","BG_KONTO_SKATT_FL":"N","OCR_REF_LANGD1":0,"OCR_REF_LANGD2":0,"MOTT_CLNR":"6144","KONTONR":"","MOTT_CLNR_EUR":"","KONTONR_EUR":""}]}}}
+
+REQUEST 22 MATCH EXECUTE03
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankKollany01Betal_privat01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+
+{"request":{"VODB":{"DEVID01":{"APPLICATION_VERSION":"9.1.1","OS_NAME":"iOS","MODEL":"API_VERSION=2","MANUFACTURER":"Apple","OS_VERSION":"12.0.1","APPLICATION_NAME":"MASP"},"PCBW5211":{"UPPDRAG_BEL":328.0,"SEB_KUND_NR":"77101200000009","MOTT_KONTO_NR":"5768353","KONTO_NR":"58398257466","UPPDRAG_BESKRIV":"","MOTTAGAR_REG_FL":"","MOTT_KONTO_TYP":"BG","MOTTAGAR_INFO":"1047514784933","BETAL_DATUM":"2020-06-22","NOTERING":"Tinkpay","KK_TXT":""}},"__type":"SEB_CS.SEBCSService"}}
+
+RESPONSE 22 SET EXECUTE04
+200
+content-type: application/json; charset=utf-8
+date: Sat, 20 Jun 2020 05:46:09 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":155},"MiddlewareReport":{"HttpServer":"A1","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20062007:46:09.2069148"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW5211":{"UPPDRAG_BEL":328.00,"SEB_KUND_NR":"69030903860009","MOTT_KONTO_NR":"5768353","KONTO_NR":"54220006303","UPPDRAG_BESKRIV":"","MOTTAGAR_REG_FL":"","MOTT_KONTO_TYP":"BG","MOTTAGAR_INFO":"1047514784933","BETAL_DATUM":"2020-06-22","NOTERING":"SWEETPAY","KK_TXT":"","ROW_ID":0,"MEDD_TXT1":"","MEDD_TXT2":"","MEDD_TXT3":"","MEDD_TXT4":"","FAKTURA_ID":"","BEL_ANDR_KOD":"","SUTI":"STOMPR19200620074609052351000001"},"PCBW1241":[{"ROW_ID":1,"USER_ID_NKL":"69309038","ROLL_ID_NKL":"69030903860009","LEV_SATT":"05","TIME_STAMP_NKL":"017207460937","KONTO_NR":"54220006303","MOTT_KONTO_TYP":"BG","MOTT_KONTO_NR":"576-8353","KK_TXT":"Financial Tech Sweden AB","START_DATUM":"2020-06-22","UPPDRAG_BEL":328.00,"MEDD_TXT1":"1047514784933"}],"PCBW1242":null,"PCBW1243":null}}}
+
+REQUEST 23 MATCH EXECUTE04
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankKolla11Bunt01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[]}}
+
+RESPONSE 23 SET EXECUTE05
+200
+content-type: application/json; charset=utf-8
+date: Sat, 20 Jun 2020 05:46:08 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":183},"MiddlewareReport":{"HttpServer":"9074","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20062007:46:09.5337595"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW024":{"ROW_ID":0,"VERIF_REQ":"J","CERTIFIKAT":null,"TIME_STAMP_OLD":null,"DATA1_TEXT":null,"DATA2_TEXT":null,"SIGN_TEXT":"Jag godkänner de här uppdragen\r\n\r\nAntal uppdrag: 1st Totalbelopp: 328,00\r\n\r\nFrån konto: 5422 00 063 03\r\nMottagare, datum, belopp\r\n576-8353, 2020-06-22, 328,00 SEK\r\n","STATUS":"PASSTROUGH","STATUS_TITLE":null,"STATUS_TEXT":null}}}}
+
+REQUEST 24 MATCH EXECUTE05
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankSkapa11Signera01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[]}}
+
+RESPONSE 24 SET EXECUTE06
+200
+content-type: application/json; charset=utf-8
+date: Sat, 20 Jun 2020 05:46:09 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":132},"MiddlewareReport":{"HttpServer":"A3","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20062007:46:09.7377871"},"VODB":{"DBZV170":null,"DBZV160":null}}}
+
+REQUEST 25 MATCH EXECUTE06
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankUtfor11Bunt01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[]}}
+
+RESPONSE 25 SET EXECUTE07
+200
+content-type: application/json; charset=utf-8
+date: Sat, 20 Jun 2020 05:46:18 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":[{"TableName":null,"ErrorRowId":1,"ErrorColumnName":"","Level":"","ErrorCode":"RFA3","ErrorText":""},{"TableName":null,"ErrorRowId":2,"ErrorColumnName":"","Level":"","ErrorCode":"Status","ErrorText":""}],"HostReturnCode":2004,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":122},"MiddlewareReport":{"HttpServer":"A3","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20062007:46:18.1043230"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW1241":null,"PCBW1242":null,"PCBW1243":null,"PCBW1251":null,"PCBW1252":null}}}
+
+REQUEST 26 MATCH EXECUTE07
+POST https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankUtfor11Bunt01.asmx/Execute
+User-Agent: Tink (+https://www.tink.se/; noc@tink.se)
+Content-Type: application/json
+
+{"request":{"__type":"SEB_CS.SEBCSService","ServiceInput":[]}}
+
+RESPONSE 26 SET EXECUTE08
+200
+content-type: application/json; charset=utf-8
+date: Sat, 20 Jun 2020 05:46:21 GMT
+p3p: ***
+cache-control: private, max-age=0
+_selt: ***
+sebstatus: ***
+sebstatusmessage: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Set-Cookie: ***
+Strict-Transport-Security: ***
+Vary: Accept-Encoding
+
+{"d":{"__type":"SEB_CS.SEBCSService","ServiceInfo":{"SEBCS_Service":"","minusL":"","Type":"WantToWorkHere-Call us","SMMVersion":0,"Timestamp":null,"SubId":0,"CSBusinessObject":"","VersionStamp":"","SMMName":"","ClientType":"","PreviousElapseTime":0,"PreviousElapseTimeSpecified":false,"CodePage":"","Accounting":{"CorrelationID":null,"Language":"","CountryCode":null,"Channel":null,"InvoiceHint":"","Brand":"","ParentReqId":null,"CurrentReqId":null,"ZipOptions":null,"Saml":null},"TimeoutMillis":0,"TimeoutMillisSpecified":false},"ServiceInput":null,"UserCredentials":null,"ResultInfo":{"GatewayReturnCode":0,"GatewayReturnCodeText":"","Message":null,"HostReturnCode":0,"HostReturnCodeText":"","ResponseTimes":{"QueueTime":0,"ExecuteTime":0,"HostTime":0,"GateWayTime":0,"HTTPServerTime":367},"MiddlewareReport":{"HttpServer":"A1","TGWInstance":null,"IMS":null,"AS400":null},"CurrentTic":"20062007:46:22.6546862"},"VODB":{"DBZV170":null,"DBZV160":null,"PCBW1241":[{"ROW_ID":1,"USER_ID_NKL":null,"ROLL_ID_NKL":null,"LEV_SATT":null,"TIME_STAMP_NKL":null,"KONTO_NR":"58398257466","MOTT_KONTO_TYP":"BG      ","MOTT_KONTO_NR":"   576-8353","KK_TXT":"Financial Tech Sweden AB","START_DATUM":"2020-06-22","UPPDRAG_BEL":328.00,"MEDD_TXT1":"1047514784933            "}],"PCBW1242":[null],"PCBW1243":[null],"PCBW1251":null,"PCBW1252":null}}}

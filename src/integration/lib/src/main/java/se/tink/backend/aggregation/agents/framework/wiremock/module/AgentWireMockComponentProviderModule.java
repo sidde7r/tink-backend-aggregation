@@ -24,6 +24,7 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
     private final TinkHttpClientProvider wireMockTinkHttpClientProvider;
     private final SupplementalInformationProvider mockSupplementalInformationProvider;
     private final GeneratedValueProvider generatedValueProvider;
+    private final FakeBankSocket fakeBankSocket;
 
     public AgentWireMockComponentProviderModule(
             CredentialsRequest request,
@@ -40,6 +41,7 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
         this.generatedValueProvider =
                 new GeneratedValueProviderImpl(
                         new ConstantLocalDateTimeSource(), new MockRandomValueGenerator());
+        this.fakeBankSocket = fakeBankSocket;
     }
 
     @Override
@@ -50,6 +52,7 @@ public final class AgentWireMockComponentProviderModule extends AbstractModule {
         bind(AgentContextProvider.class).to(AgentContextProviderImpl.class);
         bind(GeneratedValueProvider.class).toInstance(generatedValueProvider);
 
+        bind(FakeBankSocket.class).toInstance(fakeBankSocket);
         bind(AgentComponentProvider.class).in(Scopes.SINGLETON);
     }
 }

@@ -26,7 +26,6 @@ import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.Security;
@@ -43,6 +42,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.net.ssl.KeyManagerFactory;
@@ -144,6 +144,11 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForDecoupledMode;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModulesForProductionMode;
+import se.tink.backend.aggregation.agents.modules.LegacyAgentProductionStrategyModule;
+import se.tink.backend.aggregation.agents.modules.LegacyAgentWiremockStrategyModule;
+import se.tink.backend.aggregation.agents.modules.providers.LegacyAgentStrategyInterface;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
@@ -176,6 +181,8 @@ import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
+@AgentDependencyModulesForProductionMode(modules = LegacyAgentProductionStrategyModule.class)
+@AgentDependencyModulesForDecoupledMode(modules = LegacyAgentWiremockStrategyModule.class)
 public class SEBApiAgent extends AbstractAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshEInvoiceExecutor,
@@ -294,15 +301,19 @@ public class SEBApiAgent extends AbstractAgent
     private final Catalog catalog;
     private final TransferMessageFormatter transferMessageFormatter;
     private final SebBaseApiClient sebBaseApiClient;
+    private final Function<ApacheHttpClient4Config, TinkApacheHttpClient4> strategy;
 
     // cache
     private Map<AccountEntity, Account> accountEntityAccountMap = null;
 
     @Inject
-    public SEBApiAgent(AgentComponentProvider agentComponentProvider) {
+    SEBApiAgent(
+            AgentComponentProvider agentComponentProvider,
+            LegacyAgentStrategyInterface strategyProvider) {
         super(agentComponentProvider.getCredentialsRequest(), agentComponentProvider.getContext());
 
         credentials = request.getCredentials();
+        strategy = strategyProvider.getLegacyHttpClientStrategy();
         client = createClient();
         catalog = context.getCatalog();
         transferMessageFormatter =
@@ -310,7 +321,7 @@ public class SEBApiAgent extends AbstractAgent
                         catalog,
                         TRANSFER_MESSAGE_LENGTH_CONFIG,
                         new StringNormalizerSwedish("#%*+=$@©£·…~_-/:;()&@\".,?!\'"));
-        sebBaseApiClient = new SebBaseApiClient(client, URI::create);
+        sebBaseApiClient = new SebBaseApiClient(client, strategyProvider.getLegacyHostStrategy());
     }
 
     /**
@@ -898,7 +909,7 @@ public class SEBApiAgent extends AbstractAgent
 
             config.getProperties().put(CoreConnectionPNames.SO_TIMEOUT, 30000);
 
-            return clientFactory.createCustomClient(context.getLogOutputStream(), config);
+            return strategy.apply(config);
         } catch (Exception e) {
             log.error("Caught exception while creating client", e);
             return null;
