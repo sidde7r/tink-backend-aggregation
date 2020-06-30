@@ -116,7 +116,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         UkOpenBankingClientConfigurationAdapter ukOpenBankingConfiguration =
                 getAgentConfiguration().getProviderSpecificConfiguration();
 
-        softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertion();
+        softwareStatement = ukOpenBankingConfiguration.getSoftwareStatementAssertions();
 
         providerConfiguration = ukOpenBankingConfiguration.getProviderConfiguration();
 

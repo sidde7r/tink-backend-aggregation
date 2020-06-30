@@ -86,7 +86,7 @@ public class UkOpenBankingConfiguration implements UkOpenBankingClientConfigurat
     }
 
     @Override
-    public SoftwareStatementAssertion getSoftwareStatementAssertion() {
+    public SoftwareStatementAssertion getSoftwareStatementAssertions() {
         return new SoftwareStatementAssertion(softwareStatementAssertion, softwareId);
     }
 

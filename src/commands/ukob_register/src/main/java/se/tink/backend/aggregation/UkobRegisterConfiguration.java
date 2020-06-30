@@ -41,7 +41,7 @@ public class UkobRegisterConfiguration implements UkOpenBankingClientConfigurati
     }
 
     @Override
-    public SoftwareStatementAssertion getSoftwareStatementAssertion() {
+    public SoftwareStatementAssertion getSoftwareStatementAssertions() {
         return softwareStatement.getAssertion();
     }
 

@@ -62,7 +62,7 @@ public class DanskebankConfiguration implements UkOpenBankingClientConfiguration
     }
 
     @Override
-    public SoftwareStatementAssertion getSoftwareStatementAssertion() {
+    public SoftwareStatementAssertion getSoftwareStatementAssertions() {
         return new SoftwareStatementAssertion(softwareStatementAssertion, softwareId);
     }
 
