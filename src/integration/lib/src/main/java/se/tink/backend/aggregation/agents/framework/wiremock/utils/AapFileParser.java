@@ -32,9 +32,9 @@ public class AapFileParser implements RequestResponseParser {
     public ImmutableSet<Pair<HTTPRequest, HTTPResponse>> parseRequestResponsePairs() {
 
         List<Integer> requestStartIndices =
-                findLineIndicesContainingGivenExpression(lines, "REQUEST");
+                findLineIndicesStartingWithExpression(lines, "REQUEST ");
         List<Integer> responseStartIndices =
-                findLineIndicesContainingGivenExpression(lines, "RESPONSE");
+                findLineIndicesStartingWithExpression(lines, "RESPONSE ");
         Set<Pair<HTTPRequest, HTTPResponse>> pairs = new HashSet<>();
         int totalPairAmount = requestStartIndices.size();
         for (int currentPairIndex = 0; currentPairIndex < totalPairAmount; currentPairIndex++) {
@@ -55,10 +55,10 @@ public class AapFileParser implements RequestResponseParser {
         return ImmutableSet.copyOf(pairs);
     }
 
-    private List<Integer> findLineIndicesContainingGivenExpression(
+    private List<Integer> findLineIndicesStartingWithExpression(
             List<String> lines, String searchedExpression) {
         return lines.stream()
-                .filter(line -> line.contains(searchedExpression))
+                .filter(line -> line.startsWith(searchedExpression))
                 .map(lines::indexOf)
                 .collect(Collectors.toList());
     }
