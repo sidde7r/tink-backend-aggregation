@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class SebResultInfoMessageTest {
 
@@ -28,5 +29,23 @@ public class SebResultInfoMessageTest {
         ResultInfoMessage resultInfoMessage =
                 SerializationUtils.deserializeFromString(source, ResultInfoMessage.class);
         Assert.assertEquals("PCB046H", resultInfoMessage.getErrorCode());
+    }
+
+    @Test
+    public void testSignableStatus() {
+        String source =
+                "{\n"
+                        + "  \"TableName\": null,\n"
+                        + "  \"ErrorRowId\": 0,\n"
+                        + "  \"ErrorColumnName\": \"KONTO_NR          \",\n"
+                        + "  \"Level\": \"2\",\n"
+                        + "  \"ErrorCode\": \"PCB03H6\",\n"
+                        + "  \"ErrorText\": \"Bankgirokontot accepterar inte OCR-nummer. Skriv in valfritt meddelande i mottagarmeddelande under meddelandetyp.                 \"\n"
+                        + "}";
+        ResultInfoMessage resultInfoMessage =
+                SerializationUtils.deserializeFromString(source, ResultInfoMessage.class);
+        Assert.assertEquals(
+                SignableOperationStatuses.CANCELLED,
+                resultInfoMessage.getSignableOperationStatus());
     }
 }

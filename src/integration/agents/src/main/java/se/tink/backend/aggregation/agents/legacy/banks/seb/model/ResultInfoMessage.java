@@ -20,6 +20,9 @@ public class ResultInfoMessage {
                     .put(
                             "PCB049H",
                             "Transfer Validation: Please change expiration date. Choose a day that is a weekday")
+                    .put(
+                            "PCB03H6",
+                            "The bank giro account does not accept OCR numbers. Enter any message in the recipient message under message type.")
                     .put("PCB03G0", "Transfer validation: The user does not have enough money")
                     .put("PCB03K1", "Transfer validation: The destination account is not correct")
                     .put(
