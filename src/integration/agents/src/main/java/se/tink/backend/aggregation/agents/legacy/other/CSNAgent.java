@@ -123,8 +123,9 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
 
         String initLoginPage = get("https://tjanster.csn.se/bas/inloggning/pinkod.do");
 
-        Preconditions.checkState(
-                initLoginPage.contains("Fyll i ditt personnummer samt din personliga kod"));
+        if (!initLoginPage.contains("Fyll i ditt personnummer samt din personliga kod")) {
+            throw BankServiceError.NO_BANK_SERVICE.exception();
+        }
 
         String loginResponse =
                 post("https://tjanster.csn.se/bas/inloggning/Pinkod.do", new LoginForm());
@@ -170,7 +171,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
     private void checkBankSideError() throws BankServiceException {
         String csnResp = get("https://www.csn.se/");
         if (csnResp.contains("Tekniska problem i våra e-tjänster")) {
-            throw new BankServiceException(BankServiceError.BANK_SIDE_FAILURE);
+            throw new BankServiceException(BankServiceError.NO_BANK_SERVICE);
         }
     }
 
