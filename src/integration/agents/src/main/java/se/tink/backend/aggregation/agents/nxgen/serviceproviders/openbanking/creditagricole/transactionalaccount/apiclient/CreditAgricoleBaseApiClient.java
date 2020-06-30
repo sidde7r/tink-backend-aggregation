@@ -86,6 +86,7 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
         return getTrustedBeneficiaries(BENEFICIARIES_PATH);
     }
 
+    @Override
     public Optional<GetTrustedBeneficiariesResponse> getTrustedBeneficiaries(String path) {
         return getTrustedBeneficiaries(new URL(configuration.getBaseUrl() + BASE_PATH + path));
     }

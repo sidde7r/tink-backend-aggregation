@@ -46,3 +46,27 @@ RESPONSE 4
 Content-Type: application/json
 
 {"transactions":[{"resourceId":"DUMMY_RESOURCE_ID_2","transactionAmount":{"currency":"EUR","amount":"13.25"},"creditDebitIndicator":"CRDT","status":"BOOK","bookingDate":"2018-02-12","remittanceInformation":{"unstructured":["SEPA CREDIT TRANSFER from PSD2Company"]}}],"_links":{"self":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2"},"parent-list":{"href":"/cm/stet-psd2-api/v1/accounts"},"balances":{"href":"v1/accounts/DUMMY_RESOURCE_ID/balances"},"last":{"href":"/cm/stet-psd2-api/v1/accounts/DUMMY_RESOURCE_ID/transactions?page=2"},"next":null}}
+
+REQUEST 5
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/trusted-beneficiaries
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 5 SET BENEFICIARIES_FIRST_PAGE_LOADED
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"id":"DUMMY_ID_1","isTrusted":true,"creditorAccount":{"iban":"FR7612548029981234567890161"},"creditorAgent":{"bicFi":"AXUBFRPP"},"creditor":{"name":"DUMMY_NAME","postalAddress":null}}],"_links":{"self":{"href":"/trusted-beneficiaries","templated":false},"parent-list":null,"first":null,"last":null,"next":{"href":"/trusted-beneficiaries?page=2","templated":true},"prev":null}}
+
+REQUEST 6 MATCH BENEFICIARIES_FIRST_PAGE_LOADED
+GET https://oauth2-apisi.e-i.com/cm/stet-psd2-api/v1/trusted-beneficiaries?page=2
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 6
+200
+Content-Type: application/json
+
+{"beneficiaries":[{"id":"DUMMY_ID_2","isTrusted":true,"creditorAccount":{"iban":"FR7610278001110002007680247"},"creditorAgent":{"bicFi":"AXUBFRPP"},"creditor":{"name":"DUMMY_NAME","postalAddress":null}}],"_links":{"self":{"href":"/trusted-beneficiaries","templated":false},"parent-list":null,"first":null,"last":null,"next":null,"prev":{"href":"/trusted-beneficiaries","templated":false}}}

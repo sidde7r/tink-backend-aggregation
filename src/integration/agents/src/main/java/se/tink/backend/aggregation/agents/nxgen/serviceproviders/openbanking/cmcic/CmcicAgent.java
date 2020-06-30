@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic;
 
+import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.apiclient.CmcicApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.CmcicAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
@@ -15,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.CmcicTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.converter.CmcicTransactionalAccountConverter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transfer.CmcicTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicCodeChallengeProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicDigestProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.provider.CmcicSignatureProvider;
@@ -31,43 +36,45 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 public abstract class CmcicAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
-                RefreshIdentityDataExecutor {
+                RefreshIdentityDataExecutor,
+                RefreshTransferDestinationExecutor {
 
     private final CmcicApiClient apiClient;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final AgentConfiguration<CmcicConfiguration> agentConfiguration;
-    private final CmcicConfiguration cmcicConfiguration;
     private final CmcicIdentityDataFetcher cmcicIdentityDataFetcher;
+    private final TransferDestinationRefreshController transferDestinationRefreshController;
 
     public CmcicAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
         super(componentProvider);
 
-        agentConfiguration =
+        this.agentConfiguration =
                 getAgentConfigurationController().getAgentConfiguration(CmcicConfiguration.class);
-        cmcicConfiguration = agentConfiguration.getProviderSpecificConfiguration();
 
         final CmcicSignatureProvider signatureProvider = new CmcicSignatureProvider(qsealcSigner);
         final CmcicDigestProvider digestProvider = new CmcicDigestProvider();
         final CmcicCodeChallengeProvider codeChallengeProvider = new CmcicCodeChallengeProvider();
 
-        apiClient =
+        this.apiClient =
                 new CmcicApiClient(
-                        client,
-                        persistentStorage,
-                        sessionStorage,
-                        cmcicConfiguration,
+                        this.client,
+                        this.persistentStorage,
+                        this.sessionStorage,
+                        this.agentConfiguration.getProviderSpecificConfiguration(),
                         digestProvider,
                         signatureProvider,
                         codeChallengeProvider);
 
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
-        cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(apiClient);
+        this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+        this.cmcicIdentityDataFetcher = new CmcicIdentityDataFetcher(this.apiClient);
+        this.transferDestinationRefreshController = constructTransferDestinationRefreshController();
     }
 
     @Override
@@ -148,5 +155,15 @@ public abstract class CmcicAgent extends NextGenerationAgent
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return cmcicIdentityDataFetcher.response();
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return transferDestinationRefreshController.fetchTransferDestinations(accounts);
+    }
+
+    private TransferDestinationRefreshController constructTransferDestinationRefreshController() {
+        return new TransferDestinationRefreshController(
+                metricRefreshController, new CmcicTransferDestinationFetcher(apiClient));
     }
 }
