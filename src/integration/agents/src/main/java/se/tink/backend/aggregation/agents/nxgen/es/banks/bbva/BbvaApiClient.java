@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Head
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Url;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
@@ -78,18 +77,17 @@ public class BbvaApiClient {
         return loginResponse;
     }
 
-    public LoginResponse authorize(AuthorizeRequest authorizeRequest) {
+    public void sendOTP(LoginRequest loginRequest) {
         HttpResponse httpResponse =
                 client.request(BbvaConstants.Url.TICKET)
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header(Headers.CONSUMER_ID)
                         .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
-                        .post(HttpResponse.class, authorizeRequest);
+                        .post(HttpResponse.class, loginRequest);
         LoginResponse loginResponse = httpResponse.getBody(LoginResponse.class);
         setTsec(httpResponse.getHeaders().getFirst(HeaderKeys.TSEC_KEY));
         setUserId(loginResponse.getUser().getId());
-        return loginResponse;
     }
 
     public HttpResponse isAlive() {

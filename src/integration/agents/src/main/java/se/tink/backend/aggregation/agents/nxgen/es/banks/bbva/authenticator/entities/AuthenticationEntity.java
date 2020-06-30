@@ -31,14 +31,4 @@ public class AuthenticationEntity {
                 ? LoginParameter.AUTH_DATA_ID
                 : LoginParameter.OTP_DATA_ID;
     }
-
-    public AuthenticationEntity(String username, String otpCode, String multistepProcessId) {
-        this.userID = LoginParameter.USER_VALUE_PREFIX + username;
-        this.authenticationData =
-                Collections.singletonList(
-                        new AuthenticationDataEntity(otpCode, LoginParameter.OTP_DATA_ID));
-        this.multistepProcessId = multistepProcessId;
-        this.consumerID = LoginParameter.CONSUMER_ID;
-        this.authenticationType = LoginParameter.AUTH_OTP_TYPE;
-    }
 }
