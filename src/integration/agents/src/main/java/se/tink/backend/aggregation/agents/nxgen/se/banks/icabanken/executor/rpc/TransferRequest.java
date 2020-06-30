@@ -13,7 +13,7 @@ public class TransferRequest {
     private String recipientAccountNumber;
 
     @JsonProperty("Amount")
-    private double amount;
+    private String amount;
 
     @JsonProperty("RegistrationId")
     private String registrationId;
@@ -56,7 +56,7 @@ public class TransferRequest {
             String remittanceInformationValue,
             String typeOfPayment) {
         this.recipientAccountNumber = destinationAccount.getAccountNumber();
-        this.amount = transfer.getAmount().getValue();
+        this.amount = String.valueOf(transfer.getAmount().getValue());
         this.registrationId = null;
         this.memo = sourceMessage;
         this.fromAccountId = sourceAccount.getAccountId();
@@ -66,10 +66,13 @@ public class TransferRequest {
         this.eventId = null;
         this.type = typeOfPayment;
         this.dueDate = IcaBankenExecutorUtils.getDueDate(transfer);
+
         if (IcaBankenConstants.Transfers.BANK_TRANSFER.equalsIgnoreCase(typeOfPayment)) {
             this.referenceType = null;
             this.recipientType = typeOfPayment;
         } else {
+            this.recipientType = destinationAccount.getType();
+
             // TODO: these 3 lines + method should be removed after customers start using only RI
             if (transfer.getRemittanceInformation().getType() == null) {
                 IcaBankenExecutorUtils.validateAndSetRemittanceInformationType(transfer);
