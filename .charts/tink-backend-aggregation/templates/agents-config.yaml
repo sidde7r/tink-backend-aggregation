@@ -95,9 +95,6 @@ data:
         {{- if $featureFlagsConfig.beProxy }}
           beProxy: {{ $featureFlagsConfig.beProxy | default false }}
         {{- end }}
-        {{- if $featureFlagsConfig.resetSuplementalInformation }}
-          resetSuplementalInformation: {{ $featureFlagsConfig.resetSuplementalInformation | default false }}
-        {{- end }}
         {{- if $featureFlagsConfig.createBeneficiary }}
           createBeneficiary: {{ $featureFlagsConfig.createBeneficiary | default false }}
         {{- end }}
