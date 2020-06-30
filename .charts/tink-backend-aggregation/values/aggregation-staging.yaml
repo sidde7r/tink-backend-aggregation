@@ -70,7 +70,6 @@ sendDataTrackingEvents: true
 featureFlags:
   esProxy: true
   beProxy: true
-  resetSuplementalInformation: true
   createBeneficiary: true
 
 providerConfigurationServiceConfiguration:

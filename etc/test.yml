@@ -16,7 +16,6 @@ agentsServiceConfiguration:
   featureFlags:
     beProxy: false
     esProxy: false
-    resetSuplementalInformation: false
   abnAmro:
     ignoreCreditCardErrors: false
     trustStore:

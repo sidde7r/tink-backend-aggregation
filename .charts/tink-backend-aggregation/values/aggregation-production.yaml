@@ -444,7 +444,6 @@ sendDataTrackingEvents: true
 featureFlags:
   esProxy: true
   beProxy: false
-  resetSuplementalInformation: false
   createBeneficiary: true
 
 providerConfigurationServiceConfiguration:
