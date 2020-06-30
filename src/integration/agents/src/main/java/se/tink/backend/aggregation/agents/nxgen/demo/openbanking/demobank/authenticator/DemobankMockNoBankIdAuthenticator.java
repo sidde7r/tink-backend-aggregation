@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
-public class DemobankNoBankIdAuthenticator implements BankIdAuthenticatorNO {
-    public DemobankNoBankIdAuthenticator(DemobankApiClient apiClient) {
+public class DemobankMockNoBankIdAuthenticator implements BankIdAuthenticatorNO {
+    public DemobankMockNoBankIdAuthenticator(DemobankApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

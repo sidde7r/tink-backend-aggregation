@@ -8,11 +8,13 @@ public class CreateTicketRequest {
     private String username;
     private String password;
     private String returnUri;
+    private String state;
 
-    public CreateTicketRequest(String username, String password, String returnUri) {
+    public CreateTicketRequest(String username, String password, String returnUri, String state) {
         this.username = username;
         this.password = password;
         this.returnUri = returnUri;
+        this.state = state;
     }
 
     public String getUsername() {
@@ -27,15 +29,7 @@ public class CreateTicketRequest {
         return returnUri;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setReturnUri(String returnUri) {
-        this.returnUri = returnUri;
+    public String getState() {
+        return state;
     }
 }

@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
-public class DemobankDkNemIdReAuthenticator
+public class DemobankMockDkNemIdReAuthenticator
         extends NemIdCodeAppAuthenticator<NemIdGenerateCodeResponse> implements AutoAuthenticator {
 
     private final DemobankApiClient apiClient;
@@ -36,7 +36,7 @@ public class DemobankDkNemIdReAuthenticator
     private static final String PSK_CHALLENGE_ENTITY = "challengeEntity";
     private static final String PSK_LOGIN_ENTITY = "loginEntity";
 
-    public DemobankDkNemIdReAuthenticator(
+    public DemobankMockDkNemIdReAuthenticator(
             DemobankApiClient apiClient,
             TinkHttpClient client,
             PersistentStorage persistentStorage,

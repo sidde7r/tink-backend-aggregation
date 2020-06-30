@@ -28,21 +28,28 @@ public class DemobankAppToAppAuthenticator
     private final String username;
     private final String password;
     private final String callbackUri;
+    private final String state;
 
     private CreateTicketResponse createTicketResponse = null;
 
     public DemobankAppToAppAuthenticator(
-            DemobankApiClient apiClient, String username, String password, String callbackUri) {
+            DemobankApiClient apiClient,
+            String username,
+            String password,
+            String callbackUri,
+            String state) {
         this.apiClient = apiClient;
         this.username = username;
         this.password = password;
         this.callbackUri = callbackUri;
+        this.state = state;
     }
 
     @Override
     public ThirdPartyAppResponse<CreateTicketResponse> init() {
         this.createTicketResponse =
-                apiClient.initAppToApp(new CreateTicketRequest(username, password, callbackUri));
+                apiClient.initAppToApp(
+                        new CreateTicketRequest(username, password, callbackUri, state));
 
         return new ThirdPartyAppResponse<CreateTicketResponse>() {
             @Override
@@ -101,7 +108,6 @@ public class DemobankAppToAppAuthenticator
 
                 @Override
                 public CreateTicketResponse getReference() {
-                    reference.setToken(response.getToken());
                     return reference;
                 }
             };
@@ -114,13 +120,13 @@ public class DemobankAppToAppAuthenticator
 
         Ios ios = new Ios();
         ios.setAppScheme("tink-demobank-auth");
-        ios.setAppStoreUrl("https://appstore.tink.com");
+        ios.setAppStoreUrl("https://demobank.production.global.tink.se/appstore");
         ios.setDeepLinkUrl(createTicketResponse.getDeeplinkUrl());
         payload.setIos(ios);
 
         Android android = new Android();
-        android.setIntent("intent");
-        android.setPackageName("packagename");
+        android.setIntent(createTicketResponse.getDeeplinkUrl());
+        android.setPackageName("com.tink.demobank.authenticator");
         payload.setAndroid(android);
 
         Desktop desktop = new Desktop();
