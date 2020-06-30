@@ -171,7 +171,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
     private void checkBankSideError() throws BankServiceException {
         String csnResp = get("https://www.csn.se/");
         if (csnResp.contains("Tekniska problem i våra e-tjänster")) {
-            throw new BankServiceException(BankServiceError.BANK_SIDE_FAILURE);
+            throw new BankServiceException(BankServiceError.NO_BANK_SERVICE);
         }
     }
 
