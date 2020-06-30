@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.IdentityDataV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.TransactionalAccountV31Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.transaction.AccountTransactionsV31Response;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.AccountTypeMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.IdentityDataMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardAccountMapper;
@@ -33,8 +34,8 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
     private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final PersistentStorage persistentStorage;
     private final LocalDateTimeSource localDateTimeSource;
-    private final CreditCardAccountMapper creditCardAccountMapper;
-    private final TransactionalAccountMapper transactionalAccountMapper;
+    private final AccountMapper<CreditCardAccount> creditCardAccountMapper;
+    private final AccountMapper<TransactionalAccount> transactionalAccountMapper;
 
     public UkOpenBankingV31Ais(
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
@@ -65,8 +66,8 @@ public class UkOpenBankingV31Ais implements UkOpenBankingAis {
             UkOpenBankingAisConfig ukOpenBankingAisConfig,
             PersistentStorage persistentStorage,
             LocalDateTimeSource localDateTimeSource,
-            CreditCardAccountMapper creditCardAccountMapper,
-            TransactionalAccountMapper transactionalAccountMapper) {
+            AccountMapper<CreditCardAccount> creditCardAccountMapper,
+            AccountMapper<TransactionalAccount> transactionalAccountMapper) {
 
         this.ukOpenBankingAisConfig = Preconditions.checkNotNull(ukOpenBankingAisConfig);
         this.persistentStorage = Preconditions.checkNotNull(persistentStorage);

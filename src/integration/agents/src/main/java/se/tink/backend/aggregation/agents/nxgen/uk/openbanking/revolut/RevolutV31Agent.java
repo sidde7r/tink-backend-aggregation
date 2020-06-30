@@ -14,6 +14,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UKOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.DefaultCreditCardBalanceMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountBalanceMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.transactionalaccounts.TransactionalAccountMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.revolut.RevolutConstants.Urls.V31;
 import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
@@ -25,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingLocalKeySignerModule.class)
 @AgentDependencyModulesForDecoupledMode(
@@ -69,7 +75,19 @@ public class RevolutV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV31Ais(aisConfig, persistentStorage, localDateTimeSource);
+        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
+        IdentifierMapper identifierMapper = new IdentifierMapper(valueExtractor);
+
+        return new UkOpenBankingV31Ais(
+                aisConfig,
+                persistentStorage,
+                localDateTimeSource,
+                new CreditCardAccountMapper(
+                        new DefaultCreditCardBalanceMapper(valueExtractor), identifierMapper),
+                new RevolutTransactionalAccountMapperDecorator(
+                        new TransactionalAccountMapper(
+                                new TransactionalAccountBalanceMapper(valueExtractor),
+                                identifierMapper)));
     }
 
     @Override
