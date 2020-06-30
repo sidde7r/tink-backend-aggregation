@@ -6,6 +6,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.context.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.operation.AgentWorkerCommand;
@@ -18,15 +19,18 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
 
     private String operationName;
     private ReportProviderMetricsAgentWorkerCommandState state;
+    private AgentWorkerMetricReporter metricReporter;
     private AgentWorkerCommandContext context;
 
     public ReportProviderMetricsAgentWorkerCommand(
             AgentWorkerCommandContext context,
             String operationName,
-            ReportProviderMetricsAgentWorkerCommandState state) {
+            ReportProviderMetricsAgentWorkerCommandState state,
+            AgentWorkerMetricReporter metricReporter) {
         this.context = context;
         this.operationName = operationName;
         this.state = state;
+        this.metricReporter = metricReporter;
     }
 
     private MetricId.MetricLabels constructProviderMetricLabels() {
@@ -112,5 +116,13 @@ public class ReportProviderMetricsAgentWorkerCommand extends AgentWorkerCommand 
         // Counts total executions finished. Useful when calculating relative errors from meters
         // above.
         state.getExecutionsMeters().get(providerMetricName).inc();
+
+        // Updates aggregated metrics - it's here since we want it to
+        // trace the same amount of calls as the above solution
+        try {
+            metricReporter.observe(context, operationName);
+        } catch (Exception e) {
+            log.warn("Could not update RealTimeBankMetrics", e);
+        }
     }
 }
