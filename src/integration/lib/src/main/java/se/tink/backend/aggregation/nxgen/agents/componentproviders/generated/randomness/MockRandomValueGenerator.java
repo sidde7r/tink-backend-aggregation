@@ -40,4 +40,9 @@ public class MockRandomValueGenerator implements RandomValueGenerator {
     public int generateRandomNumberInRange(int minimum, int maximum) {
         return minimum;
     }
+
+    @Override
+    public String generateUuidWithTinkTag() {
+        return getUUID().toString();
+    }
 }

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ra
 
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class RandomValueGeneratorImpl implements RandomValueGenerator {
 
@@ -27,5 +28,9 @@ public class RandomValueGeneratorImpl implements RandomValueGenerator {
 
     public int generateRandomNumberInRange(int minimum, int maximum) {
         return RandomUtils.generateRandomNumberInRange(minimum, maximum);
+    }
+
+    public String generateUuidWithTinkTag() {
+        return UUIDUtils.generateUuidWithTinkTag();
     }
 }
