@@ -107,6 +107,12 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isInvalidOcr() {
+        return HttpStatus.SC_BAD_REQUEST == httpStatus
+                && ErrorCodes.INVALID_OCR_ERROR_CODE.equalsIgnoreCase(error);
+    }
+
+    @JsonIgnore
     public boolean isBankServiceError() {
         return HttpStatus.SC_INTERNAL_SERVER_ERROR == httpStatus
                 && (isHysterixShortCircuited() || isUnexpectedError());
@@ -180,6 +186,9 @@ public class ErrorResponse {
         }
         if (isWrongToAccountLengthError()) {
             throw wrongToAccountLengthError();
+        }
+        if (isInvalidOcr()) {
+            throw wrongOcrError();
         }
     }
 
@@ -341,6 +350,13 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_TO_ACCOUNT_LENGTH)
                 .setEndUserMessage(EndUserMessage.INVALID_DESTINATION)
+                .build();
+    }
+
+    private TransferExecutionException wrongOcrError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(NordeaSEConstants.LogMessages.WRONG_OCR_MESSAGE)
+                .setEndUserMessage(EndUserMessage.INVALID_OCR)
                 .build();
     }
 }

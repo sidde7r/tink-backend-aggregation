@@ -289,6 +289,7 @@ public class NordeaSEConstants {
                 "Error from bank when trying to fetch details about payment outbox";
         public static final String WRONG_TO_ACCOUNT_LENGTH =
                 "Invalid destination account number, it is too long.";
+        public static final String WRONG_OCR_MESSAGE = "Error in reference number (OCR)";
     }
 
     public static class ProductName {
@@ -341,6 +342,7 @@ public class NordeaSEConstants {
         public static final String INVALID_PARAMETERS_FOR_PAYMENT =
                 "Invalid parameter(s) for payment";
         public static final String BESE1076 = "BESE1076".toLowerCase();
+        public static final String INVALID_OCR_ERROR_CODE = "BESE1009";
         public static final String OWN_MESSAGE_CONSTRAINTS =
                 "Own message must be between".toLowerCase();
         public static final String UNEXPECTED_EXECUTION_ERROR_CODE = "unexpected_execution_error";
