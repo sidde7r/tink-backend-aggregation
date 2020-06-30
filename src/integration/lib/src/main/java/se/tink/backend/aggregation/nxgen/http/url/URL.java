@@ -52,6 +52,10 @@ public final class URL {
         return Strings.isNullOrEmpty(query) ? queryParam : query + "&" + queryParam;
     }
 
+    public static URL of(String url) {
+        return new URL(url);
+    }
+
     public static String urlEncode(String value) {
         try {
             return URLEncoder.encode(value, "UTF-8");
