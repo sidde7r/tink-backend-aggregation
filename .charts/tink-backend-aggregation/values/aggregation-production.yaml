@@ -217,6 +217,8 @@ clients:
     aggregatorIdentifier: "Middelfart Sparekasse"
   nl-abnamro-testing:
     aggregatorIdentifier: "ABN AMRO"
+  nl-bunq-oauth2:
+    aggregatorIdentifier: "Bunq"
   no-68-nord-testing:
     aggregatorIdentifier: "Sparebank 68 Nord"
   no-aasen-sparebank:

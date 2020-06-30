@@ -9,11 +9,10 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.AuthenticationMethodResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.FinalizeAuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.InitAuthorizationResponse;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.sparkassen.authenticator.rpc.SelectAuthenticationMethodResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -81,7 +80,7 @@ class AuthenticatorTestData {
                             + "}",
                     ConsentResponse.class);
 
-    static final InitAuthorizationResponse INIT_AUTH_RESPONSE_NO_METHOD =
+    static final AuthenticationMethodResponse INIT_AUTH_RESPONSE_NO_METHOD =
             SerializationUtils.deserializeFromString(
                     "{\n"
                             + "    \"_links\": {\n"
@@ -96,9 +95,9 @@ class AuthenticatorTestData {
                             + "    \"scaMethods\": [],\n"
                             + "    \"scaStatus\": \"whatever\"\n"
                             + "}",
-                    InitAuthorizationResponse.class);
+                    AuthenticationMethodResponse.class);
 
-    static final InitAuthorizationResponse INIT_AUTH_RESPONSE_OK_ONE_METHOD =
+    static final AuthenticationMethodResponse INIT_AUTH_RESPONSE_OK_ONE_METHOD =
             SerializationUtils.deserializeFromString(
                     "{\n"
                             + "    \"_links\": {\n"
@@ -110,14 +109,12 @@ class AuthenticatorTestData {
                             + "        }\n"
                             + "    },\n"
                             + "    \"authorisationId\": \"1234567890\",\n"
-                            + "    \"scaMethods\": [\n"
-                            + "        {\n"
-                            + "            \"authenticationMethodId\": \"METHOD_1\",\n"
-                            + "            \"authenticationType\": \"PUSH_OTP\",\n"
-                            + "            \"authenticationVersion\": \"\",\n"
-                            + "            \"name\": \"pushTAN | METHOD_1\"\n"
-                            + "        }\n"
-                            + "    ],\n"
+                            + "    \"chosenScaMethod\": {\n"
+                            + "        \"authenticationMethodId\": \"METHOD_1\",\n"
+                            + "        \"authenticationType\": \"PUSH_OTP\",\n"
+                            + "        \"authenticationVersion\": \"\",\n"
+                            + "        \"name\": \"pushTAN | METHOD_1\"\n"
+                            + "    },\n"
                             + "    \"challengeData\": {\n"
                             + "        \"additionalInformation\": \"Bitte tragen Sie die TAN aus der pushTAN-App ein.\",\n"
                             + "        \"otpFormat\": \"integer\",\n"
@@ -125,9 +122,9 @@ class AuthenticatorTestData {
                             + "    },\n"
                             + "    \"scaStatus\": \"scaMethodSelected\"\n"
                             + "}",
-                    InitAuthorizationResponse.class);
+                    AuthenticationMethodResponse.class);
 
-    static final InitAuthorizationResponse INIT_AUTH_RESPONSE_OK_TWO_METHODS =
+    static final AuthenticationMethodResponse INIT_AUTH_RESPONSE_OK_TWO_METHODS =
             SerializationUtils.deserializeFromString(
                     "{\n"
                             + "    \"_links\": {\n"
@@ -155,9 +152,9 @@ class AuthenticatorTestData {
                             + "    ],\n"
                             + "    \"scaStatus\": \"psuAuthenticated\"\n"
                             + "}",
-                    InitAuthorizationResponse.class);
+                    AuthenticationMethodResponse.class);
 
-    static final SelectAuthenticationMethodResponse SELECT_AUTH_METHOD_OK =
+    static final AuthenticationMethodResponse SELECT_AUTH_METHOD_OK =
             SerializationUtils.deserializeFromString(
                     "{\n"
                             + "    \"_links\": {\n"
@@ -182,9 +179,9 @@ class AuthenticatorTestData {
                             + "    \"psuMessage\": \"Bitte tragen Sie die TAN aus der pushTAN-App ein.\",\n"
                             + "    \"scaStatus\": \"scaMethodSelected\"\n"
                             + "}",
-                    SelectAuthenticationMethodResponse.class);
+                    AuthenticationMethodResponse.class);
 
-    static final SelectAuthenticationMethodResponse SELECT_AUTH_METHOD_NO_CHALLENGE_DATA =
+    static final AuthenticationMethodResponse SELECT_AUTH_METHOD_NO_CHALLENGE_DATA =
             SerializationUtils.deserializeFromString(
                     "{\n"
                             + "    \"_links\": {\n"
@@ -204,7 +201,7 @@ class AuthenticatorTestData {
                             + "    \"psuMessage\": \"Bitte tragen Sie die TAN aus der pushTAN-App ein.\",\n"
                             + "    \"scaStatus\": \"scaMethodSelected\"\n"
                             + "}",
-                    SelectAuthenticationMethodResponse.class);
+                    AuthenticationMethodResponse.class);
 
     static final FinalizeAuthorizationResponse FINALIZE_AUTH_FAILED =
             SerializationUtils.deserializeFromString(

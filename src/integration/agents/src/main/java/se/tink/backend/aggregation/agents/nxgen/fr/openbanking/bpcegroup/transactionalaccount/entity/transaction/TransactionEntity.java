@@ -1,41 +1,49 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.transaction;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.Date;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.LocalDate;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.entity.common.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.utils.json.deserializers.LocalDateDeserializer;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class TransactionEntity {
 
     private String resourceId;
+
     private List<String> remittanceInformation;
+
     private AmountEntity transactionAmount;
-    private String creditDebitIndicator;
+
+    private CreditDebitIndicator creditDebitIndicator;
+
     private String entryReference;
-    private String status;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date bookingDate;
+    private TransactionStatus status;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date valueDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate bookingDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date transactionDate;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate valueDate;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate transactionDate;
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(transactionAmount.toTinkAmount())
+                .setAmount(getTinkAmount())
                 .setDate(bookingDate)
                 .setDescription(String.join(", ", remittanceInformation))
-                .setPending(isPending())
+                .setPending(status == TransactionStatus.PDNG)
                 .build();
     }
 
-    private boolean isPending() {
-        return TransactionStatus.PENDING.getStatus().equalsIgnoreCase(status);
+    private ExactCurrencyAmount getTinkAmount() {
+        final ExactCurrencyAmount tinkAmount = transactionAmount.toTinkAmount();
+        return creditDebitIndicator == CreditDebitIndicator.DBIT ? tinkAmount.negate() : tinkAmount;
     }
 }

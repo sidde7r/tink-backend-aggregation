@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup;
 
+import com.google.inject.Inject;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
+import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.BpceGroupAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.configuration.BpceGroupConfiguration;
@@ -16,18 +17,21 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transac
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.converter.BpceGroupTransactionalAccountConverter;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.eidassigner.QsealcSigner;
+import se.tink.backend.aggregation.eidassigner.module.QSealcSignerModuleRSASHA256;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponentProvider;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.StrongAuthenticationState;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 
+@AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public final class BpceGroupAgent extends NextGenerationAgent
         implements RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor {
 
@@ -36,18 +40,16 @@ public final class BpceGroupAgent extends NextGenerationAgent
     private final StrongAuthenticationState strongAuthenticationState;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
-    public BpceGroupAgent(
-            CredentialsRequest request,
-            AgentContext context,
-            AgentsServiceConfiguration agentsServiceConfiguration) {
-        super(request, context, agentsServiceConfiguration.getSignatureKeyPair());
+    @Inject
+    public BpceGroupAgent(AgentComponentProvider componentProvider, QsealcSigner qsealcSigner) {
+        super(componentProvider);
 
         final AgentConfiguration<BpceGroupConfiguration> agentConfiguration =
                 getAgentConfiguration();
         final BpceGroupConfiguration bpceGroupConfiguration =
                 agentConfiguration.getProviderSpecificConfiguration();
         final BpceGroupSignatureHeaderGenerator bpceGroupSignatureHeaderGenerator =
-                createSignatureHeaderGenerator(agentsServiceConfiguration, bpceGroupConfiguration);
+                createSignatureHeaderGenerator(qsealcSigner, bpceGroupConfiguration);
         final String redirectUrl = agentConfiguration.getRedirectUrl();
 
         this.bpceOAuth2TokenStorage = new BpceOAuth2TokenStorage(this.persistentStorage);
@@ -60,11 +62,15 @@ public final class BpceGroupAgent extends NextGenerationAgent
                         redirectUrl,
                         bpceGroupSignatureHeaderGenerator);
 
-        this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
-
-        this.client.setEidasProxy(agentsServiceConfiguration.getEidasProxy());
+        this.strongAuthenticationState = new StrongAuthenticationState(this.request.getAppUriId());
 
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+        client.setEidasProxy(configuration.getEidasProxy());
     }
 
     @Override
@@ -111,12 +117,10 @@ public final class BpceGroupAgent extends NextGenerationAgent
     }
 
     private BpceGroupSignatureHeaderGenerator createSignatureHeaderGenerator(
-            AgentsServiceConfiguration agentsServiceConfiguration,
-            BpceGroupConfiguration bpceGroupConfiguration) {
+            QsealcSigner qsealcSigner, BpceGroupConfiguration bpceGroupConfiguration) {
 
         final BpceGroupRequestSigner bpceGroupRequestSigner =
-                new BpceGroupRequestSigner(
-                        agentsServiceConfiguration.getEidasProxy(), getEidasIdentity());
+                new BpceGroupRequestSigner(qsealcSigner);
 
         return new BpceGroupSignatureHeaderGenerator(
                 bpceGroupConfiguration, bpceGroupRequestSigner);
@@ -144,6 +148,6 @@ public final class BpceGroupAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionPagePaginationController<>(transactionFetcher, 1)));
     }
 }
