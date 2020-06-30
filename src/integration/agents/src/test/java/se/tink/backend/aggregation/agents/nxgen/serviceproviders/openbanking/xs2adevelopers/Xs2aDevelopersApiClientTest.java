@@ -7,16 +7,25 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.*;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.*;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.*;
-import static se.tink.libraries.serialization.utils.SerializationUtils.*;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.CREATE_PAYMENT;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.GET_ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.POST_CONSENT;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.ApiServices.TOKEN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.OAUTH_TOKEN;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.StorageKeys.PIS_TOKEN;
+import static se.tink.libraries.serialization.utils.SerializationUtils.deserializeFromString;
 
+import com.google.common.collect.Lists;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.authenticator.rpc.PostConsentBody;
@@ -26,6 +35,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.TransactionsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.entities.TransactionsLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
@@ -33,6 +44,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -141,17 +153,26 @@ public class Xs2aDevelopersApiClientTest {
         // given
         URL url = new URL(BASE_URL + "/berlingroup/v1/accounts/1/transactions");
         GetTransactionsResponse getTransactionsResponse =
-                deserializeFromString(JSON_MOCK, GetTransactionsResponse.class);
+                Mockito.mock(GetTransactionsResponse.class);
+        List transactions = Lists.newArrayList(Mockito.mock(Transaction.class));
+        Mockito.when(getTransactionsResponse.toTinkTransactions()).thenReturn(transactions);
+        TransactionsLinksEntity linksEntity = Mockito.mock(TransactionsLinksEntity.class);
+        Mockito.when(linksEntity.getNext()).thenReturn(Optional.empty());
+        TransactionsEntity transactionsEntity = Mockito.mock(TransactionsEntity.class);
+        Mockito.when(transactionsEntity.getLinks()).thenReturn(linksEntity);
+        Mockito.when(getTransactionsResponse.getTransactions()).thenReturn(transactionsEntity);
         when(tinkHttpClient.request(url)).thenReturn(requestBuilder);
         when(requestBuilder.get(GetTransactionsResponse.class)).thenReturn(getTransactionsResponse);
         TransactionalAccount account = mock(TransactionalAccount.class);
         when(account.getApiIdentifier()).thenReturn("1");
 
         // when
-        GetTransactionsResponse result = apiClient.getTransactions(account, new Date(), new Date());
+        List<? extends Transaction> result =
+                apiClient.getTransactions(account, LocalDate.now(), LocalDate.now());
 
         // then
-        assertThat(result).isEqualTo(getTransactionsResponse);
+        Assert.assertTrue(result.size() == 1);
+        assertThat(result.get(0)).isEqualTo(getTransactionsResponse.toTinkTransactions().get(0));
         verify(tinkHttpClient).request(url);
         verifyNoMoreInteractions(tinkHttpClient);
     }

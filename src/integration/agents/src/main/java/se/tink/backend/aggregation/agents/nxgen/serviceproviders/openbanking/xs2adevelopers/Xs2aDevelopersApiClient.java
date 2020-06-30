@@ -3,7 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.CryptoUtils.getCodeChallenge;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.CryptoUtils.getCodeVerifier;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -29,6 +34,7 @@ import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -121,16 +127,26 @@ public class Xs2aDevelopersApiClient {
                 .get(GetBalanceResponse.class);
     }
 
-    public GetTransactionsResponse getTransactions(
-            TransactionalAccount account, Date fromDate, Date toDate) {
-        return createFetchingRequest(
+    public List<? extends Transaction> getTransactions(
+            TransactionalAccount account, LocalDate fromDate, LocalDate toDate) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        List<Transaction> fetchedTransactions = new LinkedList<>();
+        Optional<URL> transactionFetchUrl =
+                Optional.of(
                         new URL(configuration.getBaseUrl() + ApiServices.GET_TRANSACTIONS)
-                                .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier()))
-                .queryParam(
-                        QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
-                .get(GetTransactionsResponse.class);
+                                .parameter(IdTags.ACCOUNT_ID, account.getApiIdentifier()));
+        do {
+            GetTransactionsResponse response =
+                    createFetchingRequest(transactionFetchUrl.get())
+                            .queryParam(QueryKeys.DATE_FROM, dateFormatter.format(fromDate))
+                            .queryParam(QueryKeys.DATE_TO, dateFormatter.format(toDate))
+                            .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
+                            .get(GetTransactionsResponse.class);
+            fetchedTransactions.addAll(response.toTinkTransactions());
+            transactionFetchUrl =
+                    response.getTransactions().getLinks().getNext().map(next -> new URL(next));
+        } while (transactionFetchUrl.isPresent());
+        return fetchedTransactions;
     }
 
     public GetTransactionsResponse getCreditTransactions(

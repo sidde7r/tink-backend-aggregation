@@ -50,7 +50,10 @@ public class Xs2aDevelopersTransactionalAccountFetcher
             TransactionalAccount account, Date fromDate, Date toDate) {
         try {
             return PaginatorResponseImpl.create(
-                    apiClient.getTransactions(account, fromDate, toDate).toTinkTransactions());
+                    apiClient.getTransactions(
+                            account,
+                            new java.sql.Date(fromDate.getTime()).toLocalDate(),
+                            new java.sql.Date(toDate.getTime()).toLocalDate()));
         } catch (HttpResponseException e) {
             if (isNoMoreTransactionsAvailableToFetchException(e)) {
                 return PaginatorResponseImpl.createEmpty(false);
