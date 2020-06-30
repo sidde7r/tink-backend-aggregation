@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator;
 
 import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.MAX_CONSENT_VALIDITY_DAYS;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.AuthResult.PROMPT_FOR_TAN;
+import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.AuthResult.SML;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -68,7 +68,7 @@ public class DkbAuthenticator implements PasswordAuthenticator {
     private AuthResult authenticate2ndFactor(AuthResult previousResult)
             throws AuthenticationException {
         if (previousResult.isAuthenticationFinished()
-                && !PROMPT_FOR_TAN.equals(previousResult.getActionCode())) {
+                && !SML.equals(previousResult.getAuthTypeSelected())) {
             log.info(
                     "Authentication process is finished with returnCode: [{}]",
                     previousResult.getReturnCode());
@@ -95,7 +95,7 @@ public class DkbAuthenticator implements PasswordAuthenticator {
     private AuthResult provide2ndFactorCode(AuthResult previousResult)
             throws AuthenticationException {
         if (previousResult.isAuthenticationFinished()
-                && !PROMPT_FOR_TAN.equals(previousResult.getActionCode())) {
+                && !SML.equals(previousResult.getAuthTypeSelected())) {
             log.info(
                     "Authentication process is finished. Authentication result returnCode [{}] and actionCode [{}]",
                     previousResult.getReturnCode(),
@@ -103,8 +103,21 @@ public class DkbAuthenticator implements PasswordAuthenticator {
             return previousResult;
         }
         log.info("Authentication is not finished. Need to provide TAN code");
-        String code = supplementalDataProvider.getTanCode();
-        return authApiClient.submit2ndFactorTanCode(code);
+        return authApiClient.submit2ndFactorTanCode(getTanByAuthTypeSelected(previousResult));
+    }
+
+    private String getTanByAuthTypeSelected(AuthResult previousResult)
+            throws SupplementalInfoException {
+        if (SML.equals(previousResult.getAuthTypeSelected())
+                && previousResult.getChallenge().contains("#")) {
+            return previousResult
+                    .getChallenge()
+                    .substring(0, previousResult.getChallenge().indexOf("#"));
+        }
+        log.info(
+                "AuthTypeSelected is [{}], so TAN needs to be provided from external resource",
+                previousResult.getAuthTypeSelected());
+        return supplementalDataProvider.getTanCode();
     }
 
     private void getConsent() throws AuthenticationException {
