@@ -3,7 +3,9 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/fropenbanking/base",
         "//src/integration/amount",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/credentials:service",
         "//src/integration/identity_data",
         "//src/integration/lib",
@@ -34,6 +36,8 @@ java_library(
         "//third_party:javax_validation_validation_api",
         "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_apache_httpcomponents_httpcore",
         "@aggregation//:com_fasterxml_jackson_core_jackson_annotations",
+        "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

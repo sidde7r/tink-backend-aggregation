@@ -69,6 +69,7 @@ public class SocieteGeneraleApiClient implements FrAispApiClient {
         return getTrustedBeneficiaries(Urls.TRUSTED_BENEFICIARIES_PATH);
     }
 
+    @Override
     public Optional<TrustedBeneficiariesResponse> getTrustedBeneficiaries(String path) {
         return getTrustedBeneficiaries(new URL(AIS_BASE_URL + path));
     }

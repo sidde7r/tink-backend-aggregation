@@ -14,13 +14,15 @@ public final class CmcicConstants {
     }
 
     public static class Urls {
-        public static final String FETCH_ACCOUNTS_PATH = "stet-psd2-api/v1/accounts";
-        public static final String FETCH_END_USER_IDENTITY = "stet-psd2-api/v1/end-user-identity";
+        public static final String BASE_API_PATH = "stet-psd2-api/v1";
+        public static final String FETCH_ACCOUNTS_PATH = BASE_API_PATH + "/accounts";
+        public static final String FETCH_END_USER_IDENTITY = BASE_API_PATH + "/end-user-identity";
         public static final String TOKEN_PATH = "oauth2/token";
         public static final String FETCH_TRANSACTIONS_PATH =
-                "stet-psd2-api/v1/accounts/%s/transactions";
-        public static final String PAYMENT_REQUESTS = "stet-psd2-api/v1/payment-requests";
+                FETCH_ACCOUNTS_PATH + "/%s/transactions";
+        public static final String PAYMENT_REQUESTS = BASE_API_PATH + "/payment-requests";
         public static final String SUCCESS_REPORT_PATH = "?code=123&state=";
+        public static final String BENEFICIARIES_PATH = "/trusted-beneficiaries";
     }
 
     public static class StorageKeys {
@@ -77,7 +79,7 @@ public final class CmcicConstants {
         public static final String AUTHORIZATION_CODE = "authorization_code";
     }
 
-    public class DateFormat {
+    public static class DateFormat {
         public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
     }
 }
