@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginRequest {
     private AuthenticationEntity authentication;
 
-    public LoginRequest(String username, String password) {
-        this.authentication = new AuthenticationEntity(username, password);
+    public LoginRequest(String username, String password, String multistepProcessId) {
+        this.authentication = new AuthenticationEntity(username, password, multistepProcessId);
     }
 }

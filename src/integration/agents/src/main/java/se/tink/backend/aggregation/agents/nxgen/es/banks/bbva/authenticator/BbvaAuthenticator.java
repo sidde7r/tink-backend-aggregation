@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
@@ -38,17 +37,16 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
         String username = credentials.getField(CredentialKeys.USERNAME);
         String password = credentials.getField(CredentialKeys.PASSWORD);
         final LoginRequest loginRequest =
-                new LoginRequest(BbvaUtils.formatUsername(username), password);
+                new LoginRequest(BbvaUtils.formatUsername(username), password, null);
         try {
             LoginResponse loginResponse = apiClient.login(loginRequest);
             if (loginResponse
                     .getAuthenticationState()
                     .equalsIgnoreCase(AuthenticationStates.GO_ON)) {
                 String otpCode = supplementalInformationHelper.waitForOtpInput();
-                final AuthorizeRequest authorizeRequest =
-                        new AuthorizeRequest(
-                                username, otpCode, loginResponse.getMultistepProcessId());
-                LoginResponse authorizeResponse = apiClient.authorize(authorizeRequest);
+                final LoginRequest otpRequest =
+                        new LoginRequest(username, otpCode, loginResponse.getMultistepProcessId());
+                apiClient.sendOTP(otpRequest);
             }
 
         } catch (HttpResponseException ex) {
