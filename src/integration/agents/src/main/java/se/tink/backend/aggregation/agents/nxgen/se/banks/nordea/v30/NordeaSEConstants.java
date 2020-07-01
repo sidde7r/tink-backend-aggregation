@@ -290,6 +290,7 @@ public class NordeaSEConstants {
         public static final String WRONG_TO_ACCOUNT_LENGTH =
                 "Invalid destination account number, it is too long.";
         public static final String WRONG_OCR_MESSAGE = "Error in reference number (OCR)";
+        public static final String USER_UNAUTHORIZED_MESSAGE = "User not authorised to operation";
     }
 
     public static class ProductName {
@@ -348,6 +349,8 @@ public class NordeaSEConstants {
         public static final String UNEXPECTED_EXECUTION_ERROR_CODE = "unexpected_execution_error";
         public static final String UNEXPECTED_EXECUTION_ERROR =
                 "An unexpected execution error has occurred".toLowerCase();
+        public static final String USER_UNAUTHORIZED = "error_core_unauthorized";
+        public static final String USER_UNAUTHORIZED_MESSAGE = "User not authorised to operation";
     }
 
     public static class LogTags {
