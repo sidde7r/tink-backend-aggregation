@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider.AccessType;
+import se.tink.backend.agents.rpc.Provider.AuthenticationFlow;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.Demoba
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankAppToAppAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockDkNemIdReAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankMockNoBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAndOtpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.DemobankRedirectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.DemobankTransactionalAccountFetcher;
@@ -90,6 +92,10 @@ public class DemobankAgent extends NextGenerationAgent
                 && AccessType.OTHER.equals(provider.getAccessType())
                 && "DK".equals(provider.getMarket())) {
             return constructMockNemIdAuthenticator();
+        } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())
+                && AccessType.OPEN_BANKING.equals(provider.getAccessType())
+                && AuthenticationFlow.EMBEDDED.equals(provider.getAuthenticationFlow())) {
+            return constructPasswordAndOtpAuthenticator();
         } else if (CredentialsTypes.PASSWORD.equals(provider.getCredentialsType())) {
             return new PasswordAuthenticationController(
                     new DemobankPasswordAuthenticator(apiClient));
@@ -100,6 +106,13 @@ public class DemobankAgent extends NextGenerationAgent
         } else {
             throw new IllegalStateException("Invalid provider configuration");
         }
+    }
+
+    private Authenticator constructPasswordAndOtpAuthenticator() {
+        DemobankPasswordAndOtpAuthenticator authenticator =
+                new DemobankPasswordAndOtpAuthenticator(
+                        apiClient, supplementalInformationController);
+        return new AutoAuthenticationController(request, context, authenticator, authenticator);
     }
 
     private Authenticator constructMockNemIdAuthenticator() {

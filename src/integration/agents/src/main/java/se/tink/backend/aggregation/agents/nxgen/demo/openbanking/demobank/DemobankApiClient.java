@@ -12,6 +12,9 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.Demoba
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CollectTicketResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.a2a.rpc.CreateTicketResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.embeddedotp.EmbeddedChallengeResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.embeddedotp.EmbeddedCompleteResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.embeddedotp.EmbeddedRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdChallengeEntity;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.nemid.entities.NemIdEnrollEntity;
@@ -185,6 +188,23 @@ public class DemobankApiClient {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(CollectTicketResponse.class);
+    }
+
+    public EmbeddedChallengeResponse initEmbeddedOtp(String username, String password) {
+        EmbeddedRequest request = new EmbeddedRequest(username, password, null);
+        return createRequest(fetchBaseUrl().concat(Urls.EMBEDDED_OTP_COMMENCE))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(EmbeddedChallengeResponse.class, request);
+    }
+
+    public EmbeddedCompleteResponse completeEmbeddedOtp(
+            String username, String password, String otp) {
+        EmbeddedRequest request = new EmbeddedRequest(username, password, otp);
+        return createRequest(fetchBaseUrl().concat(Urls.EMBEDDED_OTP_COMPLETE))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(EmbeddedCompleteResponse.class, request);
     }
 
     public FetchAccountResponse fetchAccounts() {
