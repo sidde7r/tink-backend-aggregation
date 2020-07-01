@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient.BpceGroupApiClient;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.storage.BpceOAuth2TokenStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -23,30 +22,17 @@ public class BpceGroupAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-        final TokenResponse tokenResponse = bpceGroupApiClient.exchangeAuthorizationToken(code);
-
-        return convertResponseToOAuthToken(tokenResponse);
+        return bpceGroupApiClient.exchangeAuthorizationToken(code).toOauthToken();
     }
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        final TokenResponse tokenResponse = bpceGroupApiClient.exchangeRefreshToken(refreshToken);
-
-        return convertResponseToOAuthToken(tokenResponse);
+        return bpceGroupApiClient.exchangeRefreshToken(refreshToken).toOauthToken();
     }
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
         bpceOAuth2TokenStorage.storeToken(accessToken);
-    }
-
-    private static OAuth2Token convertResponseToOAuthToken(TokenResponse response) {
-
-        return OAuth2Token.create(
-                response.getTokenType(),
-                response.getAccessToken(),
-                response.getRefreshToken(),
-                response.getExpiresIn());
     }
 }

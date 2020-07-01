@@ -1,0 +1,41 @@
+REQUEST 1
+POST https://www.17515.live.api.89c3.com/stet/psd2/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+X-Aggregator: Tink Testing
+
+client_id=DUMMY_CLIENT_ID&grant_type=client_credentials&scope=pisp
+
+RESPONSE 1
+200
+Content-Type: application/json
+
+{"access_token":"DUMMY_ACCESS_TOKEN","token_type":"Bearer","expires_in":3599, "scope":"pisp"}
+
+REQUEST 2
+POST https://www.17515.live.api.89c3.com/stet/psd2/v1/payment-requests
+Accept: application/json
+Content-Type: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+{"numberOfTransactions":1,"initiatingParty":{"name":"TINK"},"paymentTypeInformation":{"serviceLevel":"SEPA"},"debtorAccount":{"iban":"23147001111111"},"beneficiary":{"creditor":{"name":"Payment Creditor"},"creditorAccount":{"iban":"04000469430924"}},"creditTransferTransaction":[{"remittanceInformation":["test"],"instructedAmount":{"amount":"1.0","currency":"EUR"}}]}
+
+RESPONSE 2
+200
+Content-Type: application/json
+
+{"appliedAuthenticationApproach":"REDIRECT","_links":{"consentApproval":{"href":"https://www.17515.live.api.89c3.com/89C3api/accreditation/v1/identificationPisp?paymentRequestRessourceId=paymentId&nonce=aa1o1Y3se1puwOPsipUz","templated":null}}}
+
+REQUEST 3
+GET https://www.17515.live.api.89c3.com/stet/psd2/v1/payment-requests/paymentId
+Accept: application/json
+X-Aggregator: Tink Testing
+Authorization: Bearer DUMMY_ACCESS_TOKEN
+
+RESPONSE 3
+200
+Content-Type: application/json
+
+{"paymentRequest":{"paymentTypeInformation":{"serviceLevel":"SEPA"},"debtorAccount":{"iban":"23147001111111"},"beneficiary":{"creditorAccount":{"iban":"04000469430924"}},"paymentInformationStatus":"ACSP","creditTransferTransaction":[{"instructedAmount":{"currency":"EUR","amount":"1.0"}}]}}
+

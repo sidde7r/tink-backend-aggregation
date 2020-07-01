@@ -145,7 +145,7 @@ public class NordeaSEConstants {
 
             addType("SE2000", "Girokapital Kfm", TransactionalAccountType.CHECKING);
             addType("SE2100", "Specialkonto", TransactionalAccountType.CHECKING);
-            addType("SE2200", "Sparkonto Företag", TransactionalAccountType.CHECKING);
+            addType("SE2200", "Sparkonto Företag", TransactionalAccountType.SAVINGS);
             addType("SE2300", "Koncern Plusgirokonto", TransactionalAccountType.CHECKING);
             addType("SE2311", "Koncern Toppkonto", TransactionalAccountType.CHECKING);
             addType("SE2312", "Koncern Samlingskto", TransactionalAccountType.CHECKING);
@@ -196,7 +196,7 @@ public class NordeaSEConstants {
 
             addType("SE6000", "Affärsgiro", TransactionalAccountType.SAVINGS);
             addType("SE6013", "Zb Företagskonto Sub Acc", TransactionalAccountType.SAVINGS);
-            addType("SE6100", "Plusgirokonto Ftg", TransactionalAccountType.SAVINGS);
+            addType("SE6100", "Plusgirokonto Företag", TransactionalAccountType.CHECKING);
             addType("SE6200", "Föreningsgiro", TransactionalAccountType.SAVINGS);
             addType("SE6300", "Pgkonto Förening", TransactionalAccountType.SAVINGS);
             addType("SE6600", "Plusgirokonto", TransactionalAccountType.SAVINGS);

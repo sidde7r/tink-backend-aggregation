@@ -3,26 +3,24 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetch
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaTestFixtures.createAccount1;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaTestFixtures.createAccount2;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaTestFixtures.createBeneficiaryAccount;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.BoursoramaTestFixtures.createGetTrustedBeneficiariesResponse;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestFixtures.createAccount1;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestFixtures.createAccount2;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.client.BoursoramaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.boursorama.fetcher.transfer.dto.TrustedBeneficiariesResponseDto;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestBase;
 import se.tink.libraries.account.AccountIdentifier;
 
-public class BoursoramaTransferDestinationFetcherTest {
+public class BoursoramaTransferDestinationFetcherTest extends FrTransferDestinationFetcherTestBase {
 
     private BoursoramaTransferDestinationFetcher boursoramaTransferDestinationFetcher;
 
@@ -64,14 +62,5 @@ public class BoursoramaTransferDestinationFetcherTest {
                 .containsExactlyInAnyOrder(identifier2, beneficiaryIdentifier);
         assertThat(getAccountIdentifiers(returnedResponse, account2))
                 .containsExactlyInAnyOrder(identifier1, beneficiaryIdentifier);
-    }
-
-    private static List<AccountIdentifier> getAccountIdentifiers(
-            TransferDestinationsResponse transferDestinationsResponse, Account account) {
-        return transferDestinationsResponse.getDestinations().get(account).stream()
-                .map(TransferDestinationPattern::getAccountIdentifier)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
     }
 }

@@ -11,7 +11,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.ACCOUNT_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.AUTH_CODE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.BASE_URL;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.BENEFICIARIES_2ND_PAGE_PATH;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.CLIENT_ID;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.DATE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.PSU_IP_ADDR;
@@ -20,6 +19,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.STRING_DATE;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.createTokenResponse;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleTestFixtures.createTransactionsResponse;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestFixtures.BENEFICIARIES_2ND_PAGE_PATH;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,8 +35,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.entities.AccountIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.PutConsentsRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -200,16 +200,16 @@ public class CreditAgricoleBaseApiClientTest {
     public void shouldGetBeneficiariesFirstPage() {
         // given
         final HttpResponse httpResponseMock = mock(HttpResponse.class);
-        final GetTrustedBeneficiariesResponse expectedResponse =
-                mock(GetTrustedBeneficiariesResponse.class);
-        when(httpResponseMock.getBody(GetTrustedBeneficiariesResponse.class))
+        final TrustedBeneficiariesResponseDto expectedResponse =
+                mock(TrustedBeneficiariesResponseDto.class);
+        when(httpResponseMock.getBody(TrustedBeneficiariesResponseDto.class))
                 .thenReturn(expectedResponse);
         when(httpResponseMock.getStatus()).thenReturn(200);
 
         setUpHttpClientMockForApi(BENEFICIARIES_URL, httpResponseMock);
 
         // when
-        final Optional<GetTrustedBeneficiariesResponse> returnedResponse =
+        final Optional<TrustedBeneficiariesResponseDto> returnedResponse =
                 apiClient.getTrustedBeneficiaries();
 
         // then
@@ -221,9 +221,9 @@ public class CreditAgricoleBaseApiClientTest {
     public void shouldGetBeneficiariesSecondPage() {
         // given
         final HttpResponse httpResponseMock = mock(HttpResponse.class);
-        final GetTrustedBeneficiariesResponse expectedResponse =
-                mock(GetTrustedBeneficiariesResponse.class);
-        when(httpResponseMock.getBody(GetTrustedBeneficiariesResponse.class))
+        final TrustedBeneficiariesResponseDto expectedResponse =
+                mock(TrustedBeneficiariesResponseDto.class);
+        when(httpResponseMock.getBody(TrustedBeneficiariesResponseDto.class))
                 .thenReturn(expectedResponse);
         when(httpResponseMock.getStatus()).thenReturn(200);
 
@@ -231,7 +231,7 @@ public class CreditAgricoleBaseApiClientTest {
         setUpHttpClientMockForApi(url, httpResponseMock);
 
         // when
-        final Optional<GetTrustedBeneficiariesResponse> returnedResponse =
+        final Optional<TrustedBeneficiariesResponseDto> returnedResponse =
                 apiClient.getTrustedBeneficiaries(BENEFICIARIES_2ND_PAGE_PATH);
 
         // then
@@ -248,7 +248,7 @@ public class CreditAgricoleBaseApiClientTest {
         setUpHttpClientMockForApi(BENEFICIARIES_URL, httpResponseMock);
 
         // when
-        final Optional<GetTrustedBeneficiariesResponse> returnedResponse =
+        final Optional<TrustedBeneficiariesResponseDto> returnedResponse =
                 apiClient.getTrustedBeneficiaries();
 
         // then

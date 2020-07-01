@@ -104,10 +104,20 @@ public class FrOpenBankingPaymentExecutor implements PaymentExecutor, FetchableP
 
         CreatePaymentResponse paymentResponse = apiClient.createPayment(createPaymentRequest);
 
-        sessionStorage.put(
-                PAYMENT_AUTHORIZATION_URL, paymentResponse.getLinks().getAuthorizationUrl());
+        String authorizationUrl = paymentResponse.getLinks().getAuthorizationUrl();
+        sessionStorage.put(PAYMENT_AUTHORIZATION_URL, authorizationUrl);
 
-        return paymentResponse.toTinkPaymentResponse(creditor, debtor, amount, paymentType);
+        String paymentId = apiClient.findPaymentId(authorizationUrl);
+
+        return new PaymentResponse(
+                new Payment.Builder()
+                        .withUniqueId(paymentId)
+                        .withType(paymentType)
+                        .withCurrency(amount.getCurrency())
+                        .withExactCurrencyAmount(amount.toTinkAmount())
+                        .withCreditor(creditor.toTinkCreditor())
+                        .withDebtor(debtor.toTinkDebtor())
+                        .build());
     }
 
     @Override

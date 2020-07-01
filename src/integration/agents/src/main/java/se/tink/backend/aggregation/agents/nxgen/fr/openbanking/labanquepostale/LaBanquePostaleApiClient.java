@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Payload;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.c
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.identity.dto.EndUserIdentityResponseDto;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.rpc.TransactionResponse;
@@ -26,16 +29,19 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.eidassigner.QsealcSigner;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public final class LaBanquePostaleApiClient
-        extends BerlinGroupApiClient<LaBanquePostaleConfiguration> {
+public class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanquePostaleConfiguration>
+        implements FrAispApiClient {
 
     private final QsealcSigner qsealcSigner;
 
@@ -71,6 +77,12 @@ public final class LaBanquePostaleApiClient
     @Override
     public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
         return null;
+    }
+
+    public EndUserIdentityResponseDto getEndUserIdentity() {
+        return buildRequestWithSignature(
+                        getConfiguration().getBaseUrl() + Urls.FETCH_IDENTITY_DATA, "")
+                .get(EndUserIdentityResponseDto.class);
     }
 
     private RequestBuilder buildRequestWithSignature(final String url, final String payload) {
@@ -145,6 +157,24 @@ public final class LaBanquePostaleApiClient
                 .queryParam(BerlinGroupConstants.QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(BerlinGroupConstants.QueryKeys.STATE, state)
                 .getUrl();
+    }
+
+    @Override
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries() {
+        return getTrustedBeneficiaries(Urls.FETCH_TRUSTED_BENEFICIARIES);
+    }
+
+    @Override
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
+        final HttpResponse response =
+                buildRequestWithSignature(getConfiguration().getBaseUrl() + path, "")
+                        .get(HttpResponse.class);
+
+        if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(response.getBody(TrustedBeneficiariesResponseDto.class));
     }
 
     private void populateBalanceForAccount(AccountEntity accountBaseEntityWithHref) {

@@ -7,13 +7,15 @@ public final class LaBanquePostaleConstants {
     public static class Urls {
 
         public static final String OAUTH = "/authorize";
-        public static final String GET_TOKEN = "/token";
+        static final String GET_TOKEN = "/token";
         public static final String FETCH_ACCOUNTS = "/accounts";
-        public static final String FETCH_BALANCES = "/accounts/%s/balances";
+        static final String FETCH_BALANCES = "/accounts/%s/balances";
         public static final String FETCH_TRANSACTIONS = "/accounts/%s/transactions";
-        public static final String PAYMENT_INITIATION = "/payment-requests";
+        static final String FETCH_IDENTITY_DATA = "/end-user-identity";
+        static final String FETCH_TRUSTED_BENEFICIARIES = "/trusted-beneficiaries";
+        static final String PAYMENT_INITIATION = "/payment-requests";
         public static final String GET_PAYMENT = "/payment-requests/%s";
-        public static final String CONFIRM_PAYMENT = "/payment-requests/%s/confirmation";
+        static final String CONFIRM_PAYMENT = "/payment-requests/%s/confirmation";
     }
 
     public static class StorageKeys {
@@ -47,6 +49,6 @@ public final class LaBanquePostaleConstants {
     }
 
     public static class QueryValues {
-        public static final String SCORE = "aisp";
+        static final String SCORE = "aisp";
     }
 }

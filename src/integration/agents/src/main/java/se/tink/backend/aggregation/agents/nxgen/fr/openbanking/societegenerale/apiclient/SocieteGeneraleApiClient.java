@@ -18,9 +18,9 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.e
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transactionalaccount.rpc.TransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transfer.rpc.TrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2TokenBase;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -65,17 +65,17 @@ public class SocieteGeneraleApiClient implements FrAispApiClient {
     }
 
     @Override
-    public Optional<TrustedBeneficiariesResponse> getTrustedBeneficiaries() {
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries() {
         return getTrustedBeneficiaries(Urls.TRUSTED_BENEFICIARIES_PATH);
     }
 
     @Override
-    public Optional<TrustedBeneficiariesResponse> getTrustedBeneficiaries(String path) {
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
         return getTrustedBeneficiaries(new URL(AIS_BASE_URL + path));
     }
 
-    private Optional<TrustedBeneficiariesResponse> getTrustedBeneficiaries(URL url) {
-        return Optional.of(createRequest(url).get(TrustedBeneficiariesResponse.class));
+    private Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(URL url) {
+        return Optional.of(createRequest(url).get(TrustedBeneficiariesResponseDto.class));
     }
 
     private RequestBuilder createFirstRequest(String accountId) {

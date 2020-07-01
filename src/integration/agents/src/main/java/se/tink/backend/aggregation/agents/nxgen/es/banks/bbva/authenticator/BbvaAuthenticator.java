@@ -5,6 +5,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.AuthenticationStates;
@@ -59,10 +60,10 @@ public class BbvaAuthenticator implements MultiFactorAuthenticator {
         return CredentialsTypes.PASSWORD;
     }
 
-    private Exception mapHttpErrors(HttpResponseException e) {
+    private void mapHttpErrors(HttpResponseException e) throws LoginException {
         if (e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
-            return LoginError.INCORRECT_CREDENTIALS.exception();
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        return e;
+        throw e;
     }
 }
