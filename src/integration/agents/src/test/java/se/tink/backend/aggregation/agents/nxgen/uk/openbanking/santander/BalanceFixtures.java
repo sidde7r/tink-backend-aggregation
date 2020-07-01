@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.santander;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class BalanceFixtures {
+class BalanceFixtures {
 
     private static final String BALANCE_INTERIM_AVAILABLE =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"123.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"InterimAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
