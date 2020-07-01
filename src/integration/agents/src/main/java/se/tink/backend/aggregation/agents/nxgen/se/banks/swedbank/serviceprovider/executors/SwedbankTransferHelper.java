@@ -262,6 +262,7 @@ public class SwedbankTransferHelper {
         try {
             return Optional.of(apiClient.confirmSignNewRecipient(linkEntity));
         } catch (Exception e) {
+            log.warn("Exception when confirmSignNewRecipient", e);
             return Optional.empty();
         }
     }
