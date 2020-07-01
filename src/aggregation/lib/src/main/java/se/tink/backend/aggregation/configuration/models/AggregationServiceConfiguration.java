@@ -31,6 +31,9 @@ public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty private SqsQueueConfiguration sqsQueueConfiguration = new SqsQueueConfiguration();
 
     @JsonProperty
+    private ProviderTierConfiguration providerTierConfiguration = new ProviderTierConfiguration();
+
+    @JsonProperty
     private S3StorageConfiguration s3StorageConfiguration = new S3StorageConfiguration();
 
     @JsonProperty
@@ -113,6 +116,10 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public EndpointsConfiguration getEndpoints() {
         return endpoints;
+    }
+
+    public ProviderTierConfiguration getProviderTierConfiguration() {
+        return providerTierConfiguration;
     }
 
     public ProviderConfigurationServiceConfiguration

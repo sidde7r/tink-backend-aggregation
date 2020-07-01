@@ -1,0 +1,18 @@
+load("//tools/bzl:junit_old.bzl", "junit_test")
+
+junit_test(
+    name = "agent_metrics",
+    srcs = glob(["**/*.java"]),
+    deps = [
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/agent_metrics",
+        "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/context",
+        "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/libraries/metrics:collection",
+        "//src/libraries/metrics:core",
+        "//src/libraries/metrics:counters",
+        "//src/libraries/metrics:registry",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_mockito_mockito_core",
+    ],
+)

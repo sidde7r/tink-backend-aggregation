@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.CredentialsEventProducer;
@@ -34,6 +35,7 @@ import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.AbnAmroSpecificCase;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCommand;
@@ -106,6 +108,7 @@ public class AgentWorkerOperationFactory {
     private final DataTrackerEventProducer dataTrackerEventProducer;
     private final LoginAgentEventProducer loginAgentEventProducer;
     private final RefreshEventProducer refreshEventProducer;
+    private final ProviderTierConfiguration providerTierConfiguration;
     private final Predicate<Provider> shouldAddExtraCommands;
 
     // States
@@ -148,6 +151,7 @@ public class AgentWorkerOperationFactory {
             AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient,
             ManagedTppSecretsServiceClient tppSecretsServiceClient,
             InterProcessSemaphoreMutexFactory interProcessSemaphoreMutexFactory,
+            ProviderTierConfiguration providerTierConfiguration,
             @ShouldAddExtraCommands Predicate<Provider> shouldAddExtraCommands) {
         this.cacheClient = cacheClient;
 
@@ -176,6 +180,7 @@ public class AgentWorkerOperationFactory {
         this.agentDataAvailabilityTrackerClient = agentDataAvailabilityTrackerClient;
         this.tppSecretsServiceClient = tppSecretsServiceClient;
         this.interProcessSemaphoreMutexFactory = interProcessSemaphoreMutexFactory;
+        this.providerTierConfiguration = providerTierConfiguration;
         this.shouldAddExtraCommands = shouldAddExtraCommands;
     }
 
@@ -365,7 +370,11 @@ public class AgentWorkerOperationFactory {
                                         && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
-                        context, metricsName, reportMetricsAgentWorkerCommandState));
+                        context,
+                        metricsName,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(
+                                metricRegistry, this.providerTierConfiguration)));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
@@ -460,7 +469,11 @@ public class AgentWorkerOperationFactory {
                                         && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
-                        context, metricsName, reportMetricsAgentWorkerCommandState));
+                        context,
+                        metricsName,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(
+                                metricRegistry, this.providerTierConfiguration)));
 
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
@@ -633,7 +646,11 @@ public class AgentWorkerOperationFactory {
                                 !c.isWaitingOnConnectorTransactions()
                                         && !c.isSystemProcessingTransactions()),
                 new ReportProviderMetricsAgentWorkerCommand(
-                        context, operationName, reportMetricsAgentWorkerCommandState),
+                        context,
+                        operationName,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(
+                                metricRegistry, this.providerTierConfiguration)),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
@@ -687,7 +704,11 @@ public class AgentWorkerOperationFactory {
                         context,
                         c -> true), // is it enough to return true in this predicate?
                 new ReportProviderMetricsAgentWorkerCommand(
-                        context, operationName, reportMetricsAgentWorkerCommandState),
+                        context,
+                        operationName,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(
+                                metricRegistry, this.providerTierConfiguration)),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
                 new SendDataForProcessingAgentWorkerCommand( // todo @majid investigate if this is
                         // needed?
@@ -820,7 +841,11 @@ public class AgentWorkerOperationFactory {
                         context.getRequest(), controllerWrapper, clientInfo));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
-                        context, operation, reportMetricsAgentWorkerCommandState));
+                        context,
+                        operation,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(
+                                metricRegistry, this.providerTierConfiguration)));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
@@ -989,7 +1014,11 @@ public class AgentWorkerOperationFactory {
                                         && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
-                        context, metricsName, reportMetricsAgentWorkerCommandState));
+                        context,
+                        metricsName,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(
+                                metricRegistry, this.providerTierConfiguration)));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
@@ -1104,7 +1133,11 @@ public class AgentWorkerOperationFactory {
                                         && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
-                        context, operationMetricName, reportMetricsAgentWorkerCommandState));
+                        context,
+                        operationMetricName,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(
+                                metricRegistry, this.providerTierConfiguration)));
         commands.add(
                 new SendDataForProcessingAgentWorkerCommand(
                         context,
@@ -1300,7 +1333,8 @@ public class AgentWorkerOperationFactory {
                         instantiateAgentWorkerCommandState,
                         loginAgentWorkerCommandState,
                         loginAgentEventProducer,
-                        agentWorkerOperationState));
+                        agentWorkerOperationState,
+                        this.providerTierConfiguration));
     }
 
     private static String generateOrGetCorrelationId(String correlationId) {

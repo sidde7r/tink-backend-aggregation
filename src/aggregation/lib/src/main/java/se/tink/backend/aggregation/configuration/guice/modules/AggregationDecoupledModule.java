@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationDecoupledAapF
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.ProviderConfigurationServiceConfiguration;
+import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.configuration.models.configuration.S3StorageConfiguration;
 import se.tink.backend.aggregation.log.AggregationLoggerRequestFilter;
 import se.tink.backend.aggregation.resources.AggregationServiceResource;
@@ -191,6 +192,8 @@ public class AggregationDecoupledModule extends AbstractModule {
         bind(SqsQueueConfiguration.class)
                 .toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
         bind(AggregationServiceConfiguration.class).toInstance(configuration);
+        bind(ProviderTierConfiguration.class)
+                .toInstance(configuration.getProviderTierConfiguration());
         bind(AgentsServiceConfiguration.class)
                 .toInstance(configuration.getAgentsServiceConfiguration());
 

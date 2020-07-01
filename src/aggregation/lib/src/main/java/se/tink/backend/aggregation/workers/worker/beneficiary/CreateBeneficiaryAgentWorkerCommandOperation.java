@@ -8,11 +8,13 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.models.ProviderTierConfiguration;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.events.LoginAgentEventProducer;
 import se.tink.backend.aggregation.rpc.CreateBeneficiaryCredentialsRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
+import se.tink.backend.aggregation.workers.agent_metrics.AgentWorkerMetricReporter;
 import se.tink.backend.aggregation.workers.commands.CircuitBreakerAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CreateAgentConfigurationControllerWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.CreateBeneficiaryAgentWorkerCommand;
@@ -69,7 +71,8 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
             InstantiateAgentWorkerCommandState instantiateAgentWorkerCommandState,
             LoginAgentWorkerCommandState loginAgentWorkerCommandState,
             LoginAgentEventProducer loginAgentEventProducer,
-            AgentWorkerOperationState agentWorkerOperationState) {
+            AgentWorkerOperationState agentWorkerOperationState,
+            ProviderTierConfiguration providerTierConfiguration) {
         AgentWorkerCommandContext context =
                 new AgentWorkerCommandContext(
                         request,
@@ -119,7 +122,10 @@ public class CreateBeneficiaryAgentWorkerCommandOperation {
                                         && !agentContext.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
-                        context, metricsName, reportMetricsAgentWorkerCommandState));
+                        context,
+                        metricsName,
+                        reportMetricsAgentWorkerCommandState,
+                        new AgentWorkerMetricReporter(metricRegistry, providerTierConfiguration)));
         commands.add(
                 new CreateAgentConfigurationControllerWorkerCommand(
                         context, tppSecretsServiceClient));
