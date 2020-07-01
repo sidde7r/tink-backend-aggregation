@@ -8,16 +8,16 @@ public class LinksEntity {
 
     private Href scaStatus;
 
-    private Href scaRedirect;
-
     private Href status;
+
+    private Href startAuthorisationWithAuthenticationMethodSelection;
 
     public Href getScaStatus() {
         return scaStatus;
     }
 
     public Href getHrefEntity() {
-        return scaRedirect;
+        return startAuthorisationWithAuthenticationMethodSelection;
     }
 
     public Href getStatus() {
