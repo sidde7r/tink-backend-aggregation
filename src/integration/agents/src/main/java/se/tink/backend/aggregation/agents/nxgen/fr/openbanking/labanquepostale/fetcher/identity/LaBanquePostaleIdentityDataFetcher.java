@@ -16,7 +16,7 @@ public class LaBanquePostaleIdentityDataFetcher implements IdentityDataFetcher {
     public IdentityData fetchIdentityData() {
         final EndUserIdentityResponseDto endUserIdentityResponse = apiClient.getEndUserIdentity();
         return IdentityData.builder()
-                .setFullName(endUserIdentityResponse.getConnectedPsu())
+                .setFullName(endUserIdentityResponse.getConnectedPSU())
                 .setDateOfBirth(null)
                 .build();
     }
