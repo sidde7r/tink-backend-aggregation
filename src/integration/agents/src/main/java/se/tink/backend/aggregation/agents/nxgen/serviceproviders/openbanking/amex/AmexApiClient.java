@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.am
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -29,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class AmexApiClient {
     private final TinkHttpClient httpClient;
     private final AmexMacGenerator amexMacGenerator;
     private final ObjectMapper objectMapper;
-    private final SessionStorage sessionStorage;
+    private final TemporaryStorage temporaryStorage;
     private final HmacMultiTokenStorage hmacMultiTokenStorage;
     private boolean logout;
 
@@ -191,12 +190,11 @@ public class AmexApiClient {
         return transactionResponses;
     }
 
-    private URL buildTransactionsUrl(int limit, Date toDate) {
+    private URL buildTransactionsUrl(int limit, Date fromDate, Date toDate) {
         return new URL(AmericanExpressConstants.Urls.ENDPOINT_TRANSACTIONS)
                 .queryParam(
                         AmericanExpressConstants.QueryParams.QUERY_PARAM_START_DATE,
-                        getPreviousDate(
-                                toDate, 90)) // replace with fromDate when Amex supports pagination
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(
                         AmericanExpressConstants.QueryParams.QUERY_PARAM_END_DATE,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
@@ -211,7 +209,7 @@ public class AmexApiClient {
     private List<TransactionsResponseDto> fetchTransactionsWithGivenLimit(
             HmacToken hmacToken, int limit, Date fromDate, Date toDate) {
 
-        URL url = buildTransactionsUrl(limit, toDate);
+        URL url = buildTransactionsUrl(limit, fromDate, toDate);
 
         // fetching posted transactions
         List<LinkedHashMap<String, String>> postedObjects =
@@ -227,7 +225,7 @@ public class AmexApiClient {
                 mergeResponse(postedObjects, pendingObjects);
 
         // store the response to be used for account-specific mapping.
-        sessionStorage.put(
+        temporaryStorage.put(
                 AmericanExpressUtils.createAndGetStorageString(fromDate, toDate), mergedObjects);
 
         /* this workaround is necessary since the response from Amex cannot be directly mapped to a
@@ -252,12 +250,6 @@ public class AmexApiClient {
             mergedObjects.addAll(b);
         }
         return mergedObjects;
-    }
-
-    private String getPreviousDate(Date toDate, int offset) {
-        return LocalDate.parse(ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                .minusDays(offset)
-                .toString();
     }
 
     private <T> T sendRequestAndGetResponse(

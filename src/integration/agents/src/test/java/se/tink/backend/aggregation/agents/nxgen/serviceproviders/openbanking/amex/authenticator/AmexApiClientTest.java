@@ -28,7 +28,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -56,7 +55,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmexApiClientTest {
@@ -90,7 +89,7 @@ public class AmexApiClientTest {
 
         httpClientMock = mock(TinkHttpClient.class);
 
-        SessionStorage sessionStorage = mock(SessionStorage.class);
+        TemporaryStorage temporaryStorage = mock(TemporaryStorage.class);
 
         HmacMultiTokenStorage hmacMultiTokenStorage = mock(HmacMultiTokenStorage.class);
 
@@ -101,7 +100,7 @@ public class AmexApiClientTest {
                         httpClientMock,
                         amexMacGeneratorMock,
                         new ObjectMapper(),
-                        sessionStorage,
+                        temporaryStorage,
                         hmacMultiTokenStorage);
     }
 
@@ -315,11 +314,7 @@ public class AmexApiClientTest {
                         new URL(urlString)
                                 .queryParam(
                                         "start_date",
-                                        LocalDate.parse(
-                                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                                                new Date()))
-                                                .minusDays(90)
-                                                .toString())
+                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
                                 .queryParam(
                                         "end_date",
                                         ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
@@ -331,11 +326,7 @@ public class AmexApiClientTest {
                         new URL(urlString)
                                 .queryParam(
                                         "start_date",
-                                        LocalDate.parse(
-                                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(
-                                                                new Date()))
-                                                .minusDays(90)
-                                                .toString())
+                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
                                 .queryParam(
                                         "end_date",
                                         ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))

@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.TransactionDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.TransactionResponseFormatted;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.dto.TransactionsResponseDto;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.converter.AmexTransactionalAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIdStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.amex.transactionalaccount.storage.HmacAccountIds;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -26,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 @RequiredArgsConstructor
 public class AmexCreditCardTransactionFetcher
@@ -34,8 +33,7 @@ public class AmexCreditCardTransactionFetcher
 
     private final AmexApiClient amexApiClient;
     private final HmacAccountIdStorage hmacAccountIdStorage;
-    private final AmexTransactionalAccountConverter amexTransactionalAccountConverter;
-    private final SessionStorage sessionStorage;
+    private final TemporaryStorage temporaryStorage;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -84,7 +82,7 @@ public class AmexCreditCardTransactionFetcher
      */
     private List<TransactionsResponseDto> getStoredTransactions(Date fromDate, Date toDate) {
         List storedTransactions =
-                sessionStorage
+                temporaryStorage
                         .get(
                                 AmericanExpressUtils.createAndGetStorageString(fromDate, toDate),
                                 List.class)

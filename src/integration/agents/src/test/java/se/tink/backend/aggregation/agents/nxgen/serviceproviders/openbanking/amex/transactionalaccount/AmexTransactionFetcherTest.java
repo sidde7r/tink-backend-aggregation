@@ -35,7 +35,7 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdMo
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
@@ -54,15 +54,14 @@ public class AmexTransactionFetcherTest {
         amexApiClientMock = mock(AmexApiClient.class);
         hmacAccountIdStorageMock = mock(HmacAccountIdStorage.class);
         amexTransactionalAccountConverterMock = mock(AmexTransactionalAccountConverter.class);
-        SessionStorage sessionStorage = mock(SessionStorage.class);
+        TemporaryStorage temporaryStorage = mock(TemporaryStorage.class);
         ObjectMapper objectMapper = mock(ObjectMapper.class);
 
         amexTransactionFetcher =
                 new AmexCreditCardTransactionFetcher(
                         amexApiClientMock,
                         hmacAccountIdStorageMock,
-                        amexTransactionalAccountConverterMock,
-                        sessionStorage,
+                        temporaryStorage,
                         objectMapper);
     }
 
