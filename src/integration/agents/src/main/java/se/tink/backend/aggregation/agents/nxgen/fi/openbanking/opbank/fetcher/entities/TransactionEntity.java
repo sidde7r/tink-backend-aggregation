@@ -5,9 +5,8 @@ import com.google.common.base.Strings;
 import java.text.ParseException;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class TransactionEntity {
@@ -70,13 +69,12 @@ public class TransactionEntity {
     private String getDescription() {
         if (payer != null) {
             return payer.getName();
-        } else if (!Strings.isNullOrEmpty(message)) {
-            return message;
         } else if (recipient != null) {
             return recipient.getName();
-        } else {
-            return "";
+        } else if (!Strings.isNullOrEmpty(message)) {
+            return message;
         }
+        return "";
     }
 
     @JsonIgnore
@@ -85,7 +83,7 @@ public class TransactionEntity {
             return Transaction.builder()
                     .setDescription(getDescription())
                     .setDate(ThreadSafeDateFormat.FORMATTER_DAILY.parse(bookingDate))
-                    .setAmount(new Amount(currency, StringUtils.parseAmount(amount)))
+                    .setAmount(ExactCurrencyAmount.of(amount, currency))
                     .build();
         } catch (ParseException e) {
             throw new IllegalStateException("Parsing error with date");
