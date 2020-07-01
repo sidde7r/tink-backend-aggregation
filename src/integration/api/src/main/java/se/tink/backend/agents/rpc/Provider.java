@@ -25,10 +25,17 @@ public class Provider implements Cloneable {
         OTHER
     }
 
+    public enum AuthenticationFlow {
+        EMBEDDED,
+        REDIRECT,
+        DECOUPLED
+    }
+
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
 
     private AccessType accessType;
+    private AuthenticationFlow authenticationFlow;
     // Where in the aggregation structure the agent is placed - Format:
     // banks.se.alandsbanken.AlandsBankenAgent
     private String className;
@@ -60,6 +67,10 @@ public class Provider implements Cloneable {
 
     public AccessType getAccessType() {
         return accessType;
+    }
+
+    public AuthenticationFlow getAuthenticationFlow() {
+        return authenticationFlow;
     }
 
     public String getClassName() {
@@ -112,6 +123,10 @@ public class Provider implements Cloneable {
 
     public void setAccessType(AccessType accessType) {
         this.accessType = accessType;
+    }
+
+    public void setAuthenticationFlow(AuthenticationFlow authenticationFlow) {
+        this.authenticationFlow = authenticationFlow;
     }
 
     public void setClassName(String className) {
@@ -178,6 +193,11 @@ public class Provider implements Cloneable {
 
         provider.setAccessType(
                 Provider.AccessType.valueOf(providerConfiguration.getAccessType().name()));
+        if (providerConfiguration.getAuthenticationFlow() != null) {
+            provider.setAuthenticationFlow(
+                    Provider.AuthenticationFlow.valueOf(
+                            providerConfiguration.getAuthenticationFlow().name()));
+        }
         provider.setClassName(providerConfiguration.getClassName());
         provider.setCredentialsType(
                 CredentialsTypes.valueOf(providerConfiguration.getCredentialsType().name()));
