@@ -5,6 +5,8 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 
 public class RabobankConstants {
+    public static final String UUID_PATTERN =
+            "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
     public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
@@ -22,7 +24,6 @@ public class RabobankConstants {
     }
 
     public static class Consents {
-        public static final String PREFIX = "_ais.balances.read";
         public static final String EXPIRE = "expire";
         public static final String INVALID = "invalid";
         public static final String REVOKED_BY_USER = "revoked";
