@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -28,5 +29,11 @@ public class TargobankAgentTest {
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();
+    }
+
+    @AfterClass
+    public static void cleanup() {
+        ArgumentManager.afterClass();
+        ;
     }
 }

@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.contexts.EidasContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingClientConfigurationAdapter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.configuration.UkOpenBankingConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.DefaultTransferDestinationAccountsProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.NoOpTransferDestinationAccountsProvider;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.filter.ReAuthenticateFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
@@ -263,7 +263,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent
         return new TransferDestinationRefreshController(
                 metricRefreshController,
                 new UkOpenBankingTransferDestinationFetcher(
-                        new DefaultTransferDestinationAccountsProvider(),
+                        new NoOpTransferDestinationAccountsProvider(),
                         AccountIdentifier.Type.SORT_CODE,
                         SortCodeIdentifier.class));
     }
