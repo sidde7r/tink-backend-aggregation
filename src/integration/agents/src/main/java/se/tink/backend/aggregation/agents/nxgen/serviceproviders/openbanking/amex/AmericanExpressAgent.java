@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
         implements RefreshCreditCardAccountsExecutor {
@@ -49,6 +50,7 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
     private final CreditCardRefreshController creditCardRefreshController;
     private final ObjectMapper objectMapper;
     private final LocalDateTimeSource localDateTimeSource;
+    private final TemporaryStorage temporaryStorage;
 
     @VisibleForTesting @Getter private final HmacMultiTokenStorage hmacMultiTokenStorage;
 
@@ -70,6 +72,8 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
 
         this.objectMapper = new ObjectMapper();
 
+        this.temporaryStorage = new TemporaryStorage();
+
         this.amexApiClient =
                 new AmexApiClient(
                         amexConfiguration,
@@ -77,7 +81,7 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
                         this.client,
                         amexMacGenerator,
                         this.objectMapper,
-                        this.sessionStorage,
+                        temporaryStorage,
                         hmacMultiTokenStorage);
 
         this.strongAuthenticationState = new StrongAuthenticationState(request.getAppUriId());
@@ -149,8 +153,7 @@ public class AmericanExpressAgent extends SubsequentProgressiveGenerationAgent
                                 new AmexCreditCardTransactionFetcher(
                                         amexApiClient,
                                         hmacAccountIdStorage,
-                                        amexTransactionalAccountConverter,
-                                        sessionStorage,
+                                        temporaryStorage,
                                         this.objectMapper),
                                 0,
                                 90,

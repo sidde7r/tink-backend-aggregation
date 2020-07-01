@@ -55,7 +55,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.HmacToken;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AmexApiClientTest {
@@ -89,7 +89,7 @@ public class AmexApiClientTest {
 
         httpClientMock = mock(TinkHttpClient.class);
 
-        SessionStorage sessionStorage = mock(SessionStorage.class);
+        TemporaryStorage temporaryStorage = mock(TemporaryStorage.class);
 
         HmacMultiTokenStorage hmacMultiTokenStorage = mock(HmacMultiTokenStorage.class);
 
@@ -100,7 +100,7 @@ public class AmexApiClientTest {
                         httpClientMock,
                         amexMacGeneratorMock,
                         new ObjectMapper(),
-                        sessionStorage,
+                        temporaryStorage,
                         hmacMultiTokenStorage);
     }
 
