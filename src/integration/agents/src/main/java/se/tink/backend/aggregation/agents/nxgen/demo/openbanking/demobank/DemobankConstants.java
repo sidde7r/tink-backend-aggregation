@@ -24,6 +24,10 @@ public class DemobankConstants {
         public static final String DK_NEMID_ENROLL = "/auth/dk/mobilbank/nemid/inroll";
         public static final String DK_NEMID_LOGIN =
                 "/auth/dk/mobilbank/nemid/login_with_installid_prop";
+
+        // Embedded OTP
+        public static final String EMBEDDED_OTP_COMMENCE = "/api/auth/otplogin/commence";
+        public static final String EMBEDDED_OTP_COMPLETE = "/api/auth/otplogin/complete";
     }
 
     public static class QueryParams {

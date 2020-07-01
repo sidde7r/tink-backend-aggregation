@@ -29,9 +29,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @Slf4j
 public class TransactionalAccountMapper implements AccountMapper<TransactionalAccount> {
 
-    private static final String NO_IDENTIFIER_FOUND_LOG_MESSAGE_FORMAT =
-            "No valid id for account accountNickname: {}, accountDescription: {}, skipping";
-
     private final TransactionalAccountBalanceMapper balanceMapper;
     private final IdentifierMapper identifierMapper;
 
@@ -46,14 +43,6 @@ public class TransactionalAccountMapper implements AccountMapper<TransactionalAc
             Collection<AccountBalanceEntity> balances,
             Collection<IdentityDataV31Entity> parties) {
         List<AccountIdentifierEntity> accountIdentifiers = account.getIdentifiers();
-
-        if (accountIdentifiers.isEmpty()) {
-            log.debug(
-                    NO_IDENTIFIER_FOUND_LOG_MESSAGE_FORMAT,
-                    account.getNickname(),
-                    account.getDescription());
-            return Optional.empty();
-        }
 
         AccountIdentifierEntity primaryIdentifier =
                 identifierMapper.getTransactionalAccountPrimaryIdentifier(accountIdentifiers);
