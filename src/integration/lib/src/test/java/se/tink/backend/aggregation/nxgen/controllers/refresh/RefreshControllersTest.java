@@ -12,6 +12,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
@@ -48,6 +49,8 @@ public class RefreshControllersTest {
     @Mock private TransactionFetcher<CreditCardAccount> creditCardTransactionFetcher;
     @Mock private EInvoiceFetcher eInvoiceFetcher;
     @Mock private TransferDestinationFetcher transferDestinationFetcher;
+    @Mock private Provider provider;
+
     private List<Refresher> refreshers;
 
     private final List<TransactionalAccount> accounts =
@@ -91,7 +94,7 @@ public class RefreshControllersTest {
         Mockito.when(
                         transferDestinationFetcher.fetchTransferDestinationsFor(
                                 accounts.stream()
-                                        .map(a -> a.toSystemAccount(user))
+                                        .map(a -> a.toSystemAccount(user, provider))
                                         .collect(Collectors.toList())))
                 .thenReturn(transferDestinations);
         Mockito.when(eInvoiceFetcher.fetchEInvoices()).thenReturn(eInvoices);
