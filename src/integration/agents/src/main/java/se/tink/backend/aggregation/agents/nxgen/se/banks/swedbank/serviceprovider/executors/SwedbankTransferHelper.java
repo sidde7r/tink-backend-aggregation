@@ -282,6 +282,11 @@ public class SwedbankTransferHelper {
                 .orElseThrow(
                         () ->
                                 TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                                        .setMessage(
+                                                TransferExecutionException.EndUserMessage
+                                                        .NEW_RECIPIENT_FAILED
+                                                        .getKey()
+                                                        .get())
                                         .setEndUserMessage(
                                                 catalog.getString(
                                                         TransferExecutionException.EndUserMessage
