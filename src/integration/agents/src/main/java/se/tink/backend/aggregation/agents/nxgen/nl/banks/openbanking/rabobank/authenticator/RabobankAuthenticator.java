@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator;
 
+import com.google.common.base.Strings;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceErro
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Consents;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
@@ -121,15 +122,21 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         String consentId = null;
         final String[] words = scope.split(" ");
         for (String word : words) {
-            if (word.contains(Consents.PREFIX)) {
+            if (word.contains("_")) {
                 String parts[] = word.split("_");
-                consentId = parts[0];
-                break;
+                if (isUuid(parts[0])) {
+                    consentId = parts[0];
+                    break;
+                }
             }
         }
-        if (consentId.isEmpty()) {
+        if (Strings.isNullOrEmpty(consentId)) {
             throw BankServiceError.CONSENT_INVALID.exception("Missing consent ID.");
         }
         return consentId;
+    }
+
+    static boolean isUuid(String uuid) {
+        return uuid.matches(RabobankConstants.UUID_PATTERN);
     }
 }
