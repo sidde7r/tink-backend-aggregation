@@ -42,8 +42,8 @@ public class DemobankPasswordAndOtpAuthenticator
                 supplementalInformationController
                         .askSupplementalInformation(
                                 Field.builder()
-                                        .description(message)
-                                        .helpText("Please enter OTP code")
+                                        .description("OTP Code")
+                                        .helpText(message)
                                         .immutable(true)
                                         .masked(false)
                                         .name("otpinput")
