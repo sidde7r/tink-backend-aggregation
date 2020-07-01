@@ -19,17 +19,17 @@ public class AgentWorkerMetricReporter {
     private final ProviderTierConfiguration providerTierConfiguration;
 
     private enum Metric {
-        operationsTotal(MetricId.newId("aggregation_total_flows")),
-        operationsFailed(MetricId.newId("aggregation_failed_flows")),
-        operationsSuccessful(MetricId.newId("aggregation_successful_flows")),
+        operationsTotal(MetricId.newId("aggregation_total_operations")),
+        operationsFailed(MetricId.newId("aggregation_failed_operations")),
+        operationsSuccessful(MetricId.newId("aggregation_successful_operations")),
 
         marketsTotal(MetricId.newId("aggregation_total_market")),
         marketsFailed(MetricId.newId("aggregation_failed_market")),
         marketsSuccessful(MetricId.newId("aggregation_successful_market")),
 
-        marketsOperationsTotal(MetricId.newId("aggregation_total_market_operation")),
-        marketsOperationsFailed(MetricId.newId("aggregation_failed_market_operation")),
-        marketsOperationsSuccessful(MetricId.newId("aggregation_successful_operation")),
+        marketsOperationsTotal(MetricId.newId("aggregation_total_market_operations")),
+        marketsOperationsFailed(MetricId.newId("aggregation_failed_market_operations")),
+        marketsOperationsSuccessful(MetricId.newId("aggregation_successful_market_operations")),
 
         tierMarketsTotal(MetricId.newId("aggregation_total_market")),
         tierMarketsFailed(MetricId.newId("aggregation_failed_market")),
