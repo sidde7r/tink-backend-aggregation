@@ -14,8 +14,8 @@ import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegen
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.NEXT_PAGE_PATH;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.REDIRECT_URL;
 import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.SIGNATURE;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.createTrustedBeneficiariesPage1Response;
-import static se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleTestFixtures.createTrustedBeneficiariesPage2Response;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestFixtures.createTrustedBeneficiariesPage1Response;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestFixtures.createTrustedBeneficiariesPage2Response;
 
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
@@ -23,8 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.SocieteGeneraleConstants;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.configuration.SocieteGeneraleConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.fetcher.transfer.rpc.TrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.societegenerale.utils.SignatureHeaderProvider;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -69,13 +69,13 @@ public class SocieteGeneraleApiClientTest {
     @Test
     public void shouldGetTrustedBeneficiaries() {
         // given
-        final TrustedBeneficiariesResponse expectedResponse =
+        final TrustedBeneficiariesResponseDto expectedResponse =
                 createTrustedBeneficiariesPage1Response();
 
         setUpHttpClientMockForApi(TRUSTED_BENEFICIARIES_PATH, expectedResponse);
 
         // when
-        final Optional<TrustedBeneficiariesResponse> response =
+        final Optional<TrustedBeneficiariesResponseDto> response =
                 societeGeneraleApiClient.getTrustedBeneficiaries();
 
         // then
@@ -87,14 +87,14 @@ public class SocieteGeneraleApiClientTest {
     @Test
     public void shouldGetTrustedBeneficiariesNextPage() {
         // given
-        final TrustedBeneficiariesResponse expectedResponse =
+        final TrustedBeneficiariesResponseDto expectedResponse =
                 createTrustedBeneficiariesPage2Response();
         final URL nextPageUrl = new URL(AIS_BASE_URL + NEXT_PAGE_PATH);
 
         setUpHttpClientMockForApi(nextPageUrl, expectedResponse);
 
         // when
-        final Optional<TrustedBeneficiariesResponse> response =
+        final Optional<TrustedBeneficiariesResponseDto> response =
                 societeGeneraleApiClient.getTrustedBeneficiaries(NEXT_PAGE_PATH);
 
         // then

@@ -19,9 +19,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cre
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.EndUserIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.GetTrustedBeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.rpc.PutConsentsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDto;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
@@ -82,23 +82,23 @@ public class CreditAgricoleBaseApiClient implements FrAispApiClient {
     }
 
     @Override
-    public Optional<GetTrustedBeneficiariesResponse> getTrustedBeneficiaries() {
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries() {
         return getTrustedBeneficiaries(BENEFICIARIES_PATH);
     }
 
     @Override
-    public Optional<GetTrustedBeneficiariesResponse> getTrustedBeneficiaries(String path) {
+    public Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(String path) {
         return getTrustedBeneficiaries(new URL(configuration.getBaseUrl() + BASE_PATH + path));
     }
 
-    private Optional<GetTrustedBeneficiariesResponse> getTrustedBeneficiaries(URL url) {
+    private Optional<TrustedBeneficiariesResponseDto> getTrustedBeneficiaries(URL url) {
         final HttpResponse response = createGetRequest(url).get(HttpResponse.class);
 
         if (HttpStatus.SC_NO_CONTENT == response.getStatus()) {
             return Optional.empty();
         }
 
-        return Optional.of(response.getBody(GetTrustedBeneficiariesResponse.class));
+        return Optional.of(response.getBody(TrustedBeneficiariesResponseDto.class));
     }
 
     private String getBearerAuthHeader() {

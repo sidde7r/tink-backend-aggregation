@@ -11,10 +11,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BoursoramaTestFixtures {
 
-    private static final String IBAN_1 = "FR7630006000011234567890189";
-    private static final String IBAN_2 = "FR7612345987650123456789014";
-    private static final String NAME_1 = "DUMMY_NAME";
-    private static final String NAME_2 = "DUMMY_NAME";
     private static final String CURRENCY = "EUR";
     private static final String BENEFICIARY_IBAN = "FR7612548029981234567890161";
     private static final String BENEFICIARY_NAME = "DUMMY_BENEFICIARY_1";
@@ -24,28 +20,6 @@ public final class BoursoramaTestFixtures {
         return SerializationUtils.deserializeFromString(
                 createGetTrustedBeneficiariesResponseJsonString(),
                 TrustedBeneficiariesResponseDto.class);
-    }
-
-    public static Account createAccount1() {
-        final Account account = new Account();
-
-        account.setIdentifiers(Collections.singleton(new IbanIdentifier(IBAN_1)));
-        account.setName(NAME_1);
-        account.setBankId(IBAN_1);
-        account.setCurrencyCode(CURRENCY);
-
-        return account;
-    }
-
-    public static Account createAccount2() {
-        final Account account = new Account();
-
-        account.setIdentifiers(Collections.singleton(new IbanIdentifier(IBAN_2)));
-        account.setName(NAME_2);
-        account.setBankId(IBAN_2);
-        account.setCurrencyCode(CURRENCY);
-
-        return account;
     }
 
     public static Account createBeneficiaryAccount() {
@@ -88,13 +62,7 @@ public final class BoursoramaTestFixtures {
                 + "                 }"
                 + "           }"
                 + "       }"
-                + "   ],"
-                + "   \"_links\":{"
-                + "       \"self\":{"
-                + "           \"href\": \"/_user_/_{userHash}_/domain/controller/service/{resourceId}\","
-                + "           \"method\": \"GET\""
-                + "       }"
-                + "   }"
+                + "   ]"
                 + "}";
     }
 }

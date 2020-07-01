@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.transfer;
+package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transfer;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -13,22 +13,21 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.transactionalaccount.apiclient.CreditAgricoleBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrTransferDestinationFetcherTestBase;
 
-public class CreditAgricoleTransferDestinationFetcherTest
+public class LaBanquePostaleTransferDestinationFetcherTest
         extends FrTransferDestinationFetcherTestBase {
 
-    private CreditAgricoleTransferDestinationFetcher creditAgricoleTransferDestinationFetcher;
+    private LaBanquePostaleTransferDestinationFetcher transferDestinationFetcher;
 
-    private CreditAgricoleBaseApiClient creditAgricoleBaseApiClientMock;
+    private LaBanquePostaleApiClient apiClientMock;
 
     @Before
     public void setUp() {
-        creditAgricoleBaseApiClientMock = mock(CreditAgricoleBaseApiClient.class);
+        apiClientMock = mock(LaBanquePostaleApiClient.class);
 
-        creditAgricoleTransferDestinationFetcher =
-                new CreditAgricoleTransferDestinationFetcher(creditAgricoleBaseApiClientMock);
+        transferDestinationFetcher = new LaBanquePostaleTransferDestinationFetcher(apiClientMock);
     }
 
     @Test
@@ -36,15 +35,15 @@ public class CreditAgricoleTransferDestinationFetcherTest
         // given
         final List<Account> accounts = createAccounts();
 
-        when(creditAgricoleBaseApiClientMock.getTrustedBeneficiaries())
+        when(apiClientMock.getTrustedBeneficiaries())
                 .thenReturn(Optional.of(createTrustedBeneficiariesPage1Response()));
 
-        when(creditAgricoleBaseApiClientMock.getTrustedBeneficiaries(BENEFICIARIES_2ND_PAGE_PATH))
+        when(apiClientMock.getTrustedBeneficiaries(BENEFICIARIES_2ND_PAGE_PATH))
                 .thenReturn(Optional.of(createTrustedBeneficiariesPage2Response()));
 
         // when
         final TransferDestinationsResponse returnedResponse =
-                creditAgricoleTransferDestinationFetcher.fetchTransferDestinationsFor(accounts);
+                transferDestinationFetcher.fetchTransferDestinationsFor(accounts);
 
         // then
         verifyTransferDestinationsResponse(returnedResponse, accounts);
@@ -55,12 +54,11 @@ public class CreditAgricoleTransferDestinationFetcherTest
         // given
         final List<Account> accounts = createAccounts();
 
-        when(creditAgricoleBaseApiClientMock.getTrustedBeneficiaries())
-                .thenReturn(Optional.empty());
+        when(apiClientMock.getTrustedBeneficiaries()).thenReturn(Optional.empty());
 
         // when
         final TransferDestinationsResponse returnedResponse =
-                creditAgricoleTransferDestinationFetcher.fetchTransferDestinationsFor(accounts);
+                transferDestinationFetcher.fetchTransferDestinationsFor(accounts);
 
         // then
         verifyTransferDestinationsResponseForEmptyBeneficiariesList(returnedResponse, accounts);
