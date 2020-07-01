@@ -1,14 +1,21 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.utils;
 
 import com.google.common.base.Strings;
-import se.tink.libraries.uuid.UUIDUtils;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGenerator;
+import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.randomness.RandomValueGeneratorImpl;
 
 public class StrongAuthenticationState {
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
 
     private final String state;
+    private final RandomValueGenerator randomValueGenerator;
 
+    @Deprecated
     public StrongAuthenticationState(String appUriId) {
+        this(appUriId, new RandomValueGeneratorImpl());
+    }
+
+    public StrongAuthenticationState(String appUriId, RandomValueGenerator randomValueGenerator) {
         // Use `appUriId` as state or, if not set, generate a random one.
         //
         // The strong authentication state carries information to main
@@ -16,6 +23,7 @@ public class StrongAuthenticationState {
         // That is why we must prefer using the appUriId (which is random)
         // as the state.
         // Last resort is to randomize it ourselves.
+        this.randomValueGenerator = randomValueGenerator;
         this.state = generateState(appUriId);
     }
 
@@ -29,7 +37,7 @@ public class StrongAuthenticationState {
             // the state parameter. Known limitations:
             // - SDC only allow UUID.
             // - Barclays only allow ^(?!\s)(a-zA-Z0-9-_){1,255})$
-            return UUIDUtils.generateUuidWithTinkTag();
+            return this.randomValueGenerator.generateUuidWithTinkTag();
         }
 
         return appUriId;

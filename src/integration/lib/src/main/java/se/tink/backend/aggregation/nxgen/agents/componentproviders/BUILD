@@ -15,5 +15,6 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
         "//third_party:com_google_inject_guice",
         "//third_party:commons_codec_commons_codec",
+        "@tink_backend//src/libraries/uuid",
     ],
 )

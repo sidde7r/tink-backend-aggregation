@@ -15,4 +15,6 @@ public interface RandomValueGenerator {
     int generateRandomNumberInRange(int minimum, int maximum);
 
     UUID getUUID();
+
+    String generateUuidWithTinkTag();
 }
