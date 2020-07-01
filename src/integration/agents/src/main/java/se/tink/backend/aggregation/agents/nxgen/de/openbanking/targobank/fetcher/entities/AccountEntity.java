@@ -2,17 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.fetche
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.targobank.TargobankConstants;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BalanceEntity;
+import se.tink.backend.aggregation.agents.utils.berlingroup.BerlinGroupBalanceMapper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class AccountEntity {
@@ -36,7 +37,7 @@ public class AccountEntity {
                         TargobankConstants.ACCOUNT_TYPE_MAPPER,
                         cashAccountType,
                         TransactionalAccountType.OTHER)
-                .withBalance(BalanceModule.of(getBalanceAmount()))
+                .withBalance(getBalanceModule())
                 .withId(
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
@@ -50,15 +51,14 @@ public class AccountEntity {
                 .build();
     }
 
-    @JsonIgnore
-    private ExactCurrencyAmount getBalanceAmount() {
-        BalanceAmountEntity balanceAmount =
-                balances.stream()
-                        .findFirst()
-                        .orElseThrow(IllegalStateException::new)
-                        .getBalanceAmount();
-
-        return new ExactCurrencyAmount(
-                new BigDecimal(balanceAmount.getAmount()), balanceAmount.getCurrency());
+    private BalanceModule getBalanceModule() {
+        BalanceBuilderStep balanceBuilderStep =
+                BalanceModule.builder()
+                        .withBalance(BerlinGroupBalanceMapper.getBookedBalance(balances));
+        BerlinGroupBalanceMapper.getAvailableBalance(balances)
+                .ifPresent(balanceBuilderStep::setAvailableBalance);
+        BerlinGroupBalanceMapper.getCreditLimit(balances)
+                .ifPresent(balanceBuilderStep::setCreditLimit);
+        return balanceBuilderStep.build();
     }
 }
