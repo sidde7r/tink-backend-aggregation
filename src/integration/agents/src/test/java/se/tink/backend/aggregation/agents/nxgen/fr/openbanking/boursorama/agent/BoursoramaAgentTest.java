@@ -19,6 +19,7 @@ public class BoursoramaAgentTest {
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true)
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                        .addRefreshableItems(RefreshableItem.TRANSFER_DESTINATIONS)
                         .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray());
     }
 
