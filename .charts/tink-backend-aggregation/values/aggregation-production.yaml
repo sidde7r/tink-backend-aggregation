@@ -431,6 +431,10 @@ clients:
     aggregatorIdentifier: "PayPal Inc"
   paypal-inc-production:
     aggregatorIdentifier: "PayPal Inc"
+  anyfin-production:
+    aggregatorIdentifier: "Anyfin"
+  anyfin-testing:
+    aggregatorIdentifier: "Anyfin"
 
 tppSecretsServiceConfiguration:
   certificatesLocation: "cluster"
