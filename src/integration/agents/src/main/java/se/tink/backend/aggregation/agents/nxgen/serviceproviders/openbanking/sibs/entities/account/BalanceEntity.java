@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.entity.account;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 

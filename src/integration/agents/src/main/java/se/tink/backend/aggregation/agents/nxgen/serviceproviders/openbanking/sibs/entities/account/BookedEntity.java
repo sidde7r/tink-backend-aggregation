@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.entity.account;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.entity.transaction.CreditorAccount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.transaction.CreditorAccount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 

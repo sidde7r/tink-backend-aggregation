@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.rpc;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.entity.account.BalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

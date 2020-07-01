@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.entity.transaction;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.transaction;
 
 import com.google.common.base.Strings;
 import java.util.Optional;
