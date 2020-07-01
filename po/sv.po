@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-06-15 08:49+0000\n"
-"PO-Revision-Date: 2020-06-15 08:49+0000\n"
+"POT-Creation-Date: 2020-07-01 10:49+0000\n"
+"PO-Revision-Date: 2020-07-01 10:49+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: sv\n"
@@ -10,9 +10,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid "An error occurred while confirming the payment."
-msgstr "Ett fel uppstod när betalningen skulle bekräftas."
 
 msgid "Input the code from your code card"
 msgstr "Ange koden från ditt kodkort"
@@ -1633,3 +1630,9 @@ msgstr "Betalningen avbröts av användaren."
 
 msgid "An error occurred when confirming the payment."
 msgstr "Ett fel inträffade när betalningen skulle bekräftas."
+
+msgid "An error occurred while confirming the payment."
+msgstr "Ett fel uppstod när betalningen skulle bekräftas."
+
+msgid "User is not authorized to create the payment"
+msgstr "Användaren är inte auktorisrad för att genomföra betalningen."

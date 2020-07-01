@@ -125,7 +125,8 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
             BankPaymentResponse paymentResponse = apiClient.executeBankPayment(paymentRequest);
             executorHelper.confirm(paymentResponse.getApiIdentifier());
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
+                    || e.getResponse().getStatus() == HttpStatus.SC_FORBIDDEN) {
                 final ErrorResponse errorResponse = e.getResponse().getBody(ErrorResponse.class);
                 errorResponse.throwAppropriateErrorIfAny();
                 log.warn("Payment execution failed", e);

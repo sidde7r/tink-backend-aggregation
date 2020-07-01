@@ -242,7 +242,8 @@ public class TransferExecutionException extends RuntimeException {
                 new LocalizableKey("This type of payment is unavailable for you")),
         COULD_NOT_SAVE_NEW_RECIPIENT_MESSAGE(
                 new LocalizableKey(
-                        "Could not save new recipient, check that the information is correct"));
+                        "Could not save new recipient, check that the information is correct")),
+        USER_UNAUTHORIZED(new LocalizableKey("User is not authorized to create the payment"));
 
         private final LocalizableKey key;
 

@@ -113,6 +113,13 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean isUserUnauthorizedError() {
+        return NordeaSEConstants.ErrorCodes.USER_UNAUTHORIZED.equalsIgnoreCase(error)
+                && NordeaSEConstants.ErrorCodes.USER_UNAUTHORIZED_MESSAGE.equalsIgnoreCase(
+                        errorDescription);
+    }
+
+    @JsonIgnore
     public boolean isBankServiceError() {
         return HttpStatus.SC_INTERNAL_SERVER_ERROR == httpStatus
                 && (isHysterixShortCircuited() || isUnexpectedError());
@@ -189,6 +196,9 @@ public class ErrorResponse {
         }
         if (isInvalidOcr()) {
             throw wrongOcrError();
+        }
+        if (isUserUnauthorizedError()) {
+            throw userUnauthorizedError();
         }
     }
 
@@ -357,6 +367,13 @@ public class ErrorResponse {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(NordeaSEConstants.LogMessages.WRONG_OCR_MESSAGE)
                 .setEndUserMessage(EndUserMessage.INVALID_OCR)
+                .build();
+    }
+
+    public TransferExecutionException userUnauthorizedError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                .setMessage(NordeaSEConstants.LogMessages.USER_UNAUTHORIZED_MESSAGE)
+                .setEndUserMessage(EndUserMessage.USER_UNAUTHORIZED)
                 .build();
     }
 }
