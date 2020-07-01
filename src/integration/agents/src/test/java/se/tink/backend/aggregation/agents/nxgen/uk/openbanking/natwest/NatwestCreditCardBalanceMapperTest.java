@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.BalanceFixtures.*;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.BalanceFixtures.expectedBalance;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.BalanceFixtures.forwardAvailableBalance;
+import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.BalanceFixtures.previouslyClosedBookedBalance;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
