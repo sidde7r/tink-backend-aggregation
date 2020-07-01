@@ -262,6 +262,7 @@ public class SwedbankTransferHelper {
         try {
             return Optional.of(apiClient.confirmSignNewRecipient(linkEntity));
         } catch (Exception e) {
+            log.warn("Failed to confirm new recipient signature", e);
             return Optional.empty();
         }
     }
@@ -282,6 +283,11 @@ public class SwedbankTransferHelper {
                 .orElseThrow(
                         () ->
                                 TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                                        .setMessage(
+                                                TransferExecutionException.EndUserMessage
+                                                        .NEW_RECIPIENT_FAILED
+                                                        .getKey()
+                                                        .get())
                                         .setEndUserMessage(
                                                 catalog.getString(
                                                         TransferExecutionException.EndUserMessage
