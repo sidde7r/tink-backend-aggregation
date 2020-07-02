@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -22,7 +23,10 @@ public class CreditorAccount {
                         .translate(creditor.getAccountIdentifierType())
                         .orElseThrow(() -> new IllegalStateException("SchemeName cannot be null!"));
         this.identification = creditor.getAccountNumber();
-        this.name = creditor.getName();
+        this.name =
+                Strings.isNullOrEmpty(creditor.getName())
+                        ? UkOpenBankingV31Constants.FormValues.PAYMENT_CREDITOR_DEFAULT_NAME
+                        : creditor.getName();
     }
 
     public Creditor toCreditor() {

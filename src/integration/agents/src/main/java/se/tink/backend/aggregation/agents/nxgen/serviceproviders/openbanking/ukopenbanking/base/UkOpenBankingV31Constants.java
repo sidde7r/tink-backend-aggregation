@@ -86,4 +86,8 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
     public static class PaymentStatusCode {
         public static final String AWAITING_AUTHORISATION = "AwaitingAuthorisation";
     }
+
+    public static class FormValues {
+        public static final String PAYMENT_CREDITOR_DEFAULT_NAME = "Payment Receiver";
+    }
 }
