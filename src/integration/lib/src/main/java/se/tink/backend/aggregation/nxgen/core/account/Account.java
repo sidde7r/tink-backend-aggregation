@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
@@ -248,7 +249,7 @@ public abstract class Account {
         return getUniqueIdentifier().hashCode();
     }
 
-    public se.tink.backend.agents.rpc.Account toSystemAccount(User user) {
+    public se.tink.backend.agents.rpc.Account toSystemAccount(User user, Provider provider) {
         se.tink.backend.agents.rpc.Account account = new se.tink.backend.agents.rpc.Account();
 
         account.setType(getType());
@@ -275,13 +276,20 @@ public abstract class Account {
             AccountHolder accountHolder = new AccountHolder();
             accountHolder.setType(
                     Optional.ofNullable(holderType)
-                            .orElse(AccountHolderType.PERSONAL)
+                            .orElse(inferHolderType(provider.getAuthenticationUserType()))
                             .toSystemType());
             accountHolder.setIdentities(
                     holders.stream().map(Holder::toSystemHolder).collect(Collectors.toList()));
             account.setAccountHolder(accountHolder);
         }
         return account;
+    }
+
+    private AccountHolderType inferHolderType(
+            Provider.AuthenticationUserType authenticationUserType) {
+        return authenticationUserType == Provider.AuthenticationUserType.BUSINESS
+                ? AccountHolderType.BUSINESS
+                : AccountHolderType.PERSONAL;
     }
 
     private Optional<String> getFirstHolder() {

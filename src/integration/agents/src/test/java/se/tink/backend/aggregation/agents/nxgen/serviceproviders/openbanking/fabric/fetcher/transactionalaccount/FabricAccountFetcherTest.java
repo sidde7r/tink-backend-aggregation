@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.FabricApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fabric.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
@@ -108,7 +109,7 @@ public class FabricAccountFetcherTest {
         FetchTransferDestinationsResponse dt =
                 InferredTransferDestinations.forPaymentAccounts(
                         fabricAccountFetcher.fetchAccounts().stream()
-                                .map(a -> a.toSystemAccount(new User()))
+                                .map(a -> a.toSystemAccount(new User(), new Provider()))
                                 .collect(Collectors.toList()),
                         AccountIdentifier.Type.IBAN);
         Assert.assertEquals(1, dt.getTransferDestinations().size());

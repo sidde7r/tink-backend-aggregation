@@ -31,6 +31,11 @@ public class Provider implements Cloneable {
         DECOUPLED
     }
 
+    public enum AuthenticationUserType {
+        PERSONAL,
+        BUSINESS
+    }
+
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
 
@@ -59,6 +64,7 @@ public class Provider implements Cloneable {
     private ProviderStatuses status;
     private ProviderTypes type;
     private String financialInstitutionId;
+    private AuthenticationUserType authenticationUserType;
 
     public Provider() {
         setFields(Lists.newArrayList());
@@ -178,6 +184,14 @@ public class Provider implements Cloneable {
         this.financialInstitutionId = financialInstitutionId;
     }
 
+    public AuthenticationUserType getAuthenticationUserType() {
+        return authenticationUserType;
+    }
+
+    public void setAuthenticationUserType(AuthenticationUserType authenticationUserType) {
+        this.authenticationUserType = authenticationUserType;
+    }
+
     @JsonIgnore
     public String getMetricTypeName() {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_UNDERSCORE, getType().name());
@@ -217,6 +231,9 @@ public class Provider implements Cloneable {
                         .map(Field::of)
                         .collect(Collectors.toList()));
         provider.setType(ProviderTypes.valueOf(providerConfiguration.getType().name()));
+        provider.setAuthenticationUserType(
+                Provider.AuthenticationUserType.valueOf(
+                        providerConfiguration.getAuthenticationUserType().name()));
 
         return provider;
     }

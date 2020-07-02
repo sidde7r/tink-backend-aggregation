@@ -9,10 +9,12 @@ import org.assertj.core.util.Preconditions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
@@ -26,18 +28,16 @@ import se.tink.libraries.user.rpc.User;
 @RunWith(MockitoJUnitRunner.class)
 public final class UpdateControllerTest {
     @Spy private FakeAgentContext context;
+    @Mock private Provider provider;
 
     private User user = new User();
 
-    private Credentials getCredential() {
-        Credentials credentials = new Credentials();
-        credentials.setProviderName("Test");
-        return credentials;
-    }
-
     @Test
     public void ensureLoansRemain_whenTransactions_areRefreshed() {
-        final UpdateController updateController = new UpdateController(MarketCode.SE, "SEK", user);
+        Mockito.when(provider.getMarket()).thenReturn(MarketCode.SE.name());
+        Mockito.when(provider.getCurrency()).thenReturn("SEK");
+
+        final UpdateController updateController = new UpdateController(provider, user);
 
         final LoanAccount loanAccount =
                 LoanAccount.builder("1337")
@@ -52,7 +52,7 @@ public final class UpdateControllerTest {
         // This call should never discard any cached loans
         updateController.updateTransactions(loanAccount, transactions);
 
-        final String uniqueAccountId = loanAccount.toSystemAccount(user).getBankId();
+        final String uniqueAccountId = loanAccount.toSystemAccount(user, provider).getBankId();
 
         Assert.assertTrue(context.getAccountFeatures(uniqueAccountId).isPresent());
         Assert.assertFalse(context.getAccountFeatures(uniqueAccountId).get().getLoans().isEmpty());
@@ -60,7 +60,9 @@ public final class UpdateControllerTest {
 
     @Test
     public void ensureCacheTransactions_whenUpdateTransactions_isNotCalledWithNull() {
-        final UpdateController updateController = new UpdateController(MarketCode.SE, "SEK", user);
+        Mockito.when(provider.getMarket()).thenReturn(MarketCode.SE.name());
+        Mockito.when(provider.getCurrency()).thenReturn("SEK");
+        final UpdateController updateController = new UpdateController(provider, user);
 
         final LoanAccount loanAccount =
                 LoanAccount.builder("1337")
