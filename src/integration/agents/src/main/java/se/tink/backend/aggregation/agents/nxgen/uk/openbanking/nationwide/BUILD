@@ -12,6 +12,8 @@ java_library(
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/controllers/authentication/multifactor/thirdpartyapp/openid/jwt/signer/iface",
         "//src/libraries/mapper",
         "//third_party:com_google_inject_guice",
+        "//third_party:lombok_libs",
         "//third_party:org_apache_commons_commons_collections4",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
