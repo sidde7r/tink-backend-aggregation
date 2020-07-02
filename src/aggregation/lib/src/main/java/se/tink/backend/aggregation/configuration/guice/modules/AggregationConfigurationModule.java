@@ -5,6 +5,7 @@ import com.google.inject.name.Names;
 import com.google.inject.util.Providers;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.eidas.proxy.EidasProxyConfiguration;
+import se.tink.backend.aggregation.configuration.models.AccountInformationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
@@ -74,6 +75,8 @@ public class AggregationConfigurationModule extends AbstractModule {
                 .toInstance(configuration.getProviderConfigurationServiceConfiguration());
         bind(EidasProxyConfiguration.class)
                 .toInstance(configuration.getAgentsServiceConfiguration().getEidasProxy());
+        bind(AccountInformationServiceConfiguration.class)
+                .toInstance(configuration.getAccountInformationService());
 
         if (configuration.isDevelopmentMode()
                 && configuration.getDevelopmentConfiguration().isValid()) {
