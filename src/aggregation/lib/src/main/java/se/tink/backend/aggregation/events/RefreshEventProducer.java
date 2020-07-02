@@ -57,28 +57,6 @@ public class RefreshEventProducer {
             String appId,
             String clusterId,
             String userId,
-            se.tink.libraries.credentials.service.RefreshableItem refreshableItem) {
-        sendRefreshEvent(
-                providerName,
-                correlationId,
-                marketCode,
-                credentialsId,
-                appId,
-                clusterId,
-                userId,
-                RefreshResult.TINK_ERROR,
-                AdditionalInfo.ERROR_INFO,
-                refreshableItem);
-    }
-
-    public void sendEventForRefreshWithErrorInTinkSide(
-            String providerName,
-            String correlationId,
-            String marketCode,
-            String credentialsId,
-            String appId,
-            String clusterId,
-            String userId,
             AdditionalInfo additionalInfo,
             se.tink.libraries.credentials.service.RefreshableItem refreshableItem) {
         sendRefreshEvent(
@@ -91,28 +69,6 @@ public class RefreshEventProducer {
                 userId,
                 RefreshResult.TINK_ERROR,
                 additionalInfo,
-                refreshableItem);
-    }
-
-    public void sendEventForRefreshWithErrorInBankSide(
-            String providerName,
-            String correlationId,
-            String marketCode,
-            String credentialsId,
-            String appId,
-            String clusterId,
-            String userId,
-            se.tink.libraries.credentials.service.RefreshableItem refreshableItem) {
-        sendRefreshEvent(
-                providerName,
-                correlationId,
-                marketCode,
-                credentialsId,
-                appId,
-                clusterId,
-                userId,
-                RefreshResult.BANK_ERROR,
-                AdditionalInfo.ERROR_INFO,
                 refreshableItem);
     }
 
