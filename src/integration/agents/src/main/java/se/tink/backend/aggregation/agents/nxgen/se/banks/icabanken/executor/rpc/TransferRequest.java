@@ -48,6 +48,10 @@ public class TransferRequest {
     @JsonProperty("RecipientId")
     private String recipientId;
 
+    public String getMemo() {
+        return memo;
+    }
+
     private TransferRequest(
             Transfer transfer,
             AccountEntity sourceAccount,
@@ -97,7 +101,7 @@ public class TransferRequest {
                 transfer,
                 sourceAccount,
                 destinationAccount,
-                transfer.getSourceMessage(),
+                IcaBankenExecutorUtils.getTruncatedSourceMessage(transfer),
                 transfer.getRemittanceInformation().getValue(),
                 IcaBankenConstants.Transfers.PAYMENT);
     }
