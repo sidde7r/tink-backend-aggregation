@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entity.account;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,7 +11,6 @@ import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account.AmountEntity;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @RunWith(JUnitParamsRunner.class)
