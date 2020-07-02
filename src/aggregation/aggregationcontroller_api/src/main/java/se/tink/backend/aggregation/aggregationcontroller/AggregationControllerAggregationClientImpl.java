@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDa
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
+import se.tink.backend.aggregation.configuration.models.AccountInformationServiceConfiguration;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.http.client.WebResourceFactory;
 import se.tink.libraries.jersey.utils.JerseyUtils;
@@ -49,15 +50,23 @@ public class AggregationControllerAggregationClientImpl
             ImmutableSet.of("oxford-staging", "oxford-production");
     private static final ImmutableSet<String> ACCOUNT_INFORMATION_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("local-development", "oxford-staging");
-    private final ClientConfig config;
     private static final int MAXIMUM_RETRY_ATTEMPT = 3;
     private static final int WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS = 2000;
     private static final ImmutableSet<Integer> ERROR_CODES_FOR_RETRY =
             ImmutableSet.of(502, 503, 504);
 
+    private final ClientConfig config;
+    private final AccountInformationServiceConfiguration accountInformationServiceConfiguration;
+
     @Inject
-    private AggregationControllerAggregationClientImpl(ClientConfig custom) {
+    private AggregationControllerAggregationClientImpl(
+            ClientConfig custom,
+            AccountInformationServiceConfiguration accountInformationServiceConfiguration) {
         this.config = custom;
+        this.accountInformationServiceConfiguration = accountInformationServiceConfiguration;
+        log.info(
+                "account information service enabled in: "
+                        + accountInformationServiceConfiguration.getEnabledClusters());
     }
 
     private <T> T buildInterClusterServiceFromInterface(
