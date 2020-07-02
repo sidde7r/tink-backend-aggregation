@@ -36,17 +36,17 @@ public class AccountEntityTest {
     private Object[] loansInJsonResponse() {
         return new Object[] {
             new Object[] {
-                "{\"id\":\"dummy\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"bic\":\"dummy\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"bic\":\"dummy\"}",
                 "EUR",
                 "6.27"
             },
             new Object[] {
-                "{\"id\":\"dummy\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"bic\":\"dummy\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"bic\":\"dummy\"}",
                 "EUR",
                 "0.01"
             },
             new Object[] {
-                "{\"id\":\"dummy\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"bic\":\"dummy\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"bic\":\"dummy\"}",
                 "PLN",
                 "99999.99"
             },
@@ -57,17 +57,17 @@ public class AccountEntityTest {
     private Object[] accountsInJsonResponse() {
         return new Object[] {
             new Object[] {
-                "{\"id\":\"dummy\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"pan\":\"1234\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"pan\":\"1234\"}",
                 "EUR",
                 "-6.27"
             },
             new Object[] {
-                "{\"id\":\"dummy\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"pan\":\"1244243\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"pan\":\"1244243\"}",
                 "EUR",
                 "0.01"
             },
             new Object[] {
-                "{\"id\":\"dummy\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"pan\":\"4234242324\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"pan\":\"4234242324\"}",
                 "PLN",
                 "-99999.99"
             },
@@ -86,6 +86,7 @@ public class AccountEntityTest {
                         .get();
 
         assertThat(account.getType()).isEqualTo(CHECKING);
+        assertThat(account.getApiIdentifier()).isEqualTo("apiIdentifier");
         assertThat(account.getExactBalance())
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amount), currency));
     }
@@ -101,6 +102,7 @@ public class AccountEntityTest {
                         new ExactCurrencyAmount(new BigDecimal(amount).abs(), currency));
 
         assertThat(account.getType()).isEqualTo(LOAN);
+        assertThat(account.getApiIdentifier()).isEqualTo("apiIdentifier");
         assertThat(account.getExactBalance())
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amount), currency));
     }
@@ -116,6 +118,7 @@ public class AccountEntityTest {
                         new ExactCurrencyAmount(new BigDecimal(amount), currency));
 
         assertThat(account.getType()).isEqualTo(CREDIT_CARD);
+        assertThat(account.getApiIdentifier()).isEqualTo("apiIdentifier");
         assertThat(account.getExactBalance())
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amount), currency));
     }

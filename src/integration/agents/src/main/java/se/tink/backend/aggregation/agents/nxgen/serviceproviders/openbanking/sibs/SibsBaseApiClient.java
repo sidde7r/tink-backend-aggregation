@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
@@ -96,7 +96,7 @@ public class SibsBaseApiClient {
     }
 
     public TransactionKeyPaginatorResponse<String> getAccountTransactions(
-            TransactionalAccount account, LocalDate dateFrom) {
+            Account account, LocalDate dateFrom) {
         URL accountTransactions =
                 createUrl(SibsConstants.Urls.ACCOUNT_TRANSACTIONS)
                         .parameter(PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier());

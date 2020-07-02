@@ -57,6 +57,7 @@ public class RefreshEventProducer {
             String appId,
             String clusterId,
             String userId,
+            AdditionalInfo additionalInfo,
             se.tink.libraries.credentials.service.RefreshableItem refreshableItem) {
         sendRefreshEvent(
                 providerName,
@@ -67,7 +68,7 @@ public class RefreshEventProducer {
                 clusterId,
                 userId,
                 RefreshResult.TINK_ERROR,
-                AdditionalInfo.ERROR_INFO,
+                additionalInfo,
                 refreshableItem);
     }
 
@@ -79,6 +80,7 @@ public class RefreshEventProducer {
             String appId,
             String clusterId,
             String userId,
+            AdditionalInfo additionalInfo,
             se.tink.libraries.credentials.service.RefreshableItem refreshableItem) {
         sendRefreshEvent(
                 providerName,
@@ -89,7 +91,7 @@ public class RefreshEventProducer {
                 clusterId,
                 userId,
                 RefreshResult.BANK_ERROR,
-                AdditionalInfo.ERROR_INFO,
+                additionalInfo,
                 refreshableItem);
     }
 

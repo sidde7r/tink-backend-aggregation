@@ -1,6 +1,15 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.ACCESS_EXCEEDED;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.BANK_SIDE_FAILURE;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_EXPIRED;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_INVALID;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_REVOKED;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_REVOKED_BY_USER;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.MULTIPLE_LOGIN;
+
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +27,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
@@ -31,6 +41,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
+import se.tink.eventproducerservice.events.grpc.RefreshResultEventProto.RefreshResultEvent.AdditionalInfo;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
@@ -52,6 +63,17 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private final String agentName;
     private final String provider;
     private final String market;
+    private static final ImmutableMap<BankServiceError, AdditionalInfo>
+            ADDITIONAL_INFO_ERROR_MAPPER =
+                    ImmutableMap.<BankServiceError, AdditionalInfo>builder()
+                            .put(ACCESS_EXCEEDED, AdditionalInfo.ACCESS_EXCEEDED)
+                            .put(BANK_SIDE_FAILURE, AdditionalInfo.BANK_SIDE_FAILURE)
+                            .put(CONSENT_EXPIRED, AdditionalInfo.CONSENT_EXPIRED)
+                            .put(CONSENT_INVALID, AdditionalInfo.CONSENT_INVALID)
+                            .put(CONSENT_REVOKED_BY_USER, AdditionalInfo.CONSENT_REVOKED)
+                            .put(CONSENT_REVOKED, AdditionalInfo.CONSENT_REVOKED)
+                            .put(MULTIPLE_LOGIN, AdditionalInfo.MULTIPLE_LOGIN)
+                            .build();
 
     public RefreshItemAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -117,12 +139,14 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                         context.getAppId(),
                         context.getClusterId(),
                         context.getRequest().getCredentials().getUserId(),
+                        ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError()),
                         item);
                 log.warn("BankServiceException is received and credentials status set unchanged.");
                 return AgentWorkerCommandResult.ABORT;
-            } catch (Exception e) {
-                action.failed();
-                log.warn("Couldn't refresh RefreshableItem({})", item);
+            } catch (java.lang.NullPointerException e) {
+                log.warn(
+                        "Couldn't refresh RefreshableItem({}) because of null pointer exception",
+                        item);
                 refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
                         context.getRequest().getProvider().getName(),
                         context.getCorrelationId(),
@@ -131,6 +155,23 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                         context.getAppId(),
                         context.getClusterId(),
                         context.getRequest().getCredentials().getUserId(),
+                        AdditionalInfo.INTERNAL_SERVER_ERROR,
+                        item);
+                throw e;
+            } catch (Exception e) {
+
+                log.warn(
+                        "Couldn't refresh RefreshableItem({}) with error code: " + e.getMessage(),
+                        item);
+                refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
+                        context.getRequest().getProvider().getName(),
+                        context.getCorrelationId(),
+                        context.getRequest().getProvider().getMarket(),
+                        context.getRequest().getCredentials().getId(),
+                        context.getAppId(),
+                        context.getClusterId(),
+                        context.getRequest().getCredentials().getUserId(),
+                        AdditionalInfo.ERROR_INFO,
                         item);
                 throw e;
             }
