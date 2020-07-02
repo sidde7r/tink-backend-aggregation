@@ -184,8 +184,10 @@ public class SwedbankAuthenticationController
         ConsentResponse consentResponseIbanList = authenticator.getConsentForIbanList();
         authenticator.useConsent(consentResponseIbanList);
 
-        supplementalRequester.openBankId(
-                consentResponseIbanList.getLinks().getHrefEntity().getHref(), true);
+        AuthenticationResponse response =
+                authenticator.initiateAuthorization(
+                        consentResponseIbanList.getLinks().getHrefEntity().getHref());
+        supplementalRequester.openBankId(response.getChallengeData().getAutoStartToken(), true);
 
         while (!authenticator.getConsentStatus(consentResponseIbanList.getConsentId())) {
             Uninterruptibles.sleepUninterruptibly(

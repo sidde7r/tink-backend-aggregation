@@ -11,6 +11,7 @@ public class AuthenticationResponse {
     @JsonProperty("_links")
     private LinksEntity links;
 
+    private String scaStatus;
     private String authorizeId;
     private ChallengeDataEntity challengeData;
     private ScaMethodEntity chosenScaMethod;
@@ -18,5 +19,13 @@ public class AuthenticationResponse {
 
     public String getCollectAuthUri() {
         return links.getScaStatus().getHref();
+    }
+
+    public String getScaStatus() {
+        return scaStatus;
+    }
+
+    public ChallengeDataEntity getChallengeData() {
+        return challengeData;
     }
 }

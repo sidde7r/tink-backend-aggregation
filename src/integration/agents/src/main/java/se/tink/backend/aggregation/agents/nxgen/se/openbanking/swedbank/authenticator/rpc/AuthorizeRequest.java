@@ -17,4 +17,10 @@ public class AuthorizeRequest {
         this.redirectUri = redirectUri;
         psuData = new PsuDataEntity();
     }
+
+    public AuthorizeRequest(PsuDataEntity psuData) {
+        this.psuData = psuData;
+    }
+
+    public AuthorizeRequest() {}
 }

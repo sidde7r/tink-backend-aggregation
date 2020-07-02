@@ -298,11 +298,13 @@ public final class SwedbankApiClient {
                 .post(Response.class);
     }
 
-    public ConsentResponse startAuthorization(String endpoint) {
+    public AuthenticationResponse startAuthorization(String endpoint) {
         return createRequestInSessionWithConsent(new URL(Urls.BASE.concat(endpoint)))
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
-                .post(ConsentResponse.class);
+                .header(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TPP_REDIRECT_PREFERRED)
+                .body(new AuthorizeRequest(), MediaType.APPLICATION_JSON_TYPE)
+                .put(AuthenticationResponse.class);
     }
 
     public boolean checkStatus(String statusEndpoint) {

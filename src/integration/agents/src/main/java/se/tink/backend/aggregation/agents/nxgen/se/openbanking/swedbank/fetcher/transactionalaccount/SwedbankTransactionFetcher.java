@@ -81,7 +81,9 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
 
             poll(
                     response,
-                    apiClient.startAuthorization(response.getLinks().getHrefEntity().getHref()));
+                    //
+                    // apiClient.startAuthorization(response.getLinks().getHrefEntity().getHref()));
+                    new ConsentResponse());
         } catch (HttpResponseException e) {
             if (checkIfScaIsAlreadyDone(e)) {
                 throw new HttpResponseException(
@@ -100,7 +102,9 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
 
             poll(
                     response,
-                    apiClient.startAuthorization(response.getLinks().getHrefEntity().getHref()));
+                    //
+                    // apiClient.startAuthorization(response.getLinks().getHrefEntity().getHref()));
+                    new ConsentResponse());
         } catch (HttpResponseException e) {
             if (checkIfScaIsAlreadyDone(e)) {
                 logger.info(

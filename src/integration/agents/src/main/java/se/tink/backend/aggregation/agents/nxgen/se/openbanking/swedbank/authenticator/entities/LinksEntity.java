@@ -12,6 +12,8 @@ public class LinksEntity {
 
     private Href startAuthorisationWithAuthenticationMethodSelection;
 
+    private Href selectAuthenticationMethod;
+
     public Href getScaStatus() {
         return scaStatus;
     }
@@ -22,5 +24,9 @@ public class LinksEntity {
 
     public Href getStatus() {
         return status;
+    }
+
+    public Href getSelectAuthenticationMethod() {
+        return selectAuthenticationMethod;
     }
 }

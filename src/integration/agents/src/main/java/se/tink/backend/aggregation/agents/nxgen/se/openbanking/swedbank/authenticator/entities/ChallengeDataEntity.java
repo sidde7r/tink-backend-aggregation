@@ -5,4 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ChallengeDataEntity {
     private String code;
+    private String autoStartToken;
+
+    public String getAutoStartToken() {
+        return autoStartToken;
+    }
 }
