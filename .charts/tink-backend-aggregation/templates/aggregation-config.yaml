@@ -117,6 +117,10 @@ data:
       enabled: {{ $providerConfigurationServiceConfiguration.enabled }}
     {{- end }}
 
+    accountInformationService:
+      enabledClusters:
+        - oxford-staging
+
     {{- if eq "local" .Values.Cluster }}
     developmentMode: true
 
