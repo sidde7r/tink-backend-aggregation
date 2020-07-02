@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.workers.operation.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.operation.type.AgentWorkerOperationMetricType;
 import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
 import se.tink.backend.integration.agent_data_availability_tracker.client.serialization.IdentityDataSerializer;
+import se.tink.eventproducerservice.events.grpc.RefreshResultEventProto.RefreshResultEvent.AdditionalInfo;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.core.MetricId;
@@ -105,6 +106,28 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 }
             } catch (BankServiceException e) {
                 // The way frontend works now the message will not be displayed to the user.
+                AdditionalInfo additionalInfo = AdditionalInfo.ERROR_INFO;
+                switch (e.getError()) {
+                    case ACCESS_EXCEEDED:
+                        additionalInfo = AdditionalInfo.ACCESS_EXCEEDED;
+                        break;
+                    case BANK_SIDE_FAILURE:
+                        additionalInfo = AdditionalInfo.BANK_SIDE_FAILURE;
+                        break;
+                    case CONSENT_EXPIRED:
+                        additionalInfo = AdditionalInfo.CONSENT_EXPIRED;
+                        break;
+                    case CONSENT_INVALID:
+                        additionalInfo = AdditionalInfo.CONSENT_INVALID;
+                        break;
+                    case CONSENT_REVOKED_BY_USER:
+                    case CONSENT_REVOKED:
+                        additionalInfo = AdditionalInfo.CONSENT_REVOKED;
+                        break;
+                    case MULTIPLE_LOGIN:
+                        additionalInfo = AdditionalInfo.MULTIPLE_LOGIN;
+                        break;
+                }
                 context.updateStatus(
                         CredentialsStatus.UNCHANGED,
                         context.getCatalog().getString(e.getUserMessage()));
@@ -117,12 +140,14 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                         context.getAppId(),
                         context.getClusterId(),
                         context.getRequest().getCredentials().getUserId(),
+                        additionalInfo,
                         item);
                 log.warn("BankServiceException is received and credentials status set unchanged.");
                 return AgentWorkerCommandResult.ABORT;
-            } catch (Exception e) {
-                action.failed();
-                log.warn("Couldn't refresh RefreshableItem({})", item);
+            } catch (java.lang.NullPointerException e) {
+                log.warn(
+                        "Couldn't refresh RefreshableItem({}) because of null pointer exception",
+                        item);
                 refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
                         context.getRequest().getProvider().getName(),
                         context.getCorrelationId(),
@@ -131,6 +156,23 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                         context.getAppId(),
                         context.getClusterId(),
                         context.getRequest().getCredentials().getUserId(),
+                        AdditionalInfo.INTERNAL_SERVER_ERROR,
+                        item);
+                throw e;
+            } catch (Exception e) {
+
+                log.warn(
+                        "Couldn't refresh RefreshableItem({}) with error code: " + e.getMessage(),
+                        item);
+                refreshEventProducer.sendEventForRefreshWithErrorInTinkSide(
+                        context.getRequest().getProvider().getName(),
+                        context.getCorrelationId(),
+                        context.getRequest().getProvider().getMarket(),
+                        context.getRequest().getCredentials().getId(),
+                        context.getAppId(),
+                        context.getClusterId(),
+                        context.getRequest().getCredentials().getUserId(),
+                        AdditionalInfo.ERROR_INFO,
                         item);
                 throw e;
             }
