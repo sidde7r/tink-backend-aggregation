@@ -66,6 +66,7 @@ public class AccountEntity {
                                 .setApplicants(Collections.singletonList(name))
                                 .build())
                 .withId(getIdModule())
+                .setApiIdentifier(id)
                 .addHolderName(name)
                 .build();
     }
@@ -82,6 +83,7 @@ public class AccountEntity {
                                 .build())
                 .withoutFlags()
                 .withId(getIdModule())
+                .setApiIdentifier(id)
                 .build();
     }
 
