@@ -5,7 +5,6 @@ import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.Account;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.ProductionUrls;
@@ -15,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.AuthorizationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.RefreshTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.rpc.CreatePaymentRequest;
@@ -128,18 +126,6 @@ public final class IcaBankenApiClient {
         return paymentType.equals(PaymentType.INTERNATIONAL)
                 ? QueryValues.PaymentProduct.INTERNATIONAL
                 : QueryValues.PaymentProduct.SEPA;
-    }
-
-    public OAuth2Token authenticate() {
-        TokenRequest tokenRequest =
-                new TokenRequest(
-                        FormValues.GRANT_TYPE,
-                        configuration.getClientId(),
-                        configuration.getClientSecret());
-        return createRequest(new URL(SandboxUrls.FETCH_TOKEN))
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(TokenResponse.class, tokenRequest.toData())
-                .toTinkToken();
     }
 
     private OAuth2Token getApplicationTokenFromSession() {
