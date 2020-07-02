@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
+import com.google.common.base.Strings;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
@@ -25,4 +28,13 @@ public interface OAuth2Authenticator {
      * use the access token (e.g. when building requests or attached in a authentication filter).
      */
     void useAccessToken(OAuth2Token accessToken);
+
+    default void handleSpecificCallbackDataError(Map<String, String> callbackData)
+            throws AuthenticationException {
+        final String code = callbackData.getOrDefault(OAuth2Constants.CallbackParams.CODE, null);
+
+        if (Strings.isNullOrEmpty(code)) {
+            throw new IllegalStateException("callbackData did not contain 'code'");
+        }
+    }
 }

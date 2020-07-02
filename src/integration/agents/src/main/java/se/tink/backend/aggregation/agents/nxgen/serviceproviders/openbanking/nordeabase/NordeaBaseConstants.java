@@ -156,6 +156,7 @@ public final class NordeaBaseConstants {
 
     public static final class ErrorCodes {
         public static final String TOKEN_EXPIRED = "error.token.expired";
+        public static final String SESSION_CANCELLED = "error.session.cancelled";
     }
 
     public static final class StatusResponse {
@@ -170,5 +171,9 @@ public final class NordeaBaseConstants {
     public class Scopes {
         public static final String AIS = "AIS";
         public static final String PIS = "PIS";
+    }
+
+    public static class CallbackParams {
+        public static final String HTTP_MESSAGE = "httpMessage";
     }
 }
