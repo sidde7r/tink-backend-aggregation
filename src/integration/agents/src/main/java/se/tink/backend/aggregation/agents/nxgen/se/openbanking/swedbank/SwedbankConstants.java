@@ -37,10 +37,10 @@ public final class SwedbankConstants {
     public static class Endpoints {
         public static final String AUTHORIZATION = "/psd2/v3/authorize-decoupled";
         public static final String TOKEN = "/psd2/token";
-        public static final String ACCOUNTS = "/sandbox/v3/accounts";
-        public static final String ACCOUNT_BALANCES = "/v2/accounts/{account-id}/balances";
-        public static final String ACCOUNT_TRANSACTIONS = "/v2/accounts/{account-id}/transactions";
-        public static final String CONSENTS = "/sandbox/v3/consents";
+        public static final String ACCOUNTS = "/v3/accounts";
+        public static final String ACCOUNT_BALANCES = "/v3/accounts/{account-id}/balances";
+        public static final String ACCOUNT_TRANSACTIONS = "/v3/accounts/{account-id}/transactions";
+        public static final String CONSENTS = "/v3/consents";
         public static final String CONSENT_STATUS = CONSENTS + "/{consent-id}/status";
         public static final String INITIATE_PAYMENT = "/v2/payments/{paymentType}";
         public static final String GET_PAYMENT = "/v2/payments/{paymentId}";
