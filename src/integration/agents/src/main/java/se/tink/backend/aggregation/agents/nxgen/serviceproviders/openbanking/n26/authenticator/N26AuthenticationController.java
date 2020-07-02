@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -80,8 +80,7 @@ public class N26AuthenticationController
     @Override
     public ThirdPartyAppResponse<String> collect(String reference)
             throws AuthenticationException, AuthorizationException {
-        Map<String, String> callbackData = getCallbackData();
-        logCallbackDataKeys(callbackData);
+        Map<String, String> callbackData = new CaseInsensitiveMap<>(getCallbackData());
         processCallbackData(callbackData);
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
@@ -166,24 +165,5 @@ public class N26AuthenticationController
         return storage.getAccessTokenExpiryDate()
                 .map(expiresAtMs -> expiresAtMs < Instant.now().toEpochMilli())
                 .orElse(Boolean.TRUE);
-    }
-
-    private void logCallbackDataKeys(Map<String, String> callbackData) {
-        StringBuilder stringBuilder =
-                new StringBuilder()
-                        .append("CallbackData ")
-                        .append("[size: ")
-                        .append(callbackData.size())
-                        .append("] is containing keys: ");
-
-        callbackData.forEach(
-                (key, value) ->
-                        stringBuilder
-                                .append(key)
-                                .append(" [isValueEmpty: ")
-                                .append(StringUtils.isEmpty(value))
-                                .append("], "));
-
-        log.info(stringBuilder.toString());
     }
 }
