@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.entity.OpBankAccountEntity;
 import se.tink.libraries.user.rpc.User;
 
@@ -32,7 +33,9 @@ public class OpBankAccountEntityTest {
 
         assertEquals(
                 EXPECTED_ACCOUNT_NUMBER,
-                account.toTransactionalAccount().toSystemAccount(new User()).getBankId());
+                account.toTransactionalAccount()
+                        .toSystemAccount(new User(), new Provider())
+                        .getBankId());
     }
 
     @Test

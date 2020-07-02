@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.rpc.FetchLoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -448,8 +449,9 @@ public class NordeaLoanFetcherTest {
         Assert.assertTrue(loanAccountOptional.isPresent());
         LoanAccount loanAccount = loanAccountOptional.get();
         User user = mock(User.class);
+        Provider provider = mock(Provider.class);
         when(user.getFlags()).thenReturn(Lists.newArrayList());
-        loanAccount.toSystemAccount(user);
+        loanAccount.toSystemAccount(user, provider);
         loanAccount
                 .getDetails()
                 .toSystemLoan(loanAccount, LoanInterpreter.getInstance(MarketCode.SE));

@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.factory.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.enums.MarketCode;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -76,12 +75,8 @@ public abstract class SubsequentGenerationAgent<Auth> extends SuperAbstractAgent
                 .addSensitiveValuesSetObservable(sessionStorage.getSensitiveValuesObservable());
         this.credentials = request.getCredentials();
         this.provider = request.getProvider();
-        this.updateController =
-                new UpdateController(
-                        // TODO: Remove when provider uses MarketCode
-                        MarketCode.valueOf(request.getProvider().getMarket()),
-                        request.getProvider().getCurrency(),
-                        request.getUser());
+        this.updateController = new UpdateController(provider, request.getUser());
+
         this.client = componentProvider.getTinkHttpClient();
         if (context.getAgentConfigurationController().isOpenBankingAgent()) {
             client.disableSignatureRequestHeader();

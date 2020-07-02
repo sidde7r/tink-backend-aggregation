@@ -23,7 +23,6 @@ ignoredAgentsForCapabilityTest:
   - nxgen.be.openbanking.ing.IngAgent
   - nxgen.be.openbanking.kbc.KbcAgent
   - nxgen.be.openbanking.keytradebank.KeytradeBankAgent
-  - nxgen.be.openbanking.montepaschi.MontepaschiAgent
   - nxgen.be.openbanking.nagelmackers.NagelmackersAgent
   - nxgen.be.openbanking.vanbreda.VanBredaAgent
   - nxgen.be.openbanking.vdk.VdkAgent
@@ -94,6 +93,15 @@ ignoredAgentsForCapabilityTest:
   - nxgen.uk.openbanking.barclays.BarclaysV31Agent
   - nxgen.uk.openbanking.revolut.RevolutV31Agent
   - nxgen.uk.openbanking.starling.StarlingAgent
+  - nxgen.se.brokers.nordnet.NordnetAgent
+  - nxgen.se.banks.collector.CollectorAgent
+  - banks.sbab.SBABAgent
+  - nxgen.dk.banks.nordea.NordeaDkAgent
+  - nxgen.fr.openbanking.labanquepostale.LaBanquePostaleAgent
+  - nxgen.se.business.swedbank.SwedbankSEBusinessAgent
+  - nxgen.pt.openbanking.cofidis.CofidisAgent
+  - nxgen.pt.openbanking.unicre.UnicreAgent
+
 #
 #  These agents are temporarily ignored for initialisation tests,
 #  here are the reasons:
@@ -104,6 +112,5 @@ ignoredAgentsForCapabilityTest:
 ignoredAgentsForInitialisationTest:
   - nxgen.se.banks.nordea.partner.NordeaPartnerSeAgent
   - nxgen.dk.banks.nordeapartner.NordeaPartnerDkAgent
-  - nxgen.nl.banks.abnamro.AbnAmroAgent
   - nxgen.no.banks.nordeapartner.NordeaPartnerNoAgent
   - nxgen.fi.banks.nordea.partner.NordeaPartnerFiAgent

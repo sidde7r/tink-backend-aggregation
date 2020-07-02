@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -25,10 +26,14 @@ public class UpdateController {
     private final HashSet<Account> accounts = Sets.newHashSet();
     private final LoanInterpreter loanInterpreter;
     protected final User user;
+    private final Provider provider;
 
-    public UpdateController(MarketCode market, String currency, User user) {
+    public UpdateController(Provider provider, User user) {
+        // TODO: Remove when provider uses MarketCode
+        MarketCode market = MarketCode.valueOf(provider.getMarket());
         this.loanInterpreter = LoanInterpreter.getInstance(market);
-        this.currency = currency;
+        this.currency = provider.getCurrency();
+        this.provider = provider;
         this.user = user;
     }
 
@@ -69,7 +74,7 @@ public class UpdateController {
         }
 
         accounts.add(account);
-        return Pair.of(account.toSystemAccount(user), accountFeatures);
+        return Pair.of(account.toSystemAccount(user, provider), accountFeatures);
     }
 
     public Pair<se.tink.backend.agents.rpc.Account, List<Transaction>> updateTransactions(
@@ -79,7 +84,7 @@ public class UpdateController {
             return null;
         }
         return Pair.of(
-                account.toSystemAccount(user),
+                account.toSystemAccount(user, provider),
                 transactions.stream()
                         .map(t -> t.toSystemTransaction(user))
                         .collect(Collectors.toList()));
@@ -93,7 +98,7 @@ public class UpdateController {
         }
 
         return Pair.of(
-                account.toSystemAccount(user),
+                account.toSystemAccount(user, provider),
                 transactions.stream()
                         .map(t -> t.toSystemTransaction(user))
                         .collect(Collectors.toList()));
