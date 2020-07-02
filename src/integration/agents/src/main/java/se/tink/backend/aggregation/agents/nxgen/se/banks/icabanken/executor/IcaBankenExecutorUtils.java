@@ -172,4 +172,22 @@ public class IcaBankenExecutorUtils {
             transfer.getRemittanceInformation().setType(RemittanceInformationType.UNSTRUCTURED);
         }
     }
+
+    public static String getTruncatedSourceMessage(Transfer transfer) {
+        preconditionIsPayment(transfer);
+
+        String sourceMessage = transfer.getSourceMessage();
+        if (sourceMessage != null
+                && sourceMessage.length() > IcaBankenConstants.Transfers.SOURCE_MSG_MAX_LENGTH) {
+            return sourceMessage.substring(0, IcaBankenConstants.Transfers.SOURCE_MSG_MAX_LENGTH);
+        }
+        return sourceMessage;
+    }
+
+    private static void preconditionIsPayment(Transfer transfer) {
+        if (!transfer.isOfType(TransferType.PAYMENT)) {
+            throw new IllegalArgumentException(
+                    "This class should only be used for transfers of type PAYMENT. Use TransferMessageFormatter for BANK_TRANSFER");
+        }
+    }
 }
