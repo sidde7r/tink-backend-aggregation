@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.apiclient;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -16,6 +17,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transac
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.BalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.bpcegroup.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.FrAispApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fropenbanking.base.transfer.dto.TrustedBeneficiariesResponseDtoBase;
 import se.tink.backend.aggregation.api.Psd2Headers;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -25,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 
 @RequiredArgsConstructor
-public class BpceGroupApiClient {
+public class BpceGroupApiClient implements FrAispApiClient {
 
     private static final String AUTHORIZE_PATH = "/stet/psd2/oauth/authorize";
     private static final String TOKEN_PATH = "/stet/psd2/oauth/token";
@@ -171,5 +174,16 @@ public class BpceGroupApiClient {
                 .psuIdentity(true)
                 .trustedBeneficiaries(true)
                 .build();
+    }
+
+    @Override
+    public Optional<? extends TrustedBeneficiariesResponseDtoBase> getTrustedBeneficiaries() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<? extends TrustedBeneficiariesResponseDtoBase> getTrustedBeneficiaries(
+            String path) {
+        return Optional.empty();
     }
 }
