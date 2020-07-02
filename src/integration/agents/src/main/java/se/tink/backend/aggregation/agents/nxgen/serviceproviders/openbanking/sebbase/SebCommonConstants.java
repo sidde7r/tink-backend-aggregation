@@ -67,6 +67,7 @@ public class SebCommonConstants {
         public static final String WITH_BALANCE = "true";
         public static final String PENDING_AND_BOOKED_TRANSACTIONS = "both";
         public static final String PERMIT = "permit";
+        public static final String PENDING = "pending";
     }
 
     public static class HeaderKeys {
@@ -93,6 +94,11 @@ public class SebCommonConstants {
 
     public static class AccountTypes {
         public static final String SAVINGS = "sparkonto";
+    }
+
+    public static class TransactionType {
+        public static final String UPCOMING = "upcoming";
+        public static final String RESERVED = "reserved";
     }
 
     public static class ErrorMessages {
