@@ -1,6 +1,15 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.ACCESS_EXCEEDED;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.BANK_SIDE_FAILURE;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_EXPIRED;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_INVALID;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_REVOKED;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_REVOKED_BY_USER;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.MULTIPLE_LOGIN;
+
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +27,7 @@ import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.agent.Agent;
+import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceException;
 import se.tink.backend.aggregation.events.DataTrackerEventProducer;
 import se.tink.backend.aggregation.events.RefreshEventProducer;
@@ -53,6 +63,17 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private final String agentName;
     private final String provider;
     private final String market;
+    private static final ImmutableMap<BankServiceError, AdditionalInfo>
+            ADDITIONAL_INFO_ERROR_MAPPER =
+                    ImmutableMap.<BankServiceError, AdditionalInfo>builder()
+                            .put(ACCESS_EXCEEDED, AdditionalInfo.ACCESS_EXCEEDED)
+                            .put(BANK_SIDE_FAILURE, AdditionalInfo.BANK_SIDE_FAILURE)
+                            .put(CONSENT_EXPIRED, AdditionalInfo.CONSENT_EXPIRED)
+                            .put(CONSENT_INVALID, AdditionalInfo.CONSENT_INVALID)
+                            .put(CONSENT_REVOKED_BY_USER, AdditionalInfo.CONSENT_REVOKED)
+                            .put(CONSENT_REVOKED, AdditionalInfo.CONSENT_REVOKED)
+                            .put(MULTIPLE_LOGIN, AdditionalInfo.MULTIPLE_LOGIN)
+                            .build();
 
     public RefreshItemAgentWorkerCommand(
             AgentWorkerCommandContext context,
@@ -106,28 +127,6 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 }
             } catch (BankServiceException e) {
                 // The way frontend works now the message will not be displayed to the user.
-                AdditionalInfo additionalInfo = AdditionalInfo.ERROR_INFO;
-                switch (e.getError()) {
-                    case ACCESS_EXCEEDED:
-                        additionalInfo = AdditionalInfo.ACCESS_EXCEEDED;
-                        break;
-                    case BANK_SIDE_FAILURE:
-                        additionalInfo = AdditionalInfo.BANK_SIDE_FAILURE;
-                        break;
-                    case CONSENT_EXPIRED:
-                        additionalInfo = AdditionalInfo.CONSENT_EXPIRED;
-                        break;
-                    case CONSENT_INVALID:
-                        additionalInfo = AdditionalInfo.CONSENT_INVALID;
-                        break;
-                    case CONSENT_REVOKED_BY_USER:
-                    case CONSENT_REVOKED:
-                        additionalInfo = AdditionalInfo.CONSENT_REVOKED;
-                        break;
-                    case MULTIPLE_LOGIN:
-                        additionalInfo = AdditionalInfo.MULTIPLE_LOGIN;
-                        break;
-                }
                 context.updateStatus(
                         CredentialsStatus.UNCHANGED,
                         context.getCatalog().getString(e.getUserMessage()));
@@ -140,7 +139,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                         context.getAppId(),
                         context.getClusterId(),
                         context.getRequest().getCredentials().getUserId(),
-                        additionalInfo,
+                        ADDITIONAL_INFO_ERROR_MAPPER.get(e.getError()),
                         item);
                 log.warn("BankServiceException is received and credentials status set unchanged.");
                 return AgentWorkerCommandResult.ABORT;
