@@ -63,8 +63,8 @@ public final class HttpLoggingConstants {
                     "x-rate-limit-limit",
                     "x-rate-limit-remaining",
                     "x-rate-limit-reset",
-                    "X-RateLimit-Limit",
-                    "X-RateLimit-Remaining",
+                    "x-ratelimit-limit",
+                    "x-ratelimit-remaining",
                     "x-request-id",
                     "x-response-id");
 }

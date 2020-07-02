@@ -2849,6 +2849,16 @@ agentsServiceConfiguration:
         eidasQwac: Tink
         environment: production
         redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+    d00a2e3c594d4f27ba3a6352b17909df:
+      tink:
+        apiKey: bS12WW13bjFONE5INTdxc1RSdmhhYVlXblZnRjEtNXpLdFhFQXE6Y2Q5M2U5NGMtNmE3MS00ODkzLTgyNDgtM2JmNGU2YmY5NzA4
+        memberId: m:vYmwn1N4NH57qsTRvhaaYWnVgF1:5zKtXEAq
+        realmId: m:YxHeCNV2F2fJYyayR8JnCxhSL2q:5zKtXEAq
+        redirectUrl: https://127.0.0.1:7357/api/v1/thirdparty/callback
+        baseUrl: https://api.sandbox.token.io
+        authorizationUrl: https://web-app.sandbox.token.io/app/request-token/{tokenId}
+        aliasType: EIDAS
+        aliasValue: PSDSE-FINA-44059
     nagelmackers:
       tink:
         baseUrl: https://openbankingapi.nagelmackers.be

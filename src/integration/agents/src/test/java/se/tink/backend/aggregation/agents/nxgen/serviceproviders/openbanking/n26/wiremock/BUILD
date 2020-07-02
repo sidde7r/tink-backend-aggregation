@@ -1,0 +1,32 @@
+load("//tools/bzl:junit_old.bzl", "junit_test")
+
+junit_test(
+    name = "n26_mock",
+    srcs = glob(["*.java"]),
+    data = [
+        "//data:aggregation_test",
+        "//data:provider_configurations",
+        "//etc:development",
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26/wiremock/resources",
+    ],
+    resources = [
+        "//src/integration/agents/src/main/resources:config-templates",
+    ],
+    visibility = ["//visibility:public"],
+    runtime_deps = ["//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/openbanking/n26"],
+    deps = [
+        "//src/integration/amount",
+        "//src/integration/enums",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/configuration/agentsservice",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/assertions",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockpayment",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework/compositeagenttest/wiremockrefresh",
+        "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
+        "//src/integration/payment:rpc",
+        "//src/libraries/account_identifier",
+        "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:pl_pragmatists_junitparams",
+        "@aggregation//:com_google_guava_guava",
+    ],
+)
