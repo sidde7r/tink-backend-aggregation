@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +45,6 @@ import se.tink.libraries.pair.Pair;
        that implement TransferExecutorNxgen.
     2- We do not make any assertions on agents that implement DeprecatedRefreshExecutor
 */
-@Ignore
 public class AgentCapabilitiesTest {
     private static final Logger log = LoggerFactory.getLogger(AgentCapabilitiesTest.class);
 
