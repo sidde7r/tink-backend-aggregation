@@ -187,7 +187,7 @@ public class IcaBankenExecutorUtils {
     private static void preconditionIsPayment(Transfer transfer) {
         if (!transfer.isOfType(TransferType.PAYMENT)) {
             throw new IllegalArgumentException(
-                    "This class should only be used for transfers of type PAYMENT. Use TransferMessageFormatter for BANK_TRANSFER");
+                    "This method should only be used for transfers of type PAYMENT. Use TransferMessageFormatter for BANK_TRANSFER");
         }
     }
 }
