@@ -7,5 +7,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @Data
 public class EndUserIdentityResponseDto {
 
-    private String connectedPsu;
+    private String connectedPSU;
 }

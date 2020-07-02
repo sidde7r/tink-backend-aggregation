@@ -45,7 +45,7 @@ public class LaBanquePostaleIdentityDataFetcherTest {
     private static LaBanquePostaleApiClient createLaBanquePostaleApiClientMock() {
         final EndUserIdentityResponseDto endUserIdentityResponseDtoMock =
                 mock(EndUserIdentityResponseDto.class);
-        when(endUserIdentityResponseDtoMock.getConnectedPsu()).thenReturn(PSU_NAME);
+        when(endUserIdentityResponseDtoMock.getConnectedPSU()).thenReturn(PSU_NAME);
 
         final LaBanquePostaleApiClient apiClient = mock(LaBanquePostaleApiClient.class);
         when(apiClient.getEndUserIdentity()).thenReturn(endUserIdentityResponseDtoMock);
