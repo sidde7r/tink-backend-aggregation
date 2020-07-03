@@ -47,7 +47,12 @@ public class ExecutorExceptionResolver {
                                             .getFirstErrorMessage()
                                             .orElse(
                                                     Optional.ofNullable(messageable.getStatus())
-                                                            .orElse("Something went wrong."))
+                                                            .orElse(
+                                                                    TransferExecutionException
+                                                                            .EndUserMessage
+                                                                            .GENERIC_PAYMENT_ERROR_MESSAGE
+                                                                            .getKey()
+                                                                            .get()))
                                             .replaceAll("\n", ""));
 
                     @Override
