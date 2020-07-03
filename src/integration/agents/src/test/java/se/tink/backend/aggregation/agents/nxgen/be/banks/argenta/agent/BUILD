@@ -1,12 +1,17 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "argenta",
+    name = "argenta_agent",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",
+        "//data:cryptography_test",
         "//data:provider_configurations",
         "//etc:development",
+    ],
+    tags = [
+        "external",
+        "manual",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -14,13 +19,9 @@ junit_test(
         "//src/integration/amount",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
         "//src/integration/lib",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/agents/exceptions/bankservice",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/client",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/http/response",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/configuration",
         "//third_party:org_assertj_assertj_core",
-        "//third_party:org_mockito_mockito_core",
         "@aggregation//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

@@ -78,6 +78,6 @@ public class ArgentaConstants {
         public static final String ACCOUNT_BLOCKED = "is geblokkeerd";
         public static final String PROBLEM_SOLVING_IN_PROGRESS =
                 "We lossen het probleem zo snel mogelijk op";
-        public static final String SOMETHING_WRONG = "Oeps, er ging iets mis";
+        public static final String SOMETHING_WRONG = "er ging iets mis";
     }
 }

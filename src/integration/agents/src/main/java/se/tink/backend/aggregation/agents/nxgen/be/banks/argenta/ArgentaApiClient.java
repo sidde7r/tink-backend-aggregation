@@ -126,7 +126,7 @@ public class ArgentaApiClient {
         }
     }
 
-    private void handleKnownErrorResponses(
+    void handleKnownErrorResponses(
             ArgentaErrorResponse argentaErrorResponse, HttpResponseException responseException)
             throws LoginException, AuthorizationException {
         String errorCode = argentaErrorResponse.getCode();
