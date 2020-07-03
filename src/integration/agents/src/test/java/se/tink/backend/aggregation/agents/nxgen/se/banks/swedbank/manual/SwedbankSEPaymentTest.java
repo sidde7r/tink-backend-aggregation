@@ -15,6 +15,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.RemittanceInformation;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 /** Careful with this test! Actual transfers made! */
@@ -77,6 +78,10 @@ public class SwedbankSEPaymentTest {
         transfer.setType(TransferType.PAYMENT);
         transfer.setDueDate(getDueDate());
         transfer.setDestinationMessage("Reference");
+
+        RemittanceInformation remittanceInformation = new RemittanceInformation();
+        remittanceInformation.setValue("Reference");
+        transfer.setRemittanceInformation(remittanceInformation);
 
         builder.addCredentialField(Field.Key.USERNAME, ssnManager.get(SsnArgumentEnum.SSN))
                 .build()
