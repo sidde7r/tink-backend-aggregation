@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 

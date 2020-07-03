@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.AuthenticationStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entities.consent.ConsentAllAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthorizeRequest;
