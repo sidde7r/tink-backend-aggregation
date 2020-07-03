@@ -75,9 +75,6 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     .help("Payments experiment with no increments")
                     .register();
 
-    public static String GENERIC_PAYMENT_ERROR_MESSAGE =
-            "There was a problem connecting to the bank.";
-
     private final TransferRequest transferRequest;
     private final AgentWorkerCommandMetricState metrics;
 
@@ -234,7 +231,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             log.error(transfer, "Could not execute transfer.", e);
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
-            signableOperation.setStatusMessage(catalog.getString(GENERIC_PAYMENT_ERROR_MESSAGE));
+            signableOperation.setStatusMessage(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
+                                    .getKey()
+                                    .get()));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -393,7 +394,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             log.error(transfer, "Could not execute transfer. Something is badly broken", e);
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
-            signableOperation.setStatusMessage(catalog.getString(GENERIC_PAYMENT_ERROR_MESSAGE));
+            signableOperation.setStatusMessage(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessage.GENERIC_PAYMENT_ERROR_MESSAGE
+                                    .getKey()
+                                    .get()));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
