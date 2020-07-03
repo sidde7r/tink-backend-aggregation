@@ -155,22 +155,13 @@ public class N26AuthenticationControllerTest {
     @Test
     @SneakyThrows
     public void shouldStoreAccessTokenFromCallbackData() {
-        // given
-        String supplementalKey = "supplementalKey";
-        when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
-        Map<String, String> callbackData = Maps.newHashMap("tokenId", ACCESS_TOKEN);
-        when(supplementalInformationHelper.waitForSupplementalInformation(
-                        eq(supplementalKey), anyLong(), any(TimeUnit.class)))
-                .thenReturn(Optional.of(callbackData));
+        shouldStoreAccessToken("tokenId");
+    }
 
-        // when
-        ThirdPartyAppResponse<String> response = authenticationController.collect(null);
-
-        // then
-        assertThat(response)
-                .isEqualToComparingFieldByField(
-                        ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE));
-        verify(storage).storeAccessToken(ACCESS_TOKEN);
+    @Test
+    @SneakyThrows
+    public void shouldStoreAccessTokenFromCallbackDataWhenTokenIdInLowerCase() {
+        shouldStoreAccessToken("tokenid");
     }
 
     @Test
@@ -209,6 +200,26 @@ public class N26AuthenticationControllerTest {
         assertThat(appPayload.getDesktop().getUrl()).isEqualTo(finalAuthUrl);
         assertThat(appPayload.getIos().getDeepLinkUrl()).isEqualTo(finalAuthUrl);
         assertThat(appPayload.getAndroid().getIntent()).isEqualTo(finalAuthUrl);
+    }
+
+    @SneakyThrows
+    private void shouldStoreAccessToken(String tokenIdKey) {
+        // given
+        String supplementalKey = "supplementalKey";
+        when(strongAuthenticationState.getSupplementalKey()).thenReturn(supplementalKey);
+        Map<String, String> callbackData = Maps.newHashMap(tokenIdKey, ACCESS_TOKEN);
+        when(supplementalInformationHelper.waitForSupplementalInformation(
+                        eq(supplementalKey), anyLong(), any(TimeUnit.class)))
+                .thenReturn(Optional.of(callbackData));
+
+        // when
+        ThirdPartyAppResponse<String> response = authenticationController.collect(null);
+
+        // then
+        assertThat(response)
+                .isEqualToComparingFieldByField(
+                        ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE));
+        verify(storage).storeAccessToken(ACCESS_TOKEN);
     }
 
     private TokenDetailsResponse createTokenDetailsResponse(Long expiryDateInMs) {
