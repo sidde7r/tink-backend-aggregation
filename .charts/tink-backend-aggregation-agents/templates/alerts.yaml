@@ -741,6 +741,19 @@ spec:
   - record: sum:tink_cancelled_transfers_in_sweden:delta12h
     expr: sum(increase(tink_agent_transfer_total{market="SE", outcome="cancelled"}[12h])) or on() vector(0)
 
+  # Precompute realtime banking metrics
+  - record: ratio:tink_aggregation_market_success:delta5m
+    expr: sum(increase(tink_aggregation_successful_market_total[5m])) by (market)
+        / sum(increase(tink_aggregation_total_market_total[5m])) by (market)
+
+  - record: ratio:tink_aggregation_operation_success:delta5m
+    expr: sum(increase(tink_aggregation_successful_operations_total[5m])) by (operation)
+       / sum(increase(tink_aggregation_total_operations_total[5m])) by (operation)
+
+  - record: ratio:tink_aggregation_market_operation_success:delta5m
+    expr: sum(increase(tink_aggregation_successful_market_operations_total[5m])) by (operation, market)
+      / sum(increase(tink_aggregation_total_market_operations_total[5m])) by (operation, market)
+
   {{- if eq .Values.Environment "production" }}
   - alert: TransferFailedOutcomeThresholdIsPassedForSwedenTier2Banks
     expr: sum by (provider, outcome) (increase(tink_agent_transfer_total{market="SE", provider!~".*(nordea|seb|swedbank|handelsbanken).*", outcome="failed"}[1h])) >= 5
