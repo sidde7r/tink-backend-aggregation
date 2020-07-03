@@ -1,26 +1,31 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.creditcards;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsUserState;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.entities.account.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.SibsBaseTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.amount.ExactCurrencyAmount;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SibsCreditCardFetcher
-        implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
+public class SibsCreditCardFetcher extends SibsBaseTransactionFetcher
+        implements AccountFetcher<CreditCardAccount>,
+                TransactionKeyPaginator<CreditCardAccount, String> {
 
-    private final SibsBaseApiClient apiClient;
-
-    public SibsCreditCardFetcher(SibsBaseApiClient apiClient) {
-        this.apiClient = apiClient;
+    public SibsCreditCardFetcher(
+            SibsBaseApiClient apiClient,
+            CredentialsRequest credentialsRequest,
+            SibsUserState userState) {
+        super(apiClient, credentialsRequest, userState);
     }
 
     @Override
@@ -47,7 +52,16 @@ public class SibsCreditCardFetcher
     }
 
     @Override
-    public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        return Collections.emptyList();
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            CreditCardAccount account, String key) {
+        if (StringUtils.isNotEmpty(key)) {
+            key = key.replace(StringUtils.SPACE, ENCODED_SPACE);
+        }
+        return Optional.ofNullable(key)
+                .map(apiClient::getTransactionsForKey)
+                .orElseGet(
+                        () ->
+                                apiClient.getAccountTransactions(
+                                        account, getTransactionsFetchBeginDate(account)));
     }
 }

@@ -50,9 +50,9 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
                 ProgressiveAuthAgent {
 
     protected final SibsBaseApiClient apiClient;
+    protected final SibsUserState userState;
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
     private final StatelessProgressiveAuthenticator authenticator;
-    private final SibsUserState userState;
 
     public SibsProgressiveBaseAgent(
             CredentialsRequest request,

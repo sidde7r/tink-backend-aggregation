@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.loans.SibsLoansFetcher;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class CofidisAgent extends SibsProgressiveBaseAgent implements RefreshLoanAccountsExecutor {
@@ -21,9 +23,15 @@ public class CofidisAgent extends SibsProgressiveBaseAgent implements RefreshLoa
             AgentContext context,
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration);
-        SibsLoansFetcher fetcher = new SibsLoansFetcher(apiClient);
+        SibsLoansFetcher fetcher = new SibsLoansFetcher(apiClient, request, userState);
         loanRefreshController =
-                new LoanRefreshController(metricRefreshController, updateController, fetcher);
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        fetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(fetcher)));
     }
 
     @Override

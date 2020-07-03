@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.creditcards.SibsCreditCardFetcher;
 import se.tink.backend.aggregation.configuration.agentsservice.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class UnicreAgent extends SibsProgressiveBaseAgent
@@ -21,10 +23,15 @@ public class UnicreAgent extends SibsProgressiveBaseAgent
             AgentContext context,
             AgentsServiceConfiguration configuration) {
         super(request, context, configuration);
-        SibsCreditCardFetcher fetcher = new SibsCreditCardFetcher(apiClient);
+        SibsCreditCardFetcher fetcher = new SibsCreditCardFetcher(apiClient, request, userState);
         creditCardRefreshController =
                 new CreditCardRefreshController(
-                        metricRefreshController, updateController, fetcher, fetcher);
+                        metricRefreshController,
+                        updateController,
+                        fetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(fetcher)));
     }
 
     @Override
