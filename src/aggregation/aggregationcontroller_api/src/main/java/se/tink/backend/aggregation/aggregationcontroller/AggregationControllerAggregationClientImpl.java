@@ -9,6 +9,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.ClientConfig;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
@@ -48,8 +49,6 @@ public class AggregationControllerAggregationClientImpl
             LoggerFactory.getLogger(AggregationControllerAggregationClientImpl.class);
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
             ImmutableSet.of("oxford-staging", "oxford-production");
-    private static final ImmutableSet<String> ACCOUNT_INFORMATION_ENABLED_ENVIRONMENTS =
-            ImmutableSet.of("local-development", "oxford-staging");
     private static final int MAXIMUM_RETRY_ATTEMPT = 3;
     private static final int WAITING_TIME_FOR_NEW_ATTEMPT_IN_MILLISECONDS = 2000;
     private static final ImmutableSet<Integer> ERROR_CODES_FOR_RETRY =
@@ -64,9 +63,6 @@ public class AggregationControllerAggregationClientImpl
             AccountInformationServiceConfiguration accountInformationServiceConfiguration) {
         this.config = custom;
         this.accountInformationServiceConfiguration = accountInformationServiceConfiguration;
-        log.info(
-                "account information service enabled in: "
-                        + accountInformationServiceConfiguration.getEnabledClusters());
     }
 
     private <T> T buildInterClusterServiceFromInterface(
@@ -261,7 +257,11 @@ public class AggregationControllerAggregationClientImpl
     @Override
     public AccountHolder updateAccountHolder(
             HostConfiguration hostConfiguration, UpdateAccountHolderRequest request) {
-        if (ACCOUNT_INFORMATION_ENABLED_ENVIRONMENTS.contains(hostConfiguration.getClusterId())) {
+        if (Objects.nonNull(accountInformationServiceConfiguration)
+                && Objects.nonNull(accountInformationServiceConfiguration.getEnabledClusters())
+                && accountInformationServiceConfiguration
+                        .getEnabledClusters()
+                        .contains(hostConfiguration.getClusterId())) {
             return requestExecuter(
                     () -> getAccountHolderService(hostConfiguration).updateAccountHolder(request),
                     "Update Account Holder");

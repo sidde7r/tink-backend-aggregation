@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.Date;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -36,10 +37,12 @@ import se.tink.backend.aggregation.aggregationcontroller.iface.AggregationContro
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountHolderRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
+import se.tink.backend.aggregation.configuration.models.AccountInformationServiceConfiguration;
 import se.tink.libraries.credentials.rpc.Credentials;
 
 public final class AggregationControllerAggregationClientTest {
 
+    private static final String CLUSTER_ID = "local-development";
     private static WireMockTestServer server;
     private static AggregationControllerAggregationClient client;
     private static HostConfiguration hostConfiguration;
@@ -100,6 +103,9 @@ public final class AggregationControllerAggregationClientTest {
 
         @Override
         protected void configure() {
+            AccountInformationServiceConfiguration aisConfig =
+                    new AccountInformationServiceConfiguration();
+            aisConfig.setEnabledClusters(Collections.singleton(CLUSTER_ID));
             ClientConfig config = new DefaultApacheHttpClient4Config();
             JacksonJsonProvider jsonProvider = new JacksonJsonProvider();
             config.getSingletons().add(jsonProvider);
@@ -137,7 +143,7 @@ public final class AggregationControllerAggregationClientTest {
         hostConfiguration.setBase64encodedclientcert("");
         hostConfiguration.setDisablerequestcompression(false);
         hostConfiguration.setApiToken("devtoken");
-        hostConfiguration.setClusterId("local-development");
+        hostConfiguration.setClusterId(CLUSTER_ID);
     }
 
     @Test
