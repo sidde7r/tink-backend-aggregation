@@ -47,7 +47,8 @@ public class ExecutorExceptionResolver {
                                             .getFirstErrorMessage()
                                             .orElse(
                                                     Optional.ofNullable(messageable.getStatus())
-                                                            .orElse("Something went wrong."))
+                                                            .orElse(
+                                                                    "There was a problem connecting to the bank."))
                                             .replaceAll("\n", ""));
 
                     @Override

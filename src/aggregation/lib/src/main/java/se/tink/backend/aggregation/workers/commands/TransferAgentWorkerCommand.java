@@ -231,7 +231,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             log.error(transfer, "Could not execute transfer.", e);
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
-            signableOperation.setStatusMessage(catalog.getString("Something went wrong."));
+            signableOperation.setStatusMessage(
+                    catalog.getString("There was a problem connecting to the bank."));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
@@ -390,7 +391,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             log.error(transfer, "Could not execute transfer. Something is badly broken", e);
 
             signableOperation.setStatus(SignableOperationStatuses.FAILED);
-            signableOperation.setStatusMessage(catalog.getString("Something went wrong."));
+            signableOperation.setStatusMessage(
+                    catalog.getString("There was a problem connecting to the bank."));
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;

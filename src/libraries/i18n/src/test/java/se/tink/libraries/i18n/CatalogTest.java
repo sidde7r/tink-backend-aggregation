@@ -104,8 +104,8 @@ public class CatalogTest {
 
     @Test
     public void testCatalogGetString() {
-        String swwEn = "Something went wrong.";
-        String swwSv = "Något gick fel.";
+        String swwEn = "There was a problem connecting to the bank.";
+        String swwSv = "Ett problem uppstod med anslutningen till banken.";
         String swwIt = "Qualcosa è andato storto.";
         Catalog catalog = new Catalog(new Locale("sv", "SE"));
         String catalogTranslation = catalog.getString(swwEn);

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2020-06-10 10:12+0000\n"
-"PO-Revision-Date: 2020-06-10 10:12+0000\n"
+"POT-Creation-Date: 2020-07-03 08:46+0000\n"
+"PO-Revision-Date: 2020-07-03 08:46+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -1474,3 +1474,6 @@ msgstr "Le paiement a été annulé par l'utilisateur."
 
 msgid "An error occurred when confirming the payment."
 msgstr "Une erreur s'est produite lors de la confirmation du paiement."
+
+msgid "There was a problem connecting to the bank."
+msgstr "Un problème est survenu lors de la connexion à la banque."
