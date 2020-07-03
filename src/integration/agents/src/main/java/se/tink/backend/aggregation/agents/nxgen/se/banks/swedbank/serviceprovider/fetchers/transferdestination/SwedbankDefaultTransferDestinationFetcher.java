@@ -35,7 +35,7 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
         this.hasExtendedBankId =
-                sessionStorage.get(StorageKey.HAS_EXTENDED_BANKID, Boolean.class).orElse(false);
+                sessionStorage.get(StorageKey.HAS_EXTENDED_BANKID, Boolean.class).orElse(true);
 
         return TransferDestinationsResponse.builder()
                 .addTransferDestinations(getPaymentDestinations(accounts))
