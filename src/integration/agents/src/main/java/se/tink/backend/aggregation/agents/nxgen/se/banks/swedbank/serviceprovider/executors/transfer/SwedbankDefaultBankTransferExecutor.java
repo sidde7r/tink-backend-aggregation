@@ -61,7 +61,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
         String sourceAccountId = this.getSourceAccountIdAndSelectProfile(transfer);
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers();
-        registeredTransfers.noUnsignedTransfersOrThrow();
+        deleteTransfers(registeredTransfers.getRegisteredTransactions());
 
         RegisteredTransfersResponse registeredTransfersResponse =
                 registerTransfer(transfer, sourceAccountId);
