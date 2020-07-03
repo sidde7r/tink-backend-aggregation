@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderValues;
@@ -22,9 +23,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.UrlParameters;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.entities.consent.ConsentAllAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
@@ -144,6 +145,13 @@ public final class SwedbankApiClient {
                 .get(ConsentResponse.class)
                 .getConsentStatus()
                 .equalsIgnoreCase(SwedbankConstants.ConsentStatus.VALID);
+    }
+
+    public boolean getScaStatus(String statusLink) {
+        return createRequestInSession(new URL(Urls.BASE.concat(statusLink)))
+                .get(AuthenticationResponse.class)
+                .getScaStatus()
+                .equalsIgnoreCase(AuthStatus.FINALIZED);
     }
 
     public List<String> mapAccountResponseToIbanList(FetchAccountResponse accounts) {
@@ -456,4 +464,6 @@ public final class SwedbankApiClient {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         return simpleDateFormat.format(date);
     }
+
+
 }
