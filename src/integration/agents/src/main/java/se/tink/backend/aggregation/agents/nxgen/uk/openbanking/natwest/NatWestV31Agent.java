@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31PisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardAccountMapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.RbsGroupCreditCardBalanceMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.identifier.IdentifierMapper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.NatWestConstants.Urls.V31;
@@ -23,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.generated.ran
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.jwt.signer.iface.JwtSigner;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.libraries.mapper.PrioritizedValueExtractor;
 
 @AgentDependencyModulesForProductionMode(modules = UkOpenBankingLocalKeySignerModule.class)
 @AgentDependencyModulesForDecoupledMode(
@@ -57,11 +59,11 @@ public class NatWestV31Agent extends UkOpenBankingBaseAgent {
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        se.tink.libraries.mapper.PrioritizedValueExtractor valueExtractor =
-                new se.tink.libraries.mapper.PrioritizedValueExtractor();
+        PrioritizedValueExtractor valueExtractor = new PrioritizedValueExtractor();
         CreditCardAccountMapper creditCardAccountMapper =
                 new CreditCardAccountMapper(
-                        new NatwestCreditCardBalanceMapper(), new IdentifierMapper(valueExtractor));
+                        new RbsGroupCreditCardBalanceMapper(),
+                        new IdentifierMapper(valueExtractor));
         return new UkOpenBankingV31Ais(
                 aisConfig, persistentStorage, creditCardAccountMapper, localDateTimeSource);
     }

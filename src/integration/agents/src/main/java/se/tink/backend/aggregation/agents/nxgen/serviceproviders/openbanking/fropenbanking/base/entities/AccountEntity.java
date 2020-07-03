@@ -17,12 +17,17 @@ public class AccountEntity {
     private String iban;
 
     public static AccountEntity creditorOf(PaymentRequest paymentRequest) {
-        return new AccountEntity(paymentRequest.getPayment().getCreditor().getAccountNumber());
+        IbanIdentifier accountIdentifier =
+                (IbanIdentifier) paymentRequest.getPayment().getCreditor().getAccountIdentifier();
+        return new AccountEntity(accountIdentifier.getIban());
     }
 
     public static AccountEntity debtorOf(PaymentRequest paymentRequest) {
         return Optional.ofNullable(paymentRequest.getPayment().getDebtor())
-                .map(debtor -> new AccountEntity(debtor.getAccountNumber()))
+                .map(
+                        debtor ->
+                                new AccountEntity(
+                                        ((IbanIdentifier) debtor.getAccountIdentifier()).getIban()))
                 .orElse(new AccountEntity());
     }
 

@@ -81,10 +81,11 @@ public class CreditAgricoleSavoieWireMockTest {
         return new Payment.Builder()
                 .withCreditor(
                         new Creditor(
-                                AccountIdentifier.create(
-                                        AccountIdentifier.Type.SORT_CODE, "04000469430924"),
+                                AccountIdentifier.create(Type.IBAN, "FR1420041010050500013M02606"),
                                 "Tink"))
-                .withDebtor(new Debtor(AccountIdentifier.create(Type.SORT_CODE, "2314701111111")))
+                .withDebtor(
+                        new Debtor(
+                                AccountIdentifier.create(Type.IBAN, "FR1261401750597365134612940")))
                 .withExactCurrencyAmount(amount)
                 .withCurrency(currency)
                 .withReference(new Reference("TRANSFER", "test"))
