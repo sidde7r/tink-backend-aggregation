@@ -17,6 +17,10 @@ public class BalanceFixtures {
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"444.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"ClosingBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
     private static final String BALANCE_TYPE_PREVIOUSLY_CLOSED_BOOKED =
             "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"555.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"PreviouslyClosedBooked\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
+    private static final String BALANCE_TYPE_EXPECTED =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"123.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"Expected\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
+    private static final String BALANCE_TYPE_FORWARD_AVAILABLE =
+            "{\"AccountId\":\"4cc\",\"Amount\":{\"Amount\":\"111.05\",\"Currency\":\"GBP\"},\"CreditDebitIndicator\":\"Credit\",\"Type\":\"ForwardAvailable\",\"DateTime\":\"2019-11-20T14:24:56Z\"}";
 
     private static final String TEMPORARY_CREDIT_LINE =
             "{\"Amount\":{\"Amount\":\"111.11\",\"Currency\":\"GBP\"},\"Included\":false,\"Type\":\"Temporary\"}";
@@ -28,6 +32,16 @@ public class BalanceFixtures {
             "{\"Amount\":{\"Amount\":\"444.33\",\"Currency\":\"GBP\"},\"Included\":false,\"Type\":\"Emergency\"}";
     private static final String PRE_AGREED_CREDIT_LINE =
             "{\"Amount\":{\"Amount\":\"444.33\",\"Currency\":\"GBP\"},\"Included\":false,\"Type\":\"PreAgreed\"}";
+
+    public static AccountBalanceEntity expectedBalance() {
+        return SerializationUtils.deserializeFromString(
+                BALANCE_TYPE_EXPECTED, AccountBalanceEntity.class);
+    }
+
+    public static AccountBalanceEntity forwardAvailableBalance() {
+        return SerializationUtils.deserializeFromString(
+                BALANCE_TYPE_FORWARD_AVAILABLE, AccountBalanceEntity.class);
+    }
 
     public static AccountBalanceEntity balanceDebit() {
         return SerializationUtils.deserializeFromString(BALANCE_DEBIT, AccountBalanceEntity.class);

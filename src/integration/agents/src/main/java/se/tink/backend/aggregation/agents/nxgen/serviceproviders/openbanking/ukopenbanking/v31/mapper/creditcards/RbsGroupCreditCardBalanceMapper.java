@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards;
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.EXPECTED;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.AccountBalanceType.FORWARD_AVAILABLE;
@@ -6,10 +6,9 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbank
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards.CreditCardBalanceMapper;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-class NatwestCreditCardBalanceMapper implements CreditCardBalanceMapper {
+public class RbsGroupCreditCardBalanceMapper implements CreditCardBalanceMapper {
 
     @Override
     public ExactCurrencyAmount getAccountBalance(Collection<AccountBalanceEntity> balances) {
@@ -20,7 +19,7 @@ class NatwestCreditCardBalanceMapper implements CreditCardBalanceMapper {
                 .orElseThrow(
                         () ->
                                 new NoSuchElementException(
-                                        "Unable to get available credit - no EXPECTED available balance found."));
+                                        "Unable to get account balance - no EXPECTED balance found."));
     }
 
     @Override

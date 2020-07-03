@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.mapper.creditcards;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.BalanceFixtures.expectedBalance;
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.BalanceFixtures.forwardAvailableBalance;
-import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.natwest.BalanceFixtures.previouslyClosedBookedBalance;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.expectedBalance;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.forwardAvailableBalance;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fixtures.BalanceFixtures.previouslyClosedBookedBalance;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
@@ -15,13 +15,13 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
-public class NatwestCreditCardBalanceMapperTest {
+public class RbsGroupCreditCardBalanceMapperTest {
 
-    private NatwestCreditCardBalanceMapper balanceMapper;
+    private RbsGroupCreditCardBalanceMapper balanceMapper;
 
     @Before
     public void setUp() {
-        balanceMapper = new NatwestCreditCardBalanceMapper();
+        balanceMapper = new RbsGroupCreditCardBalanceMapper();
     }
 
     @Test
