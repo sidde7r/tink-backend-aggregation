@@ -11,6 +11,9 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 public class ExecutorExceptionResolver {
     private final Catalog catalog;
 
+    public static String GENERIC_PAYMENT_ERROR_MESSAGE =
+            "There was a problem connecting to the bank.";
+
     public ExecutorExceptionResolver(Catalog catalog) {
         this.catalog = catalog;
     }
@@ -47,8 +50,7 @@ public class ExecutorExceptionResolver {
                                             .getFirstErrorMessage()
                                             .orElse(
                                                     Optional.ofNullable(messageable.getStatus())
-                                                            .orElse(
-                                                                    "There was a problem connecting to the bank."))
+                                                            .orElse(GENERIC_PAYMENT_ERROR_MESSAGE))
                                             .replaceAll("\n", ""));
 
                     @Override
