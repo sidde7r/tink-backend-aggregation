@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.agent;
 
 import org.junit.AfterClass;
 import org.junit.Before;

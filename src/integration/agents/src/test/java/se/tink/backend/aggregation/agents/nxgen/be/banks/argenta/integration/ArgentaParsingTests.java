@@ -31,9 +31,8 @@ public class ArgentaParsingTests {
 
         TransactionalAccount checkingAccount =
                 argentaAccountResponse.getAccounts().get(0).toTransactionalAccount().get();
-        assertThat(checkingAccount.getExactBalance()).isEqualTo(1891.98);
+        assertThat(checkingAccount.getExactBalance().getDoubleValue()).isEqualTo(1891.98);
         assertThat(checkingAccount.getAccountNumber()).isEqualTo("BE78973136067186");
-        assertThat(checkingAccount.getApiIdentifier()).isEqualTo("1#01");
         assertThat(checkingAccount.getType()).isEqualTo(AccountTypes.CHECKING);
 
         TransactionalAccount savingsAccount =
@@ -57,7 +56,6 @@ public class ArgentaParsingTests {
                 .isEqualTo(ExactCurrencyAmount.of(new BigDecimal(-150), "EUR"));
         assertThat(argentaTransaction.getDescription())
                 .isEqualTo("Uw overschrijving Olivier Appel Zakgeld");
-        assertThat(argentaTransaction.getExternalId()).isEqualTo("B7H30BI1K00A000U");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         assertThat(format.format(argentaTransaction.getDate())).isEqualTo("20170930");
@@ -77,7 +75,6 @@ public class ArgentaParsingTests {
                 .isEqualTo(new ExactCurrencyAmount(new BigDecimal(-15), "EUR"));
         assertThat(argentaTransaction.getDescription())
                 .isEqualTo("Uw overschrijving Olivier Appel");
-        assertThat(argentaTransaction.getExternalId()).isEqualTo("B7H30BI3K00A000T");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         assertThat(format.format(argentaTransaction.getDate())).isEqualTo("20170929");

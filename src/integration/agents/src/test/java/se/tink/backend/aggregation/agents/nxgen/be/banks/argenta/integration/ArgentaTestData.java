@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.integration;
 
+import org.junit.Ignore;
+
+@Ignore
 public class ArgentaTestData {
 
     static final String ERROR =
