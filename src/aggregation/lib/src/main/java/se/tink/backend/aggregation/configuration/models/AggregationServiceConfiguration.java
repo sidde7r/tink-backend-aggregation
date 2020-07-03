@@ -47,6 +47,10 @@ public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty private EndpointsConfiguration endpoints = new EndpointsConfiguration();
 
     @JsonProperty
+    private AccountInformationServiceConfiguration accountInformationService =
+            new AccountInformationServiceConfiguration();
+
+    @JsonProperty
     private ProviderConfigurationServiceConfiguration providerConfigurationServiceConfiguration =
             new ProviderConfigurationServiceConfiguration();
 
@@ -137,5 +141,9 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public boolean isSendAgentRefreshEvents() {
         return sendAgentRefreshEvents;
+    }
+
+    public AccountInformationServiceConfiguration getAccountInformationService() {
+        return accountInformationService;
     }
 }
