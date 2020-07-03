@@ -164,7 +164,7 @@ public class BaseTransferExecutor {
     }
 
     /** Delete a set of transfer groups (used when cancelling injected transfers). */
-    private void deleteTransfers(List<TransferTransactionEntity> transferTransactions) {
+    public void deleteTransfers(List<TransferTransactionEntity> transferTransactions) {
         try {
             for (TransferTransactionEntity transferTransaction : transferTransactions) {
                 for (TransactionEntity transactionEntity : transferTransaction.getTransactions()) {
