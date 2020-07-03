@@ -106,7 +106,7 @@ public class CatalogTest {
     public void testCatalogGetString() {
         String swwEn = "There was a problem connecting to the bank.";
         String swwSv = "Ett problem uppstod med anslutningen till banken.";
-        String swwIt = "Qualcosa è andato storto.";
+        String swwIt = "C'è stato un problema nel connettersi alla banca.";
         Catalog catalog = new Catalog(new Locale("sv", "SE"));
         String catalogTranslation = catalog.getString(swwEn);
         Assert.assertEquals(swwSv, catalogTranslation);
@@ -125,6 +125,36 @@ public class CatalogTest {
             return;
         }
         Assert.fail("NPE not caught");
+    }
+
+    @Test
+    public void testCatalogGetStringForFR() {
+        String swwEn = "There was a problem connecting to the bank.";
+        String swwFR = "Un problème est survenu lors de la connexion à la banque.";
+
+        Catalog catalog = new Catalog(new Locale("fr", "FR"));
+        String catalogTranslation = catalog.getString(swwEn);
+        Assert.assertEquals(swwFR, catalogTranslation);
+    }
+
+    @Test
+    public void testCatalogGetStringForPT() {
+        String swwEn = "There was a problem connecting to the bank.";
+        String swwPT = "Ocorreu um problema ao conectar com o banco.";
+
+        Catalog catalog = new Catalog(new Locale("pt", "PT"));
+        String catalogTranslation = catalog.getString(swwEn);
+        Assert.assertEquals(swwPT, catalogTranslation);
+    }
+
+    @Test
+    public void testCatalogGetStringForDE() {
+        String swwEn = "There was a problem connecting to the bank.";
+        String swwDE = "Es gab ein Problem die Verbindung zu der Bank aufzubauen.";
+
+        Catalog catalog = new Catalog(new Locale("de", "DE"));
+        String catalogTranslation = catalog.getString(swwEn);
+        Assert.assertEquals(swwDE, catalogTranslation);
     }
 
     @Test
