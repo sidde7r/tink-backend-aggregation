@@ -52,7 +52,7 @@ public class ArgentaConstants {
 
     public static class Application {
         // Probably also want to change User-Agent
-        static final String APPLICATION_VERSION = "5.6.1";
+        static final String APPLICATION_VERSION = "5.7.1";
         static final String USER_AGENT = "Argenta-PROD/2737 CFNetwork/1121.2.2 Darwin/19.3.0";
     }
 
