@@ -22,6 +22,7 @@ java_library(
         "//src/integration/tpp_secrets_service/client/src/main/java/se/tink/backend/integration/tpp_secrets_service/client/configuration",
         "//src/integration/user:rpc",
         "//src/libraries/metrics:registry",
+        "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_github_tomakehurst_wiremock",

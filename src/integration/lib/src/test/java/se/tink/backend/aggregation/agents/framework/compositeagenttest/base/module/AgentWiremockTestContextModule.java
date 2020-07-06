@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.agent.AgentContext;
@@ -26,6 +27,7 @@ import se.tink.backend.integration.tpp_secrets_service.client.ManagedTppSecretsS
 import se.tink.backend.integration.tpp_secrets_service.client.TppSecretsServiceClientImpl;
 import se.tink.backend.integration.tpp_secrets_service.client.configuration.TppSecretsServiceConfiguration;
 import se.tink.libraries.enums.MarketCode;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
@@ -41,6 +43,7 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
     private final Map<String, String> loginDetails;
     private final String supplementalInfoForCredentials;
     private final Map<String, String> callbackData;
+    private final Map<String, String> persistentStorageData;
 
     public AgentWiremockTestContextModule(
             MarketCode marketCode,
@@ -48,13 +51,15 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
             AgentsServiceConfiguration configuration,
             Map<String, String> loginDetails,
             String supplementalInfoForCredentials,
-            Map<String, String> callbackData) {
+            Map<String, String> callbackData,
+            Map<String, String> persistentStorageData) {
         this.marketCode = marketCode;
         this.providerName = providerName;
         this.configuration = configuration;
         this.loginDetails = loginDetails;
         this.supplementalInfoForCredentials = supplementalInfoForCredentials;
         this.callbackData = callbackData;
+        this.persistentStorageData = persistentStorageData;
     }
 
     @Override
@@ -113,7 +118,9 @@ public final class AgentWiremockTestContextModule extends AbstractModule {
         credential.setProviderName(provider.getName());
         credential.setType(provider.getCredentialsType());
         credential.setFields(loginDetails);
-
+        credential.setSensitivePayload(
+                Field.Key.PERSISTENT_STORAGE,
+                SerializationUtils.serializeToString(persistentStorageData));
         return credential;
     }
 
