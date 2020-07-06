@@ -10,17 +10,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
-import org.apache.commons.lang3.StringEscapeUtils;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.annotations.Views;
-import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.commons.lang3.StringEscapeUtils;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.annotations.Views;
+import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public class ClientConfigurationTemplateBuilder {
     private static final int NUM_SPACES_INDENT = 10;
