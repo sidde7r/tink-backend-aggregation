@@ -254,20 +254,27 @@ public class AggregationControllerAggregationClientImpl
         return Response.ok().build();
     }
 
+    private boolean isAccountInformationServiceDisabled(HostConfiguration hostConfiguration) {
+        if (Objects.isNull(accountInformationServiceConfiguration)
+                || Objects.isNull(accountInformationServiceConfiguration.getEnabledClusters())) {
+            return true;
+        }
+        return !accountInformationServiceConfiguration
+                .getEnabledClusters()
+                .contains(hostConfiguration.getClusterId());
+    }
+
     @Override
     public AccountHolder updateAccountHolder(
             HostConfiguration hostConfiguration, UpdateAccountHolderRequest request) {
-        if (Objects.nonNull(accountInformationServiceConfiguration)
-                && Objects.nonNull(accountInformationServiceConfiguration.getEnabledClusters())
-                && accountInformationServiceConfiguration
-                        .getEnabledClusters()
-                        .contains(hostConfiguration.getClusterId())) {
-            return requestExecuter(
-                    () -> getAccountHolderService(hostConfiguration).updateAccountHolder(request),
-                    "Update Account Holder");
+        if (isAccountInformationServiceDisabled(hostConfiguration)) {
+            log.info("Updating Account Holder is disabled!");
+            return request.getAccountHolder();
         }
-        log.info("Updating Account Holder is disabled!");
-        return request.getAccountHolder();
+
+        return requestExecuter(
+                () -> getAccountHolderService(hostConfiguration).updateAccountHolder(request),
+                "Update Account Holder");
     }
 
     @FunctionalInterface
