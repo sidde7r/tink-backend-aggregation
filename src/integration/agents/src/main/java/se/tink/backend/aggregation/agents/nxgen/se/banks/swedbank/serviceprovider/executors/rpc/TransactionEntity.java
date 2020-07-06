@@ -49,8 +49,7 @@ public class TransactionEntity extends AbstractExecutorTransactionEntity {
             case SwedbankBaseConstants.ErrorCode.INSUFFICIENT_FUNDS:
                 return Optional.of(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT);
             case SwedbankBaseConstants.ErrorCode.DUPLICATION:
-                return Optional.of(
-                        TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS);
+                return Optional.of(TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT);
             default:
                 log.warn(
                         "Unknown transfer rejection cause. Code: {}, message {}",
