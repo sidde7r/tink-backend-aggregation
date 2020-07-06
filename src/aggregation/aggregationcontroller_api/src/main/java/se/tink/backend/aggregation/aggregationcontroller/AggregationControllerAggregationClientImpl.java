@@ -23,8 +23,10 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.api.AggregationContr
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.IdentityAggregatorService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.ProcessService;
+import se.tink.backend.aggregation.aggregationcontroller.v1.api.RegulatoryClassificationService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.UpdateService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryClassification;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
@@ -36,6 +38,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDa
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatoryClassificationRequest;
 import se.tink.backend.aggregation.configuration.models.AccountInformationServiceConfiguration;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.http.client.WebResourceFactory;
@@ -110,6 +113,12 @@ public class AggregationControllerAggregationClientImpl
 
     private AccountHolderService getAccountHolderService(HostConfiguration hostConfiguration) {
         return buildInterClusterServiceFromInterface(hostConfiguration, AccountHolderService.class);
+    }
+
+    private RegulatoryClassificationService getRegulatoryClassificationService(
+            HostConfiguration hostConfiguration) {
+        return buildInterClusterServiceFromInterface(
+                hostConfiguration, RegulatoryClassificationService.class);
     }
 
     @Override
@@ -275,6 +284,21 @@ public class AggregationControllerAggregationClientImpl
         return requestExecuter(
                 () -> getAccountHolderService(hostConfiguration).updateAccountHolder(request),
                 "Update Account Holder");
+    }
+
+    @Override
+    public CoreRegulatoryClassification upsertRegulatoryClassification(
+            HostConfiguration hostConfiguration, UpsertRegulatoryClassificationRequest request) {
+        if (isAccountInformationServiceDisabled(hostConfiguration)) {
+            log.info("Upserting Regulatory classification is disabled!");
+            return request.getClassification();
+        }
+
+        return requestExecuter(
+                () ->
+                        getRegulatoryClassificationService(hostConfiguration)
+                                .upsertRegulatoryClassification(request),
+                "Upsert Regulatory classification");
     }
 
     @FunctionalInterface

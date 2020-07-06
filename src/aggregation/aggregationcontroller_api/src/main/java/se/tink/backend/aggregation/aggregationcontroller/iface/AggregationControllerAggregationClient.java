@@ -5,6 +5,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountHolder;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.CoreRegulatoryClassification;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDa
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpsertRegulatoryClassificationRequest;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public interface AggregationControllerAggregationClient {
@@ -60,4 +62,7 @@ public interface AggregationControllerAggregationClient {
 
     AccountHolder updateAccountHolder(
             HostConfiguration hostConfiguration, UpdateAccountHolderRequest request);
+
+    CoreRegulatoryClassification upsertRegulatoryClassification(
+            HostConfiguration hostConfiguration, UpsertRegulatoryClassificationRequest request);
 }
