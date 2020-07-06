@@ -8,13 +8,15 @@ public class Links {
 
     private Href startAuthorisation;
 
-    private Href status;
+    private Href scaStatus;
+
+    private Href scaRedirect;
 
     public Href getHrefEntity() {
-        return startAuthorisation;
+        return scaRedirect;
     }
 
-    public Href getStatus() {
-        return status;
+    public Href getScaStatus() {
+        return scaStatus;
     }
 }
