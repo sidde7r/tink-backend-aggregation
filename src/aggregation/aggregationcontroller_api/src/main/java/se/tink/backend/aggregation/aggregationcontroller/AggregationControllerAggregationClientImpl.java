@@ -277,7 +277,7 @@ public class AggregationControllerAggregationClientImpl
     public AccountHolder updateAccountHolder(
             HostConfiguration hostConfiguration, UpdateAccountHolderRequest request) {
         if (isAccountInformationServiceDisabled(hostConfiguration)) {
-            log.info("Updating Account Holder is disabled!");
+            log.info("Account Information Service is disabled - wont update Account Holder!");
             return request.getAccountHolder();
         }
 
@@ -290,7 +290,8 @@ public class AggregationControllerAggregationClientImpl
     public CoreRegulatoryClassification upsertRegulatoryClassification(
             HostConfiguration hostConfiguration, UpsertRegulatoryClassificationRequest request) {
         if (isAccountInformationServiceDisabled(hostConfiguration)) {
-            log.info("Upserting Regulatory classification is disabled!");
+            log.info(
+                    "Account Information Service is disabled - wont upsert Regulatory classification!");
             return request.getClassification();
         }
 
