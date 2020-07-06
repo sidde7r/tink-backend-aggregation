@@ -1,12 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount;
 
-import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -27,13 +24,12 @@ public class DemobankTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        List<TransactionalAccount> accounts = Lists.newArrayList();
-        FetchAccountResponse accountResponse = apiClient.fetchAccounts();
-        accountResponse.stream()
-                .map(AccountEntity::toTinkAccount)
-                .forEach(account -> accounts.add(account));
-
-        return accounts;
+        return apiClient.fetchAccounts().stream()
+                .map(
+                        accountEntity ->
+                                accountEntity.toTinkAccount(
+                                        apiClient.fetchAccountHolders(accountEntity.getId())))
+                .collect(Collectors.toList());
     }
 
     @Override

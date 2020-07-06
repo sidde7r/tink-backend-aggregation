@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authen
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.PasswordLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.authenticator.rpc.RedirectRefreshTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.rpc.FetchAccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -228,5 +229,11 @@ public class DemobankApiClient {
                                 ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate));
         return createRequestInSession(url, getOauth2TokenFromStorage())
                 .get(FetchTransactionsResponse.class);
+    }
+
+    public FetchAccountHolderResponse fetchAccountHolders(String accountId) {
+        final URL url = fetchBaseUrl().concat(Urls.HOLDERS).parameter(ACCOUNT_ID, accountId);
+        return createRequestInSession(url, getOauth2TokenFromStorage())
+                .get(FetchAccountHolderResponse.class);
     }
 }

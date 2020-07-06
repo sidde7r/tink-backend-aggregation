@@ -3,8 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.fetch
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demobank.DemobankConstants.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.Holder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -36,7 +39,7 @@ public class AccountEntity {
     private String accountType;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
+    public TransactionalAccount toTinkAccount(List<AccountHolder> accountHolders) {
         return TransactionalAccount.nxBuilder()
                 .withType(getAccountType())
                 .withPaymentAccountFlag()
@@ -52,6 +55,11 @@ public class AccountEntity {
                                 .withAccountName(description)
                                 .addIdentifier(new IbanIdentifier(accountNumber))
                                 .build())
+                .addHolders(
+                        accountHolders.stream()
+                                .map(AccountHolder::getName)
+                                .map(Holder::of)
+                                .collect(Collectors.toList()))
                 .setApiIdentifier(getId())
                 .build()
                 .get();

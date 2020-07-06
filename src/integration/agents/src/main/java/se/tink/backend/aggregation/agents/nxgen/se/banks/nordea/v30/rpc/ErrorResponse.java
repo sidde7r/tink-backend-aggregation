@@ -293,8 +293,9 @@ public class ErrorResponse {
 
     protected TransferExecutionException duplicatePaymentError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT)
-                .setMessage(NordeaSEConstants.LogMessages.DUPLICATE_PAYMENT)
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT)
+                .setMessage(
+                        TransferExecutionException.EndUserMessage.DUPLICATE_PAYMENT.getKey().get())
                 .build();
     }
 

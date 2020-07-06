@@ -283,8 +283,6 @@ public class NordeaSEConstants {
                 "Not allowed to update e-invoice source";
         public static final String EINVOICE_MODIFY_DESTINATION =
                 "Not allowed to update e-invoice destination";
-        public static final String DUPLICATE_PAYMENT =
-                "This payment seems to be duplicate. Please check your outgoing payments in the banks app.";
         public static final String BANKSIDE_ERROR_WHEN_SEARCHING_OUTBOX =
                 "Error from bank when trying to fetch details about payment outbox";
         public static final String WRONG_TO_ACCOUNT_LENGTH =
