@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.utils;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -76,7 +79,15 @@ public final class MockSupplementalInformationHelper implements SupplementalInfo
     @Override
     public Map<String, String> askSupplementalInformation(final Field... fields)
             throws SupplementalInfoException {
-        throw new UnsupportedOperationException("Not implemented");
+        Map<String, String> supplementalInformations = new HashMap<>();
+        Stream.of(fields)
+                .filter(field -> Objects.nonNull(field.getName()))
+                .filter(field -> callbackData.containsKey(field.getName()))
+                .forEach(
+                        field ->
+                                supplementalInformations.put(
+                                        field.getName(), this.callbackData.get(field.getName())));
+        return supplementalInformations;
     }
 
     @Override

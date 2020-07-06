@@ -32,7 +32,7 @@ public class SwedbankSEConstants {
                     .build();
 
     public static class StorageKey {
-        public static final String HAS_EXTENDED_BANKID = "extendedBankId";
+        public static final String HAS_EXTENDED_USAGE = "hasExtendedUsage";
     }
 
     public static class Endpoint {

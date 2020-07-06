@@ -22,7 +22,7 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
 
     private final SwedbankDefaultApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private Boolean hasExtendedBankId;
+    private Boolean hasExtendedUsage;
     private static final Logger log =
             LoggerFactory.getLogger(SwedbankDefaultTransferDestinationFetcher.class);
 
@@ -34,8 +34,8 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
 
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
-        this.hasExtendedBankId =
-                sessionStorage.get(StorageKey.HAS_EXTENDED_BANKID, Boolean.class).orElse(false);
+        this.hasExtendedUsage =
+                sessionStorage.get(StorageKey.HAS_EXTENDED_USAGE, Boolean.class).orElse(true);
 
         return TransferDestinationsResponse.builder()
                 .addTransferDestinations(getPaymentDestinations(accounts))
@@ -65,13 +65,13 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
         // Only users with extended bankID can make transfers to new recipients. Therefore only
         // adding the generic pattern for users with extended bankID. Already saved recipients
         // are added explicitly when we set destination accounts.
-        if (hasExtendedBankId) {
+        if (hasExtendedUsage) {
             transferDestinationPatternBuilder.addMultiMatchPattern(
                     AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL);
             transferDestinationPatternBuilder.addMultiMatchPattern(
                     AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL);
         } else {
-            log.info("No ExtendedBankId present for the user");
+            log.warn("No ExtendedUsage present for the user");
         }
 
         return transferDestinationPatternBuilder.build();
@@ -99,7 +99,7 @@ public class SwedbankDefaultTransferDestinationFetcher implements TransferDestin
         // Only users with extended bankID can make transfers to new recipients. Therefore only
         // adding the generic pattern for users with extended bankID. Already saved recipients
         // are added explicitly when we set destination accounts.
-        if (hasExtendedBankId) {
+        if (hasExtendedUsage) {
             transferDestinationPatternBuilder.addMultiMatchPattern(
                     AccountIdentifier.Type.SE, TransferDestinationPattern.ALL);
         }

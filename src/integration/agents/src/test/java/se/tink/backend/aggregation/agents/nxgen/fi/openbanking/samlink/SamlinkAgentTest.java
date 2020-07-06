@@ -17,7 +17,7 @@ public class SamlinkAgentTest {
                         .expectLoggedIn(false)
                         .setClusterId("oxford-preprod")
                         .setAppId("tink")
-                        .setFinancialInstitutionId("samlink");
+                        .setFinancialInstitutionId("f7dfba4f1a3b4735a64d2de4d6350721");
     }
 
     @Test

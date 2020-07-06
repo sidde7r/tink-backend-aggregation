@@ -82,8 +82,7 @@ public class SwedbankDefaultBankIdAuthenticator
                 case COMPLETE:
                     // Store if bankID has extended usage for when fetching transfer destinations
                     sessionStorage.put(
-                            StorageKey.HAS_EXTENDED_BANKID,
-                            collectBankIdResponse.isExtendedUsage());
+                            StorageKey.HAS_EXTENDED_USAGE, collectBankIdResponse.isExtendedUsage());
                     completeBankIdLogin(collectBankIdResponse);
                     return BankIdStatus.DONE;
                 case TIMEOUT:
