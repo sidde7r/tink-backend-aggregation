@@ -1076,6 +1076,8 @@ public class LansforsakringarAgent extends AbstractAgent
                     case "00159":
                     case "001512":
                         throw BankIdError.TIMEOUT.exception();
+                    case "00151":
+                        throw BankServiceError.BANK_SIDE_FAILURE.exception();
                     default:
                         if (clientResponse.getHeaders().getFirst("Error-Message") != null) {
                             throw failTransferWithMessage(
@@ -1193,6 +1195,7 @@ public class LansforsakringarAgent extends AbstractAgent
                     case "502203":
                         throw cancelTransfer(EndUserMessage.INVALID_DESTINATION);
                     case "502204":
+                    case "99142":
                         throw cancelTransfer(EndUserMessage.EXCESS_AMOUNT);
                     default:
                         throw failTransferWithMessage(
