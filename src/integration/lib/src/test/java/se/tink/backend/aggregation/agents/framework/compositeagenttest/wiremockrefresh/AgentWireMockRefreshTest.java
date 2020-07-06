@@ -253,6 +253,20 @@ public final class AgentWireMockRefreshTest {
         }
 
         /**
+         * Add refreshable items. If not specified agent will use <code>
+         * RefreshableItem.REFRESHABLE_ITEMS_ALL</code>.
+         *
+         * <p>Can be called multiple times to add several items.
+         *
+         * @param items Items to refresh.
+         * @return This builder.
+         */
+        public Builder addRefreshableItems(Set<RefreshableItem> items) {
+            this.refreshableItems.addAll(items);
+            return this;
+        }
+
+        /**
          * Enables http debug trace printout
          *
          * @return This builder.
