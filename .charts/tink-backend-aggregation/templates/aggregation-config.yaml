@@ -121,6 +121,7 @@ data:
       enabledClusters:
         - oxford-staging
         - oxford-preprod
+        - oxford-production
 
     {{- if eq "local" .Values.Cluster }}
     developmentMode: true
