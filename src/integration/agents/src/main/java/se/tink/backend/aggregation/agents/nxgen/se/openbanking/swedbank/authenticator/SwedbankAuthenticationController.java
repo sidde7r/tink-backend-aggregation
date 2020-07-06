@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.List;
@@ -19,7 +17,6 @@ import se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceExce
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
@@ -193,15 +190,6 @@ public class SwedbankAuthenticationController
         while (!authenticator.getScaStatus(response.getCollectAuthUri())) {
             Uninterruptibles.sleepUninterruptibly(
                     SwedbankConstants.TimeValues.SLEEP_TIME_MILLISECONDS, TimeUnit.MILLISECONDS);
-        }
-
-
-        for (String iban : ibanList) {
-            swedbankTransactionFetcher.startScaAuthorization(
-                    iban,
-                    Timestamp.valueOf(
-                            LocalDateTime.now().minusMonths(TimeValues.MONTHS_TO_FETCH_MAX)),
-                    Timestamp.valueOf(LocalDateTime.now()));
         }
     }
 }
