@@ -112,7 +112,8 @@ public class CaisseEpargneConstants {
 
     public static class StorageKeys {
         public static final String TOKEN = "token";
-        public static final String TERM_ID = "termId";
+        static final String TERM_ID = "termId";
+        public static final String FINAL_AUTH_RESPONSE = "finalAuthResponse";
         static final String REDIRECT_LOCATION = "redirectLocation";
     }
 
@@ -136,5 +137,11 @@ public class CaisseEpargneConstants {
         public String toString() {
             return name;
         }
+    }
+
+    public static class SoapKeys {
+        public static final String VALID_SUBSCRIPTION = "AbonnementValide";
+        public static final String SURNAME = "Nom";
+        public static final String NAME = "Prenom";
     }
 }

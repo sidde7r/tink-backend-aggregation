@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager.UsernamePasswordArgumentEnum;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class CaisseEpargneAgentTest {
 
@@ -35,6 +36,9 @@ public class CaisseEpargneAgentTest {
                         usernamePasswordArgumentManager.get(UsernamePasswordArgumentEnum.PASSWORD))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .expectLoggedIn(false)
                 .build()
                 .testRefresh();
     }

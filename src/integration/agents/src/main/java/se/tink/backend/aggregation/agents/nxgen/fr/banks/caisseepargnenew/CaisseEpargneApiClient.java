@@ -52,20 +52,24 @@ import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CaisseEpargneApiClient {
     private final TinkHttpClient httpClient;
     private final TinkHttpClient notRedirectFollowingHttpClient;
     private final SessionStorage sessionStorage;
+    private final Storage instanceStorage;
 
-    public CaisseEpargneApiClient(TinkHttpClient httpClient, SessionStorage sessionStorage) {
+    public CaisseEpargneApiClient(
+            TinkHttpClient httpClient, SessionStorage sessionStorage, Storage instanceStorage) {
         this.httpClient = httpClient;
         this.httpClient.disableAggregatorHeader();
         this.notRedirectFollowingHttpClient = httpClient;
         this.notRedirectFollowingHttpClient.disableAggregatorHeader();
         this.notRedirectFollowingHttpClient.setFollowRedirects(false);
         this.sessionStorage = sessionStorage;
+        this.instanceStorage = instanceStorage;
     }
 
     public Optional<OAuth2Token> getOAuth2Token() {
@@ -314,5 +318,6 @@ public class CaisseEpargneApiClient {
                                                                 "No term id found in storage."))))
                         .post(HttpResponse.class);
         String xmlBody = response.getBody(String.class);
+        instanceStorage.put(StorageKeys.FINAL_AUTH_RESPONSE, xmlBody);
     }
 }
