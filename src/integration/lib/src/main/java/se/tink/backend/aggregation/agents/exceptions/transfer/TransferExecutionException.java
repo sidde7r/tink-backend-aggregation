@@ -152,6 +152,9 @@ public class TransferExecutionException extends RuntimeException {
         EXISTING_UNSIGNED_TRANSFERS(
                 new LocalizableKey(
                         "You have existing unsigned transfers, please sign these in your bank's app before executing a new transfer")),
+        DUPLICATE_PAYMENT(
+                new LocalizableKey(
+                        "The payment could not be made because an identical payment is already registered")),
         EXCESS_AMOUNT(
                 new LocalizableKey(
                         "The transfer amount is larger than what is available on the account.")),
