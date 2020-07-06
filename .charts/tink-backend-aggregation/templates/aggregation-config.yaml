@@ -120,6 +120,7 @@ data:
     accountInformationService:
       enabledClusters:
         - oxford-staging
+        - oxford-preprod
 
     {{- if eq "local" .Values.Cluster }}
     developmentMode: true
