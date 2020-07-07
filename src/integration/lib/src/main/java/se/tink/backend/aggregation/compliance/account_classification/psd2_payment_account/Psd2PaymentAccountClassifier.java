@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.compliance.account_classification.psd2_payment_account;
 
 import com.google.common.collect.ImmutableList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -51,12 +52,16 @@ public class Psd2PaymentAccountClassifier
     private final @Nullable AccountClassificationMetrics<Psd2PaymentAccountClassificationResult>
             metrics;
 
+    private final HashMap<String, Psd2PaymentAccountClassificationResult>
+            cachedClassificationResults;
+
     private Psd2PaymentAccountClassifier(
             @Nullable AccountClassificationMetrics<Psd2PaymentAccountClassificationResult> metrics,
             ImmutableList<AccountClassificationRule<Psd2PaymentAccountClassificationResult>>
                     rules) {
         this.rules = rules;
         this.metrics = metrics;
+        this.cachedClassificationResults = new HashMap<>();
     }
 
     public static Psd2PaymentAccountClassifier createWithMetrics(MetricRegistry metricRegistry) {
@@ -78,6 +83,13 @@ public class Psd2PaymentAccountClassifier
     @Override
     public Optional<Psd2PaymentAccountClassificationResult> classify(
             Provider provider, Account account) {
+
+        // Check the cached results in order to avoid recording metrics multiple times
+        // for the same account.
+        if (cachedClassificationResults.containsKey(account.getBankId())) {
+            return Optional.of(cachedClassificationResults.get(account.getBankId()));
+        }
+
         List<AccountClassificationRule<Psd2PaymentAccountClassificationResult>> applicableRules =
                 getApplicableRules(provider);
         if (applicableRules.isEmpty()) {
@@ -91,6 +103,8 @@ public class Psd2PaymentAccountClassifier
         if (Objects.nonNull(metrics)) {
             metrics.finalResult(this, provider, account, finalResult);
         }
+
+        cachedClassificationResults.put(account.getBankId(), finalResult);
 
         return Optional.of(finalResult);
     }

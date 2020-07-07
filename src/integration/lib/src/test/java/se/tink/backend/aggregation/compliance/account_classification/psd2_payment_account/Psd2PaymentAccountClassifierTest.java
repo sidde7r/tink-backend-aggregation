@@ -3,11 +3,14 @@ package se.tink.backend.aggregation.compliance.account_classification.psd2_payme
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import org.junit.Test;
+import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Provider;
@@ -18,6 +21,7 @@ public class Psd2PaymentAccountClassifierTest {
 
     private static final boolean ENABLED = true;
     private static final boolean DISABLED = false;
+    private static final String DUMMY_BANK_ID = "dummyBankId";
 
     @Test
     public void shouldClassifyAsPaymentAccountIfRuleReturnsPaymentAccount() {
@@ -38,7 +42,8 @@ public class Psd2PaymentAccountClassifierTest {
 
         // when
         Optional<Psd2PaymentAccountClassificationResult> result =
-                classifier.classify(prepareMockedProvider(), prepareMockedAccount());
+                classifier.classify(
+                        prepareMockedProvider(), prepareMockedAccountWithUniqueId(DUMMY_BANK_ID));
 
         // then
         assertThat(result)
@@ -64,7 +69,8 @@ public class Psd2PaymentAccountClassifierTest {
 
         // when
         Optional<Psd2PaymentAccountClassificationResult> result =
-                classifier.classify(prepareMockedProvider(), prepareMockedAccount());
+                classifier.classify(
+                        prepareMockedProvider(), prepareMockedAccountWithUniqueId(DUMMY_BANK_ID));
 
         // then
         assertThat(result)
@@ -88,7 +94,8 @@ public class Psd2PaymentAccountClassifierTest {
 
         // when
         Optional<Psd2PaymentAccountClassificationResult> result =
-                classifier.classify(prepareMockedProvider(), prepareMockedAccount());
+                classifier.classify(
+                        prepareMockedProvider(), prepareMockedAccountWithUniqueId(DUMMY_BANK_ID));
 
         // then
         assertThat(result)
@@ -113,7 +120,8 @@ public class Psd2PaymentAccountClassifierTest {
 
         // when
         Optional<Psd2PaymentAccountClassificationResult> result =
-                classifier.classify(prepareMockedProvider(), prepareMockedAccount());
+                classifier.classify(
+                        prepareMockedProvider(), prepareMockedAccountWithUniqueId(DUMMY_BANK_ID));
 
         // then
         assertThat(result)
@@ -133,7 +141,8 @@ public class Psd2PaymentAccountClassifierTest {
 
         // when
         Optional<Psd2PaymentAccountClassificationResult> result =
-                classifier.classify(prepareMockedProvider(), prepareMockedAccount());
+                classifier.classify(
+                        prepareMockedProvider(), prepareMockedAccountWithUniqueId(DUMMY_BANK_ID));
 
         // then
         assertThat(result).isEqualTo(Optional.empty());
@@ -158,10 +167,38 @@ public class Psd2PaymentAccountClassifierTest {
 
         // when
         Optional<Psd2PaymentAccountClassificationResult> result =
-                classifier.classify(prepareMockedProvider(), prepareMockedAccount());
+                classifier.classify(
+                        prepareMockedProvider(), prepareMockedAccountWithUniqueId(DUMMY_BANK_ID));
 
         // then
         assertThat(result).isEqualTo(Optional.empty());
+    }
+
+    @Test
+    public void shouldOnlyClassifyTwice() {
+        // Ensure the caching works by classifying two unique accounts, one of these accounts
+        // will be classified twice (should hit the cache!).
+        AccountClassificationRule<Psd2PaymentAccountClassificationResult> rule =
+                prepareMockedRule(ENABLED, Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT);
+
+        ImmutableList<AccountClassificationRule<Psd2PaymentAccountClassificationResult>> rules =
+                ImmutableList.of(rule);
+
+        Provider provider = prepareMockedProvider();
+        Account account1 = prepareMockedAccountWithUniqueId("1");
+        Account account2 = prepareMockedAccountWithUniqueId("2");
+
+        Psd2PaymentAccountClassifier classifier =
+                Psd2PaymentAccountClassifier.createWithRules(rules);
+
+        // Classify the same account twice.
+        classifier.classify(provider, account1);
+        classifier.classify(provider, account1);
+
+        // Then classify another account.
+        classifier.classify(provider, account2);
+
+        verify(rule, times(2)).classify(Mockito.any(), Mockito.any());
     }
 
     private AccountClassificationRule<Psd2PaymentAccountClassificationResult> prepareMockedRule(
@@ -181,9 +218,10 @@ public class Psd2PaymentAccountClassifierTest {
         return provider;
     }
 
-    private Account prepareMockedAccount() {
+    private Account prepareMockedAccountWithUniqueId(String bankId) {
         Account account = mock(Account.class);
         when(account.getType()).thenReturn(AccountTypes.CHECKING);
+        when(account.getBankId()).thenReturn(bankId);
         return account;
     }
 }
