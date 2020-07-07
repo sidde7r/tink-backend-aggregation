@@ -22,8 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.TimeValues;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.Response;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
@@ -73,7 +73,8 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
     private void startScaAuthorization(String account, Date fromDate, Date toDate) {
         try {
             // TODO: Handle 428 response code for "transaction not available"
-            Response response = apiClient.startScaTransactionRequest(account, fromDate, toDate);
+            StatementResponse response =
+                    apiClient.startScaTransactionRequest(account, fromDate, toDate);
             // TODO: Handle failed status (continue the flow with no exception)
             if (response.getStatementStatus().equalsIgnoreCase(ConsentStatus.SIGNED)) {
                 return;
@@ -88,7 +89,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
         }
     }
 
-    private void poll(Response response) {
+    private void poll(StatementResponse response) {
         boolean status;
 
         supplementalInformationHelper.openThirdPartyApp(
@@ -112,7 +113,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     private FetchTransactionsResponse fetchAllTransactions(TransactionalAccount account) {
 
-        Response response;
+        StatementResponse response;
         try {
             response = apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
         } catch (HttpResponseException e) {

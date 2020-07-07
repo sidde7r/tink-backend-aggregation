@@ -40,9 +40,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.account.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.Response;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -273,7 +273,7 @@ public final class SwedbankApiClient {
                 .get(AccountBalanceResponse.class);
     }
 
-    public Response getTransactions(String accountId, Date fromDate, Date toDate) {
+    public StatementResponse getTransactions(String accountId, Date fromDate, Date toDate) {
         return createRequestInSession(
                         Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParameters.ACCOUNT_ID, accountId),
                         true)
@@ -286,7 +286,7 @@ public final class SwedbankApiClient {
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
                         SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
-                .get(Response.class);
+                .get(StatementResponse.class);
     }
 
     public HttpResponse getTransactions(String endPoint) {
@@ -294,7 +294,8 @@ public final class SwedbankApiClient {
                 .get(HttpResponse.class);
     }
 
-    public Response startScaTransactionRequest(String accountId, Date fromDate, Date toDate) {
+    public StatementResponse startScaTransactionRequest(
+            String accountId, Date fromDate, Date toDate) {
 
         return createRequestInSession(
                         Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParameters.ACCOUNT_ID, accountId),
@@ -310,7 +311,7 @@ public final class SwedbankApiClient {
                         SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
                 .header(HeaderKeys.TPP_REDIRECT_URI, getRedirectUrl())
                 .header(HeaderKeys.TPP_NOK_REDIRECT_URI, getRedirectUrl())
-                .post(Response.class);
+                .post(StatementResponse.class);
     }
 
     public AuthenticationResponse startAuthorization(String endpoint) {

@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.Links;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Response {
+public class StatementResponse {
 
     @JsonProperty("_links")
     private Links links;
