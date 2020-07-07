@@ -1,5 +1,0 @@
-clientId-description: |2
-    Client ID (AppId) registered for a user application subscribing to this API in the developer portal.
-
-clientId-example: |2
-    "6c550d22-1eb7-4d0a-9430-89cd178e2290"
