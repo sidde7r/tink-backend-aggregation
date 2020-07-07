@@ -859,7 +859,8 @@ public class SEBApiAgent extends AbstractAgent
                 case FAILED_UNKNOWN:
                     switch (authenticationResponse.getHintCode().toLowerCase()) {
                         case "seb_unknown_bankid":
-                            throw BankIdError.BLOCKED.exception();
+                            throw BankIdError.BLOCKED.exception(
+                                    "Message from SEB - make sure you have activated your BankId at SEB and that you are a customer at www.seb.se");
                         default:
                             throw new IllegalStateException(
                                     "Unhandled BankID response: "
