@@ -28,7 +28,7 @@ public class AmexConfiguration implements ClientConfiguration {
             strings = {
                 @JsonSchemaString(
                         path = "pattern",
-                        value = "https:\\/\\/api2s\\.americanexpress\\.com")
+                        value = "https:\\\\/\\\\/api2s\\\\.americanexpress\\\\.com")
             })
     @JsonSchemaExamples("https://api2s.americanexpress.com")
     @Secret
@@ -38,7 +38,9 @@ public class AmexConfiguration implements ClientConfiguration {
     @JsonSchemaDescription("GrantAccessJourney Url, will be deprecated")
     @JsonSchemaTitle("GrantAccessJourney Url")
     @JsonSchemaInject(
-            strings = {@JsonSchemaString(path = "pattern", value = "https:\\/\\/m\\.amex\\/oauth")})
+            strings = {
+                @JsonSchemaString(path = "pattern", value = "https:\\\\/\\\\/m\\\\.amex\\\\/oauth")
+            })
     @JsonSchemaExamples("https://m.amex/oauth")
     @Secret
     private String grantAccessJourneyUrl;
