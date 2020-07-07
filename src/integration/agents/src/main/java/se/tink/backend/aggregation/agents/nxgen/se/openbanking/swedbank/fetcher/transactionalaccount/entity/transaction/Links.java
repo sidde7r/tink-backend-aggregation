@@ -12,11 +12,23 @@ public class Links {
 
     private Href scaRedirect;
 
+    private Href status;
+
+    private Href download;
+
     public Href getHrefEntity() {
         return scaRedirect;
     }
 
     public Href getScaStatus() {
         return scaStatus;
+    }
+
+    public Href getStatus() {
+        return status;
+    }
+
+    public Href getDownload() {
+        return download;
     }
 }

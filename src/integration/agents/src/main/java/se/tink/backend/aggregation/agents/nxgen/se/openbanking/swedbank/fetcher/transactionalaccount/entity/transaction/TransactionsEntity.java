@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction;
 
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -8,13 +9,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionsEntity {
     private List<TransactionEntity> booked;
     private List<TransactionEntity> pending;
-    private TransactionLinksEntity accountLinks;
 
-    public Optional<List<TransactionEntity>> getBooked() {
-        return Optional.ofNullable(booked);
+    public List<TransactionEntity> getBooked() {
+        return Optional.ofNullable(booked).orElseGet(Lists::newArrayList);
     }
 
-    public Optional<List<TransactionEntity>> getPending() {
-        return Optional.ofNullable(pending);
+    public List<TransactionEntity> getPending() {
+        return Optional.ofNullable(pending).orElseGet(Lists::newArrayList);
     }
 }

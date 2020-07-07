@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.AuthenticationStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.SwedbankTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.authenticator.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -39,23 +38,20 @@ public class SwedbankAuthenticationController
     private final Credentials credentials;
     private final int tokenLifetime;
     private final TemporalUnit tokenLifetimeUnit;
-    private final SwedbankTransactionFetcher swedbankTransactionFetcher;
     private String ssn;
 
     public SwedbankAuthenticationController(
             PersistentStorage persistentStorage,
             SupplementalRequester supplementalRequester,
             SwedbankAuthenticator authenticator,
-            Credentials credentials,
-            SwedbankTransactionFetcher swedbankTransactionFetcher) {
+            Credentials credentials) {
         this(
                 persistentStorage,
                 supplementalRequester,
                 authenticator,
                 credentials,
                 DEFAULT_TOKEN_LIFETIME,
-                DEFAULT_TOKEN_LIFETIME_UNIT,
-                swedbankTransactionFetcher);
+                DEFAULT_TOKEN_LIFETIME_UNIT);
     }
 
     public SwedbankAuthenticationController(
@@ -64,15 +60,13 @@ public class SwedbankAuthenticationController
             SwedbankAuthenticator authenticator,
             Credentials credentials,
             int tokenLifetime,
-            TemporalUnit tokenLifetimeUnit,
-            SwedbankTransactionFetcher swedbankTransactionFetcher) {
+            TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
         this.supplementalRequester = supplementalRequester;
         this.authenticator = authenticator;
         this.credentials = credentials;
         this.tokenLifetime = tokenLifetime;
         this.tokenLifetimeUnit = tokenLifetimeUnit;
-        this.swedbankTransactionFetcher = swedbankTransactionFetcher;
     }
 
     @Override

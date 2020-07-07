@@ -43,7 +43,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.Response;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.hash.Hash;
 import se.tink.backend.aggregation.api.Psd2Headers;
@@ -274,7 +273,7 @@ public final class SwedbankApiClient {
                 .get(AccountBalanceResponse.class);
     }
 
-    public FetchTransactionsResponse getTransactions(String accountId, Date fromDate, Date toDate) {
+    public Response getTransactions(String accountId, Date fromDate, Date toDate) {
         return createRequestInSession(
                         Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParameters.ACCOUNT_ID, accountId),
                         true)
@@ -287,7 +286,12 @@ public final class SwedbankApiClient {
                 .queryParam(
                         SwedbankConstants.QueryKeys.BOOKING_STATUS,
                         SwedbankConstants.QueryValues.BOOKING_STATUS_BOTH)
-                .get(FetchTransactionsResponse.class);
+                .get(Response.class);
+    }
+
+    public HttpResponse getTransactions(String endPoint) {
+        return createRequestInSession(new URL(Urls.BASE.concat(endPoint)), true)
+                .get(HttpResponse.class);
     }
 
     public Response startScaTransactionRequest(String accountId, Date fromDate, Date toDate) {
