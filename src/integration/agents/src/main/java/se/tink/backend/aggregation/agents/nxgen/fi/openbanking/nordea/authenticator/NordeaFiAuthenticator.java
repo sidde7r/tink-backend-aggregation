@@ -32,15 +32,19 @@ public class NordeaFiAuthenticator extends NordeaBaseAuthenticator {
 
         final String code = callbackData.getOrDefault(OAuth2Constants.CallbackParams.CODE, null);
         final String httpMessage =
-                callbackData.getOrDefault(NordeaBaseConstants.CallbackParams.HTTP_MESSAGE, null);
+                callbackData.getOrDefault(
+                        // this one is for running test locally
+                        NordeaBaseConstants.CallbackParams.HTTP_MESSAGE,
+                        // this one is for running in production
+                        callbackData.getOrDefault(
+                                NordeaBaseConstants.CallbackParams.HTTP_MESSAGE.toLowerCase(),
+                                null));
 
         if (Strings.isNullOrEmpty(code)) {
             if (Strings.isNullOrEmpty(httpMessage)) {
 
-                logger.info(
-                        String.format(
-                                "callbackData keys: %s, values: %s",
-                                callbackData.keySet(), callbackData.values()));
+                // no valid callbackData was found. Will log the callbackData keys
+                logger.info(String.format("callbackData keys: %s", callbackData.keySet()));
 
                 throw new IllegalStateException(
                         "callbackData did not contain 'code' or 'httpMessage'");
