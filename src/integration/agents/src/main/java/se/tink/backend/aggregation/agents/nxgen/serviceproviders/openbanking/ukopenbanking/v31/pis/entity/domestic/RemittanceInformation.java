@@ -19,6 +19,11 @@ public class RemittanceInformation {
         this.reference = reference.getValue();
     }
 
+    public RemittanceInformation(Reference reference) {
+        this.unstructured = "";
+        this.reference = reference.getValue();
+    }
+
     public String getReference() {
         return reference;
     }
