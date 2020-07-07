@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.operation;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,6 +19,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.compliance.regulatory_restrictions.RegulatoryRestrictions;
 import se.tink.backend.aggregation.controllers.ProviderSessionCacheController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -35,6 +37,7 @@ public class AgentWorkerContextTest {
     private AggregatorInfo aggregatorInfo;
     private ProviderSessionCacheController providerSessionCacheController;
     private ControllerWrapper controllerWrapper;
+    private RegulatoryRestrictions regulatoryRestrictions;
 
     @Before
     public void setUp() {
@@ -45,6 +48,9 @@ public class AgentWorkerContextTest {
         this.supplementalInfoController = Mockito.mock(SupplementalInformationController.class);
         this.providerSessionCacheController = Mockito.mock(ProviderSessionCacheController.class);
         this.controllerWrapper = Mockito.mock(ControllerWrapper.class);
+        this.regulatoryRestrictions = Mockito.mock(RegulatoryRestrictions.class);
+        Mockito.when(regulatoryRestrictions.shouldAccountBeRestricted(any(), any(), any()))
+                .thenReturn(true);
     }
 
     private AgentWorkerContext buildAgentWorkerContext(CredentialsRequest request) {
@@ -57,7 +63,8 @@ public class AgentWorkerContextTest {
                 providerSessionCacheController,
                 controllerWrapper,
                 "test",
-                "two");
+                "two",
+                regulatoryRestrictions);
     }
 
     @Test
@@ -133,7 +140,7 @@ public class AgentWorkerContextTest {
 
         // then
         Assert.assertNull(accountHolder);
-        verify(controllerWrapper, times(0)).updateAccountHolder(Mockito.any());
+        verify(controllerWrapper, times(0)).updateAccountHolder(any());
     }
 
     @Test

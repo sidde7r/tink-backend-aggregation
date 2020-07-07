@@ -15,6 +15,7 @@ java_library(
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/configuration",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/events",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/daos",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/compliance/regulatory_restrictions",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/database/providers",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/storage/debug",
         "//src/aggregation/lib/src/main/java/se/tink/backend/aggregation/workers/agent_metrics",
@@ -51,5 +52,8 @@ java_library(
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/core",
         "@tink_backend//src/libraries/metrics/core/src/main/java/se/tink/libraries/metrics/registry",
         "@tink_backend//src/libraries/uuid",
+
+        # JSR305 (javax.annotations)
+        "//third_party:com_google_code_findbugs_jsr305",
     ],
 )
