@@ -173,12 +173,7 @@ public class CmcicApiClient implements FrAispApiClient {
                                                         Urls.FETCH_TRANSACTIONS_PATH,
                                                         account.getApiIdentifier()));
 
-        FetchTransactionsResponse fetchTransactionsResponse =
-                createAispRequestInSession(baseUrl, path).get(FetchTransactionsResponse.class);
-
-        fetchTransactionsResponse.setTransactionalAccount(account);
-
-        return fetchTransactionsResponse;
+        return createAispRequestInSession(baseUrl, path).get(FetchTransactionsResponse.class);
     }
 
     public HalPaymentRequestCreation makePayment(

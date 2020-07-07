@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.AccountResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.BalanceResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.BalanceStatusEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.CashAccountTypeEnumEntity;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -27,6 +28,10 @@ public class CmcicTransactionalAccountConverter {
 
     public Optional<TransactionalAccount> convertAccountResourceToTinkAccount(
             AccountResourceDto accountResource) {
+        if (accountResource.getCashAccountType() != CashAccountTypeEnumEntity.CACC) {
+            return Optional.empty();
+        }
+
         final String iban = accountResource.getAccountId().getIban();
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
