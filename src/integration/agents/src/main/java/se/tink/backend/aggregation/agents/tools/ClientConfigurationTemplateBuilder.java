@@ -1,22 +1,24 @@
 package se.tink.backend.aggregation.agents.tools;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import java.io.InputStream;
+import com.kjetland.jackson.jsonSchema.JsonSchemaGenerator;
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.error.YAMLException;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.annotations.Views;
 import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 
 public class ClientConfigurationTemplateBuilder {
@@ -24,7 +26,8 @@ public class ClientConfigurationTemplateBuilder {
     private static final String PRETTY_PRINTING_INDENT_PADDING =
             new String(new char[NUM_SPACES_INDENT]).replace((char) 0, ' ');
     private static final String FIN_IDS_KEY = "finId";
-
+    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_EXAMPLES = "examples";
     private final boolean includeDescriptions;
     private final boolean includeExamples;
     private final String financialInstitutionId;
@@ -55,64 +58,35 @@ public class ClientConfigurationTemplateBuilder {
 
     private Map<String, String> readFieldsDescriptionsAndExamples(
             Class<? extends ClientConfiguration> clientConfigurationClassForProvider) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
+        mapper.setConfig(mapper.getSerializationConfig().withView(Views.Public.class));
+        JsonSchemaGenerator jsonSchemaGenerator = new JsonSchemaGenerator(mapper);
+        JsonNode flatSchemaFromConf =
+                jsonSchemaGenerator.generateJsonSchema(clientConfigurationClassForProvider);
+        JsonNode properties = flatSchemaFromConf.get("properties");
+        Iterator<Map.Entry<String, JsonNode>> fields = properties.fields();
 
-        Yaml yaml = new Yaml();
+        final Map<String, String> fieldsDescriptionAndExamples = new HashMap<>();
 
-        // First we retrieve the common descriptions and examples.
-        String fieldsDescriptionsAndExamplesCommonPath = "config-templates/Common.yaml";
-
-        InputStream fieldsDescriptionsAndExamplesCommonStream =
-                Optional.ofNullable(
-                                clientConfigurationClassForProvider
-                                        .getClassLoader()
-                                        .getResourceAsStream(
-                                                fieldsDescriptionsAndExamplesCommonPath))
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Could not find 'config-templates/Common.yaml', make sure it is included as a resource."));
-
-        final Map<String, String> fieldsDescriptionAndExamplesCommon;
-        try {
-            fieldsDescriptionAndExamplesCommon =
-                    (Map<String, String>) yaml.load(fieldsDescriptionsAndExamplesCommonStream);
-        } catch (YAMLException e) {
-            throw new IllegalStateException(
-                    "Problem when loading the common descriptions and examples template yaml file: "
-                            + fieldsDescriptionsAndExamplesCommonPath,
-                    e);
+        while (fields.hasNext()) {
+            Map.Entry<String, JsonNode> field = fields.next();
+            JsonNode fieldValue = properties.get(field.getKey());
+            Optional.ofNullable(fieldValue.get(KEY_DESCRIPTION))
+                    .map(JsonNode::asText)
+                    .ifPresent(
+                            text ->
+                                    fieldsDescriptionAndExamples.put(
+                                            field.getKey() + KEY_DESCRIPTION, text));
+            Optional.ofNullable(fieldValue.path(KEY_EXAMPLES))
+                    .map(examples -> examples.get(0))
+                    .map(JsonNode::asText)
+                    .ifPresent(
+                            text ->
+                                    fieldsDescriptionAndExamples.put(
+                                            field.getKey() + KEY_EXAMPLES, text));
         }
-
-        // Now we get the provider specific descriptions and examples, if there are any duplicates
-        // from the common ones, the provider specific ones will override the common ones.
-        String fieldsDescriptionsAndExamplesForProviderPath =
-                "config-templates/"
-                        + clientConfigurationClassForProvider.getCanonicalName().replace(".", "/")
-                        + ".yaml";
-
-        InputStream fieldsDescriptionsAndExamplesForProviderStream =
-                clientConfigurationClassForProvider
-                        .getClassLoader()
-                        .getResourceAsStream(fieldsDescriptionsAndExamplesForProviderPath);
-
-        if (fieldsDescriptionsAndExamplesForProviderStream != null) {
-            final Map<String, String> fieldsDescriptionAndExamplesForProvider;
-            try {
-                fieldsDescriptionAndExamplesForProvider =
-                        (Map<String, String>)
-                                yaml.load(fieldsDescriptionsAndExamplesForProviderStream);
-            } catch (YAMLException e) {
-                throw new IllegalArgumentException(
-                        "Problem when loading yaml file: "
-                                + fieldsDescriptionsAndExamplesForProviderPath,
-                        e);
-            }
-
-            // Merge the common and the provider specific ones.
-            fieldsDescriptionAndExamplesCommon.putAll(fieldsDescriptionAndExamplesForProvider);
-        }
-
-        return fieldsDescriptionAndExamplesCommon;
+        return fieldsDescriptionAndExamples;
     }
 
     private String replaceUnwantedCharacters(String jsonString) {
@@ -136,15 +110,8 @@ public class ClientConfigurationTemplateBuilder {
 
         JsonObject jsonSecrets = getSecretFields(fieldsDescriptionsAndExamples);
         JsonObject jsonSensitive = getSensitiveFields(fieldsDescriptionsAndExamples);
-        JsonObject jsonAgentConfigParam = getAgentConfigParamFields(fieldsDescriptionsAndExamples);
         jsonConfigurationTemplate.add("secrets", jsonSecrets);
         jsonConfigurationTemplate.add("sensitive", jsonSensitive);
-        jsonAgentConfigParam.entrySet().stream()
-                .forEach(
-                        agentConfigParamEntry ->
-                                jsonConfigurationTemplate.add(
-                                        agentConfigParamEntry.getKey(),
-                                        agentConfigParamEntry.getValue()));
 
         return jsonConfigurationTemplates;
     }
@@ -155,14 +122,13 @@ public class ClientConfigurationTemplateBuilder {
         Set<Field> sensitiveFieldsSet =
                 clientConfigurationMetaInfoHandler.getSensitiveSecretFields();
 
-        sensitiveFieldsSet.stream()
-                .forEach(
-                        sensitiveField ->
-                                sensitiveFieldsJson.addProperty(
-                                        clientConfigurationMetaInfoHandler.fieldToFieldName.apply(
-                                                sensitiveField),
-                                        getDescriptionAndExample(
-                                                sensitiveField, fieldsDescriptionsAndExamples)));
+        sensitiveFieldsSet.forEach(
+                sensitiveField ->
+                        sensitiveFieldsJson.addProperty(
+                                clientConfigurationMetaInfoHandler.fieldToFieldName.apply(
+                                        sensitiveField),
+                                getDescriptionAndExample(
+                                        sensitiveField, fieldsDescriptionsAndExamples)));
 
         return sensitiveFieldsJson;
     }
@@ -172,43 +138,15 @@ public class ClientConfigurationTemplateBuilder {
 
         Set<Field> secretFieldsSet = clientConfigurationMetaInfoHandler.getSecretFields();
 
-        secretFieldsSet.stream()
-                .forEach(
-                        secretField ->
-                                secretFieldsJson.addProperty(
-                                        clientConfigurationMetaInfoHandler.fieldToFieldName.apply(
-                                                secretField),
-                                        getDescriptionAndExample(
-                                                secretField, fieldsDescriptionsAndExamples)));
+        secretFieldsSet.forEach(
+                secretField ->
+                        secretFieldsJson.addProperty(
+                                clientConfigurationMetaInfoHandler.fieldToFieldName.apply(
+                                        secretField),
+                                getDescriptionAndExample(
+                                        secretField, fieldsDescriptionsAndExamples)));
 
         return secretFieldsJson;
-    }
-
-    private JsonObject getAgentConfigParamFields(
-            Map<String, String> fieldsDescriptionsAndExamples) {
-        JsonObject agentConfigParamJson = new JsonObject();
-
-        Set<Field> agentConfigParamFieldsSet =
-                clientConfigurationMetaInfoHandler.getAgentConfigParamFields();
-
-        for (Field field : agentConfigParamFieldsSet) {
-            String descriptionAndExample =
-                    getDescriptionAndExample(field, fieldsDescriptionsAndExamples);
-            try {
-                List<String> examples = (new Gson()).fromJson(descriptionAndExample, List.class);
-                JsonArray examplesJson = new JsonArray();
-                examples.stream().forEach(example -> examplesJson.add(new JsonPrimitive(example)));
-                agentConfigParamJson.add(
-                        clientConfigurationMetaInfoHandler.fieldToFieldName.apply(field),
-                        examplesJson);
-            } catch (Exception e) {
-                agentConfigParamJson.addProperty(
-                        clientConfigurationMetaInfoHandler.fieldToFieldName.apply(field),
-                        descriptionAndExample);
-            }
-        }
-
-        return agentConfigParamJson;
     }
 
     private String getDescriptionAndExample(
@@ -218,7 +156,7 @@ public class ClientConfigurationTemplateBuilder {
         StringBuilder sb = new StringBuilder();
 
         if (includeDescriptions) {
-            String fieldDescriptionKey = fieldName + "-description";
+            String fieldDescriptionKey = fieldName + KEY_DESCRIPTION;
             if (fieldsDescriptionsAndExamples.containsKey(fieldDescriptionKey)) {
                 sb.append(System.lineSeparator());
                 sb.append("Description:");
@@ -228,7 +166,7 @@ public class ClientConfigurationTemplateBuilder {
         }
 
         if (includeExamples) {
-            String fieldExampleKey = fieldName + "-example";
+            String fieldExampleKey = fieldName + KEY_EXAMPLES;
             if (fieldsDescriptionsAndExamples.containsKey(fieldExampleKey)) {
                 String example = fieldsDescriptionsAndExamples.get(fieldExampleKey);
                 if (includeDescriptions) {
