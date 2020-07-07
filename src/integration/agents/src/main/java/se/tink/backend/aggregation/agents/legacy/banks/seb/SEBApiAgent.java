@@ -860,7 +860,7 @@ public class SEBApiAgent extends AbstractAgent
                     switch (authenticationResponse.getHintCode().toLowerCase()) {
                         case "seb_unknown_bankid":
                             throw BankIdError.BLOCKED.exception(
-                                    "Message from SEB - make sure you have activated your BankId at SEB and that you are a customer at www.seb.se");
+                                    UserMessage.SEB_UNKNOWN_BANKID.getKey());
                         default:
                             throw new IllegalStateException(
                                     "Unhandled BankID response: "
@@ -2457,6 +2457,10 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private enum UserMessage implements LocalizableEnum {
+        SEB_UNKNOWN_BANKID(
+                new LocalizableKey(
+                        "Message from SEB - This BankId is unknown to SEB. Make sure to verify it and that you are a customer at www.seb.se")),
+
         MUST_AUTHORIZE_BANKID(
                 new LocalizableKey(
                         "The first time you use your mobile BankId you have to verify it with your Digipass. Login to the SEB-app with your mobile BankID to do this.")),
