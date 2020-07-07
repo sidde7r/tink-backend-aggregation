@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.compliance.account_classification.psd2_payme
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -199,6 +200,8 @@ public class Psd2PaymentAccountClassifierTest {
         classifier.classify(provider, account2);
 
         verify(rule, times(2)).classify(Mockito.any(), Mockito.any());
+        verify(rule, times(1)).classify(Mockito.any(), eq(account1));
+        verify(rule, times(1)).classify(Mockito.any(), eq(account2));
     }
 
     private AccountClassificationRule<Psd2PaymentAccountClassificationResult> prepareMockedRule(
