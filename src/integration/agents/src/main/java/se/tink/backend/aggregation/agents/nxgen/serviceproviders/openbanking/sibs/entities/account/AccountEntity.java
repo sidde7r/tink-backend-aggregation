@@ -76,7 +76,7 @@ public class AccountEntity {
         return CreditCardAccount.nxBuilder()
                 .withCardDetails(
                         CreditCardModule.builder()
-                                .withCardNumber(pan)
+                                .withCardNumber(maskedPan)
                                 .withBalance(balance)
                                 .withAvailableCredit(balance)
                                 .withCardAlias(name)

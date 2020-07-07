@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.SibsPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategy;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.executor.payment.sign.SignPaymentStrategyFactory;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.transactionalaccount.SibsTransactionalAccountAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.transactionalaccount.SibsTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.fetcher.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.ConsentInvalidErrorFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.filter.RateLimitErrorFilter;
@@ -116,8 +116,8 @@ public abstract class SibsProgressiveBaseAgent extends SubsequentProgressiveGene
     }
 
     private TransactionalAccountRefreshController constructTransactionalAccountRefreshController() {
-        final SibsTransactionalAccountAccountFetcher accountFetcher =
-                new SibsTransactionalAccountAccountFetcher(apiClient);
+        final SibsTransactionalAccountFetcher accountFetcher =
+                new SibsTransactionalAccountFetcher(apiClient);
         final SibsTransactionalAccountTransactionFetcher transactionFetcher =
                 new SibsTransactionalAccountTransactionFetcher(apiClient, request, userState);
 
