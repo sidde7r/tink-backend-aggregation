@@ -57,17 +57,17 @@ public class AccountEntityTest {
     private Object[] accountsInJsonResponse() {
         return new Object[] {
             new Object[] {
-                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"pan\":\"1234\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"maskedPan\":\"1234\"}",
                 "EUR",
                 "-6.27"
             },
             new Object[] {
-                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"pan\":\"1244243\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"maskedPan\":\"1244243\"}",
                 "EUR",
                 "0.01"
             },
             new Object[] {
-                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"pan\":\"4234242324\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"maskedPan\":\"4234242324\"}",
                 "PLN",
                 "-99999.99"
             },
