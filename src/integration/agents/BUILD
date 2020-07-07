@@ -3,9 +3,6 @@ load("//tools/bzl:junit_old.bzl", "junit_test")
 java_library(
     name = "agents",
     srcs = glob(["src/main/java/**/*.java"]),
-    resources = [
-        "//src/integration/agents/src/main/resources:config-templates",
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/account/src/main/java/se/tink/libraries/account/enums",
@@ -139,9 +136,6 @@ junit_test(
         "//tools:libkbc_wbaes_mac",
         "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
-    ],
-    resources = [
-        "//src/integration/agents/src/main/resources:config-templates",
     ],
     tags = ["manual"],
     visibility = ["//visibility:public"],

@@ -17,9 +17,6 @@ junit_test(
         "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
     ],
-    resources = [
-        "//src/integration/agents/src/main/resources:config-templates",
-    ],
     tags = ["manual"],
     visibility = ["//visibility:public"],
     runtime_deps = [
@@ -49,9 +46,6 @@ junit_test(
         "//tools:libkbc_wbaes_mac",
         "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
-    ],
-    resources = [
-        "//src/integration/agents/src/main/resources:config-templates",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
