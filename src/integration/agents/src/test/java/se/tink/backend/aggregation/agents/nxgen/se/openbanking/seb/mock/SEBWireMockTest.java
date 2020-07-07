@@ -36,7 +36,7 @@ public class SEBWireMockTest {
                 new AgentContractEntitiesJsonFileParser()
                         .parseContractOnBasisOfFile(contractFilePath);
 
-        // When
+        // when
         agentWireMockRefreshTest.executeRefresh();
 
         // then
