@@ -42,6 +42,7 @@ public final class AgentWireMockPaymentTest {
             AgentsServiceConfiguration configuration,
             Map<String, String> loginDetails,
             Map<String, String> callbackData,
+            Map<String, String> persistentStorageData,
             TestModule agentModule,
             List<Payment> paymentList,
             List<Transfer> transfersList,
@@ -66,7 +67,8 @@ public final class AgentWireMockPaymentTest {
                                 configuration,
                                 loginDetails,
                                 null,
-                                callbackData),
+                                callbackData,
+                                persistentStorageData),
                         new RefreshRequestModule(
                                 RefreshableItem.REFRESHABLE_ITEMS_ALL, true, false, false),
                         new PaymentRequestModule(paymentList, transfersList),
@@ -117,6 +119,7 @@ public final class AgentWireMockPaymentTest {
         private final String wireMockFilePath;
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
+        private final Map<String, String> persistentStorageData;
         private final List<Payment> paymentList;
         private final List<Transfer> transferList;
         private boolean httpDebugTrace = false;
@@ -131,6 +134,7 @@ public final class AgentWireMockPaymentTest {
             this.configuration = new AgentsServiceConfiguration();
             this.credentialFields = new HashMap<>();
             this.callbackData = new HashMap<>();
+            this.persistentStorageData = new HashMap<>();
             this.paymentList = new ArrayList<>();
             this.transferList = new ArrayList<>();
         }
@@ -173,6 +177,21 @@ public final class AgentWireMockPaymentTest {
          */
         public Builder addCallbackData(String key, String value) {
             callbackData.put(key, value);
+            return this;
+        }
+
+        /**
+         * Add data to be added to persistent storage. TODO: This should be moved to more flexible
+         * configuration file.
+         *
+         * <p>Can be called multiple times to add several items.
+         *
+         * @param key Key of data to put to persistent storage.
+         * @param value Value of data to put to persistent storage.
+         * @return This builder.
+         */
+        public Builder addPersistentStorageData(String key, String value) {
+            persistentStorageData.put(key, value);
             return this;
         }
 
@@ -232,6 +251,7 @@ public final class AgentWireMockPaymentTest {
                     configuration,
                     credentialFields,
                     callbackData,
+                    persistentStorageData,
                     agentTestModule,
                     paymentList,
                     transferList,
@@ -254,6 +274,7 @@ public final class AgentWireMockPaymentTest {
                     configuration,
                     credentialFields,
                     callbackData,
+                    persistentStorageData,
                     agentTestModule,
                     paymentList,
                     transferList,

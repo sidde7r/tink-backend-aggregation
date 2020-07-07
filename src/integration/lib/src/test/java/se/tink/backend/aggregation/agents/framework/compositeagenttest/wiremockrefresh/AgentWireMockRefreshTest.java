@@ -52,6 +52,7 @@ public final class AgentWireMockRefreshTest {
             AgentsServiceConfiguration configuration,
             Map<String, String> loginDetails,
             Map<String, String> callbackData,
+            Map<String, String> persistentStorageData,
             TestModule agentTestModule,
             Set<RefreshableItem> refreshableItems,
             List<Class<? extends CompositeAgentTestCommand>> commandSequence,
@@ -79,7 +80,8 @@ public final class AgentWireMockRefreshTest {
                                 configuration,
                                 loginDetails,
                                 null,
-                                callbackData),
+                                callbackData,
+                                persistentStorageData),
                         new RefreshRequestModule(
                                 refreshableItems,
                                 requestFlagManual,
@@ -163,6 +165,7 @@ public final class AgentWireMockRefreshTest {
         private final Set<String> wireMockFilePaths;
         private final Map<String, String> credentialFields;
         private final Map<String, String> callbackData;
+        private final Map<String, String> persistentStorageData;
         private final Set<RefreshableItem> refreshableItems;
         private boolean httpDebugTrace = false;
         private boolean dumpContentForContractFile = false;
@@ -180,6 +183,7 @@ public final class AgentWireMockRefreshTest {
             this.configuration = new AgentsServiceConfiguration();
             this.credentialFields = new HashMap<>();
             this.callbackData = new HashMap<>();
+            this.persistentStorageData = new HashMap<>();
             this.refreshableItems = new HashSet<>();
         }
 
@@ -221,6 +225,21 @@ public final class AgentWireMockRefreshTest {
          */
         public Builder addCallbackData(String key, String value) {
             callbackData.put(key, value);
+            return this;
+        }
+
+        /**
+         * Add data to be added to persistent storage. TODO: This should be moved to more flexible
+         * configuration file.
+         *
+         * <p>Can be called multiple times to add several items.
+         *
+         * @param key Key of data to put to persistent storage.
+         * @param value Value of data to put to persistent storage.
+         * @return This builder.
+         */
+        public Builder addPersistentStorageData(String key, String value) {
+            persistentStorageData.put(key, value);
             return this;
         }
 
@@ -345,6 +364,7 @@ public final class AgentWireMockRefreshTest {
                     configuration,
                     credentialFields,
                     callbackData,
+                    persistentStorageData,
                     agentTestModule,
                     refreshableItems,
                     of(LoginCommand.class, RefreshCommand.class),
