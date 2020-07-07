@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.AuthorizationCodeTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.PisTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.RefreshTokenTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.authenticator.entity.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.configuration.CmcicConfiguration;
@@ -66,11 +67,11 @@ public class CmcicApiClient implements FrAispApiClient {
     }
 
     private RequestBuilder createPispRequestInSession(String baseUrl, String path) {
-        return createRequestInSession(baseUrl, path, getPispTokenFromStorage());
+        return createRequestInSession(baseUrl, path, getPispTokenFromStorage().get());
     }
 
     private RequestBuilder createPispRequestInSession(URL baseUrl, String path, String body) {
-        return createRequestInSession(baseUrl, path, body, getPispTokenFromStorage());
+        return createRequestInSession(baseUrl, path, body, getPispTokenFromStorage().get());
     }
 
     private RequestBuilder createAispRequestInSession(String baseUrl, String path) {
@@ -120,11 +121,8 @@ public class CmcicApiClient implements FrAispApiClient {
                 .header(HeaderKeys.X_REQUEST_ID, requestId);
     }
 
-    private OAuth2Token getPispTokenFromStorage() {
-        return persistentStorage
-                .get(StorageKeys.PISP_TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    private Optional<OAuth2Token> getPispTokenFromStorage() {
+        return sessionStorage.get(StorageKeys.PISP_TOKEN, OAuth2Token.class);
     }
 
     private OAuth2Token getAispTokenFromStorage() {
@@ -219,6 +217,22 @@ public class CmcicApiClient implements FrAispApiClient {
         final TokenResponse tokenResponse = getTokenResponseAndCheckTokenExpired(request, tokenUrl);
 
         return createOAuth2Token(tokenResponse);
+    }
+
+    public void fetchPisOauthToken() {
+        if (!isValidPisOauthToken()) {
+            fetchAndSavePisOauthToken();
+        }
+    }
+
+    private boolean isValidPisOauthToken() {
+        return getPispTokenFromStorage().map(OAuth2Token::isValid).orElse(false);
+    }
+
+    private void fetchAndSavePisOauthToken() {
+        PisTokenRequest pisTokenRequest = new PisTokenRequest(configuration.getClientId());
+        OAuth2Token token = executeTokenRequest(pisTokenRequest);
+        sessionStorage.put(StorageKeys.PISP_TOKEN, token);
     }
 
     public HalPaymentRequestEntity fetchPayment(String uniqueId) {

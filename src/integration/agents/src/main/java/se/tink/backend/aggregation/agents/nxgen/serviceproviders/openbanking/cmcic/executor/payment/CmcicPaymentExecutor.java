@@ -71,6 +71,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        apiClient.fetchPisOauthToken();
         Payment payment = paymentRequest.getPayment();
 
         String id = UUIDUtils.generateUUID();
