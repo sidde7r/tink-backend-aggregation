@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.seb
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonObject
 public class PendingEntity {
@@ -28,7 +29,7 @@ public class PendingEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(transactionAmount.getAmount())
+                .setAmount(getAmount())
                 .setDate(valueDate)
                 .setDescription(descriptiveText)
                 .setPending(true)
@@ -41,6 +42,12 @@ public class PendingEntity {
                 .setAmount(transactionAmount.getAmount())
                 .setDescription(creditorName)
                 .build();
+    }
+
+    private ExactCurrencyAmount getAmount() {
+        return isPendingTransaction()
+                ? transactionAmount.getAmount().negate()
+                : transactionAmount.getAmount();
     }
 
     public boolean isUpcomingTransaction() {
