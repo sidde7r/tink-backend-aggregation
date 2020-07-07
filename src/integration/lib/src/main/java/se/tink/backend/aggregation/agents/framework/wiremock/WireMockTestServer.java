@@ -113,6 +113,22 @@ public class WireMockTestServer {
                                         .append(
                                                 " has different values for the request and its closest match\n"));
 
+        // Check Query Parameters
+        if (entity.getMissingQueryParametersInGivenRequest().size() > 0) {
+            errorMessage.append("The following query parameters are missing in the request\n");
+            entity.getMissingQueryParametersInGivenRequest()
+                    .forEach(key -> errorMessage.append(key).append("\n"));
+        }
+
+        entity.getQueryParametersWithDifferentValues()
+                .forEach(
+                        key ->
+                                errorMessage
+                                        .append("The query parameter ")
+                                        .append(key)
+                                        .append(
+                                                " has different values for the request and its closest match\n"));
+
         errorMessage.append(entity.getBodyComparisonReporter().report());
         return errorMessage.toString();
     }
@@ -186,6 +202,10 @@ public class WireMockTestServer {
 
         if ("put".equalsIgnoreCase(method)) {
             return WireMock.put(urlPattern);
+        }
+
+        if ("patch".equalsIgnoreCase(method)) {
+            return WireMock.patch(urlPattern);
         }
 
         throw new RuntimeException(

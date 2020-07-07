@@ -44,19 +44,7 @@ public class NordeaNoAgentTest {
                 .addCredentialField(Field.Key.MOBILENUMBER, manager.get(Arg.MOBILENUMBER))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
-                .expectLoggedIn(false)
-                .build()
-                .testRefresh();
-    }
-
-    @Test
-    public void testRefreshLightLogin() throws Exception {
-        new AgentIntegrationTest.Builder("no", "no-nordea-lightlogin")
-                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
-                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true)
-                .expectLoggedIn(false)
+                .expectLoggedIn(true)
                 .build()
                 .testRefresh();
     }

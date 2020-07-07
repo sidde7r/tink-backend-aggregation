@@ -15,6 +15,8 @@ public class CompareEntity {
         private Boolean areHTTPMethodsMatching;
         private final Set<String> missingHeaderKeysInGivenRequest = new HashSet<>();
         private final Set<String> headerKeysWithDifferentValues = new HashSet<>();
+        private final Set<String> missingQueryParametersInGivenRequest = new HashSet<>();
+        private final Set<String> queryParametersWithDifferentValues = new HashSet<>();
         private ComparisonReporter bodyComparisonReporter;
 
         public Builder(String givenRequest, String expectedRequest) {
@@ -42,6 +44,16 @@ public class CompareEntity {
             return this;
         }
 
+        public Builder addMissingQueryParameterInGivenRequest(String key) {
+            this.missingQueryParametersInGivenRequest.add(key);
+            return this;
+        }
+
+        public Builder addQueryParameterWithDifferentValue(String key) {
+            this.queryParametersWithDifferentValues.add(key);
+            return this;
+        }
+
         public Builder addBodyComparisonReporter(ComparisonReporter reporter) {
             this.bodyComparisonReporter = reporter;
             return this;
@@ -55,6 +67,8 @@ public class CompareEntity {
                     areHTTPMethodsMatching,
                     missingHeaderKeysInGivenRequest,
                     headerKeysWithDifferentValues,
+                    missingQueryParametersInGivenRequest,
+                    queryParametersWithDifferentValues,
                     bodyComparisonReporter);
         }
     }
@@ -66,6 +80,8 @@ public class CompareEntity {
             boolean areMethodsMatching,
             Set<String> missingHeaderKeysInGivenRequest,
             Set<String> headerKeysWithDifferentValues,
+            Set<String> missingQueryParametersInGivenRequest,
+            Set<String> queryParametersWithDifferentValues,
             ComparisonReporter reporter) {
         this.givenRequest = givenRequest;
         this.expectedRequest = expectedRequest;
@@ -73,6 +89,8 @@ public class CompareEntity {
         this.areMethodsMatching = areMethodsMatching;
         this.missingHeaderKeysInGivenRequest = missingHeaderKeysInGivenRequest;
         this.headerKeysWithDifferentValues = headerKeysWithDifferentValues;
+        this.missingQueryParametersInGivenRequest = missingQueryParametersInGivenRequest;
+        this.queryParametersWithDifferentValues = queryParametersWithDifferentValues;
         this.bodyComparisonReporter = reporter;
     }
 
@@ -85,6 +103,9 @@ public class CompareEntity {
 
     private Set<String> missingHeaderKeysInGivenRequest;
     private Set<String> headerKeysWithDifferentValues;
+
+    private Set<String> missingQueryParametersInGivenRequest;
+    private Set<String> queryParametersWithDifferentValues;
 
     private ComparisonReporter bodyComparisonReporter;
 
@@ -114,6 +135,14 @@ public class CompareEntity {
 
     public Set<String> getHeaderKeysWithDifferentValues() {
         return ImmutableSet.copyOf(headerKeysWithDifferentValues);
+    }
+
+    public Set<String> getMissingQueryParametersInGivenRequest() {
+        return ImmutableSet.copyOf(missingQueryParametersInGivenRequest);
+    }
+
+    public Set<String> getQueryParametersWithDifferentValues() {
+        return ImmutableSet.copyOf(queryParametersWithDifferentValues);
     }
 
     public ComparisonReporter getBodyComparisonReporter() {

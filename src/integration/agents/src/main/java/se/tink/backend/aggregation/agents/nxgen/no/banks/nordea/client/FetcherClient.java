@@ -1,0 +1,71 @@
+package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.client;
+
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.QueryParamKeys;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.UriParams;
+import static se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants.Urls;
+
+import lombok.AllArgsConstructor;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard.rpc.CreditCardDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.creditcard.rpc.CreditCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.identitydata.rpc.IdentityDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.url.URL;
+
+@AllArgsConstructor
+public class FetcherClient {
+
+    private BaseClient baseClient;
+
+    public AccountsResponse fetchAccounts() {
+        return baseClient.baseAuthorizedRequest(Urls.FETCH_ACCOUNTS).get(AccountsResponse.class);
+    }
+
+    public TransactionsResponse fetchAccountTransactions(
+            String accountId, String productCode, String continuationKey) {
+
+        RequestBuilder request =
+                baseClient.baseAuthorizedRequest(
+                        new URL(Urls.FETCH_ACCOUNT_TRANSACTIONS)
+                                .parameter(UriParams.URI_ACCOUNT_ID, accountId));
+        request.queryParam(QueryParamKeys.PRODUCT_CODE, productCode);
+        if (continuationKey != null) {
+            request.queryParam(QueryParamKeys.CONTINUATION_KEY, continuationKey);
+        }
+        return request.get(TransactionsResponse.class);
+    }
+
+    public CreditCardsResponse fetchCreditCards() {
+        return baseClient.baseAuthorizedRequest(Urls.FETCH_CARDS).get(CreditCardsResponse.class);
+    }
+
+    public CreditCardDetailsResponse fetchCreditCardDetails(String cardId) {
+        return baseClient
+                .baseAuthorizedRequest(
+                        new URL(Urls.FETCH_CARD_DETAILS).parameter(UriParams.URI_CARD_ID, cardId))
+                .get(CreditCardDetailsResponse.class);
+    }
+
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(String cardId, int page) {
+        return baseClient
+                .baseAuthorizedRequest(
+                        new URL(Urls.FETCH_CARD_TRANSACTIONS)
+                                .parameter(UriParams.URI_CARD_ID, cardId))
+                .queryParam("page", String.valueOf(page))
+                .queryParam("page_size", String.valueOf(100))
+                .get(CreditCardTransactionsResponse.class);
+    }
+
+    public HttpResponse fetchInvestments() {
+        return baseClient.baseAuthorizedRequest(Urls.FETCH_INVESTMENTS).get(HttpResponse.class);
+    }
+
+    public IdentityDataResponse fetchIdentityData() {
+        return baseClient
+                .baseAuthorizedRequest(Urls.FETCH_IDENTITY_DATA)
+                .get(IdentityDataResponse.class);
+    }
+}
