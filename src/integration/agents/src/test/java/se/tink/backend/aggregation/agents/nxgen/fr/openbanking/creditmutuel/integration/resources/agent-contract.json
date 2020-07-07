@@ -5,14 +5,14 @@
       "accountExclusion":"NONE",
       "exactBalance":{
         "currencyCode":"EUR",
-        "doubleValue":42.48,
+        "doubleValue":5134.53,
         "scale":2,
-        "unscaledValue":4248,
-        "exactValue":42.48
+        "unscaledValue":513453,
+        "exactValue":5134.53
       },
       "currencyCode":"EUR",
       "bankId":"DUMMYIBAN",
-      "name":"DUMMY_NAME",
+      "name":"DUMMY_NAME_1",
       "ownership":1.0,
       "type":"CHECKING",
       "identifiers":"[]",
@@ -20,7 +20,7 @@
       "holderName":null,
       "flags":"[\"PSD2_PAYMENT_ACCOUNT\"]",
       "availableCredit":0.0,
-      "balance":42.48
+      "balance":5134.53
     }
   ],
   "transactions": [
@@ -38,7 +38,7 @@
     },
     {
       "amount":13.25,
-      "date":1518433200000,
+      "date":1518519600000,
       "description":"SEPA CREDIT TRANSFER from PSD2Company",
       "internalPayload":{},
       "originalAmount":0.0,

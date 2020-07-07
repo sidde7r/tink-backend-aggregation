@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmc
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.dto.BalanceResourceDto;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.AmountTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.BalanceStatusEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.CashAccountTypeEnumEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity.PsuAccountIdentificationEntity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.mapper.PrioritizedValueExtractor;
@@ -105,6 +106,21 @@ public class CmcicTransactionalAccountConverterTest {
                         "Could not extract account balance. No available balance with type of: XPCD, CLBD");
     }
 
+    @Test
+    public void shouldReturnEmptyForAccountTypeCard() {
+        // given
+        final AccountResourceDto accountResourceDto = createAccountResourceDtoMock();
+        when(accountResourceDto.getCashAccountType()).thenReturn(CashAccountTypeEnumEntity.CARD);
+
+        // when
+        final Optional<TransactionalAccount> result =
+                cmcicTransactionalAccountConverter.convertAccountResourceToTinkAccount(
+                        accountResourceDto);
+
+        // then
+        assertThat(result.isPresent()).isFalse();
+    }
+
     private static AccountResourceDto createAccountResourceDtoMock() {
         final PsuAccountIdentificationEntity psuAccountIdentificationEntityMock =
                 mock(PsuAccountIdentificationEntity.class);
@@ -115,6 +131,8 @@ public class CmcicTransactionalAccountConverterTest {
         when(accountResourceDtoMock.getAccountId()).thenReturn(psuAccountIdentificationEntityMock);
         when(accountResourceDtoMock.getName()).thenReturn(NAME);
         when(accountResourceDtoMock.getResourceId()).thenReturn(RESOURCE_ID);
+        when(accountResourceDtoMock.getCashAccountType())
+                .thenReturn(CashAccountTypeEnumEntity.CACC);
 
         return accountResourceDtoMock;
     }
