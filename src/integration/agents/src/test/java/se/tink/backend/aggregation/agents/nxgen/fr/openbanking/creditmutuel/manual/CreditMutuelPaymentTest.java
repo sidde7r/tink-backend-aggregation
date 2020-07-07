@@ -1,62 +1,88 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditmutuel.manual;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import org.junit.Ignore;
+import java.util.UUID;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Reference;
 
-@Ignore
 public class CreditMutuelPaymentTest {
+    private AgentIntegrationTest.Builder builder;
 
-    @Test
-    public void testPayments() throws Exception {
-        AgentIntegrationTest.Builder builder =
+    private final ArgumentManager<ArgumentManager.PsuIdArgumentEnum> manager =
+            new ArgumentManager<>(ArgumentManager.PsuIdArgumentEnum.values());
+    private final ArgumentManager<CreditMutuelPaymentTest.Arg> creditorDebtorManager =
+            new ArgumentManager<>(CreditMutuelPaymentTest.Arg.values());
+
+    @Before
+    public void setup() {
+        builder =
                 new AgentIntegrationTest.Builder("fr", "fr-creditmutuel-oauth2")
+                        .setFinancialInstitutionId("creditmutuel")
+                        .setAppId("tink")
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
-
-        builder.build().testGenericPayment(createListMockedDomesticPayment(2));
     }
 
-    @SuppressWarnings("Duplicates")
-    private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
-        List<Payment> listOfMockedPayments = new ArrayList<>();
+    @Test
+    public void testPayments() throws Exception {
 
-        for (int i = 0; i < numberOfMockedPayments; ++i) {
-            Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn("FR7630066109720002000100130").when(creditor).getAccountNumber();
+        manager.before();
+        creditorDebtorManager.before();
 
-            Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
-            doReturn("FR7610278001110002007680247").when(debtor).getAccountNumber();
+        builder.build().testTinkLinkPayment(createRealDomesticPayment());
+    }
 
-            Amount amount = Amount.inSEK(new Random().nextInt(50000));
-            LocalDate executionDate = LocalDate.now();
-            String currency = "SEK";
+    private List<Payment> createRealDomesticPayment() {
+        AccountIdentifier creditorAccountIdentifier =
+                new IbanIdentifier(
+                        creditorDebtorManager.get(CreditMutuelPaymentTest.Arg.CREDITOR_ACCOUNT));
+        Creditor creditor = new Creditor(creditorAccountIdentifier, "Creditor Name");
 
-            listOfMockedPayments.add(
-                    new Payment.Builder()
-                            .withCreditor(creditor)
-                            .withDebtor(debtor)
-                            .withAmount(amount)
-                            .withExecutionDate(executionDate)
-                            .withCurrency(currency)
-                            .build());
+        AccountIdentifier debtorAccountIdentifier =
+                new IbanIdentifier(
+                        creditorDebtorManager.get(CreditMutuelPaymentTest.Arg.DEBTOR_ACCOUNT));
+        Debtor debtor = new Debtor(debtorAccountIdentifier);
+
+        Reference reference = new Reference("Message", "ReferenceToCreditor");
+
+        Amount amount = Amount.inEUR(1);
+        LocalDate executionDate = LocalDate.now();
+        return Collections.singletonList(
+                new Payment.Builder()
+                        .withCreditor(creditor)
+                        .withDebtor(debtor)
+                        .withAmount(amount)
+                        .withExecutionDate(executionDate)
+                        .withReference(reference)
+                        .withUniqueId(UUID.randomUUID().toString())
+                        .build());
+    }
+
+    private enum Arg implements ArgumentManager.ArgumentManagerEnum {
+        DEBTOR_ACCOUNT, // Domestic IBAN account number
+        CREDITOR_ACCOUNT; // Domestic IBAN account number
+
+        @Override
+        public boolean isOptional() {
+            return false;
         }
+    }
 
-        return listOfMockedPayments;
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }

@@ -67,11 +67,28 @@ public class CmcicApiClient implements FrAispApiClient {
     }
 
     private RequestBuilder createPispRequestInSession(String baseUrl, String path) {
-        return createRequestInSession(baseUrl, path, getPispTokenFromStorage().get());
+        return createRequestInSession(
+                baseUrl,
+                path,
+                getPispTokenFromStorage()
+                        .filter(OAuth2Token::isValid)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                SessionError.SESSION_EXPIRED.exception())));
     }
 
     private RequestBuilder createPispRequestInSession(URL baseUrl, String path, String body) {
-        return createRequestInSession(baseUrl, path, body, getPispTokenFromStorage().get());
+        return createRequestInSession(
+                baseUrl,
+                path,
+                body,
+                getPispTokenFromStorage()
+                        .filter(OAuth2Token::isValid)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                SessionError.SESSION_EXPIRED.exception())));
     }
 
     private RequestBuilder createAispRequestInSession(String baseUrl, String path) {
