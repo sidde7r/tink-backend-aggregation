@@ -108,9 +108,8 @@ func parseEntry(lines []string) (Entry, error) {
 		}
 		if attr == Date {
 			s = strings.Replace(s, "--", "T", 1)
-			s = strings.Replace(s, ".", "-", 1)
-			s = s + "0"
-			t, err := time.Parse("2006-01-02T15:04:05-0700", s)
+			s = s + "+02:00"
+			t, err := time.Parse(time.RFC3339, s)
 			if err != nil {
 				continue
 			}
