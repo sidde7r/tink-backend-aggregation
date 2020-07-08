@@ -63,16 +63,18 @@ type Entry struct {
 	RspBody    string            `json:"responseBody"`
 }
 
-func parse(lines []string) (map[int][]string, error) {
-	out := map[int][]string{}
-	entryNr := 0
+func parse(lines []string) ([][]string, error) {
+	var out [][]string
+	var tmp []string
 	for _, l := range lines {
-
-		nr, err := strconv.Atoi(num.FindString(l))
-		if err == nil {
-			entryNr = nr
+		if strings.HasSuffix(l, "Client out-bound request") && len(tmp) > 0 {
+			out = append(out, tmp)
+			tmp = []string{}
 		}
-		out[entryNr] = append(out[entryNr], l)
+		tmp = append(tmp, l)
+	}
+	if len(tmp) > 0 {
+		out = append(out, tmp)
 	}
 	return out, nil
 }
