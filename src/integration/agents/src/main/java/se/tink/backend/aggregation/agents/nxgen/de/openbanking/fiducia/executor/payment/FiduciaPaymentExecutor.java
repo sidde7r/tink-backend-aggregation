@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.AuthorizePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.rpc.PaymentDocument;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.JWTUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.XmlConverter;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
@@ -67,7 +66,6 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
     private final String psuId;
     private final String password;
     private final String certificate;
-    private final String keyId;
     private final RSAPrivateKey privateKey;
 
     public FiduciaPaymentExecutor(
@@ -79,9 +77,11 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
         this.configuration = configuration;
         this.psuId = psuId;
         this.password = password;
-        certificate = JWTUtils.readFile(configuration.getCertificatePath());
-        keyId = configuration.getKeyId();
-        privateKey = JWTUtils.getKey(configuration.getKeyPath());
+        certificate = configuration.getCertificate();
+
+        // TODO change made for secrets cleanup purposes (prev values were used by Vega for sbx)
+        // Entire payment executor has to be refactored to use QSealC signer
+        privateKey = null;
     }
 
     @Override
@@ -143,7 +143,6 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
         String signature =
                 SignatureUtils.createSignature(
                         privateKey,
-                        keyId,
                         SignatureValues.HEADERS_WITH_PSU_ID,
                         digest,
                         reqId,
@@ -170,7 +169,6 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
         String signature =
                 SignatureUtils.createSignature(
                         privateKey,
-                        keyId,
                         SignatureValues.HEADERS_WITH_PSU_ID,
                         digest,
                         reqId,
@@ -206,7 +204,7 @@ public class FiduciaPaymentExecutor implements PaymentExecutor, FetchablePayment
         String reqId = String.valueOf(UUID.randomUUID());
         String signature =
                 SignatureUtils.createSignature(
-                        privateKey, keyId, SignatureValues.HEADERS, digest, reqId, date, null);
+                        privateKey, SignatureValues.HEADERS, digest, reqId, date, null);
 
         PaymentDocument paymentDocument =
                 apiClient.getPayment(paymentId, digest, certificate, signature, reqId, date);

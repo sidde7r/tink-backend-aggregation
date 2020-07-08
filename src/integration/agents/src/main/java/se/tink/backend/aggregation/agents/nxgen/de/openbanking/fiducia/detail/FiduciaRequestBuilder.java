@@ -10,12 +10,12 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
 import se.tink.backend.aggregation.configuration.agents.AgentConfiguration;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.filterable.request.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -25,13 +25,13 @@ public class FiduciaRequestBuilder {
     private final SessionStorage sessionStorage;
     private final FiduciaConfiguration fiduciaConfiguration;
     private final String redirectUrl;
-    private final SignatureHeaderGenerator signatureHeaderGenerator;
+    private final FiduciaSignatureHeaderGenerator signatureHeaderGenerator;
 
     public FiduciaRequestBuilder(
             TinkHttpClient client,
             SessionStorage sessionStorage,
             AgentConfiguration<FiduciaConfiguration> agentConfiguration,
-            SignatureHeaderGenerator signatureHeaderGenerator) {
+            FiduciaSignatureHeaderGenerator signatureHeaderGenerator) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.fiduciaConfiguration = agentConfiguration.getProviderSpecificConfiguration();

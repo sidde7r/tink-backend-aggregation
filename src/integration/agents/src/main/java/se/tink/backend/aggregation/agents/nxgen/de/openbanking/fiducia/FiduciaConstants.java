@@ -8,7 +8,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 public final class FiduciaConstants {
 
     public static final String SIGNATURE_HEADER =
-            "keyId=\"%s\",algorithm=\"SHA256withRSA\",headers=\"%s\",signature=\"%s\"";
+            "algorithm=\"SHA256withRSA\",headers=\"%s\",signature=\"%s\"";
     static final List<String> HEADERS_TO_SIGN =
             Arrays.asList(
                     HeaderKeys.DATE,

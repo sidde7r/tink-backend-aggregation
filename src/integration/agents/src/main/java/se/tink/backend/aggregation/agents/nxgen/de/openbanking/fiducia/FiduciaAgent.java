@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.module.annotation.AgentDependencyModules;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaSignatureHeaderGenerator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.detail.FiduciaRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
@@ -27,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.header.SignatureHeaderGenerator;
 
 @AgentDependencyModules(modules = QSealcSignerModuleRSASHA256.class)
 public final class FiduciaAgent extends NextGenerationAgent
@@ -53,12 +53,10 @@ public final class FiduciaAgent extends NextGenerationAgent
         this.transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
-    private SignatureHeaderGenerator createSignatureHeaderGenerator(QsealcSigner qsealcSigner) {
-        return new SignatureHeaderGenerator(
-                FiduciaConstants.SIGNATURE_HEADER,
-                FiduciaConstants.HEADERS_TO_SIGN,
-                getAgentConfiguration().getProviderSpecificConfiguration().getKeyId(),
-                qsealcSigner);
+    private FiduciaSignatureHeaderGenerator createSignatureHeaderGenerator(
+            QsealcSigner qsealcSigner) {
+        return new FiduciaSignatureHeaderGenerator(
+                FiduciaConstants.SIGNATURE_HEADER, FiduciaConstants.HEADERS_TO_SIGN, qsealcSigner);
     }
 
     protected AgentConfiguration<FiduciaConfiguration> getAgentConfiguration() {
