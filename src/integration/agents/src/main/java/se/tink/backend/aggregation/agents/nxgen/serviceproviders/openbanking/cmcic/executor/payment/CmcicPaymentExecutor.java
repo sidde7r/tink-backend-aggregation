@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
@@ -48,7 +49,6 @@ import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.uuid.UUIDUtils;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentExecutor {
 
@@ -219,12 +219,14 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     @Override
     public CreateBeneficiaryMultiStepResponse createBeneficiary(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
-        throw new NotImplementedException();
+        throw new NotImplementedException(
+                "createBeneficiary not yet implemented for " + this.getClass().getName());
     }
 
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        throw new NotImplementedException();
+        throw new NotImplementedException(
+                "cancel not yet implemented for " + this.getClass().getName());
     }
 
     @Override
