@@ -9,6 +9,7 @@ public final class SwedbankConstants {
     }
 
     public static final String INTEGRATION_NAME = "swedbank";
+    public static final int TRANSACTIONS_DOWNLOAD_RETRY_COUNT = 1;
 
     public static class Format {
         public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
@@ -168,6 +169,7 @@ public final class SwedbankConstants {
         public static final int MONTHS_TO_FETCH_MAX = 25;
         public static final int ATTEMPS_BEFORE_TIMEOUT = 10;
         public static final int CONSENT_DURATION_IN_DAYS = 90;
+        public static final int RETRY_TRANSACTIONS_DOWNLOAD = 60000;
     }
 
     public static final class LogMessages {
@@ -175,6 +177,10 @@ public final class SwedbankConstants {
         public static final String WAITING_FOR_SIGNING = "Waiting for signing";
         public static final String TRANSACTION_SIGNING_TIMED_OUT =
                 "Sign for fetching transactions for the last 25 months, timed out";
+    }
+
+    public static final class HttpStatus {
+        public static final int RESOURCE_PENDING = 428;
     }
 
     public enum HeadersToSign {

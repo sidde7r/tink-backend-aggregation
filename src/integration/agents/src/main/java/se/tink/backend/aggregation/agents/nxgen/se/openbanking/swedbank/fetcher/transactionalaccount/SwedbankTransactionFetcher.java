@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
@@ -84,9 +85,10 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     private Optional<FetchTransactionsResponse> fetchAllTransactions(TransactionalAccount account) {
 
-        StatementResponse response;
+        StatementResponse statementResponse;
         try {
-            response = apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
+            statementResponse =
+                    apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
         } catch (HttpResponseException e) {
             if (checkIfScaIsRequired(e)) {
                 String scaStatus =
@@ -94,25 +96,45 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                 if (!scaStatus.equalsIgnoreCase(AuthStatus.FINALIZED)) {
                     return Optional.empty();
                 }
-                response = apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
+                statementResponse =
+                        apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
             } else {
                 throw e;
             }
         }
-        try (ZipInputStream zipInputStream =
-                new ZipInputStream(
-                        apiClient
-                                .getTransactions(response.getLinks().getDownload().getHref())
-                                .getBodyInputStream())) {
-            // There's only one file in the archive
-            zipInputStream.getNextEntry();
-            return Optional.of(
-                    SerializationUtils.deserializeFromString(
-                            IOUtils.toString(zipInputStream, StandardCharsets.UTF_8),
-                            FetchTransactionsResponse.class));
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to parse transactions");
-        }
+        return downaloadZippedTransactions(statementResponse.getLinks().getDownload().getHref());
+    }
+
+    private Optional<FetchTransactionsResponse> downaloadZippedTransactions(String downloadLink) {
+        int retryCount = SwedbankConstants.TRANSACTIONS_DOWNLOAD_RETRY_COUNT;
+        do {
+            try (ZipInputStream zipInputStream =
+                    new ZipInputStream(
+                            apiClient.getTransactions(downloadLink).getBodyInputStream())) {
+                // There's only one file in the archive
+                ZipEntry entry = zipInputStream.getNextEntry();
+                if (entry == null) {
+                    return Optional.empty();
+                }
+                return Optional.of(
+                        SerializationUtils.deserializeFromString(
+                                IOUtils.toString(zipInputStream, StandardCharsets.UTF_8),
+                                FetchTransactionsResponse.class));
+            } catch (HttpResponseException e) {
+                if (e.getResponse().getStatus() == SwedbankConstants.HttpStatus.RESOURCE_PENDING) {
+                    // Download resource is not ready yet. TPP should retry download link after some
+                    // time (proposed wait time is 60 seconds).
+                    retryCount--;
+                    Uninterruptibles.sleepUninterruptibly(
+                            TimeValues.RETRY_TRANSACTIONS_DOWNLOAD, TimeUnit.MILLISECONDS);
+                } else {
+                    throw e;
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to parse transactions");
+            }
+        } while (retryCount > 0);
+        return Optional.empty();
     }
 
     @Override
@@ -132,7 +154,7 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                                 .orElseGet(Lists::newArrayList),
                         fetchTransactionsResponse
                                 .map(FetchTransactionsResponse::getTransactions)
-                                .map(TransactionsEntity::getPending)
+                                .map(TransactionsEntity::getBooked)
                                 .map(
                                         tes ->
                                                 tes.stream()
