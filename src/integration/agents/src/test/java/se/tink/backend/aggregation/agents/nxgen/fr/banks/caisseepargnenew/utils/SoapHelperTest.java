@@ -12,7 +12,9 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetche
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.identitydata.IdentityData;
 
 public class SoapHelperTest {
@@ -212,6 +214,50 @@ public class SoapHelperTest {
                     + "  </soap:Body>\n"
                     + "</soap:Envelope>";
 
+    private static final String transactionsData =
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <GetHistoriqueOperationsByCompteResponse xmlns=\"http://caisse-epargne.fr/webservices/\">\n"
+                    + "      <GetHistoriqueOperationsByCompteResult>\n"
+                    + "        <CodeRetour>0000</CodeRetour>\n"
+                    + "        <LibelleRetour>La requête s'est bien déroulée (0000).</LibelleRetour>\n"
+                    + "        <Resultat xsi:type=\"Histo\">\n"
+                    + "          <IndicateurNav>S</IndicateurNav>\n"
+                    + "          <BufferSuite>050520202020-05-05-09.42.17.585414</BufferSuite>\n"
+                    + "          <Nb_Op>50</Nb_Op>\n"
+                    + "          <Nb_Op_Tot>130</Nb_Op_Tot>\n"
+                    + "          <IndiceExaustif>P</IndiceExaustif>\n"
+                    + "          <ListHistoCpt>\n"
+                    + "            <HistoCpt>\n"
+                    + "              <DateOprt>2020-06-19T00:00:00</DateOprt>\n"
+                    + "              <LiblOprt>VERY COOL TRANSACTION</LiblOprt>\n"
+                    + "              <MtOprt>133700</MtOprt>\n"
+                    + "              <CodeDevise>EUR</CodeDevise>\n"
+                    + "              <SensOprt>D</SensOprt>\n"
+                    + "              <RefrOprt>1906202020200619-15.01.54.758945</RefrOprt>\n"
+                    + "              <CodeTypeEcrit>D</CodeTypeEcrit>\n"
+                    + "              <CodeTypeOp>01</CodeTypeOp>\n"
+                    + "            </HistoCpt>\n"
+                    + "            <HistoCpt>\n"
+                    + "              <DateOprt>2020-05-05T00:00:00</DateOprt>\n"
+                    + "              <LiblOprt>NOT SO COOL TRANSACTION</LiblOprt>\n"
+                    + "              <MtOprt>9900</MtOprt>\n"
+                    + "              <CodeDevise>EUR</CodeDevise>\n"
+                    + "              <SensOprt>C</SensOprt>\n"
+                    + "              <RefrOprt>0505202020200505-18.24.59.555648</RefrOprt>\n"
+                    + "              <CodeTypeEcrit>D</CodeTypeEcrit>\n"
+                    + "              <CodeTypeOp>02</CodeTypeOp>\n"
+                    + "            </HistoCpt>\n"
+                    + "          </ListHistoCpt>\n"
+                    + "          <MttSoldeCompte>99999</MttSoldeCompte>\n"
+                    + "          <SensSoldeCompte>D</SensSoldeCompte>\n"
+                    + "        </Resultat>\n"
+                    + "      </GetHistoriqueOperationsByCompteResult>\n"
+                    + "    </GetHistoriqueOperationsByCompteResponse>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>\n";
+
     @Test
     public void getAccounts() {
         AccountsResponse response = SoapHelper.getAccounts(accountsData);
@@ -263,5 +309,36 @@ public class SoapHelperTest {
         AccountDetailsResponse response2 = SoapHelper.getAccountDetails(accountDetailsData);
         AccountDetailsResultEntity a = response2.getResult();
         assertThat(a.getIban()).isEqualTo("FR1231231231231231231231231");
+    }
+
+    @Test
+    public void getTransactions() {
+        TransactionsResponse response = SoapHelper.getTransactions(transactionsData);
+        Collection<? extends Transaction> transactions = response.getTinkTransactions();
+        assertThat(transactions.size()).isEqualTo(2);
+        Optional<? extends Transaction> negativeTransaction =
+                transactions.stream()
+                        .filter(t -> t.getExactAmount().getExactValue().signum() == -1)
+                        .findFirst();
+        assertThat(negativeTransaction.isPresent()).isTrue();
+        Transaction negTransaction = negativeTransaction.get();
+        assertThat(
+                        negTransaction
+                                .getExactAmount()
+                                .getExactValue()
+                                .compareTo(BigDecimal.valueOf(-1337)))
+                .isEqualTo(0);
+        Optional<? extends Transaction> positiveTransaction =
+                transactions.stream()
+                        .filter(t -> t.getExactAmount().getExactValue().signum() != -1)
+                        .findFirst();
+        assertThat(positiveTransaction.isPresent()).isTrue();
+        Transaction posTransaction = positiveTransaction.get();
+        assertThat(
+                        posTransaction
+                                .getExactAmount()
+                                .getExactValue()
+                                .compareTo(BigDecimal.valueOf(99)))
+                .isEqualTo(0);
     }
 }

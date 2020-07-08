@@ -112,7 +112,7 @@ public class AccountEntity {
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .addHolderName(productTitle)
-                .setBankIdentifier(fullAccountNumber)
+                .setApiIdentifier(fullAccountNumber)
                 .build();
     }
 

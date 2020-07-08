@@ -56,11 +56,12 @@ public class CaisseEpargneConstants {
     }
 
     public static class HeaderValues {
-
         public static final String GET_ACCOUNTS =
                 "http://caisse-epargne.fr/webservices/GetSyntheseCpteAbonnement";
         public static final String GET_ACCOUNT_DETAILS =
                 "http://caisse-epargne.fr/webservices/GetRice";
+        public static final String GET_TRANSACTIONS =
+                "http://caisse-epargne.fr/webservices/GetHistoriqueOperationsByCompte";
         static final String SSO_BAPI = "http://caisse-epargne.fr/webservices/sso_BAPI";
         static final String VERSION_WS_BAD_22 = "V22";
         static final String CAISSE_DARWIN = "CaisseEpargne/742 CFNetwork/978.0.7 Darwin/18.7.0";
@@ -103,6 +104,9 @@ public class CaisseEpargneConstants {
 
     public static class RequestValues {
         public static final String PASSWORD = "PASSWORD";
+        public static final int PAGE_SIZE = 100;
+        public static final String TRANSACTION_REQUEST_TYPE_SUBSEQUENT = "S";
+        public static final String TRANSACTION_REQUEST_TYPE_INITIAL = "D";
         static final String IT_ENTITY_02 = "02";
     }
 
@@ -114,7 +118,6 @@ public class CaisseEpargneConstants {
 
     public static class StorageKeys {
         public static final String TOKEN = "token";
-        public static final String ACCOUNTS_RESPONSE = "accountsResponse";
         static final String TERM_ID = "termId";
         public static final String FINAL_AUTH_RESPONSE = "finalAuthResponse";
         static final String REDIRECT_LOCATION = "redirectLocation";
@@ -122,7 +125,7 @@ public class CaisseEpargneConstants {
 
     public static class ResponseValue {
         public static final String RETURN_CODE_OK = "0000";
-        public static final String TRANSACTION_TYPE_INCOME = "R";
+        public static final String TRANSACTION_TYPE_INCOME = "C";
     }
 
     public enum MembershipTypes {
@@ -155,8 +158,14 @@ public class CaisseEpargneConstants {
     }
 
     public static class ResponseKeys {
-
         public static final String ACCOUNT_DETAILS_RESULT = "GetRiceResult";
         public static final String ACCOUNTS_RESPONSE = "GetSyntheseCpteAbonnementResult";
+        public static final String TRANSACTIONS_RESULT = "GetHistoriqueOperationsByCompteResult";
+    }
+
+    public static class SoapXmlFragment {
+        public static final String PREFIX =
+                "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><soap:Body>";
+        public static final String SUFFIX = "</soap:Body></soap:Envelope>";
     }
 }

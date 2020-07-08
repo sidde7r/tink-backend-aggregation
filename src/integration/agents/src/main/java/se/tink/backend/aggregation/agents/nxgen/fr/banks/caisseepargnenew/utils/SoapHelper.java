@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.common.base.Preconditions;
 import java.io.IOException;
@@ -13,8 +14,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.CaisseEpargneConstants.ResponseKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.CaisseEpargneConstants.SoapKeys;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.CaisseEpargneConstants.SoapXmlFragment;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.soap.SoapParser;
 import se.tink.libraries.identitydata.IdentityData;
 
@@ -129,5 +132,20 @@ public class SoapHelper {
         } catch (XMLStreamException | IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public static <T> String formRequest(T request) {
+        String requestAsString;
+        try {
+            requestAsString = mapper.writeValueAsString(request);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e);
+        }
+        return SoapXmlFragment.PREFIX + requestAsString + SoapXmlFragment.SUFFIX;
+    }
+
+    public static TransactionsResponse getTransactions(String transactionsResponse) {
+        return parseXmlToResponse(
+                ResponseKeys.TRANSACTIONS_RESULT, transactionsResponse, TransactionsResponse.class);
     }
 }

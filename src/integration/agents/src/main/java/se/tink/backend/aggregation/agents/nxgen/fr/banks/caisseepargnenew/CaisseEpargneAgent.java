@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.agents.componentproviders.AgentComponen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.client.TinkHttpClient;
@@ -54,7 +54,7 @@ public class CaisseEpargneAgent extends NextGenerationAgent
                 new CaisseEpragneTransactionalAccountFetcher(apiClient);
 
         CaisseEpargneTransactionalAccountTransactionFetcher transactionFetcher =
-                new CaisseEpargneTransactionalAccountTransactionFetcher();
+                new CaisseEpargneTransactionalAccountTransactionFetcher(apiClient);
 
         return new TransactionalAccountRefreshController(
                 metricRefreshController,
@@ -62,7 +62,7 @@ public class CaisseEpargneAgent extends NextGenerationAgent
                 accountFetcher,
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher)));
+                        new TransactionKeyPaginationController<>(transactionFetcher)));
     }
 
     @Override

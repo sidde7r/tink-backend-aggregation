@@ -46,6 +46,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authen
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.utils.CaisseEpargneUtils;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.utils.SoapHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -346,5 +348,21 @@ public class CaisseEpargneApiClient {
                         .body(request)
                         .post(String.class);
         return SoapHelper.getAccountDetails(accountDetailsResponse);
+    }
+
+    public TransactionsResponse getTransactionsForAccount(String fullAccountNumber, String key) {
+        TransactionsRequest transactionsRequest = new TransactionsRequest();
+        transactionsRequest.setAccount(fullAccountNumber);
+        transactionsRequest.setPaginationKey(key);
+        String request = SoapHelper.formRequest(transactionsRequest);
+        String transactionsResponse =
+                httpClient
+                        .request(Urls.WS_BAD)
+                        .accept(MediaType.WILDCARD_TYPE)
+                        .header(HeaderKeys.CONTENT_TYPE, MediaType.TEXT_XML)
+                        .header(HeaderKeys.SOAP_ACTION, HeaderValues.GET_TRANSACTIONS)
+                        .body(request)
+                        .post(String.class);
+        return SoapHelper.getTransactions(transactionsResponse);
     }
 }
