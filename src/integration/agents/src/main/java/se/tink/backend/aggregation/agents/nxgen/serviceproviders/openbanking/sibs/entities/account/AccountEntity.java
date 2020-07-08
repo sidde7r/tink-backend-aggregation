@@ -57,12 +57,12 @@ public class AccountEntity {
                 .withLoanDetails(
                         LoanModule.builder()
                                 .withType(LoanDetails.Type.DERIVE_FROM_NAME)
-                                .withBalance(balance)
+                                .withBalance(balance.negate())
                                 .withInterestRate(
                                         AgentParsingUtils.parsePercentageFormInterest(
-                                                        balance.getExactValue())
+                                                        balance.getExactValue().abs())
                                                 .doubleValue())
-                                .setInitialBalance(balance)
+                                .setInitialBalance(balance.negate())
                                 .setApplicants(Collections.singletonList(name))
                                 .build())
                 .withId(getIdModule())
@@ -77,8 +77,8 @@ public class AccountEntity {
                 .withCardDetails(
                         CreditCardModule.builder()
                                 .withCardNumber(maskedPan)
-                                .withBalance(balance)
-                                .withAvailableCredit(balance)
+                                .withBalance(balance.negate())
+                                .withAvailableCredit(balance.negate())
                                 .withCardAlias(name)
                                 .build())
                 .withoutFlags()

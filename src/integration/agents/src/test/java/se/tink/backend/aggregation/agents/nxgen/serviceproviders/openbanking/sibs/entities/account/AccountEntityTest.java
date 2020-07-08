@@ -33,22 +33,22 @@ public class AccountEntityTest {
     }
 
     @SuppressWarnings("unused")
-    private Object[] loansInJsonResponse() {
+    private Object[] loansAndCreditCardsInJsonResponse() {
         return new Object[] {
             new Object[] {
-                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"bic\":\"dummy\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"maskedPan\":\"1234\"}",
                 "EUR",
                 "6.27"
             },
             new Object[] {
-                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"bic\":\"dummy\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"maskedPan\":\"1234\"}",
                 "EUR",
                 "0.01"
             },
             new Object[] {
-                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"bic\":\"dummy\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"maskedPan\":\"1234\"}",
                 "PLN",
-                "99999.99"
+                "-99999.99"
             },
         };
     }
@@ -57,17 +57,17 @@ public class AccountEntityTest {
     private Object[] accountsInJsonResponse() {
         return new Object[] {
             new Object[] {
-                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"maskedPan\":\"1234\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\"}",
                 "EUR",
                 "-6.27"
             },
             new Object[] {
-                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"maskedPan\":\"1244243\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\"}",
                 "EUR",
                 "0.01"
             },
             new Object[] {
-                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\",\"maskedPan\":\"4234242324\"}",
+                "{\"id\":\"apiIdentifier\",\"iban\":\"dummy\",\"currency\":\"EUR\",\"name\":\"dummy\",\"accountType\":\"CACC\"}",
                 "PLN",
                 "-99999.99"
             },
@@ -92,23 +92,22 @@ public class AccountEntityTest {
     }
 
     @Test
-    @Parameters(method = "loansInJsonResponse")
+    @Parameters(method = "loansAndCreditCardsInJsonResponse")
     public void shouldCorrectlyConvertJsonAccountToLoanAccount(
             String json, String currency, String amount) throws IOException {
         AccountEntity accountEntity = mapper.readValue(json, AccountEntity.class);
 
         LoanAccount account =
-                accountEntity.toTinkLoan(
-                        new ExactCurrencyAmount(new BigDecimal(amount).abs(), currency));
+                accountEntity.toTinkLoan(new ExactCurrencyAmount(new BigDecimal(amount), currency));
 
         assertThat(account.getType()).isEqualTo(LOAN);
         assertThat(account.getApiIdentifier()).isEqualTo("apiIdentifier");
         assertThat(account.getExactBalance())
-                .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amount), currency));
+                .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amount).negate(), currency));
     }
 
     @Test
-    @Parameters(method = "accountsInJsonResponse")
+    @Parameters(method = "loansAndCreditCardsInJsonResponse")
     public void shouldCorrectlyConvertJsonAccountToCreditCardAccount(
             String json, String currency, String amount) throws IOException {
         AccountEntity accountEntity = mapper.readValue(json, AccountEntity.class);
@@ -120,6 +119,7 @@ public class AccountEntityTest {
         assertThat(account.getType()).isEqualTo(CREDIT_CARD);
         assertThat(account.getApiIdentifier()).isEqualTo("apiIdentifier");
         assertThat(account.getExactBalance())
-                .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amount), currency));
+                .isEqualTo(new ExactCurrencyAmount(new BigDecimal(amount).negate(), currency));
+        System.out.println(new BigDecimal(amount).negate());
     }
 }
