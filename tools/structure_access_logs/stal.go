@@ -110,9 +110,8 @@ func parseEntry(lines []string) (Entry, error) {
 		}
 		if attr == Date {
 			s = strings.Replace(s, "--", "T", 1)
-			s = strings.Replace(s, ".", "-", 1)
-			s = s + "0"
-			t, err := time.Parse("2006-01-02T15:04:05-0700", s)
+			s = s + "+02:00"
+			t, err := time.Parse(time.RFC3339, s)
 			if err != nil {
 				continue
 			}
@@ -152,41 +151,44 @@ func parseEntry(lines []string) (Entry, error) {
 }
 
 func parseLine(s string) (Attr, string) {
-	if strings.HasSuffix(s, " < ") {
-		return Default, ""
+	if info.MatchString(s) {
+		if strings.HasSuffix(s, "Client out-bound request") {
+			return Req, ""
+		}
+		if strings.HasSuffix(s, "Client in-bound response") {
+			return Rsp, ""
+		}
+		if date.MatchString(s) {
+			return Date, date.FindString(s)
+		}
 	}
-	if strings.HasSuffix(s, "Client out-bound request") {
-		return Req, ""
-	}
-	if strings.HasSuffix(s, "Client in-bound response") {
-		return Rsp, ""
-	}
-	if date.MatchString(s) {
-		return Date, date.FindString(s)
-	}
-	if methodUrl.MatchString(s) {
-		return MethodUrl, methodUrl.FindString(s)
-	}
-	if header.MatchString(s) {
-		return Header, header.FindString(s)
+	if reqOrRes.MatchString(s) {
+		if status.MatchString(s) {
+			return Status, code.FindString(s)
+		}
+		if methodUrl.MatchString(s) {
+			return MethodUrl, methodUrl.FindString(s)
+		}
+		if header.MatchString(s) {
+			return Header, header.FindString(s)
+		}
 	}
 	if body.MatchString(s) {
 		return Body, body.FindString(s)
 	}
-	if status.MatchString(s) {
-		return Status, code.FindString(s)
-	}
-	return Default, s
+	return Default, ""
 }
 
 var (
-	num       = regexp.MustCompile(`^\d*`)
+	info      = regexp.MustCompile(`^\d+ [*] .*`)
+	reqOrRes  = regexp.MustCompile(`^\d+ [<>] .*`)
+	num       = regexp.MustCompile(`^\d+`)
 	date      = regexp.MustCompile(`\d\d\d\d-\d\d-\d\d--\d\d:\d\d:\d\d.\d\d\d`)
 	methodUrl = regexp.MustCompile(`[A-Z]* https://.*$`)
 	header    = regexp.MustCompile(`\S*: .*$`)
 	body      = regexp.MustCompile(`^[^\d].*$`)
-	status    = regexp.MustCompile(`^\d < \d*$`)
-	code      = regexp.MustCompile(`\d*$`)
+	status    = regexp.MustCompile(`^\d+ < \d+$`)
+	code      = regexp.MustCompile(`\d+$`)
 )
 
 type Attr int
@@ -205,8 +207,9 @@ const (
 func read(scanner *bufio.Scanner) []string {
 	scanner.Split(bufio.ScanLines)
 	var lines []string
-	buf := make([]byte, 0, 64*1024)
-	scanner.Buffer(buf, 1024*1024)
+	const maxCapacity = 1024 * 1024
+	buf := make([]byte, 0, maxCapacity)
+	scanner.Buffer(buf, maxCapacity)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
