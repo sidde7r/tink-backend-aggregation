@@ -77,6 +77,8 @@ public final class CmcicConstants {
         public static final String INSTRUCTION_ID = "MyInstrId";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String CLIENT_CREDENTIALS = "client_credentials";
+        public static final String PIS_SCOPE = "pisp";
     }
 
     public static class DateFormat {
