@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.seb;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.bankid.status.BankIdStatus;
+import se.tink.backend.aggregation.compliance.account_capabilities.AccountCapabilities.Answer;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -132,20 +134,102 @@ public class SebConstants {
         }
     }
 
+    public static final class AccountTypeCode {
+        private AccountTypeCode() {
+            throw new AssertionError();
+        }
+
+        public static final String PRIVATKONTO = "1";
+        // 2: NOTARIATKONTO, SKOGSKONTO, FÖRETAGSKONTO: classified as OTHER in legacy agent
+        // sometimes 1 has KTOSLAG_TXT=NOTARIATKONTO, but shows as product=Privatkonto on OB
+        public static final String OTHER = "2";
+        public static final String PERSONALLONEKONTO = "3";
+        public static final String ENKLA_SPARKONTOT_FORETAG = "12";
+        public static final String ENKLA_SPARKONTOT = "16";
+        public static final String SPECIALINLANINGSKONTO = "17";
+        public static final String FUND = "22";
+        public static final String IPS = "27";
+        public static final String PLACERINGSKONTO = "35";
+        public static final String ISK_KAPITALKONTO = "54";
+    }
+
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
-                    // 1: PRIVATKONTO
-                    // 2: FÖRETAGSKONTO
-                    // 3: PERSONALLONEKONTO
-                    // 17: SPECIALINLONEKONTO
-                    .put(AccountTypes.CHECKING, "1", "2", "3", "17")
-                    // 12: ENKLA_SPARKONTOT_FORETAG
-                    // 16: ENKLA_SPARKONTOT
-                    .put(AccountTypes.SAVINGS, "12", "16")
-                    // 22: FUND
-                    // 27: IPS
-                    // 35: PLACERINGSKONTO
-                    // 54: ISK_KAPITALKONTO
-                    .put(AccountTypes.INVESTMENT, "22", "27", "35", "54")
+                    .put(
+                            AccountTypes.CHECKING,
+                            AccountTypeCode.PRIVATKONTO,
+                            AccountTypeCode.OTHER,
+                            AccountTypeCode.PERSONALLONEKONTO,
+                            AccountTypeCode.SPECIALINLANINGSKONTO)
+                    .put(
+                            AccountTypes.SAVINGS,
+                            AccountTypeCode.ENKLA_SPARKONTOT,
+                            AccountTypeCode.ENKLA_SPARKONTOT_FORETAG)
+                    .put(
+                            AccountTypes.INVESTMENT,
+                            AccountTypeCode.FUND,
+                            AccountTypeCode.IPS,
+                            AccountTypeCode.PLACERINGSKONTO,
+                            AccountTypeCode.ISK_KAPITALKONTO)
                     .build();
+
+    public static final class AccountCapabilities {
+        private AccountCapabilities() {
+            throw new AssertionError();
+        }
+
+        public static final TypeMapper<Answer> CAN_WITHDRAW_CASH_MAPPER =
+                TypeMapper.<Answer>builder()
+                        .put(
+                                Answer.YES,
+                                AccountTypeCode.PRIVATKONTO,
+                                AccountTypeCode.PERSONALLONEKONTO)
+                        .put(
+                                Answer.NO,
+                                AccountTypeCode.ENKLA_SPARKONTOT,
+                                AccountTypeCode.SPECIALINLANINGSKONTO,
+                                AccountTypeCode.PLACERINGSKONTO,
+                                AccountTypeCode.ISK_KAPITALKONTO)
+                        .build();
+
+        public static final TypeMapper<Answer> CAN_PLACE_FUNDS_MAPPER =
+                TypeMapper.<Answer>builder()
+                        .put(
+                                Answer.YES,
+                                AccountTypeCode.PRIVATKONTO,
+                                AccountTypeCode.PERSONALLONEKONTO,
+                                AccountTypeCode.ENKLA_SPARKONTOT,
+                                AccountTypeCode.SPECIALINLANINGSKONTO,
+                                AccountTypeCode.PLACERINGSKONTO,
+                                AccountTypeCode.ISK_KAPITALKONTO)
+                        .build();
+
+        public static final TypeMapper<Answer> CAN_EXECUTE_EXTERNAL_TRANSFER_MAPPER =
+                TypeMapper.<Answer>builder()
+                        .put(
+                                Answer.YES,
+                                AccountTypeCode.PRIVATKONTO,
+                                AccountTypeCode.PERSONALLONEKONTO,
+                                AccountTypeCode.ENKLA_SPARKONTOT,
+                                AccountTypeCode.ISK_KAPITALKONTO)
+                        .put(
+                                Answer.NO,
+                                AccountTypeCode.SPECIALINLANINGSKONTO,
+                                AccountTypeCode.PLACERINGSKONTO)
+                        .build();
+
+        public static final TypeMapper<Answer> CAN_RECEIVE_EXTERNAL_TRANSFER_MAPPER =
+                TypeMapper.<Answer>builder()
+                        .put(
+                                Answer.YES,
+                                AccountTypeCode.PRIVATKONTO,
+                                AccountTypeCode.PERSONALLONEKONTO,
+                                AccountTypeCode.ENKLA_SPARKONTOT,
+                                AccountTypeCode.ISK_KAPITALKONTO)
+                        .put(
+                                Answer.NO,
+                                AccountTypeCode.SPECIALINLANINGSKONTO,
+                                AccountTypeCode.PLACERINGSKONTO)
+                        .build();
+    }
 }
