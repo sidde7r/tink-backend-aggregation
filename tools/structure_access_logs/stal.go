@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"os"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -65,26 +64,19 @@ type Entry struct {
 }
 
 func parse(lines []string) ([][]string, error) {
-	out := map[int][]string{}
-	entryNr := 0
+	var out [][]string
+	var tmp []string
 	for _, l := range lines {
-
-		nr, err := strconv.Atoi(num.FindString(l))
-		if err == nil {
-			entryNr = nr
+		if strings.HasSuffix(l, "Client out-bound request") && len(tmp) > 0 {
+			out = append(out, tmp)
+			tmp = []string{}
 		}
-		out[entryNr] = append(out[entryNr], l)
+		tmp = append(tmp, l)
 	}
-	keys := make([]int, 0)
-	for k := range out {
-		keys = append(keys, k)
+	if len(tmp) > 0 {
+		out = append(out, tmp)
 	}
-	sort.Ints(keys)
-	var list [][]string
-	for _, k := range keys {
-		list = append(list, out[k])
-	}
-	return list, nil
+	return out, nil
 }
 
 func parseEntry(lines []string) (Entry, error) {
