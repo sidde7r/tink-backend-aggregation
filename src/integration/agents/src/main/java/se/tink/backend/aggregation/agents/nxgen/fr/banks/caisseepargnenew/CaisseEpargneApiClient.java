@@ -44,6 +44,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authen
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc.OAuth2V2AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc.SamlAuthnResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.authenticator.rpc.TokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.utils.CaisseEpargneUtils;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.utils.SoapHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -319,5 +321,30 @@ public class CaisseEpargneApiClient {
                         .post(HttpResponse.class);
         String xmlBody = response.getBody(String.class);
         instanceStorage.put(StorageKeys.FINAL_AUTH_RESPONSE, xmlBody);
+    }
+
+    public AccountsResponse getAccounts() {
+        String accountsResponse =
+                httpClient
+                        .request(Urls.WS_BAD)
+                        .header(HeaderKeys.SOAP_ACTION, HeaderValues.GET_ACCOUNTS)
+                        .accept(MediaType.WILDCARD_TYPE)
+                        .header(HeaderKeys.CONTENT_TYPE, MediaType.TEXT_XML)
+                        .body(SoapHelper.createGetAccountsRequest())
+                        .post(String.class);
+        return SoapHelper.getAccounts(accountsResponse);
+    }
+
+    public AccountDetailsResponse getAccountDetails(String fullAccountNumber) {
+        String request = SoapHelper.createGetAccountDetailsRequest(fullAccountNumber);
+        String accountDetailsResponse =
+                httpClient
+                        .request(Urls.WS_BAD)
+                        .header(HeaderKeys.SOAP_ACTION, HeaderValues.GET_ACCOUNT_DETAILS)
+                        .accept(MediaType.WILDCARD_TYPE)
+                        .header(HeaderKeys.CONTENT_TYPE, MediaType.TEXT_XML)
+                        .body(request)
+                        .post(String.class);
+        return SoapHelper.getAccountDetails(accountDetailsResponse);
     }
 }

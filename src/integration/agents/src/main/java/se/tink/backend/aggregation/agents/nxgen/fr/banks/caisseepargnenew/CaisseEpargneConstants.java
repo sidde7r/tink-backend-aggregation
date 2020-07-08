@@ -59,6 +59,8 @@ public class CaisseEpargneConstants {
 
         public static final String GET_ACCOUNTS =
                 "http://caisse-epargne.fr/webservices/GetSyntheseCpteAbonnement";
+        public static final String GET_ACCOUNT_DETAILS =
+                "http://caisse-epargne.fr/webservices/GetRice";
         static final String SSO_BAPI = "http://caisse-epargne.fr/webservices/sso_BAPI";
         static final String VERSION_WS_BAD_22 = "V22";
         static final String CAISSE_DARWIN = "CaisseEpargne/742 CFNetwork/978.0.7 Darwin/18.7.0";
@@ -112,9 +114,15 @@ public class CaisseEpargneConstants {
 
     public static class StorageKeys {
         public static final String TOKEN = "token";
+        public static final String ACCOUNTS_RESPONSE = "accountsResponse";
         static final String TERM_ID = "termId";
         public static final String FINAL_AUTH_RESPONSE = "finalAuthResponse";
         static final String REDIRECT_LOCATION = "redirectLocation";
+    }
+
+    public static class ResponseValue {
+        public static final String RETURN_CODE_OK = "0000";
+        public static final String TRANSACTION_TYPE_INCOME = "R";
     }
 
     public enum MembershipTypes {
@@ -143,5 +151,12 @@ public class CaisseEpargneConstants {
         public static final String VALID_SUBSCRIPTION = "AbonnementValide";
         public static final String SURNAME = "Nom";
         public static final String NAME = "Prenom";
+        public static final String INTERNAL_ACCOUNT = "CompteInterneSynt";
+    }
+
+    public static class ResponseKeys {
+
+        public static final String ACCOUNT_DETAILS_RESULT = "GetRiceResult";
+        public static final String ACCOUNTS_RESPONSE = "GetSyntheseCpteAbonnementResult";
     }
 }

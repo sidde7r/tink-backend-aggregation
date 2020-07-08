@@ -2,7 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.utils
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.entity.AccountDetailsResultEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.entity.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountsResponse;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.identitydata.IdentityData;
 
 public class SoapHelperTest {
@@ -82,5 +92,176 @@ public class SoapHelperTest {
     public void getIdentityData() {
         IdentityData data = SoapHelper.getIdentityData(xmlData);
         assertThat(data.getFullName()).isEqualTo("FIRSTNAME SURNAME");
+    }
+
+    private static final String accountsData =
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <GetSyntheseCpteAbonnementResponse xmlns=\"http://caisse-epargne.fr/webservices/\">\n"
+                    + "      <GetSyntheseCpteAbonnementResult>\n"
+                    + "        <CodeRetour>0000</CodeRetour>\n"
+                    + "        <LibelleRetour>La requête s'est bien déroulée (0000).</LibelleRetour>\n"
+                    + "        <Resultat xsi:type=\"SyntheseCompteInterne\">\n"
+                    + "          <Resultat>0000</Resultat>\n"
+                    + "          <Message/>\n"
+                    + "          <NumeroAbonne>999999999</NumeroAbonne>\n"
+                    + "          <lstComptesInternesTit>\n"
+                    + "            <CompteInterneSynt>\n"
+                    + "              <NumeroRib>12312312312312312312312</NumeroRib>\n"
+                    + "              <NumeroCompteReduit>12312312312</NumeroCompteReduit>\n"
+                    + "              <LibelleTypeProduit>CPT DEPOT PART.</LibelleTypeProduit>\n"
+                    + "              <MontantSoldeCompte>5923.00</MontantSoldeCompte>\n"
+                    + "              <CodeDevise>EUR</CodeDevise>\n"
+                    + "              <IntituleProduit>MLLE SURNAME NAME</IntituleProduit>\n"
+                    + "              <LibelleAbregeTypeProduit>C.CHEQUE</LibelleAbregeTypeProduit>\n"
+                    + "              <IsClicable>true</IsClicable>\n"
+                    + "              <CodeSens>D</CodeSens>\n"
+                    + "              <MontantDecouvert>80000</MontantDecouvert>\n"
+                    + "              <CodeDeviseDecouvert>EUR</CodeDeviseDecouvert>\n"
+                    + "              <CodeSensDecouvert>C</CodeSensDecouvert>\n"
+                    + "              <CodeProduit>04</CodeProduit>\n"
+                    + "              <CodeCategorieProduit>A</CodeCategorieProduit>\n"
+                    + "              <NumeroRibCompteLie/>\n"
+                    + "              <IndicateurChequierRice>R</IndicateurChequierRice>\n"
+                    + "              <EncoursM>\n"
+                    + "                <NumeroRib>12312312312312312312312</NumeroRib>\n"
+                    + "                <NumeroCompteReduit>12312312312</NumeroCompteReduit>\n"
+                    + "                <DateImputation>2020-08-04T00:00:00</DateImputation>\n"
+                    + "                <MontantSoldeEnCours>55091.00</MontantSoldeEnCours>\n"
+                    + "                <CodeDevise>EUR</CodeDevise>\n"
+                    + "                <CodeSens>D</CodeSens>\n"
+                    + "                <Personnalise>false</Personnalise>\n"
+                    + "                <SeuilMin>0</SeuilMin>\n"
+                    + "                <SeuilMax>0</SeuilMax>\n"
+                    + "              </EncoursM>\n"
+                    + "              <Personnalise>false</Personnalise>\n"
+                    + "              <SeuilMin>0</SeuilMin>\n"
+                    + "              <SeuilMax>0</SeuilMax>\n"
+                    + "              <NvAutoCpt/>\n"
+                    + "            </CompteInterneSynt>\n"
+                    + "            <CompteInterneSynt>\n"
+                    + "              <NumeroRib>32132132132132132132132</NumeroRib>\n"
+                    + "              <NumeroCompteReduit>32132132132</NumeroCompteReduit>\n"
+                    + "              <LibelleTypeProduit>LIVRET JEUNE</LibelleTypeProduit>\n"
+                    + "              <MontantSoldeCompte>1000</MontantSoldeCompte>\n"
+                    + "              <CodeDevise>EUR</CodeDevise>\n"
+                    + "              <IntituleProduit>MLLE SURNAME NAME</IntituleProduit>\n"
+                    + "              <LibelleAbregeTypeProduit>L. JEUNE</LibelleAbregeTypeProduit>\n"
+                    + "              <IsClicable>true</IsClicable>\n"
+                    + "              <CodeSens>C</CodeSens>\n"
+                    + "              <MontantDecouvert>0</MontantDecouvert>\n"
+                    + "              <CodeDeviseDecouvert>EUR</CodeDeviseDecouvert>\n"
+                    + "              <CodeSensDecouvert>C</CodeSensDecouvert>\n"
+                    + "              <CodeProduit>10</CodeProduit>\n"
+                    + "              <CodeCategorieProduit>B</CodeCategorieProduit>\n"
+                    + "              <NumeroRibCompteLie/>\n"
+                    + "              <IndicateurChequierRice>N</IndicateurChequierRice>\n"
+                    + "              <Personnalise>false</Personnalise>\n"
+                    + "              <SeuilMin>0</SeuilMin>\n"
+                    + "              <SeuilMax>0</SeuilMax>\n"
+                    + "              <NvAutoCpt/>\n"
+                    + "            </CompteInterneSynt>\n"
+                    + "          </lstComptesInternesTit>\n"
+                    + "          <lstComptesInternesAutre/>\n"
+                    + "        </Resultat>\n"
+                    + "      </GetSyntheseCpteAbonnementResult>\n"
+                    + "    </GetSyntheseCpteAbonnementResponse>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>";
+
+    private static final String accountDetailsData =
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                    + "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
+                    + "  <soap:Body>\n"
+                    + "    <GetRiceResponse xmlns=\"http://caisse-epargne.fr/webservices/\">\n"
+                    + "      <GetRiceResult>\n"
+                    + "        <CodeRetour>0000</CodeRetour>\n"
+                    + "        <LibelleRetour>La requête s'est bien déroulée (0000).</LibelleRetour>\n"
+                    + "        <Resultat xsi:type=\"Rice\">\n"
+                    + "          <CodeInseePaysAgence/>\n"
+                    + "          <CodeInseePaysTitulaire/>\n"
+                    + "          <AdresseTitulaire>\n"
+                    + "            <string>32 RUE LA QUINTINIE</string>\n"
+                    + "            <string/>\n"
+                    + "            <string>75015 PARIS</string>\n"
+                    + "            <string xsi:nil=\"true\"/>\n"
+                    + "            <string xsi:nil=\"true\"/>\n"
+                    + "          </AdresseTitulaire>\n"
+                    + "          <AdresseAgence>\n"
+                    + "            <string>LA DEFENSE</string>\n"
+                    + "            <string>14 PLACE DE LA DEFENSE</string>\n"
+                    + "            <string>92400 COURBEVOIE</string>\n"
+                    + "            <string xsi:nil=\"true\"/>\n"
+                    + "            <string xsi:nil=\"true\"/>\n"
+                    + "            <string>TEL : 01.71.09.61.14</string>\n"
+                    + "          </AdresseAgence>\n"
+                    + "          <CleRib>58</CleRib>\n"
+                    + "          <CodeBic>CEPAFRPP751</CodeBic>\n"
+                    + "          <CodeGuicIntb>90000</CodeGuicIntb>\n"
+                    + "          <CodeIban>FR1231231231231231231231231</CodeIban>\n"
+                    + "          <IdntEtabGce>17515</IdntEtabGce>\n"
+                    + "          <InttlCpte/>\n"
+                    + "          <LiblGuicIntb/>\n"
+                    + "          <NumrPrdt>04134777368</NumrPrdt>\n"
+                    + "          <NumTelAgence>TEL : 01.71.09.61.14</NumTelAgence>\n"
+                    + "          <LibelleCaisse>CE CEIDF</LibelleCaisse>\n"
+                    + "        </Resultat>\n"
+                    + "      </GetRiceResult>\n"
+                    + "    </GetRiceResponse>\n"
+                    + "  </soap:Body>\n"
+                    + "</soap:Envelope>";
+
+    @Test
+    public void getAccounts() {
+        AccountsResponse response = SoapHelper.getAccounts(accountsData);
+        response.stream()
+                .forEach(
+                        accountEntity ->
+                                accountEntity.setIban(
+                                        getIban(accountEntity.getFullAccountNumber())));
+        Collection<TransactionalAccount> accounts =
+                response.stream()
+                        .map(AccountEntity::toTinkAccount)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+        assertThat(accounts.size()).isEqualTo(2);
+        Optional<TransactionalAccount> checking =
+                accounts.stream()
+                        .filter(account -> account.getType().equals(AccountTypes.CHECKING))
+                        .findFirst();
+        assertThat(checking.isPresent()).isTrue();
+        assertThat(checking.get().getAccountNumber()).isEqualTo("12312312312");
+        assertThat(checking.get().getIdentifiers().get(0).getIdentifier())
+                .isEqualTo("FR4820041010050014391645720");
+        assertThat(checking.get().getHolderName().toString()).isEqualTo("MLLE SURNAME NAME");
+        assertThat(checking.get().getExactBalance().compareTo(BigDecimal.valueOf(59.23)))
+                .isEqualTo(0);
+        Optional<TransactionalAccount> savings =
+                accounts.stream()
+                        .filter(account -> account.getType().equals(AccountTypes.SAVINGS))
+                        .findFirst();
+        assertThat(savings.isPresent()).isTrue();
+        assertThat(savings.get().getHolderName().toString()).isEqualTo("MLLE SURNAME NAME");
+        assertThat(savings.get().getIdentifiers().get(0).getIdentifier())
+                .isEqualTo("FR6720041010050008697430710");
+        assertThat(savings.get().getExactBalance().compareTo(BigDecimal.valueOf(10))).isEqualTo(0);
+    }
+
+    private String getIban(String fullAccountNumber) {
+        if (fullAccountNumber.equals("12312312312312312312312")) {
+            return "FR4820041010050014391645720";
+        } else if (fullAccountNumber.equals("32132132132132132132132")) {
+            return "FR6720041010050008697430710";
+        }
+        return "";
+    }
+
+    @Test
+    public void getAccountDetails() {
+        AccountDetailsResponse response2 = SoapHelper.getAccountDetails(accountDetailsData);
+        AccountDetailsResultEntity a = response2.getResult();
+        assertThat(a.getIban()).isEqualTo("FR1231231231231231231231231");
     }
 }
