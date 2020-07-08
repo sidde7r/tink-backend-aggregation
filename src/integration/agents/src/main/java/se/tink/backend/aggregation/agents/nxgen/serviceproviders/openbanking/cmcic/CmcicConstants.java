@@ -11,6 +11,7 @@ public final class CmcicConstants {
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
+        public static final String NO_PIS_OAUTH_TOKEN_IN_STORAGE = "No PIS Oauth Token In Storage";
     }
 
     public static class Urls {

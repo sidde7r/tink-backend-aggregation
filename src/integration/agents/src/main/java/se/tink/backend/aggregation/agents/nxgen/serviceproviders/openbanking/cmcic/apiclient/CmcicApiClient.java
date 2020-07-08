@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.QueryKeys;
@@ -75,7 +76,7 @@ public class CmcicApiClient implements FrAispApiClient {
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception())));
+                                                ErrorMessages.NO_PIS_OAUTH_TOKEN_IN_STORAGE)));
     }
 
     private RequestBuilder createPispRequestInSession(URL baseUrl, String path, String body) {
@@ -88,7 +89,7 @@ public class CmcicApiClient implements FrAispApiClient {
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception())));
+                                                ErrorMessages.NO_PIS_OAUTH_TOKEN_IN_STORAGE)));
     }
 
     private RequestBuilder createAispRequestInSession(String baseUrl, String path) {
