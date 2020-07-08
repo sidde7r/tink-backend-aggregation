@@ -1469,6 +1469,7 @@ public class SEBApiAgent extends AbstractAgent
         if (SEBApiConstants.PSD2_Account_Types.contains(type)) {
             account.setFlags(ImmutableList.of(AccountFlag.PSD2_PAYMENT_ACCOUNT));
         }
+        account.setCapabilities(SEBAgentUtils.guessAccountCapabilities(accountTypeCode));
 
         return account;
     }
