@@ -25,7 +25,8 @@ public class RegulatoryRestrictions {
             Account account,
             Optional<Psd2PaymentAccountClassificationResult> paymentAccountClassification) {
         try {
-            boolean isRestricted = shouldBeRestricted(request, paymentAccountClassification);
+            boolean isRestricted =
+                    shouldBeRestricted(request, account, paymentAccountClassification);
             regulatoryRestrictionsMetrics.regulatoryRestrictions(
                     request.getProvider(), account, isRestricted);
             return isRestricted;
@@ -39,31 +40,28 @@ public class RegulatoryRestrictions {
 
     private boolean shouldBeRestricted(
             CredentialsRequest request,
+            Account account,
             Optional<Psd2PaymentAccountClassificationResult> paymentAccountClassification) {
+        if (!paymentAccountClassification.isPresent()) {
+            logger.info("No classification for " + account);
+            return false;
+        }
         return request.getDataFetchingRestrictions().stream()
-                .anyMatch(restriction -> isRestricted(paymentAccountClassification, restriction));
+                .anyMatch(
+                        restriction ->
+                                isRestricted(paymentAccountClassification.get(), restriction));
     }
 
     private boolean isRestricted(
-            Optional<Psd2PaymentAccountClassificationResult> paymentAccountClassification,
+            Psd2PaymentAccountClassificationResult paymentAccountClassification,
             DataFetchingRestrictions restriction) {
         switch (restriction) {
             case RESTRICT_FETCHING_PSD2_PAYMENT_ACCOUNTS:
                 return paymentAccountClassification
-                        .map(
-                                classification ->
-                                        classification
-                                                == Psd2PaymentAccountClassificationResult
-                                                        .PAYMENT_ACCOUNT)
-                        .orElse(false);
+                        == Psd2PaymentAccountClassificationResult.PAYMENT_ACCOUNT;
             case RESTRICT_FETCHING_PSD2_UNDETERMINED_PAYMENT_ACCOUNTS:
                 return paymentAccountClassification
-                        .map(
-                                classification ->
-                                        classification
-                                                == Psd2PaymentAccountClassificationResult
-                                                        .UNDETERMINED_PAYMENT_ACCOUNT)
-                        .orElse(true);
+                        == Psd2PaymentAccountClassificationResult.UNDETERMINED_PAYMENT_ACCOUNT;
             default:
                 logger.warn("Unrecognized restriction: " + restriction);
                 return false;
