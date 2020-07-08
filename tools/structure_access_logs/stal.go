@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -63,7 +64,7 @@ type Entry struct {
 	RspBody    string            `json:"responseBody"`
 }
 
-func parse(lines []string) (map[int][]string, error) {
+func parse(lines []string) ([][]string, error) {
 	out := map[int][]string{}
 	entryNr := 0
 	for _, l := range lines {
@@ -74,7 +75,16 @@ func parse(lines []string) (map[int][]string, error) {
 		}
 		out[entryNr] = append(out[entryNr], l)
 	}
-	return out, nil
+	keys := make([]int, 0)
+	for k := range out {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+	var list [][]string
+	for _, k := range keys {
+		list = append(list, out[k])
+	}
+	return list, nil
 }
 
 func parseEntry(lines []string) (Entry, error) {
