@@ -20,8 +20,7 @@ public class RemittanceInformation {
     }
 
     public RemittanceInformation(Reference reference) {
-        this.unstructured = "";
-        this.reference = reference.getValue();
+        this("", reference);
     }
 
     public String getReference() {
