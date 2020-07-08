@@ -205,8 +205,9 @@ const (
 func read(scanner *bufio.Scanner) []string {
 	scanner.Split(bufio.ScanLines)
 	var lines []string
-	buf := make([]byte, 0, 64*1024)
-	scanner.Buffer(buf, 1024*1024)
+	const maxCapacity = 1024 * 1024
+	buf := make([]byte, 0, maxCapacity)
+	scanner.Buffer(buf, maxCapacity)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
