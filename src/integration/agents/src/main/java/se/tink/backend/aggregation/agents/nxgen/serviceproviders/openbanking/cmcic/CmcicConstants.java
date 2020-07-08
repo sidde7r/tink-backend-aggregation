@@ -31,6 +31,7 @@ public final class CmcicConstants {
         public static final String CODE_VERIFIER = "CODE_VERIFIER";
         public static final String PISP_TOKEN = "PISP_TOKEN";
         public static final String STATE = "STATE";
+        public static final String AUTH_URL = "AUTH_URL";
     }
 
     public static class QueryKeys {
@@ -74,12 +75,13 @@ public final class CmcicConstants {
     }
 
     public static class FormValues {
-        public static final String BENEFICIARY_NAME = "myMerchant";
+        public static final String BENEFICIARY_NAME = "Payment Receiver";
         public static final String INSTRUCTION_ID = "MyInstrId";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String PIS_SCOPE = "pisp";
+        public static final int NUMBER_OF_TRANSACTIONS = 1;
     }
 
     public static class DateFormat {

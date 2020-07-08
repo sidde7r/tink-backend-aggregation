@@ -2,13 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cm
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentRejectedException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.CmcicConstants.StorageKeys;
@@ -57,6 +58,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     private CmcicConfiguration configuration;
     private String redirectUrl;
     private List<PaymentResponse> paymentResponses;
+    private static final Logger logger = LoggerFactory.getLogger(CmcicPaymentExecutor.class);
 
     public CmcicPaymentExecutor(
             CmcicApiClient apiClient,
@@ -70,85 +72,27 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         apiClient.fetchPisOauthToken();
-        Payment payment = paymentRequest.getPayment();
-
-        String id = UUIDUtils.generateUUID();
-
-        PartyIdentificationEntity initiatingParty =
-                new PartyIdentificationEntity(
-                        payment.getDebtor().getAccountNumber(), null, null, null);
-
-        PaymentTypeInformationEntity paymentTypeInformation =
-                new PaymentTypeInformationEntity(null, ServiceLevelCodeEntity.SEPA, null, null);
-
-        AccountIdentificationEntity debtorAccount =
-                new AccountIdentificationEntity(
-                        paymentRequest.getPayment().getDebtor().getAccountNumber(), null);
-
-        PartyIdentificationEntity creditor =
-                new PartyIdentificationEntity(FormValues.BENEFICIARY_NAME, null, null, null);
-
-        AccountIdentificationEntity creditorAccount =
-                new AccountIdentificationEntity(
-                        paymentRequest.getPayment().getCreditor().getAccountNumber(), null);
-
-        BeneficiaryEntity beneficiary =
-                BeneficiaryEntity.builder()
-                        .creditor(creditor)
-                        .creditorAccount(creditorAccount)
-                        .build();
-
-        PaymentIdentificationEntity paymentId =
-                new PaymentIdentificationEntity(null, FormValues.INSTRUCTION_ID, null);
-
-        AmountTypeEntity instructedAmount =
-                new AmountTypeEntity(
-                        payment.getAmount().getCurrency(),
-                        payment.getAmount().getValue().toString());
-
-        List<CreditTransferTransactionEntity> creditTransferTransaction =
-                Collections.singletonList(
-                        CreditTransferTransactionEntity.builder()
-                                .paymentId(paymentId)
-                                .requestedExecutionDate(
-                                        OffsetDateTime.now(Clock.systemDefaultZone()).toString())
-                                .instructedAmount(instructedAmount)
-                                .build());
-
-        String callbackUrl =
-                redirectUrl + Urls.SUCCESS_REPORT_PATH + sessionStorage.get(StorageKeys.STATE);
-
-        List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach =
-                Collections.singletonList(AcceptedAuthenticationApproachEnum.REDIRECT);
-        SupplementaryDataEntity supplementaryData =
-                SupplementaryDataEntity.builder()
-                        .acceptedAuthenticationApproach(acceptedAuthenticationApproach)
-                        .successfulReportUrl(callbackUrl)
-                        .unsuccessfulReportUrl(callbackUrl)
-                        .build();
 
         PaymentRequestResourceEntity paymentRequestResourceEntity =
-                PaymentRequestResourceEntity.builder()
-                        .resourceId(id)
-                        .paymentInformationId(id)
-                        .creationDateTime(OffsetDateTime.now(Clock.systemDefaultZone()).toString())
-                        .numberOfTransactions(1)
-                        .requestedExecutionDate(
-                                OffsetDateTime.now(Clock.systemDefaultZone()).toString())
-                        .initiatingParty(initiatingParty)
-                        .paymentTypeInformation(paymentTypeInformation)
-                        .debtorAccount(debtorAccount)
-                        .beneficiary(beneficiary)
-                        .creditTransferTransaction(creditTransferTransaction)
-                        .supplementaryData(supplementaryData)
-                        .build();
-
+                buildPaymentRequest(paymentRequest);
         HalPaymentRequestCreation paymentRequestCreation =
                 apiClient.makePayment(paymentRequestResourceEntity);
 
-        sessionStorage.put(id, paymentRequestCreation.getLinks().getConsentApproval().getHref());
+        String authorizeUrl =
+                Optional.ofNullable(
+                                paymentRequestCreation.getLinks().getConsentApproval().getHref())
+                        .orElseThrow(
+                                () -> {
+                                    logger.error(
+                                            "Payment authorization failed. There is no authentication url!");
+                                    return new PaymentAuthorizationException(
+                                            "Payment authorization failed.",
+                                            new PaymentRejectedException());
+                                });
+
+        sessionStorage.put(StorageKeys.AUTH_URL, authorizeUrl);
 
         PaymentResponse res = getPaymentResponse(paymentRequestResourceEntity);
 
@@ -190,11 +134,7 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                                 new Debtor(
                                         new IbanIdentifier(payment.getDebtorAccount().getIban())))
                         .withExecutionDate(
-                                parseDate(
-                                                payment.getCreditTransferTransaction()
-                                                        .get(0)
-                                                        .getRequestedExecutionDate())
-                                        .toLocalDate())
+                                parseDate(payment.getRequestedExecutionDate()).toLocalDate())
                         .build());
     }
 
@@ -214,6 +154,89 @@ public class CmcicPaymentExecutor implements PaymentExecutor, FetchablePaymentEx
                 paymentMultiStepRequest.getPayment(),
                 AuthenticationStepConstants.STEP_FINALIZE,
                 null);
+    }
+
+    private PaymentRequestResourceEntity buildPaymentRequest(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
+
+        PartyIdentificationEntity initiatingParty =
+                new PartyIdentificationEntity(
+                        payment.getDebtor().getAccountNumber(), null, null, null);
+
+        PaymentTypeInformationEntity paymentTypeInformation =
+                new PaymentTypeInformationEntity(null, ServiceLevelCodeEntity.SEPA, null, null);
+
+        AccountIdentificationEntity debtorAccount =
+                new AccountIdentificationEntity(
+                        paymentRequest.getPayment().getDebtor().getAccountNumber(), null);
+
+        PartyIdentificationEntity creditor =
+                new PartyIdentificationEntity(FormValues.BENEFICIARY_NAME, null, null, null);
+
+        AccountIdentificationEntity creditorAccount =
+                new AccountIdentificationEntity(
+                        paymentRequest.getPayment().getCreditor().getAccountNumber(), null);
+
+        BeneficiaryEntity beneficiary =
+                BeneficiaryEntity.builder()
+                        .creditor(creditor)
+                        .creditorAccount(creditorAccount)
+                        .build();
+
+        PaymentIdentificationEntity paymentId =
+                new PaymentIdentificationEntity(
+                        payment.getUniqueId(), UUIDUtils.generateUUID(), null);
+
+        AmountTypeEntity instructedAmount =
+                new AmountTypeEntity(
+                        payment.getAmount().getCurrency(),
+                        payment.getAmount().getValue().toString());
+
+        List<CreditTransferTransactionEntity> creditTransferTransaction =
+                Collections.singletonList(
+                        CreditTransferTransactionEntity.builder()
+                                .paymentId(paymentId)
+                                .instructedAmount(instructedAmount)
+                                .build());
+
+        String callbackUrl =
+                redirectUrl + Urls.SUCCESS_REPORT_PATH + sessionStorage.get(StorageKeys.STATE);
+
+        List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach =
+                Collections.singletonList(AcceptedAuthenticationApproachEnum.REDIRECT);
+        SupplementaryDataEntity supplementaryData =
+                SupplementaryDataEntity.builder()
+                        .acceptedAuthenticationApproach(acceptedAuthenticationApproach)
+                        .successfulReportUrl(callbackUrl)
+                        .unsuccessfulReportUrl(callbackUrl)
+                        .build();
+
+        return PaymentRequestResourceEntity.builder()
+                .paymentInformationId(UUIDUtils.generateUUID())
+                .creationDateTime(OffsetDateTime.now(Clock.systemDefaultZone()).toString())
+                .numberOfTransactions(FormValues.NUMBER_OF_TRANSACTIONS)
+                .requestedExecutionDate(getExecutionDate(payment.getExecutionDate()))
+                .initiatingParty(initiatingParty)
+                .paymentTypeInformation(paymentTypeInformation)
+                .debtorAccount(debtorAccount)
+                .beneficiary(beneficiary)
+                .creditTransferTransaction(creditTransferTransaction)
+                .supplementaryData(supplementaryData)
+                .build();
+    }
+
+    private String getExecutionDate(LocalDate localDate) {
+        return Optional.ofNullable(localDate)
+                .map(
+                        date ->
+                                localDate
+                                        .atStartOfDay()
+                                        .atZone(ZoneId.of("CET"))
+                                        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .orElse(
+                        LocalDateTime.now()
+                                .atZone(ZoneId.of("CET"))
+                                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 
     @Override

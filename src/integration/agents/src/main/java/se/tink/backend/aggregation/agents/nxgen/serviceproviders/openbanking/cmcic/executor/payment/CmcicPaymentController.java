@@ -73,8 +73,7 @@ public class CmcicPaymentController extends PaymentController {
 
         ThirdPartyAppResponse<String> ref = init();
 
-        String id = paymentMultiStepRequest.getPayment().getUniqueId();
-        URL authorizeUrl = new URL(sessionStorage.get(id));
+        URL authorizeUrl = new URL(sessionStorage.get(StorageKeys.AUTH_URL));
         openThirdPartyApp(authorizeUrl);
         collect();
 
