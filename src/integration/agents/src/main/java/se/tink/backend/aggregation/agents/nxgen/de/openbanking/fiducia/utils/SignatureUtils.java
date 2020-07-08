@@ -18,7 +18,6 @@ public final class SignatureUtils {
 
     public static String createSignature(
             PrivateKey privateKey,
-            String keyId,
             String headers,
             String digest,
             String reqId,
@@ -26,7 +25,6 @@ public final class SignatureUtils {
             String psuId) {
         String signature =
                 SignatureKeys.KEY_ID
-                        + keyId
                         + SignatureKeys.ALGORITHM
                         + SignatureValues.ALGORITHM
                         + SignatureKeys.HEADERS

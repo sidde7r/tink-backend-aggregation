@@ -12,16 +12,10 @@ import se.tink.backend.aggregation.configuration.agents.ClientConfiguration;
 @Getter
 public class FiduciaConfiguration implements ClientConfiguration {
 
-    @Secret private String keyId;
-    @Secret private String keyPath;
-    @Secret private String certificatePath;
     @Secret private String certificate;
     @Secret private String tppId;
 
     public FiduciaConfiguration validateConfig() {
-        requireNonNull(Strings.emptyToNull(keyId));
-        requireNonNull(Strings.emptyToNull(keyPath));
-        requireNonNull(Strings.emptyToNull(certificatePath));
         requireNonNull(Strings.emptyToNull(certificate));
         requireNonNull(Strings.emptyToNull(tppId));
 
