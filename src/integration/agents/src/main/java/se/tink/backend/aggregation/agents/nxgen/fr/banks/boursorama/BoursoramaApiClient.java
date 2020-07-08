@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.http.response.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.response.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.url.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.identitydata.IdentityData;
 
 public class BoursoramaApiClient {
     private final TinkHttpClient client;
@@ -106,20 +105,13 @@ public class BoursoramaApiClient {
                 .get(ListAccountsResponse.class);
     }
 
-    public IdentityData getIdentityData() {
+    public IdentityResponse getIdentityData() {
         String loggedInBearerToken =
                 sessionStorage.get(BoursoramaConstants.Storage.LOGGED_IN_BEARER_TOKEN);
-        IdentityResponse identityResponse =
-                client.request(createUserHashUrl(BoursoramaConstants.UserUrls.IDENTITY_DATA))
-                        .header("Authorization", loggedInBearerToken)
-                        .header("X-Session-Id", boursoramaPersistentStorage.getUdid())
-                        .get(IdentityResponse.class);
-
-        return IdentityData.builder()
-                .addFirstNameElement(identityResponse.getFirstName())
-                .addSurnameElement(identityResponse.getLastName())
-                .setDateOfBirth(identityResponse.getBirthdayDate())
-                .build();
+        return client.request(createUserHashUrl(BoursoramaConstants.UserUrls.IDENTITY_DATA))
+                .header("Authorization", loggedInBearerToken)
+                .header("X-Session-Id", boursoramaPersistentStorage.getUdid())
+                .get(IdentityResponse.class);
     }
 
     public TransactionsResponse getTransactions(String accountKey, String continuationToken) {

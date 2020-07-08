@@ -6,6 +6,9 @@ junit_test(
         ["**/*.java"],
         exclude = ["agent/**/*.java"],
     ),
+    data = [
+        "//src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/boursorama/resources",
+    ],
     tags = [
         "external",
     ],
@@ -13,8 +16,11 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fr/banks/boursorama",
         "//src/integration/api/src/main/java/se/tink/backend/agents/rpc",
+        "//src/integration/identity_data",
         "//src/integration/lib",
         "//src/integration/lib/src/test/java/se/tink/backend/aggregation/agents/framework",
+        "//src/libraries/serialization",
         "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
     ],
 )

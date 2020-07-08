@@ -1,0 +1,72 @@
+[
+  {
+    "id": "opportunities"
+  },
+  {
+    "id": "professional"
+  },
+  {
+    "id": "personal",
+    "label": "Mes comptes personnels",
+    "categories": [
+      {
+        "id": "BANK",
+        "label": "Mes comptes bancaires",
+        "banks": [
+          {
+            "id": "a14777f1bec34c86ce49aac84cb22aac",
+            "label": "Boursorama Banque",
+            "accounts": [
+              {
+                "label": "BOURSORAMA BANQUE",
+                "referenceLabel": "FR76 4061 8803 0000 0403 7248 195",
+                "bankId": "a14777f1bec34c86ce49aac84cb22aac",
+                "bankName": "Boursorama Banque",
+                "accountKey": "a14777f1bec34c86ce49aac84cb22aac",
+                "accountNumber": "00040372481",
+                "iban": "FR7640618803000004037248195",
+                "balance": 6970.75,
+                "currency": "EUR",
+
+                "flags": [
+                  "BANK_IDENTIFIER_ACCOUNT",
+                  "TRANSFER_DEBIT_ACCOUNT",
+                  "PRODUCT_TYPE_COMPTE"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SAVINGS",
+        "label": "Mon \u00e9pargne",
+        "banks": [
+          {
+            "id": "a14777f1bec34c86ce49aac84cb22aac",
+            "label": "Boursorama Banque",
+            "accounts": [
+              {
+                "label": "COMPTE SUR LIVRET",
+                "referenceLabel": "FR76 4061 8803 0000 0216 3936 859",
+                "bankId": "a14777f1bec34c86ce49aac84cb22aac",
+                "bankName": "Boursorama Banque",
+                "accountKey": "00825e5e9ee6880da9a900da3941baac",
+                "accountNumber": "00021639368",
+                "iban": "FR7640618803000002163936859",
+                "balance": 15.18,
+                "currency": "EUR",
+                "excludeFromBalance": false,
+                "attachedProducts": [],
+                "flags": [
+                  "TRANSFER_DEBIT_ACCOUNT",
+                  "PRODUCT_TYPE_EPARGNE"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

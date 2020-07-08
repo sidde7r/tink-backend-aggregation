@@ -1,0 +1,63 @@
+{
+  "actions": [
+    {
+      "api": {
+        "href": "/_user_/_{userHash}_/bank/account/operations/{resourceId}",
+        "method": "GET",
+        "params": {
+          "continuationToken": "testContinuationKey",
+          "resourceId": "adff0acfcefa80ae849065f2076ecaac"
+        }
+      },
+      "disabled": false,
+      "featureId": "customer.accounts_bank_movements",
+      "label": "Mouvements précédents",
+      "web": "https://clients.boursorama.com/feature-redirect?featureId=accounts_bank_movements&params%5BresourceId%5D=adff0acfcefa80ae849065f2076ecaac&params%5BcontinuationToken%5D=testcontinuationToken"
+    }
+  ],
+  "operations": [
+    {
+      "accountKey": "adff0acfcefa80ae849065f2076ecaac",
+      "amount": -13,
+      "category": {
+        "color": "#47BFE3",
+        "distributionColor": "#69C4E7",
+        "iconId": "pfm-phone-subscription",
+        "id": 75,
+        "label": "Multimedia à domicile (TV, internet, téléphonie...)",
+        "parentLabel": "Abonnements & téléphonie"
+      },
+      "comments": [],
+      "currency": "EUR",
+      "dates": [
+        {
+          "date": "2020-07-10",
+          "label": "Effectué le",
+          "type": "operation_date"
+        },
+        {
+          "date": "2020-07-10",
+          "label": "Valorisé le",
+          "type": "value_date"
+        }
+      ],
+      "flags": [
+        "HAS_SUGGESTED_PROVIDER",
+        "SPLIT_CHILD_REMAINING"
+      ],
+      "id": "5f07a1790923ff19ad7b3aac",
+      "labels": [
+        {
+          "body": "PRLV SEPA SFR FIXE ADSL",
+          "type": "operation_label"
+        }
+      ],
+      "relatedOperations": [],
+      "status": {
+        "id": "accounted",
+        "label": "Comptabilisée"
+      },
+      "tags": []
+    }
+  ]
+}

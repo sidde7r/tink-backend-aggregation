@@ -1,21 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticator.rpc;
 
-import java.util.Map;
+import lombok.Getter;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.boursorama.authenticator.entity.KeymapEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@Getter
 public class GenerateMatrixResponse {
-    private String expire;
     private KeymapEntity keymap;
     private String matrixRandomChallenge;
-    private String token;
-
-    public Map<String, String> getKeys() {
-        return keymap.getKeys();
-    }
-
-    public String getMatrixRandomChallenge() {
-        return matrixRandomChallenge;
-    }
 }
