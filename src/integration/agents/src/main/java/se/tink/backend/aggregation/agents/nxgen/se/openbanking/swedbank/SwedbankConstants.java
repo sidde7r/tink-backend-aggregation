@@ -135,6 +135,7 @@ public final class SwedbankConstants {
         public static final String RECEIVED = "received";
         public static final String STARTED = "started";
         public static final String FINALIZED = "finalised";
+        public static final String FAILED = "failed";
     }
 
     public static class ErrorMessages {

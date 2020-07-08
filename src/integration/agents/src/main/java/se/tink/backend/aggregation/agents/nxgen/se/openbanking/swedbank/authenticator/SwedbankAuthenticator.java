@@ -76,7 +76,7 @@ public class SwedbankAuthenticator implements OAuth2Authenticator {
         return apiClient.checkIfConsentIsApproved(consentId);
     }
 
-    public boolean getScaStatus(String statusLink) {
+    public String getScaStatus(String statusLink) {
         return apiClient.getScaStatus(statusLink);
     }
 

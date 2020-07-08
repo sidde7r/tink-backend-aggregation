@@ -181,7 +181,9 @@ public class SwedbankAuthenticationController
                         consentResponseIbanList.getLinks().getHrefEntity().getHref());
         supplementalRequester.openBankId(response.getChallengeData().getAutoStartToken(), true);
 
-        while (!authenticator.getScaStatus(response.getCollectAuthUri())) {
+        while (authenticator
+                .getScaStatus(response.getCollectAuthUri())
+                .equalsIgnoreCase(AuthStatus.STARTED)) {
             Uninterruptibles.sleepUninterruptibly(
                     SwedbankConstants.TimeValues.SLEEP_TIME_MILLISECONDS, TimeUnit.MILLISECONDS);
         }

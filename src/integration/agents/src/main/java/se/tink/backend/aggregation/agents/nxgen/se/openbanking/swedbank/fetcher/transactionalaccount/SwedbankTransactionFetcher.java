@@ -16,15 +16,13 @@ import java.util.stream.Stream;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.TimeValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -38,8 +36,6 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
 
     private final SwedbankApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private static final Logger logger =
-            LoggerFactory.getLogger(OAuth2AuthenticationController.class);
     private final Date fromDate;
     private final Date toDate;
 
@@ -61,14 +57,6 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                         .contains(SwedbankConstants.ErrorMessages.SCA_REQUIRED));
     }
 
-    private boolean checkIfScaIsAlreadyDone(HttpResponseException e) {
-        return e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST
-                && e.getResponse()
-                        .getBody(String.class)
-                        .toLowerCase()
-                        .contains(SwedbankConstants.ErrorMessages.TRANSACTION_SCA_ALREADY_SIGNED);
-    }
-
     // TODO: Flow should continue if user rejects consent or we get timeout so no exception(?)
     private void startScaAuthorization(String account, Date fromDate, Date toDate) {
         try {
@@ -81,29 +69,21 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
             }
             poll(response);
         } catch (HttpResponseException e) {
-            if (checkIfScaIsAlreadyDone(e)) {
-                logger.info(
-                        "Request SCA, but its already been signed for the requested period, proceeding with authentication");
-            }
             throw e;
         }
     }
 
-    private void poll(StatementResponse response) {
-        boolean status;
-
+    private String poll(StatementResponse response) {
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(
                         new URL(response.getLinks().getHrefEntity().getHref())));
 
         for (int i = 0; i < SwedbankConstants.TimeValues.ATTEMPS_BEFORE_TIMEOUT; i++) {
-            status = apiClient.getScaStatus(response.getLinks().getScaStatus().getHref());
-
-            if (status) {
-                logger.info(SwedbankConstants.LogMessages.SIGNING_COMPLETE);
-                return;
+            String status = apiClient.getScaStatus(response.getLinks().getScaStatus().getHref());
+            if (!status.equalsIgnoreCase(AuthStatus.STARTED)) {
+                return status;
             }
-            logger.info(SwedbankConstants.LogMessages.WAITING_FOR_SIGNING);
+
             Uninterruptibles.sleepUninterruptibly(
                     SwedbankConstants.TimeValues.SLEEP_TIME_MILLISECONDS, TimeUnit.MILLISECONDS);
         }

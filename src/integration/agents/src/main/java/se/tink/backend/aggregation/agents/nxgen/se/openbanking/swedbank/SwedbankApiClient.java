@@ -13,7 +13,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.HeaderValues;
@@ -147,11 +146,10 @@ public final class SwedbankApiClient {
                 .equalsIgnoreCase(SwedbankConstants.ConsentStatus.VALID);
     }
 
-    public boolean getScaStatus(String statusLink) {
+    public String getScaStatus(String statusLink) {
         return createRequestInSession(new URL(Urls.BASE.concat(statusLink)), true)
                 .get(AuthenticationResponse.class)
-                .getScaStatus()
-                .equalsIgnoreCase(AuthStatus.FINALIZED);
+                .getScaStatus();
     }
 
     public List<String> mapAccountResponseToIbanList(FetchAccountResponse accounts) {
