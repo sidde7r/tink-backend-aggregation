@@ -48,6 +48,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetche
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.fetcher.transferdestination.rpc.BeneficiariesResponse;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.utils.CaisseEpargneUtils;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.utils.SoapHelper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.constants.OAuth2Constants.PersistentStorageKeys;
@@ -291,15 +292,14 @@ public class CaisseEpargneApiClient {
             if (!token.isValidBearerToken()) {
                 throw new IllegalStateException("Could not parse token from location url.");
             }
-            sessionStorage.put(StorageKeys.TOKEN, token);
+            sessionStorage.put(StorageKeys.TOKEN, token.toOAuth2Token());
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Could not URL encode", e);
         }
     }
 
     public void soapActionSsoBapi(String bankId) {
-        Optional<TokenFromLocation> token =
-                sessionStorage.get(StorageKeys.TOKEN, TokenFromLocation.class);
+        Optional<OAuth2Token> token = sessionStorage.get(StorageKeys.TOKEN, OAuth2Token.class);
         Optional<String> termId = sessionStorage.get(StorageKeys.TERM_ID, String.class);
         HttpResponse response =
                 httpClient
@@ -364,5 +364,20 @@ public class CaisseEpargneApiClient {
                         .body(request)
                         .post(String.class);
         return SoapHelper.getTransactions(transactionsResponse);
+    }
+
+    public BeneficiariesResponse getBeneficiaries() {
+        OAuth2Token bearerToken =
+                sessionStorage
+                        .get(StorageKeys.TOKEN, OAuth2Token.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                SessionError.SESSION_EXPIRED.exception()));
+        return httpClient
+                .request(Urls.GET_BENEFICIARIES)
+                .addBearerToken(bearerToken)
+                .accept(MediaType.WILDCARD_TYPE)
+                .get(BeneficiariesResponse.class);
     }
 }

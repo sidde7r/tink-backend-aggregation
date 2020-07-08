@@ -21,6 +21,9 @@ public class CaisseEpargneConstants {
                 new URL("https://www.rs-ex-ano-groupe.caisse-epargne.fr");
         private static final URL AS_EX_ATH_BASE_URL =
                 new URL("https://www.as-ex-ath-groupe.caisse-epargne.fr");
+        private static final URL RS_EX_ATH_BASE_URL =
+                new URL("https://www.rs-ex-ath-groupe.caisse-epargne.fr");
+
         public static final URL ICG_AUTH_BASE = new URL("https://www.icgauth.caisse-epargne.fr");
         static final URL SOAP_BASE = new URL("https://www.s.caisse-epargne.fr");
         static final URL WS_BAD = SOAP_BASE.concat("/V22/WsBad/WsBad.asmx");
@@ -28,6 +31,8 @@ public class CaisseEpargneConstants {
                 RS_EX_ANO_BASE_URL.concat("/bapi/user/v1/users/identificationRouting");
         static final URL OAUTH2_TOKEN = AS_EX_ANO_BASE_URL.concat("/api/oauth/token");
         static final URL OAUTH_V2_AUTHORIZE = AS_EX_ATH_BASE_URL.concat("/api/oauth/v2/authorize");
+        static final URL GET_BENEFICIARIES =
+                RS_EX_ATH_BASE_URL.concat("/bapi/transfer/v2/transferCreditors");
     }
 
     public static class CookieKeys {}

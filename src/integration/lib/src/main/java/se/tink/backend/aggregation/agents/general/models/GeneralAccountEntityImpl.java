@@ -12,7 +12,7 @@ public class GeneralAccountEntityImpl implements GeneralAccountEntity {
     private final String accountName;
     private final AccountIdentifier accountIdentifier;
 
-    private GeneralAccountEntityImpl(
+    public GeneralAccountEntityImpl(
             String bankName, String accountName, AccountIdentifier accountIdentifier) {
         this.bankName = bankName;
         this.accountName = accountName;

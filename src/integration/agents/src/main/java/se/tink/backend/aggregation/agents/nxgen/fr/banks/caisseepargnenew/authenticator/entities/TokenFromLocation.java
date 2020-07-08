@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargnenew.CaisseEpargneConstants.QueryKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -63,4 +64,9 @@ public class TokenFromLocation {
 
     @JsonProperty("id_token")
     private String idToken;
+
+    @JsonIgnore
+    public OAuth2Token toOAuth2Token() {
+        return OAuth2Token.create(tokenType, accessToken, "", expiresIn);
+    }
 }
