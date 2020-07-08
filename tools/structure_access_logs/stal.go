@@ -149,41 +149,44 @@ func parseEntry(lines []string) (Entry, error) {
 }
 
 func parseLine(s string) (Attr, string) {
-	if strings.HasSuffix(s, " < ") {
-		return Default, ""
+	if info.MatchString(s) {
+		if strings.HasSuffix(s, "Client out-bound request") {
+			return Req, ""
+		}
+		if strings.HasSuffix(s, "Client in-bound response") {
+			return Rsp, ""
+		}
+		if date.MatchString(s) {
+			return Date, date.FindString(s)
+		}
 	}
-	if strings.HasSuffix(s, "Client out-bound request") {
-		return Req, ""
-	}
-	if strings.HasSuffix(s, "Client in-bound response") {
-		return Rsp, ""
-	}
-	if date.MatchString(s) {
-		return Date, date.FindString(s)
-	}
-	if methodUrl.MatchString(s) {
-		return MethodUrl, methodUrl.FindString(s)
-	}
-	if header.MatchString(s) {
-		return Header, header.FindString(s)
+	if reqOrRes.MatchString(s) {
+		if status.MatchString(s) {
+			return Status, code.FindString(s)
+		}
+		if methodUrl.MatchString(s) {
+			return MethodUrl, methodUrl.FindString(s)
+		}
+		if header.MatchString(s) {
+			return Header, header.FindString(s)
+		}
 	}
 	if body.MatchString(s) {
 		return Body, body.FindString(s)
 	}
-	if status.MatchString(s) {
-		return Status, code.FindString(s)
-	}
-	return Default, s
+	return Default, ""
 }
 
 var (
-	num       = regexp.MustCompile(`^\d*`)
+	info      = regexp.MustCompile(`^\d+ [*] .*`)
+	reqOrRes  = regexp.MustCompile(`^\d+ [<>] .*`)
+	num       = regexp.MustCompile(`^\d+`)
 	date      = regexp.MustCompile(`\d\d\d\d-\d\d-\d\d--\d\d:\d\d:\d\d.\d\d\d`)
 	methodUrl = regexp.MustCompile(`[A-Z]* https://.*$`)
 	header    = regexp.MustCompile(`\S*: .*$`)
 	body      = regexp.MustCompile(`^[^\d].*$`)
-	status    = regexp.MustCompile(`^\d < \d*$`)
-	code      = regexp.MustCompile(`\d*$`)
+	status    = regexp.MustCompile(`^\d+ < \d+$`)
+	code      = regexp.MustCompile(`\d+$`)
 )
 
 type Attr int
