@@ -7,6 +7,8 @@ import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServ
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_REVOKED;
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.CONSENT_REVOKED_BY_USER;
 import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.MULTIPLE_LOGIN;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.NO_BANK_SERVICE;
+import static se.tink.backend.aggregation.agents.exceptions.bankservice.BankServiceError.SESSION_TERMINATED;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -73,6 +75,8 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                             .put(CONSENT_REVOKED_BY_USER, AdditionalInfo.CONSENT_REVOKED)
                             .put(CONSENT_REVOKED, AdditionalInfo.CONSENT_REVOKED)
                             .put(MULTIPLE_LOGIN, AdditionalInfo.MULTIPLE_LOGIN)
+                            .put(NO_BANK_SERVICE, AdditionalInfo.NO_BANK_SERVICE)
+                            .put(SESSION_TERMINATED, AdditionalInfo.SESSION_TERMINATED)
                             .build();
 
     public RefreshItemAgentWorkerCommand(
