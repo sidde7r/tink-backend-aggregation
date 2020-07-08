@@ -32,7 +32,8 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     }
 
     private List<Transaction> getBookedTransactions() {
-        return transactions.getBooked().stream()
+        return Optional.ofNullable(transactions.getBooked()).orElse(Collections.emptyList())
+                .stream()
                 .map(this::toTinkTransaction)
                 .collect(Collectors.toList());
     }
