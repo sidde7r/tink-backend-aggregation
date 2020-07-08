@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.Swedbank
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.AuthStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants.TimeValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.transaction.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.StatementResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -57,30 +58,20 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                         .contains(SwedbankConstants.ErrorMessages.SCA_REQUIRED));
     }
 
-    // TODO: Flow should continue if user rejects consent or we get timeout so no exception(?)
-    private void startScaAuthorization(String account, Date fromDate, Date toDate) {
-        try {
-            // TODO: Handle 428 response code for "transaction not available"
-            StatementResponse response =
-                    apiClient.startScaTransactionRequest(account, fromDate, toDate);
-            // TODO: Handle failed status (continue the flow with no exception)
-            if (response.getStatementStatus().equalsIgnoreCase(ConsentStatus.SIGNED)) {
-                return;
-            }
-            poll(response);
-        } catch (HttpResponseException e) {
-            throw e;
+    private String startScaAuthorization(String account, Date fromDate, Date toDate) {
+        StatementResponse response =
+                apiClient.startScaTransactionRequest(account, fromDate, toDate);
+        if (response.getStatementStatus().equalsIgnoreCase(ConsentStatus.SIGNED)) {
+            return AuthStatus.FINALIZED;
         }
-    }
-
-    private String poll(StatementResponse response) {
         supplementalInformationHelper.openThirdPartyApp(
                 ThirdPartyAppAuthenticationPayload.of(
                         new URL(response.getLinks().getHrefEntity().getHref())));
 
         for (int i = 0; i < SwedbankConstants.TimeValues.ATTEMPS_BEFORE_TIMEOUT; i++) {
             String status = apiClient.getScaStatus(response.getLinks().getScaStatus().getHref());
-            if (!status.equalsIgnoreCase(AuthStatus.STARTED)) {
+            if (!status.equalsIgnoreCase(AuthStatus.STARTED)
+                    && !status.equalsIgnoreCase(AuthStatus.RECEIVED)) {
                 return status;
             }
 
@@ -91,15 +82,19 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                 SwedbankConstants.LogMessages.TRANSACTION_SIGNING_TIMED_OUT);
     }
 
-    private FetchTransactionsResponse fetchAllTransactions(TransactionalAccount account) {
+    private Optional<FetchTransactionsResponse> fetchAllTransactions(TransactionalAccount account) {
 
         StatementResponse response;
         try {
             response = apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
         } catch (HttpResponseException e) {
             if (checkIfScaIsRequired(e)) {
-                startScaAuthorization(account.getApiIdentifier(), fromDate, toDate);
-                return fetchAllTransactions(account);
+                String scaStatus =
+                        startScaAuthorization(account.getApiIdentifier(), fromDate, toDate);
+                if (!scaStatus.equalsIgnoreCase(AuthStatus.FINALIZED)) {
+                    return Optional.empty();
+                }
+                response = apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
             } else {
                 throw e;
             }
@@ -109,11 +104,12 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
                         apiClient
                                 .getTransactions(response.getLinks().getDownload().getHref())
                                 .getBodyInputStream())) {
-            // TODO: If no file exists in archive throw proper exception
+            // There's only one file in the archive
             zipInputStream.getNextEntry();
-            return SerializationUtils.deserializeFromString(
-                    IOUtils.toString(zipInputStream, StandardCharsets.UTF_8),
-                    FetchTransactionsResponse.class);
+            return Optional.of(
+                    SerializationUtils.deserializeFromString(
+                            IOUtils.toString(zipInputStream, StandardCharsets.UTF_8),
+                            FetchTransactionsResponse.class));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to parse transactions");
         }
@@ -122,19 +118,26 @@ public class SwedbankTransactionFetcher implements TransactionFetcher<Transactio
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
         // First add upcoming then booked
-        FetchTransactionsResponse fetchTransactionsResponse = fetchAllTransactions(account);
+        Optional<FetchTransactionsResponse> fetchTransactionsResponse =
+                fetchAllTransactions(account);
         return Stream.of(
-                        Optional.ofNullable(
-                                        fetchTransactionsResponse.getTransactions().getPending()
-                                                .stream()
-                                                .map(te -> te.toTinkTransaction(true))
-                                                .collect(Collectors.toList()))
+                        fetchTransactionsResponse
+                                .map(FetchTransactionsResponse::getTransactions)
+                                .map(TransactionsEntity::getPending)
+                                .map(
+                                        tes ->
+                                                tes.stream()
+                                                        .map(te -> te.toTinkTransaction(true))
+                                                        .collect(Collectors.toList()))
                                 .orElseGet(Lists::newArrayList),
-                        Optional.ofNullable(
-                                        fetchTransactionsResponse.getTransactions().getBooked()
-                                                .stream()
-                                                .map(te -> te.toTinkTransaction(false))
-                                                .collect(Collectors.toList()))
+                        fetchTransactionsResponse
+                                .map(FetchTransactionsResponse::getTransactions)
+                                .map(TransactionsEntity::getPending)
+                                .map(
+                                        tes ->
+                                                tes.stream()
+                                                        .map(te -> te.toTinkTransaction(false))
+                                                        .collect(Collectors.toList()))
                                 .orElseGet(Lists::newArrayList))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
