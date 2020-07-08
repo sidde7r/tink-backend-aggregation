@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.revolut;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class RevolutTransactionalAccountMapperDecoratorTest {
     }
 
     @Test
-    public void shouldNotMapAccountsWithoutIdentifiers() {
+    public void shouldNotMapAccountsWithEmptyListOfIdentifiers() {
         // given
         AccountEntity incorrectAccount = TransactionalAccountFixtures.savingsAccountWithoutId();
 
@@ -36,6 +37,21 @@ public class RevolutTransactionalAccountMapperDecoratorTest {
                 mapperDecorator.map(incorrectAccount, mock(List.class), mock(List.class));
 
         assertThat(transactionalAccount).isEmpty();
+        verifyZeroInteractions(transactionalAccountMapperMock);
+    }
+
+    @Test
+    public void shouldNotMapAccountsWithNullListOfIdentifiers() {
+        // given
+        AccountEntity incorrectAccount = TransactionalAccountFixtures.currentAccount();
+        incorrectAccount.setIdentifiers(null);
+
+        // when
+        Optional<TransactionalAccount> transactionalAccount =
+                mapperDecorator.map(incorrectAccount, mock(List.class), mock(List.class));
+
+        assertThat(transactionalAccount).isEmpty();
+        verifyZeroInteractions(transactionalAccountMapperMock);
     }
 
     @Test

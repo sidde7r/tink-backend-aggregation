@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.entities.AccountEntity;
@@ -33,7 +34,7 @@ public class RevolutTransactionalAccountMapperDecorator
             Collection<AccountBalanceEntity> balances,
             Collection<IdentityDataV31Entity> parties) {
 
-        if (account.getIdentifiers().isEmpty()) {
+        if (CollectionUtils.isEmpty(account.getIdentifiers())) {
             log.debug(
                     NO_IDENTIFIER_FOUND_LOG_MESSAGE_FORMAT,
                     account.getNickname(),
