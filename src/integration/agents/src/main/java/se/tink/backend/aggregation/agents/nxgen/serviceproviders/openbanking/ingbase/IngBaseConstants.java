@@ -102,7 +102,7 @@ public final class IngBaseConstants {
         public static final String MISSING_CLIENT_ID = "Cannot find client id!";
         public static final String INVALID_GRANT_ERROR = "invalid_grant";
         public static final ImmutableList<Integer> ERROR_CODES =
-                ImmutableList.of(HttpStatus.SC_NOT_FOUND);
+                ImmutableList.of(HttpStatus.SC_NOT_FOUND, HttpStatus.SC_BAD_GATEWAY);
     }
 
     static class HttpClient {
